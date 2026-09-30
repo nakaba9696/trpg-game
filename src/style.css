@@ -58,7 +58,7 @@ button { cursor: pointer; }
 .logo, .logoBig { font-family: var(--f-logo); font-weight: 700; text-transform: uppercase; line-height: 1; white-space: nowrap; }
 .logo .mors, .logoBig .mors { color: var(--blood); }
 .top h1.logo { font-size: 26px; letter-spacing: .16em; }
-body:has(#setup:not([hidden])) .top h1.logo, body:has(#setup:not([hidden])) .top .sub { visibility: hidden; }
+body:has(#setup[data-step="title"]:not([hidden])) .top h1.logo, body:has(#setup[data-step="title"]:not([hidden])) .top .sub { visibility: hidden; }
 .titleHero { text-align: center; padding-block: 28px 8px; }
 .logoBig { display: flex; align-items: center; justify-content: center; font-size: clamp(34px, 10.5vw, 82px); letter-spacing: .2em; padding-left: .2em; text-shadow: 0 2px 0 rgba(0, 0, 0, .08); }
 .titleHero .reading { font-family: var(--f-body); font-size: 12px; letter-spacing: .6em; padding-left: .6em; color: var(--muted); margin-top: 14px; }
@@ -360,3 +360,125 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
   .pface > .grid2 { grid-template-columns: 1fr; }
   #profFace { width: 120px; height: 150px; }
 }
+
+/* ---------------------------------------------------------------- キャラクター作成（U5） */
+.fine.center { text-align: center; }
+.titleMenu { display: grid; gap: 10px; width: min(320px, 100%); margin: 8px auto 0; }
+.titleMenu .btn { min-height: 48px; font-family: var(--f-body); font-size: 17px; letter-spacing: .12em; display: grid; place-items: center; gap: 2px; }
+.titleMenu .btn small { font-family: var(--f-ui); font-size: 12px; letter-spacing: 0; color: var(--muted); font-weight: 400; }
+.creSteps { list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; font-size: 12.5px; color: var(--muted); }
+.creSteps li { flex: 1; text-align: center; border-bottom: 2px solid var(--rule); padding-bottom: 4px; letter-spacing: .1em; }
+.creSteps li.done { border-color: var(--muted); }
+.creSteps li.on { border-color: var(--blood); color: var(--ink); font-weight: 700; }
+.creHead { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; justify-content: space-between; }
+.creHead h2 { margin: 0 !important; }
+.cre2 { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 18px; align-items: start; }
+.whoCard { position: sticky; top: 12px; border: 1px solid var(--ink); background: var(--sheet); padding: 12px; display: grid; gap: 10px; justify-items: center; text-align: center; }
+.whoCard canvas { width: 168px; height: 210px; border: 1px solid var(--rule); border-radius: 2px; background: #3a3a3a; }
+.whoTxt { display: grid; gap: 4px; font-size: 13px; line-height: 1.55; }
+.whoTxt .whoName { font-family: var(--f-display); font-weight: 400; font-size: 20px; }
+.whoTxt .whoLine { font-family: var(--f-body); font-size: 13.5px; }
+.whoTxt span:not(.whoLine):not(.fine) { color: var(--muted); }
+.creForm { display: grid; gap: 16px; min-width: 0; }
+.creSec { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.creSec:first-child { border-top: 0; padding-top: 0; }
+.creSec h3, .charSheet h3 { font-family: var(--f-display); font-weight: 400; font-size: 17px; margin: 0; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+.creSec h3 .fine { font-family: var(--f-ui); }
+.creSec p.fine { margin: 0; }
+.creRow { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: end; }
+.flabel { font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+.ageNum { width: 5.5em; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { position: relative; border: 1px solid var(--rule); background: var(--sheet); border-radius: 999px; padding: 5px 12px; font-size: 13px; cursor: pointer; }
+.chip input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.chip:has(input:checked) { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chip:has(input:focus-visible), .seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cards.compact { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.cards.compact .card { padding: 9px 12px; }
+.cards.compact .card b { font-size: 15px; }
+.cards.compact .card span { font-size: 12.5px; }
+.creNav { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.creNav .btn { min-height: 40px; padding-inline: 16px; }
+.creNav .btn.primary { margin-left: auto; font-size: 15px; }
+/* 能力値 */
+.rollBar { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "who tray roll" "info info info"; gap: 10px 14px; align-items: center; border: 1px solid var(--ink); background: var(--sheet); padding: 12px 14px; }
+.rollWho { grid-area: who; display: flex; gap: 10px; align-items: center; min-width: 0; }
+.rollWho canvas { width: 48px; height: 60px; border: 1px solid var(--rule); background: #3a3a3a; flex: none; }
+.rollWho b { display: block; font-family: var(--f-display); font-weight: 400; font-size: 17px; }
+.rollWho .fine { display: block; }
+.tray { grid-area: tray; display: flex; gap: 6px; }
+.pipDie { width: 30px; height: 30px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 4px; gap: 2px; background: var(--field); border: 1.5px solid var(--ink); border-radius: 6px; }
+.pipDie i { display: block; border-radius: 50%; }
+.pipDie i.on { background: var(--ink); }
+.pipDie:nth-child(2) i.on { background: var(--blood); }
+.tray.tumble .pipDie { animation: dieTumble .36s ease-out; }
+.tray.tumble .pipDie:nth-child(2) { animation-duration: .3s; }
+@keyframes dieTumble { 0% { transform: translateY(-8px) rotate(-60deg); } 60% { transform: translateY(2px) rotate(15deg); } 100% { transform: none; } }
+.rollBtn { grid-area: roll; font-size: 18px !important; padding: 10px 28px !important; letter-spacing: .3em; }
+.rollInfo { grid-area: info; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12.5px; color: var(--muted); }
+.bonusLeft { font-weight: 700; }
+.bonusLeft.has { color: var(--blood); }
+.creStats { gap: 4px; }
+.creStats .srow { display: grid; grid-template-columns: 36px 3em 2.4em minmax(0, 1fr) auto; grid-template-areas: "lk nm v bar pm" "lk det det det det"; align-items: center; gap: 2px 8px; padding: 6px 0; border-bottom: 1px dashed var(--rule); font-size: 13.5px; }
+.creStats .srow:last-child { border-bottom: 0; }
+.creStats .lock { grid-area: lk; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; color: var(--muted); }
+.creStats .locked .lock { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+.creStats .nm { grid-area: nm; font-family: var(--f-body); }
+.creStats .v { grid-area: v; font-weight: 700; font-size: 18px; text-align: right; }
+.creStats .bar { grid-area: bar; position: relative; height: 8px; background: var(--paper); border: 1px solid var(--rule); }
+.creStats .bar i { position: absolute; inset: 0 auto 0 0; background: var(--ink); }
+.creStats .bar u { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ng); }
+.creStats .pm { grid-area: pm; display: flex; gap: 4px; align-items: center; }
+.creStats .pm .bn { min-width: 2em; text-align: center; font-size: 12.5px; color: var(--muted); }
+.creStats .det { grid-area: det; display: flex; flex-wrap: wrap; gap: 0 10px; font-size: 11.5px; color: var(--muted); }
+.creStats .det .plus { color: var(--ok); }
+.creStats .det .minus { color: var(--ng); }
+.creStats .rolled .v { animation: statFlash .5s ease-out; }
+.creStats .locked .v { color: var(--accent); }
+@keyframes statFlash { 0% { color: var(--blood); transform: scale(1.25); } 100% { transform: none; } }
+/* キャラクターシート（一枚の紙） */
+.charSheet { background: var(--sheet); border: 1px solid var(--ink); outline: 1px solid var(--ink); outline-offset: 3px; padding: 18px; margin: 4px; display: grid; gap: 16px; background-image: repeating-linear-gradient(0deg, transparent 0 27px, color-mix(in srgb, var(--rule) 35%, transparent) 27px 28px); }
+.csTop { display: flex; gap: 16px; align-items: center; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.csTop canvas { width: 96px; height: 120px; border: 1px solid var(--ink); background: #3a3a3a; flex: none; }
+.csTop > div { display: grid; gap: 4px; min-width: 0; }
+.csName { font-family: var(--f-display); font-weight: 400; font-size: 26px; letter-spacing: .06em; }
+.csLine { font-family: var(--f-body); font-size: 14px; }
+.csCols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px 22px; }
+.csCols section { display: grid; gap: 8px; align-content: start; }
+.csCols p { margin: 0; }
+.csGear { font-size: 13.5px; }
+.csKv { margin: 0; display: grid; grid-template-columns: 6em minmax(0, 1fr); gap: 4px 10px; font-size: 13.5px; }
+.csKv dt { color: var(--muted); }
+.csKv dd { margin: 0; font-family: var(--f-body); }
+/* 導入（本のページ） */
+.book { max-width: 36em; margin: 12px auto 0; width: 100%; background: var(--sheet); border: 1px solid var(--rule); box-shadow: 4px 4px 0 var(--rule); padding: 28px 26px 16px; min-height: 280px; display: grid; align-content: space-between; }
+.bookPage p { font-family: var(--f-body); font-size: 17px; line-height: 2; margin: 0 0 1em; text-indent: 1em; }
+.bookPage.turn { animation: pageTurn .45s ease-out; }
+@keyframes pageTurn { 0% { opacity: 0; transform: translateX(14px); } 100% { opacity: 1; transform: none; } }
+.folio { text-align: center; font-family: var(--f-body); color: var(--muted); font-size: 13px; letter-spacing: .3em; }
+.bookNav { max-width: 36em; margin-inline: auto; width: 100%; }
+@media (prefers-reduced-motion: reduce) { .tray.tumble .pipDie, .creStats .rolled .v, .bookPage.turn { animation: none; } }
+@media (max-width: 720px) {
+  .cre2 { grid-template-columns: 1fr; }
+  .whoCard { position: static; grid-template-columns: 96px minmax(0, 1fr); justify-items: start; text-align: left; align-items: center; }
+  .whoCard canvas { width: 96px; height: 120px; }
+}
+@media (max-width: 520px) {
+  .rollBar { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who who" "tray roll" "info info"; }
+  .creStats .srow { grid-template-columns: 34px 2.6em 2.2em minmax(0, 1fr) auto; gap: 2px 6px; }
+  .creStats .pm .btn.small { min-width: 34px; padding-inline: 6px; }
+  .charSheet { padding: 14px 12px; }
+  .csTop canvas { width: 72px; height: 90px; }
+  .csName { font-size: 22px; }
+  .book { padding: 20px 16px 12px; }
+  .bookPage p { font-size: 16px; line-height: 1.9; }
+  .creNav .btn { flex: 1 1 auto; }
+  .creNav .btn.primary { flex-basis: 100%; order: 9; margin-left: 0; }
+  .titleMenu .btn { min-height: 52px; }
+}
+/* 音の設定（ui/sound.js） */
+#dlgSound { width: min(420px, calc(100vw - 32px)); }
+.dbody.sound .srow { display: grid; grid-template-columns: 5em 1fr 2.5em; align-items: center; gap: 10px; font-family: var(--f-ui); font-size: 14px; }
+.dbody.sound .srow:first-child { display: flex; }
+.dbody.sound input[type="range"] { width: 100%; accent-color: var(--accent); }
+.dbody.sound output { text-align: right; }
