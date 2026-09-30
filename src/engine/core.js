@@ -229,6 +229,75 @@
     S.fame = Math.max(0, S.fame + n);
     const after = G.fameRank(S.fame);
     if (after !== before && n > 0) { G.note(`名声が高まった。今やあなたは「${after}」だ。`); G.chron(`「${after}」と呼ばれるようになる`, "event"); }
+    const nation = n > 0 && G.nationOf();
+    if (nation) G.repOf(nation).rep += n;   // 名声は大陸じゅうの名の通り方、評判はその国で稼いだ分
+  };
+
+  // ---------------------------------------------------------------- 国ごとの評判と悪名（M3）
+  // S.repute = { 国: { rep: 評判, inf: 悪名, wanted: 賞金首か } }。S.sin = 罪の匂い（国をまたいで残る。殺しと裏切りで増える）
+  // 国は場所の nation か region。D.LAWLESS の地域（魔物界など）には衛兵がいない。
+  // 悪名が手配の線（30＋評判/10、最大 +20）を超えるとその国で賞金首。10 日ごとに悪名が 1 ずつ薄れ、線より 10 下がると手配が解ける。
+  // 罪の種類と重さは D.CRIMES、既存の出来事の悪行は D.DEEDS（src/data/events_m3.js）。古いセーブでは項目が無くても動く
+  G.nationOf = (id) => {
+    const L = D.LOCS[id || G.S.loc];
+    const n = L && (L.nation || L.region);
+    return n && !(D.LAWLESS || []).includes(n) ? n : null;
+  };
+  G.repOf = (n) => { const S = G.S; S.repute = S.repute || {}; S.m3day = S.m3day || S.day; return S.repute[n] || (S.repute[n] = { rep: 0, inf: 0, wanted: false }); };
+  G.bountyLine = (n) => 30 + Math.min(20, Math.floor(G.repOf(n).rep / 10));
+  G.bounty = (n) => G.repOf(n).inf * 10;
+  G.wanted = (n) => { const S = G.S; n = n === undefined ? G.nationOf() : n; return !!(n && S.repute && S.repute[n] && S.repute[n].wanted); };
+  G.wantedIn = () => Object.keys(G.S.repute || {}).filter((n) => G.S.repute[n].wanted);
+  G.infamyHere = () => { const n = G.nationOf(); return n && G.S.repute && G.S.repute[n] ? G.S.repute[n].inf : 0; };
+  G.updateWanted = (n) => {
+    const S = G.S;
+    const r = G.repOf(n);
+    const line = G.bountyLine(n);
+    if (!r.wanted && r.inf >= line) {
+      r.wanted = true;
+      G.chron(`${n}で賞金首になる。懸賞金${G.bounty(n)}G`, "event");
+      if (S.title && S.title !== "国王" && S.titleAt === n) {
+        G.note(`${n}は、あなたの${S.title}の位を取り上げた。`);
+        G.chron(`${n}から${S.title}の位を剥奪される`, "event");
+        S.title = ""; S.titleAt = "";
+      }
+    } else if (r.wanted && r.inf < line - 10) {
+      r.wanted = false;
+      G.chron(`${n}での手配が解かれる`, "event");
+    }
+  };
+  G.addInfamy = (v, n) => {
+    n = n === undefined ? G.nationOf() : n;
+    if (!n || !v) return;
+    const r = G.repOf(n);
+    r.inf = G.clamp(r.inf + v, 0, 999);
+    G.note(`${n}での悪名 ${G.sign(v)}`);
+    G.updateWanted(n);
+  };
+  G.crime = (kind, n) => {
+    const S = G.S;
+    const c = (D.CRIMES || {})[kind];
+    if (!c) return;
+    if (c.sin) S.sin = (S.sin || 0) + c.sin;
+    G.addInfamy(c.inf, n);
+  };
+  G.reputeTick = () => {
+    const S = G.S;
+    if (!S.repute) return;
+    S.m3day = S.m3day || S.day;
+    while (S.day - S.m3day >= 10) {
+      S.m3day += 10;
+      Object.keys(S.repute).forEach((n) => { const r = S.repute[n]; if (r.inf > 0) { r.inf--; G.updateWanted(n); } });
+    }
+  };
+  // 画面の見出しに添える一言（手配中の国と懸賞金、なければ今いる国の悪名）
+  G.reputeLabel = () => {
+    const S = G.S;
+    if (!S) return "";
+    const w = G.wantedIn();
+    if (w.length) return `・${w.includes(G.nationOf()) ? "この国で" : w.join("・") + "で"}手配中（懸賞金 ${G.bounty(w.includes(G.nationOf()) ? G.nationOf() : w[0])}G）`;
+    const inf = G.infamyHere();
+    return inf ? `・悪名 ${inf}` : "";
   };
 
   // ---------------------------------------------------------------- 仲間
@@ -286,6 +355,11 @@
     if (o.memo) G.memo(o.memo);
     if (o.chron) G.chron(o.chron);
     if (o.trophy) G.award(o.trophy);
+    if (o.crime) G.crime(o.crime);
+    if (o.infamy) G.addInfamy(o.infamy);
+    if (o.sin) S.sin = Math.max(0, (S.sin || 0) + o.sin);
+    if (o.title === "国王" && G.nationOf()) { const r = G.repOf(G.nationOf()); r.inf = 0; r.wanted = false; }
+    if (o.dropCompanion && S.companions.length) { const c = S.companions.pop(); G.note(`${c.name}は、もういない。`); }
     if (o.hp) { if (o.hp > 0) { G.heal(o.hp); G.note(`HP +${o.hp}`); } else { G.note(`HP ${o.hp}`); G.hurt(-o.hp, "傷がもとで力尽きた"); } }
     if (S.over) return;
     if (o.fight) { G.startCombat(G.resolveFoes(o.fight), { win: o.win }); return; }
@@ -351,6 +425,8 @@
       o = r.ok ? c.ok : c.ng;
     }
     G.apply(o);
+    const deed = (D.DEEDS || {})[e.id + ":" + i];   // 既存の出来事の悪行（書き換えずに悪名を付ける）
+    if (deed && o && !S.over && (deed.on === "any" || (o === c.ng ? "ng" : "ok") === (deed.on || "ok"))) G.crime(deed.crime);
   };
 
   // ---------------------------------------------------------------- 新しい冒険
@@ -414,6 +490,7 @@
   G.endTurn = () => {
     const S = G.S;
     S.turn++;
+    G.reputeTick();
     if (!S.over && G.goalDone(S) && !S.flags.goalAnnounced) {
       S.flags.goalAnnounced = true;
       G.log("title", "宿願成就");

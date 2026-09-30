@@ -15,7 +15,9 @@
     "data/enemies_2.js",
     "engine/foe_quirks.js",
     "data/events_town2.js",
-    "data/events_who.js"
+    "data/events_who.js",
+    "data/events_m3.js",
+    "engine/m3_repute.js"
   ],
   "ui": [
     "ui/art_monsters.js",
