@@ -102,6 +102,55 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`敵の台詞と逃げ方（台詞あり ${Object.values(D.ENEMIES).filter((e) => e.lines).length} 種・逃げる ${Object.values(D.ENEMIES).filter((e) => e.fleeAt).length} 種）`);
 }
 
+// ---------------------------------------------------------------- 1c. 魔人の居城（engine/e2_lair.js）
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  const lairs = Object.entries(D.LOCS).filter(([, L]) => L.lair);
+  for (const [id, L] of lairs) {
+    const ev = D.EVENTS.find((e) => e.id === L.lair.event);
+    if (!ev) { fail(`${id}: 謁見の出来事 ${L.lair.event} が無い`); continue; }
+    if (!D.ENEMIES[L.boss].majin) fail(`${id}: 居城の主 ${L.boss} が魔人でない`);
+    if (ev.w) fail(`${id}: 謁見の出来事はたまたま起きてはいけない（w: 0）`);
+    const fight = ev.choices.filter((c) => c.fight === L.boss);
+    if (fight.length !== 1 || !fight[0].cond || fight[0].win?.flag !== L.reward.flag) fail(`${id}: 挑む選択肢は剣の条件つきで1つ、勝てば ${L.reward.flag}`);
+    if (!ev.choices.some((c) => !c.cond && !c.stat && !c.fight)) fail(`${id}: 判定なしで関われる選択肢が無い`);
+    const start = () => {
+      G.rand = seeded(11);
+      G.P = { trophies: {}, graves: [] };
+      const stats = {}, caps = {};
+      D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 60; });
+      G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
+      G.S.maxHp = G.S.hp = 999;
+      G.arrive(id);
+      G.S.depth = L.floors - 1;
+      G.exploreAct("deeper");
+    };
+    // 剣が無ければ、戦わずに謁見になり、挑む選択肢は出ない
+    start();
+    if (G.S.mode !== "event" || G.S.event !== ev.id) fail(`${id}: 最奥で謁見が始まらない（mode=${G.S.mode}）`);
+    if (G.eventChoices().some(({ c }) => c.fight === L.boss)) fail(`${id}: 剣が無いのに挑めてしまう`);
+    // 入口へ放り出される選択肢を選ぶと、深さが 0 に戻る
+    const out = G.eventChoices().find(({ c }) => !c.stat && c.ok?.toEntrance);
+    if (out) { G.chooseEvent(out.i); if (G.S.depth !== 0) fail(`${id}: toEntrance で入口に戻らない`); }
+    // 剣があれば挑めて、勝てば主の旗が立つ
+    start();
+    G.give("volgrim"); G.equip("volgrim");
+    const fc = G.eventChoices().find(({ c }) => c.fight === L.boss);
+    if (!fc) fail(`${id}: 剣があるのに挑めない`);
+    else {
+      G.chooseEvent(fc.i);
+      if (G.S.mode !== "combat") fail(`${id}: 挑んでも戦闘にならない`);
+      G.S.combat.foes.forEach((f) => { f.hp = 1; });
+      for (let i = 0; i < 30 && G.S.combat; i++) G.combatAct("attack");
+      if (!G.S.flags[L.reward.flag]) fail(`${id}: 主を倒しても ${L.reward.flag} が立たない`);
+    }
+  }
+  if (!lairs.length) fail("居城の迷宮が無い");
+  if (failures === before) ok(`魔人の居城（${lairs.length} か所・剣が無ければ謁見・剣があれば挑める）`);
+}
+
 // ---------------------------------------------------------------- 2. ランダムに遊ぶ
 {
   const G = loadEngine();

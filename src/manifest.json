@@ -13,7 +13,11 @@
     "engine/parser.js",
     "engine/gm.js",
     "data/enemies_2.js",
-    "engine/foe_quirks.js"
+    "engine/foe_quirks.js",
+    "data/enemies_e2.js",
+    "data/locations_e2.js",
+    "data/events_e2.js",
+    "engine/e2_lair.js"
   ],
   "ui": [
     "ui/art_monsters.js",
