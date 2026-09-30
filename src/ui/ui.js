@@ -33,7 +33,7 @@
     const S = G.S;
     const L = G.loc();
     if (S.mode === "fac" && S.fac) return FAC_SCENE[S.fac];
-    if (L.type === "dungeon" && S.depth > 0) return ["bones", "cave", "majin"].includes(L.scene) ? L.scene : "dungeon";
+    if (L.type === "dungeon" && S.depth > 0) return G.dungeonScene ? G.dungeonScene(L) : "dungeon";
     return L.scene;
   }
   function paint(force) {
@@ -45,12 +45,12 @@
     lastPaint = sig;
     G.paintScene($("#scene"), { key, phase: S.phase, seed: S.loc + ":" + S.depth + ":" + key, foes, redMoon: S.phase === 3 && !!S.flags.god });
   }
-  // 出来事に出てくる人物（出来事のデータの who）。背景の右上に重ねる
+  // 出来事に出てくる人物（出来事のデータの who）と、施設の人（王城の主。G.facWho）。背景の右上に重ねる
   let lastWho = "";
   function paintWho() {
     const S = G.S;
     const e = S.mode === "event" && S.event && G.eventWho ? D.EVENTS.find((x) => x.id === S.event) : null;
-    const who = e ? G.eventWho(e) : null;
+    const who = e ? G.eventWho(e) : S.mode === "fac" && !S.combat && G.facWho ? G.facWho(S) : null;
     let box = $("#who");
     if (!who) { if (box) box.hidden = true; lastWho = ""; return; }
     if (!box) {
@@ -92,17 +92,20 @@
   const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" };
   function logEntryEl(e) {
     if (e.k === "dice") return checkEl(e);
-    return h("p", LOG_CLS[e.k] || "l-sys", e.k === "you" ? "▶ " + e.text : e.text);
+    return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : ""), e.k === "you" ? "▶ " + e.text : e.text);
   }
   const LOG_KEEP = 90;
-  let logSeen = -1; // 前回描いたときの記録の数（-1 は初回）
+  let logLast = null; // 前回描いたときの最後の記録（記録は 240 件で古い方から消えるので、数ではなく中身で覚える）
+  let logFresh = []; // 今回増えた記録（戦闘の演出 fx.js に渡す）
   function renderLog() {
     const S = G.S;
     const log = $("#log");
     log.textContent = "";
     const shown = S.log.slice(-LOG_KEEP);
-    const fresh = logSeen < 0 ? 0 : Math.min(shown.length, Math.max(0, S.log.length - logSeen));
-    logSeen = S.log.length;
+    const at = logLast ? S.log.lastIndexOf(logLast) : -1; // 見つからなければ初回か、別の冒険
+    const fresh = at < 0 ? 0 : Math.min(shown.length, S.log.length - 1 - at);
+    logLast = S.log[S.log.length - 1] || null;
+    logFresh = fresh ? shown.slice(-fresh) : [];
     shown.forEach((e, i) => { const el = logEntryEl(e); if (fresh && i >= shown.length - fresh) el.classList.add("new"); log.append(el); });
     // 新しく増えた記録の頭から読めるようにする（増えていなければ末尾）
     const first = fresh ? log.children[shown.length - fresh] : null;
@@ -138,6 +141,7 @@
   // 戦闘中の敵の札（B1 の演出はここに足す）
   function foeEl(f) {
     const c = h("div", "foe" + (f.hp > 0 ? "" : " down"));
+    c.dataset.foe = f.name;
     c.append(h("b", "", f.name));
     const g = h("span", "g"); const i = h("i"); i.style.width = (f.hp / f.max) * 100 + "%"; g.append(i); c.append(g);
     c.append(h("span", "num fine", `HP ${f.hp}/${f.max}`));
@@ -469,6 +473,7 @@
     renderSheet(ups);
     markWorld();
     if (G.sound) G.sound.react(S); // 増えた記録と状態の変化から音を選ぶ（ui/sound.js）
+    if (G.fx) G.fx.play(logFresh, S); // 戦闘の演出（ui/fx.js）
     if (!prevStats) prevStats = { ...S.stats, run: S.id };
   };
 

@@ -110,7 +110,7 @@
       links: { onigashima: 2 }, sea: { nerva: { days: 5, cost: 40 } },
     },
     onigashima: {
-      name: "鬼ヶ島の洞窟", region: "八雲", type: "dungeon", danger: 3, scene: "cave", x: 20, y: 96,
+      name: "鬼ヶ島の洞窟", region: "八雲", type: "dungeon", danger: 3, scene: "onigashima", x: 20, y: 96,
       desc: "鬼の住む島の洞窟。奥で大鬼・酒呑が宴を開いている。",
       pool: ["oni", "ninja", "zombie", "ogre"], floors: 4, boss: "shuten",
       reward: { flag: "shuten", item: "byakuya", fame: 50, trophy: "byakuya", chron: "鬼ヶ島で酒呑を討ち、聖刀白夜を取り戻す", text: "酒呑が倒れた宝物庫の奥に、白く光る刀が突き立っていた。抜くと、刀身が月のように澄んだ光を放った。聖刀白夜。" },

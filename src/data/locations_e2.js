@@ -8,7 +8,7 @@
 
   Object.assign(D.LOCS, {
     e2_kitchen: {
-      name: "肉の谷の大厨房", region: "魔物界", type: "dungeon", danger: 5, scene: "realm", x: 82, y: 66,
+      name: "肉の谷の大厨房", region: "魔物界", type: "dungeon", danger: 5, scene: "e2_kitchen", x: 82, y: 66,
       desc: "灰の荒野の南、肉の谷の底に建つ城ほどもある厨房。煙突から昼も夜も湯気が上がり、谷じゅうに煮込みの匂いが立ちこめている。働いているのは料理人と、生きている食材だという。帰ってきた者の話は、口の数のところでいつも食い違う。",
       pool: ["e2_cookgob", "e2_meatling", "ogre", "oni", "general"], floors: 4, midboss: { 3: "e2_marmit" }, boss: "e2_gormoa",
       lair: { event: "e2_gormoa_table" },
@@ -16,7 +16,7 @@
       links: { wasteland: 2 },
     },
     e2_garden: {
-      name: "腐れ庭園", region: "魔法国ゼファラ", type: "dungeon", danger: 2, scene: "swamp", x: 70, y: 88,
+      name: "腐れ庭園", region: "魔法国ゼファラ", type: "dungeon", danger: 2, scene: "e2_garden", x: 70, y: 88,
       desc: "毒沼の湿地の奥。あるはずのない、きれいな花畑が広がっている。甘い匂いがする。花壇の手入れは、いつも行き届いている。",
       pool: ["e2_planted", "e2_rotbloom", "slime"], floors: 4, midboss: { 3: "e2_berna" }, boss: "e2_mordu",
       lair: { event: "e2_mordu_garden" },
