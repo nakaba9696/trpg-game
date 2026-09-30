@@ -1,5 +1,5 @@
 // 効果音と環境音。音声ファイルは使わず、Web Audio でその場で合成する。
-// 鳴らすのは画面側だけ（manifest では main.js の後に読む）。ui.js が描き直すたびに G.sound.react(G.S) を呼び、増えた記録と状態の変化から音を選ぶ。
+// 鳴らすのは画面側だけ。ui.js が描き直すたびに G.sound.react(G.S) を呼び、増えた記録と状態の変化から音を選ぶ。
 // 名前で鳴らす：G.sound.play("slash")。名前の一覧は G.sound.names。
 // AudioContext が無い環境（テスト）や、最初のタップの前は何もしない。
 // 乱数は Math.random を使う（音の揺らぎだけで、遊びの結果には関わらないため。G.rand を進めない）。レーン S（音）が管理
@@ -8,7 +8,7 @@
   const AC = globalThis.AudioContext || globalThis.webkitAudioContext;
 
   // ---------------------------------------------------------------- 設定（このブラウザに保存）
-  const SKEY = "kotodama3-sound";
+  const SKEY = "morsveld-sound";
   const DEF = { mute: false, sfx: 0.7, amb: 0.4 };
   const loadSet = () => { try { const j = JSON.parse(globalThis.localStorage.getItem(SKEY)); return { ...DEF, ...(j || {}) }; } catch { return { ...DEF }; } };
   const saveSet = () => { try { globalThis.localStorage.setItem(SKEY, JSON.stringify(snd.settings)); } catch {} };
@@ -331,7 +331,7 @@
       if (e.crit) return "crit";
       if (e.fumble) return "fumble";
       if (/^(攻撃|急所狙い)$/.test(e.reason)) return e.ok ? null : "swing";
-      if (/魔法|奇跡|術|呪文|祈/.test(e.reason) && e.ok) return null; // 魔法の音はこの後に鳴る
+      if (ctx.magic && e.ok) return null; // 術の音は行動の記録で鳴らした
       return e.ok ? "ok" : "ng";
     }
     if (e.k === "grow") return "levelup";
@@ -342,7 +342,7 @@
       if (/へ向かう/.test(t)) return "depart";
       if (/迷宮に入る|奥へ進む/.test(t)) return null; // 階の見出しで足音を鳴らす
       if (/に入る$|外に出る|入口まで/.test(t)) return "door";
-      if (!/魔法|術|放つ|唱え|奇跡|祈/.test(t)) return null;
+      if (!MAGIC.test(t)) return null;
       if (/氷|凍|冷気/.test(t)) return "ice";
       if (/雷|稲妻/.test(t)) return "thunder";
       if (/呪い|呪詛/.test(t)) return "curse";
@@ -358,13 +358,14 @@
       if (d && (d.boss || d.majin)) return "kill";
       return d && d.tier <= 1 ? "pop" : "kill";
     }
-    if (/のダメージ（残り/.test(t)) return ctx.lastYou && /炎/.test(ctx.lastYou) ? null : ctx.blunt ? "blunt" : "slash";
+    if (/のダメージ（残り/.test(t)) return ctx.magic ? null : ctx.blunt ? "blunt" : "slash";
     if (/の(攻撃|呪い)！.*ダメージ/.test(t)) return /呪い！/.test(t) ? "curse" : "hurt";
     if (/HP \+|全快|傷がふさがって/.test(t)) return "heal";
     if (/G を手に入れた|^\+\d+G|報酬/.test(t)) return "coin";
     if (/を手に入れた|を見つけた|を買った/.test(t)) return "item";
     return null;
   }
+  const MAGIC = /魔法|術|放つ|唱え|奇跡|祈|呪いの言葉/;
   const BLUNT = /棍|槌|杖|拳|メイス|鎚|こん棒|棒/;
   // 鳴らす音の名前を順に返す（DOM・音なしでも動く。テストはこれを見る）
   snd.cues = (S) => {
@@ -380,12 +381,13 @@
     seen = last;
     const foes = { ...(prev && prev.foes) };
     if (S.combat) S.combat.foes.forEach((f) => { foes[f.name] = f.id; });
-    const w = G.weapon ? G.weapon() : null;
-    const ctx = { foes, lastYou: "", blunt: !!(w && BLUNT.test(w.name)) };
+    let w = null;
+    try { w = G.S === S && G.weapon ? G.weapon() : null; } catch {}
+    const ctx = { foes, magic: false, blunt: !!(w && BLUNT.test(w.name)) };
     const cues = [];
     const add = (c) => { if (c && !cues.includes(c)) cues.push(c); };
     news.forEach((e) => {
-      if (e.k === "you") ctx.lastYou = e.text;
+      if (e.k === "you") ctx.magic = MAGIC.test(e.text || "");
       add(cueOf(e, ctx));
     });
     if (!fresh) {
@@ -401,8 +403,17 @@
     return cues.slice(0, 5);
   };
   snd.forget = () => { prev = null; seen = null; };
+  // 冒険から作成画面に戻ったら環境音を止める（main.js は最後に読まれるので、最初に描くときに包む）
+  function hookMain() {
+    const M = G.main;
+    if (!M || !M.toSetup || M.toSetup._sound) return;
+    const orig = M.toSetup;
+    M.toSetup = (...a) => { snd.ambient(null); snd.forget(); return orig(...a); };
+    M.toSetup._sound = true;
+  }
   // 重なりすぎないよう、少しずつずらして鳴らす
   snd.react = (S) => {
+    hookMain();
     const cues = snd.cues(S);
     cues.forEach((c, i) => snd.play(c, i * 0.17));
     if (S) snd.ambient(snd.ambFor(S));
@@ -457,12 +468,6 @@
     const timer = made.tick ? setInterval(() => { if (E.ctx.state === "running" && !snd.settings.mute) made.tick(E.ctx.currentTime + 0.05); }, 1100) : 0;
     amb = { name, gain: g, stops, timer };
   };
-
-  // 冒険から作成画面に戻ったら環境音を止める（manifest で main.js の後に読むので、ここで包める）
-  if (G.main && G.main.toSetup) {
-    const orig = G.main.toSetup;
-    G.main.toSetup = (...a) => { snd.ambient(null); snd.forget(); return orig(...a); };
-  }
 
   // ---------------------------------------------------------------- 設定の画面（見出しの道具に「音」ボタンを足す）
   function buildSettings() {

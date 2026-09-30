@@ -16,7 +16,14 @@
     "engine/foe_quirks.js",
     "data/events_town2.js",
     "data/events_who.js",
-    "data/items_2.js"
+    "data/items_2.js",
+    "data/enemies_w1.js",
+    "data/locations_w1.js",
+    "data/events_w1.js",
+    "engine/savekeys.js",
+    "data/spells_m1.js",
+    "data/items_m1.js",
+    "engine/academy_m1.js"
   ],
   "ui": [
     "ui/art_monsters.js",
@@ -24,7 +31,6 @@
     "ui/scene.js",
     "ui/ui.js",
     "ui/setup.js",
-    "main.js",
-    "ui/sound.js"
+    "main.js"
   ]
 }

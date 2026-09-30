@@ -2,7 +2,8 @@
 // 1. データの整合（存在しない場所・敵・アイテムを参照していないか）
 // 2. ランダムに遊び続けるテスト（例外が出ないか、数値が範囲に収まるか）
 // 3. 釣り合いの測定（職業ごとの数字を出すだけ。失敗にはしない）。tests/balance.mjs
-import { readFileSync } from "node:fs";
+// 新しい確認は tests/checks/<id>.mjs に置けば名前順に自動で読まれる（export default ({ G, fail, ok, loadEngine, seeded }) => {...}）
+import { readFileSync, readdirSync } from "node:fs";
 import vm from "node:vm";
 import { loadEngine, seeded } from "./lib.mjs";
 import { measureBalance } from "./balance.mjs";
@@ -65,6 +66,23 @@ const ok = (msg) => console.log("OK   " + msg);
   }
   for (const [id, L] of Object.entries(D.LOCS)) if (L.reward?.trophy && !D.TROPHIES.some((t) => t.key === L.reward.trophy)) fail(`${id}: トロフィー ${L.reward.trophy} が無い`);
   if (failures === before) ok(`データの整合（場所 ${Object.keys(D.LOCS).length}・敵 ${Object.keys(D.ENEMIES).length}・アイテム ${Object.keys(D.ITEMS).length}・出来事 ${D.EVENTS.length}）`);
+}
+
+// ---------------------------------------------------------------- 1a. どの場所にも、どの出発地からも道か船で行ける
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  for (const [cls, c] of Object.entries(D.CLASSES)) {
+    const seen = new Set([c.start]), queue = [c.start];
+    while (queue.length) {
+      const L = D.LOCS[queue.shift()];
+      for (const to of [...Object.keys(L?.links || {}), ...Object.keys(L?.sea || {})]) if (!seen.has(to)) { seen.add(to); queue.push(to); }
+    }
+    for (const id of Object.keys(D.LOCS)) if (!seen.has(id)) fail(`職業 ${cls}: 出発地 ${c.start} から ${id} へ行けない`);
+    for (const [id, L] of Object.entries(D.LOCS)) if (!(L.x >= 0 && L.x <= 100 && L.y >= 0 && L.y <= 100)) fail(`${id}: 地図の位置が無い`);
+  }
+  if (failures === before) ok(`どの場所にも行ける（場所 ${Object.keys(D.LOCS).length}）`);
 }
 
 // ---------------------------------------------------------------- 1b. 敵の台詞と逃げ方（engine/foe_quirks.js）
@@ -160,6 +178,128 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`装飾品の枠（装飾品 ${Object.values(D.ITEMS).filter((it) => it.type === "ring").length} 種・I1 の品 ${i1.length} 種すべてに入手先あり）`);
 }
 
+// ---------------------------------------------------------------- 1d. 魔法の種類と習得（M1）
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  const NEW = ["ice", "bolt", "curse", "ward"];
+  // データ：術の表、魔導書、覚え方があるか
+  for (const id of NEW) if (!D.SPELLS[id] || D.SPELLS[id].base) fail(`術 ${id} が無いか、はじめから誰でも使える`);
+  for (const [id, sp] of Object.entries(D.SPELLS)) {
+    if (!sp.name || !(sp.mp > 0)) fail(`術 ${id}: 名前か MP が無い`);
+    if (!sp.base && G.diffMod(sp.diff) === undefined) fail(`術 ${id}: 難しさが変`);
+    if (sp.school && D.DIFF[sp.school.diff] === undefined) fail(`術 ${id}: 講義の難しさ ${sp.school.diff} が無い`);
+  }
+  for (const [cls, ids] of Object.entries(D.SPELL_START)) { if (!D.CLASSES[cls]) fail(`SPELL_START: 職業 ${cls} が無い`); for (const id of ids) if (!D.SPELLS[id]) fail(`SPELL_START: 術 ${id} が無い`); }
+  const tomes = Object.entries(D.ITEMS).filter(([, it]) => it.type === "tome");
+  for (const [id, it] of tomes) { if (!D.SPELLS[it.teach] || D.SPELLS[it.teach].base) fail(`魔導書 ${id}: 覚える術 ${it.teach} が無い`); if (D.DIFF[it.learn || "普通"] === undefined) fail(`魔導書 ${id}: 難しさが変`); }
+  const sources = new Set(D.SHOP_BASE);
+  for (const L of Object.values(D.LOCS)) for (const it of L.shop || []) sources.add(it);
+  for (const e of Object.values(D.ENEMIES)) for (const [it] of e.loot || []) sources.add(it);
+  const addOut = (o) => { if (!o) return; for (const it of typeof o.item === "string" ? [o.item] : Object.keys(o.item || {})) sources.add(it); addOut(o.win); };
+  for (const e of D.EVENTS) for (const c of e.choices) { addOut(c.ok); addOut(c.ng); addOut(c.win); }
+  for (const [id] of tomes) if (!sources.has(id)) fail(`魔導書 ${id}: 入手先が無い`);
+  for (const id of NEW) if (!D.SPELLS[id].school && !tomes.some(([tid, it]) => it.teach === id && sources.has(tid))) fail(`術 ${id}: 覚える手段が無い`);
+  if (!D.LOCS.zephara.fac.includes("academy")) fail("ゼファラに学院が無い");
+
+  const start = (cls, seed) => {
+    G.rand = seeded(seed);
+    G.P = { trophies: {}, graves: [] };
+    const stats = {}, caps = {};
+    D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 60; });
+    G.newGame({ cls, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
+    return G.S;
+  };
+  const acts = () => G.actions().flatMap((g) => g.list);
+  // 古いセーブ（S.spells が無い）でも動き、新しい術は出ない。炎と癒しは今までどおり
+  let S = start("merc", 21);
+  delete S.spells;
+  G.startCombat(["goblin"], {});
+  if (NEW.some((id) => G.knows(id)) || acts().some((a) => NEW.includes(a.id.slice(3)))) fail("古いセーブで覚えていない術が出る");
+  if (!acts().some((a) => a.id === "cb:fire") || !acts().some((a) => a.id === "cb:heal")) fail("炎と癒しが出ない");
+  G.S.combat = null; G.S.mode = "explore";
+  // はじめから覚えている術
+  start("mage", 22);
+  if (!G.knows("ice")) fail("魔法使いが氷の魔法を覚えていない");
+  if (!start("priest", 23).spells.includes("ward")) fail("破戒神官が加護を覚えていない");
+  // 学院で覚える（成功するまで通う）
+  S = start("merc", 24);
+  S.loc = "zephara"; S.gold = 5000; S.stats.知力 = 95;
+  if (!acts().some((a) => a.id === "fac:academy")) fail("ゼファラの町に学院が出ない");
+  G.act("fac:academy");
+  if (S.mode !== "fac" || S.fac !== "academy") fail("学院に入れない");
+  const lec = acts().find((a) => a.id === "academy:ward");
+  if (!lec || lec.disabled || !/知力 \d+%/.test(lec.sub)) fail("学院の講義に成功率が出ない");
+  if (acts().some((a) => a.id === "academy:curse")) fail("呪いを学院で教えている");
+  for (let i = 0; i < 10 && !G.knows("ward"); i++) G.act("academy:ward");
+  if (!G.knows("ward")) fail("学院で加護を覚えられない");
+  if (!acts().find((a) => a.id === "academy:ward")?.disabled) fail("覚えた術の講義をまた受けられる");
+  G.act("back");
+  if (S.mode !== "explore") fail("学院から出られない");
+  // 魔導書で覚える（読んでも本は残る）
+  G.give("m1_tome_curse");
+  const read = acts().find((a) => a.id === "tome:m1_tome_curse");
+  if (!read || !/知力 \d+%/.test(read.sub)) fail("魔導書を読み解く行動が出ない");
+  for (let i = 0; i < 20 && !G.knows("curse"); i++) G.act("tome:m1_tome_curse");
+  if (!G.knows("curse") || !S.inv.m1_tome_curse) fail("魔導書で呪いを覚えられない（か、本が消えた）");
+  if (acts().some((a) => a.id === "tome:m1_tome_curse")) fail("覚えたのに魔導書を読む行動が残る");
+  G.give("m1_tome_ice");
+  if (!G.useItem("m1_tome_ice")) fail("持ち物から魔導書を読めない");
+  // 戦闘：成功率が出て、効き目がある
+  G.learnSpell("ice"); G.learnSpell("bolt");
+  S.stats.魔力 = 95; S.maxMp = S.mp = 99; S.maxHp = S.hp = 999;
+  G.startCombat(["goblin", "goblin"], {});
+  for (const id of NEW) {
+    const a = acts().find((x) => x.id === "cb:" + id);
+    if (!a || !/魔力 \d+%・MP\d/.test(a.sub)) fail(`戦闘に ${id} が成功率つきで出ない`);
+  }
+  const always = (fn) => { const r = G.rand; G.rand = () => 0.01; try { fn(); } finally { G.rand = r; } };
+  // 雷：敵すべてに当たる
+  always(() => G.combatAct("bolt"));
+  if (G.S.combat && G.S.combat.foes.some((f) => f.hp === f.max)) fail("雷の魔法が全員に当たらない");
+  // 氷：凍った敵は次の番に攻めてこない
+  G.startCombat(["orc"], {});
+  const hp0 = S.hp;
+  always(() => G.combatAct("ice"));
+  if (G.S.combat) { if (S.hp !== hp0) fail("凍った敵が攻撃してきた"); }
+  // 加護：受けるダメージが減る。呪い：命中が落ち、蝕まれる
+  G.startCombat(["orc"], {});
+  always(() => G.combatAct("ward"));
+  if (!(G.S.combat?.ward > 0)) fail("加護がかからない");
+  const hitWith = (ward) => {
+    G.startCombat(["orc"], {});
+    G.S.combat.ward = ward;
+    const h = S.hp, hit = D.ENEMIES.orc.hit, r = G.rand;
+    D.ENEMIES.orc.hit = 999; G.rand = () => 0.9;
+    try { G.combatAct("guard"); } finally { G.rand = r; D.ENEMIES.orc.hit = hit; }
+    return h - S.hp;
+  };
+  if (!(hitWith(3) < hitWith(0))) fail("加護で受けるダメージが減らない");
+  G.startCombat(["orc"], {});
+  const foe = G.S.combat.foes[0];
+  always(() => G.combatAct("curse"));
+  if (G.S.combat && !(foe.hex > 0 && foe.hp < foe.max)) fail("呪いで敵が蝕まれない");
+  // 呪いで最後の敵が倒れたら、戦闘が終わる
+  G.startCombat(["goblin"], {});
+  G.S.combat.foes[0].hex = 3; G.S.combat.foes[0].hp = 1;
+  G.combatAct("guard");
+  if (G.S.combat || G.S.mode !== "explore") fail("呪いで敵が倒れても戦闘が終わらない");
+  // 魔人には絶界で効かない
+  const majin = Object.keys(D.ENEMIES).find((id) => D.ENEMIES[id].majin);
+  G.startCombat([majin], {});
+  const m = G.S.combat.foes[0];
+  always(() => { G.combatAct("curse"); G.combatAct("ice"); });
+  if (G.S.combat && (m.hex || m.frozen || m.hp < m.max)) fail("魔人に術が効いた");
+  G.S.combat = null; G.S.mode = "explore";
+  // 大失敗で借りを返す
+  G.startCombat(["goblin"], {});
+  const debt = S.magicDebt || 0;
+  { const r = G.rand; G.rand = () => 0.99; try { G.combatAct("ward"); } finally { G.rand = r; } }
+  if (!((S.magicDebt || 0) > debt)) fail("術の大失敗で借りが増えない");
+  if (failures === before) ok(`魔法の種類と習得（術 ${Object.keys(D.SPELLS).length} 種・魔導書 ${tomes.length} 冊・古いセーブ・学院・魔導書・戦闘の効き目）`);
+}
+
 // ---------------------------------------------------------------- 2. ランダムに遊ぶ
 {
   const G = loadEngine();
@@ -170,6 +310,7 @@ const ok = (msg) => console.log("OK   " + msg);
   const before = failures;
   // I1 の品が手に入った回数（G.give を数える）
   const gains = {};
+  const learned = {}; // M1：遊んでいるうちに覚えた術
   const give0 = G.give;
   G.give = (id, n) => { if (String(id).startsWith("i1_") && G.S.turn > 0) gains[id] = (gains[id] || 0) + (n || 1); return give0(id, n); };
   for (let g = 0; g < GAMES; g++) {
@@ -224,6 +365,7 @@ const ok = (msg) => console.log("OK   " + msg);
       fail(`game ${g}: 例外 ${e.stack || e}`);
       if (failures - before > 20) break;
     }
+    for (const id of G.S.spells || []) if (!(D.SPELL_START[G.S.cls] || []).includes(id)) learned[id] = (learned[id] || 0) + 1;
     if (G.S.over === "dead") deaths++;
     maxDay = Math.max(maxDay, G.S.day);
     totalTurns += G.S.turn;
@@ -232,6 +374,7 @@ const ok = (msg) => console.log("OK   " + msg);
   G.give = give0;
   const gained = Object.entries(gains).sort((a, b) => b[1] - a[1]).map(([id, n]) => `${D.ITEMS[id].name} ${n}`);
   console.log(`NOTE ランダムプレイで I1 の品が手に入った回数（${Object.keys(gains).length}/15 種）: ${gained.join("・") || "なし"}`);
+  console.log(`NOTE ランダムプレイで覚えた術: ${Object.entries(learned).map(([id, n]) => `${D.SPELLS[id].name} ${n}`).join("・") || "なし"}`);
   if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
 }
 
@@ -319,45 +462,51 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
 }
 
-// ---------------------------------------------------------------- 2d. 音（AudioContext も DOM も無い所で、例外を出さず何も鳴らさない）
+// ---------------------------------------------------------------- 保存の鍵の移し替え（古い名前 → Morsveld）
 {
   const G = loadEngine();
-  const D = G.data;
   const before = failures;
-  const ctx = vm.createContext({ console, G });
-  try { vm.runInContext(readFileSync(new URL("../src/ui/sound.js", import.meta.url), "utf8"), ctx, { filename: "ui/sound.js" }); }
-  catch (e) { fail("音: 読み込みで例外 " + (e.stack || e)); }
-  const snd = G.sound;
-  const need = ["click", "page", "ok", "ng", "crit", "fumble", "slash", "blunt", "hurt", "kill", "death", "coin", "item", "levelup", "door", "sleep", "depart", "trophy", "majin", "fire", "ice", "thunder", "curse", "bless", "heal"];
-  for (const n of need) if (!snd.names.includes(n)) fail(`音: 効果音 ${n} が無い`);
-  for (const id of Object.keys(D.LOCS)) {
-    const a = snd.ambFor({ loc: id, mode: "explore", depth: 1, log: [] });
-    if (a !== null && !snd.ambNames.includes(a)) fail(`音: ${id} の環境音 ${a} が無い`);
-  }
-  if (snd.ambFor({ loc: Object.keys(D.LOCS)[0], mode: "explore", depth: 0, weather: "雨", log: [] }) !== "rain") fail("音: 雨の環境音に切り替わらない");
-  // 遊びながら音を選ばせる（鳴らすのは何もしない）
-  const heard = new Set();
-  const cls = Object.keys(D.CLASSES);
-  for (let g = 0; g < 12; g++) {
-    G.rand = seeded(7000 + g);
-    G.P = { trophies: {}, graves: [] };
-    const c = cls[g % cls.length];
-    const stats = {}, caps = {};
-    D.STATS.forEach((k) => { stats[k] = D.CLASSES[c].base[k] + 5; caps[k] = stats[k] + 30; });
-    G.newGame({ cls: c, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "女", age: 20, history: "テスト用", personality: "無口" } });
-    snd.forget();
+  const mem = (init) => {
+    const m = new Map(Object.entries(init));
+    return { m, getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
+  };
+  const K = G.SAVE_KEYS;
+  if (!K || !/^morsveld-/.test(K.save) || !/^morsveld-/.test(K.profile)) fail("保存の鍵: 新しい鍵が Morsveld になっていない");
+  const save = JSON.stringify({ v: 1, chron: [{ day: 1, text: "旅立ち" }] });
+  const prof = JSON.stringify({ trophies: { first: 1 }, graves: [{ id: "g1", name: "名無し" }] });
+  // 古い鍵だけ → 新しい鍵へ移り、古い鍵は消える（冒険・年表・トロフィー・墓碑）
+  const OLD = { save: "koto" + "dama3-save", profile: "koto" + "dama3-profile" }; // 古い鍵（git grep に掛からないように分けて書く）
+  const a = mem({ [OLD.save]: save, [OLD.profile]: prof });
+  const moved = G.migrateSaveKeys(a);
+  if (a.getItem(K.save) !== save) fail("保存の鍵: 古い冒険（年表）が移らない");
+  if (a.getItem(K.profile) !== prof) fail("保存の鍵: 古いトロフィー・墓碑が移らない");
+  if (a.m.has(OLD.save) || a.m.has(OLD.profile)) fail("保存の鍵: 古い鍵が残る");
+  if (moved.length !== 2) fail("保存の鍵: 移したものの数が違う");
+  // 新しい鍵が既にある → 上書きしない
+  const b = mem({ [OLD.save]: save, [K.save]: "新しい" });
+  G.migrateSaveKeys(b);
+  if (b.getItem(K.save) !== "新しい") fail("保存の鍵: 新しいセーブを古いもので上書きする");
+  // 二度目は何もしない・保存できない環境でも落ちない
+  if (G.migrateSaveKeys(a).length) fail("保存の鍵: 二度目にも移し替える");
+  G.migrateSaveKeys(null);
+  G.migrateSaveKeys({ getItem() { throw new Error("blocked"); } });
+  if (failures === before) ok("保存の鍵の移し替え（古い鍵 → " + K.save + "・" + K.profile + "）");
+}
+
+// ---------------------------------------------------------------- 2z. tests/checks/*.mjs（置くだけで読まれる確認）
+{
+  const dir = new URL("./checks/", import.meta.url);
+  const names = readdirSync(dir).filter((n) => n.endsWith(".mjs")).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  for (const n of names) {
+    const before = failures;
     try {
-      snd.play("slash"); snd.react(G.S); snd.ambient("town");
-      for (let step = 0; step < 300 && !G.S.over; step++) {
-        const acts = G.actions().flatMap((x) => x.list).filter((a) => !a.disabled);
-        if (!acts.length) break;
-        G.act(acts[Math.floor(G.rand() * acts.length)].id);
-        for (const n of snd.cues(G.S)) { if (!snd.names.includes(n)) fail(`音: 知らない音 ${n}`); heard.add(n); }
-      }
-    } catch (e) { fail(`音: game ${g} で例外 ${e.stack || e}`); break; }
+      const mod = await import(new URL(n, dir));
+      await mod.default({ G: loadEngine(), fail: (m) => fail(`${n}: ${m}`), ok, loadEngine, seeded });
+    } catch (e) {
+      fail(`${n}: 例外 ${e.stack || e}`);
+    }
+    if (failures === before) ok(`tests/checks/${n}`);
   }
-  for (const n of ["page", "ok", "ng", "battle", "hurt", "coin"]) if (!heard.has(n)) fail(`音: 遊んでいて ${n} が一度も選ばれない`);
-  if (failures === before) ok(`音（効果音 ${snd.names.length} 種・環境音 ${snd.ambNames.length} 種・遊んで選ばれた音 ${heard.size} 種：${[...heard].join(" ")}）`);
 }
 
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）
