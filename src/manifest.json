@@ -14,6 +14,7 @@
     "engine/gm.js",
     "data/enemies_2.js",
     "engine/foe_quirks.js",
+    "data/events_town2.js",
     "data/enemies_e2.js",
     "data/locations_e2.js",
     "data/events_e2.js",
