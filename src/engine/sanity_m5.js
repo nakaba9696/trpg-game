@@ -34,6 +34,8 @@
     if (sb > sa) {
       G.say(G.pick(M.SANITY_DOWN[sb]));
       G.chron(M.SANITY_CHRON[sb], "sanity");
+      notice(M.SANITY_NOTICE[sb]);
+      openLore(M.SANITY_LORE[sb]);
     } else if (sb < sa && !quiet) G.say(G.pick(M.SANITY_UP));
   };
 
@@ -56,7 +58,18 @@
     if (b >= 5) return G.m5End("beast");
     G.say(M.BEAST_UP[b]);
     G.chron(M.BEAST_CHRON[b], "beast");
+    notice(M.BEAST_NOTICE[b]);
+    openLore(M.BEAST_LORE[b]);
   };
+  // 仲間（M2）が異変に気づく。仲間がいなければ何もしない
+  function notice(lines) {
+    const S = G.S;
+    if (!lines || !S || S.over || !(S.companions || []).length) return;
+    const c = G.pick(S.companions);
+    const n = G.m2Short ? G.m2Short(c) : c.name;
+    G.say((Array.isArray(lines) ? G.pick(lines) : lines).replace(/\{n\}/g, n));
+  }
+  const openLore = (t) => { if (t && G.openLore) G.openLore(t); };
   G.beastCure = () => {
     const S = G.S;
     if (!S || !G.beastOf(S) || G.beastOf(S) > 2) return false;

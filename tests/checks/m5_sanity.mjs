@@ -105,6 +105,32 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   G.give("m5_morning"); S.sanity = 50;
   if (!G.useItem("m5_morning") || !(S.sanity > 50)) f("瓶詰めの朝で正気が戻らない");
 
+  // ---------------------------------------------------------------- 仲間（M2）が気づく・用語説明（U3）が開く・振り直し（M7）と正気の判定が両方効く
+  S = start("merc", 520);
+  G.addCompanion("random");
+  const cn = G.m2Short ? G.m2Short(S.companions[0]) : S.companions[0].name;
+  G.addSanity(-35);
+  if (!S.log.slice(-10).some((l) => (l.text || "").includes(cn))) f("正気が崩れても仲間が気づかない");
+  G.apply({ beast: "infect" });
+  if (!S.log.slice(-10).some((l) => (l.text || "").includes(cn))) f("獣の病に仲間が気づかない");
+  if (G.loreOf) {
+    const lore = G.loreOf(S);
+    if (!(lore.unseen || []).includes("sound") || !(lore.beast || []).includes("fever")) f("症状が出ても用語説明が開かない");
+  }
+  if (G.reroll) {
+    S = start("merc", 521);
+    S.sanity = 30; S.rerolls = 3; S.loc = "karna"; S.mode = "explore";
+    let rolled = 0;
+    for (let i = 0; i < 60 && !rolled && !S.over; i++) {
+      S.mode = "explore"; S.event = null; S.fac = null; S.combat = null;
+      G.startEvent("brawl");
+      G.act("ev:0");
+      if (G.rerollPending()) { const n = S.rerolls; G.act("rr:go"); if (S.rerolls === n - 1) rolled++; }
+    }
+    if (!rolled) f("狂気の縁でも振り直しが使えない");
+    if (!(G.sanityOf(S) <= 30)) f("振り直したら正気が戻った");
+  }
+
   // ---------------------------------------------------------------- 正気 0：選べない終わり方
   S = start("merc", 505);
   G.P.graves = [];
