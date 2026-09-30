@@ -165,11 +165,10 @@
     // 作成画面の形（goal: id, goalText）とセーブの形（goal: { id, text }）のどちらでもよい
     const g = o.goal && typeof o.goal === "object" ? o.goal : { id: o.goal, text: o.goalText };
     const goalLine = P.goal[D.GOALS[g.id] && P.goal[g.id] ? g.id : "custom"].replace("{text}", g.text || o.goalText || "");
-    const who = [org ? org.home : "", `${p.name}、${p.age}歳。${P.age[band]}`].filter(Boolean);
+    const fill = (t) => t.replace("{name}", p.name).replace("{age}", p.age);
     return [
-      P.world.slice(),
-      who,
-      [P.cls[o.cls] || "", p.history ? `${p.history}。` : ""].filter(Boolean),
+      (P.cls[o.cls] || []).slice(),
+      [org ? org.home : "", fill(P.age[band]) + (p.history ? `${p.history}。` : "")].filter(Boolean),
       [goalLine, P.arrive.replace("{place}", start.name)],
     ];
   };

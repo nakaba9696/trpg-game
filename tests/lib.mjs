@@ -3,13 +3,14 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 import path from "node:path";
+import { listFiles } from "../tools/files.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "src");
-const manifest = JSON.parse(readFileSync(path.join(root, "manifest.json"), "utf8"));
+const { engine } = listFiles(root); // build.mjs と同じ順番
 
 export function loadEngine() {
   const ctx = vm.createContext({ console });
-  for (const f of manifest.engine) vm.runInContext(readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
+  for (const f of engine) vm.runInContext(readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
   return ctx.G;
 }
 

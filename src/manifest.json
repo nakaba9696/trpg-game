@@ -20,9 +20,7 @@
     "data/enemies_w1.js",
     "data/locations_w1.js",
     "data/events_w1.js",
-    "engine/savekeys.js",
-    "data/u5_origins.js",
-    "engine/u5_creation.js"
+    "engine/savekeys.js"
   ],
   "ui": [
     "ui/art_monsters.js",
