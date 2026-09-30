@@ -11,7 +11,9 @@
     "engine/combat.js",
     "engine/explore.js",
     "engine/parser.js",
-    "engine/gm.js"
+    "engine/gm.js",
+    "data/enemies_2.js",
+    "engine/foe_quirks.js"
   ],
   "ui": [
     "ui/scene.js",
