@@ -319,6 +319,47 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
 }
 
+// ---------------------------------------------------------------- 2d. 音（AudioContext も DOM も無い所で、例外を出さず何も鳴らさない）
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  const ctx = vm.createContext({ console, G });
+  try { vm.runInContext(readFileSync(new URL("../src/ui/sound.js", import.meta.url), "utf8"), ctx, { filename: "ui/sound.js" }); }
+  catch (e) { fail("音: 読み込みで例外 " + (e.stack || e)); }
+  const snd = G.sound;
+  const need = ["click", "page", "ok", "ng", "crit", "fumble", "slash", "blunt", "hurt", "kill", "death", "coin", "item", "levelup", "door", "sleep", "depart", "trophy", "majin", "fire", "ice", "thunder", "curse", "bless", "heal"];
+  for (const n of need) if (!snd.names.includes(n)) fail(`音: 効果音 ${n} が無い`);
+  for (const id of Object.keys(D.LOCS)) {
+    const a = snd.ambFor({ loc: id, mode: "explore", depth: 1, log: [] });
+    if (a !== null && !snd.ambNames.includes(a)) fail(`音: ${id} の環境音 ${a} が無い`);
+  }
+  if (snd.ambFor({ loc: Object.keys(D.LOCS)[0], mode: "explore", depth: 0, weather: "雨", log: [] }) !== "rain") fail("音: 雨の環境音に切り替わらない");
+  // 遊びながら音を選ばせる（鳴らすのは何もしない）
+  const heard = new Set();
+  const cls = Object.keys(D.CLASSES);
+  for (let g = 0; g < 12; g++) {
+    G.rand = seeded(7000 + g);
+    G.P = { trophies: {}, graves: [] };
+    const c = cls[g % cls.length];
+    const stats = {}, caps = {};
+    D.STATS.forEach((k) => { stats[k] = D.CLASSES[c].base[k] + 5; caps[k] = stats[k] + 30; });
+    G.newGame({ cls: c, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "女", age: 20, history: "テスト用", personality: "無口" } });
+    snd.forget();
+    try {
+      snd.play("slash"); snd.react(G.S); snd.ambient("town");
+      for (let step = 0; step < 300 && !G.S.over; step++) {
+        const acts = G.actions().flatMap((x) => x.list).filter((a) => !a.disabled);
+        if (!acts.length) break;
+        G.act(acts[Math.floor(G.rand() * acts.length)].id);
+        for (const n of snd.cues(G.S)) { if (!snd.names.includes(n)) fail(`音: 知らない音 ${n}`); heard.add(n); }
+      }
+    } catch (e) { fail(`音: game ${g} で例外 ${e.stack || e}`); break; }
+  }
+  for (const n of ["page", "ok", "ng", "battle", "hurt", "coin"]) if (!heard.has(n)) fail(`音: 遊んでいて ${n} が一度も選ばれない`);
+  if (failures === before) ok(`音（効果音 ${snd.names.length} 種・環境音 ${snd.ambNames.length} 種・遊んで選ばれた音 ${heard.size} 種：${[...heard].join(" ")}）`);
+}
+
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）
 try {
   measureBalance();
