@@ -158,9 +158,11 @@
     return { kind, seed: name, sex };
   };
   // 出来事の who: "<種類>" か { kind, sex, age, look }。書いていなければ null（絵を出さない）
+  // 出来事のデータに who が無ければ、src/data/events_who.js の表（G.data.EVENT_WHO）を見る
   G.eventWho = (e) => {
-    if (!e || !e.who) return null;
-    const w = typeof e.who === "string" ? { kind: e.who } : Object.assign({}, e.who);
+    const src = e && (e.who || (G.data && G.data.EVENT_WHO && G.data.EVENT_WHO[e.id]));
+    if (!src) return null;
+    const w = typeof src === "string" ? { kind: src } : Object.assign({}, src);
     w.seed = w.seed || `ev:${e.id}`;
     return w;
   };
@@ -782,11 +784,32 @@
       for (const s of [-1, 1]) { ctx.beginPath(); ellipse(ctx, cx + s * sp, ey, er * 1.55, er * 1.3); ctx.stroke(); ctx.fillStyle = "rgba(200,230,255,.15)"; ctx.fill(); }
       line(ctx, "#3a2a1a", lw * 1.1, [cx - sp + er * 1.5, ey - er * 0.2, cx + sp - er * 1.5, ey - er * 0.2]);
     }
+    if (has("beak")) {
+      // 疫医の嘴の仮面
+      const mc = "#3a2a22";
+      paint(ctx, mc, lw, () => { ctx.moveTo(cx - rx * 0.95, ey - er * 1.6); ctx.quadraticCurveTo(cx, ey - er * 2.4, cx + rx * 0.95, ey - er * 1.6); ctx.lineTo(cx + rx * 0.9, ey + er * 1.7); ctx.lineTo(cx - rx * 0.9, ey + er * 1.7); ctx.closePath(); });
+      paint(ctx, rgrad(ctx, cx, my, rx * 0.5, "#4a3a2a"), lw, () => { ctx.moveTo(cx - rx * 0.4, ey + er * 1.2); ctx.quadraticCurveTo(cx + rx * 0.1, ey + er * 1.0, cx + rx * 0.4, ey + er * 1.2); ctx.quadraticCurveTo(cx + rx * 0.45, cy + ry * 0.9, cx + rx * 0.55, cy + ry * 1.45); ctx.quadraticCurveTo(cx + rx * 0.1, cy + ry * 1.0, cx - rx * 0.4, ey + er * 1.2); });
+      for (const s2 of [-1, 1]) { paint(ctx, "#8a7a3a", lw, () => ellipse(ctx, cx + s2 * sp, ey, er * 1.45, er * 1.45)); ctx.fillStyle = "rgba(255,240,180,.55)"; ctx.beginPath(); ellipse(ctx, cx + s2 * sp - er * 0.4, ey - er * 0.4, er * 0.35, er * 0.35); ctx.fill(); }
+    }
     if (has("monocle")) {
       ctx.strokeStyle = "#d8b040"; ctx.lineWidth = lw * 1.3;
       ctx.beginPath(); ellipse(ctx, cx + sp, ey, er * 1.6, er * 1.6); ctx.stroke();
       line(ctx, "#d8b040", lw * 0.7, [cx + sp + er * 1.2, ey + er * 1.1, cx + sp + er * 1.6, ey + er * 5]);
     }
+  }
+
+  // 頭の横に掛けた狐の面
+  function foxMask(ctx, x, y, r, U) {
+    const lw = U * 0.007;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(-0.45);
+    paint(ctx, "#f4f0e6", lw, () => { ctx.moveTo(-r * 0.8, -r * 0.2); ctx.lineTo(-r * 0.75, -r * 1.2); ctx.lineTo(-r * 0.3, -r * 0.55); ctx.quadraticCurveTo(0, -r * 0.65, r * 0.3, -r * 0.55); ctx.lineTo(r * 0.75, -r * 1.2); ctx.lineTo(r * 0.8, -r * 0.2); ctx.quadraticCurveTo(r * 0.7, r * 0.5, 0, r * 1.05); ctx.quadraticCurveTo(-r * 0.7, r * 0.5, -r * 0.8, -r * 0.2); });
+    for (const s of [-1, 1]) {
+      paint(ctx, "#c8282a", 0, () => { ctx.moveTo(s * r * 0.62, -r * 0.35); ctx.lineTo(s * r * 0.66, -r * 0.95); ctx.lineTo(s * r * 0.42, -r * 0.55); });
+      line(ctx, "#c8282a", lw * 1.6, [s * r * 0.15, -r * 0.05, s * r * 0.5, -r * 0.25]);
+      line(ctx, "#1a1418", lw * 1.2, [s * r * 0.18, r * 0.12, s * r * 0.48, r * 0.02]);
+    }
+    paint(ctx, "#1a1418", 0, () => ellipse(ctx, 0, r * 0.82, r * 0.1, r * 0.07));
+    ctx.restore();
   }
 
   // ---------------------------------------------------------------- 入口
@@ -839,6 +862,7 @@
     if (L.marks.includes("earring")) { ctx.strokeStyle = "#e0c050"; ctx.lineWidth = U * 0.006; ctx.beginPath(); ellipse(ctx, cx - rx * 1.0, ey + ry * 0.28, rx * 0.06, rx * 0.08); ctx.stroke(); }
     hairFront(ctx, L, cx, cy, rx, ry, U);
     headwear(ctx, L, cx, cy, rx, ry, U);
+    if (L.marks.includes("foxmask")) foxMask(ctx, cx - rx * 0.78, cy - ry * 0.72, rx * 0.5, U);
     // 周りを暗く
     const v = ctx.createRadialGradient(cx, y + h * 0.45, h * 0.35, cx, y + h * 0.5, h * 0.8);
     v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.35)");

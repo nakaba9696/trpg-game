@@ -1,6 +1,6 @@
 // 今ある出来事に、出てくる人物の種類（who）を付ける。人物の絵は src/ui/art_people.js が描く。
 // who は "<種類>" か { kind, sex, age, look }。種類の一覧は art_people.js の G.PEOPLE。魔物なら { kind: "foe", foe: "<敵 id>" }。
-// 新しい出来事は、この表ではなく出来事のデータに直接 who を書けばよい。レーン A（絵）が管理
+// 新しい出来事は、この表ではなく出来事のデータに直接 who を書けばよい（表は、他のレーンのファイルを書き換えずに付けるためのもの）。レーン A（絵）が管理
 (function (G) {
   const D = G.data;
   const WHO = {
@@ -23,6 +23,24 @@
     frontline: { kind: "soldier", sex: "男", age: 46, look: { outfit: "armor", head: "helmet", marks: ["scar", "mustache"] } },
     tsujigiri: { kind: "ronin", sex: "男", look: { head: "kasa", gear: "katana" } },
     prince: { kind: "rogue", sex: "男", look: { head: "hood", outfit: "cloak", cloth: "#1a1a22", mouth: "flat" } },
+    // V1（events_town2.js）
+    v1_zalve: { kind: "merchant", sex: "男", look: { head: "none", mouth: "smirk", marks: ["monocle", "gaunt"] } },
+    v1_borg: { kind: "rogue", sex: "男", age: 40, look: { build: "broad", head: "none", mouth: "grin", marks: ["scar", "stubble"] } },
+    v1_spatship: { kind: "sailor", sex: "男", age: 56, look: { brows: "worried", mouth: "open" } },
+    v1_mermaid: { kind: "merchant", sex: "男", look: { eyes: "smile", mouth: "grin", head: "hat" } },
+    v1_pilgrims: { kind: "priest", sex: "男", age: 50, look: { head: "mitre", mouth: "open" } },
+    v1_taster: { kind: "host", sex: "男", age: 45, look: { brows: "worried", mouth: "frown" } },
+    v1_boardgame: { kind: "elder", sex: "男", age: 72, look: { outfit: "noble", head: "none", gear: "none", hairStyle: "slick", mouth: "smirk", marks: ["wrinkles", "monocle", "mustache"] } },
+    v1_conscript: { kind: "knight", sex: "男", look: { head: "helmet", cloth: "#1a1a22", mouth: "frown", brows: "angry" } },
+    v1_skyshadow: { kind: "foe", foe: "wyvern" },
+    v1_latrine: { kind: "foe", foe: "goblin" },
+    v1_plague: { kind: "mage", sex: "男", look: { head: "hood", cloth: "#1a1a1a", gear: "none", chest: "none", marks: ["beak"] } },
+    v1_golem: { kind: "foe", foe: "dogu" },
+    v1_foxdice: { kind: "ronin", sex: "女", age: 15, look: { gear: "none", head: "none", eyes: "smile", mouth: "smirk", cloth: "#8a1a2a", marks: ["foxmask"] } },
+    v1_foxfest: { kind: "ronin", sex: "女", age: 28, look: { gear: "none", head: "none", hairStyle: "long", eyes: "narrow", mouth: "smirk", cloth: "#b02a3a", marks: ["foxmask"] } },
+    v1_returned: { kind: "ronin", sex: "男", age: 24, look: { gear: "none", head: "none", brows: "worried", mouth: "open" } },
+    v1_yuradream: { kind: "child", look: { eyes: "sleepy", mouth: "open", head: "none" } },
   };
-  (D.EVENTS || []).forEach((e) => { if (!e.who && WHO[e.id]) e.who = WHO[e.id]; });
+  // 読み込む順番に関係なく使えるように、表として置く（G.eventWho が見る）。出来事のデータに who があればそちらが先
+  D.EVENT_WHO = Object.assign(D.EVENT_WHO || {}, WHO);
 })(globalThis.G = globalThis.G || {});

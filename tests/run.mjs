@@ -228,8 +228,10 @@ const ok = (msg) => console.log("OK   " + msg);
   }
   // 出来事の who は、ある種類（か、ある敵）を指す
   let withWho = 0;
+  const evIds = new Set(G.data.EVENTS.map((e) => e.id));
+  for (const id of Object.keys(G.data.EVENT_WHO || {})) if (!evIds.has(id)) fail(`events_who.js: 出来事 ${id} が無い`);
   for (const e of G.data.EVENTS) {
-    if (!e.who) continue;
+    if (!G.eventWho(e)) continue;
     withWho++;
     const w = G.eventWho(e);
     if (w.kind === "foe") { if (!G.data.ENEMIES[w.foe]) fail(`出来事 ${e.id}: who の敵 ${w.foe} が無い`); continue; }
