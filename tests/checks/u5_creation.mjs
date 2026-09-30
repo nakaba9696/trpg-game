@@ -24,9 +24,9 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   for (const o of Object.values(D.ORIGINS)) { scan("生まれ", o.blurb); scan("生まれ", o.home); }
   for (const a of Object.values(D.AGES)) scan("年齢", a.blurb);
   scan("導入", JSON.stringify(D.PROLOGUE));
-  // 導入は世界を説明しない：魔人の名前・二つ名を出さない。「神様は良い」と説く文を置かない
+  // 導入は世界を説明しない：魔人の名前と「〇〇の魔人」を出さない（二つ名だけだと「契約」のような普通の言葉と重なる）。「神様は良い」と説く文を置かない
   const told = JSON.stringify([D.PROLOGUE, Object.values(D.ORIGINS).map((o) => [o.blurb, o.home])]);
-  for (const m of Object.values(D.MAJIN || {})) for (const w of [m.name, m.title]) if (w && told.includes(w)) fail(`導入: 魔人の名「${w}」を出している`);
+  for (const m of Object.values(D.MAJIN || {})) for (const w of [m.name, m.title && `${m.title}の魔人`]) if (w && told.includes(w)) fail(`導入: 魔人の名「${w}」を出している`);
   if (/神(様|々)?は(良い|よい|善い|優しい)/.test(told)) fail("導入: 神を説明する文がある");
 
   // おまかせで作って、そのまま冒険を始められる

@@ -30,7 +30,7 @@
     },
     ruins: {
       name: "古代遺跡ロゥム", region: "自由都市連合", type: "dungeon", danger: 2, scene: "ruins", x: 40, y: 84,
-      desc: "神々の時代の遺跡。近ごろ、使徒が住みついたという噂がある。",
+      desc: "神々の時代の遺跡。近ごろ、奥に「あれ」とは違う何かが住みついたと、発掘人たちが嫌がっている。",
       pool: ["goblin", "orc", "spider", "slime", "zombie", "mimic"], floors: 4, boss: "kain",
       reward: { flag: "kain", fame: 40, chron: "古代遺跡ロゥムの最奥で、使徒カインを討ち取る", text: "カインの体が崩れ、遺跡の奥に古い壁画が現れた。三柱の神と、それを見下ろす巨大な目が描かれている。" },
       links: { forest: 2, nerva: 2 },

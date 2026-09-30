@@ -413,6 +413,7 @@
     renderLog();
     renderPanel();
     renderSheet(ups);
+    if (G.sound) G.sound.react(S); // 増えた記録と状態の変化から音を選ぶ（ui/sound.js）
     if (!prevStats) prevStats = { ...S.stats };
   };
 

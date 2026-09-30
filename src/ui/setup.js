@@ -12,7 +12,7 @@
   const signed = (n) => (n > 0 ? "+" + n : n < 0 ? "−" + -n : "±0");
   const KANJI = ["一", "二", "三", "四", "五", "六", "七", "八"];
 
-  // 音（ui/sound.js があれば鳴らす。無い名前は次の候補へ）
+  // 音（ui/sound.js があれば鳴らす。無い名前は次の候補へ。ボタンの「click」は sound.js がどのボタンでも鳴らす）
   const sfx = (...names) => {
     const s = G.sound;
     if (!s || !s.play) return;
@@ -94,7 +94,7 @@
     steps(root, 0);
     const top = h("div", "creHead");
     head(top, "あなたは何者か", "選ぶと、その場で姿が変わる");
-    top.append(btn("全部おまかせ", "primary", () => { const s = draft.customGoal; draft = cre.fresh(R); draft.customGoal = s; sfx("dice", "click"); setup.show(); }, "p-all"));
+    top.append(btn("全部おまかせ", "primary", () => { const s = draft.customGoal; draft = cre.fresh(R); draft.customGoal = s; sfx("dice", "coin"); setup.show(); }, "p-all"));
     root.append(top);
 
     const lay = h("div", "cre2");
@@ -282,7 +282,7 @@
     tray.setAttribute("aria-hidden", "true");
     const dice = [die(1 + Math.floor(R() * 6)), die(1 + Math.floor(R() * 6)), die(1 + Math.floor(R() * 6))];
     tray.append(...dice);
-    const rb = btn("振る", "primary rollBtn", () => { cre.roll(draft, R); rolledNow = true; sfx("dice", "click"); setup.show(); }, "s-roll");
+    const rb = btn("振る", "primary rollBtn", () => { cre.roll(draft, R); rolledNow = true; sfx("dice", "coin"); setup.show(); }, "s-roll");
     const info = h("div", "rollInfo num");
     info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `鍵 ${cre.lockCount(draft)}／${D.LOCK_MAX}`), h("span", "", `合計 ${cre.total(draft)}`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
     bar.append(who, tray, rb, info);
