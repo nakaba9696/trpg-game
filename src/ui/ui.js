@@ -238,7 +238,7 @@
     const pf = face("sface", heroWho(S), 72, 90);
     pf.title = "人物を見る";
     pf.onclick = () => ui.openProfile();
-    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）`));
+    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）${G.reputeLabel ? G.reputeLabel() : ""}`));
     const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
     head.append(pf, hd, close);
     return head;
@@ -435,7 +435,7 @@
     $("#profTitle").textContent = `${p.name}（${S.clsName}）`;
     const dl = $("#profBody");
     dl.textContent = "";
-    [["性別", p.sex], ["年齢", `${p.age}歳`], ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", `「${p.quote}」`], ["好きなもの", p.like], ["苦手なもの", p.dislike], ["目的", S.goal.text]]
+    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", `「${p.quote}」`], ["好きなもの", p.like], ["苦手なもの", p.dislike], ["目的", S.goal.text]]
       .forEach(([k, v]) => { if (v) dl.append(h("dt", "", k), h("dd", "", v)); });
     let pf = $("#profFace");
     if (!pf) { pf = face("profface", null, 150, 188); pf.id = "profFace"; dl.before(pf); }
