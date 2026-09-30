@@ -82,7 +82,10 @@ export default ({ fail, loadEngine, seeded }) => {
     const loreSecs = D.LORE_SECS.filter((t) => secs().includes(t));
     const goal0 = Object.keys(D.GOALS)[0];
     const startOpen = [].concat(D.LORE_ON.goal[goal0] || []).length;
-    if (!secs().includes("人の国") || !secs().includes("暮らしの言葉")) fail("はじめの手引きに、人の国・暮らしの言葉が無い");
+    if (!secs().includes("大陸と国") || !secs().includes("人と暮らし")) fail("はじめの手引きに、大陸と国・人と暮らしが無い");
+    const first = [D.WORLD.intro, ...D.WORLD.all.flatMap(([, r]) => r.flatMap(([k, v]) => [k, v]))].join("\n");
+    const secret = first.match(/十三|七十二|ヴォルグリム|白夜|魔王の座|使徒|絶界|ロゥム|古言|世界樹/);
+    if (secret) fail(`はじめの手引きに、物語で知るはずの「${secret[0]}」がある`);
     if (Object.values(S.lore).flat().length !== startOpen) fail(`はじめから用語説明が開いている：${JSON.stringify(S.lore)}`);
     if (!startOpen && loreSecs.length) fail("はじめから世界観の節が見える");
     if (rows().includes("赤い月")) fail("はじめから「赤い月」が見える");
@@ -92,7 +95,7 @@ export default ({ fail, loadEngine, seeded }) => {
     S.memos = [];
     if (!rows().includes("赤い月")) fail("覚えていることが消えると、用語説明も消える");
     G.startEvent("redmoon");
-    if (S.lore.redmoon.join() !== "rumor,night" || !S.lore.clap) fail(`赤い月の夜で、行が書き足されない：${JSON.stringify(S.lore)}`);
+    if (!S.lore.redmoon.includes("night") || !S.lore.redmoon.includes("first") || !S.lore.clap) fail(`赤い月の夜で、行が書き足されない：${JSON.stringify(S.lore)}`);
     const n = D.WORLD.sections.find(([t]) => t === "言い伝え")[1].filter(([k]) => k === "赤い月").length;
     if (n !== 1) fail("同じ項目の二行目にも見出しが付く");
     if (!(G.P.loreSeen && G.P.loreSeen.redmoon && G.P.loreSeen.redmoon.includes("night"))) fail("一度見た行が G.P.loreSeen に残らない");
@@ -108,7 +111,7 @@ export default ({ fail, loadEngine, seeded }) => {
     const G2 = loadEngine();
     const S2 = newGame(G2, 4);
     S2.flags = {}; G2.startCombat(["graw"], {});
-    if (!(S2.lore.majin || []).includes("wall")) fail("魔人に会っても「魔人のこと」が開かない");
+    if (!(S2.lore.zekkai || []).includes("first") || !S2.lore.majin) fail("魔人に会っても「魔人」「絶界」が開かない");
   }
 
   // ---- 最初の町で、10 手番のうちに通行人に出会う

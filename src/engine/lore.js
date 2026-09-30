@@ -105,7 +105,7 @@
   const baseExploreAct = G.exploreAct;
   G.exploreAct = (head, arg, a) => {
     baseExploreAct(head, arg, a);
-    if (head === "fac") G.openLores((ON().fac || {})[arg]);
+    if (head === "fac") { const fac = ON().fac || {}; G.openLores(fac[arg]); G.openLores(fac[`${arg}@${G.S.loc}`]); }
   };
 
   const baseEndTurn = G.endTurn;

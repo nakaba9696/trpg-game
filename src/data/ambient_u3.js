@@ -28,13 +28,16 @@
     // ---------------------------------------------------------------- 町ごと
     { id: "u3_karna_clerk", where: ["karna"], w: 2, text: "ギルドの見習い書記が、依頼の紙を抱えて走っていく。一枚落とした。「ドブ掃除　報酬3G　命の危険なし（たぶん）」" },
     { id: "u3_karna_moneychanger", where: ["karna"], cond: later(4), text: "表通りの両替商の前で、男が幸せそうに笑いながら金貨を数えている。足元の影が、少しだけ本人より細い。", lore: "zalve:rumor" },
+    { id: "u3_karna_rubbing", where: ["karna"], cond: (S) => !!(S.lore && S.lore.kokuin), text: "ギルドの壁の拓本の前で、酔った老人が言った。「あれは墓碑だよ。墓碑ってのは、死んだ者の分だけ彫るもんだ」誰も相手にしない。", lore: "kokuin:grave" },
     { id: "u3_nerva_net", where: ["nerva"], w: 2, text: "網を繕う漁師が、鼻歌をやめた。「夜の海じゃ歌うな。歌われたら、下手でも歌い返せ。うちの爺さんの言いつけでな」", lore: "lugu:rumor" },
+    { id: "u3_nerva_fleet", where: ["nerva"], text: "桟橋の老いた船大工が、東の沖を顎でしゃくった。「わしの兄貴は、東の大地へ行く艦隊に乗った。一隻も帰らんかった。……まあ、兄貴は借金も返さんかったがな」", lore: "hikarikabe" },
     { id: "u3_nerva_widow", where: ["nerva"], text: "桟橋の先に、毎朝同じ女が立っているという。今朝もいた。沖を見ている。船は、もう十年帰っていない。" },
     { id: "u3_leavel_knight", where: ["leavel"], w: 2, text: "白銀の鎧の若い騎士が、鏡の前で口上の練習をしている。「我が剣は女王陛下に……陛下の……」三回目で、噛んだ。" },
     { id: "u3_leavel_pilgrim", where: ["leavel"], cond: later(3), text: "巡礼の母親が、子どもの首筋を撫でながら言った。「聖女さまに触れていただいた痕よ。ありがたいねえ」子どもは、眠そうに笑っている。", lore: "mark:blessed" },
     { id: "u3_garmund_widows", where: ["garmund"], w: 2, text: "雪かきをしているのは女と年寄りばかりだ。男たちは、みんな南の砦か、皇子さまの誰かの陣にいる。" },
     { id: "u3_garmund_game", where: ["garmund"], cond: later(6), text: "宮廷の近くの酒場で、下働きの男が声をひそめた。「北の賢人さまは、駒を取るたびに謝るんだとよ。人の首を取るときは、謝らないのにな」", lore: "chezar:rumor" },
     { id: "u3_fort_sky", where: ["fort"], w: 2, text: "見張りの兵が、空ばかり見ている。「下は魔物、上は……上はいいんだ。上を見てりゃ、少なくとも最初に分かる」", lore: "azlag:rumor" },
+    { id: "u3_fort_king", where: ["fort"], text: "砦の古参兵が、山脈の向こうを見ながら言った。「向こうには王様がいるんだとよ。魔物の王様だ。寝てるって話だがな」新兵が小声で、寝ててくれ、と言った。", lore: ["maou", "maou:rumor"] },
     { id: "u3_fort_cook", where: ["fort"], text: "砦の炊事番が、鍋をかき回しながら新兵の数を数えている。先月より、鍋が一つ少ない。" },
     { id: "u3_zephara_smoke", where: ["zephara"], w: 2, text: "学院の塔から紫の煙が上がった。通りの誰も見上げない。パン屋だけが、窓を閉めた。" },
     { id: "u3_zephara_mute", where: ["zephara"], text: "魔法の使えない荷運びの男が、荷の上の印章を指でなぞっている。字は読めないが、形で覚えているらしい。" },
@@ -43,6 +46,9 @@
 
     // ---------------------------------------------------------------- 先へ進むほど（遠い影）
     { id: "u3_maou_brawl", where: ["town"], cond: later(4), text: "酒場の前で、酔っ払い二人が、魔王は寝てるのか死んでるのかで殴り合いを始めた。どちらも、見たことはない。", lore: "maou:rumor" },
+    { id: "u3_twomoons", where: ["town", "wild"], cond: later(7), text: "年寄りが孫の頭を押さえて言った。「月が二つの晩は、上を見るんじゃない」孫は、見たそうにしている。", lore: "tojizuki" },
+    { id: "u3_bellhoods", where: ["town"], cond: later(5), text: "揃いの灰色の頭巾の一団が、鐘楼に登っていく。宿の女将が舌打ちした。「また鐘の人たちだよ。今夜は眠れないね」", lore: "gyoushou" },
+    { id: "u3_bellcount", where: ["town"], cond: (S) => S.day >= 8 && !!(S.lore && S.lore.gyoushou), text: "夜通し鳴った鐘が、明け方にぴたりと止んだ。鐘楼から「……九百九十八だった！」「九百九十九だ！」と言い争う声が降ってくる。", lore: "gyoushou:count" },
     { id: "u3_refugee", where: ["town"], cond: later(8), text: "東の街道から、荷車に家財を積んだ一家が来た。どこから来たのかと聞かれると、父親は「もう無い町だ」とだけ言った。" },
     { id: "u3_bard", where: ["town"], cond: later(10), text: "吟遊詩人の歌の途中で、客の一人が泣き出した。消えた町の歌だった。その町の名前を、詩人は毎回ちがえて歌う。" },
     { id: "u3_priest_quiet", where: ["town"], cond: later(12), text: "教会の若い司祭が、石段に座り込んでいる。「祈りが届いたんです。届いてしまった。……いえ、何でもありません」" },
