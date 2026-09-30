@@ -6,7 +6,7 @@
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
   const ui = (G.ui = {});
 
-  const FAC_SCENE = { inn: "inn", tavern: "tavern", shop: "shop", guild: "guild", church: "church", train: "train", alley: "alley", castle: "throne" };
+  const FAC_SCENE = { inn: "inn", tavern: "tavern", shop: "shop", guild: "guild", church: "church", train: "train", alley: "alley", castle: "throne", academy: "academy" };
   let lastPaint = "";
   let busy = false;
 
@@ -40,7 +40,7 @@
     const S = G.S;
     const foes = S.combat ? G.alive().map((f) => { const e = D.ENEMIES[f.id]; return { id: f.id, shape: e.shape, eye: e.eye, boss: !!e.boss }; }) : [];
     const key = sceneKey();
-    const sig = [key, S.phase, S.loc, S.depth, JSON.stringify(foes), $("#scene").clientWidth].join("|");
+    const sig = [key, S.phase, S.loc, S.depth, S.day, S.weather, JSON.stringify(foes), $("#scene").clientWidth].join("|");
     if (!force && sig === lastPaint) return;
     lastPaint = sig;
     G.paintScene($("#scene"), { key, phase: S.phase, seed: S.loc + ":" + S.depth + ":" + key, foes, redMoon: S.phase === 3 && !!S.flags.god });
@@ -145,7 +145,8 @@
   }
   function renderFoes(panel) {
     const foes = h("div", "foes");
-    G.S.combat.foes.forEach((f) => foes.append(foeEl(f)));
+    const aim = G.target && G.target();
+    G.S.combat.foes.forEach((f) => { const el = foeEl(f); if (f === aim) { el.classList.add("aim"); el.prepend(h("span", "aimTag", "狙い")); } foes.append(el); });
     panel.append(foes);
   }
   // 行動ボタン1つ
@@ -155,10 +156,17 @@
     b.disabled = !!a.disabled || busy;
     b.append(h("b", "", a.label));
     if (a.sub) b.append(h("span", "", a.sub));
+    // U4：依頼への道の印・押せない理由
+    const mark = /^(travel|sail):/.test(a.id || "") ? travelMarks[a.id.split(":")[1]] : "";
+    if (mark) { b.classList.add("marked"); b.append(h("em", "mark", "◆ " + mark)); }
+    const why = a.disabled && G.lockReason ? G.lockReason(a, G.S) : "";
+    if (why) { b.append(h("em", "why", why)); b.title = why; }
     b.onclick = () => { if (!busy) { G.act(a.id); after(); } };
     return b;
   }
+  let travelMarks = {};
   function renderActions(panel) {
+    travelMarks = G.travelMarks ? G.travelMarks(G.S) : {};
     G.actions().forEach((grp) => {
       if (!grp.list.length) return;
       const box = h("div", "agroup");
@@ -169,11 +177,33 @@
       panel.append(box);
     });
   }
+  // U4：HP が危ないときの帯と、その場面ではじめてのときだけ出す遊び方の一行
+  let shownTip = null;
+  function renderGuide(panel) {
+    const S = G.S;
+    if (G.hpDanger && G.hpDanger(S)) panel.append(h("div", "danger", `HP が残り ${S.hp}。${S.combat ? "身を守る・逃げる・道具も手だ。" : "休むか、傷を手当てしたい。"}`));
+    const tip = G.playTip && G.P ? G.playTip(S, G.P) : null;
+    shownTip = tip && tip.key;
+    if (!tip) return;
+    const box = h("div", "tip");
+    box.append(h("span", "", tip.text));
+    const x = h("button", "btn small", "わかった"); x.type = "button";
+    x.onclick = () => { seeTip(); box.remove(); };
+    box.append(x);
+    panel.append(box);
+  }
+  function seeTip() {
+    if (!shownTip || !G.P) return;
+    (G.P.tips = G.P.tips || {})[shownTip] = 1;
+    shownTip = null;
+    G.main.saveProfile();
+  }
   function renderPanel() {
     const S = G.S;
     const panel = $("#panel");
     panel.textContent = "";
     if (S.over) { renderEnd(panel); return; }
+    renderGuide(panel);
     if (S.combat) renderFoes(panel);
     renderActions(panel);
   }
@@ -306,7 +336,13 @@
     const S = G.S;
     if (!S.quests.length) return null;
     const ul = h("ul", "inv");
-    S.quests.forEach((x) => ul.append(h("li", "", `${x.done ? "✔ " : ""}${x.title}${x.type === "hunt" ? `（${x.progress}/${x.need}）` : ""}`)));
+    const ways = G.questWays ? G.questWays(S) : [];
+    S.quests.forEach((x) => {
+      const li = h("li", "", `${x.done ? "✔ " : ""}${x.title}${x.type === "hunt" ? `（${x.progress}/${x.need}）` : ""}`);
+      const w = ways.find((y) => y.q === x);
+      if (w) li.append(h("span", "way fine", w.next ? `${w.why}：${D.LOCS[w.to].name}（${w.path.length > 2 ? w.path.slice(1).map((id) => D.LOCS[id].name).join(" → ") + "・" : ""}${w.days}日）` : `${w.why}：ここ`));
+      ul.append(li);
+    });
     return sheetSection("quests", `受けている依頼（${S.quests.length}）`, ul);
   }
   // 持ち物1行のボタン（装備できる種類を増やすときはここ）
@@ -348,6 +384,7 @@
     mk("地図", () => ui.openMap());
     mk("年表", () => { ui.setSheetOpen(false); ui.openChronicle(S, false); });
     mk("ログをコピー", copyLog);
+    mk("タイトルへ", () => G.main.toTitle());
     if (!S.over) {
       let armed = 0;
       // 物語を終えられるのは、節目（M6）に着いてから。基本は死ぬまで
@@ -359,6 +396,7 @@
       });
       rb.disabled = busy || S.mode === "combat" || !can;
     }
+    acts.append(h("p", "fine saved", "冒険は行動のたびに自動で保存される。タイトルの「つづきから」で戻れる。"));
     return acts;
   }
   // スマホの上部バー（名前・HP・MP・所持金）
@@ -370,6 +408,7 @@
     $("#mHpBar").style.width = (S.maxHp ? (S.hp / S.maxHp) * 100 : 0) + "%";
     $("#mMpBar").style.width = (S.maxMp ? (S.mp / S.maxMp) * 100 : 0) + "%";
     $("#mGold").textContent = `${S.gold}G`;
+    $("#mbar").classList.toggle("danger", !!(G.hpDanger && G.hpDanger(S)));
     const bar = $("#mbar");
     let mf = $("#mFace");
     if (!mf && G.drawPortrait) { mf = face("mface", null, 40, 50); mf.id = "mFace"; bar.prepend(mf); bar.classList.add("hasface"); }
@@ -406,8 +445,12 @@
   function after() {
     const S = G.S;
     const ups = {};
-    if (prevStats) D.STATS.forEach((k) => { if (S.stats[k] > prevStats[k]) ups[k] = true; });
-    prevStats = { ...S.stats };
+    if (prevStats && prevStats.run !== S.id) prevStats = null; // 別の冒険に替わったら比べない
+    if (prevStats) D.STATS.forEach((k) => { if (S.stats[k] > prevStats[k]) ups[k] = [prevStats[k], S.stats[k]]; });
+    seeTip();
+    const grew = Object.entries(ups).map(([k, [a, b]]) => `${k} ${a}→${b}`);
+    if (grew.length) ui.toast("能力値が伸びた", grew.join("・"));
+    prevStats = { ...S.stats, run: S.id };
     G.main.save();
     ui.render(ups);
     if (S.over && !S.flags.chronShown) { S.flags.chronShown = true; G.main.save(); setTimeout(() => ui.openChronicle(S, true), 700); }
@@ -424,16 +467,20 @@
     renderLog();
     renderPanel();
     renderSheet(ups);
+    markWorld();
     if (G.sound) G.sound.react(S); // 増えた記録と状態の変化から音を選ぶ（ui/sound.js）
-    if (!prevStats) prevStats = { ...S.stats };
+    if (!prevStats) prevStats = { ...S.stats, run: S.id };
   };
 
   // ---------------------------------------------------------------- 通知
   let toastT = 0;
   ui.toast = (text, strong) => {
     const t = $("#toast");
-    t.textContent = "";
-    if (strong) { t.append(h("span", "", text + " ")); t.append(h("b", "", strong)); } else t.textContent = text;
+    if (t.hidden) t.textContent = ""; // 出ている間に来た通知は下に重ねる（トロフィーと能力値の伸びが同時に来ても消えない）
+    const line = h("div");
+    if (strong) { line.append(h("span", "", text + " ")); line.append(h("b", "", strong)); } else line.textContent = text;
+    t.append(line);
+    while (t.children.length > 3) t.firstChild.remove();
     t.hidden = false;
     clearTimeout(toastT);
     toastT = setTimeout(() => { t.hidden = true; }, 3800);
@@ -556,6 +603,14 @@
   $("#tabT").onclick = () => setTab("T");
   $("#tabG").onclick = () => setTab("G");
 
+  // 手引きに書き足された行の数（増えたらボタンに印を付ける）
+  const loreCount = () => (G.S && G.S.lore ? Object.values(G.S.lore).reduce((a, x) => a + x.length, 0) : 0);
+  let loreSeenCount = -1;
+  function markWorld() {
+    const n = loreCount();
+    if (loreSeenCount < 0 || n < loreSeenCount) loreSeenCount = n;
+    $("#openWorld").classList.toggle("fresh", n > loreSeenCount);
+  }
   ui.buildWorld = () => {
     const body = $("#worldBody");
     body.textContent = "";
@@ -572,7 +627,8 @@
   document.querySelectorAll("[data-close]").forEach((b) => { b.onclick = () => b.closest("dialog").close(); });
   document.querySelectorAll("dialog").forEach((dl) => dl.addEventListener("click", (ev) => { if (ev.target === dl) dl.close(); }));
   $("#openTrophy").onclick = () => ui.openTrophies();
-  $("#openWorld").onclick = () => $("#dlgWorld").showModal();
+  // 手引きは開くたびに作り直す（物語の中で書き足された用語説明を載せる）
+  $("#openWorld").onclick = () => { ui.buildWorld(); loreSeenCount = loreCount(); $("#openWorld").classList.remove("fresh"); $("#dlgWorld").showModal(); };
   $("#openSheet").onclick = () => ui.setSheetOpen(true);
   $("#sheetBox").addEventListener("click", (ev) => { if (ev.target.id === "sheetBox") ui.setSheetOpen(false); });
   document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && document.body.classList.contains("sheet-open")) ui.setSheetOpen(false); });
