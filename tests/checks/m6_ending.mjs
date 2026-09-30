@@ -171,7 +171,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   // ---- M2・M4 の欄があれば使う（無くても動く）
   {
     const S = start("rich", 601);
-    S.m2 = { gone: [{ name: "槍兵のテス", how: "death" }] };
+    S.m2 = { gone: [{ name: "槍兵のテス", how: "death" }, { name: "盗賊のロロ", how: "slain" }] };
     S.companions = [{ name: "僧侶のミナ", bond: 95 }];
     S.chronicle.push({ date: G.date(), kind: "world", text: "黒鉄の砦が空から焼かれたと聞く" });
     S.day = 200;

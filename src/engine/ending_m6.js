@@ -120,9 +120,11 @@
     const cls = D.CLASSES[S.cls];
     const L0 = run ? D.LOCS[S.loc] : null;
     const startLoc = cls && D.LOCS[cls.start];
+    // M2 の別れ方：death 死んだ / slain 刃を向けてきて討った / betray 裏切って去った / leave 去った
     const goneKind = (g) => {
-      const h = String(g.how || "") + String(g.cause || "");
-      if (/death|dead|die|死|看取|討/.test(h)) return "death";
+      const h = String(g.how || "");
+      if (h === "slain") return "slain";
+      if (/death|dead|die|死|看取/.test(h)) return "death";
       if (/betray|steal|thief|sell|stab|裏切|持ち逃|売/.test(h)) return "betray";
       return "left";
     };
@@ -132,7 +134,8 @@
     const spells = S.spells || [];
     const learned = spells.filter((id) => !((D.SPELL_START && D.SPELL_START[S.cls]) || []).includes(id)).length;
     const alive = comps.find((c) => (c.bond || 0) >= 90) || comps[0];
-    const kept = gone.find((g) => g.keep) || gone[0];
+    // 語り手になれる仲間は、生きて別れた者だけ（死んだ者・裏切った者は語れない）
+    const kept = gone.find((g) => g.how === "leave");
     const joinedChron = chron.filter((c) => /仲間に加わる/.test(c.text || "")).length;
     const L = {
       run, name: p.name || "名も知れぬ者", sex: p.sex, ageN: Number.isFinite(ageN) ? ageN : null,
@@ -146,7 +149,7 @@
       visited: Object.keys(S.visited || {}).length, sin: S.sin || 0, wanted: wantedIn.length > 0, where: wantedIn[0] || "",
       debt: S.magicDebt || 0, learned,
       sword: ["volgrim", "byakuya"].some((k) => (S.inv && S.inv[k]) || S.weapon === k),
-      comp: alive ? alive.name : kept ? kept.name : "", joined: Math.max(comps.length + gone.length, joinedChron),
+      comp: alive ? alive.name : kept ? kept.name : "", anyComp: (alive || gone[0] || {}).name || "", joined: Math.max(comps.length + gone.length, joinedChron),
       goneBy: (kind) => { const g = gone.find((x) => goneKind(x) === kind); return g ? { comp: g.name } : false; },
       marks: chron.filter((c) => ["sanity", "beast", "fate"].includes(c.kind)),
       world: world.length ? { text: G.pick(world).text } : false,
