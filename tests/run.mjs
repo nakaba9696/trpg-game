@@ -2,6 +2,8 @@
 // 1. データの整合（存在しない場所・敵・アイテムを参照していないか）
 // 2. ランダムに遊び続けるテスト（例外が出ないか、数値が範囲に収まるか）
 // 3. 釣り合いの測定（職業ごとの数字を出すだけ。失敗にはしない）。tests/balance.mjs
+import { readFileSync } from "node:fs";
+import vm from "node:vm";
 import { loadEngine, seeded } from "./lib.mjs";
 import { measureBalance } from "./balance.mjs";
 
@@ -125,6 +127,34 @@ const ok = (msg) => console.log("OK   " + msg);
     bossKills += G.S.counters.bosses;
   }
   if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
+}
+
+// ---------------------------------------------------------------- 2b. モンスターの絵（DOM なしの偽の canvas で描く）
+{
+  const G = loadEngine();
+  const before = failures;
+  vm.runInContext(readFileSync(new URL("../src/ui/art_monsters.js", import.meta.url), "utf8"), vm.createContext({ G }));
+  // 何を呼んでも受け流す偽の 2D 文脈
+  const noop = () => {};
+  const grad = { addColorStop: noop };
+  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : k === "createRadialGradient" || k === "createLinearGradient" ? () => grad : noop), set: (t, k, v) => ((t[k] = v), true) });
+  const seen = new Map();
+  G.rand = () => { throw new Error("絵が G.rand を使った"); };
+  for (const [id, e] of Object.entries(G.data.ENEMIES)) {
+    const a = G.monsterLook(id, e), b = G.monsterLook(id, e);
+    const sig = JSON.stringify(Object.assign({}, a, { seed: 0 }));
+    if (sig !== JSON.stringify(Object.assign({}, b, { seed: 0 }))) fail(`絵 ${id}: 同じ敵なのに見た目が変わる`);
+    if (seen.has(sig)) fail(`絵 ${id}: ${seen.get(sig)} と見た目がまったく同じ`);
+    seen.set(sig, id);
+    if (e.boss && !a.aura) fail(`絵 ${id}: ボスなのにオーラが無い`);
+    if (e.majin && !a.barrier) fail(`絵 ${id}: 魔人なのに絶界が無い`);
+    try { G.paintMonster(ctx, 200, 240, 120, { id, shape: e.shape, eye: e.eye, boss: !!e.boss }); } catch (err) { fail(`絵 ${id}: 描くと例外 ${err.message}`); }
+  }
+  // look の指定が優先され、書いていない部品は無しになる
+  const custom = G.monsterLook("zz_test", { shape: "humanoid", tier: 3, look: { body: "blob", skin: "#123456" } });
+  if (custom.body !== "blob" || custom.skin !== "#123456" || custom.tail !== "none") fail("絵: look の指定が効かない");
+  try { G.paintMonster(ctx, 200, 240, 120, { id: "zz_unknown", shape: "dragon" }); } catch (err) { fail(`絵: データに無い敵で例外 ${err.message}`); }
+  if (failures === before) ok(`モンスターの絵（${seen.size} 種が別々の見た目・ボスはオーラ・魔人は絶界）`);
 }
 
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）
