@@ -1,5 +1,6 @@
 // 背景の絵。画像ファイルは使わず、場所と時間帯ごとに canvas に描く。
-// G.paintScene(canvas, { key, phase, seed, foes: [{ id, shape, eye, boss }] })
+// G.paintScene(canvas, { key, phase, seed, foes: [{ id, shape, eye, boss }], sky })
+// sky（{ season: "春|夏|秋|冬", weather: "晴|雨|霧|雪" }）を省くと、今の場所の G.skyAt を使う
 // 敵の絵は art_monsters.js の G.paintMonster が描く（無ければ下の影で代わりにする）
 // key を足すときは SCENES に関数を1つ足す。レーン A（絵）が管理
 (function (G) {
@@ -13,10 +14,131 @@
   const mix = (a, b, t) => { const x = hex(a), y = hex(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
   const rgba = (c, a) => { const [r, g, b] = hex(c); return `rgba(${r},${g},${b},${a})`; };
 
+  // ---------------------------------------------------------------- 季節と天候（A1）
+  // 今の場所の季節と天候は engine/weather.js の G.skyAt が決める。絵はそれを読むだけ。
+  // ENV は1枚描くあいだだけ使う（木・屋根・山の雪などの小道具が読む）
+  let ENV = { season: "", weather: "", night: false, key: "", snowCap: null };
+  const SEASON_ART = { 春: "spring", 夏: "summer", 秋: "autumn", 冬: "winter" };
+  const WEATHER_ART = { 雨: "rain", 霧: "fog", 雪: "snow" };
+  // 霧の色は町ごとに違う（港は潮の白、沼は緑、魔法都市は紫、砦は煤、朧島は提灯の色）
+  const FOG = { port: "#c9d2dc", swamp: "#a8c29a", magic: "#c0b2e8", fort: "#a39888", w1_oboro: "#e8c4a4", w1_catacomb: "#b4c8be", bones: "#c8c4b4", forest: "#c4d0c4" };
+  const fogColor = () => { const c = FOG[ENV.key] || "#d6dce4"; return ENV.night ? mix(c, "#1c2230", 0.6) : c; };
+  function setEnv(key, sk, opt) {
+    ENV = { season: "", weather: "", night: !!sk.night, key, snowCap: null };
+    if (key === "realm" || key === "majin") return;
+    const at = opt.sky || (G.skyAt && G.S ? G.skyAt(G.S.loc) : null);
+    if (!at || at.still) return;
+    ENV.season = SEASON_ART[at.season] || "";
+    ENV.weather = WEATHER_ART[at.weather] || "";
+    if (ENV.season === "winter") ENV.snowCap = sk.night ? "rgba(196,208,228,.6)" : "rgba(242,246,252,.92)";
+  }
+  // 季節と天候で空の色を変える（遠景・近景の色もここから作られる）
+  function skyFor(sk) {
+    const o = Object.assign({}, sk), n = sk.night;
+    if (ENV.season === "winter") { o.top = mix(o.top, "#8a98aa", n ? 0.1 : 0.25); o.bot = mix(o.bot, "#e4eaf2", n ? 0.1 : 0.3); }
+    else if (ENV.season === "autumn") o.bot = mix(o.bot, "#f0a060", n ? 0.05 : 0.18);
+    else if (ENV.season === "summer" && !n) o.top = mix(o.top, "#2f6fd0", 0.15);
+    if (ENV.weather === "rain" || ENV.weather === "snow") {
+      const c = ENV.weather === "snow" ? "#9aa4b2" : "#4a525c";
+      o.top = mix(o.top, n ? "#101418" : c, 0.7); o.bot = mix(o.bot, n ? "#1a2028" : mix(c, "#ffffff", 0.3), 0.65);
+      o.veil = "cloud"; o.sun = null;
+    } else if (ENV.weather === "fog") {
+      const c = fogColor();
+      o.top = mix(o.top, c, n ? 0.2 : 0.4); o.bot = mix(o.bot, c, n ? 0.35 : 0.6);
+      o.veil = "fog";
+    }
+    return o;
+  }
+  // 木の色。季節ごとに、針葉樹の色・広葉樹の色（秋の紅葉・春の花）・雪
+  function foliage(color) {
+    if (!/^#/.test(color)) return { needle: color };
+    const k = ENV.night ? 0.22 : 0.55;
+    const tint = (cs) => cs.map((c) => mix(color, c, k));
+    const heavy = ENV.key === "yakumo" || ENV.key === "w1_oboro";
+    switch (ENV.season) {
+      case "summer": return { needle: mix(color, "#2f6a2a", k * 0.6) };
+      case "spring": return { needle: mix(color, "#3f7a32", k * 0.5), broad: tint(heavy ? ["#f4c0cc", "#eaa8bc", "#f8d4dc"] : ["#8ab45a", "#f0c0cc", "#6a9a48"]) };
+      case "autumn": return { needle: mix(color, "#3a4a28", k * 0.3), broad: tint(heavy ? ["#c8281a", "#e0401e", "#b01e14", "#e87a2a"] : ["#c8481e", "#e0802a", "#b8301a", "#d8a030"]) };
+      case "winter": return { needle: color, snow: ENV.snowCap };
+      default: return { needle: color };
+    }
+  }
+  // 雨雲・雪雲
+  function clouds(ctx, w, h, sk, R) {
+    const c = sk.night ? "#0c1014" : mix(sk.top, "#2a3038", 0.35);
+    for (let i = 0; i < 14; i++) {
+      const x = R() * w, y = h * (0.02 + R() * 0.25), rx = w * (0.12 + R() * 0.15), ry = h * (0.04 + R() * 0.05);
+      ctx.fillStyle = rgba(c, 0.35 + R() * 0.3);
+      ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  // 地面に季節を足す（夏の草・春の花びら・秋の落ち葉・冬の積雪）
+  function seasonPass(ctx, w, h, R) {
+    const heavy = ENV.key === "yakumo" || ENV.key === "w1_oboro";
+    const falling = (n, cols, s) => {
+      for (let i = 0; i < n; i++) {
+        const x = R() * w, y = R() * h, a = R() * Math.PI;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.fillStyle = cols[i % cols.length];
+        ctx.beginPath(); ctx.ellipse(0, 0, s * (0.8 + R() * 0.6), s * 0.45, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      }
+    };
+    const dim = ENV.night ? 0.45 : 0.9;
+    if (ENV.season === "summer") {
+      ctx.strokeStyle = mix("#07080c", "#3d6b2a", ENV.night ? 0.18 : 0.45); ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let x = 0; x < w; x += 3 + R() * 4) { const l = 5 + R() * 9; ctx.moveTo(x, h); ctx.lineTo(x + (R() - 0.5) * 5, h - l); }
+      ctx.stroke();
+    } else if (ENV.season === "spring") {
+      falling(heavy ? 90 : 24, [`rgba(250,200,215,${dim})`, `rgba(255,228,236,${dim})`], 2.4);
+    } else if (ENV.season === "autumn") {
+      const cols = heavy ? [`rgba(210,50,30,${dim})`, `rgba(235,95,35,${dim})`, `rgba(180,30,24,${dim})`] : [`rgba(205,90,35,${dim})`, `rgba(225,150,50,${dim})`, `rgba(170,60,30,${dim})`];
+      falling(heavy ? 70 : 34, cols, 2.8);
+      for (let i = 0; i < w / 5; i++) { ctx.fillStyle = cols[i % cols.length]; ctx.fillRect(R() * w, h * (0.955 + R() * 0.045), 3 + R() * 3, 1.5 + R()); }
+    } else if (ENV.season === "winter" && ENV.snowCap) {
+      ctx.fillStyle = ENV.snowCap;
+      ctx.beginPath(); ctx.moveTo(0, h);
+      for (let x = 0; x <= w; x += 12) ctx.lineTo(x, h * (0.955 + 0.012 * Math.sin(x * 0.05) + R() * 0.006));
+      ctx.lineTo(w, h); ctx.fill();
+    }
+  }
+  // 霧（敵より奥）
+  function fogPass(ctx, w, h, R) {
+    if (ENV.weather !== "fog") return;
+    const c = fogColor(), a = ENV.night ? 0.3 : 0.42;
+    ctx.fillStyle = rgba(c, a * 0.4); ctx.fillRect(0, 0, w, h);
+    for (let i = 0; i < 6; i++) {
+      const y = h * (0.4 + i * 0.1) + (R() - 0.5) * h * 0.05, bh = h * (0.08 + R() * 0.08);
+      const g = ctx.createLinearGradient(0, y - bh, 0, y + bh);
+      g.addColorStop(0, rgba(c, 0)); g.addColorStop(0.5, rgba(c, a * (0.6 + R() * 0.4))); g.addColorStop(1, rgba(c, 0));
+      ctx.fillStyle = g; ctx.fillRect(0, y - bh, w, bh * 2);
+    }
+  }
+  // 雨と雪（敵より手前）。吹雪の場所は横殴り
+  function fallPass(ctx, w, h, R) {
+    if (ENV.weather === "rain") {
+      ctx.fillStyle = "rgba(16,22,32,.18)"; ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = ENV.night ? "rgba(170,185,210,.28)" : "rgba(200,212,230,.42)"; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i < w * 0.5; i++) { const x = R() * (w + 40), y = R() * h, l = 10 + R() * 14; ctx.moveTo(x, y); ctx.lineTo(x - l * 0.25, y + l); }
+      ctx.stroke();
+      ctx.strokeStyle = ENV.night ? "rgba(170,185,210,.25)" : "rgba(210,220,235,.4)";
+      for (let i = 0; i < w / 14; i++) { const x = R() * w, y = h * (0.93 + R() * 0.06); ctx.beginPath(); ctx.ellipse(x, y, 4 + R() * 3, 1.2, 0, 0, Math.PI * 2); ctx.stroke(); }
+    } else if (ENV.weather === "snow") {
+      const storm = ENV.key === "snow" || ENV.key === "snowcity" || ENV.key === "mountain";
+      if (storm) { ctx.fillStyle = ENV.night ? "rgba(160,170,190,.14)" : "rgba(232,238,246,.22)"; ctx.fillRect(0, 0, w, h); }
+      ctx.fillStyle = ENV.night ? "rgba(220,228,240,.6)" : "rgba(255,255,255,.85)";
+      for (let i = 0; i < w * (storm ? 0.7 : 0.35); i++) {
+        const x = R() * w, y = R() * h, r = 0.8 + R() * 1.8;
+        if (storm) { ctx.save(); ctx.translate(x, y); ctx.rotate(0.25); ctx.fillRect(0, 0, r * 3.5, r * 0.6); ctx.restore(); }
+        else { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+      }
+    }
+  }
+
   const SKIES = [
     { top: "#6f8fb8", bot: "#f0c79a", sun: "#fff1c9", night: false },  // 朝
     { top: "#4f7fbf", bot: "#bcd6ec", sun: "#fffbe8", night: false },  // 昼
-    { top: "#2c2346", bot: "#e2764a", sun: "#ffc27a", night: false },  // 夕
+    { top: "#2c2346", bot: "#e2764a", sun: "#ffc27a", night: false, dusk: true },  // 夕
     { top: "#070b18", bot: "#1f2a48", sun: null, night: true },        // 夜
   ];
   const RED_SKY = { top: "#140304", bot: "#7a1c12", sun: "#ff5a3a", night: true };
@@ -27,21 +149,22 @@
     g.addColorStop(1, sk.bot);
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
-    if (sk.night) {
+    if (sk.night && !sk.veil) {
       for (let i = 0; i < 90; i++) {
         ctx.fillStyle = `rgba(255,255,255,${0.2 + R() * 0.6})`;
         ctx.fillRect(R() * w, R() * h * 0.6, 1.2, 1.2);
       }
     }
-    if (sk.night || redMoon) {
+    if (sk.veil === "cloud") clouds(ctx, w, h, sk, R);
+    if ((sk.night && !sk.veil) || redMoon) {
       const mx = w * (0.15 + R() * 0.7), my = h * 0.18, mr = h * 0.07;
       ctx.fillStyle = redMoon ? "#e0442e" : "#f1ecd6";
       ctx.shadowColor = redMoon ? "#ff3b1f" : "#fff6d8";
       ctx.shadowBlur = 30;
       ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
-    } else if (sk.sun) {
-      const sx = w * (0.2 + R() * 0.6), sy = h * (sk.bot === "#e2764a" ? 0.55 : 0.2);
+    } else if (sk.sun && sk.veil !== "cloud") {
+      const sx = w * (0.2 + R() * 0.6), sy = h * (sk.dusk ? 0.55 : 0.2);
       const sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, h * 0.35);
       sg.addColorStop(0, rgba(sk.sun, 0.9)); sg.addColorStop(0.15, rgba(sk.sun, 0.5)); sg.addColorStop(1, rgba(sk.sun, 0));
       ctx.fillStyle = sg; ctx.fillRect(0, 0, w, h);
@@ -63,6 +186,7 @@
     ctx.fill();
   }
   function peaks(ctx, w, h, base, height, n, color, snow, R) {
+    if (ENV.season === "winter") snow = ENV.snowCap || "rgba(240,245,255,.7)";
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.moveTo(0, h);
@@ -84,11 +208,21 @@
     }
   }
   function pines(ctx, w, base, size, n, color, R) {
-    ctx.fillStyle = color;
+    const leaf = foliage(color);
     for (let i = 0; i < n; i++) {
       const x = R() * w, s = size * (0.6 + R() * 0.7), y = base + R() * size * 0.3;
-      ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.55, y); ctx.lineTo(x + s * 0.55, y); ctx.fill();
+      ctx.fillStyle = color;
       ctx.fillRect(x - s * 0.06, y, s * 0.12, s * 0.3);
+      // 秋と春は、針葉樹のあいだに葉の落ちる木が混じる（並びは季節で変えない）
+      if (leaf.broad && (i * 7) % 10 < 5) {
+        ctx.fillRect(x - s * 0.08, y - s * 0.9, s * 0.16, s * 0.9);
+        ctx.fillStyle = leaf.broad[i % leaf.broad.length];
+        ctx.beginPath(); ctx.arc(x, y - s * 1.2, s * 0.55, 0, Math.PI * 2); ctx.arc(x - s * 0.35, y - s * 0.85, s * 0.35, 0, Math.PI * 2); ctx.arc(x + s * 0.35, y - s * 0.9, s * 0.38, 0, Math.PI * 2); ctx.fill();
+        continue;
+      }
+      ctx.fillStyle = leaf.needle;
+      ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.55, y); ctx.lineTo(x + s * 0.55, y); ctx.fill();
+      if (leaf.snow) { ctx.fillStyle = leaf.snow; ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.22, y - s * 1.35); ctx.lineTo(x, y - s * 1.5); ctx.lineTo(x + s * 0.22, y - s * 1.35); ctx.fill(); }
     }
   }
   function buildings(ctx, w, base, hmax, color, lit, R, roofs) {
@@ -98,6 +232,11 @@
       ctx.fillStyle = color;
       ctx.fillRect(x, base - bh, bw, bh + 2);
       if (roofs) { ctx.beginPath(); ctx.moveTo(x - 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.45); ctx.lineTo(x + bw + 3, base - bh); ctx.fill(); }
+      if (ENV.snowCap) {
+        ctx.fillStyle = ENV.snowCap;
+        if (roofs) { ctx.beginPath(); ctx.moveTo(x - 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.45); ctx.lineTo(x + bw + 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.3); ctx.fill(); }
+        else ctx.fillRect(x, base - bh - 2, bw, 3);
+      }
       if (lit) {
         for (let wy = base - bh + 8; wy < base - 8; wy += 12) for (let wx = x + 5; wx < x + bw - 6; wx += 10) {
           if (R() < 0.35) { ctx.fillStyle = R() < 0.5 ? "#ffcf6e" : "#ffb04a"; ctx.fillRect(wx, wy, 4, 5); }
@@ -111,6 +250,7 @@
     ctx.fillRect(x - tw / 2, base - th, tw, th);
     ctx.fillStyle = roof || color;
     ctx.beginPath(); ctx.moveTo(x - tw / 2 - 4, base - th); ctx.lineTo(x, base - th - tw * 1.2); ctx.lineTo(x + tw / 2 + 4, base - th); ctx.fill();
+    if (ENV.snowCap) { ctx.fillStyle = ENV.snowCap; ctx.beginPath(); ctx.moveTo(x, base - th - tw * 1.2); ctx.lineTo(x - tw * 0.35, base - th - tw * 0.6); ctx.lineTo(x + tw * 0.35, base - th - tw * 0.6); ctx.fill(); }
     if (flag) { ctx.fillStyle = flag; ctx.fillRect(x, base - th - tw * 1.2 - 14, 1.5, 14); ctx.fillRect(x + 1.5, base - th - tw * 1.2 - 14, 12, 7); }
   }
   function glow(ctx, x, y, r, color, a) {
@@ -135,7 +275,7 @@
     town(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
       ridge(ctx, w, h, h * 0.6, h * 0.08, 1, far, R);
-      buildings(ctx, w, h * 0.78, h * 0.3, mid, sk.night || sk.top === "#2c2346", R, true);
+      buildings(ctx, w, h * 0.78, h * 0.3, mid, sk.night || sk.dusk, R, true);
       tower(ctx, w * 0.62, h * 0.78, 18, h * 0.42, mid, mid, "#b0342a");
       buildings(ctx, w, h * 0.93, h * 0.18, near, sk.night, R, true);
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.92, w, h);
@@ -282,7 +422,7 @@
       pines(ctx, w, h * 0.68, h * 0.12, 40, mix(far, mid, 0.5), R);
       pines(ctx, w, h * 0.82, h * 0.17, 22, mid, R);
       pines(ctx, w, h * 1.02, h * 0.28, 9, near, R);
-      if (!sk.night) for (let i = 0; i < 5; i++) { ctx.fillStyle = rgba(sk.sun || "#fff", 0.07); ctx.beginPath(); const x = R() * w; ctx.moveTo(x, 0); ctx.lineTo(x + 30, 0); ctx.lineTo(x + 110, h); ctx.lineTo(x + 60, h); ctx.fill(); }
+      if (!sk.night && !sk.veil) for (let i = 0; i < 5; i++) { ctx.fillStyle = rgba(sk.sun || "#fff", 0.07); ctx.beginPath(); const x = R() * w; ctx.moveTo(x, 0); ctx.lineTo(x + 30, 0); ctx.lineTo(x + 110, h); ctx.lineTo(x + 60, h); ctx.fill(); }
     },
     plains(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
@@ -485,13 +625,18 @@
     if (canvas.width !== w * dpr || canvas.height !== h * dpr) { canvas.width = w * dpr; canvas.height = h * dpr; }
     const ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const R = rng(String(opt.seed || opt.key));
+    const seed = String(opt.seed || opt.key);
+    const R = rng(seed), RE = rng(seed + ":env");
     const key = opt.key;
-    if (IN[key]) IN[key](ctx, w, h, R);
+    if (IN[key]) { ENV = { season: "", weather: "", night: false, key, snowCap: null }; IN[key](ctx, w, h, R); }
     else {
-      const sk = key === "realm" || key === "majin" ? RED_SKY : SKIES[opt.phase || 0];
-      sky(ctx, w, h, sk, R, opt.redMoon);
+      const sk0 = key === "realm" || key === "majin" ? RED_SKY : SKIES[opt.phase || 0];
+      setEnv(key, sk0, opt);
+      const sk = skyFor(sk0);
+      sky(ctx, w, h, sk, rng(seed + ":sky"), opt.redMoon);
       (OUT[key] || OUT.plains)(ctx, w, h, sk, R);
+      seasonPass(ctx, w, h, RE);
+      fogPass(ctx, w, h, RE);
     }
     const foes = opt.foes || [];
     const n = foes.length;
@@ -502,6 +647,7 @@
       if (G.paintMonster) G.paintMonster(ctx, x, h * 0.97, s, f);
       else foe(ctx, x, h * 0.97, s, f.shape, f.eye || "#ff3a3a");
     });
+    fallPass(ctx, w, h, RE);
     vignette(ctx, w, h, 0.55);
   };
 })(globalThis.G = globalThis.G || {});

@@ -336,6 +336,54 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
 }
 
+// ---------------------------------------------------------------- 2d. 季節と天候・背景の絵（A1。DOM なしの偽の canvas で描く）
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  const vmc = vm.createContext({ G });
+  for (const f of ["art_monsters.js", "scene.js"]) vm.runInContext(readFileSync(new URL("../src/ui/" + f, import.meta.url), "utf8"), vmc);
+  G.rand = seeded(7);
+  G.newGame({ cls: Object.keys(D.CLASSES)[0], stats: Object.fromEntries(D.STATS.map((k) => [k, 40])), caps: Object.fromEntries(D.STATS.map((k) => [k, 70])), goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
+  if (!(G.S.wseed > 0)) fail("天候: 新しい冒険に天候の種（wseed）が無い");
+  G.rand = () => { throw new Error("天候や絵が G.rand を使った"); };
+  const seasons = new Set(), weathers = new Set();
+  const seen = {};
+  for (const id of Object.keys(D.LOCS)) {
+    seen[id] = new Set();
+    for (let day = 1; day <= 720; day += 3) {
+      const a = G.skyAt(id, day);
+      if (JSON.stringify(a) !== JSON.stringify(G.skyAt(id, day))) fail(`天候 ${id} ${day}日: 同じ日なのに変わる`);
+      if (a.still) continue;
+      if (!G.SEASONS.includes(a.season)) fail(`天候 ${id}: 季節が変 ${a.season}`);
+      if (!["晴", "雨", "霧", "雪"].includes(a.weather)) fail(`天候 ${id}: 天候が変 ${a.weather}`);
+      seasons.add(a.season); weathers.add(a.weather); seen[id].add(a.season + a.weather);
+    }
+  }
+  for (const s of ["夏", "秋", "冬"]) if (!seasons.has(s)) fail(`天候: 季節「${s}」がどこにも来ない`);
+  for (const w of ["雨", "霧", "雪"]) if (!weathers.has(w)) fail(`天候: 「${w}」がどこにも来ない`);
+  if ([...seen.garmund].some((x) => !x.startsWith("冬"))) fail("天候: 帝都ガルムントに冬でない日がある");
+  if ([...seen.w1_holy].some((x) => x.endsWith("雨"))) fail("天候: 聖都サンクタに雨が降った");
+  if ([...seen.w1_oboro].some((x) => !x.startsWith("秋"))) fail("天候: 朧島の季節が進んだ");
+  if (seen.wasteland.size) fail("天候: 魔物界に季節がある");
+  // 古いセーブ（wseed も id も無い）でも動き、G.rand を使わない
+  const S0 = G.S; G.S = { loc: "karna", day: 100 };
+  try { G.skyAt(); } catch (err) { fail(`天候: 古いセーブで例外 ${err.message}`); }
+  G.S = S0;
+  // すべての場面を、季節・天候・時間帯ごとに描いて例外が出ないか
+  const noop = () => {};
+  const grad = { addColorStop: noop };
+  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : k === "createRadialGradient" || k === "createLinearGradient" ? () => grad : noop), set: (t, k, v) => ((t[k] = v), true) });
+  const canvas = { width: 0, height: 0, getBoundingClientRect: () => ({ width: 640, height: 360 }), getContext: () => ctx };
+  const keys = new Set(Object.values(D.LOCS).map((L) => L.scene).concat(["inn", "tavern", "dungeon", "cave"]));
+  let n = 0;
+  for (const key of keys) for (const season of ["春", "夏", "秋", "冬"]) for (const weather of ["晴", "雨", "霧", "雪"]) for (const phase of [1, 3]) {
+    try { G.paintScene(canvas, { key, phase, seed: key, sky: { season, weather }, foes: n % 5 ? [] : [{ id: "goblin", shape: "small" }] }); n++; } catch (err) { fail(`背景 ${key} ${season}${weather}: 描くと例外 ${err.message}`); }
+  }
+  for (const id of Object.keys(D.LOCS)) { G.S.loc = id; try { G.paintScene(canvas, { key: D.LOCS[id].scene, phase: 0 }); } catch (err) { fail(`背景 ${id}: 今の天候で描くと例外 ${err.message}`); } }
+  if (failures === before) ok(`季節と天候（季節 ${[...seasons].join("")}・天候 ${[...weathers].join("")}・背景 ${n} 枚を描いた）`);
+}
+
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）
 try {
   measureBalance();
