@@ -11,6 +11,16 @@
   const setup = (G.setup = {});
   let draft = null;
 
+  // 人物の絵（art_people.js）。画面に置いてから描く
+  function face(cls, cw, ch) {
+    const cv = h("canvas", cls);
+    cv.width = cw * 2; cv.height = ch * 2;
+    cv.setAttribute("aria-hidden", "true");
+    return cv;
+  }
+  const heroWho = (cls) => G.heroWho(Object.assign({}, draft.profile, $("#pf-name") ? readProfile() : {}, { sex: draft.sex }), cls || draft.cls);
+  function drawHero() { const cv = $("#heroFace"); if (cv && G.drawPortrait) G.drawPortrait(cv, heroWho()); }
+
   const PROFILE_FIELDS = [
     ["age", "年齢", "input"], ["look", "外見", "input"], ["personality", "性格", "input"],
     ["history", "生い立ち", "textarea"], ["quote", "口癖", "input"], ["like", "好きなもの", "input"], ["dislike", "苦手なもの", "input"],
@@ -80,6 +90,7 @@
     h2c.append(h("span", "fine", "職業で、能力値の傾向と出発地と持ち物が決まる"));
     secC.append(h2c);
     const cards = h("div", "cards");
+    const faces = [];
     Object.entries(D.CLASSES).forEach(([id, c]) => {
       const l = h("label", "card");
       const inp = h("input"); inp.type = "radio"; inp.name = "cls"; inp.value = id; inp.checked = draft.cls === id;
@@ -92,7 +103,9 @@
         draft.profile.history = genField("history");
         setup.show();
       };
-      l.append(inp, h("b", "", c.name), h("span", "", c.blurb), h("span", "", `出発地：${D.LOCS[c.start].name}`));
+      const cf = face("cardFace", 56, 70);
+      faces.push([cf, id]);
+      l.append(inp, cf, h("b", "", c.name), h("span", "", c.blurb), h("span", "", `出発地：${D.LOCS[c.start].name}`));
       cards.append(l);
     });
     secC.append(cards);
@@ -139,11 +152,14 @@
     const pr = h("div", "right");
     const all = h("button", "btn", "すべておまかせ");
     all.type = "button";
-    all.onclick = () => { draft.profile = fullProfile(); writeProfile(draft.profile); };
+    all.onclick = () => { draft.profile = fullProfile(); writeProfile(draft.profile); setup.redraw(); };
     pr.append(all);
     ph.append(pr);
     pbox.append(ph);
 
+    const pface = h("div", "pface");
+    pface.append(face("heroFace", 112, 140));
+    pface.lastChild.id = "heroFace";
     const top = h("div", "grid2");
     top.append(fieldEl("name", "名前", "input"));
     const sexF = h("div", "field");
@@ -152,18 +168,24 @@
     ["男", "女"].forEach((s) => {
       const l = h("label");
       const inp = h("input"); inp.type = "radio"; inp.name = "sex"; inp.value = s; inp.checked = draft.sex === s;
-      inp.onchange = () => { draft.sex = s; draft.profile = readProfile(); draft.profile.name = genField("name"); writeProfile(draft.profile); };
+      inp.onchange = () => { draft.sex = s; draft.profile = readProfile(); draft.profile.name = genField("name"); writeProfile(draft.profile); setup.redraw(); };
       l.append(inp, document.createTextNode(s));
       seg.append(l);
     });
     sexF.append(seg);
     top.append(sexF);
-    pbox.append(top);
+    pface.append(top);
+    pbox.append(pface);
+    pbox.addEventListener("input", () => setup.redraw());
     const grid = h("div", "grid2");
     PROFILE_FIELDS.forEach(([k, label, type]) => grid.append(fieldEl(k, label, type)));
     pbox.append(grid);
     root.append(pbox);
     writeProfile(draft.profile);
+    // 職業の札には、今の人物設定でその職業になった姿を出す
+    function drawCards() { if (G.drawPortrait) faces.forEach(([cv, id]) => G.drawPortrait(cv, heroWho(id))); }
+    setup.redraw = () => { drawCards(); drawHero(); };
+    setup.redraw();
 
     // 目的
     const secG = h("section");
@@ -226,7 +248,7 @@
     const b = h("button", "btn small", "振る");
     b.type = "button";
     b.setAttribute("aria-label", `${label}をおまかせで作り直す`);
-    b.onclick = () => { inp.value = genField(key); };
+    b.onclick = () => { inp.value = genField(key); setup.redraw(); };
     row.append(inp, b);
     f.append(row);
     return f;

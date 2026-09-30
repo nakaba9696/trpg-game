@@ -263,6 +263,62 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`モンスターの絵（${seen.size} 種が別々の見た目・ボスはオーラ・魔人は絶界）`);
 }
 
+// ---------------------------------------------------------------- 2c. 人物の絵（DOM なしの偽の canvas で描く）
+{
+  const G = loadEngine();
+  const before = failures;
+  const vmc = vm.createContext({ G });
+  for (const f of ["art_monsters.js", "art_people.js"]) vm.runInContext(readFileSync(new URL("../src/ui/" + f, import.meta.url), "utf8"), vmc);
+  const noop = () => {};
+  const grad = { addColorStop: noop };
+  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : k === "createRadialGradient" || k === "createLinearGradient" ? () => grad : noop), set: (t, k, v) => ((t[k] = v), true) });
+  G.rand = () => { throw new Error("絵が G.rand を使った"); };
+  const kinds = Object.keys(G.PEOPLE);
+  if (kinds.length < 8) fail(`人物の絵: 種類が ${kinds.length} しかない（8 以上）`);
+  const draw = (who, label) => { try { G.paintPerson(ctx, 0, 0, 96, 120, who); } catch (err) { fail(`人物の絵 ${label}: 描くと例外 ${err.message}`); } };
+  const sig = (who) => JSON.stringify(Object.assign({}, G.personLook(who), { seed: 0 }));
+  // 種類ごとに、同じ種は同じ見た目・種が違えば違う見た目
+  for (const k of kinds) {
+    if (!G.PEOPLE[k].name) fail(`人物の絵 ${k}: name が無い`);
+    for (const sex of ["男", "女", undefined]) for (let i = 0; i < 4; i++) draw({ kind: k, seed: "t" + i, sex }, `${k}/${sex}/${i}`);
+    if (sig({ kind: k, seed: "a" }) !== sig({ kind: k, seed: "a" })) fail(`人物の絵 ${k}: 同じ種なのに見た目が変わる`);
+    if (sig({ kind: k, seed: "a" }) === sig({ kind: k, seed: "b" })) fail(`人物の絵 ${k}: 種が違っても同じ見た目`);
+  }
+  // 主人公：職業ごとに違う見た目（同じ人物設定でも）
+  const prof = { name: "テスト", sex: "男", age: "24", look: "黒髪、鋭い目つき、大柄な体" };
+  const heroes = new Map();
+  for (const cls of Object.keys(G.data.CLASSES)) {
+    const who = G.heroWho(prof, cls);
+    draw(who, `主人公 ${cls}`);
+    for (const age of ["8", "70"]) draw(G.heroWho({ ...prof, age }, cls), `主人公 ${cls} ${age}歳`);
+    const L = G.personLook(who);
+    const key = [L.outfit, L.gear].join("/");
+    if (heroes.has(key)) fail(`人物の絵: 主人公 ${cls} と ${heroes.get(key)} の服と装備が同じ`);
+    heroes.set(key, cls);
+    if (L.hair !== "#1c1a1e" || L.eyes !== "sharp" || L.build !== "broad") fail(`人物の絵: 主人公 ${cls} に外見の文（黒髪・鋭い・大柄）が効かない`);
+  }
+  // 出来事の who は、ある種類（か、ある敵）を指す
+  let withWho = 0;
+  const evIds = new Set(G.data.EVENTS.map((e) => e.id));
+  for (const id of Object.keys(G.data.EVENT_WHO || {})) if (!evIds.has(id)) fail(`events_who.js: 出来事 ${id} が無い`);
+  for (const e of G.data.EVENTS) {
+    if (!G.eventWho(e)) continue;
+    withWho++;
+    const w = G.eventWho(e);
+    if (w.kind === "foe") { if (!G.data.ENEMIES[w.foe]) fail(`出来事 ${e.id}: who の敵 ${w.foe} が無い`); continue; }
+    if (!G.PEOPLE[w.kind]) fail(`出来事 ${e.id}: who の種類 ${w.kind} が無い（${kinds.join(", ")}）`);
+    draw(w, `出来事 ${e.id}`);
+  }
+  if (G.eventWho({ id: "x" }) !== null) fail("人物の絵: who の無い出来事で絵を出そうとする");
+  // 仲間（名前と職業から）
+  for (const c of [{ name: "傭兵のラグナ", cls: "傭兵" }, { name: "僧侶のセラ", cls: "僧侶" }, { name: "謎の人", cls: "謎" }, { name: "樽ゴブリンのダル", cls: "ゴブリン" }]) {
+    const w = G.companionWho(c);
+    if (w.kind === "foe") { if (!G.data.ENEMIES[w.foe]) fail(`仲間 ${c.name}: 敵 ${w.foe} が無い`); } else draw(w, `仲間 ${c.name}`);
+  }
+  if (G.companionWho({ name: "僧侶のセラ", cls: "僧侶" }).sex !== "女") fail("人物の絵: 仲間の名前から性別を拾えない");
+  if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
+}
+
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）
 try {
   measureBalance();
