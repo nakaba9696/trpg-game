@@ -131,7 +131,7 @@
     const f = h("div", "fin");
     f.append(h("b", "", S.over === "dead" ? `── ${S.profile.name}、ここに眠る ──` : `── ${S.profile.name}の物語、ここに終わる ──`));
     const row = h("div", "start");
-    const b1 = h("button", "btn", "年表を見る"); b1.type = "button"; b1.onclick = () => ui.openChronicle(S, true);
+    const b1 = h("button", "btn", S.story ? "人生の物語と年表" : "年表を見る"); b1.type = "button"; b1.onclick = () => ui.openChronicle(S, true);
     const b2 = h("button", "btn primary", "新しい冒険を始める"); b2.type = "button"; b2.onclick = () => G.main.toSetup();
     row.append(b1, b2); f.append(row); panel.append(f);
   }
@@ -309,7 +309,7 @@
     return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
       ["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
       ["装飾品", rg ? `${rg.name}（${G.ringEffect(rg)}）` : "なし", rg ? S.ring : null],
-      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
+      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
   }
   function sheetGear() {
     const kv = h("dl", "kv");
@@ -387,11 +387,14 @@
     mk("タイトルへ", () => G.main.toTitle());
     if (!S.over) {
       let armed = 0;
-      const rb = mk("引退する", () => {
-        if (Date.now() - armed > 3000) { armed = Date.now(); rb.textContent = "もう一度押すと引退"; setTimeout(() => { rb.textContent = "引退する"; }, 3000); return; }
+      // 物語を終えられるのは、節目（M6）に着いてから。基本は死ぬまで
+      const can = !G.m6CanEnd || G.m6CanEnd();
+      const label = can ? "物語を終える" : "物語を終える（節目はまだ）";
+      const rb = mk(label, () => {
+        if (Date.now() - armed > 3000) { armed = Date.now(); rb.textContent = "もう一度押すと物語を終える"; setTimeout(() => { rb.textContent = label; }, 3000); return; }
         G.retire(); after();
       });
-      rb.disabled = busy || S.mode === "combat";
+      rb.disabled = busy || S.mode === "combat" || !can;
     }
     acts.append(h("p", "fine saved", "冒険は行動のたびに自動で保存される。タイトルの「つづきから」で戻れる。"));
     return acts;
@@ -584,7 +587,7 @@
     P.graves.forEach((g) => {
       const b = h("button", "grave");
       b.type = "button";
-      b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : "物語を終えた"}　${g.turns} 手番`));
+      b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : g.epitaph || "物語を終えた"}　${g.turns} 手番`));
       b.onclick = () => { $("#dlgTrophy").close(); ui.openChronicle(g, false); };
       gl.append(b);
     });
