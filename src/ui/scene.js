@@ -561,6 +561,31 @@
       ctx.fillStyle = "#b39a52"; ctx.fillRect(w * 0.46, h * 0.38, w * 0.08, h * 0.33); ctx.beginPath(); ctx.arc(w * 0.5, h * 0.38, w * 0.04, Math.PI, 0); ctx.fill();
       ctx.fillStyle = "rgba(0,0,0,.25)"; for (let i = 0; i < 4; i++) { ctx.fillRect(w * (0.08 + i * 0.1), 0, 14, h * 0.71); ctx.fillRect(w * (0.62 + i * 0.1), 0, 14, h * 0.71); }
     },
+    // M1：ゼファラの学院（天井までの書架、浮かぶ灯り、床の魔法陣、結晶の窓）
+    academy(ctx, w, h, R) {
+      interior(ctx, w, h, "#3a3450", "#221e30", R);
+      const cx = w * 0.5;
+      ctx.fillStyle = "#12101c"; ctx.beginPath(); ctx.arc(cx, h * 0.3, h * 0.16, Math.PI, 0); ctx.fill(); ctx.fillRect(cx - h * 0.16, h * 0.3, h * 0.32, h * 0.26);
+      glow(ctx, cx, h * 0.34, h * 0.3, "#7fe3ff", 0.35);
+      ctx.fillStyle = "#bff4ff"; ctx.beginPath(); ctx.moveTo(cx, h * 0.18); ctx.lineTo(cx + h * 0.05, h * 0.34); ctx.lineTo(cx, h * 0.5); ctx.lineTo(cx - h * 0.05, h * 0.34); ctx.fill();
+      for (const side of [0, 1]) {
+        const x0 = side ? w * 0.66 : w * 0.04, bw = w * 0.3;
+        ctx.fillStyle = "#1a1424"; ctx.fillRect(x0, h * 0.06, bw, h * 0.66);
+        for (let s = 0; s < 6; s++) {
+          const y = h * (0.16 + s * 0.1);
+          ctx.fillStyle = "#0e0a14"; ctx.fillRect(x0, y, bw, 4);
+          for (let x = x0 + 3; x < x0 + bw - 6;) { const bk = 4 + R() * 6, bh = h * (0.05 + R() * 0.035); ctx.fillStyle = mix(["#6a2a3a", "#2a4a6a", "#5a4a2a", "#3a5a3a", "#4a3a6a"][Math.floor(R() * 5)], "#000000", 0.35); ctx.fillRect(x, y - bh, bk, bh); x += bk + 1; }
+        }
+      }
+      for (let i = 0; i < 7; i++) { const x = w * (0.2 + R() * 0.6), y = h * (0.1 + R() * 0.35); glow(ctx, x, y, 26, i % 2 ? "#c0a0ff" : "#ffd88a", 0.55); ctx.fillStyle = "#fff4d8"; ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill(); }
+      ctx.strokeStyle = rgba("#9fd8ff", 0.55); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.ellipse(cx, h * 0.86, w * 0.22, h * 0.07, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(cx, h * 0.86, w * 0.15, h * 0.045, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2, b = ((i + 2) / 6) * Math.PI * 2; ctx.moveTo(cx + Math.cos(a) * w * 0.15, h * 0.86 + Math.sin(a) * h * 0.045); ctx.lineTo(cx + Math.cos(b) * w * 0.15, h * 0.86 + Math.sin(b) * h * 0.045); } ctx.stroke();
+      glow(ctx, cx, h * 0.86, w * 0.2, "#7fc8ff", 0.2);
+      ctx.fillStyle = "#1a1424"; ctx.fillRect(w * 0.36, h * 0.66, w * 0.28, 8); ctx.fillRect(w * 0.38, h * 0.67, 6, h * 0.1); ctx.fillRect(w * 0.6, h * 0.67, 6, h * 0.1);
+      ctx.fillStyle = "#e8dcc0"; ctx.save(); ctx.translate(w * 0.47, h * 0.645); ctx.rotate(-0.06); ctx.fillRect(0, 0, w * 0.06, 6); ctx.restore();
+    },
     dungeon(ctx, w, h, R) {
       ctx.fillStyle = "#0c0b0d"; ctx.fillRect(0, 0, w, h);
       for (let i = 0; i < 5; i++) {
@@ -627,7 +652,8 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const seed = String(opt.seed || opt.key);
     const R = rng(seed), RE = rng(seed + ":env");
-    const key = opt.key;
+    // 絵の決まっていない施設は、施設の名前の室内があればそれを使う（学院など）
+    const key = opt.key || (G.S && G.S.mode === "fac" && IN[G.S.fac] ? G.S.fac : opt.key);
     if (IN[key]) { ENV = { season: "", weather: "", night: false, key, snowCap: null }; IN[key](ctx, w, h, R); }
     else {
       const sk0 = key === "realm" || key === "majin" ? RED_SKY : SKIES[opt.phase || 0];

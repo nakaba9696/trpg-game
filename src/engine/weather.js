@@ -2,6 +2,7 @@
 // 季節は暦（G.dateOf と同じ 90 日ごと）と場所の寒さから、天候は日付・地方・冒険ごとの種から決める。
 // 種は冒険の初めに G.rand で一度だけ引く（S.wseed）。古いセーブに無ければ冒険の id から作る。
 // G.skyAt(locId?, day?) → { season: "春|夏|秋|冬", weather: "晴|雨|霧|雪", still, label }
+// 行動のたびに、今いる場所の天候を S.weather に写す（環境音が読む）
 (function (G) {
   const D = G.data;
 
@@ -66,11 +67,26 @@
     return { season, weather, still: false, label: season + "・" + weather };
   };
 
+  // 今いる場所の天候を S.weather に写す（「晴」「雨」「霧」「雪」。魔物界は ""）。
+  // 環境音（ui/sound.js）はこれを読んで雨の音にする。古いセーブは次の行動で入る
+  G.syncWeather = () => {
+    const S = G.S;
+    if (!S || !S.loc) return;
+    S.weather = G.skyAt(S.loc, S.day).weather;
+  };
+  const after = (name) => {
+    const f0 = G[name];
+    if (typeof f0 !== "function") return;
+    G[name] = function () { const r = f0.apply(this, arguments); G.syncWeather(); return r; };
+  };
   // 冒険の初めに天候の種を引く（古いセーブは上の S.id から作る）
   const newGame0 = G.newGame;
   G.newGame = function (opt) {
     const r = newGame0.apply(this, arguments);
     if (G.S && !G.S.wseed) G.S.wseed = 1 + Math.floor(G.rand() * 1e9);
+    G.syncWeather();
     return r;
   };
+  after("act");
+  after("gmApply");
 })(globalThis.G = globalThis.G || {});
