@@ -1,36 +1,78 @@
-// 釣り合いの測定：職業ごとにランダムに遊ばせて、生存手番・死因・到達した場所・ボス撃破を表にする。
-// 数字を出すだけで、テストの失敗にはしない（直すのは Q2）。
+// 釣り合いの測定：職業ごとに遊ばせて、生存手番・死因・到達した場所・ボス撃破を表にする。
+// 遊び方は二通り。数字を出すだけで、テストの失敗にはしない（CI の軽い確認は tests/checks/q2_balance.mjs）。
+//   ランダム       … tests/run.mjs のランダムプレイと同じ（できる行動から等確率で選ぶ）
+//   筋のよい遊び方 … tests/bot.mjs（勝ち目を見積もる・逃げる・宿で休む・装備を買う・鍛える・危険の低い所から）
+// どちらも金や能力値の底上げはせず、キャラクター作成の画面と同じ振り方で始める。
 //   node tests/run.mjs                 … テストのあとに表を出す
 //   node tests/balance.mjs             … 表だけ出す
-//   BALANCE_GAMES=400 node tests/balance.mjs   … 職業ごとの回数（既定 400）
+//   BALANCE_GAMES=400 node tests/balance.mjs   … ランダムの職業ごとの回数（既定 400）
+//   BALANCE_SMART_GAMES=100 …          … 筋のよい遊び方の回数（既定はランダムの 1/8）
+//   STEPS=500 / SMART_STEPS=1500 …     … 1回の行動の上限
 //   BALANCE_SEED=1 …                   … 乱数の出発点をずらす（揺れの確認用。既定 0）
 //   BALANCE=0 node tests/run.mjs       … 測定を省く
 // GitHub Actions では GITHUB_STEP_SUMMARY にも同じ表を書く。
-//
-// 遊び方は tests/run.mjs のランダムプレイと同じ（できる行動から等確率で選ぶ）が、
-// 金や能力値の底上げはせず、キャラクター作成の画面と同じ振り方で始める。
 import { appendFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { loadEngine, seeded } from "./lib.mjs";
+import { makeSmartBot } from "./bot.mjs";
 
 const TOP_CAUSES = 3;
 
 export function measureBalance(opts = {}) {
   if (process.env.BALANCE === "0") return null;
   const GAMES = opts.games ?? Number(process.env.BALANCE_GAMES || 400);
+  const SMART_GAMES = opts.smartGames ?? Number(process.env.BALANCE_SMART_GAMES || Math.max(1, Math.round(GAMES / 8)));
   const STEPS = opts.steps ?? Number(process.env.STEPS || 500);
+  const SMART_STEPS = opts.smartSteps ?? Number(process.env.SMART_STEPS || 1500);
   const SEED = opts.seed ?? Number(process.env.BALANCE_SEED || 0);
+  const quiet = !!opts.quiet;
+  const out = {};
+  const md = [];
+  for (const [mode, games, steps] of [["random", GAMES, STEPS], ["smart", SMART_GAMES, SMART_STEPS]]) {
+    if (opts.modes && !opts.modes.includes(mode)) continue;
+    const t0 = Date.now();
+    const rows = playGames({ mode, games, steps, seed: SEED, classes: opts.classes });
+    out[mode] = rows;
+    md.push(...report(loadEngine().data, rows, { mode, GAMES: games, STEPS: steps, SEED, ms: Date.now() - t0 }));
+  }
+  md.push(...ratioLines(out));
+  if (!quiet) console.log(md.map((l, i) => (l.startsWith("|") ? alignRow(md, i) : l)).join("\n"));
+  if (!quiet && process.env.GITHUB_STEP_SUMMARY) {
+    try { appendFileSync(process.env.GITHUB_STEP_SUMMARY, md.join("\n") + "\n"); } catch { /* 書けなくても失敗にしない */ }
+  }
+  return out;
+}
+
+// 職業ごとの平均手番の、いちばん長い職業 ÷ いちばん短い職業
+export function turnRatio(rows) {
+  const m = rows.map((r) => mean(r.turns));
+  return Math.max(...m) / Math.max(1, Math.min(...m));
+}
+function ratioLines(out) {
+  const lines = ["", "### 職業の差（平均手番の 最長 ÷ 最短。目標は 1.5 倍以内）", ""];
+  for (const [mode, rows] of Object.entries(out)) {
+    const m = rows.map((r) => [(CLASS_NAME[r.cls] || r.cls), mean(r.turns)]).sort((a, b) => a[1] - b[1]);
+    lines.push(`- ${MODE_NAME[mode]}：${turnRatio(rows).toFixed(2)} 倍（最短 ${m[0][0]} ${Math.round(m[0][1])}・最長 ${m[m.length - 1][0]} ${Math.round(m[m.length - 1][1])}）`);
+  }
+  lines.push("");
+  return lines;
+}
+const MODE_NAME = { random: "ランダム", smart: "筋のよい遊び方" };
+const CLASS_NAME = {};
+
+// 職業ごとに games 回遊ばせて集計する。mode は random（できる行動から等確率）か smart（tests/bot.mjs）
+export function playGames({ mode = "random", games = 400, steps = 500, seed = 0, classes: only } = {}) {
   const G = loadEngine();
   const D = G.data;
   const classes = Object.keys(D.CLASSES);
+  classes.forEach((k) => { CLASS_NAME[k] = D.CLASSES[k].name; });
   const goals = Object.keys(D.GOALS).filter((k) => k !== "custom");
-  const t0 = Date.now();
-
-  const rows = classes.map((cls, ci) => {
-    const r = { cls, games: 0, deaths: 0, errors: 0, turns: [], deathTurns: [], days: 0, places: 0, bossKills: 0, bossRuns: 0, kills: 0, causes: {}, visited: {}, diedAt: {} };
-    for (let i = 0; i < GAMES; i++) {
+  return classes.map((cls, ci) => {
+    const r = { cls, games: 0, deaths: 0, errors: 0, turns: [], deathTurns: [], days: 0, places: 0, bossKills: 0, bossRuns: 0, bossMet: 0, kills: 0, causes: {}, visited: {}, diedAt: {}, bossNames: {}, bossDown: {}, milestones: {} };
+    if (only && !only.includes(cls)) return r;
+    for (let i = 0; i < games; i++) {
       // 職業ごとに別の範囲の種を使う（職業を足しても他の職業の数字が変わらないように）
-      G.rand = seeded(100000 + SEED * 1000000 + ci * 10000 + i);
+      G.rand = seeded(100000 + seed * 1000000 + ci * 10000 + i);
       G.P = { trophies: {}, graves: [] };
       const c = D.CLASSES[cls];
       // 作成画面（src/ui/setup.js）と同じ振り方。ボーナス点は均等に配る
@@ -42,11 +84,22 @@ export function measureBalance(opts = {}) {
         stats[k] = Math.min(caps[k], stats[k] + bonus);
       });
       G.newGame({ cls, stats, caps, goal: goals[i % goals.length], profile: { name: "測定", sex: "男", age: 20, history: "測定用", personality: "無口" } });
+      const bot = mode === "smart" ? makeSmartBot(G) : null;
+      let met = false;
       try {
-        for (let step = 0; step < STEPS && !G.S.over; step++) {
-          const acts = G.actions().flatMap((x) => x.list).filter((a) => !a.disabled);
-          if (!acts.length) break;
-          G.act(acts[Math.floor(G.rand() * acts.length)].id);
+        for (let step = 0; step < steps && !G.S.over; step++) {
+          let id;
+          if (bot) id = bot.choose();
+          else {
+            const acts = G.actions().flatMap((x) => x.list).filter((a) => !a.disabled);
+            id = acts.length ? acts[Math.floor(G.rand() * acts.length)].id : null;
+          }
+          if (!id) break;
+          const C = G.S.combat;
+          const bossesBefore = G.S.counters.bosses;
+          G.act(id);
+          if (C && C.boss && G.S.counters.bosses > bossesBefore) C.foes.filter((f) => D.ENEMIES[f.id].boss).forEach((f) => { r.bossDown[f.id] = (r.bossDown[f.id] || 0) + 1; });
+          if (!met && G.S.combat && G.S.combat.boss) { met = true; const b = G.S.combat.foes.find((f) => D.ENEMIES[f.id].boss); if (b) r.bossNames[b.id] = (r.bossNames[b.id] || 0) + 1; }
         }
       } catch {
         r.errors++; // 例外は tests/run.mjs の 2 が拾う。ここでは数えるだけ
@@ -59,6 +112,8 @@ export function measureBalance(opts = {}) {
       r.kills += S.counters.kills;
       r.bossKills += S.counters.bosses;
       if (S.counters.bosses > 0) r.bossRuns++;
+      if (met) r.bossMet++;
+      for (const m of Object.keys((S.m6 && S.m6.reached) || {})) r.milestones[m] = (r.milestones[m] || 0) + 1;
       const v = Object.keys(S.visited || {});
       r.places += v.length;
       for (const id of v) r.visited[id] = (r.visited[id] || 0) + 1;
@@ -71,14 +126,7 @@ export function measureBalance(opts = {}) {
       }
     }
     return r;
-  });
-
-  const md = report(D, rows, { GAMES, STEPS, SEED, ms: Date.now() - t0 });
-  console.log(md.map((l, i) => (l.startsWith("|") ? alignRow(md, i) : l)).join("\n"));
-  if (process.env.GITHUB_STEP_SUMMARY) {
-    try { appendFileSync(process.env.GITHUB_STEP_SUMMARY, md.join("\n") + "\n"); } catch { /* 書けなくても失敗にしない */ }
-  }
-  return rows;
+  }).filter((r) => r.games || r.errors);
 }
 
 // ---------------------------------------------------------------- 表を組む（Markdown）
@@ -97,21 +145,33 @@ const ci95 = (a) => {
 const pct = (n, d) => (d ? `${Math.round((n / d) * 100)}%` : "-");
 const f1 = (x) => x.toFixed(1);
 
-function report(D, rows, { GAMES, STEPS, SEED, ms }) {
+function report(D, rows, { mode, GAMES, STEPS, SEED, ms }) {
   const name = (r) => D.CLASSES[r.cls].name;
   const out = [];
   out.push("");
-  out.push(`## 釣り合いの測定（職業ごとに ${GAMES} 回・1回 ${STEPS} 行動まで・種 ${SEED}・${(ms / 1000).toFixed(1)} 秒）`);
-  out.push("ランダムな行動で遊んだ結果。手番は死ぬか打ち切られるまでの数。失敗にはしない。");
+  out.push(`## 釣り合いの測定：${MODE_NAME[mode]}（職業ごとに ${GAMES} 回・1回 ${STEPS} 行動まで・種 ${SEED}・${(ms / 1000).toFixed(1)} 秒）`);
+  out.push(mode === "smart"
+    ? "tests/bot.mjs の遊び方（勝ち目を見積もって戦う・逃げる・宿で休む・装備を買う・鍛える・危険の低い所から）。手番は死ぬか打ち切られるまでの数。"
+    : "ランダムな行動で遊んだ結果。手番は死ぬか打ち切られるまでの数。失敗にはしない。");
   out.push("");
-  out.push("| 職業 | 死亡率 | 平均手番 | 死亡時の手番（中央値） | 平均日数 | 平均撃破 | ボス撃破（合計） | ボスを倒した回 | 平均到達地 |");
-  out.push("|---|--:|--:|--:|--:|--:|--:|--:|--:|");
+  out.push("| 職業 | 死亡率 | 平均手番 | 死亡時の手番（中央値） | 平均日数 | 平均撃破 | ボス撃破（合計） | ボスを倒した回 | ボスに挑んだ回 | 平均到達地 |");
+  out.push("|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|");
   for (const r of rows) {
     const n = r.games;
-    out.push(`| ${name(r)} | ${pct(r.deaths, n)} | ${Math.round(mean(r.turns))} ±${Math.round(ci95(r.turns))} | ${Math.round(median(r.deathTurns))} | ${f1(r.days / (n || 1))} | ${f1(r.kills / (n || 1))} | ${r.bossKills} | ${pct(r.bossRuns, n)} | ${f1(r.places / (n || 1))} |`);
+    out.push(`| ${name(r)} | ${pct(r.deaths, n)} | ${Math.round(mean(r.turns))} ±${Math.round(ci95(r.turns))} | ${Math.round(median(r.deathTurns))} | ${f1(r.days / (n || 1))} | ${f1(r.kills / (n || 1))} | ${r.bossKills} | ${pct(r.bossRuns, n)} | ${pct(r.bossMet, n)} | ${f1(r.places / (n || 1))} |`);
   }
   const errs = rows.reduce((a, r) => a + r.errors, 0);
   if (errs) out.push(`\n例外で止まった回 ${errs}（数字から除いた）`);
+  const tally = (key, names) => rows.map((r) => {
+    const t = Object.entries(r[key]).sort((a, b) => b[1] - a[1]).map(([id, n]) => `${names(id)} ${n}`).join("・");
+    return `- ${name(r)}：${t || "なし"}`;
+  });
+  out.push("");
+  out.push("倒したボス（回数）");
+  out.push(...tally("bossDown", (id) => (D.ENEMIES[id] ? D.ENEMIES[id].name : id)));
+  out.push("");
+  out.push("着いた節目（M6。回数）");
+  out.push(...tally("milestones", (id) => { const m = D.M6 && D.M6.MILESTONES.find((x) => x.id === id); return m ? m.title : id; }));
 
   out.push("");
   out.push(`### 死因（上位 ${TOP_CAUSES}）`);
