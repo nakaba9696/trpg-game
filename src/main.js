@@ -2,7 +2,7 @@
 // GM（Claude）は、claude.ai で開いたときだけ使える。レーン U（UI）が管理
 (function (G) {
   const $ = (s) => document.querySelector(s);
-  const LKEY = { save: "kotodama3-save", profile: "kotodama3-profile" };
+  const LKEY = G.SAVE_KEYS;
   const lget = (k) => { try { const j = localStorage.getItem(k); return j ? JSON.parse(j) : null; } catch { return null; } };
   const lset = (k, v) => { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 
@@ -34,16 +34,24 @@
     $("#newGame").hidden = false;
     G.ui.render();
   }
-  main.toSetup = () => {
-    G.S = null;
-    main.save();
+  function showSetup(o) {
     G.ui.setSheetOpen(false);
     G.ui.setLogExpanded(false);
     $("#play").hidden = true;
     $("#newGame").hidden = true;
     $("#setup").hidden = false;
-    G.setup.show();
+    G.setup.show(o);
     window.scrollTo({ top: 0 });
+  }
+  const valid = (sv) => !!(sv && sv.v === 1 && sv.stats && sv.log && G.data.LOCS[sv.loc]);
+  // タイトル（今の冒険は消さない。「つづきから」で戻れる）
+  main.toTitle = () => showSetup({ step: "title" });
+  main.resume = () => { if (valid(G.S)) showPlay(); };
+  // 今の冒険を捨てて、人物づくりから
+  main.toSetup = () => {
+    G.S = null;
+    main.save();
+    showSetup({ step: "person", fresh: true });
   };
   main.start = (opts) => {
     G.newGame(opts);
@@ -69,15 +77,18 @@
     main.toSetup();
   };
 
+  // 読み込んだ冒険を今の冒険にする。冒険の画面を開いていれば描き直す（タイトルや作成の途中なら、そのまま）
   function adopt(sv) {
-    if (sv && sv.v === 1 && sv.stats && sv.log && G.data.LOCS[sv.loc]) { G.S = sv; showPlay(); }
-    else main.toSetup();
+    G.S = valid(sv) ? sv : null;
+    if (!$("#play").hidden) { if (G.S) showPlay(); else main.toTitle(); }
   }
 
   // ---------------------------------------------------------------- 起動
+  try { G.migrateSaveKeys(localStorage); } catch {}
   G.P = lget(LKEY.profile) || { trophies: {}, graves: [] };
   G.ui.buildWorld();
   adopt(lget(LKEY.save));
+  main.toTitle();
 
   (async () => {
     const c = window.claude;

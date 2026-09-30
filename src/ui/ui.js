@@ -10,6 +10,24 @@
   let lastPaint = "";
   let busy = false;
 
+  // ---------------------------------------------------------------- 人物の絵（art_people.js の G.drawPortrait を通す）
+  // face() で canvas を作り、画面に置いてから drawFaces() で描く（大きさを測ってから描くため）
+  let faceQueue = [];
+  function face(cls, who, cw, ch) {
+    const cv = h("canvas", "face " + cls);
+    cv.width = cw * 2; cv.height = ch * 2;
+    cv.setAttribute("aria-hidden", "true");
+    if (who) faceQueue.push([cv, who]);
+    return cv;
+  }
+  function drawFaces() {
+    const q = faceQueue;
+    faceQueue = [];
+    if (G.drawPortrait) q.forEach(([cv, who]) => G.drawPortrait(cv, who));
+  }
+  const heroWho = (S) => G.heroWho(S.profile, S.cls);
+  ui.heroWho = heroWho;
+
   // ---------------------------------------------------------------- 背景
   function sceneKey() {
     const S = G.S;
@@ -27,7 +45,28 @@
     lastPaint = sig;
     G.paintScene($("#scene"), { key, phase: S.phase, seed: S.loc + ":" + S.depth + ":" + key, foes, redMoon: S.phase === 3 && !!S.flags.god });
   }
-  window.addEventListener("resize", () => { if (G.S && !$("#play").hidden) paint(true); });
+  // 出来事に出てくる人物（出来事のデータの who）。背景の右上に重ねる
+  let lastWho = "";
+  function paintWho() {
+    const S = G.S;
+    const e = S.mode === "event" && S.event && G.eventWho ? D.EVENTS.find((x) => x.id === S.event) : null;
+    const who = e ? G.eventWho(e) : null;
+    let box = $("#who");
+    if (!who) { if (box) box.hidden = true; lastWho = ""; return; }
+    if (!box) {
+      box = h("div"); box.id = "who";
+      box.append(face("whoFace", null, 96, 120), h("span", "whoName"));
+      $(".scene").append(box);
+    }
+    box.hidden = false;
+    const kind = G.PEOPLE && G.PEOPLE[who.kind];
+    box.querySelector(".whoName").textContent = who.name || (kind ? kind.name : "");
+    const sig = JSON.stringify(who) + "|" + box.clientWidth;
+    if (sig === lastWho) return;
+    lastWho = sig;
+    if (G.drawPortrait) G.drawPortrait(box.querySelector("canvas"), who);
+  }
+  window.addEventListener("resize", () => { if (G.S && !$("#play").hidden) { paint(true); paintWho(); } });
 
   // ---------------------------------------------------------------- 記録
   // 1件の記録を要素にする。新しい種類の記録（戦闘の演出など）は logEntryEl に足す
@@ -40,6 +79,14 @@
     box.append(dice, h("span", "num", `→ ${e.roll}`));
     box.append(h("span", "verdict " + (e.crit ? "crit" : e.ok ? "ok" : "ng"), e.label));
     if (e.growth) box.append(h("span", "grow num", `${e.stat} 成長 ${e.growth[0]}→${e.growth[1]}`));
+    if (e.rr) box.append(h("span", "fine", `（振り直し。前の出目 ${e.rr.roll}）`));
+    // M7：失敗した判定の横に「振り直す（残り n）」
+    if (G.rerollTarget && G.rerollTarget(e) && !busy) {
+      const b = h("button", "btn small", `振り直す（残り ${G.rerolls()}）`);
+      b.type = "button";
+      b.onclick = () => { if (!busy) { G.act("rr:go"); after(); } };
+      box.append(b);
+    }
     return box;
   }
   const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" };
@@ -196,9 +243,12 @@
     const S = G.S;
     const head = h("div", "shead");
     const hd = h("div");
-    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）`));
+    const pf = face("sface", heroWho(S), 72, 90);
+    pf.title = "人物を見る";
+    pf.onclick = () => ui.openProfile();
+    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）${G.reputeLabel ? G.reputeLabel() : ""}`));
     const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
-    head.append(hd, close);
+    head.append(pf, hd, close);
     return head;
   }
   function sheetPools() {
@@ -225,15 +275,32 @@
   // 目的・日付・装備などの表（装備の枠を足すときはここの行に足す）
   function sheetGearRows() {
     const S = G.S;
-    const w = G.weapon(), ar = G.armor();
+    const w = G.weapon(), ar = G.armor(), rg = G.ring();
     return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
       ["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
-      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
+      ["装飾品", rg ? `${rg.name}（${G.ringEffect(rg)}）` : "なし", rg ? S.ring : null],
+      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
   }
   function sheetGear() {
     const kv = h("dl", "kv");
-    sheetGearRows().forEach(([k, v]) => { kv.append(h("dt", "", k), h("dd", "", v)); });
+    // 3つ目があれば、その装備を外すボタンを付ける
+    sheetGearRows().forEach(([k, v, id]) => { const dd = h("dd", "", v); if (id) itemButtons(id, G.itemInfo(id), dd, true); kv.append(h("dt", "", k), dd); });
     return kv;
+  }
+  // 仲間の顔
+  function sheetCompanions() {
+    const S = G.S;
+    if (!S.companions.length || !G.companionWho) return null;
+    const box = h("div", "comps");
+    S.companions.forEach((c) => {
+      const el = h("div", "comp");
+      el.append(face("cface", G.companionWho(c), 44, 55));
+      const t = h("div");
+      t.append(h("b", "", c.name), h("span", "fine", c.desc || ""));
+      el.append(t);
+      box.append(el);
+    });
+    return box;
   }
   function sheetQuests() {
     const S = G.S;
@@ -243,12 +310,13 @@
     return sheetSection("quests", `受けている依頼（${S.quests.length}）`, ul);
   }
   // 持ち物1行のボタン（装備できる種類を増やすときはここ）
-  function itemButtons(id, it, li) {
+  function itemButtons(id, it, li, worn) {
     const S = G.S;
     const free = !busy && !S.over && S.mode !== "combat";
     const mk = (label, fn) => { const b = h("button", "btn small", label); b.type = "button"; b.disabled = !free; b.onclick = () => { fn(); after(); }; li.append(b); };
-    if (it.type === "use" && (it.hp || it.mp)) mk("使う", () => G.useItem(id));
+    if (it.type === "use" && (it.hp || it.mp || it.reroll)) mk("使う", () => G.useItem(id));
     if (it.type === "weapon" || it.type === "armor") mk("装備", () => G.equip(id));
+    if (it.type === "ring") { if (worn) mk("外す", () => G.unequip("ring")); else mk("装備", () => G.equip(id)); }
   }
   function sheetInventory() {
     const S = G.S;
@@ -299,14 +367,19 @@
     $("#mHpBar").style.width = (S.maxHp ? (S.hp / S.maxHp) * 100 : 0) + "%";
     $("#mMpBar").style.width = (S.maxMp ? (S.mp / S.maxMp) * 100 : 0) + "%";
     $("#mGold").textContent = `${S.gold}G`;
+    const bar = $("#mbar");
+    let mf = $("#mFace");
+    if (!mf && G.drawPortrait) { mf = face("mface", null, 40, 50); mf.id = "mFace"; bar.prepend(mf); bar.classList.add("hasface"); }
+    if (mf) { const sig = JSON.stringify(heroWho(S)); if (mf.dataset.sig !== sig) { mf.dataset.sig = sig; faceQueue.push([mf, heroWho(S)]); } }
   }
   function renderSheet(ups) {
     const sh = $("#sheet");
     const keep = sh.scrollTop;
     sh.textContent = "";
-    [sheetHead(), sheetPools(), sheetStats(ups), sheetGear(), sheetQuests(), sheetInventory(), sheetMemos(), sheetButtons()].forEach((el) => { if (el) sh.append(el); });
+    [sheetHead(), sheetPools(), sheetStats(ups), sheetGear(), sheetCompanions(), sheetQuests(), sheetInventory(), sheetMemos(), sheetButtons()].forEach((el) => { if (el) sh.append(el); });
     sh.scrollTop = keep;
     renderMobileBar();
+    drawFaces();
   }
   // ステータスの開閉（スマホでは全面に重ねて出す。PC では常に横にある）
   ui.setSheetOpen = (on) => {
@@ -320,7 +393,7 @@
   async function copyLog() {
     const S = G.S;
     const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}成長${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
-    const txt = `『言霊の卓』 ${S.clsName} ${S.profile.name} ── 目的：${S.goal.text}\n` + lines.join("\n");
+    const txt = `『Morsveld』 ${S.clsName} ${S.profile.name} ── 目的：${S.goal.text}\n` + lines.join("\n");
     try { await navigator.clipboard.writeText(txt); ui.toast("ログをコピーしました"); }
     catch { const ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.append(ta); ta.select(); try { document.execCommand("copy"); ui.toast("ログをコピーしました"); } catch { ui.toast("コピーできませんでした"); } ta.remove(); }
   }
@@ -344,9 +417,11 @@
     $("#sceneTitle").textContent = L.name + (S.mode === "fac" && S.fac ? `・${G.FAC_NAMES[S.fac]}` : "") + (L.type === "dungeon" && S.depth ? `・地下${S.depth}階` : "");
     $("#sceneDate").textContent = `${G.date()}・${G.PHASES[S.phase]}`;
     paint();
+    paintWho();
     renderLog();
     renderPanel();
     renderSheet(ups);
+    if (G.sound) G.sound.react(S); // 増えた記録と状態の変化から音を選ぶ（ui/sound.js）
     if (!prevStats) prevStats = { ...S.stats };
   };
 
@@ -368,9 +443,12 @@
     $("#profTitle").textContent = `${p.name}（${S.clsName}）`;
     const dl = $("#profBody");
     dl.textContent = "";
-    [["性別", p.sex], ["年齢", `${p.age}歳`], ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", `「${p.quote}」`], ["好きなもの", p.like], ["苦手なもの", p.dislike], ["目的", S.goal.text]]
+    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", `「${p.quote}」`], ["好きなもの", p.like], ["苦手なもの", p.dislike], ["目的", S.goal.text]]
       .forEach(([k, v]) => { if (v) dl.append(h("dt", "", k), h("dd", "", v)); });
+    let pf = $("#profFace");
+    if (!pf) { pf = face("profface", null, 150, 188); pf.id = "profFace"; dl.before(pf); }
     $("#dlgProfile").showModal();
+    if (G.drawPortrait) G.drawPortrait(pf, heroWho(S));
   };
 
   ui.openMap = () => {
@@ -419,6 +497,7 @@
       ep.textContent = "";
       const name = run.profile ? run.profile.name : run.name;
       const cls = run.clsName || run.cls;
+      if (run.profile && run.cls) ep.append(face("eface", heroWho(run), 64, 80));
       ep.append(h("b", "", end === "dead" ? `${cls} ${name}、ここに眠る` : `${cls} ${name}、物語を終える`));
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
@@ -433,6 +512,7 @@
     });
     $("#chronActions").hidden = !fromEnd;
     $("#dlgChron").showModal();
+    drawFaces();
   };
 
   ui.openTrophies = (tab) => {

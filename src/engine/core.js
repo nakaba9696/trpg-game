@@ -50,7 +50,7 @@
 
   // ---------------------------------------------------------------- 持ち物
   G.count = (id) => G.S.inv[id] || 0;
-  G.has = (id) => G.count(id) > 0 || G.S.weapon === id || G.S.armor === id;
+  G.has = (id) => G.count(id) > 0 || G.S.weapon === id || G.S.armor === id || G.S.ring === id;
   G.give = (id, n) => {
     n = n || 1;
     const it = G.itemInfo(id);
@@ -68,12 +68,23 @@
   };
   G.weapon = () => D.ITEMS[G.S.weapon] || D.ITEMS.fists;
   G.armor = () => D.ITEMS[G.S.armor] || null;
+  G.ring = () => D.ITEMS[G.S.ring] || null; // 装飾品（古いセーブには S.ring が無い）
   G.gearBonus = (kind) => {
     let b = 0;
     Object.keys(G.S.inv).forEach((id) => { const it = D.ITEMS[id]; if (it && it.type === "gear" && it.bonus && it.bonus[kind]) b += it.bonus[kind]; });
+    const r = G.ring();
+    if (r && r.bonus && r.bonus[kind]) b += r.bonus[kind];
     return b;
   };
-  G.magicBonus = () => (G.weapon().magic || 0) + ((G.armor() && G.armor().magic) || 0);
+  G.magicBonus = () => (G.weapon().magic || 0) + ((G.armor() && G.armor().magic) || 0) + ((G.ring() && G.ring().magic) || 0);
+  // 装飾品の効き目を短い文にする（画面と店の説明用）
+  G.ringEffect = (it) => {
+    const KIND = { fire: "炎の魔法", heal: "癒し", steal: "盗み", trap: "罠", talk: "話術" };
+    const out = Object.entries(it.stats || {}).map(([k, n]) => k + G.sign(n));
+    Object.entries(it.bonus || {}).forEach(([k, n]) => out.push((KIND[k] || k) + G.sign(n)));
+    if (it.magic) out.push("魔法" + G.sign(it.magic));
+    return out.join("・") + (it.cursed ? "・呪い" : "");
+  };
   G.equip = (id) => {
     const S = G.S;
     const it = D.ITEMS[id];
@@ -86,8 +97,29 @@
       if (S.armor) G.give(S.armor);
       G.take(id);
       S.armor = id;
+    } else if (it.type === "ring") {
+      if (G.ring() && !G.unequip("ring")) return false;
+      G.take(id);
+      S.ring = id;
     } else return false;
     G.note(`${it.name}を装備した。`);
+    return true;
+  };
+
+  // 装備を外して持ち物に戻す（今は装飾品だけ）。呪われた物は指の皮ごと持っていかれる
+  G.unequip = (slot) => {
+    const S = G.S;
+    if (slot !== "ring" || !S.ring) return false;
+    const it = G.ring();
+    if (it && it.cursed) {
+      const n = Math.min(3, S.hp - 1);
+      if (n > 0) S.hp -= n;
+      G.say(`${it.name}は、はがすようにしか外れなかった。指の皮がめくれた。`);
+      if (n > 0) G.note(`HP -${n}`);
+    }
+    G.give(S.ring);
+    S.ring = "";
+    G.note(`${it ? it.name : "装飾品"}を外した。`);
     return true;
   };
 
@@ -95,6 +127,7 @@
   G.useItem = (id) => {
     const S = G.S;
     const it = D.ITEMS[id];
+    if (it && it.type === "tome") return G.readTome(id);
     if (!S || S.over || S.mode === "combat" || !it || it.type !== "use" || !(it.hp || it.mp) || !G.take(id)) return false;
     G.log("you", `${it.name}を使う`);
     if (it.hp) { G.heal(it.hp); G.note(it.hp > 100 ? "HP が全快した。" : `HP +${it.hp}`); }
@@ -107,6 +140,7 @@
     const S = G.S;
     let v = S.stats[k];
     if (k === "敏捷" && G.armor()) v += G.armor().agi || 0;
+    if (G.ring() && G.ring().stats) v += G.ring().stats[k] || 0;
     if (S.conds.includes("毒") && (k === "筋力" || k === "体力")) v -= 10;
     if (S.conds.includes("呪い")) v -= 5;
     return v;
@@ -229,6 +263,75 @@
     S.fame = Math.max(0, S.fame + n);
     const after = G.fameRank(S.fame);
     if (after !== before && n > 0) { G.note(`名声が高まった。今やあなたは「${after}」だ。`); G.chron(`「${after}」と呼ばれるようになる`, "event"); }
+    const nation = n > 0 && G.nationOf();
+    if (nation) G.repOf(nation).rep += n;   // 名声は大陸じゅうの名の通り方、評判はその国で稼いだ分
+  };
+
+  // ---------------------------------------------------------------- 国ごとの評判と悪名（M3）
+  // S.repute = { 国: { rep: 評判, inf: 悪名, wanted: 賞金首か } }。S.sin = 罪の匂い（国をまたいで残る。殺しと裏切りで増える）
+  // 国は場所の nation か region。D.LAWLESS の地域（魔物界など）には衛兵がいない。
+  // 悪名が手配の線（30＋評判/10、最大 +20）を超えるとその国で賞金首。10 日ごとに悪名が 1 ずつ薄れ、線より 10 下がると手配が解ける。
+  // 罪の種類と重さは D.CRIMES、既存の出来事の悪行は D.DEEDS（src/data/events_m3.js）。古いセーブでは項目が無くても動く
+  G.nationOf = (id) => {
+    const L = D.LOCS[id || G.S.loc];
+    const n = L && (L.nation || L.region);
+    return n && !(D.LAWLESS || []).includes(n) ? n : null;
+  };
+  G.repOf = (n) => { const S = G.S; S.repute = S.repute || {}; S.m3day = S.m3day || S.day; return S.repute[n] || (S.repute[n] = { rep: 0, inf: 0, wanted: false }); };
+  G.bountyLine = (n) => 30 + Math.min(20, Math.floor(G.repOf(n).rep / 10));
+  G.bounty = (n) => G.repOf(n).inf * 10;
+  G.wanted = (n) => { const S = G.S; n = n === undefined ? G.nationOf() : n; return !!(n && S.repute && S.repute[n] && S.repute[n].wanted); };
+  G.wantedIn = () => Object.keys(G.S.repute || {}).filter((n) => G.S.repute[n].wanted);
+  G.infamyHere = () => { const n = G.nationOf(); return n && G.S.repute && G.S.repute[n] ? G.S.repute[n].inf : 0; };
+  G.updateWanted = (n) => {
+    const S = G.S;
+    const r = G.repOf(n);
+    const line = G.bountyLine(n);
+    if (!r.wanted && r.inf >= line) {
+      r.wanted = true;
+      G.chron(`${n}で賞金首になる。懸賞金${G.bounty(n)}G`, "event");
+      if (S.title && S.title !== "国王" && S.titleAt === n) {
+        G.note(`${n}は、あなたの${S.title}の位を取り上げた。`);
+        G.chron(`${n}から${S.title}の位を剥奪される`, "event");
+        S.title = ""; S.titleAt = "";
+      }
+    } else if (r.wanted && r.inf < line - 10) {
+      r.wanted = false;
+      G.chron(`${n}での手配が解かれる`, "event");
+    }
+  };
+  G.addInfamy = (v, n) => {
+    n = n === undefined ? G.nationOf() : n;
+    if (!n || !v) return;
+    const r = G.repOf(n);
+    r.inf = G.clamp(r.inf + v, 0, 999);
+    G.note(`${n}での悪名 ${G.sign(v)}`);
+    G.updateWanted(n);
+  };
+  G.crime = (kind, n) => {
+    const S = G.S;
+    const c = (D.CRIMES || {})[kind];
+    if (!c) return;
+    if (c.sin) S.sin = (S.sin || 0) + c.sin;
+    G.addInfamy(c.inf, n);
+  };
+  G.reputeTick = () => {
+    const S = G.S;
+    if (!S.repute) return;
+    S.m3day = S.m3day || S.day;
+    while (S.day - S.m3day >= 10) {
+      S.m3day += 10;
+      Object.keys(S.repute).forEach((n) => { const r = S.repute[n]; if (r.inf > 0) { r.inf--; G.updateWanted(n); } });
+    }
+  };
+  // 画面の見出しに添える一言（手配中の国と懸賞金、なければ今いる国の悪名）
+  G.reputeLabel = () => {
+    const S = G.S;
+    if (!S) return "";
+    const w = G.wantedIn();
+    if (w.length) return `・${w.includes(G.nationOf()) ? "この国で" : w.join("・") + "で"}手配中（懸賞金 ${G.bounty(w.includes(G.nationOf()) ? G.nationOf() : w[0])}G）`;
+    const inf = G.infamyHere();
+    return inf ? `・悪名 ${inf}` : "";
   };
 
   // ---------------------------------------------------------------- 仲間
@@ -250,6 +353,39 @@
     S.companions.push(comp);
     G.note(`${comp.name}が仲間になった。（${comp.desc}）`);
     G.chron(`${comp.name}が仲間に加わる`, "event");
+    return true;
+  };
+
+  // ---------------------------------------------------------------- 魔法の習得（M1）
+  // 炎と癒しは誰でも使える。ほかの術（D.SPELLS）は、学院か魔導書で覚えて S.spells に持つ（古いセーブには無い）
+  G.knows = (id) => { const sp = D.SPELLS && D.SPELLS[id]; return !!sp && (!!sp.base || (G.S.spells || []).includes(id)); };
+  G.learnSpell = (id) => {
+    const S = G.S;
+    const sp = D.SPELLS && D.SPELLS[id];
+    if (!sp || G.knows(id)) return false;
+    S.spells = [...(S.spells || []), id];
+    G.note(`${sp.name}を覚えた。（${sp.hint}）`);
+    G.chron(`${sp.name}を覚える`);
+    return true;
+  };
+  // 借りた力の代償。術を大失敗したときに払う。今は借り（S.magicDebt）が積もるだけ。正気（M5）はここに繋ぐ
+  G.payDebt = (n) => {
+    const S = G.S;
+    S.magicDebt = (S.magicDebt || 0) + n;
+    G.note("どこか遠くで、帳面に何かが書き足された気がする。");
+  };
+  // 魔導書を読み解く（知力）。覚えても本は残る
+  G.tomeChance = (id) => G.chance("知力", (D.ITEMS[id] && D.ITEMS[id].learn) || "普通");
+  G.readTome = (id) => {
+    const S = G.S;
+    const it = D.ITEMS[id];
+    if (!S || S.over || S.mode === "combat" || !it || it.type !== "tome" || !S.inv[id] || G.knows(it.teach)) return false;
+    G.log("you", `${it.name}を読み解く`);
+    G.pass(1);
+    const r = G.check("知力", it.learn || "普通", "魔導書を読み解く");
+    if (r.ok) { G.say("文字の並びが、ふいに意味を持った。誰かが耳元で、読み方を教えてくれたような気がした。"); G.learnSpell(it.teach); }
+    else if (r.fumble) { G.say("読み違えた一行が、指に絡みついて離れない。"); G.payDebt(1); }
+    else G.say("頁の上で文字が泳ぐ。今日は読めそうにない。");
     return true;
   };
 
@@ -286,6 +422,11 @@
     if (o.memo) G.memo(o.memo);
     if (o.chron) G.chron(o.chron);
     if (o.trophy) G.award(o.trophy);
+    if (o.crime) G.crime(o.crime);
+    if (o.infamy) G.addInfamy(o.infamy);
+    if (o.sin) S.sin = Math.max(0, (S.sin || 0) + o.sin);
+    if (o.title === "国王" && G.nationOf()) { const r = G.repOf(G.nationOf()); r.inf = 0; r.wanted = false; }
+    if (o.dropCompanion && S.companions.length) { const c = S.companions.pop(); G.note(`${c.name}は、もういない。`); }
     if (o.hp) { if (o.hp > 0) { G.heal(o.hp); G.note(`HP +${o.hp}`); } else { G.note(`HP ${o.hp}`); G.hurt(-o.hp, "傷がもとで力尽きた"); } }
     if (S.over) return;
     if (o.fight) { G.startCombat(G.resolveFoes(o.fight), { win: o.win }); return; }
@@ -351,6 +492,8 @@
       o = r.ok ? c.ok : c.ng;
     }
     G.apply(o);
+    const deed = (D.DEEDS || {})[e.id + ":" + i];   // 既存の出来事の悪行（書き換えずに悪名を付ける）
+    if (deed && o && !S.over && (deed.on === "any" || (o === c.ng ? "ng" : "ok") === (deed.on || "ok"))) G.crime(deed.crime);
   };
 
   // ---------------------------------------------------------------- 新しい冒険
@@ -363,7 +506,7 @@
       goal: { id: opt.goal, text: opt.goalText || D.GOALS[opt.goal].text },
       stats, caps: { ...opt.caps }, startStats: { ...stats },
       maxHp: G.maxHpOf(stats), hp: G.maxHpOf(stats), maxMp: G.maxMpOf(stats), mp: G.maxMpOf(stats),
-      gold: c.gold, fame: 0, title: "", inv: { ...c.items }, weapon: c.weapon, armor: c.armor,
+      gold: c.gold, fame: 0, title: "", inv: { ...c.items }, weapon: c.weapon, armor: c.armor, ring: "",
       companions: [], loc: c.start, visited: {}, day: 1, phase: 0, turn: 0,
       mode: "explore", fac: null, event: null, combat: null, depth: 0, travel: null,
       quests: [], board: null, recruits: null, flags: {}, conds: [], memos: [], chronicle: [], log: [],
@@ -371,6 +514,7 @@
       clungUsed: false, over: "", deathCause: "", startedAt: Date.now(),
     };
     G.S = S;
+    S.spells = [...((D.SPELL_START && D.SPELL_START[opt.cls]) || [])]; // 覚えている術（M1）
     S.visited[S.loc] = true;
     const L = G.loc();
     G.chron(`${L.name}にて、${c.name}${S.profile.name}の冒険が始まる。目的は「${S.goal.text}」`, "start");
@@ -414,6 +558,7 @@
   G.endTurn = () => {
     const S = G.S;
     S.turn++;
+    G.reputeTick();
     if (!S.over && G.goalDone(S) && !S.flags.goalAnnounced) {
       S.flags.goalAnnounced = true;
       G.log("title", "宿願成就");
