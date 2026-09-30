@@ -85,7 +85,8 @@ button { cursor: pointer; }
 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
 .seg { display: inline-flex; justify-self: start; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
 .seg label { padding: 5px 12px; cursor: pointer; font-size: 13px; }
-.seg input { position: absolute; opacity: 0; }
+.seg { position: relative; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .seg label:has(input:checked) { background: var(--ink); color: var(--paper); }
 .start { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .start .btn.primary { font-size: 16px; padding: 9px 22px; }
@@ -130,6 +131,7 @@ button { cursor: pointer; }
 #log { display: grid; gap: 8px; align-content: start; max-height: 46vh; overflow-y: auto; padding-right: 6px; font-family: var(--f-body); font-size: 16px; line-height: 1.85; }
 @media (max-width: 880px) { #log { max-height: none; overflow: visible; } }
 #log > * { margin: 0; }
+.logbar { display: none; }
 .l-title { font-family: var(--f-display); font-size: 15px; color: var(--accent); letter-spacing: .08em; border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px !important; }
 .l-you { font-family: var(--f-ui); font-size: 14px; border-left: 3px solid var(--ink); padding-left: 10px; }
 .l-sys { font-family: var(--f-ui); font-size: 13px; color: var(--muted); }
@@ -159,6 +161,7 @@ button { cursor: pointer; }
 .foe b { font-family: var(--f-body); font-size: 15px; }
 .foe .g { height: 6px; background: var(--paper); border: 1px solid var(--rule); position: relative; }
 .foe .g i { position: absolute; inset: 0 auto 0 0; background: var(--ng); }
+.foe.down { opacity: .35; }
 
 #act { position: sticky; bottom: 0; padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid var(--rule); display: grid; gap: 8px; z-index: 4; }
 .freeRow { display: flex; gap: 8px; }
@@ -176,6 +179,10 @@ button { cursor: pointer; }
 .sclass { font-size: 12.5px; color: var(--muted); display: block; }
 .closeSheet { display: none; }
 .lab { font-size: 11.5px; letter-spacing: .12em; color: var(--muted); margin-bottom: 4px; }
+.ssec > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }
+.ssec > summary::-webkit-details-marker { display: none; }
+.ssec > summary::before { content: "▸"; font-size: 10px; transition: transform .15s; }
+.ssec[open] > summary::before { transform: rotate(90deg); }
 .pools { display: grid; gap: 6px; }
 .pool { display: grid; grid-template-columns: 2.4em minmax(0, 1fr) 4.8em; gap: 8px; align-items: center; font-size: 13px; }
 .pool .g { height: 10px; background: var(--paper); border: 1px solid var(--rule); position: relative; }
@@ -248,3 +255,60 @@ dialog::backdrop { background: var(--scrim); }
 #toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 30; background: var(--ink); color: var(--paper);
   padding: 10px 18px; border-radius: 3px; font-size: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.25); max-width: calc(100vw - 32px); }
 #toast b { color: var(--gold); }
+
+/* ---------------------------------------------------------------- スマホ（狭い画面） */
+@media (max-width: 880px) {
+  /* 記録は枠の中で読み、下の行動ボタンが近くに見えるようにする */
+  .logbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; letter-spacing: .12em; color: var(--muted); font-weight: 700; margin-bottom: -6px; }
+  #log { max-height: 40vh; max-height: 40svh; overflow-y: auto; overscroll-behavior: contain; scroll-margin-top: 72px; border-block: 1px solid var(--rule); padding: 4px 4px 8px 0; }
+  body.log-open #log { max-height: none; overflow: visible; }
+  #log .new { animation: logIn .35s ease-out; }
+  #mbar { padding-block: 6px; }
+  #mbar .btn { min-height: 40px; }
+}
+@keyframes logIn { from { opacity: 0; transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { #log .new { animation: none; } }
+
+@media (max-width: 600px) {
+  body { margin: 0; padding-inline: 12px; }
+  #mbar { margin-inline: -12px; padding-inline: 12px; }
+  .top { padding-block: 10px 8px; gap: 4px 10px; align-items: center; }
+  .top h1 { font-size: 22px; }
+  .top .sub, .top .wide { display: none; }
+  .top .tools { gap: 4px; }
+  .top .tools .btn { padding: 6px 8px; font-size: 12px; min-height: 36px; }
+  .scene canvas { height: clamp(110px, 32vw, 150px); }
+  .scene figcaption { padding: 14px 10px 6px; }
+  .scene figcaption b { font-size: 16px; }
+  #log { font-size: 15.5px; line-height: 1.8; }
+  .check { font-size: 12.5px; gap: 4px 8px; }
+
+  /* 行動ボタンは2列。指で押しやすい高さにする */
+  .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .act { min-height: 52px; padding: 8px 10px; align-content: center; }
+  .act b { font-size: 14px; line-height: 1.4; overflow-wrap: anywhere; }
+  .act span { font-size: 11.5px; line-height: 1.4; }
+  .foes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .foe { min-width: 0; }
+  .foe b { font-size: 14px; overflow-wrap: anywhere; }
+
+  /* 自由入力：iOS で拡大されないよう 16px */
+  .freeRow input { font-size: 16px; padding: 9px 10px; }
+  #act .btn.primary { min-width: 64px; }
+
+  /* ステータスは下から出る全面のシート */
+  #sheetBox { padding: calc(8px + env(safe-area-inset-top, 0px)) 0 0; }
+  .sheet { max-width: none; height: 100%; border-radius: 10px 10px 0 0; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  .closeSheet { min-height: 40px; min-width: 64px; }
+  .ssec > summary { min-height: 36px; margin-bottom: 0; }
+  .inv li { min-height: 40px; }
+  .btn.small { min-height: 34px; padding: 4px 12px; font-size: 13px; }
+  .sheet-actions .btn { min-height: 40px; }
+
+  dialog { width: calc(100vw - 16px); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); }
+  .dhead { padding: 10px 12px; }
+  .dhead h2 { font-size: 18px; }
+  .dbody { padding: 12px 12px 16px; }
+  .dhead .btn { min-height: 40px; }
+  #toast { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+}
