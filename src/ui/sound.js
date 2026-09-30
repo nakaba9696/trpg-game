@@ -309,7 +309,7 @@
 
   // 場所・施設・天候から環境音を選ぶ（S.weather は、天候の仕組みが入ったときのための予約）
   const SEA = { port: 1, yakumo: 1 };
-  const WINDY = { snow: 1, mountain: 1, plains: 1, realm: 1, swamp: 1, forest: 1, snowcity: 0 };
+  const WINDY = { snow: 1, mountain: 1, plains: 1, realm: 1, swamp: 1, forest: 1, snowcity: 0, e2_garden: 1, onigashima: 1 };
   snd.ambFor = (S) => {
     if (!S || S.over) return null;
     const L = G.data.LOCS[S.loc] || {};
@@ -317,7 +317,7 @@
     if (/rain|雨|嵐/.test(w) && !(S.mode === "fac") && !(L.type === "dungeon" && S.depth > 0)) return "rain";
     if (S.mode === "fac") return S.fac === "inn" || S.fac === "tavern" ? "fire" : null;
     if (L.type === "dungeon" && S.depth > 0) return L.scene === "majin" ? "dread" : "cave";
-    if (L.scene === "majin" || L.scene === "realm") return "dread";
+    if (L.scene === "majin" || L.scene === "realm" || L.scene === "e2_kitchen") return "dread";
     if (L.type === "town") return SEA[L.scene] ? "sea" : "town";
     if (WINDY[L.scene] !== undefined || L.type === "wild") return "wind";
     return null;

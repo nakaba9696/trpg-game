@@ -102,6 +102,9 @@
     return L;
   };
 
+  // 見た目が決めてあるか（PRESET か敵のデータの look）。無ければ種類と id から自動で作られる（tests/checks/a4_art.mjs が見る）
+  G.monsterHasLook = (id) => !!(PRESET[id] || (G.data && G.data.ENEMIES && G.data.ENEMIES[id] && G.data.ENEMIES[id].look));
+
   // ---------------------------------------------------------------- 描く道具
   function shade(ctx, x, y, r, c) {
     const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r * 1.2);
@@ -313,7 +316,18 @@
       paint(ctx, shade(ctx, hx, hy - hr, hr, dent ? "#6a6a62" : "#9aa0a8"), lw, () => { ctx.moveTo(hx - hr * 1.25, hy - hr * 0.3); ctx.quadraticCurveTo(hx - hr * 1.05, hy - hr * 1.35, hx, hy - hr * 1.3); ctx.quadraticCurveTo(hx + hr * 1.05, hy - hr * (dent ? 1.0 : 1.35), hx + hr * 1.25, hy - hr * 0.3); ctx.closePath(); });
       if (dent) { ctx.strokeStyle = INK; ctx.lineWidth = lw * 0.7; ctx.beginPath(); ctx.moveTo(hx + hr * 0.3, hy - hr * 1.15); ctx.lineTo(hx + hr * 0.45, hy - hr * 0.8); ctx.lineTo(hx + hr * 0.7, hy - hr * 0.85); ctx.stroke(); }
     }
+    if (L.extra.includes("pot")) {
+      // かぶった鍋（ずり落ちかけて、片目が隠れている）
+      paint(ctx, shade(ctx, hx, hy - hr, hr * 1.2, "#4a4a4e"), lw, () => { ctx.moveTo(hx - hr * 1.15, hy - hr * 0.1); ctx.lineTo(hx - hr * 1.0, hy - hr * 1.2); ctx.lineTo(hx + hr * 1.0, hy - hr * 1.3); ctx.lineTo(hx + hr * 1.2, hy - hr * 0.35); ctx.closePath(); });
+      paint(ctx, "#2a2a2e", lw, () => ctx.rect(hx + hr * 1.1, hy - hr * 0.75, hr * 0.7, hr * 0.16));
+    }
+    if (L.extra.includes("crown")) crown(ctx, hx, hy - hr * 0.95, hr * 0.7, lw);
     horns(ctx, L, hx, hy, hr, lw);
+  }
+  // 小さな冠（体に比べて小さすぎる。まぬけな王さま用）
+  function crown(ctx, x, y, r, lw) {
+    paint(ctx, shade(ctx, x, y, r, "#e0b030"), lw, () => { ctx.moveTo(x - r, y); ctx.lineTo(x - r, y - r * 0.7); ctx.lineTo(x - r * 0.5, y - r * 0.3); ctx.lineTo(x, y - r * 0.85); ctx.lineTo(x + r * 0.5, y - r * 0.3); ctx.lineTo(x + r, y - r * 0.7); ctx.lineTo(x + r, y); ctx.closePath(); });
+    ctx.fillStyle = "#c83040"; ctx.beginPath(); ellipse(ctx, x, y - r * 0.25, r * 0.14, r * 0.14); ctx.fill();
   }
 
   // ---------------------------------------------------------------- 手に持つもの
@@ -595,6 +609,8 @@
     ctx.restore();
     eyes(ctx, L, x, base - h * 0.62, U * 0.05, w * 0.35, R, lw);
     mouth(ctx, L, x, base - h * 0.35, w * 0.3, lw);
+    if (L.extra.includes("crown")) crown(ctx, x + w * 0.1, base - h * 0.97, U * 0.1, lw);
+    if (L.extra.includes("blush")) { ctx.fillStyle = "rgba(255,90,110,.45)"; ctx.beginPath(); ellipse(ctx, x - w * 0.5, base - h * 0.45, U * 0.04, U * 0.022); ellipse(ctx, x + w * 0.5, base - h * 0.45, U * 0.04, U * 0.022); ctx.fill(); }
     if (L.extra.includes("sweat")) paint(ctx, "#bfe6ff", lw * 0.6, () => { const sx = x + w * 0.75, sy = base - h * 0.85; ctx.moveTo(sx, sy); ctx.quadraticCurveTo(sx + U * 0.04, sy + U * 0.06, sx, sy + U * 0.07); ctx.quadraticCurveTo(sx - U * 0.04, sy + U * 0.06, sx, sy); });
     return { top: base - h, mid: base - h * 0.5, width: w * 2, H: h };
   }
@@ -787,7 +803,9 @@
   // ---------------------------------------------------------------- 入口
   G.paintMonster = (ctx, x, base, s, f) => {
     f = f || {};
-    const e = (G.data && G.data.ENEMIES && G.data.ENEMIES[f.id]) || { shape: f.shape, eye: f.eye, boss: f.boss };
+    let e = (G.data && G.data.ENEMIES && G.data.ENEMIES[f.id]) || { shape: f.shape, eye: f.eye, boss: f.boss };
+    // 出来事の絵（art_people.js）は、敵の見た目を少し変えて描ける（{ id, look }。look が敵のデータの look に重なる）
+    if (f.look) e = Object.assign({}, e, { look: Object.assign({}, e.look || {}, f.look) });
     const L = G.monsterLook(f.id || f.shape || "foe", e);
     const R = rng(L.seed);
     let U = s * (L.size || 1);
