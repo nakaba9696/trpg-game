@@ -2,7 +2,8 @@
 // 1. データの整合（存在しない場所・敵・アイテムを参照していないか）
 // 2. ランダムに遊び続けるテスト（例外が出ないか、数値が範囲に収まるか）
 // 3. 釣り合いの測定（職業ごとの数字を出すだけ。失敗にはしない）。tests/balance.mjs
-import { readFileSync } from "node:fs";
+// 新しい確認は tests/checks/<id>.mjs に置けば名前順に自動で読まれる（export default ({ G, fail, ok, loadEngine, seeded }) => {...}）
+import { readFileSync, readdirSync } from "node:fs";
 import vm from "node:vm";
 import { loadEngine, seeded } from "./lib.mjs";
 import { measureBalance } from "./balance.mjs";
@@ -177,80 +178,6 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`装飾品の枠（装飾品 ${Object.values(D.ITEMS).filter((it) => it.type === "ring").length} 種・I1 の品 ${i1.length} 種すべてに入手先あり）`);
 }
 
-// ---------------------------------------------------------------- 1d. 戦闘の演出（B1）：記録の fx とボスの前口上
-{
-  const G = loadEngine();
-  const D = G.data;
-  const before = failures;
-  // 前口上は、あるボスだけを指し、どのボスにもある。短く、明かさない言葉を使わない
-  const HIDDEN = /見世物|観客|客席|舞台|台本|神々が眺め/;
-  for (const [id, B] of Object.entries(D.BOSS_LINES)) {
-    if (!D.ENEMIES[id]) { fail(`前口上 ${id}: その敵が無い`); continue; }
-    if (!D.ENEMIES[id].boss) fail(`前口上 ${id}: ボスではない`);
-    if (!Array.isArray(B.lines) || !B.lines.length) fail(`前口上 ${id}: lines が空`);
-    for (const t of B.lines || []) {
-      if (typeof t !== "string" || !t) fail(`前口上 ${id}: 文字列でない`);
-      else if (t.length > 60) fail(`前口上 ${id}: 長すぎる（${t.length} 字・60 字まで）`);
-      else if (HIDDEN.test(t)) fail(`前口上 ${id}: 明かさない言葉がある「${t}」`);
-    }
-  }
-  for (const [id, e] of Object.entries(D.ENEMIES)) if (e.boss && !D.BOSS_LINES[id]) fail(`ボス ${id}: 前口上が無い（src/data/boss_lines.js に足す）`);
-
-  G.rand = seeded(16);
-  G.P = { trophies: {}, graves: [] };
-  const stats = {}, caps = {};
-  D.STATS.forEach((k) => { stats[k] = 60; caps[k] = 70; });
-  const fresh = () => G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
-  const fxOf = (from) => G.S.log.slice(from).filter((e) => e.fx);
-
-  // ボス戦の始まりに前口上。魔人には絶界の fx
-  fresh();
-  G.S.maxHp = G.S.hp = 9999;
-  let mark = G.S.log.length;
-  G.startCombat(["graw"], {});
-  const intro = fxOf(mark).find((e) => e.fx === "boss");
-  if (!intro || intro.foe !== "graw" || intro.name !== D.ENEMIES.graw.name || !D.BOSS_LINES.graw.lines.includes(intro.text)) fail("ボス戦の始まりに前口上の fx が無い");
-  for (let i = 0; i < 30 && G.S.combat && !fxOf(mark).some((e) => e.fx === "wall"); i++) { G.S.hp = 9999; G.combatAct("attack"); }
-  if (!fxOf(mark).some((e) => e.fx === "wall" && e.foe === D.ENEMIES.graw.name)) fail("絶界に弾かれた fx が無い");
-  fresh();
-  mark = G.S.log.length;
-  G.startCombat(["goblin"], {});
-  if (fxOf(mark).some((e) => e.fx === "boss")) fail("ボスでない敵に前口上が出た");
-
-  // 普通の戦闘：hit の合計が敵の減った HP、hurt の合計があなたの減った HP、倒れた数だけ down
-  fresh();
-  G.S.maxHp = G.S.hp = 9999;
-  G.startCombat(["orc", "orc"], {});
-  const names = G.S.combat.foes.map((f) => f.name);
-  const foes = G.S.combat.foes;
-  mark = G.S.log.length;
-  let hurtBad = 0, turns = 0;
-  for (; turns < 200 && G.S.combat; turns++) {
-    const hp = G.S.hp, from = G.S.log.length;
-    G.combatAct(turns % 3 === 2 ? "vital" : "attack");
-    const hurt = fxOf(from).filter((e) => e.fx === "hurt").reduce((a, e) => a + e.n, 0);
-    if (hurt !== hp - G.S.hp) hurtBad++;
-  }
-  const all = fxOf(mark);
-  if (G.S.combat) fail("演出の確認：戦闘が終わらない");
-  if (hurtBad) fail(`hurt の数字と減った HP が合わない手番が ${hurtBad} 回`);
-  for (const f of foes) {
-    const dealt = all.filter((e) => e.fx === "hit" && e.foe === f.name).reduce((a, e) => a + e.n, 0);
-    if (Math.min(dealt, f.max) !== f.max - f.hp) fail(`hit の合計（${dealt}）と ${f.name} の減った HP（${f.max - f.hp}）が合わない`);
-  }
-  if (all.some((e) => (e.fx === "hit" || e.fx === "down") && !names.includes(e.foe))) fail("fx の foe が戦闘中の敵の名前でない");
-  const downs = all.filter((e) => e.fx === "down");
-  if (downs.length !== foes.filter((f) => f.hp <= 0).length || downs.length !== 2) fail(`down の数が倒れた数と合わない（${downs.length}）`);
-  if (!all.some((e) => e.fx === "hurt")) fail("hurt の fx が一度も出ない");
-
-  // 画面の演出の順番表（ui/fx.js の DOM を使わない部分）
-  vm.runInContext(readFileSync(new URL("../src/ui/fx.js", import.meta.url), "utf8"), vm.createContext({ G }));
-  const plan = G.fx.plan([{ k: "you" }, { fx: "crit" }, { fx: "hit", foe: "A", n: 5 }, { fx: "hurt", n: 3, heavy: true }, { fx: "down", foe: "A" }]);
-  if (plan.length !== 4 || plan[0].at !== plan[1].at || !(plan[2].at > plan[1].at) || !(plan[3].at > plan[2].at)) fail("演出の順番表が変");
-  if (G.fx.plan(all).some((p, i, a) => i && p.at < a[i - 1].at)) fail("演出の順番表が時間の順になっていない");
-  if (failures === before) ok(`戦闘の演出（前口上 ${Object.keys(D.BOSS_LINES).length} 体・${turns} 手番の戦闘で fx ${all.length} 件が HP の増減と合う）`);
-}
-
 // ---------------------------------------------------------------- 2. ランダムに遊ぶ
 {
   const G = loadEngine();
@@ -408,6 +335,53 @@ const ok = (msg) => console.log("OK   " + msg);
   }
   if (G.companionWho({ name: "僧侶のセラ", cls: "僧侶" }).sex !== "女") fail("人物の絵: 仲間の名前から性別を拾えない");
   if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
+}
+
+// ---------------------------------------------------------------- 保存の鍵の移し替え（古い名前 → Morsveld）
+{
+  const G = loadEngine();
+  const before = failures;
+  const mem = (init) => {
+    const m = new Map(Object.entries(init));
+    return { m, getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
+  };
+  const K = G.SAVE_KEYS;
+  if (!K || !/^morsveld-/.test(K.save) || !/^morsveld-/.test(K.profile)) fail("保存の鍵: 新しい鍵が Morsveld になっていない");
+  const save = JSON.stringify({ v: 1, chron: [{ day: 1, text: "旅立ち" }] });
+  const prof = JSON.stringify({ trophies: { first: 1 }, graves: [{ id: "g1", name: "名無し" }] });
+  // 古い鍵だけ → 新しい鍵へ移り、古い鍵は消える（冒険・年表・トロフィー・墓碑）
+  const OLD = { save: "koto" + "dama3-save", profile: "koto" + "dama3-profile" }; // 古い鍵（git grep に掛からないように分けて書く）
+  const a = mem({ [OLD.save]: save, [OLD.profile]: prof });
+  const moved = G.migrateSaveKeys(a);
+  if (a.getItem(K.save) !== save) fail("保存の鍵: 古い冒険（年表）が移らない");
+  if (a.getItem(K.profile) !== prof) fail("保存の鍵: 古いトロフィー・墓碑が移らない");
+  if (a.m.has(OLD.save) || a.m.has(OLD.profile)) fail("保存の鍵: 古い鍵が残る");
+  if (moved.length !== 2) fail("保存の鍵: 移したものの数が違う");
+  // 新しい鍵が既にある → 上書きしない
+  const b = mem({ [OLD.save]: save, [K.save]: "新しい" });
+  G.migrateSaveKeys(b);
+  if (b.getItem(K.save) !== "新しい") fail("保存の鍵: 新しいセーブを古いもので上書きする");
+  // 二度目は何もしない・保存できない環境でも落ちない
+  if (G.migrateSaveKeys(a).length) fail("保存の鍵: 二度目にも移し替える");
+  G.migrateSaveKeys(null);
+  G.migrateSaveKeys({ getItem() { throw new Error("blocked"); } });
+  if (failures === before) ok("保存の鍵の移し替え（古い鍵 → " + K.save + "・" + K.profile + "）");
+}
+
+// ---------------------------------------------------------------- 2z. tests/checks/*.mjs（置くだけで読まれる確認）
+{
+  const dir = new URL("./checks/", import.meta.url);
+  const names = readdirSync(dir).filter((n) => n.endsWith(".mjs")).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  for (const n of names) {
+    const before = failures;
+    try {
+      const mod = await import(new URL(n, dir));
+      await mod.default({ G: loadEngine(), fail: (m) => fail(`${n}: ${m}`), ok, loadEngine, seeded });
+    } catch (e) {
+      fail(`${n}: 例外 ${e.stack || e}`);
+    }
+    if (failures === before) ok(`tests/checks/${n}`);
+  }
 }
 
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）

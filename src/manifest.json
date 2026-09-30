@@ -20,7 +20,7 @@
     "data/enemies_w1.js",
     "data/locations_w1.js",
     "data/events_w1.js",
-    "data/boss_lines.js"
+    "engine/savekeys.js"
   ],
   "ui": [
     "ui/art_monsters.js",
@@ -28,7 +28,6 @@
     "ui/scene.js",
     "ui/ui.js",
     "ui/setup.js",
-    "main.js",
-    "ui/fx.js"
+    "main.js"
   ]
 }
