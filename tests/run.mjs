@@ -2,7 +2,8 @@
 // 1. データの整合（存在しない場所・敵・アイテムを参照していないか）
 // 2. ランダムに遊び続けるテスト（例外が出ないか、数値が範囲に収まるか）
 // 3. 釣り合いの測定（職業ごとの数字を出すだけ。失敗にはしない）。tests/balance.mjs
-import { readFileSync } from "node:fs";
+// 新しい確認は tests/checks/<id>.mjs に置けば名前順に自動で読まれる（export default ({ G, fail, ok, loadEngine, seeded }) => {...}）
+import { readFileSync, readdirSync } from "node:fs";
 import vm from "node:vm";
 import { loadEngine, seeded } from "./lib.mjs";
 import { measureBalance } from "./balance.mjs";
@@ -490,6 +491,22 @@ const ok = (msg) => console.log("OK   " + msg);
   G.migrateSaveKeys(null);
   G.migrateSaveKeys({ getItem() { throw new Error("blocked"); } });
   if (failures === before) ok("保存の鍵の移し替え（古い鍵 → " + K.save + "・" + K.profile + "）");
+}
+
+// ---------------------------------------------------------------- 2z. tests/checks/*.mjs（置くだけで読まれる確認）
+{
+  const dir = new URL("./checks/", import.meta.url);
+  const names = readdirSync(dir).filter((n) => n.endsWith(".mjs")).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  for (const n of names) {
+    const before = failures;
+    try {
+      const mod = await import(new URL(n, dir));
+      await mod.default({ G: loadEngine(), fail: (m) => fail(`${n}: ${m}`), ok, loadEngine, seeded });
+    } catch (e) {
+      fail(`${n}: 例外 ${e.stack || e}`);
+    }
+    if (failures === before) ok(`tests/checks/${n}`);
+  }
 }
 
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）

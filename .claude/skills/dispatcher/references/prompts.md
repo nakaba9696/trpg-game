@@ -24,7 +24,7 @@
 
 **決まり**（CLAUDE.md も必ず読むこと）
 - PR を出す前に CLAUDE.md の検証を通す（`node tools/build.mjs && node tests/run.mjs`。新しい仕組みには `tests/run.mjs` に確認を足す）。
-- 新しい内容は新しいファイルに書き、`src/manifest.json` の末尾に追記する（CLAUDE.md の決まり）。id は `<レーンの記号><番号>_` で始める。
+- 新しい内容は新しいファイルに書き、`src/data/`・`src/engine/`・`src/ui/` に置く（自動で読まれる。`src/manifest.json` は編集しない。CLAUDE.md の決まり）。新しい確認は `tests/checks/<id>.mjs` に置く（`tests/run.mjs` の末尾には足さない）。id は `<レーンの記号><番号>_` で始める。
 - 普段の手番で Claude を呼ぶ仕組みは作らない（docs/VISION.md の「やらないこと」）。
 - `docs/ROADMAP.md` のチェックは編集しない。測った数字は PR の説明に書く。
 - 共有ファイル（<このゲームの共有ファイル>）は追記だけにする。
