@@ -127,6 +127,7 @@
   G.useItem = (id) => {
     const S = G.S;
     const it = D.ITEMS[id];
+    if (it && it.type === "tome") return G.readTome(id);
     if (!S || S.over || S.mode === "combat" || !it || it.type !== "use" || !(it.hp || it.mp) || !G.take(id)) return false;
     G.log("you", `${it.name}を使う`);
     if (it.hp) { G.heal(it.hp); G.note(it.hp > 100 ? "HP が全快した。" : `HP +${it.hp}`); }
@@ -286,6 +287,39 @@
     return true;
   };
 
+  // ---------------------------------------------------------------- 魔法の習得（M1）
+  // 炎と癒しは誰でも使える。ほかの術（D.SPELLS）は、学院か魔導書で覚えて S.spells に持つ（古いセーブには無い）
+  G.knows = (id) => { const sp = D.SPELLS && D.SPELLS[id]; return !!sp && (!!sp.base || (G.S.spells || []).includes(id)); };
+  G.learnSpell = (id) => {
+    const S = G.S;
+    const sp = D.SPELLS && D.SPELLS[id];
+    if (!sp || G.knows(id)) return false;
+    S.spells = [...(S.spells || []), id];
+    G.note(`${sp.name}を覚えた。（${sp.hint}）`);
+    G.chron(`${sp.name}を覚える`);
+    return true;
+  };
+  // 借りた力の代償。術を大失敗したときに払う。今は借り（S.magicDebt）が積もるだけ。正気（M5）はここに繋ぐ
+  G.payDebt = (n) => {
+    const S = G.S;
+    S.magicDebt = (S.magicDebt || 0) + n;
+    G.note("どこか遠くで、帳面に何かが書き足された気がする。");
+  };
+  // 魔導書を読み解く（知力）。覚えても本は残る
+  G.tomeChance = (id) => G.chance("知力", (D.ITEMS[id] && D.ITEMS[id].learn) || "普通");
+  G.readTome = (id) => {
+    const S = G.S;
+    const it = D.ITEMS[id];
+    if (!S || S.over || S.mode === "combat" || !it || it.type !== "tome" || !S.inv[id] || G.knows(it.teach)) return false;
+    G.log("you", `${it.name}を読み解く`);
+    G.pass(1);
+    const r = G.check("知力", it.learn || "普通", "魔導書を読み解く");
+    if (r.ok) { G.say("文字の並びが、ふいに意味を持った。誰かが耳元で、読み方を教えてくれたような気がした。"); G.learnSpell(it.teach); }
+    else if (r.fumble) { G.say("読み違えた一行が、指に絡みついて離れない。"); G.payDebt(1); }
+    else G.say("頁の上で文字が泳ぐ。今日は読めそうにない。");
+    return true;
+  };
+
   // ---------------------------------------------------------------- 出来事の結果を当てはめる
   G.apply = (o) => {
     const S = G.S;
@@ -404,6 +438,7 @@
       clungUsed: false, over: "", deathCause: "", startedAt: Date.now(),
     };
     G.S = S;
+    S.spells = [...((D.SPELL_START && D.SPELL_START[opt.cls]) || [])]; // 覚えている術（M1）
     S.visited[S.loc] = true;
     const L = G.loc();
     G.chron(`${L.name}にて、${c.name}${S.profile.name}の冒険が始まる。目的は「${S.goal.text}」`, "start");

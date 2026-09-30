@@ -178,6 +178,128 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`装飾品の枠（装飾品 ${Object.values(D.ITEMS).filter((it) => it.type === "ring").length} 種・I1 の品 ${i1.length} 種すべてに入手先あり）`);
 }
 
+// ---------------------------------------------------------------- 1d. 魔法の種類と習得（M1）
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  const NEW = ["ice", "bolt", "curse", "ward"];
+  // データ：術の表、魔導書、覚え方があるか
+  for (const id of NEW) if (!D.SPELLS[id] || D.SPELLS[id].base) fail(`術 ${id} が無いか、はじめから誰でも使える`);
+  for (const [id, sp] of Object.entries(D.SPELLS)) {
+    if (!sp.name || !(sp.mp > 0)) fail(`術 ${id}: 名前か MP が無い`);
+    if (!sp.base && G.diffMod(sp.diff) === undefined) fail(`術 ${id}: 難しさが変`);
+    if (sp.school && D.DIFF[sp.school.diff] === undefined) fail(`術 ${id}: 講義の難しさ ${sp.school.diff} が無い`);
+  }
+  for (const [cls, ids] of Object.entries(D.SPELL_START)) { if (!D.CLASSES[cls]) fail(`SPELL_START: 職業 ${cls} が無い`); for (const id of ids) if (!D.SPELLS[id]) fail(`SPELL_START: 術 ${id} が無い`); }
+  const tomes = Object.entries(D.ITEMS).filter(([, it]) => it.type === "tome");
+  for (const [id, it] of tomes) { if (!D.SPELLS[it.teach] || D.SPELLS[it.teach].base) fail(`魔導書 ${id}: 覚える術 ${it.teach} が無い`); if (D.DIFF[it.learn || "普通"] === undefined) fail(`魔導書 ${id}: 難しさが変`); }
+  const sources = new Set(D.SHOP_BASE);
+  for (const L of Object.values(D.LOCS)) for (const it of L.shop || []) sources.add(it);
+  for (const e of Object.values(D.ENEMIES)) for (const [it] of e.loot || []) sources.add(it);
+  const addOut = (o) => { if (!o) return; for (const it of typeof o.item === "string" ? [o.item] : Object.keys(o.item || {})) sources.add(it); addOut(o.win); };
+  for (const e of D.EVENTS) for (const c of e.choices) { addOut(c.ok); addOut(c.ng); addOut(c.win); }
+  for (const [id] of tomes) if (!sources.has(id)) fail(`魔導書 ${id}: 入手先が無い`);
+  for (const id of NEW) if (!D.SPELLS[id].school && !tomes.some(([tid, it]) => it.teach === id && sources.has(tid))) fail(`術 ${id}: 覚える手段が無い`);
+  if (!D.LOCS.zephara.fac.includes("academy")) fail("ゼファラに学院が無い");
+
+  const start = (cls, seed) => {
+    G.rand = seeded(seed);
+    G.P = { trophies: {}, graves: [] };
+    const stats = {}, caps = {};
+    D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 60; });
+    G.newGame({ cls, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
+    return G.S;
+  };
+  const acts = () => G.actions().flatMap((g) => g.list);
+  // 古いセーブ（S.spells が無い）でも動き、新しい術は出ない。炎と癒しは今までどおり
+  let S = start("merc", 21);
+  delete S.spells;
+  G.startCombat(["goblin"], {});
+  if (NEW.some((id) => G.knows(id)) || acts().some((a) => NEW.includes(a.id.slice(3)))) fail("古いセーブで覚えていない術が出る");
+  if (!acts().some((a) => a.id === "cb:fire") || !acts().some((a) => a.id === "cb:heal")) fail("炎と癒しが出ない");
+  G.S.combat = null; G.S.mode = "explore";
+  // はじめから覚えている術
+  start("mage", 22);
+  if (!G.knows("ice")) fail("魔法使いが氷の魔法を覚えていない");
+  if (!start("priest", 23).spells.includes("ward")) fail("破戒神官が加護を覚えていない");
+  // 学院で覚える（成功するまで通う）
+  S = start("merc", 24);
+  S.loc = "zephara"; S.gold = 5000; S.stats.知力 = 95;
+  if (!acts().some((a) => a.id === "fac:academy")) fail("ゼファラの町に学院が出ない");
+  G.act("fac:academy");
+  if (S.mode !== "fac" || S.fac !== "academy") fail("学院に入れない");
+  const lec = acts().find((a) => a.id === "academy:ward");
+  if (!lec || lec.disabled || !/知力 \d+%/.test(lec.sub)) fail("学院の講義に成功率が出ない");
+  if (acts().some((a) => a.id === "academy:curse")) fail("呪いを学院で教えている");
+  for (let i = 0; i < 10 && !G.knows("ward"); i++) G.act("academy:ward");
+  if (!G.knows("ward")) fail("学院で加護を覚えられない");
+  if (!acts().find((a) => a.id === "academy:ward")?.disabled) fail("覚えた術の講義をまた受けられる");
+  G.act("back");
+  if (S.mode !== "explore") fail("学院から出られない");
+  // 魔導書で覚える（読んでも本は残る）
+  G.give("m1_tome_curse");
+  const read = acts().find((a) => a.id === "tome:m1_tome_curse");
+  if (!read || !/知力 \d+%/.test(read.sub)) fail("魔導書を読み解く行動が出ない");
+  for (let i = 0; i < 20 && !G.knows("curse"); i++) G.act("tome:m1_tome_curse");
+  if (!G.knows("curse") || !S.inv.m1_tome_curse) fail("魔導書で呪いを覚えられない（か、本が消えた）");
+  if (acts().some((a) => a.id === "tome:m1_tome_curse")) fail("覚えたのに魔導書を読む行動が残る");
+  G.give("m1_tome_ice");
+  if (!G.useItem("m1_tome_ice")) fail("持ち物から魔導書を読めない");
+  // 戦闘：成功率が出て、効き目がある
+  G.learnSpell("ice"); G.learnSpell("bolt");
+  S.stats.魔力 = 95; S.maxMp = S.mp = 99; S.maxHp = S.hp = 999;
+  G.startCombat(["goblin", "goblin"], {});
+  for (const id of NEW) {
+    const a = acts().find((x) => x.id === "cb:" + id);
+    if (!a || !/魔力 \d+%・MP\d/.test(a.sub)) fail(`戦闘に ${id} が成功率つきで出ない`);
+  }
+  const always = (fn) => { const r = G.rand; G.rand = () => 0.01; try { fn(); } finally { G.rand = r; } };
+  // 雷：敵すべてに当たる
+  always(() => G.combatAct("bolt"));
+  if (G.S.combat && G.S.combat.foes.some((f) => f.hp === f.max)) fail("雷の魔法が全員に当たらない");
+  // 氷：凍った敵は次の番に攻めてこない
+  G.startCombat(["orc"], {});
+  const hp0 = S.hp;
+  always(() => G.combatAct("ice"));
+  if (G.S.combat) { if (S.hp !== hp0) fail("凍った敵が攻撃してきた"); }
+  // 加護：受けるダメージが減る。呪い：命中が落ち、蝕まれる
+  G.startCombat(["orc"], {});
+  always(() => G.combatAct("ward"));
+  if (!(G.S.combat?.ward > 0)) fail("加護がかからない");
+  const hitWith = (ward) => {
+    G.startCombat(["orc"], {});
+    G.S.combat.ward = ward;
+    const h = S.hp, hit = D.ENEMIES.orc.hit, r = G.rand;
+    D.ENEMIES.orc.hit = 999; G.rand = () => 0.9;
+    try { G.combatAct("guard"); } finally { G.rand = r; D.ENEMIES.orc.hit = hit; }
+    return h - S.hp;
+  };
+  if (!(hitWith(3) < hitWith(0))) fail("加護で受けるダメージが減らない");
+  G.startCombat(["orc"], {});
+  const foe = G.S.combat.foes[0];
+  always(() => G.combatAct("curse"));
+  if (G.S.combat && !(foe.hex > 0 && foe.hp < foe.max)) fail("呪いで敵が蝕まれない");
+  // 呪いで最後の敵が倒れたら、戦闘が終わる
+  G.startCombat(["goblin"], {});
+  G.S.combat.foes[0].hex = 3; G.S.combat.foes[0].hp = 1;
+  G.combatAct("guard");
+  if (G.S.combat || G.S.mode !== "explore") fail("呪いで敵が倒れても戦闘が終わらない");
+  // 魔人には絶界で効かない
+  const majin = Object.keys(D.ENEMIES).find((id) => D.ENEMIES[id].majin);
+  G.startCombat([majin], {});
+  const m = G.S.combat.foes[0];
+  always(() => { G.combatAct("curse"); G.combatAct("ice"); });
+  if (G.S.combat && (m.hex || m.frozen || m.hp < m.max)) fail("魔人に術が効いた");
+  G.S.combat = null; G.S.mode = "explore";
+  // 大失敗で借りを返す
+  G.startCombat(["goblin"], {});
+  const debt = S.magicDebt || 0;
+  { const r = G.rand; G.rand = () => 0.99; try { G.combatAct("ward"); } finally { G.rand = r; } }
+  if (!((S.magicDebt || 0) > debt)) fail("術の大失敗で借りが増えない");
+  if (failures === before) ok(`魔法の種類と習得（術 ${Object.keys(D.SPELLS).length} 種・魔導書 ${tomes.length} 冊・古いセーブ・学院・魔導書・戦闘の効き目）`);
+}
+
 // ---------------------------------------------------------------- 2. ランダムに遊ぶ
 {
   const G = loadEngine();
@@ -188,6 +310,7 @@ const ok = (msg) => console.log("OK   " + msg);
   const before = failures;
   // I1 の品が手に入った回数（G.give を数える）
   const gains = {};
+  const learned = {}; // M1：遊んでいるうちに覚えた術
   const give0 = G.give;
   G.give = (id, n) => { if (String(id).startsWith("i1_") && G.S.turn > 0) gains[id] = (gains[id] || 0) + (n || 1); return give0(id, n); };
   for (let g = 0; g < GAMES; g++) {
@@ -242,6 +365,7 @@ const ok = (msg) => console.log("OK   " + msg);
       fail(`game ${g}: 例外 ${e.stack || e}`);
       if (failures - before > 20) break;
     }
+    for (const id of G.S.spells || []) if (!(D.SPELL_START[G.S.cls] || []).includes(id)) learned[id] = (learned[id] || 0) + 1;
     if (G.S.over === "dead") deaths++;
     maxDay = Math.max(maxDay, G.S.day);
     totalTurns += G.S.turn;
@@ -250,6 +374,7 @@ const ok = (msg) => console.log("OK   " + msg);
   G.give = give0;
   const gained = Object.entries(gains).sort((a, b) => b[1] - a[1]).map(([id, n]) => `${D.ITEMS[id].name} ${n}`);
   console.log(`NOTE ランダムプレイで I1 の品が手に入った回数（${Object.keys(gains).length}/15 種）: ${gained.join("・") || "なし"}`);
+  console.log(`NOTE ランダムプレイで覚えた術: ${Object.entries(learned).map(([id, n]) => `${D.SPELLS[id].name} ${n}`).join("・") || "なし"}`);
   if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
 }
 
