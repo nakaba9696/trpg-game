@@ -1,83 +1,72 @@
-// キャラクター作成：職業、能力値（振り直しとボーナス点）、人物設定（おまかせ生成＋手直し）、目的。
-// レーン C（キャラクター）が管理
+// タイトルとキャラクター作成：タイトル → 人物（一画面でまとめて選ぶ）→ 能力値（何度でも振り直し・鍵・ボーナス点）→ キャラクターシート → 導入 → 冒険。
+// 決まり（おまかせ・振る・鍵・ボーナス点・導入の文）は engine/u5_creation.js の G.cre。ここは画面だけ。
+// 作成画面の乱数は Math.random（CLAUDE.md の例外）。レーン U（画面）が管理
 (function (G) {
   const D = G.data;
+  const cre = G.cre;
   const $ = (s) => document.querySelector(s);
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
-  const d = (n) => 1 + Math.floor(Math.random() * n);
-  const pick = (a) => a[Math.floor(Math.random() * a.length)];
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const btn = (label, cls, fn, fid) => { const b = h("button", "btn" + (cls ? " " + cls : ""), label); b.type = "button"; b.onclick = fn; if (fid) b.dataset.fid = fid; return b; };
+  const R = Math.random;
+  const reduced = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } };
+  const signed = (n) => (n > 0 ? "+" + n : n < 0 ? "−" + -n : "±0");
+  const KANJI = ["一", "二", "三", "四", "五", "六", "七", "八"];
+
+  // 音（ui/sound.js があれば鳴らす。無い名前は次の候補へ）
+  const sfx = (...names) => {
+    const s = G.sound;
+    if (!s || !s.play) return;
+    const n = names.find((x) => !s.names || s.names.includes(x));
+    if (n) s.play(n);
+  };
 
   const setup = (G.setup = {});
   let draft = null;
+  let step = "title";
+  let opts = null;   // 旅立つ人物（確認のあと）
+  let page = 0;      // 導入のページ
+  let rolledNow = false;
 
-  // 人物の絵（art_people.js）。画面に置いてから描く
+  // 人物の絵（art_people.js）
   function face(cls, cw, ch) {
     const cv = h("canvas", cls);
     cv.width = cw * 2; cv.height = ch * 2;
     cv.setAttribute("aria-hidden", "true");
     return cv;
   }
-  const heroWho = (cls) => G.heroWho(Object.assign({}, draft.profile, $("#pf-name") ? readProfile() : {}, { sex: draft.sex }), cls || draft.cls);
-  function drawHero() { const cv = $("#heroFace"); if (cv && G.drawPortrait) G.drawPortrait(cv, heroWho()); }
+  const heroWho = () => G.heroWho(Object.assign({}, draft.profile, { sex: draft.sex }), draft.cls);
+  const paint = (cv) => { if (cv && G.drawPortrait) G.drawPortrait(cv, heroWho()); };
 
-  const PROFILE_FIELDS = [
-    ["age", "年齢", "input"], ["look", "外見", "input"], ["personality", "性格", "input"],
-    ["history", "生い立ち", "textarea"], ["quote", "口癖", "input"], ["like", "好きなもの", "input"], ["dislike", "苦手なもの", "input"],
-  ];
+  const go = (s) => { step = s; setup.show(); window.scrollTo({ top: 0 }); };
 
-  function genField(key) {
-    const P = D.PROFILE;
-    const c = D.CLASSES[draft.cls];
-    switch (key) {
-      case "name": return pick(P.names[c.culture][draft.sex]);
-      case "age": return String(16 + d(24));
-      case "look": return `${pick(P.hair)}、${pick(P.eyes)}、${pick(P.build)}`;
-      case "personality": return pick(P.personality);
-      case "history": return pick(P.history[draft.cls]);
-      case "quote": return pick(P.quote);
-      case "like": return pick(P.like);
-      case "dislike": return pick(P.dislike);
-    }
-    return "";
-  }
-
-  function rollStats() {
-    const c = D.CLASSES[draft.cls];
-    const stats = {}, caps = {};
-    D.STATS.forEach((k) => {
-      stats[k] = clamp(c.base[k] + d(6) + d(6) + d(6) - 3, 5, 90);
-      caps[k] = clamp(stats[k] + 20 + d(10) + d(10) + d(10), stats[k] + 10, 99);
-    });
-    draft.rolled = stats;
-    draft.caps = caps;
-    draft.bonus = Object.fromEntries(D.STATS.map((k) => [k, 0]));
-  }
-  const finalStats = () => Object.fromEntries(D.STATS.map((k) => [k, draft.rolled[k] + draft.bonus[k]]));
-  const bonusLeft = () => D.BONUS_POINTS - D.STATS.reduce((a, k) => a + draft.bonus[k], 0);
-
-  function readProfile() {
-    const p = {};
-    ["name", ...PROFILE_FIELDS.map((f) => f[0])].forEach((k) => { const el = $("#pf-" + k); p[k] = el ? el.value.trim() : ""; });
-    return p;
-  }
-  function writeProfile(p) { Object.entries(p).forEach(([k, v]) => { const el = $("#pf-" + k); if (el) el.value = v; }); }
-  function fullProfile() {
-    const p = { name: genField("name") };
-    PROFILE_FIELDS.forEach(([k]) => { p[k] = genField(k); });
-    return p;
-  }
-
-  // ---------------------------------------------------------------- 描画
-  setup.show = () => {
+  // ---------------------------------------------------------------- 入口
+  setup.show = (o) => {
+    o = o || {};
+    if (o.step) step = o.step;
+    if (o.fresh) draft = null;
+    if (!draft) draft = cre.fresh(R);
     const root = $("#setup");
-    if (!draft) {
-      draft = { cls: "merc", sex: "男", rerolls: D.REROLLS, goal: "majin" };
-      rollStats();
-      draft.profile = fullProfile();
-    }
+    const fid = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.fid : "";
+    root.dataset.step = step;
     root.textContent = "";
-    // 題（ロゴと副題）。副題は index.html のヘッダーと同じ文
+    ({ title, person, stats, sheet, prologue })[step](root);
+    // 描き直しても、押していたボタンに手元を戻す（キーボードで続けて押せるように）
+    if (fid) { const el = root.querySelector(`[data-fid="${fid}"]`); if (el && !el.disabled) el.focus({ preventScroll: true }); }
+  };
+
+  function head(root, title, fine) {
+    const h2 = h("h2", "", title);
+    if (fine) h2.append(h("span", "fine", fine));
+    root.append(h2);
+  }
+  function steps(root, i) {
+    const ol = h("ol", "creSteps");
+    ["人物", "能力値", "確認"].forEach((s, j) => { const li = h("li", j === i ? "on" : j < i ? "done" : "", s); if (j === i) li.setAttribute("aria-current", "step"); ol.append(li); });
+    root.append(ol);
+  }
+
+  // ---------------------------------------------------------------- 1. タイトル
+  function title(root) {
     const hero = h("div", "titleHero");
     const logo = h("div", "logoBig");
     logo.setAttribute("role", "img");
@@ -85,166 +74,172 @@
     logo.append(h("span", "mors", "Mors"), h("span", "veld", "veld"));
     hero.append(logo, h("div", "reading", "モルスヴェルド"), h("p", "tagline", $("#tagline") ? $("#tagline").textContent : ""));
     root.append(hero);
-    const intro = h("div");
-    intro.append(h("p", "lead", "ここはヴェルド大陸。東の山脈の向こうは魔物の土地で、人の国々は砦でそれを食い止めながら、互いにいがみ合っている。ときどき、剣も魔法も通じない「魔人」というものが現れて、町をひとつ気まぐれに消していくらしい。見た者はたいてい帰ってこないので、みな嵐のようなものだと諦めている。"));
-    const p2 = h("p", "lead", "あなたにできることは、たぶん、そう多くない。それでも、今日から冒険者だ。能力値が行動の成功率を決め、使った能力値は伸びていく。まずは、あなた自身を作ろう。");
-    p2.style.marginTop = "8px";
-    intro.append(p2);
-    root.append(intro);
+
+    const menu = h("div", "titleMenu");
+    const live = G.S && !G.S.over && G.S.profile;
+    menu.append(btn("はじめる", "primary", () => { opts = null; go("person"); }, "t-start"));
+    if (live) {
+      const c = btn("つづきから", "", () => G.main.resume(), "t-cont");
+      c.append(h("small", "", `${G.S.clsName} ${G.S.profile.name}・${G.dateOf ? G.dateOf(G.S.day) : G.S.day + "日目"}`));
+      menu.append(c);
+    }
+    menu.append(btn("記録（墓碑・トロフィー）", "", () => G.ui.openTrophies(), "t-rec"));
+    root.append(menu);
+    if (live) root.append(h("p", "fine center", "「はじめる」で新しい者が旅立つと、つづきの冒険は消える。"));
+    root.append(h("p", "fine center", `これまでの冒険者 ${G.P.graves.length} 人 ／ トロフィー ${Object.keys(G.P.trophies).length} 個`));
+  }
+
+  // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
+  function person(root) {
+    steps(root, 0);
+    const top = h("div", "creHead");
+    head(top, "あなたは何者か", "選ぶと、その場で姿が変わる");
+    top.append(btn("全部おまかせ", "primary", () => { const s = draft.customGoal; draft = cre.fresh(R); draft.customGoal = s; sfx("dice", "click"); setup.show(); }, "p-all"));
+    root.append(top);
+
+    const lay = h("div", "cre2");
+    // 姿と短い説明（スマホでは上）
+    const card = h("aside", "whoCard");
+    const cv = face("heroFace", 112, 140);
+    const txt = h("div", "whoTxt");
+    card.append(cv, txt);
+    function refresh() {
+      paint(cv);
+      const c = D.CLASSES[draft.cls], a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
+      txt.textContent = "";
+      txt.append(h("b", "whoName", draft.profile.name || "（名無し）"));
+      txt.append(h("span", "whoLine", `${c.name}・${draft.sex}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ`));
+      txt.append(h("span", "", c.blurb));
+      txt.append(h("span", "fine", `得意：${cre.strengths(draft.cls).join("・")} ／ 出発地：${D.LOCS[c.start].name}`));
+      if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
+      if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${a.cap ? `、才能限界 ${signed(a.cap)}` : ""}）`;
+    }
+    lay.append(card);
+
+    const form = h("div", "creForm");
+    let oBlurb = null, aBlurb = null;
+    const setVal = (k) => { const el = form.querySelector("#pf-" + k); if (el) el.value = draft.profile[k] || ""; };
+
+    // 名前・性別・年齢
+    const s1 = h("section", "creSec");
+    s1.append(h("h3", "", "名前・性別・年齢"));
+    s1.append(fieldEl("name", "名前", "input", refresh));
+    const row = h("div", "creRow");
+    row.append(segEl("性別", "sex", [["男", "男"], ["女", "女"]], draft.sex, (v) => { cre.setSex(draft, v, R); setVal("name"); refresh(); }));
+    row.append(segEl("年齢", "age", Object.entries(D.AGES).map(([id, a]) => [id, a.name]), draft.ageBand, (v) => { cre.setAge(draft, v, R); setVal("age"); refresh(); }));
+    const ageF = h("div", "field ageNum");
+    const al = h("label", "", "歳"); al.htmlFor = "pf-age";
+    const ai = h("input"); ai.id = "pf-age"; ai.inputMode = "numeric"; ai.maxLength = 3; ai.value = draft.profile.age || "";
+    ai.oninput = () => { draft.profile.age = ai.value.replace(/[^0-9]/g, ""); refresh(); };
+    ageF.append(al, ai);
+    row.append(ageF);
+    s1.append(row);
+    aBlurb = h("p", "fine");
+    s1.append(aBlurb);
+    form.append(s1);
+
+    // 生まれ
+    const s2 = h("section", "creSec");
+    s2.append(h("h3", "", "生まれ"));
+    const chips = h("div", "chips");
+    chips.setAttribute("role", "radiogroup");
+    chips.setAttribute("aria-label", "生まれ");
+    Object.entries(D.ORIGINS).forEach(([id, o]) => {
+      const l = h("label", "chip");
+      const inp = h("input"); inp.type = "radio"; inp.name = "origin"; inp.value = id; inp.checked = draft.origin === id;
+      inp.onchange = () => { cre.setOrigin(draft, id, R); setVal("name"); refresh(); };
+      l.append(inp, document.createTextNode(o.name));
+      chips.append(l);
+    });
+    s2.append(chips);
+    oBlurb = h("p", "fine");
+    s2.append(oBlurb);
+    form.append(s2);
 
     // 職業
-    const secC = h("section");
-    const h2c = h("h2", "", "職業");
-    h2c.append(h("span", "fine", "職業で、能力値の傾向と出発地と持ち物が決まる"));
-    secC.append(h2c);
-    const cards = h("div", "cards");
-    const faces = [];
+    const s3 = h("section", "creSec");
+    s3.append(h("h3", "", "職業"));
+    const cards = h("div", "cards compact");
     Object.entries(D.CLASSES).forEach(([id, c]) => {
       const l = h("label", "card");
       const inp = h("input"); inp.type = "radio"; inp.name = "cls"; inp.value = id; inp.checked = draft.cls === id;
       inp.onchange = () => {
-        const oldCulture = D.CLASSES[draft.cls].culture;
-        draft.cls = id;
-        rollStats();
-        draft.profile = readProfile();
-        if (oldCulture !== c.culture) draft.profile.name = genField("name");
-        draft.profile.history = genField("history");
-        setup.show();
+        const oldOrigin = draft.origin;
+        cre.setClass(draft, id, R);
+        setVal("name"); setVal("history");
+        if (draft.origin !== oldOrigin) { const r = form.querySelector(`input[name=origin][value=${draft.origin}]`); if (r) r.checked = true; }
+        refresh();
       };
-      const cf = face("cardFace", 56, 70);
-      faces.push([cf, id]);
-      l.append(inp, cf, h("b", "", c.name), h("span", "", c.blurb), h("span", "", `出発地：${D.LOCS[c.start].name}`));
+      l.append(inp, h("b", "", c.name), h("span", "", c.blurb), h("span", "fine", `得意：${cre.strengths(id).join("・")}`));
       cards.append(l);
     });
-    secC.append(cards);
-    root.append(secC);
-
-    // 能力値
-    const box = h("section", "box");
-    const bh = h("div", "boxhead");
-    const st = finalStats();
-    bh.append(h("b", "", "能力値"), h("span", "fine num", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
-    const right = h("div", "right");
-    const bl = h("span", "fine num", `ボーナス 残り ${bonusLeft()} 点`);
-    const rr = h("button", "btn", `振り直す（残り ${draft.rerolls} 回）`);
-    rr.type = "button";
-    rr.disabled = draft.rerolls <= 0;
-    rr.onclick = () => { draft.rerolls--; draft.profile = readProfile(); rollStats(); setup.show(); };
-    right.append(bl, rr);
-    bh.append(right);
-    box.append(bh);
-    const list = h("div", "statlist num");
-    D.STATS.forEach((k) => {
-      const row = h("div", "stat alloc");
-      row.title = D.STAT_HINT[k];
-      const bar = h("span", "bar"); const i = h("i"); i.style.width = st[k] + "%"; const u = h("u"); u.style.left = `calc(${draft.caps[k]}% - 1px)`; bar.append(i, u);
-      const pm = h("span", "pm");
-      const minus = h("button", "btn small", "−"); minus.type = "button"; minus.setAttribute("aria-label", `${k}を1下げる`);
-      minus.disabled = draft.bonus[k] <= 0;
-      minus.onclick = () => { draft.bonus[k]--; draft.profile = readProfile(); setup.show(); };
-      const plus = h("button", "btn small", "＋"); plus.type = "button"; plus.setAttribute("aria-label", `${k}を1上げる`);
-      plus.disabled = bonusLeft() <= 0 || st[k] >= draft.caps[k];
-      plus.onclick = () => { draft.bonus[k]++; draft.profile = readProfile(); setup.show(); };
-      pm.append(minus, plus);
-      row.append(h("span", "nm", k), h("span", "v", String(st[k])), bar, h("span", "cap", `限界 ${draft.caps[k]}`), pm);
-      list.append(row);
-    });
-    box.append(list);
-    box.append(h("p", "fine", "数値がそのまま成功率の基準（％）。赤い線は才能限界で、冒険でそこまで伸ばせる。能力にカーソルを合わせると説明が出る。"));
-    root.append(box);
-
-    // 人物設定
-    const pbox = h("section", "box");
-    const ph = h("div", "boxhead");
-    ph.append(h("b", "", "人物設定"), h("span", "fine", "おまかせで作ったあと、自由に書き換えられる"));
-    const pr = h("div", "right");
-    const all = h("button", "btn", "すべておまかせ");
-    all.type = "button";
-    all.onclick = () => { draft.profile = fullProfile(); writeProfile(draft.profile); setup.redraw(); };
-    pr.append(all);
-    ph.append(pr);
-    pbox.append(ph);
-
-    const pface = h("div", "pface");
-    pface.append(face("heroFace", 112, 140));
-    pface.lastChild.id = "heroFace";
-    const top = h("div", "grid2");
-    top.append(fieldEl("name", "名前", "input"));
-    const sexF = h("div", "field");
-    sexF.append(h("label", "", "性別"));
-    const seg = h("div", "seg");
-    ["男", "女"].forEach((s) => {
-      const l = h("label");
-      const inp = h("input"); inp.type = "radio"; inp.name = "sex"; inp.value = s; inp.checked = draft.sex === s;
-      inp.onchange = () => { draft.sex = s; draft.profile = readProfile(); draft.profile.name = genField("name"); writeProfile(draft.profile); setup.redraw(); };
-      l.append(inp, document.createTextNode(s));
-      seg.append(l);
-    });
-    sexF.append(seg);
-    top.append(sexF);
-    pface.append(top);
-    pbox.append(pface);
-    pbox.addEventListener("input", () => setup.redraw());
-    const grid = h("div", "grid2");
-    PROFILE_FIELDS.forEach(([k, label, type]) => grid.append(fieldEl(k, label, type)));
-    pbox.append(grid);
-    root.append(pbox);
-    writeProfile(draft.profile);
-    // 職業の札には、今の人物設定でその職業になった姿を出す
-    function drawCards() { if (G.drawPortrait) faces.forEach(([cv, id]) => G.drawPortrait(cv, heroWho(id))); }
-    setup.redraw = () => { drawCards(); drawHero(); };
-    setup.redraw();
+    s3.append(cards);
+    form.append(s3);
 
     // 目的
-    const secG = h("section");
-    const h2g = h("h2", "", "目的");
-    h2g.append(h("span", "fine", "果たすとトロフィー「宿願成就」。その後も冒険は続けられる"));
-    secG.append(h2g);
-    const gcards = h("div", "cards");
+    const s4 = h("section", "creSec");
+    const g3 = h("h3", "", "目的");
+    g3.append(h("span", "fine", "果たすとトロフィー「宿願成就」。その後も冒険は続けられる"));
+    s4.append(g3);
+    const gcards = h("div", "cards compact");
+    const cg = h("div", "field");
     Object.entries(D.GOALS).forEach(([id, g]) => {
       const l = h("label", "card");
       const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
-      inp.onchange = () => { draft.goal = id; $("#customGoalBox").hidden = id !== "custom"; };
+      inp.onchange = () => { draft.goal = id; cg.hidden = id !== "custom"; };
       l.append(inp, h("b", "", g.name), h("span", "", g.hint));
       gcards.append(l);
     });
-    secG.append(gcards);
-    const cg = h("div", "field");
-    cg.id = "customGoalBox";
+    s4.append(gcards);
     cg.hidden = draft.goal !== "custom";
-    cg.style.marginTop = "10px";
-    cg.append(h("label", "", "自分で決めた目的"));
-    const cgi = h("input"); cgi.id = "customGoal"; cgi.maxLength = 80; cgi.value = draft.customGoal || "生き別れの妹を探し出し、村を焼いた男に報いを受けさせる";
+    const cgl = h("label", "", "自分で決めた目的"); cgl.htmlFor = "customGoal";
+    const cgi = h("input"); cgi.id = "customGoal"; cgi.maxLength = 80; cgi.placeholder = "生き別れの妹を探し出し、村を焼いた男に報いを受けさせる";
+    cgi.value = draft.customGoal || "";
     cgi.oninput = () => { draft.customGoal = cgi.value; };
-    cg.append(cgi);
-    secG.append(cg);
-    root.append(secG);
+    cg.append(cgl, cgi);
+    s4.append(cg);
+    form.append(s4);
 
-    // 開始
-    const start = h("div", "start");
-    const sb = h("button", "btn primary", "冒険を始める");
-    sb.type = "button";
-    sb.onclick = () => {
-      const p = readProfile();
-      p.name = p.name || genField("name");
-      p.sex = draft.sex;
-      p.age = p.age || genField("age");
-      const goalText = draft.goal === "custom" ? ($("#customGoal").value.trim() || "自由に生きる") : D.GOALS[draft.goal].text;
-      const opts = { cls: draft.cls, stats: finalStats(), caps: { ...draft.caps }, profile: p, goal: draft.goal, goalText };
-      draft = null;
-      G.main.start(opts);
-    };
-    start.append(sb, h("p", "fine", "普段の行動は Claude を使わない（利用量はかからない）。自由入力で「GM に任せる」を選んだときだけ使う。"));
-    root.append(start);
+    // 生い立ち・特徴
+    const s5 = h("section", "creSec");
+    const t3 = h("h3", "", "生い立ち・特徴");
+    t3.append(btn("特徴をおまかせ", "small", () => { cre.randomTraits(draft, R); cre.TRAITS.forEach(setVal); refresh(); }, "p-traits"));
+    s5.append(t3);
+    const grid = h("div", "grid2");
+    [["look", "外見", "input"], ["personality", "性格", "input"], ["history", "生い立ち", "textarea"], ["quote", "口癖", "input"], ["like", "好きなもの", "input"], ["dislike", "苦手なもの", "input"]]
+      .forEach(([k, label, type]) => grid.append(fieldEl(k, label, type, refresh)));
+    s5.append(grid);
+    form.append(s5);
 
-    const legacy = h("div", "legacy");
-    legacy.append(h("span", "", `これまでの冒険者 ${G.P.graves.length} 人 ／ トロフィー ${Object.keys(G.P.trophies).length} 個`));
-    const lb = h("button", "btn", "トロフィーと墓碑を見る"); lb.type = "button"; lb.onclick = () => G.ui.openTrophies();
-    legacy.append(lb);
-    root.append(legacy);
-  };
+    lay.append(form);
+    root.append(lay);
 
-  function fieldEl(key, label, type) {
+    const nav = h("div", "creNav");
+    nav.append(btn("タイトルへ", "", () => go("title")), btn("次へ：能力値を振る", "primary", () => go("stats"), "p-next"));
+    root.append(nav);
+    refresh();
+  }
+
+  const modText = (m) => { const s = Object.entries(m || {}).filter(([, v]) => v).map(([k, v]) => `${k}${signed(v)}`); return s.length ? s.join(" ") : "補正なし"; };
+
+  function segEl(label, name, list, cur, fn) {
+    const f = h("div", "field");
+    f.append(h("span", "flabel", label));
+    const seg = h("div", "seg");
+    seg.setAttribute("role", "radiogroup");
+    seg.setAttribute("aria-label", label);
+    list.forEach(([v, text]) => {
+      const l = h("label");
+      const inp = h("input"); inp.type = "radio"; inp.name = name; inp.value = v; inp.checked = cur === v;
+      inp.onchange = () => fn(v);
+      l.append(inp, document.createTextNode(text));
+      seg.append(l);
+    });
+    f.append(seg);
+    return f;
+  }
+
+  function fieldEl(key, label, type, after) {
     const f = h("div", "field");
     const lab = h("label", "", label);
     lab.htmlFor = "pf-" + key;
@@ -253,12 +248,179 @@
     const inp = h(type === "textarea" ? "textarea" : "input");
     inp.id = "pf-" + key;
     inp.maxLength = type === "textarea" ? 160 : 60;
-    const b = h("button", "btn small", "振る");
-    b.type = "button";
+    inp.value = draft.profile[key] || "";
+    inp.oninput = () => { draft.profile[key] = inp.value; after(); };
+    const b = btn("振る", "small", () => { inp.value = draft.profile[key] = cre.gen(draft, key, R); after(); });
     b.setAttribute("aria-label", `${label}をおまかせで作り直す`);
-    b.onclick = () => { inp.value = genField(key); setup.redraw(); };
     row.append(inp, b);
     f.append(row);
     return f;
+  }
+
+  // ---------------------------------------------------------------- 3. 能力値（何度でも振り直す）
+  const PIPS = [[4], [0, 8], [0, 4, 8], [0, 2, 6, 8], [0, 2, 4, 6, 8], [0, 2, 3, 5, 6, 8]];
+  function die(n) {
+    const d = h("span", "pipDie");
+    for (let i = 0; i < 9; i++) d.append(h("i", PIPS[n - 1].includes(i) ? "on" : ""));
+    return d;
+  }
+  const setDie = (d, n) => [...d.children].forEach((p, i) => p.classList.toggle("on", PIPS[n - 1].includes(i)));
+
+  function stats(root) {
+    steps(root, 1);
+    head(root, "能力値", "何度でも振り直せる。気に入った能力値には鍵をかけて残せる");
+
+    const bar = h("div", "rollBar");
+    const who = h("div", "rollWho");
+    const cv = face("miniFace", 48, 60);
+    const c = D.CLASSES[draft.cls];
+    const st = cre.final(draft);
+    const wt = h("div");
+    wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", `${c.name}・${D.AGES[draft.ageBand].name}・${D.ORIGINS[draft.origin].short}生まれ`));
+    who.append(cv, wt);
+    const tray = h("div", "tray");
+    tray.setAttribute("aria-hidden", "true");
+    const dice = [die(1 + Math.floor(R() * 6)), die(1 + Math.floor(R() * 6)), die(1 + Math.floor(R() * 6))];
+    tray.append(...dice);
+    const rb = btn("振る", "primary rollBtn", () => { cre.roll(draft, R); rolledNow = true; sfx("dice", "click"); setup.show(); }, "s-roll");
+    const info = h("div", "rollInfo num");
+    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `鍵 ${cre.lockCount(draft)}／${D.LOCK_MAX}`), h("span", "", `合計 ${cre.total(draft)}`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
+    bar.append(who, tray, rb, info);
+    root.append(bar);
+
+    const box = h("section", "box");
+    const bh = h("div", "boxhead");
+    bh.append(h("b", "", "ボーナス点"));
+    const left = cre.bonusLeft(draft);
+    bh.append(h("span", "bonusLeft num" + (left ? " has" : ""), `残り ${left} 点`));
+    bh.append(h("span", "fine", "振り終えたら、好きな能力値に足す。才能限界（赤い線）までしか足せない"));
+    box.append(bh);
+    const list = h("div", "statlist creStats num");
+    D.STATS.forEach((k) => {
+      const row = h("div", "srow" + (rolledNow && !draft.locks[k] ? " rolled" : "") + (draft.locks[k] ? " locked" : ""));
+      row.title = D.STAT_HINT[k];
+      const lk = btn(draft.locks[k] ? "鍵" : "−", "lock", () => { if (!cre.toggleLock(draft, k)) { G.ui.toast && G.ui.toast("鍵は " + D.LOCK_MAX + " つまで", "どれかの鍵を外してから"); return; } setup.show(); }, "lk-" + k);
+      lk.setAttribute("aria-pressed", String(!!draft.locks[k]));
+      lk.setAttribute("aria-label", `${k}に鍵をかける（振り直しても変わらない）`);
+      lk.textContent = "";
+      lk.append(lockIcon(!!draft.locks[k]));
+      const v = cre.value(draft, k), cap = cre.cap(draft, k);
+      const b = h("span", "bar"); const i = h("i"); i.style.width = v + "%"; const u = h("u"); u.style.left = `calc(${cap}% - 1px)`; b.append(i, u);
+      const pm = h("span", "pm");
+      const minus = btn("−", "small", () => { cre.addBonus(draft, k, -1); setup.show(); }, "m-" + k);
+      minus.setAttribute("aria-label", `${k}のボーナスを1戻す`);
+      minus.disabled = !cre.canSub(draft, k);
+      const plus = btn("＋", "small", () => { cre.addBonus(draft, k, 1); setup.show(); }, "p-" + k);
+      plus.setAttribute("aria-label", `${k}にボーナスを1足す`);
+      plus.disabled = !cre.canAdd(draft, k);
+      pm.append(minus, h("span", "bn", draft.bonus[k] ? "+" + draft.bonus[k] : "0"), plus);
+      const m = cre.modParts(draft, k);
+      const det = h("span", "det");
+      det.append(h("span", "", `振った値 ${draft.rolled[k]}`));
+      if (m.age) det.append(h("span", m.age > 0 ? "plus" : "minus", `年齢 ${signed(m.age)}`));
+      if (m.origin) det.append(h("span", m.origin > 0 ? "plus" : "minus", `生まれ ${signed(m.origin)}`));
+      if (draft.bonus[k]) det.append(h("span", "plus", `ボーナス +${draft.bonus[k]}`));
+      det.append(h("span", "", `限界 ${cap}`));
+      row.append(lk, h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
+      list.append(row);
+    });
+    box.append(list);
+    box.append(h("p", "fine", "数値がそのまま成功率の基準（％）。使った能力値は、冒険の中で才能限界まで伸びていく。能力の名前に触れると説明が出る。"));
+    root.append(box);
+
+    const nav = h("div", "creNav");
+    const next = btn("次へ：確かめる", "primary", () => go("sheet"), "s-next");
+    nav.append(btn("人物に戻る", "", () => go("person")), next);
+    if (left > 0) nav.append(h("span", "fine", `ボーナスが ${left} 点残っている`));
+    root.append(nav);
+
+    paint(cv);
+    // 振った瞬間の小さな演出
+    if (rolledNow) {
+      rolledNow = false;
+      if (!reduced()) {
+        tray.classList.add("tumble");
+        let n = 0;
+        const t = setInterval(() => { dice.forEach((d) => setDie(d, 1 + Math.floor(R() * 6))); if (++n >= 6) { clearInterval(t); tray.classList.remove("tumble"); } }, 60);
+      }
+    }
+  }
+  function lockIcon(on) {
+    const ns = "http://www.w3.org/2000/svg";
+    const s = document.createElementNS(ns, "svg");
+    s.setAttribute("viewBox", "0 0 16 16"); s.setAttribute("width", "16"); s.setAttribute("height", "16"); s.setAttribute("aria-hidden", "true");
+    const p = document.createElementNS(ns, "path");
+    p.setAttribute("d", on ? "M4 7V5a4 4 0 0 1 8 0v2" : "M4 7V5a4 4 0 0 1 7.5-2");
+    p.setAttribute("fill", "none"); p.setAttribute("stroke", "currentColor"); p.setAttribute("stroke-width", "1.6");
+    const r = document.createElementNS(ns, "rect");
+    r.setAttribute("x", "2.5"); r.setAttribute("y", "7"); r.setAttribute("width", "11"); r.setAttribute("height", "8"); r.setAttribute("rx", "1");
+    r.setAttribute("fill", on ? "currentColor" : "none"); r.setAttribute("stroke", "currentColor"); r.setAttribute("stroke-width", "1.6");
+    s.append(p, r);
+    return s;
+  }
+
+  // ---------------------------------------------------------------- 4. キャラクターシート（確認）
+  function sheet(root) {
+    steps(root, 2);
+    head(root, "この者で旅立つか", "戻って直すこともできる");
+    const o = cre.options(draft, R);
+    const p = o.profile, c = D.CLASSES[o.cls];
+    const paper = h("article", "charSheet");
+    const top = h("header", "csTop");
+    const cv = face("csFace", 96, 120);
+    const nm = h("div");
+    nm.append(h("b", "csName", p.name), h("span", "csLine", `${c.name}・${p.sex}・${p.age}歳（${D.AGES[p.ageBand].name}）・${D.ORIGINS[p.origin].name}生まれ`));
+    nm.append(h("span", "csLine", `目的：${o.goalText}`));
+    top.append(cv, nm);
+    paper.append(top);
+
+    const cols = h("div", "csCols");
+    const stl = h("div", "statlist num");
+    D.STATS.forEach((k) => {
+      const r = h("div", "stat");
+      const b = h("span", "bar"); const i = h("i"); i.style.width = o.stats[k] + "%"; const u = h("u"); u.style.left = `calc(${o.caps[k]}% - 1px)`; b.append(i, u);
+      r.append(h("span", "nm", k), h("span", "v", String(o.stats[k])), b, h("span", "cap", `限界 ${o.caps[k]}`));
+      stl.append(r);
+    });
+    const sb = h("section");
+    sb.append(h("h3", "", "能力値"), stl, h("p", "fine num", `HP ${G.maxHpOf(o.stats)} ／ MP ${G.maxMpOf(o.stats)} ／ 所持金 ${c.gold}G`));
+    const it = (id) => (D.ITEMS[id] ? D.ITEMS[id].name : id);
+    const gear = [c.weapon, c.armor].filter(Boolean).map(it).concat(Object.entries(c.items).map(([id, n]) => `${it(id)}${n > 1 ? "×" + n : ""}`));
+    sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
+    const dl = h("dl", "kv csKv");
+    [["出発地", D.LOCS[c.start].name], ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", p.quote ? `「${p.quote}」` : ""], ["好きなもの", p.like], ["苦手なもの", p.dislike]]
+      .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
+    const pb = h("section");
+    pb.append(h("h3", "", "人物"), dl);
+    cols.append(sb, pb);
+    paper.append(cols);
+    root.append(paper);
+
+    const nav = h("div", "creNav");
+    nav.append(btn("人物を直す", "", () => go("person")), btn("能力値を直す", "", () => go("stats")),
+      btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); }, "c-go"));
+    root.append(nav);
+    root.append(h("p", "fine", "普段の行動は Claude を使わない（利用量はかからない）。自由入力で「GM に任せる」を選んだときだけ使う。"));
+    paint(cv);
+  }
+
+  // ---------------------------------------------------------------- 5. 導入（ページをめくる）
+  function prologue(root) {
+    if (!opts) { step = "sheet"; sheet(root); return; }
+    const pages = cre.prologue(opts);
+    page = Math.max(0, Math.min(page, pages.length - 1));
+    const book = h("article", "book");
+    book.setAttribute("aria-live", "polite");
+    const pg = h("div", "bookPage" + (reduced() ? "" : " turn"));
+    pages[page].forEach((t) => pg.append(h("p", "", t)));
+    book.append(pg, h("div", "folio", `── ${KANJI[page]} ──`));
+    root.append(book);
+    const last = page === pages.length - 1;
+    const nav = h("div", "creNav bookNav");
+    const begin = () => { const o = opts; opts = null; draft = null; step = "title"; sfx("depart", "page"); G.main.start(o); };
+    if (!last) nav.append(btn("とばす", "", begin));
+    if (page > 0) nav.append(btn("前のページ", "", () => { page--; sfx("page"); setup.show(); }, "b-prev"));
+    nav.append(last ? btn("旅立つ", "primary", begin, "b-go") : btn("ページをめくる", "primary", () => { page++; sfx("page"); setup.show(); }, "b-next"));
+    root.append(nav);
   }
 })(globalThis.G = globalThis.G || {});
