@@ -131,7 +131,7 @@
     const f = h("div", "fin");
     f.append(h("b", "", S.over === "dead" ? `── ${S.profile.name}、ここに眠る ──` : `── ${S.profile.name}の物語、ここに終わる ──`));
     const row = h("div", "start");
-    const b1 = h("button", "btn", "年表を見る"); b1.type = "button"; b1.onclick = () => ui.openChronicle(S, true);
+    const b1 = h("button", "btn", S.story ? "人生の物語と年表" : "年表を見る"); b1.type = "button"; b1.onclick = () => ui.openChronicle(S, true);
     const b2 = h("button", "btn primary", "新しい冒険を始める"); b2.type = "button"; b2.onclick = () => G.main.toSetup();
     row.append(b1, b2); f.append(row); panel.append(f);
   }
@@ -350,11 +350,14 @@
     mk("ログをコピー", copyLog);
     if (!S.over) {
       let armed = 0;
-      const rb = mk("引退する", () => {
-        if (Date.now() - armed > 3000) { armed = Date.now(); rb.textContent = "もう一度押すと引退"; setTimeout(() => { rb.textContent = "引退する"; }, 3000); return; }
+      // 物語を終えられるのは、節目（M6）に着いてから。基本は死ぬまで
+      const can = !G.m6CanEnd || G.m6CanEnd();
+      const label = can ? "物語を終える" : "物語を終える（節目はまだ）";
+      const rb = mk(label, () => {
+        if (Date.now() - armed > 3000) { armed = Date.now(); rb.textContent = "もう一度押すと物語を終える"; setTimeout(() => { rb.textContent = label; }, 3000); return; }
         G.retire(); after();
       });
-      rb.disabled = busy || S.mode === "combat";
+      rb.disabled = busy || S.mode === "combat" || !can;
     }
     return acts;
   }
@@ -537,7 +540,7 @@
     P.graves.forEach((g) => {
       const b = h("button", "grave");
       b.type = "button";
-      b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : "物語を終えた"}　${g.turns} 手番`));
+      b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : g.epitaph || "物語を終えた"}　${g.turns} 手番`));
       b.onclick = () => { $("#dlgTrophy").close(); ui.openChronicle(g, false); };
       gl.append(b);
     });
