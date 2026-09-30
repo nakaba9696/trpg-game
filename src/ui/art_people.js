@@ -145,11 +145,18 @@
   // 仲間の職業の名前 → 人物の種類
   const COMP_KIND = { 傭兵: "adventurer", 弓使い: "archer", 僧侶: "priest", 魔法使い: "mage", ならず者: "rogue", 剣士: "adventurer", 槍兵: "soldier", 元帝国兵: "soldier", 侍: "ronin", 浪人: "ronin", 騎士: "knight", 神官: "priest", 盗賊: "rogue", 船乗り: "sailor", 商人: "merchant", 子ども: "child" };
   // 仲間になる魔物（名前に含まれる言葉 → 敵の id。モンスターの絵で描く）
-  const COMP_FOE = [[/ゴブリン/, "barrelgob"], [/スライム/, "slime"], [/狼/, "wolf"], [/土偶/, "dogu"]];
+  const COMP_FOE = [[/ゴブ/, "barrelgob"], [/スライム/, "slime"], [/狼/, "wolf"], [/土偶/, "dogu"]];
+  // 出来事で仲間になる、名前の決まった人（名前に含まれる言葉 → who）。出来事の絵と同じ顔にする
+  const COMP_NAMED = [
+    [/鍋かぶりのゴブ/, { kind: "foe", foe: "goblin", look: { extra: ["nose", "pot"], weapon: "none", eyes: "googly", mouth: "grin", mood: "silly" } }],
+    [/茹で騎士ガストン/, { kind: "knight", sex: "男", age: 34, look: { head: "none", brows: "worried", mouth: "open", marks: ["blush", "stubble"] } }],
+    [/脱走兵ヨアヒム/, { kind: "soldier", sex: "男", look: { head: "none", brows: "worried", marks: ["stubble", "bags"] } }],
+  ];
   G.companionWho = (c) => {
     c = c || {};
     const name = String(c.name || "");
     if (c.who) return typeof c.who === "string" ? { kind: c.who, seed: name } : Object.assign({ seed: name }, c.who);
+    for (const [re, who] of COMP_NAMED) if (re.test(name)) return Object.assign({ seed: name }, who);
     for (const [re, id] of COMP_FOE) if (re.test(name) || re.test(c.cls || "")) return { kind: "foe", foe: id, seed: name };
     const P = G.data && G.data.PROFILE;
     let sex;
@@ -166,6 +173,21 @@
     w.seed = w.seed || `ev:${e.id}`;
     return w;
   };
+
+  // 施設の人：王城では、玉座の主（聖王都は退屈そうな女王、帝都は病床の皇帝に代わる宰相）。王位を奪ったあとは出さない
+  const FAC_WHO = {
+    castle: {
+      leavel: { kind: "noble", sex: "女", age: 34, name: "女王エレオノーラ", seed: "fac:leavel:queen", look: { head: "circlet", eyes: "sleepy", mouth: "flat", brows: "raised", hairStyle: "long", cloth: "#e8e0d0", chest: "gem", bg: "#8a7a5a" } },
+      garmund: { kind: "noble", sex: "男", age: 64, name: "宰相", seed: "fac:garmund:chancellor", look: { head: "none", eyes: "narrow", mouth: "flat", brows: "calm", hairStyle: "slick", cloth: "#1a1a22", chest: "chain", bg: "#3a3a44", marks: ["wrinkles", "bags"] } },
+    },
+  };
+  G.facWho = (S) => {
+    if (!S || S.mode !== "fac" || !FAC_WHO[S.fac]) return null;
+    if (S.fac === "castle" && S.flags && S.flags.throne) return null;
+    const w = FAC_WHO[S.fac][S.loc];
+    return w ? Object.assign({}, w, { look: Object.assign({}, w.look) }) : null;
+  };
+  G.FAC_WHO = FAC_WHO;
 
   // ---------------------------------------------------------------- 描く道具
   function ellipse(ctx, x, y, rx, ry, rot) { ctx.ellipse(x, y, Math.max(0.1, rx), Math.max(0.1, ry), rot || 0, 0, TAU); }
@@ -875,7 +897,10 @@
     const L = { bg: "#5a6a4a", kind: "foe", iris: "#ff3a3a", seed: "foe" };
     ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
     backdrop(ctx, L, x, y, w, h);
-    if (G.paintMonster) G.paintMonster(ctx, x + w / 2, y + h * 1.25, h * 1.25, { id: who.foe });
+    // 四つ足は頭が左の前にあるので、頭が枠の真ん中に来るように右へずらす
+    const e = G.data && G.data.ENEMIES && G.data.ENEMIES[who.foe];
+    const quad = G.monsterLook && G.monsterLook(who.foe, Object.assign({}, e, who.look ? { look: Object.assign({}, e && e.look, who.look) } : {})).body === "quad";
+    if (G.paintMonster) G.paintMonster(ctx, quad ? x + w * 0.5 + h * 0.5 : x + w / 2, quad ? y + h * 1.05 : y + h * 1.25, h * 1.25, { id: who.foe, look: who.look });
     ctx.restore();
   }
 

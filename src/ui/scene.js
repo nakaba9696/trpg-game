@@ -25,7 +25,7 @@
   const fogColor = () => { const c = FOG[ENV.key] || "#d6dce4"; return ENV.night ? mix(c, "#1c2230", 0.6) : c; };
   function setEnv(key, sk, opt) {
     ENV = { season: "", weather: "", night: !!sk.night, key, snowCap: null };
-    if (key === "realm" || key === "majin") return;
+    if (RED[key]) return;
     const at = opt.sky || (G.skyAt && G.S ? G.skyAt(G.S.loc) : null);
     if (!at || at.still) return;
     ENV.season = SEASON_ART[at.season] || "";
@@ -142,6 +142,8 @@
     { top: "#070b18", bot: "#1f2a48", sun: null, night: true },        // 夜
   ];
   const RED_SKY = { top: "#140304", bot: "#7a1c12", sun: "#ff5a3a", night: true };
+  // 魔物界の空（赤い空。季節も天候も無い）
+  const RED = { realm: 1, majin: 1, e2_kitchen: 1 };
 
   function sky(ctx, w, h, sk, R, redMoon) {
     const g = ctx.createLinearGradient(0, 0, 0, h);
@@ -266,6 +268,24 @@
     const g = ctx.createRadialGradient(w / 2, h * 0.55, h * 0.3, w / 2, h * 0.55, w * 0.75);
     g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, `rgba(0,0,0,${a})`);
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  }
+  // 腐れ庭園の花壇（畝ごとに、盛り土と色鮮やかな花。盛り土はどれも人ひとりぶんの長さ）
+  function flowerBeds(ctx, w, h, y0, rows, soil, night, R) {
+    const bright = ["#ff4a8a", "#ffd23a", "#ff7a2a", "#c04aff", "#4ad8ff", "#ff3a3a"];
+    for (let row = 0; row < rows; row++) {
+      const y = h * (y0 + row * 0.075), s = 0.7 + row * 0.25;
+      for (let i = 0; i < 8; i++) {
+        const x = w * (0.04 + i * 0.13) + (row % 2) * w * 0.065;
+        ctx.fillStyle = mix(soil, "#4a3020", 0.45);
+        ctx.beginPath(); ctx.ellipse(x, y, 22 * s, 6 * s, 0, Math.PI, 0); ctx.fill();
+        for (let k = 0; k < 3; k++) {
+          const fx = x + (k - 1) * 10 * s, fy = y - 8 * s - R() * 6 * s, c = bright[(i + k + row) % bright.length];
+          ctx.strokeStyle = "#2a5a22"; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(fx, y - 3 * s); ctx.lineTo(fx, fy); ctx.stroke();
+          if (night) glow(ctx, fx, fy, 9 * s, c, 0.35);
+          ctx.fillStyle = night ? mix(c, "#101418", 0.3) : c; ctx.beginPath(); ctx.arc(fx, fy, 3.2 * s, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+    }
   }
   // 空の色から遠景・中景・近景の色を作る
   const layers = (sk) => [mix(sk.bot, "#1a1e2a", 0.45), mix(sk.bot, "#10131b", 0.7), mix(sk.bot, "#07080c", 0.88)];
@@ -676,6 +696,85 @@
       particles(ctx, w, h, 220, "rgba(180,170,160,.55)", 2, R);
       glow(ctx, w * 0.5, h, h * 0.8, "#ff4a1f", 0.25);
     },
+    // E2：腐れ庭園（毒沼の奥の、ありえないほど色鮮やかな花畑。四角く刈り込んだ生け垣と、塔ほどもある植木鋏）
+    e2_garden(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ridge(ctx, w, h, h * 0.56, h * 0.05, 2, far, R);
+      ctx.fillStyle = mix(mid, "#1a2216", 0.4);
+      for (let i = 0; i < 9; i++) { const x = R() * w, th = h * (0.12 + R() * 0.1); ctx.fillRect(x - 2, h * 0.62 - th, 4, th); ctx.fillRect(x - 10, h * 0.62 - th * 0.7, 10, 2); ctx.fillRect(x, h * 0.62 - th * 0.5, 9, 2); }
+      ctx.fillStyle = mix(near, "#3a4a2a", 0.35); ctx.fillRect(0, h * 0.62, w, h);
+      for (let i = 0; i < 10; i++) { ctx.fillStyle = rgba("#9ac27a", 0.1); ctx.beginPath(); ctx.ellipse(R() * w, h * (0.64 + R() * 0.06), 20 + R() * 40, 3, 0, 0, Math.PI * 2); ctx.fill(); }
+      // 生け垣（定規で測ったように四角い）
+      const hedge = mix("#2e6a2a", sk.bot, sk.night ? 0.6 : 0.15);
+      for (const [x0, x1] of [[0.02, 0.3], [0.72, 0.98]]) { ctx.fillStyle = hedge; ctx.fillRect(w * x0, h * 0.57, w * (x1 - x0), h * 0.1); ctx.fillStyle = rgba("#ffffff", 0.1); ctx.fillRect(w * x0, h * 0.57, w * (x1 - x0), 2); }
+      // 植木鋏（地面に突き立ててある。刃の長さは家より長い）
+      const px = w * 0.56, py = h * 0.2, steel = mix(mid, "#a8acb4", sk.night ? 0.25 : 0.5);
+      for (const s of [-1, 1]) {
+        ctx.fillStyle = steel; ctx.beginPath(); ctx.moveTo(px - 3, py); ctx.lineTo(px + s * w * 0.05, h * 0.68); ctx.lineTo(px + s * w * 0.05 - s * 7, h * 0.68); ctx.lineTo(px + 3, py); ctx.fill();
+        ctx.strokeStyle = mix(near, "#5a3a22", 0.4); ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - s * w * 0.04, py - h * 0.1); ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(px - s * w * 0.05, py - h * 0.13, 9, 6, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.fillStyle = "#1a1a1e"; ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+      flowerBeds(ctx, w, h, 0.7, 4, near, sk.night, R);
+      // 花に埋もれた兜
+      ctx.fillStyle = mix("#7a7a76", near, sk.night ? 0.5 : 0.1); ctx.beginPath(); ctx.arc(w * 0.28, h * 0.9, 9, Math.PI, 0); ctx.fill(); ctx.fillRect(w * 0.28 - 10, h * 0.9, 20, 2);
+      glow(ctx, w * 0.5, h * 0.85, w * 0.5, "#ff9ac0", sk.night ? 0.08 : 0.14);
+    },
+    // E2：肉の谷の大厨房（城ほどもある厨房。煙突の湯気、地面に突き立った、塔より高い肉叉と包丁）
+    e2_kitchen(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(RED_SKY);
+      ridge(ctx, w, h, h * 0.52, h * 0.1, 1.4, mix(far, "#5a1a14", 0.35), R);
+      ridge(ctx, w, h, h * 0.66, h * 0.05, 2.2, mix(mid, "#4a1410", 0.3), R);
+      const bx = w * 0.26, bw = w * 0.48, top = h * 0.42, base = h * 0.84;
+      for (let i = 0; i < 4; i++) {
+        const x = bx + bw * (0.1 + i * 0.26), ch = h * (0.2 + (i % 2) * 0.1);
+        ctx.fillStyle = mid; ctx.fillRect(x, top - ch, w * 0.035, ch + 4);
+        for (let j = 0; j < 6; j++) { ctx.fillStyle = rgba("#e8dcd0", 0.1 + R() * 0.12); ctx.beginPath(); ctx.arc(x + w * 0.018 + (R() - 0.3) * j * 8, top - ch - j * h * 0.05, 8 + j * 5, 0, Math.PI * 2); ctx.fill(); }
+      }
+      ctx.fillStyle = mid; ctx.fillRect(bx, top, bw, base - top);
+      ctx.beginPath(); ctx.moveTo(bx - 8, top); ctx.lineTo(bx + bw * 0.5, top - h * 0.1); ctx.lineTo(bx + bw + 8, top); ctx.fill();
+      for (let r = 0; r < 3; r++) for (let i = 0; i < 9; i++) if (R() < 0.7) { ctx.fillStyle = R() < 0.5 ? "#ff8a2a" : "#ffb04a"; ctx.fillRect(bx + bw * (0.05 + i * 0.105), top + (base - top) * (0.15 + r * 0.25), 6, 9); }
+      // 人の背丈の勝手口（建物の大きさが分かるように）
+      ctx.fillStyle = "#ffcf6e"; ctx.fillRect(bx + bw * 0.5 - 2, base - 7, 4, 7);
+      glow(ctx, bx + bw * 0.5, base - 4, 16, "#ffb04a", 0.5);
+      // 地面に突き立った肉叉と包丁
+      const steel = mix(mid, "#b8b4b0", 0.35);
+      ctx.fillStyle = steel;
+      const fx = w * 0.11; ctx.fillRect(fx - 3, h * 0.28, 6, h * 0.6);
+      ctx.fillRect(fx - 16, h * 0.28, 32, 5); for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.moveTo(fx - 15 + i * 10, h * 0.28); ctx.lineTo(fx - 13 + i * 10, h * 0.08); ctx.lineTo(fx - 11 + i * 10, h * 0.28); ctx.fill(); }
+      const kx = w * 0.88; ctx.beginPath(); ctx.moveTo(kx - 8, h * 0.88); ctx.lineTo(kx - 8, h * 0.18); ctx.quadraticCurveTo(kx + 14, h * 0.26, kx + 14, h * 0.88); ctx.fill();
+      ctx.fillStyle = mix(near, "#3a2014", 0.5); ctx.fillRect(kx - 10, h * 0.88, 26, 3);
+      // 煮汁の川
+      ctx.fillStyle = near; ctx.fillRect(0, base, w, h);
+      ctx.fillStyle = rgba("#a0521e", 0.55); ctx.beginPath(); ctx.moveTo(0, h * 0.93); ctx.quadraticCurveTo(w * 0.5, h * 0.87, w, h * 0.95); ctx.lineTo(w, h * 0.98); ctx.quadraticCurveTo(w * 0.5, h * 0.91, 0, h * 0.97); ctx.fill();
+      glow(ctx, w * 0.5, h * 0.9, w * 0.4, "#ff6a2a", 0.18);
+      particles(ctx, w, h * 0.8, 70, "rgba(230,220,210,.25)", 2, R);
+    },
+    // 鬼ヶ島：荒れた海に突き出た岩の島。洞窟の口に鬼の顔のような岩、しめ縄、酒樽、宴の赤い灯
+    onigashima(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ctx.fillStyle = mix(sk.bot, "#1a2a3a", 0.55); ctx.fillRect(0, h * 0.6, w, h);
+      ctx.strokeStyle = rgba("#ffffff", sk.night ? 0.12 : 0.28); ctx.lineWidth = 1.2;
+      for (let i = 0; i < 26; i++) { const x = R() * w, y = h * (0.62 + R() * 0.36); ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + 8, y - 3, x + 16 + R() * 10, y); ctx.stroke(); }
+      const cx = w * 0.52, base = h * 0.8;
+      ctx.fillStyle = mid; ctx.beginPath(); ctx.moveTo(cx - w * 0.34, base);
+      for (let i = 0; i <= 12; i++) { const t = i / 12; ctx.lineTo(cx - w * 0.34 + t * w * 0.68, base - h * (0.2 + Math.sin(t * Math.PI) * 0.42) + (R() - 0.5) * h * 0.05); }
+      ctx.lineTo(cx + w * 0.34, base); ctx.fill();
+      pines(ctx, w * 0.3, h * 0.36, h * 0.06, 3, mix(mid, "#1a2a1a", 0.3), R);
+      // 角のような二本の岩
+      ctx.fillStyle = mid; for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(cx + s * w * 0.1, h * 0.3); ctx.quadraticCurveTo(cx + s * w * 0.13, h * 0.12, cx + s * w * 0.18, h * 0.08); ctx.quadraticCurveTo(cx + s * w * 0.15, h * 0.2, cx + s * w * 0.16, h * 0.32); ctx.fill(); }
+      // 洞窟の口（鬼の顔のような岩）と、奥の宴の灯
+      ctx.fillStyle = "#07060a"; ctx.beginPath(); ctx.moveTo(cx - w * 0.08, base); ctx.quadraticCurveTo(cx - w * 0.08, base - h * 0.26, cx, base - h * 0.27); ctx.quadraticCurveTo(cx + w * 0.08, base - h * 0.26, cx + w * 0.08, base); ctx.fill();
+      glow(ctx, cx, base - h * 0.08, h * 0.2, "#ff5a2a", 0.5);
+      ctx.fillStyle = "#07060a"; for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(cx + s * w * 0.05, base - h * 0.36, w * 0.022, h * 0.03, s * 0.4, 0, Math.PI * 2); ctx.fill(); }
+      glow(ctx, cx - w * 0.05, base - h * 0.36, 12, "#ff3a2a", 0.6); glow(ctx, cx + w * 0.05, base - h * 0.36, 12, "#ff3a2a", 0.6);
+      ctx.strokeStyle = "#d8c89a"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(cx - w * 0.09, base - h * 0.24); ctx.quadraticCurveTo(cx, base - h * 0.2, cx + w * 0.09, base - h * 0.24); ctx.stroke();
+      ctx.fillStyle = "#f0ece0"; for (let i = 0; i < 4; i++) { const x = cx - w * 0.06 + i * w * 0.04; ctx.fillRect(x, base - h * 0.225, 4, 10); }
+      // 転がった酒樽
+      for (const [x, r] of [[0.38, 9], [0.64, 11], [0.68, 8]]) { ctx.fillStyle = mix("#7a4a2a", near, sk.night ? 0.5 : 0.2); ctx.beginPath(); ctx.ellipse(w * x, base - r * 0.8, r, r * 0.8, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#2a1a10"; ctx.fillRect(w * x - r, base - r * 0.9, r * 2, 2); }
+      ctx.fillStyle = near; ctx.fillRect(cx - w * 0.36, base, w * 0.72, h * 0.04);
+      for (const x of [0.3, 0.74]) { ctx.fillStyle = mix("#b0342a", near, sk.night ? 0.2 : 0.4); ctx.beginPath(); ctx.arc(w * x, base - h * 0.12, 5, 0, Math.PI * 2); ctx.fill(); glow(ctx, w * x, base - h * 0.12, 18, "#ff8a3a", sk.night ? 0.6 : 0.25); ctx.fillStyle = near; ctx.fillRect(w * x - 1, base - h * 0.12, 2, h * 0.12); }
+    },
     majin(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(RED_SKY);
       ridge(ctx, w, h, h * 0.72, h * 0.06, 1, far, R);
@@ -784,20 +883,31 @@
       for (let i = 0; i < 9; i++) { const x = w * (0.66 + (i % 5) * 0.06), y = h * (0.14 + Math.floor(i / 5) * 0.26); ctx.fillStyle = "#8a8a90"; ctx.fillRect(x, y, 3, h * 0.2); ctx.fillStyle = "#5a3a22"; ctx.fillRect(x - 2, y, 7, h * 0.05); ctx.fillStyle = "#4a3a28"; ctx.fillRect(x - 1, y - 3, 5, 3); }
       particles(ctx, w, h * 0.7, 40, "rgba(255,180,80,.7)", 1.6, R);
     },
+    // 闘技場の中（砂の上から見上げる高い壁。鉄格子の門、鎖、色あせた旗、壁際の武器。上の方は描かない）
     arena(ctx, w, h, R) {
       const g = ctx.createLinearGradient(0, 0, 0, h);
       g.addColorStop(0, "#8a98aa"); g.addColorStop(1, "#dfe6ef");
       ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-      for (let row = 0; row < 5; row++) {
-        const y = h * (0.08 + row * 0.1);
-        ctx.fillStyle = mix("#5a5048", "#2a2420", row * 0.15); ctx.fillRect(0, y, w, h * 0.1);
-        for (let i = 0; i < 40; i++) { const x = R() * w; ctx.fillStyle = ["#3a2a2a", "#2a3a4a", "#4a3a22", "#1a1a1a"][i % 4]; ctx.beginPath(); ctx.arc(x, y + h * 0.03, 4, 0, Math.PI * 2); ctx.fill(); ctx.fillRect(x - 5, y + h * 0.045, 10, h * 0.05); }
+      ctx.fillStyle = "#4a423a"; ctx.fillRect(0, h * 0.08, w, h * 0.54);
+      ctx.fillStyle = "#3a332c";
+      for (let y = h * 0.08; y < h * 0.62; y += h * 0.07) { ctx.fillRect(0, y, w, 2); for (let x = (y / 7) % 40; x < w; x += 40 + R() * 20) ctx.fillRect(x, y, 2, h * 0.07); }
+      ctx.fillStyle = "#2a241e"; ctx.fillRect(0, h * 0.06, w, h * 0.03);
+      for (const gx of [0.22, 0.78]) {
+        const x = w * gx, gw = w * 0.12, top = h * 0.3;
+        ctx.fillStyle = "#0e0c0a"; ctx.beginPath(); ctx.moveTo(x - gw / 2, h * 0.62); ctx.lineTo(x - gw / 2, top + gw / 2); ctx.arc(x, top + gw / 2, gw / 2, Math.PI, 0); ctx.lineTo(x + gw / 2, h * 0.62); ctx.fill();
+        ctx.fillStyle = "#5a5450"; for (let bx = x - gw / 2 + 4; bx < x + gw / 2; bx += 8) ctx.fillRect(bx, top + 4, 2, h * 0.62 - top - 4);
+        ctx.fillRect(x - gw / 2, top + gw * 0.6, gw, 2); ctx.fillRect(x - gw / 2, h * 0.5, gw, 2);
       }
-      ctx.fillStyle = "#3a302a"; ctx.fillRect(0, h * 0.58, w, h * 0.04);
+      const flags = ["#8a2a22", "#c8b88a", "#2a3a6a"];
+      for (let i = 0; i < 3; i++) { const x = w * (0.4 + i * 0.1); ctx.fillStyle = mix(flags[i], "#4a423a", 0.35); ctx.beginPath(); ctx.moveTo(x - 12, h * 0.09); ctx.lineTo(x + 12, h * 0.09); ctx.lineTo(x + 12, h * 0.36); ctx.lineTo(x, h * 0.31); ctx.lineTo(x - 12, h * 0.36); ctx.fill(); }
+      ctx.strokeStyle = "#2a2624"; ctx.lineWidth = 2;
+      for (const cx of [0.08, 0.36, 0.64, 0.92]) { ctx.beginPath(); ctx.moveTo(w * cx - 18, h * 0.2); ctx.quadraticCurveTo(w * cx, h * 0.34, w * cx + 18, h * 0.2); ctx.stroke(); }
       ctx.fillStyle = "#c8b08a"; ctx.fillRect(0, h * 0.62, w, h);
+      ctx.fillStyle = "rgba(0,0,0,.18)"; ctx.fillRect(0, h * 0.62, w, h * 0.04);
       ctx.fillStyle = "rgba(120,40,30,.35)"; for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.ellipse(R() * w, h * (0.7 + R() * 0.25), 12 + R() * 18, 4, 0, 0, Math.PI * 2); ctx.fill(); }
-      ctx.fillStyle = "#1a1612"; ctx.fillRect(w * 0.44, h * 0.46, w * 0.12, h * 0.16); ctx.fillStyle = "#4a4440"; for (let x = w * 0.445; x < w * 0.56; x += 8) ctx.fillRect(x, h * 0.46, 2, h * 0.16);
-      particles(ctx, w, h * 0.6, 60, "rgba(255,255,255,.6)", 1.8, R);
+      ctx.fillStyle = "#2a2018"; ctx.fillRect(w * 0.44, h * 0.56, w * 0.12, 4);
+      for (let i = 0; i < 5; i++) { const x = w * (0.45 + i * 0.024); ctx.fillStyle = "#8a8a90"; ctx.fillRect(x, h * 0.36, 2, h * 0.2); ctx.fillStyle = "#4a3a28"; ctx.fillRect(x - 1, h * 0.52, 4, h * 0.05); }
+      particles(ctx, w, h, 50, "rgba(230,210,170,.4)", 1.6, R);
     },
     bath(ctx, w, h, R) {
       interior(ctx, w, h, "#5a4a38", "#4a4a4a", R);
@@ -811,6 +921,124 @@
     },
     field(ctx, w, h, R) { const sk = SKIES[1]; sky(ctx, w, h, sk, R); OUT.w2_farm(ctx, w, h, sk, R); },
     hunt(ctx, w, h, R) { const sk = SKIES[0]; sky(ctx, w, h, sk, R); OUT.w2_hunt(ctx, w, h, sk, R); },
+    // 迷宮の中（場所ごと）。G.dungeonScene が「<場所の絵>_in」を探す。無い迷宮は下の dungeon（石の通路）
+    // 鬼ヶ島の洞窟：岩の洞に、宴の赤い灯、転がる酒樽と大盃、骨
+    onigashima_in(ctx, w, h, R) {
+      IN.cave(ctx, w, h, R);
+      glow(ctx, w * 0.5, h * 0.55, w * 0.4, "#ff3a1a", 0.3);
+      for (const x of [0.15, 0.85]) { ctx.fillStyle = "#b0342a"; ctx.beginPath(); ctx.ellipse(w * x, h * 0.3, 7, 10, 0, 0, Math.PI * 2); ctx.fill(); glow(ctx, w * x, h * 0.3, 30, "#ff8a3a", 0.55); }
+      ctx.fillStyle = "#4a2a18";
+      for (const [x, y, r] of [[0.22, 0.86, 16], [0.3, 0.9, 12], [0.74, 0.88, 18]]) { ctx.beginPath(); ctx.ellipse(w * x, h * y, r, r * 0.8, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#1a0e08"; ctx.fillRect(w * x - r, h * y - 2, r * 2, 2); ctx.fillStyle = "#4a2a18"; }
+      ctx.fillStyle = "#8a1a1a"; ctx.beginPath(); ctx.ellipse(w * 0.55, h * 0.9, 34, 7, 0, 0, Math.PI); ctx.fill(); ctx.fillStyle = "#c8a040"; ctx.fillRect(w * 0.55 - 34, h * 0.9 - 1, 68, 2);
+      ctx.fillStyle = "#d8d0bc"; for (let i = 0; i < 8; i++) { ctx.save(); ctx.translate(w * (0.35 + R() * 0.3), h * (0.93 + R() * 0.05)); ctx.rotate(R() * 3); ctx.fillRect(-8, -1.5, 16, 3); ctx.restore(); }
+    },
+    // 古代遺跡ロゥム：天井の崩れた大広間。折れた柱、壁一面の自慢の碑文、顔を削られた大きな像
+    ruins_in(ctx, w, h, R) {
+      interior(ctx, w, h, "#4a4640", "#2a2824", R);
+      ctx.fillStyle = "rgba(20,18,16,.55)";
+      for (let r = 0; r < 7; r++) for (let x = w * 0.26; x < w * 0.74; x += 7 + R() * 6) if (R() < 0.8) ctx.fillRect(x, h * (0.14 + r * 0.035), 3 + R() * 3, 5);
+      const cx = w * 0.5;
+      ctx.fillStyle = "#1e1c1a"; ctx.fillRect(cx - w * 0.07, h * 0.6, w * 0.14, h * 0.11);
+      ctx.fillStyle = "#6a6458"; ctx.beginPath(); ctx.moveTo(cx - w * 0.08, h * 0.6); ctx.lineTo(cx - w * 0.05, h * 0.4); ctx.lineTo(cx + w * 0.05, h * 0.4); ctx.lineTo(cx + w * 0.08, h * 0.6); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, h * 0.34, h * 0.07, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#8a8474"; for (let i = 0; i < 14; i++) ctx.fillRect(cx - h * 0.045 + R() * h * 0.07, h * 0.3 + R() * h * 0.07, 3, 2);
+      for (let i = 0; i < 5; i++) {
+        const x = w * (0.08 + i * 0.21), ht = h * (0.25 + ((i * 37) % 10) / 20), top = h * 0.71 - ht;
+        ctx.fillStyle = "#34302a"; ctx.fillRect(x - 11, top, 22, ht);
+        ctx.beginPath(); ctx.moveTo(x - 11, top); for (let k = 0; k <= 5; k++) ctx.lineTo(x - 11 + k * 4.4, top - R() * 12); ctx.lineTo(x + 11, top); ctx.fill();
+        ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.fillRect(x + 4, top, 7, ht);
+      }
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, "rgba(255,240,200,.4)"); g.addColorStop(1, "rgba(255,240,200,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(w * 0.52, 0); ctx.lineTo(w * 0.64, 0); ctx.lineTo(w * 0.72, h); ctx.lineTo(w * 0.4, h); ctx.fill();
+      ctx.fillStyle = "#1a1816"; for (let i = 0; i < 12; i++) { const x = R() * w, r = 4 + R() * 12; ctx.beginPath(); ctx.ellipse(x, h * (0.74 + R() * 0.2), r, r * 0.5, 0, Math.PI, 0); ctx.fill(); }
+      particles(ctx, w, h, 60, "rgba(255,240,210,.45)", 1.4, R);
+    },
+    // 光の地下墓所：頭蓋骨を積んだ壁、蝋燭、奥の赤い灯り
+    w1_catacomb_in(ctx, w, h, R) {
+      ctx.fillStyle = "#0e0d0c"; ctx.fillRect(0, 0, w, h);
+      const cx = w * 0.5;
+      glow(ctx, cx, h * 0.5, h * 0.35, "#a02a1a", 0.35);
+      ctx.fillStyle = "#050404"; ctx.beginPath(); ctx.moveTo(cx - w * 0.1, h * 0.8); ctx.lineTo(cx - w * 0.1, h * 0.35); ctx.arc(cx, h * 0.35, w * 0.1, Math.PI, 0); ctx.lineTo(cx + w * 0.1, h * 0.8); ctx.fill();
+      const skull = (x, y, r, c) => {
+        ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); ctx.fillRect(x - r * 0.55, y + r * 0.5, r * 1.1, r * 0.6);
+        ctx.fillStyle = "#0e0d0c"; ctx.beginPath(); ctx.arc(x - r * 0.38, y + r * 0.1, r * 0.26, 0, Math.PI * 2); ctx.arc(x + r * 0.38, y + r * 0.1, r * 0.26, 0, Math.PI * 2); ctx.fill();
+      };
+      let row = 0;
+      for (let y = h * 0.04; y < h * 0.84; y += 13, row++) for (let x = (row % 2) * 7; x < w; x += 14) {
+        const d = Math.abs(x - cx) / (w * 0.5);
+        if (d < 0.24) continue;
+        skull(x, y, 5.5, mix("#0e0d0c", "#b8b0a0", Math.min(1, 0.25 + d * 0.6) * (0.75 + R() * 0.25)));
+      }
+      ctx.fillStyle = "#1a1612"; ctx.fillRect(0, h * 0.84, w, h);
+      for (const x of [0.2, 0.33, 0.67, 0.8]) { glow(ctx, w * x, h * 0.6, 40, "#ffb04a", 0.5); ctx.fillStyle = "#e8dcc0"; ctx.fillRect(w * x - 2, h * 0.6, 4, 10); ctx.fillStyle = "#ffcf6e"; ctx.fillRect(w * x - 1, h * 0.58, 2, 3); }
+      ctx.fillStyle = "rgba(140,20,20,.6)"; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.ellipse(cx + (R() - 0.5) * w * 0.3, h * (0.86 + R() * 0.1), 3 + R() * 5, 1.5, 0, 0, Math.PI * 2); ctx.fill(); }
+    },
+    // 酸の谷の底：緑の雫が落ちる洞、酸の溜まり、膝をついた鉄の巨人（胸の蓋が半分開いている）
+    w2_acid_in(ctx, w, h, R) {
+      ctx.fillStyle = "#0b100b"; ctx.fillRect(0, 0, w, h);
+      glow(ctx, w * 0.45, h * 0.8, w * 0.6, "#6aff4a", 0.16);
+      const gx = w * 0.7, gb = h * 0.84, iron = "#2a2e2a";
+      ctx.fillStyle = iron;
+      ctx.fillRect(gx - w * 0.1, gb - h * 0.5, w * 0.2, h * 0.34);
+      ctx.beginPath(); ctx.arc(gx, gb - h * 0.56, w * 0.05, 0, Math.PI * 2); ctx.fill();
+      ctx.fillRect(gx - w * 0.14, gb - h * 0.48, w * 0.05, h * 0.3); ctx.fillRect(gx + w * 0.09, gb - h * 0.48, w * 0.05, h * 0.38);
+      ctx.fillRect(gx - w * 0.09, gb - h * 0.16, w * 0.08, h * 0.16); ctx.fillRect(gx + w * 0.01, gb - h * 0.2, w * 0.14, h * 0.06);
+      ctx.fillStyle = "#6aff4a"; ctx.fillRect(gx - w * 0.03, gb - h * 0.575, w * 0.06, 3);
+      ctx.fillStyle = "#12160f"; ctx.fillRect(gx - w * 0.05, gb - h * 0.44, w * 0.1, h * 0.12);
+      ctx.fillStyle = "#3a403a"; ctx.save(); ctx.translate(gx - w * 0.05, gb - h * 0.44); ctx.rotate(-0.5); ctx.fillRect(0, -h * 0.12, w * 0.1, h * 0.12); ctx.restore();
+      ctx.fillStyle = "#4a524a"; for (let i = 0; i < 12; i++) ctx.fillRect(gx - w * 0.095 + (i % 6) * w * 0.037, gb - h * (0.49 - Math.floor(i / 6) * 0.3), 2, 2);
+      ctx.fillStyle = "rgba(90,200,60,.25)"; ctx.fillRect(gx - w * 0.1, gb - h * 0.3, w * 0.2, 3);
+      ctx.fillStyle = "#050805";
+      for (let i = 0; i < 16; i++) { const x = R() * w, l = 16 + R() * h * 0.25; ctx.beginPath(); ctx.moveTo(x - 9, 0); ctx.lineTo(x, l); ctx.lineTo(x + 9, 0); ctx.fill(); ctx.fillStyle = "#8aff5a"; ctx.fillRect(x - 1, l + 3 + R() * 20, 2, 5); ctx.fillStyle = "#050805"; }
+      ridge(ctx, w, h, h * 0.88, h * 0.04, 3, "#070a07", R);
+      for (let i = 0; i < 4; i++) { const x = w * (0.1 + i * 0.13), y = h * (0.9 + (i % 2) * 0.04); ctx.fillStyle = "rgba(120,240,80,.55)"; ctx.beginPath(); ctx.ellipse(x, y, 26, 5, 0, 0, Math.PI * 2); ctx.fill(); glow(ctx, x, y, 34, "#8aff5a", 0.3); }
+      particles(ctx, w, h, 40, "rgba(160,255,120,.5)", 1.5, R);
+    },
+    // 腐れ庭園の奥：蔓の天井の下の花壇、甘い霧、花壇の間の白い天幕
+    e2_garden_in(ctx, w, h, R) {
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, "#10180e"); g.addColorStop(0.65, "#2a3a22"); g.addColorStop(1, "#1a1410");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      const bright = ["#ff4a8a", "#ffd23a", "#c04aff", "#4ad8ff"];
+      for (let i = 0; i < 4; i++) {
+        const s = 1 - i * 0.2, aw = w * 0.9 * s, top = h * (0.08 + i * 0.06);
+        ctx.strokeStyle = mix("#3a6a2a", "#10180e", i * 0.2); ctx.lineWidth = 10 * s;
+        ctx.beginPath(); ctx.moveTo(w / 2 - aw / 2, h * 0.7); ctx.quadraticCurveTo(w / 2 - aw / 2, top, w / 2, top); ctx.quadraticCurveTo(w / 2 + aw / 2, top, w / 2 + aw / 2, h * 0.7); ctx.stroke();
+        for (let k = 0; k < 10; k++) { const t = k / 9, x = w / 2 + (t - 0.5) * aw * 0.95, y = top + Math.pow(Math.abs(t - 0.5) * 2, 2) * (h * 0.7 - top) * 0.9; ctx.fillStyle = bright[(k + i) % 4]; ctx.beginPath(); ctx.arc(x, y, 3 * s + 1, 0, Math.PI * 2); ctx.fill(); }
+      }
+      const tx = w * 0.78, ty = h * 0.66;
+      ctx.fillStyle = "#e8e4d8"; ctx.beginPath(); ctx.moveTo(tx - w * 0.07, ty); ctx.lineTo(tx, ty - h * 0.18); ctx.lineTo(tx + w * 0.07, ty); ctx.fill();
+      ctx.fillStyle = "#1a1410"; ctx.beginPath(); ctx.moveTo(tx - w * 0.015, ty); ctx.lineTo(tx, ty - h * 0.1); ctx.lineTo(tx + w * 0.015, ty); ctx.fill();
+      glow(ctx, tx, ty - h * 0.05, 30, "#ffe8a0", 0.45);
+      ctx.fillStyle = "#2a2018"; ctx.fillRect(0, h * 0.66, w, h);
+      flowerBeds(ctx, w, h, 0.72, 4, "#2a2018", true, R);
+      glow(ctx, w * 0.5, h * 0.7, w * 0.6, "#ff9ac0", 0.16);
+      particles(ctx, w, h, 90, "rgba(255,190,220,.45)", 1.5, R);
+    },
+    // 大厨房の中：家ほどの大鍋と火、天井から下がる鉤と肉、卓の端の巨大な包丁、小さな人間用の扉
+    e2_kitchen_in(ctx, w, h, R) {
+      interior(ctx, w, h, "#4a2a1e", "#2a1a12", R);
+      const cx = w * 0.48;
+      glow(ctx, cx, h * 0.85, h * 0.6, "#ff6a1a", 0.55);
+      ctx.fillStyle = "#ff9a3a"; for (let i = 0; i < 9; i++) { const x = cx - w * 0.16 + i * w * 0.04; ctx.beginPath(); ctx.moveTo(x - 8, h * 0.9); ctx.lineTo(x, h * (0.74 + R() * 0.06)); ctx.lineTo(x + 8, h * 0.9); ctx.fill(); }
+      ctx.fillStyle = "#15100c"; ctx.beginPath(); ctx.ellipse(cx, h * 0.52, w * 0.24, h * 0.24, 0, 0, Math.PI); ctx.fill();
+      ctx.fillRect(cx - w * 0.25, h * 0.46, w * 0.5, h * 0.07);
+      ctx.fillStyle = "#6a3a1a"; ctx.beginPath(); ctx.ellipse(cx, h * 0.465, w * 0.23, h * 0.035, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#4a2410"; for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.arc(cx + (R() - 0.5) * w * 0.36, h * 0.465, 4 + R() * 6, Math.PI, 0); ctx.fill(); }
+      for (let j = 0; j < 10; j++) { ctx.fillStyle = `rgba(240,230,220,${0.06 + R() * 0.08})`; ctx.beginPath(); ctx.arc(cx + (R() - 0.5) * w * 0.4, h * (0.42 - R() * 0.35), 16 + R() * 26, 0, Math.PI * 2); ctx.fill(); }
+      ctx.strokeStyle = "#3a2a1a"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(cx - w * 0.28, h * 0.72); ctx.lineTo(cx - w * 0.22, h * 0.44); ctx.moveTo(cx - w * 0.26, h * 0.72); ctx.lineTo(cx - w * 0.2, h * 0.44); ctx.stroke();
+      ctx.lineWidth = 1.5; for (let i = 0; i < 6; i++) { const y = h * (0.47 + i * 0.045); ctx.beginPath(); ctx.moveTo(cx - w * 0.28 + (0.72 * h - y) * 0.22 * w / h, y); ctx.lineTo(cx - w * 0.26 + (0.72 * h - y) * 0.22 * w / h, y); ctx.stroke(); }
+      for (const hx of [0.08, 0.16, 0.84, 0.92]) {
+        const x = w * hx, l = h * (0.18 + ((hx * 100) % 7) / 40);
+        ctx.strokeStyle = "#8a8a88"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, l); ctx.arc(x - 4, l, 4, 0, Math.PI); ctx.stroke();
+        ctx.fillStyle = "#7a2a22"; ctx.beginPath(); ctx.ellipse(x - 4, l + h * 0.09, w * 0.022, h * 0.085, 0.1, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#e8d8c8"; ctx.fillRect(x - 6, l + h * 0.16, 4, h * 0.03);
+      }
+      ctx.fillStyle = "#1a120c"; ctx.fillRect(w * 0.76, h * 0.62, w * 0.24, h * 0.06);
+      ctx.fillStyle = "#9a9894"; ctx.fillRect(w * 0.8, h * 0.45, w * 0.16, h * 0.17); ctx.fillStyle = "#3a2418"; ctx.fillRect(w * 0.95, h * 0.5, w * 0.05, h * 0.05);
+      ctx.fillStyle = "#1a0e08"; ctx.fillRect(w * 0.04, h * 0.64, 7, 12); glow(ctx, w * 0.04 + 3, h * 0.7, 10, "#ffcf6e", 0.4);
+    },
     dungeon(ctx, w, h, R) {
       ctx.fillStyle = "#0c0b0d"; ctx.fillRect(0, 0, w, h);
       for (let i = 0; i < 5; i++) {
@@ -868,6 +1096,10 @@
   }
 
   // ---------------------------------------------------------------- 入口
+  // 迷宮の中の絵：「<場所の絵>_in」があればそれ、墓場・洞窟・魔人の城は外と同じ絵、ほかは石の通路（dungeon）
+  G.dungeonScene = (L) => (L && IN[L.scene + "_in"] ? L.scene + "_in" : L && ["bones", "cave", "majin"].includes(L.scene) ? L.scene : "dungeon");
+  // 描ける絵の名前（tests/checks/a4_art.mjs が、汎用の絵に落ちている場所を探すのに使う）
+  G.sceneNames = () => ({ out: Object.keys(OUT), inside: Object.keys(IN) });
   G.paintScene = (canvas, opt) => {
     const dpr = Math.min(2, (typeof devicePixelRatio === "number" && devicePixelRatio) || 1);
     const rect = canvas.getBoundingClientRect();
@@ -881,7 +1113,7 @@
     const key = opt.key || (G.S && G.S.mode === "fac" && IN[G.S.fac] ? G.S.fac : opt.key);
     if (IN[key]) { ENV = { season: "", weather: "", night: false, key, snowCap: null }; IN[key](ctx, w, h, R); }
     else {
-      const sk0 = key === "realm" || key === "majin" ? RED_SKY : SKIES[opt.phase || 0];
+      const sk0 = RED[key] ? RED_SKY : SKIES[opt.phase || 0];
       setEnv(key, sk0, opt);
       const sk = skyFor(sk0);
       sky(ctx, w, h, sk, rng(seed + ":sky"), opt.redMoon);

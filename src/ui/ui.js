@@ -33,7 +33,7 @@
     const S = G.S;
     const L = G.loc();
     if (S.mode === "fac" && S.fac) return FAC_SCENE[S.fac];
-    if (L.type === "dungeon" && S.depth > 0) return ["bones", "cave", "majin"].includes(L.scene) ? L.scene : "dungeon";
+    if (L.type === "dungeon" && S.depth > 0) return G.dungeonScene ? G.dungeonScene(L) : "dungeon";
     return L.scene;
   }
   function paint(force) {
@@ -45,12 +45,12 @@
     lastPaint = sig;
     G.paintScene($("#scene"), { key, phase: S.phase, seed: S.loc + ":" + S.depth + ":" + key, foes, redMoon: S.phase === 3 && !!S.flags.god });
   }
-  // 出来事に出てくる人物（出来事のデータの who）。背景の右上に重ねる
+  // 出来事に出てくる人物（出来事のデータの who）と、施設の人（王城の主。G.facWho）。背景の右上に重ねる
   let lastWho = "";
   function paintWho() {
     const S = G.S;
     const e = S.mode === "event" && S.event && G.eventWho ? D.EVENTS.find((x) => x.id === S.event) : null;
-    const who = e ? G.eventWho(e) : null;
+    const who = e ? G.eventWho(e) : S.mode === "fac" && !S.combat && G.facWho ? G.facWho(S) : null;
     let box = $("#who");
     if (!who) { if (box) box.hidden = true; lastWho = ""; return; }
     if (!box) {
