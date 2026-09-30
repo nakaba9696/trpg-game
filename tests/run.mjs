@@ -65,6 +65,41 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`データの整合（場所 ${Object.keys(D.LOCS).length}・敵 ${Object.keys(D.ENEMIES).length}・アイテム ${Object.keys(D.ITEMS).length}・出来事 ${D.EVENTS.length}）`);
 }
 
+// ---------------------------------------------------------------- 1b. 敵の台詞と逃げ方（engine/foe_quirks.js）
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  for (const [id, e] of Object.entries(D.ENEMIES)) {
+    if (e.fleeAt !== undefined && !(e.fleeAt > 0 && e.fleeAt < 1)) fail(`敵 ${id}: fleeAt は 0〜1`);
+    if (e.fleeAt && e.boss) fail(`敵 ${id}: ボスは逃げない`);
+    for (const k of Object.keys(e.lines || {})) {
+      if (k === "flee") { if (typeof e.lines.flee !== "string") fail(`敵 ${id}: lines.flee は文字列`); }
+      else if (k === "open" || k === "turn") { if (!Array.isArray(e.lines[k]) || !e.lines[k].every((s) => typeof s === "string" && s)) fail(`敵 ${id}: lines.${k} は文字列の配列`); }
+      else fail(`敵 ${id}: lines.${k} は使われない`);
+    }
+  }
+  // 深手の臆病者が逃げると、倒したことにならず戦闘が終わる
+  G.rand = seeded(7);
+  G.P = { trophies: {}, graves: [] };
+  const cls = Object.keys(D.CLASSES)[0];
+  const stats = {}, caps = {};
+  D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 60; });
+  G.newGame({ cls, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
+  G.S.maxHp = G.S.hp = 999;
+  G.startCombat(["e1_crowngob"], {});
+  const kills = G.S.counters.kills;
+  let fled = false;
+  for (let i = 0; i < 20 && G.S.combat; i++) {
+    G.S.combat.foes[0].hp = 1;
+    G.combatAct("guard");
+    if (!G.S.combat) fled = G.S.counters.kills === kills;
+  }
+  if (!fled) fail("王冠ゴブリンが深手を負っても逃げない");
+  if (G.S.mode !== "explore") fail(`敵が逃げたあとの mode が変 ${G.S.mode}`);
+  if (failures === before) ok(`敵の台詞と逃げ方（台詞あり ${Object.values(D.ENEMIES).filter((e) => e.lines).length} 種・逃げる ${Object.values(D.ENEMIES).filter((e) => e.fleeAt).length} 種）`);
+}
+
 // ---------------------------------------------------------------- 2. ランダムに遊ぶ
 {
   const G = loadEngine();
