@@ -67,6 +67,23 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`データの整合（場所 ${Object.keys(D.LOCS).length}・敵 ${Object.keys(D.ENEMIES).length}・アイテム ${Object.keys(D.ITEMS).length}・出来事 ${D.EVENTS.length}）`);
 }
 
+// ---------------------------------------------------------------- 1a. どの場所にも、どの出発地からも道か船で行ける
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  for (const [cls, c] of Object.entries(D.CLASSES)) {
+    const seen = new Set([c.start]), queue = [c.start];
+    while (queue.length) {
+      const L = D.LOCS[queue.shift()];
+      for (const to of [...Object.keys(L?.links || {}), ...Object.keys(L?.sea || {})]) if (!seen.has(to)) { seen.add(to); queue.push(to); }
+    }
+    for (const id of Object.keys(D.LOCS)) if (!seen.has(id)) fail(`職業 ${cls}: 出発地 ${c.start} から ${id} へ行けない`);
+    for (const [id, L] of Object.entries(D.LOCS)) if (!(L.x >= 0 && L.x <= 100 && L.y >= 0 && L.y <= 100)) fail(`${id}: 地図の位置が無い`);
+  }
+  if (failures === before) ok(`どの場所にも行ける（場所 ${Object.keys(D.LOCS).length}）`);
+}
+
 // ---------------------------------------------------------------- 1b. 敵の台詞と逃げ方（engine/foe_quirks.js）
 {
   const G = loadEngine();
