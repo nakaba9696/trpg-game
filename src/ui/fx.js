@@ -15,7 +15,7 @@
     let t = 0;
     (entries || []).forEach((e) => {
       if (!e || !e.fx) return;
-      out.push({ at: Math.min(t, MAX_DELAY), fx: e.fx, foe: e.foe, n: e.n || 0, heavy: !!e.heavy, boss: !!e.boss, name: e.name, text: e.text });
+      out.push({ src: e, at: Math.min(t, MAX_DELAY), fx: e.fx, foe: e.foe, n: e.n || 0, heavy: !!e.heavy, boss: !!e.boss, name: e.name, text: e.text });
       // 会心の光は次の数字と同時に出す。前口上は帯が出てから、ほかを始める
       t += e.fx === "crit" ? 0 : e.fx === "boss" ? 600 : STEP;
     });

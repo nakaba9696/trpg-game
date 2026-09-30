@@ -1,5 +1,6 @@
 // 背景の絵。画像ファイルは使わず、場所と時間帯ごとに canvas に描く。
-// G.paintScene(canvas, { key, phase, seed, foes: [{ id, shape, eye, boss }] })
+// G.paintScene(canvas, { key, phase, seed, foes: [{ id, shape, eye, boss }], sky })
+// sky（{ season: "春|夏|秋|冬", weather: "晴|雨|霧|雪" }）を省くと、今の場所の G.skyAt を使う
 // 敵の絵は art_monsters.js の G.paintMonster が描く（無ければ下の影で代わりにする）
 // key を足すときは SCENES に関数を1つ足す。レーン A（絵）が管理
 (function (G) {
@@ -13,10 +14,131 @@
   const mix = (a, b, t) => { const x = hex(a), y = hex(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
   const rgba = (c, a) => { const [r, g, b] = hex(c); return `rgba(${r},${g},${b},${a})`; };
 
+  // ---------------------------------------------------------------- 季節と天候（A1）
+  // 今の場所の季節と天候は engine/weather.js の G.skyAt が決める。絵はそれを読むだけ。
+  // ENV は1枚描くあいだだけ使う（木・屋根・山の雪などの小道具が読む）
+  let ENV = { season: "", weather: "", night: false, key: "", snowCap: null };
+  const SEASON_ART = { 春: "spring", 夏: "summer", 秋: "autumn", 冬: "winter" };
+  const WEATHER_ART = { 雨: "rain", 霧: "fog", 雪: "snow" };
+  // 霧の色は町ごとに違う（港は潮の白、沼は緑、魔法都市は紫、砦は煤、朧島は提灯の色、酸の谷は緑、湯の町は湯気、鍛冶の都は煙）
+  const FOG = { port: "#c9d2dc", swamp: "#a8c29a", magic: "#c0b2e8", fort: "#a39888", w1_oboro: "#e8c4a4", w1_catacomb: "#b4c8be", bones: "#c8c4b4", forest: "#c4d0c4", w2_acid: "#b4d89a", w2_spa: "#eceef2", w2_forge: "#b0a8a0", w2_shadow: "#b8b4ac" };
+  const fogColor = () => { const c = FOG[ENV.key] || "#d6dce4"; return ENV.night ? mix(c, "#1c2230", 0.6) : c; };
+  function setEnv(key, sk, opt) {
+    ENV = { season: "", weather: "", night: !!sk.night, key, snowCap: null };
+    if (key === "realm" || key === "majin") return;
+    const at = opt.sky || (G.skyAt && G.S ? G.skyAt(G.S.loc) : null);
+    if (!at || at.still) return;
+    ENV.season = SEASON_ART[at.season] || "";
+    ENV.weather = WEATHER_ART[at.weather] || "";
+    if (ENV.season === "winter") ENV.snowCap = sk.night ? "rgba(196,208,228,.6)" : "rgba(242,246,252,.92)";
+  }
+  // 季節と天候で空の色を変える（遠景・近景の色もここから作られる）
+  function skyFor(sk) {
+    const o = Object.assign({}, sk), n = sk.night;
+    if (ENV.season === "winter") { o.top = mix(o.top, "#8a98aa", n ? 0.1 : 0.25); o.bot = mix(o.bot, "#e4eaf2", n ? 0.1 : 0.3); }
+    else if (ENV.season === "autumn") o.bot = mix(o.bot, "#f0a060", n ? 0.05 : 0.18);
+    else if (ENV.season === "summer" && !n) o.top = mix(o.top, "#2f6fd0", 0.15);
+    if (ENV.weather === "rain" || ENV.weather === "snow") {
+      const c = ENV.weather === "snow" ? "#9aa4b2" : "#4a525c";
+      o.top = mix(o.top, n ? "#101418" : c, 0.7); o.bot = mix(o.bot, n ? "#1a2028" : mix(c, "#ffffff", 0.3), 0.65);
+      o.veil = "cloud"; o.sun = null;
+    } else if (ENV.weather === "fog") {
+      const c = fogColor();
+      o.top = mix(o.top, c, n ? 0.2 : 0.4); o.bot = mix(o.bot, c, n ? 0.35 : 0.6);
+      o.veil = "fog";
+    }
+    return o;
+  }
+  // 木の色。季節ごとに、針葉樹の色・広葉樹の色（秋の紅葉・春の花）・雪
+  function foliage(color) {
+    if (!/^#/.test(color)) return { needle: color };
+    const k = ENV.night ? 0.22 : 0.55;
+    const tint = (cs) => cs.map((c) => mix(color, c, k));
+    const heavy = ENV.key === "yakumo" || ENV.key === "w1_oboro";
+    switch (ENV.season) {
+      case "summer": return { needle: mix(color, "#2f6a2a", k * 0.6) };
+      case "spring": return { needle: mix(color, "#3f7a32", k * 0.5), broad: tint(heavy ? ["#f4c0cc", "#eaa8bc", "#f8d4dc"] : ["#8ab45a", "#f0c0cc", "#6a9a48"]) };
+      case "autumn": return { needle: mix(color, "#3a4a28", k * 0.3), broad: tint(heavy ? ["#c8281a", "#e0401e", "#b01e14", "#e87a2a"] : ["#c8481e", "#e0802a", "#b8301a", "#d8a030"]) };
+      case "winter": return { needle: color, snow: ENV.snowCap };
+      default: return { needle: color };
+    }
+  }
+  // 雨雲・雪雲
+  function clouds(ctx, w, h, sk, R) {
+    const c = sk.night ? "#0c1014" : mix(sk.top, "#2a3038", 0.35);
+    for (let i = 0; i < 14; i++) {
+      const x = R() * w, y = h * (0.02 + R() * 0.25), rx = w * (0.12 + R() * 0.15), ry = h * (0.04 + R() * 0.05);
+      ctx.fillStyle = rgba(c, 0.35 + R() * 0.3);
+      ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  // 地面に季節を足す（夏の草・春の花びら・秋の落ち葉・冬の積雪）
+  function seasonPass(ctx, w, h, R) {
+    const heavy = ENV.key === "yakumo" || ENV.key === "w1_oboro";
+    const falling = (n, cols, s) => {
+      for (let i = 0; i < n; i++) {
+        const x = R() * w, y = R() * h, a = R() * Math.PI;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.fillStyle = cols[i % cols.length];
+        ctx.beginPath(); ctx.ellipse(0, 0, s * (0.8 + R() * 0.6), s * 0.45, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      }
+    };
+    const dim = ENV.night ? 0.45 : 0.9;
+    if (ENV.season === "summer") {
+      ctx.strokeStyle = mix("#07080c", "#3d6b2a", ENV.night ? 0.18 : 0.45); ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let x = 0; x < w; x += 3 + R() * 4) { const l = 5 + R() * 9; ctx.moveTo(x, h); ctx.lineTo(x + (R() - 0.5) * 5, h - l); }
+      ctx.stroke();
+    } else if (ENV.season === "spring") {
+      falling(heavy ? 90 : 24, [`rgba(250,200,215,${dim})`, `rgba(255,228,236,${dim})`], 2.4);
+    } else if (ENV.season === "autumn") {
+      const cols = heavy ? [`rgba(210,50,30,${dim})`, `rgba(235,95,35,${dim})`, `rgba(180,30,24,${dim})`] : [`rgba(205,90,35,${dim})`, `rgba(225,150,50,${dim})`, `rgba(170,60,30,${dim})`];
+      falling(heavy ? 70 : 34, cols, 2.8);
+      for (let i = 0; i < w / 5; i++) { ctx.fillStyle = cols[i % cols.length]; ctx.fillRect(R() * w, h * (0.955 + R() * 0.045), 3 + R() * 3, 1.5 + R()); }
+    } else if (ENV.season === "winter" && ENV.snowCap) {
+      ctx.fillStyle = ENV.snowCap;
+      ctx.beginPath(); ctx.moveTo(0, h);
+      for (let x = 0; x <= w; x += 12) ctx.lineTo(x, h * (0.955 + 0.012 * Math.sin(x * 0.05) + R() * 0.006));
+      ctx.lineTo(w, h); ctx.fill();
+    }
+  }
+  // 霧（敵より奥）
+  function fogPass(ctx, w, h, R) {
+    if (ENV.weather !== "fog") return;
+    const c = fogColor(), a = ENV.night ? 0.3 : 0.42;
+    ctx.fillStyle = rgba(c, a * 0.4); ctx.fillRect(0, 0, w, h);
+    for (let i = 0; i < 6; i++) {
+      const y = h * (0.4 + i * 0.1) + (R() - 0.5) * h * 0.05, bh = h * (0.08 + R() * 0.08);
+      const g = ctx.createLinearGradient(0, y - bh, 0, y + bh);
+      g.addColorStop(0, rgba(c, 0)); g.addColorStop(0.5, rgba(c, a * (0.6 + R() * 0.4))); g.addColorStop(1, rgba(c, 0));
+      ctx.fillStyle = g; ctx.fillRect(0, y - bh, w, bh * 2);
+    }
+  }
+  // 雨と雪（敵より手前）。吹雪の場所は横殴り
+  function fallPass(ctx, w, h, R) {
+    if (ENV.weather === "rain") {
+      ctx.fillStyle = "rgba(16,22,32,.18)"; ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = ENV.night ? "rgba(170,185,210,.28)" : "rgba(200,212,230,.42)"; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i < w * 0.5; i++) { const x = R() * (w + 40), y = R() * h, l = 10 + R() * 14; ctx.moveTo(x, y); ctx.lineTo(x - l * 0.25, y + l); }
+      ctx.stroke();
+      ctx.strokeStyle = ENV.night ? "rgba(170,185,210,.25)" : "rgba(210,220,235,.4)";
+      for (let i = 0; i < w / 14; i++) { const x = R() * w, y = h * (0.93 + R() * 0.06); ctx.beginPath(); ctx.ellipse(x, y, 4 + R() * 3, 1.2, 0, 0, Math.PI * 2); ctx.stroke(); }
+    } else if (ENV.weather === "snow") {
+      const storm = ENV.key === "snow" || ENV.key === "snowcity" || ENV.key === "mountain";
+      if (storm) { ctx.fillStyle = ENV.night ? "rgba(160,170,190,.14)" : "rgba(232,238,246,.22)"; ctx.fillRect(0, 0, w, h); }
+      ctx.fillStyle = ENV.night ? "rgba(220,228,240,.6)" : "rgba(255,255,255,.85)";
+      for (let i = 0; i < w * (storm ? 0.7 : 0.35); i++) {
+        const x = R() * w, y = R() * h, r = 0.8 + R() * 1.8;
+        if (storm) { ctx.save(); ctx.translate(x, y); ctx.rotate(0.25); ctx.fillRect(0, 0, r * 3.5, r * 0.6); ctx.restore(); }
+        else { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+      }
+    }
+  }
+
   const SKIES = [
     { top: "#6f8fb8", bot: "#f0c79a", sun: "#fff1c9", night: false },  // 朝
     { top: "#4f7fbf", bot: "#bcd6ec", sun: "#fffbe8", night: false },  // 昼
-    { top: "#2c2346", bot: "#e2764a", sun: "#ffc27a", night: false },  // 夕
+    { top: "#2c2346", bot: "#e2764a", sun: "#ffc27a", night: false, dusk: true },  // 夕
     { top: "#070b18", bot: "#1f2a48", sun: null, night: true },        // 夜
   ];
   const RED_SKY = { top: "#140304", bot: "#7a1c12", sun: "#ff5a3a", night: true };
@@ -27,21 +149,22 @@
     g.addColorStop(1, sk.bot);
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
-    if (sk.night) {
+    if (sk.night && !sk.veil) {
       for (let i = 0; i < 90; i++) {
         ctx.fillStyle = `rgba(255,255,255,${0.2 + R() * 0.6})`;
         ctx.fillRect(R() * w, R() * h * 0.6, 1.2, 1.2);
       }
     }
-    if (sk.night || redMoon) {
+    if (sk.veil === "cloud") clouds(ctx, w, h, sk, R);
+    if ((sk.night && !sk.veil) || redMoon) {
       const mx = w * (0.15 + R() * 0.7), my = h * 0.18, mr = h * 0.07;
       ctx.fillStyle = redMoon ? "#e0442e" : "#f1ecd6";
       ctx.shadowColor = redMoon ? "#ff3b1f" : "#fff6d8";
       ctx.shadowBlur = 30;
       ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
-    } else if (sk.sun) {
-      const sx = w * (0.2 + R() * 0.6), sy = h * (sk.bot === "#e2764a" ? 0.55 : 0.2);
+    } else if (sk.sun && sk.veil !== "cloud") {
+      const sx = w * (0.2 + R() * 0.6), sy = h * (sk.dusk ? 0.55 : 0.2);
       const sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, h * 0.35);
       sg.addColorStop(0, rgba(sk.sun, 0.9)); sg.addColorStop(0.15, rgba(sk.sun, 0.5)); sg.addColorStop(1, rgba(sk.sun, 0));
       ctx.fillStyle = sg; ctx.fillRect(0, 0, w, h);
@@ -63,6 +186,7 @@
     ctx.fill();
   }
   function peaks(ctx, w, h, base, height, n, color, snow, R) {
+    if (ENV.season === "winter") snow = ENV.snowCap || "rgba(240,245,255,.7)";
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.moveTo(0, h);
@@ -84,11 +208,21 @@
     }
   }
   function pines(ctx, w, base, size, n, color, R) {
-    ctx.fillStyle = color;
+    const leaf = foliage(color);
     for (let i = 0; i < n; i++) {
       const x = R() * w, s = size * (0.6 + R() * 0.7), y = base + R() * size * 0.3;
-      ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.55, y); ctx.lineTo(x + s * 0.55, y); ctx.fill();
+      ctx.fillStyle = color;
       ctx.fillRect(x - s * 0.06, y, s * 0.12, s * 0.3);
+      // 秋と春は、針葉樹のあいだに葉の落ちる木が混じる（並びは季節で変えない）
+      if (leaf.broad && (i * 7) % 10 < 5) {
+        ctx.fillRect(x - s * 0.08, y - s * 0.9, s * 0.16, s * 0.9);
+        ctx.fillStyle = leaf.broad[i % leaf.broad.length];
+        ctx.beginPath(); ctx.arc(x, y - s * 1.2, s * 0.55, 0, Math.PI * 2); ctx.arc(x - s * 0.35, y - s * 0.85, s * 0.35, 0, Math.PI * 2); ctx.arc(x + s * 0.35, y - s * 0.9, s * 0.38, 0, Math.PI * 2); ctx.fill();
+        continue;
+      }
+      ctx.fillStyle = leaf.needle;
+      ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.55, y); ctx.lineTo(x + s * 0.55, y); ctx.fill();
+      if (leaf.snow) { ctx.fillStyle = leaf.snow; ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.22, y - s * 1.35); ctx.lineTo(x, y - s * 1.5); ctx.lineTo(x + s * 0.22, y - s * 1.35); ctx.fill(); }
     }
   }
   function buildings(ctx, w, base, hmax, color, lit, R, roofs) {
@@ -98,6 +232,11 @@
       ctx.fillStyle = color;
       ctx.fillRect(x, base - bh, bw, bh + 2);
       if (roofs) { ctx.beginPath(); ctx.moveTo(x - 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.45); ctx.lineTo(x + bw + 3, base - bh); ctx.fill(); }
+      if (ENV.snowCap) {
+        ctx.fillStyle = ENV.snowCap;
+        if (roofs) { ctx.beginPath(); ctx.moveTo(x - 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.45); ctx.lineTo(x + bw + 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.3); ctx.fill(); }
+        else ctx.fillRect(x, base - bh - 2, bw, 3);
+      }
       if (lit) {
         for (let wy = base - bh + 8; wy < base - 8; wy += 12) for (let wx = x + 5; wx < x + bw - 6; wx += 10) {
           if (R() < 0.35) { ctx.fillStyle = R() < 0.5 ? "#ffcf6e" : "#ffb04a"; ctx.fillRect(wx, wy, 4, 5); }
@@ -111,6 +250,7 @@
     ctx.fillRect(x - tw / 2, base - th, tw, th);
     ctx.fillStyle = roof || color;
     ctx.beginPath(); ctx.moveTo(x - tw / 2 - 4, base - th); ctx.lineTo(x, base - th - tw * 1.2); ctx.lineTo(x + tw / 2 + 4, base - th); ctx.fill();
+    if (ENV.snowCap) { ctx.fillStyle = ENV.snowCap; ctx.beginPath(); ctx.moveTo(x, base - th - tw * 1.2); ctx.lineTo(x - tw * 0.35, base - th - tw * 0.6); ctx.lineTo(x + tw * 0.35, base - th - tw * 0.6); ctx.fill(); }
     if (flag) { ctx.fillStyle = flag; ctx.fillRect(x, base - th - tw * 1.2 - 14, 1.5, 14); ctx.fillRect(x + 1.5, base - th - tw * 1.2 - 14, 12, 7); }
   }
   function glow(ctx, x, y, r, color, a) {
@@ -135,7 +275,7 @@
     town(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
       ridge(ctx, w, h, h * 0.6, h * 0.08, 1, far, R);
-      buildings(ctx, w, h * 0.78, h * 0.3, mid, sk.night || sk.top === "#2c2346", R, true);
+      buildings(ctx, w, h * 0.78, h * 0.3, mid, sk.night || sk.dusk, R, true);
       tower(ctx, w * 0.62, h * 0.78, 18, h * 0.42, mid, mid, "#b0342a");
       buildings(ctx, w, h * 0.93, h * 0.18, near, sk.night, R, true);
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.92, w, h);
@@ -276,13 +416,199 @@
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.9, w, h);
       for (let i = 0; i < 5; i++) { const x = w * (0.3 + R() * 0.5), y = h * 0.9; ctx.beginPath(); ctx.arc(x, y - 12, 3.2, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.moveTo(x - 5, y); ctx.lineTo(x, y - 10); ctx.lineTo(x + 5, y); ctx.fill(); ctx.beginPath(); ctx.moveTo(x + 3, y - 4); ctx.quadraticCurveTo(x + 14, y - 8, x + 10, y - 16); ctx.lineTo(x + 6, y - 5); ctx.fill(); }
     },
+    // W2：麦の都グランベール（麦畑と風車。左の若い森は去年の畑。花を撒く一本道だけ麦が生えていない）
+    w2_farm(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ridge(ctx, w, h, h * 0.6, h * 0.04, 1, far, R);
+      pines(ctx, w * 0.32, h * 0.66, h * 0.07, 16, mix(far, mid, 0.5), R);
+      const crop = ENV.season === "winter" ? "#d8dce4" : ENV.season === "spring" ? "#6a9a48" : ENV.season === "summer" ? "#b8b048" : "#d8b050";
+      for (let i = 0; i < 6; i++) {
+        const y = h * (0.65 + i * 0.06);
+        ctx.fillStyle = mix(mix(sk.bot, crop, sk.night ? 0.25 : 0.65), near, 0.1 + i * 0.12 + (i % 2) * 0.06);
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y - h * 0.025); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.fill();
+      }
+      ctx.fillStyle = mix(sk.bot, "#c8b890", sk.night ? 0.2 : 0.5);
+      ctx.beginPath(); ctx.moveTo(0, h * 0.8); ctx.lineTo(w, h * 0.74); ctx.lineTo(w, h * 0.755); ctx.lineTo(0, h * 0.83); ctx.fill();
+      const mill = (x, b, s) => {
+        ctx.fillStyle = mid;
+        ctx.beginPath(); ctx.moveTo(x - s * 0.22, b); ctx.lineTo(x - s * 0.13, b - s); ctx.lineTo(x + s * 0.13, b - s); ctx.lineTo(x + s * 0.22, b); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(x - s * 0.18, b - s); ctx.lineTo(x, b - s * 1.18); ctx.lineTo(x + s * 0.18, b - s); ctx.fill();
+        if (ENV.snowCap) { ctx.fillStyle = ENV.snowCap; ctx.beginPath(); ctx.moveTo(x - s * 0.18, b - s); ctx.lineTo(x, b - s * 1.18); ctx.lineTo(x + s * 0.18, b - s); ctx.lineTo(x, b - s * 1.1); ctx.fill(); }
+        const a0 = R() * Math.PI;
+        ctx.fillStyle = mix(mid, "#8a7a60", 0.25);
+        for (let k = 0; k < 4; k++) { ctx.save(); ctx.translate(x, b - s * 0.95); ctx.rotate(a0 + (k * Math.PI) / 2); ctx.fillRect(0, -s * 0.05, s * 0.7, s * 0.1); ctx.restore(); }
+        if (sk.night || sk.dusk) { glow(ctx, x, b - s * 0.45, s * 0.3, "#ffb04a", 0.5); ctx.fillStyle = "#ffcf6e"; ctx.fillRect(x - 2, b - s * 0.48, 4, 6); }
+      };
+      mill(w * 0.66, h * 0.66, h * 0.24);
+      mill(w * 0.86, h * 0.645, h * 0.14);
+      buildings(ctx, w * 0.26, h * 0.69, h * 0.06, mid, sk.night || sk.dusk, R, true);
+      ctx.fillStyle = near;
+      for (let i = 0; i < 9; i++) { const x = w * (0.08 + i * 0.1) + R() * 8, y = h * (0.86 + R() * 0.06); ctx.fillRect(x, y - h * 0.08, 3, h * 0.08); }
+      ctx.fillRect(0, h * 0.97, w, h);
+    },
+    // W2：鍛冶の都ドランヘルツ（山肌の煙突の町。どの家にも炉の火）
+    w2_forge(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      peaks(ctx, w, h, h * 0.52, h * 0.34, 4, far, null, R);
+      const slope = (x) => h * (0.5 + 0.34 * (x / w));
+      ctx.fillStyle = mid;
+      ctx.beginPath(); ctx.moveTo(0, slope(0)); ctx.lineTo(w, slope(w)); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.fill();
+      const smoke = sk.night ? "#40444c" : mix(sk.bot, "#6a6660", 0.6);
+      const houses = [];
+      for (let i = 0; i < 22; i++) houses.push([R() * w, 14 + R() * 18, R()]);
+      houses.sort((a, b) => a[0] - b[0]).forEach(([x, s, r]) => {
+        const b = slope(x) + s * 0.4;
+        ctx.fillStyle = mix(mid, near, 0.5);
+        ctx.fillRect(x - s * 0.6, b - s, s * 1.2, s);
+        ctx.beginPath(); ctx.moveTo(x - s * 0.7, b - s); ctx.lineTo(x, b - s * 1.5); ctx.lineTo(x + s * 0.7, b - s); ctx.fill();
+        if (ENV.snowCap) { ctx.fillStyle = ENV.snowCap; ctx.beginPath(); ctx.moveTo(x - s * 0.7, b - s); ctx.lineTo(x, b - s * 1.5); ctx.lineTo(x + s * 0.7, b - s); ctx.lineTo(x, b - s * 1.35); ctx.fill(); ctx.fillStyle = mix(mid, near, 0.5); }
+        ctx.fillRect(x + s * 0.25, b - s * 1.7, s * 0.2, s * 0.6);
+        for (let k = 0; k < 4; k++) { ctx.fillStyle = rgba(smoke, 0.35 - k * 0.07); ctx.beginPath(); ctx.arc(x + s * 0.35 + k * s * 0.35, b - s * 1.85 - k * s * 0.55, s * (0.2 + k * 0.12), 0, Math.PI * 2); ctx.fill(); }
+        if (r < 0.6) { glow(ctx, x - s * 0.2, b - s * 0.3, s * 0.9, "#ff8a2a", sk.night ? 0.6 : 0.3); ctx.fillStyle = "#ffb04a"; ctx.fillRect(x - s * 0.3, b - s * 0.45, s * 0.22, s * 0.3); }
+      });
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.93, w, h);
+      particles(ctx, w, h * 0.7, sk.night ? 40 : 15, "rgba(255,170,80,.55)", 1.6, R);
+    },
+    // W2：闘技の都ザルグロス（雪の中のすり鉢形の大闘技場と、上の席の旗）
+    w2_arena(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      peaks(ctx, w, h, h * 0.6, h * 0.2, 6, far, "rgba(240,245,255,.5)", R);
+      ctx.fillStyle = mix(sk.bot, "#dfe6ef", sk.night ? 0.2 : 0.55); ctx.fillRect(0, h * 0.78, w, h);
+      buildings(ctx, w, h * 0.8, h * 0.12, mix(mid, far, 0.3), sk.night || sk.dusk, R, false);
+      const cx = w * 0.5, base = h * 0.86, rw = w * 0.34, top = base - h * 0.28, ry = h * 0.05;
+      const stone = mix(mid, "#5a5048", 0.3);
+      ctx.fillStyle = stone;
+      ctx.beginPath(); ctx.ellipse(cx, top, rw, ry, 0, Math.PI, 0); ctx.lineTo(cx + rw, base); ctx.ellipse(cx, base, rw, ry, 0, 0, Math.PI); ctx.closePath(); ctx.fill();
+      if (ENV.snowCap) { ctx.fillStyle = ENV.snowCap; ctx.beginPath(); ctx.ellipse(cx, top, rw, ry, 0, Math.PI, 0); ctx.ellipse(cx, top + 3, rw, ry, 0, 0, Math.PI, true); ctx.fill(); }
+      for (let row = 0; row < 2; row++) for (let i = 0; i < 12; i++) {
+        const t = (i + 0.5) / 12, x = cx - rw * 0.95 + t * rw * 1.9, y = top + h * (0.07 + row * 0.1) + Math.sin(t * Math.PI) * ry * 0.8, aw = rw * 0.06, ah = h * 0.06;
+        ctx.fillStyle = sk.night ? (R() < 0.4 ? "#ffb04a" : "#0a0808") : mix(stone, "#000000", 0.6);
+        ctx.beginPath(); ctx.arc(x, y, aw, Math.PI, 0); ctx.fillRect(x - aw, y, aw * 2, ah); ctx.fill();
+      }
+      const flags = ["#b0342a", "#e8e3d0", "#2a4a9a", "#c8a040"];
+      for (let i = 0; i < 7; i++) { const x = cx - rw * 0.9 + (i / 6) * rw * 1.8, y = top - ry * Math.sin(((i + 0.5) / 7) * Math.PI) * 0.6; ctx.fillStyle = stone; ctx.fillRect(x, y - 26, 2, 26); ctx.fillStyle = flags[i % 4]; ctx.fillRect(x + 2, y - 26, 12, 7); }
+      ctx.fillStyle = near;
+      for (let i = 0; i < 20; i++) { const x = R() * w, y = h * 0.95; ctx.beginPath(); ctx.arc(x, y - 11, 3, 0, Math.PI * 2); ctx.fill(); ctx.fillRect(x - 4, y - 8, 8, 10); }
+      ctx.fillRect(0, h * 0.95, w, h);
+    },
+    // W2：湯の町アミュレイン（湖のほとりの湯屋と、立ちのぼる湯気）
+    w2_spa(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ridge(ctx, w, h, h * 0.58, h * 0.07, 1, far, R);
+      pines(ctx, w, h * 0.64, h * 0.07, 24, mix(far, mid, 0.4), R);
+      ctx.fillStyle = mix(sk.bot, "#1a3040", 0.55); ctx.fillRect(0, h * 0.66, w, h);
+      for (let i = 0; i < 30; i++) { ctx.fillStyle = rgba(sk.sun || "#b8c7e6", 0.12 + R() * 0.15); ctx.fillRect(R() * w, h * (0.68 + R() * 0.12), 16 + R() * 36, 1.5); }
+      const wood = mix(mid, "#5a3a22", 0.35);
+      for (let i = 0; i < 4; i++) {
+        const x = w * (0.1 + i * 0.24) + R() * 10, b = h * 0.86, bw = w * 0.14, bh = h * 0.1;
+        ctx.fillStyle = mix(sk.bot, "#2a2a2a", 0.6); ctx.beginPath(); ctx.ellipse(x + bw * 0.5, b + h * 0.03, bw * 0.6, h * 0.02, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = wood; ctx.fillRect(x, b - bh, bw, bh);
+        ctx.beginPath(); ctx.moveTo(x - 8, b - bh); ctx.quadraticCurveTo(x + bw / 2, b - bh - bw * 0.35, x + bw + 8, b - bh); ctx.fill();
+        if (ENV.snowCap) { ctx.fillStyle = ENV.snowCap; ctx.beginPath(); ctx.moveTo(x - 8, b - bh); ctx.quadraticCurveTo(x + bw / 2, b - bh - bw * 0.35, x + bw + 8, b - bh); ctx.lineTo(x + bw, b - bh - 2); ctx.quadraticCurveTo(x + bw / 2, b - bh - bw * 0.28, x, b - bh - 2); ctx.fill(); }
+        glow(ctx, x + bw * 0.5, b - bh * 0.4, bw * 0.6, "#ffb45a", sk.night ? 0.55 : 0.25);
+        ctx.fillStyle = "#ffcf8a"; ctx.fillRect(x + bw * 0.4, b - bh * 0.6, bw * 0.2, bh * 0.35);
+        for (let k = 0; k < 6; k++) { ctx.fillStyle = `rgba(245,245,250,${(sk.night ? 0.06 : 0.1) - k * 0.012})`; ctx.beginPath(); ctx.arc(x + bw * 0.5 + Math.sin(k * 1.3 + i) * 12, b - bh - bw * 0.3 - k * h * 0.06, 8 + k * 5, 0, Math.PI * 2); ctx.fill(); }
+      }
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.93, w, h);
+    },
+    // W2：狩り場の町ナグリス（大木の枝に架けた家々。東の空に、雲に届く大樹の影）
+    w2_hunt(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      const tx = w * 0.84;
+      ctx.fillStyle = rgba(mix(far, sk.top, 0.35), 0.8);
+      ctx.fillRect(tx - w * 0.03, h * 0.12, w * 0.06, h * 0.6);
+      for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.ellipse(tx + (R() - 0.5) * w * 0.3, h * (0.02 + R() * 0.16), w * (0.08 + R() * 0.08), h * (0.04 + R() * 0.05), 0, 0, Math.PI * 2); ctx.fill(); }
+      ridge(ctx, w, h, h * 0.66, h * 0.05, 1, far, R);
+      pines(ctx, w, h * 0.72, h * 0.1, 30, mix(far, mid, 0.5), R);
+      const leaf = foliage(mid);
+      for (let i = 0; i < 4; i++) {
+        const x = w * (0.1 + i * 0.22) + R() * 12, tw = 18 + R() * 10;
+        ctx.fillStyle = near; ctx.fillRect(x - tw / 2, h * 0.2, tw, h * 0.8);
+        ctx.fillStyle = (leaf.broad && leaf.broad[i % leaf.broad.length]) || leaf.needle;
+        ctx.beginPath(); ctx.ellipse(x, h * 0.16, w * 0.1, h * 0.12, 0, 0, Math.PI * 2); ctx.fill();
+        const hy = h * (0.35 + R() * 0.2);
+        ctx.fillStyle = mix(near, "#5a3a22", 0.4); ctx.fillRect(x - 30, hy, 60, 5); ctx.fillRect(x - 24, hy - 22, 48, 22);
+        ctx.beginPath(); ctx.moveTo(x - 30, hy - 22); ctx.lineTo(x, hy - 38); ctx.lineTo(x + 30, hy - 22); ctx.fill();
+        if (sk.night || sk.dusk) { glow(ctx, x, hy - 12, 24, "#ffb04a", 0.55); ctx.fillStyle = "#ffcf6e"; ctx.fillRect(x - 3, hy - 16, 6, 7); }
+        ctx.strokeStyle = mix(near, "#8a6a40", 0.3); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x + 20, hy + 5); ctx.lineTo(x + 20, h * 0.9); ctx.stroke();
+      }
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.92, w, h);
+      ctx.strokeStyle = near; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(0, h * 0.94); ctx.quadraticCurveTo(w * 0.3, h * 0.86, w * 0.55, h * 0.93); ctx.stroke();
+    },
+    // W2：懺悔の谷（切り立った雪の谷の底に埋もれた、屋根のない町）
+    w2_echo(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ctx.fillStyle = far;
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.32, h * 0.7); ctx.lineTo(0, h); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.68, h * 0.7); ctx.lineTo(w, h); ctx.fill();
+      ctx.fillStyle = mix(sk.bot, "#dfe6ef", sk.night ? 0.15 : 0.45); ctx.fillRect(0, h * 0.8, w, h);
+      for (let i = 0; i < 10; i++) {
+        const x = w * (0.2 + R() * 0.6), bw = 18 + R() * 26, bh = h * (0.06 + R() * 0.12), b = h * (0.8 + R() * 0.06);
+        ctx.fillStyle = mid; ctx.fillRect(x, b - bh, bw, bh);
+        ctx.fillStyle = mix(mid, "#000000", 0.5); ctx.fillRect(x + bw * 0.3, b - bh * 0.7, bw * 0.3, bh * 0.4);
+        ctx.fillStyle = mid; ctx.beginPath(); ctx.moveTo(x, b - bh); ctx.lineTo(x + bw * 0.3, b - bh - 8 - R() * 10); ctx.lineTo(x + bw * 0.5, b - bh); ctx.fill();
+      }
+      ctx.fillStyle = near;
+      ctx.fillRect(w * 0.12, h * 0.7, w * 0.05, h * 0.3); ctx.fillRect(w * 0.81, h * 0.66, w * 0.06, h * 0.34);
+      for (let x = w * 0.12; x < w * 0.17; x += 7) ctx.fillRect(x, h * 0.7 - 5, 4, 5);
+      ctx.fillRect(0, h * 0.95, w, h);
+      ctx.fillStyle = mix(near, "#8a8478", 0.5); ctx.fillRect(w * 0.42, h * 0.86, 12, 26); ctx.beginPath(); ctx.arc(w * 0.42 + 6, h * 0.86, 6, Math.PI, 0); ctx.fill();
+    },
+    // W2：影の谷（崩れた壁と石畳に、人の影だけが焼き付いている）
+    w2_shadow(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ridge(ctx, w, h, h * 0.62, h * 0.06, 1, far, R);
+      const wall = mix(sk.bot, "#b8b0a0", sk.night ? 0.2 : 0.5);
+      ctx.fillStyle = mix(wall, near, 0.4); ctx.fillRect(0, h * 0.84, w, h);
+      for (let i = 0; i < 5; i++) {
+        const x = w * (0.02 + i * 0.2), ww = w * 0.16, wh = h * (0.22 + R() * 0.14), b = h * 0.86;
+        ctx.fillStyle = wall;
+        ctx.beginPath(); ctx.moveTo(x, b); ctx.lineTo(x, b - wh); for (let k = 1; k <= 5; k++) ctx.lineTo(x + (ww * k) / 5, b - wh + (R() - 0.3) * h * 0.06); ctx.lineTo(x + ww, b); ctx.fill();
+        // 焼き付いた影（人の形）
+        const n = 1 + Math.floor(R() * 2);
+        for (let k = 0; k < n; k++) {
+          const px = x + ww * (0.25 + k * 0.4), s = h * (0.1 + R() * 0.03), py = b - h * 0.02;
+          ctx.fillStyle = "rgba(12,10,10,.78)";
+          ctx.beginPath(); ctx.arc(px, py - s * 0.88, s * 0.1, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(px - s * 0.16, py - s * 0.75); ctx.lineTo(px + s * 0.16, py - s * 0.75); ctx.lineTo(px + s * 0.12, py - s * 0.35); ctx.lineTo(px - s * 0.12, py - s * 0.35); ctx.fill();
+          ctx.fillRect(px - s * 0.11, py - s * 0.36, s * 0.08, s * 0.36); ctx.fillRect(px + s * 0.03, py - s * 0.36, s * 0.08, s * 0.36);
+          ctx.save(); ctx.translate(px + s * 0.15, py - s * 0.72); ctx.rotate(-0.9 - R() * 1.2); ctx.fillRect(0, 0, s * 0.06, s * 0.35); ctx.restore();
+        }
+      }
+      ctx.fillStyle = "rgba(12,10,10,.5)";
+      for (let i = 0; i < 4; i++) { const x = R() * w, y = h * (0.9 + R() * 0.06); ctx.beginPath(); ctx.ellipse(x, y, 14, 4, 0, 0, Math.PI * 2); ctx.fill(); }
+      ctx.fillStyle = "rgba(0,0,0,.12)"; ctx.fillRect(0, 0, w, h);
+    },
+    // W2：酸の谷（緑の湯気と、膝をついた鉄の巨人たち）
+    w2_acid(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ctx.fillStyle = "rgba(90,140,40,.18)"; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = far;
+      ctx.beginPath(); ctx.moveTo(0, h * 0.2); ctx.quadraticCurveTo(w * 0.2, h * 0.5, w * 0.3, h * 0.78); ctx.lineTo(0, h); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(w, h * 0.25); ctx.quadraticCurveTo(w * 0.8, h * 0.5, w * 0.72, h * 0.78); ctx.lineTo(w, h); ctx.fill();
+      ctx.fillStyle = mix(mid, "#2a3a1a", 0.4); ctx.fillRect(0, h * 0.78, w, h);
+      for (let i = 0; i < 5; i++) { const x = w * (0.15 + R() * 0.7), y = h * (0.84 + R() * 0.1), rx = 30 + R() * 50; glow(ctx, x, y, rx * 1.4, "#9fff6a", 0.35); ctx.fillStyle = "rgba(150,230,90,.7)"; ctx.beginPath(); ctx.ellipse(x, y, rx, 5 + R() * 4, 0, 0, Math.PI * 2); ctx.fill(); }
+      const giant = (x, b, s) => {
+        ctx.fillStyle = mix(mid, "#6a5a48", 0.35);
+        ctx.fillRect(x - s * 0.3, b - s * 0.18, s * 0.25, s * 0.18); ctx.fillRect(x + s * 0.05, b - s * 0.3, s * 0.22, s * 0.3);
+        ctx.fillRect(x - s * 0.28, b - s * 0.75, s * 0.56, s * 0.5);
+        ctx.fillRect(x - s * 0.14, b - s * 0.95, s * 0.28, s * 0.2);
+        ctx.save(); ctx.translate(x - s * 0.28, b - s * 0.72); ctx.rotate(0.3); ctx.fillRect(-s * 0.12, 0, s * 0.12, s * 0.5); ctx.restore();
+        ctx.fillRect(x + s * 0.28, b - s * 0.72, s * 0.12, s * 0.45);
+        ctx.fillStyle = "rgba(150,230,90,.45)"; ctx.fillRect(x - s * 0.28, b - s * 0.4, s * 0.56, s * 0.06);
+        ctx.fillStyle = sk.night ? "#9fff6a" : "#1a1a14"; ctx.fillRect(x - s * 0.08, b - s * 0.88, s * 0.16, s * 0.03);
+      };
+      giant(w * 0.3, h * 0.84, h * 0.4); giant(w * 0.62, h * 0.8, h * 0.3); giant(w * 0.82, h * 0.86, h * 0.22);
+      for (let i = 0; i < 7; i++) { const g = ctx.createLinearGradient(0, h * (0.5 + i * 0.06), 0, h * (0.58 + i * 0.06)); g.addColorStop(0, "rgba(160,220,110,0)"); g.addColorStop(0.5, "rgba(160,220,110,.16)"); g.addColorStop(1, "rgba(160,220,110,0)"); ctx.fillStyle = g; ctx.fillRect(0, h * (0.5 + i * 0.06), w, h * 0.08); }
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.96, w, h);
+    },
     forest(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
       ridge(ctx, w, h, h * 0.58, h * 0.06, 1, far, R);
       pines(ctx, w, h * 0.68, h * 0.12, 40, mix(far, mid, 0.5), R);
       pines(ctx, w, h * 0.82, h * 0.17, 22, mid, R);
       pines(ctx, w, h * 1.02, h * 0.28, 9, near, R);
-      if (!sk.night) for (let i = 0; i < 5; i++) { ctx.fillStyle = rgba(sk.sun || "#fff", 0.07); ctx.beginPath(); const x = R() * w; ctx.moveTo(x, 0); ctx.lineTo(x + 30, 0); ctx.lineTo(x + 110, h); ctx.lineTo(x + 60, h); ctx.fill(); }
+      if (!sk.night && !sk.veil) for (let i = 0; i < 5; i++) { ctx.fillStyle = rgba(sk.sun || "#fff", 0.07); ctx.beginPath(); const x = R() * w; ctx.moveTo(x, 0); ctx.lineTo(x + 30, 0); ctx.lineTo(x + 110, h); ctx.lineTo(x + 60, h); ctx.fill(); }
     },
     plains(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
@@ -421,6 +747,70 @@
       ctx.fillStyle = "#b39a52"; ctx.fillRect(w * 0.46, h * 0.38, w * 0.08, h * 0.33); ctx.beginPath(); ctx.arc(w * 0.5, h * 0.38, w * 0.04, Math.PI, 0); ctx.fill();
       ctx.fillStyle = "rgba(0,0,0,.25)"; for (let i = 0; i < 4; i++) { ctx.fillRect(w * (0.08 + i * 0.1), 0, 14, h * 0.71); ctx.fillRect(w * (0.62 + i * 0.1), 0, 14, h * 0.71); }
     },
+    // M1：ゼファラの学院（天井までの書架、浮かぶ灯り、床の魔法陣、結晶の窓）
+    academy(ctx, w, h, R) {
+      interior(ctx, w, h, "#3a3450", "#221e30", R);
+      const cx = w * 0.5;
+      ctx.fillStyle = "#12101c"; ctx.beginPath(); ctx.arc(cx, h * 0.3, h * 0.16, Math.PI, 0); ctx.fill(); ctx.fillRect(cx - h * 0.16, h * 0.3, h * 0.32, h * 0.26);
+      glow(ctx, cx, h * 0.34, h * 0.3, "#7fe3ff", 0.35);
+      ctx.fillStyle = "#bff4ff"; ctx.beginPath(); ctx.moveTo(cx, h * 0.18); ctx.lineTo(cx + h * 0.05, h * 0.34); ctx.lineTo(cx, h * 0.5); ctx.lineTo(cx - h * 0.05, h * 0.34); ctx.fill();
+      for (const side of [0, 1]) {
+        const x0 = side ? w * 0.66 : w * 0.04, bw = w * 0.3;
+        ctx.fillStyle = "#1a1424"; ctx.fillRect(x0, h * 0.06, bw, h * 0.66);
+        for (let s = 0; s < 6; s++) {
+          const y = h * (0.16 + s * 0.1);
+          ctx.fillStyle = "#0e0a14"; ctx.fillRect(x0, y, bw, 4);
+          for (let x = x0 + 3; x < x0 + bw - 6;) { const bk = 4 + R() * 6, bh = h * (0.05 + R() * 0.035); ctx.fillStyle = mix(["#6a2a3a", "#2a4a6a", "#5a4a2a", "#3a5a3a", "#4a3a6a"][Math.floor(R() * 5)], "#000000", 0.35); ctx.fillRect(x, y - bh, bk, bh); x += bk + 1; }
+        }
+      }
+      for (let i = 0; i < 7; i++) { const x = w * (0.2 + R() * 0.6), y = h * (0.1 + R() * 0.35); glow(ctx, x, y, 26, i % 2 ? "#c0a0ff" : "#ffd88a", 0.55); ctx.fillStyle = "#fff4d8"; ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill(); }
+      ctx.strokeStyle = rgba("#9fd8ff", 0.55); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.ellipse(cx, h * 0.86, w * 0.22, h * 0.07, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(cx, h * 0.86, w * 0.15, h * 0.045, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2, b = ((i + 2) / 6) * Math.PI * 2; ctx.moveTo(cx + Math.cos(a) * w * 0.15, h * 0.86 + Math.sin(a) * h * 0.045); ctx.lineTo(cx + Math.cos(b) * w * 0.15, h * 0.86 + Math.sin(b) * h * 0.045); } ctx.stroke();
+      glow(ctx, cx, h * 0.86, w * 0.2, "#7fc8ff", 0.2);
+      ctx.fillStyle = "#1a1424"; ctx.fillRect(w * 0.36, h * 0.66, w * 0.28, 8); ctx.fillRect(w * 0.38, h * 0.67, 6, h * 0.1); ctx.fillRect(w * 0.6, h * 0.67, 6, h * 0.1);
+      ctx.fillStyle = "#e8dcc0"; ctx.save(); ctx.translate(w * 0.47, h * 0.645); ctx.rotate(-0.06); ctx.fillRect(0, 0, w * 0.06, 6); ctx.restore();
+    },
+    // W2：新しい施設の中（鍛冶場・闘技場・湯治場。畑と狩り場は、町の昼の景色を使う）
+    forge(ctx, w, h, R) {
+      interior(ctx, w, h, "#3a2a22", "#241812", R);
+      const cx = w * 0.5;
+      ctx.fillStyle = "#1a120c"; ctx.fillRect(cx - w * 0.16, h * 0.28, w * 0.32, h * 0.44);
+      ctx.beginPath(); ctx.moveTo(cx - w * 0.12, h * 0.28); ctx.lineTo(cx - w * 0.05, 0); ctx.lineTo(cx + w * 0.05, 0); ctx.lineTo(cx + w * 0.12, h * 0.28); ctx.fill();
+      glow(ctx, cx, h * 0.55, h * 0.45, "#ff7a1a", 0.6);
+      ctx.fillStyle = "#ffb04a"; ctx.beginPath(); ctx.arc(cx, h * 0.6, w * 0.08, Math.PI, 0); ctx.fillRect(cx - w * 0.08, h * 0.6, w * 0.16, h * 0.08); ctx.fill();
+      ctx.fillStyle = "#0e0a08"; ctx.fillRect(w * 0.14, h * 0.72, w * 0.14, h * 0.05); ctx.fillRect(w * 0.18, h * 0.77, w * 0.06, h * 0.12); ctx.beginPath(); ctx.moveTo(w * 0.28, h * 0.72); ctx.lineTo(w * 0.33, h * 0.735); ctx.lineTo(w * 0.28, h * 0.75); ctx.fill();
+      for (let i = 0; i < 9; i++) { const x = w * (0.66 + (i % 5) * 0.06), y = h * (0.14 + Math.floor(i / 5) * 0.26); ctx.fillStyle = "#8a8a90"; ctx.fillRect(x, y, 3, h * 0.2); ctx.fillStyle = "#5a3a22"; ctx.fillRect(x - 2, y, 7, h * 0.05); ctx.fillStyle = "#4a3a28"; ctx.fillRect(x - 1, y - 3, 5, 3); }
+      particles(ctx, w, h * 0.7, 40, "rgba(255,180,80,.7)", 1.6, R);
+    },
+    arena(ctx, w, h, R) {
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, "#8a98aa"); g.addColorStop(1, "#dfe6ef");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      for (let row = 0; row < 5; row++) {
+        const y = h * (0.08 + row * 0.1);
+        ctx.fillStyle = mix("#5a5048", "#2a2420", row * 0.15); ctx.fillRect(0, y, w, h * 0.1);
+        for (let i = 0; i < 40; i++) { const x = R() * w; ctx.fillStyle = ["#3a2a2a", "#2a3a4a", "#4a3a22", "#1a1a1a"][i % 4]; ctx.beginPath(); ctx.arc(x, y + h * 0.03, 4, 0, Math.PI * 2); ctx.fill(); ctx.fillRect(x - 5, y + h * 0.045, 10, h * 0.05); }
+      }
+      ctx.fillStyle = "#3a302a"; ctx.fillRect(0, h * 0.58, w, h * 0.04);
+      ctx.fillStyle = "#c8b08a"; ctx.fillRect(0, h * 0.62, w, h);
+      ctx.fillStyle = "rgba(120,40,30,.35)"; for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.ellipse(R() * w, h * (0.7 + R() * 0.25), 12 + R() * 18, 4, 0, 0, Math.PI * 2); ctx.fill(); }
+      ctx.fillStyle = "#1a1612"; ctx.fillRect(w * 0.44, h * 0.46, w * 0.12, h * 0.16); ctx.fillStyle = "#4a4440"; for (let x = w * 0.445; x < w * 0.56; x += 8) ctx.fillRect(x, h * 0.46, 2, h * 0.16);
+      particles(ctx, w, h * 0.6, 60, "rgba(255,255,255,.6)", 1.8, R);
+    },
+    bath(ctx, w, h, R) {
+      interior(ctx, w, h, "#5a4a38", "#4a4a4a", R);
+      glow(ctx, w * 0.5, h * 0.3, w * 0.5, "#fff0d0", 0.25);
+      ctx.fillStyle = "#6a5a44"; ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.8, w * 0.4, h * 0.14, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#6a9aa8"; ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.8, w * 0.36, h * 0.11, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,.25)"; for (let i = 0; i < 14; i++) ctx.fillRect(w * (0.2 + R() * 0.6), h * (0.74 + R() * 0.1), 12 + R() * 20, 1.5);
+      ctx.fillStyle = "#3a2a1c"; for (const x of [0.32, 0.55, 0.68]) { ctx.beginPath(); ctx.arc(w * x, h * 0.74, 9, 0, Math.PI * 2); ctx.fill(); }
+      ctx.beginPath(); ctx.moveTo(w * 0.55 + 7, h * 0.73); ctx.lineTo(w * 0.55 + 12, h * 0.69); ctx.lineTo(w * 0.55 + 4, h * 0.71); ctx.fill();
+      for (let i = 0; i < 16; i++) { ctx.fillStyle = `rgba(250,250,250,${0.03 + R() * 0.05})`; ctx.beginPath(); ctx.arc(w * (0.2 + R() * 0.6), h * (0.3 + R() * 0.45), 16 + R() * 30, 0, Math.PI * 2); ctx.fill(); }
+    },
+    field(ctx, w, h, R) { const sk = SKIES[1]; sky(ctx, w, h, sk, R); OUT.w2_farm(ctx, w, h, sk, R); },
+    hunt(ctx, w, h, R) { const sk = SKIES[0]; sky(ctx, w, h, sk, R); OUT.w2_hunt(ctx, w, h, sk, R); },
     dungeon(ctx, w, h, R) {
       ctx.fillStyle = "#0c0b0d"; ctx.fillRect(0, 0, w, h);
       for (let i = 0; i < 5; i++) {
@@ -485,13 +875,19 @@
     if (canvas.width !== w * dpr || canvas.height !== h * dpr) { canvas.width = w * dpr; canvas.height = h * dpr; }
     const ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const R = rng(String(opt.seed || opt.key));
-    const key = opt.key;
-    if (IN[key]) IN[key](ctx, w, h, R);
+    const seed = String(opt.seed || opt.key);
+    const R = rng(seed), RE = rng(seed + ":env");
+    // 絵の決まっていない施設は、施設の名前の室内があればそれを使う（学院など）
+    const key = opt.key || (G.S && G.S.mode === "fac" && IN[G.S.fac] ? G.S.fac : opt.key);
+    if (IN[key]) { ENV = { season: "", weather: "", night: false, key, snowCap: null }; IN[key](ctx, w, h, R); }
     else {
-      const sk = key === "realm" || key === "majin" ? RED_SKY : SKIES[opt.phase || 0];
-      sky(ctx, w, h, sk, R, opt.redMoon);
+      const sk0 = key === "realm" || key === "majin" ? RED_SKY : SKIES[opt.phase || 0];
+      setEnv(key, sk0, opt);
+      const sk = skyFor(sk0);
+      sky(ctx, w, h, sk, rng(seed + ":sky"), opt.redMoon);
       (OUT[key] || OUT.plains)(ctx, w, h, sk, R);
+      seasonPass(ctx, w, h, RE);
+      fogPass(ctx, w, h, RE);
     }
     const foes = opt.foes || [];
     const n = foes.length;
@@ -502,6 +898,7 @@
       if (G.paintMonster) G.paintMonster(ctx, x, h * 0.97, s, f);
       else foe(ctx, x, h * 0.97, s, f.shape, f.eye || "#ff3a3a");
     });
+    fallPass(ctx, w, h, RE);
     vignette(ctx, w, h, 0.55);
   };
 })(globalThis.G = globalThis.G || {});

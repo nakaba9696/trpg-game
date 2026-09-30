@@ -53,9 +53,19 @@
     vital: () => { const w = G.weapon(); const t = G.target(); return G.chance("敏捷", -15, (w.vital || 0) - G.foeData(t).def); },
     fire: () => { const t = G.target(); return G.chance("魔力", 0, G.gearBonus("fire") + G.magicBonus() - G.foeData(t).mres); },
     heal: () => G.chance("魔力", "易しい", G.gearBonus("heal") + G.magicBonus()),
+    // M1 の術（D.SPELLS）。雷は敵すべてを打つので、いちばん魔法に強い敵で測る
+    ice: () => spellChance("ice", G.foeData(G.target()).mres),
+    bolt: () => spellChance("bolt", Math.max(...G.alive().map((f) => G.foeData(f).mres))),
+    curse: () => spellChance("curse", G.foeData(G.target()).mres),
+    ward: () => spellChance("ward", 0),
     talk: () => { const worst = Math.max(...G.alive().map((f) => G.foeData(f).will)); return G.chance("魅力", 30 - worst, G.gearBonus("talk")); },
     flee: () => { const fast = Math.max(...G.alive().map((f) => G.foeData(f).agi)); return G.chance("敏捷", 10 - fast); },
   };
+
+  function spellChance(id, res) {
+    const sp = D.SPELLS[id];
+    return G.chance("魔力", sp.diff || 0, G.gearBonus(sp.bonus) + G.magicBonus() - res);
+  }
 
   G.combatActions = () => {
     const S = G.S;
@@ -72,6 +82,10 @@
       { title: "魔法", list: [
         { id: "cb:fire", label: "炎の魔法", sub: `魔力 ${G.cb.fire()}%・MP3`, disabled: S.mp < 3, kw: ["魔法", "炎", "火", "燃"] },
         { id: "cb:heal", label: "癒しの奇跡", sub: `魔力 ${G.cb.heal()}%・MP3`, disabled: S.mp < 3, kw: ["回復", "癒", "治"] },
+        ...["ice", "bolt", "curse", "ward"].filter((id) => G.knows(id)).map((id) => {
+          const sp = D.SPELLS[id];
+          return { id: "cb:" + id, label: sp.name, sub: `魔力 ${G.cb[id]()}%・MP${sp.mp}`, disabled: S.mp < sp.mp, kw: sp.kw };
+        }),
       ] },
       { title: "口と頭", list: [
         { id: "cb:talk", label: "威圧して追い払う", sub: talkable ? `魅力 ${G.cb.talk()}%` : "話が通じない", disabled: !talkable, kw: ["威圧", "脅", "説得", "交渉", "話", "怒鳴"] },
@@ -97,7 +111,7 @@
   function damageFoe(f, n, how) {
     const e = G.foeData(f);
     if (e.majin && !G.weapon().pierce && how !== "holy") {
-      G.log("nar", `${how === "fire" ? "炎" : "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
+      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
       return;
     }
     f.hp = Math.max(0, f.hp - n);
@@ -159,6 +173,8 @@
       const r = G.check("魔力", "易しい", "癒しの奇跡", G.gearBonus("heal") + G.magicBonus());
       if (r.ok) { const n = G.dice([2, 6, 2]) + Math.floor(S.stats.魔力 / 10); G.heal(n); G.note(`HP +${n}`); }
       else G.say("祈りは届かなかった。");
+    } else if (D.SPELLS && D.SPELLS[kind] && !D.SPELLS[kind].base) {
+      castSpell(kind, t);
     } else if (kind === "talk") {
       G.log("you", "敵を威圧する");
       const worst = Math.max(...G.alive().map((f) => G.foeData(f).will));
@@ -198,9 +214,54 @@
     if (!G.alive().length) return endCombat("win");
     foesTurn();
     if (S.over) return;
+    if (!G.alive().length) return endCombat("win"); // 呪いで倒れることがある
     if (S.weapon === "volgrim" && G.rand() < 0.2) G.say(G.pick(VOLGRIM_LINES));
     C.round++;
   };
+
+  // M1 の術。大失敗すると、借りた力の代償を払う（G.payDebt）
+  function castSpell(id, t) {
+    const S = G.S;
+    const C = S.combat;
+    const sp = D.SPELLS[id];
+    S.mp -= sp.mp;
+    const bonus = G.gearBonus(sp.bonus) + G.magicBonus();
+    if (id === "ice") {
+      G.log("you", `${t.name}に氷の魔法を放つ`);
+      const r = G.check("魔力", sp.diff, sp.name, bonus - G.foeData(t).mres);
+      if (r.ok) {
+        const dmg = G.dice([1, 6, 0]) + Math.floor(S.stats.魔力 / 10);
+        G.say("白い霜が敵の足元から這い上がった。");
+        damageFoe(t, dmg, "ice");
+        if (t.hp > 0 && !(G.foeData(t).majin && !G.weapon().pierce)) { t.frozen = r.crit ? 2 : 1; G.note(`${t.name}は凍りついて動けない。`); }
+      } else G.say(r.fumble ? "冷気が逆流し、指先が凍りついた。" : "吐く息が白くなっただけだった。");
+      if (r.fumble) { G.hurt(2, "自分の氷で凍え死んだ"); G.payDebt(sp.debt); }
+    } else if (id === "bolt") {
+      G.log("you", "雷の魔法を呼ぶ");
+      const res = Math.max(...G.alive().map((f) => G.foeData(f).mres));
+      const r = G.check("魔力", sp.diff, sp.name, bonus - res);
+      if (r.ok) {
+        G.say("空が裂け、稲妻が敵の頭上に次々と落ちた。");
+        G.alive().forEach((f) => { const dmg = G.dice([2, 4, 0]) + Math.floor(S.stats.魔力 / 12); damageFoe(f, r.crit ? dmg * 2 : dmg, "bolt"); });
+      } else G.say(r.fumble ? "稲妻は、呼んだ者の頭に落ちた。" : "遠くで雷が鳴っただけだった。");
+      if (r.fumble) { G.hurt(4, "自分の雷に打たれた"); G.payDebt(sp.debt); }
+    } else if (id === "curse") {
+      G.log("you", `${t.name}に呪いの言葉を吐く`);
+      const r = G.check("魔力", sp.diff, sp.name, bonus - G.foeData(t).mres);
+      if (r.ok) {
+        if (G.foeData(t).majin && !G.weapon().pierce) G.say(`呪いの言葉は、${t.name}の手前で霧のように散った。絶界だ。`);
+        else { t.hex = r.crit ? 5 : 3; G.say(`${t.name}の影が、ぐにゃりと歪んだ。`); G.note(`${t.name}は呪われた（${t.hex}手番・命中が落ち、少しずつ蝕まれる）`); }
+      } else G.say(r.fumble ? "言葉が口の中で裏返り、自分の舌を噛んだ。" : "言葉は届かなかった。");
+      if (r.fumble) { if (!S.conds.includes("呪い")) { S.conds.push("呪い"); G.note("状態：呪い"); } G.payDebt(sp.debt); }
+    } else if (id === "ward") {
+      G.log("you", "加護を祈る");
+      const r = G.check("魔力", sp.diff, sp.name, bonus);
+      if (r.ok) { C.ward = r.crit ? 5 : 3; G.say("淡い光の垣根が、あなたの周りに立ち上がった。"); G.note(`加護（${C.ward}手番・受けるダメージ -${wardCut()}）`); }
+      else G.say(r.fumble ? "垣根は立ち上がりかけて、あなたの上に崩れ落ちた。" : "祈りは、どこにも届かなかった。");
+      if (r.fumble) G.payDebt(sp.debt);
+    }
+  }
+  const wardCut = () => 2 + Math.floor(G.S.stats.魔力 / 20);
 
   // ---------------------------------------------------------------- 仲間と敵の番
   function companionsTurn() {
@@ -234,17 +295,27 @@
     G.alive().forEach((f) => {
       if (S.over) return;
       const e = G.foeData(f);
-      let chance = e.hit - Math.floor(G.statEff("敏捷") / 5) - (C.guard ? 20 : 0) + (C.exposed ? 20 : 0);
+      const hexed = f.hex > 0;
+      if (hexed) {
+        f.hex--;
+        G.note(`呪いが${f.name}を蝕む。`);
+        damageFoe(f, G.d(4) + Math.floor(S.stats.魔力 / 20), "curse");
+        if (f.hp <= 0) return;
+      }
+      if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は凍りついたまま動けない。`); return; }
+      let chance = e.hit - Math.floor(G.statEff("敏捷") / 5) - (C.guard ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0);
       chance = G.clamp(chance, 5, 95);
       if (G.d(100) <= chance) {
         let dmg = G.dice(e.dmg) - (e.magic ? 0 : (armor ? armor.def : 0));
         if (C.guard) dmg = Math.floor(dmg / 2);
+        if (C.ward > 0) dmg -= wardCut();
         dmg = Math.max(1, dmg);
         G.log("nar", `${f.name}の${e.magic ? "呪い" : "攻撃"}！ ${dmg} のダメージ。`, { fx: "hurt", n: dmg, heavy: dmg >= S.maxHp / 4 });
         G.hurt(dmg, `${f.name}に倒された`);
       } else G.note(`${f.name}の攻撃をかわした。`);
     });
     C.exposed = false;
+    if (C.ward > 0 && --C.ward === 0) G.note("加護の光が消えた。");
   }
 
   // ---------------------------------------------------------------- 戦闘の終わり
