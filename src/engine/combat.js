@@ -1,4 +1,7 @@
 // 戦闘。1手番ずつ：あなた → 仲間 → 敵。成功率はすべて能力値から決まる。レーン B（戦闘）が管理
+// 演出（B1）：画面が描けるよう、記録に fx を添える。DOM には触らない。
+//   { fx: "hit", foe: 名前, n } 敵にダメージ / { fx: "down", foe, boss } 敵が倒れた / { fx: "wall", foe } 絶界に弾かれた
+//   { fx: "hurt", n, heavy } あなたがダメージ / { fx: "crit" } 会心・急所 / { fx: "boss", foe: id, name } ボスの前口上（D.BOSS_LINES）
 (function (G) {
   const D = G.data;
 
@@ -29,11 +32,20 @@
     S.mode = "combat";
     S.fac = null;
     G.log("title", "戦闘");
+    if (S.combat.boss) bossIntro(ids);
     G.say(`${foes.map((f) => f.name).join("、")}が立ちはだかった！`);
     const first = D.ENEMIES[ids[0]];
     if (first.desc) G.note(first.desc);
     if (opt.firstStrike) G.note("不意を突いた。敵は深手を負っている。");
   };
+
+  // ボスの前口上（data/boss_lines.js）。ボスが並ぶときは先頭のボスが名乗る
+  function bossIntro(ids) {
+    const id = ids.find((x) => D.ENEMIES[x].boss);
+    const B = (D.BOSS_LINES || {})[id];
+    if (!B || !B.lines.length) return;
+    G.log("nar", G.pick(B.lines), { fx: "boss", foe: id, name: D.ENEMIES[id].name });
+  }
 
   // ---------------------------------------------------------------- 成功率
   G.cb = {
@@ -99,16 +111,16 @@
   function damageFoe(f, n, how) {
     const e = G.foeData(f);
     if (e.majin && !G.weapon().pierce && how !== "holy") {
-      G.say(`${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`);
+      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
       return;
     }
     f.hp = Math.max(0, f.hp - n);
-    G.note(`${f.name}に ${n} のダメージ（残り ${f.hp}/${f.max}）`);
+    G.log("sys", `${f.name}に ${n} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n });
     if (f.hp <= 0) onFoeDown(f);
   }
   function onFoeDown(f) {
     const S = G.S;
-    G.say(`${f.name}を倒した！`);
+    G.log("nar", `${f.name}を倒した！`, { fx: "down", foe: f.name, boss: !!G.foeData(f).boss });
     S.counters.kills++;
     S.quests.forEach((q) => {
       if (q.type === "hunt" && !q.done && q.target === f.id && q.loc === S.loc) {
@@ -131,7 +143,7 @@
       const r = G.check(w.stat, 0, "攻撃", (w.hit || 0) - G.foeData(t).def);
       if (r.ok) {
         let dmg = G.dice(w.dmg) + (w.stat === "筋力" ? Math.floor(S.stats.筋力 / 15) : Math.floor(S.stats.敏捷 / 20));
-        if (r.crit) { dmg *= 2; G.say("会心の一撃！"); }
+        if (r.crit) { dmg *= 2; G.log("nar", "会心の一撃！", { fx: "crit" }); }
         damageFoe(t, dmg, "blade");
       } else G.say(r.fumble ? "足を滑らせ、大きな隙をさらした。" : "攻撃は空を切った。");
       if (r.fumble) C.exposed = true;
@@ -140,7 +152,7 @@
       const r = G.check("敏捷", -15, "急所狙い", (w.vital || 0) - G.foeData(t).def);
       if (r.ok) {
         const dmg = (G.dice(w.dmg) + Math.floor(S.stats.敏捷 / 15)) * (r.crit ? 3 : 2);
-        G.say("刃が急所を捉えた！");
+        G.log("nar", "刃が急所を捉えた！", { fx: "crit" });
         damageFoe(t, dmg, "blade");
       } else G.say("急所を外した。");
       if (r.fumble) C.exposed = true;
@@ -265,12 +277,12 @@
       }
       const f = G.pick(foes);
       const e = G.foeData(f);
-      if (e.majin && !G.weapon().pierce) { G.note(`${c.name}の攻撃は絶界に弾かれた。`); return; }
+      if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
       const chance = G.clamp(c.power - (c.fire ? e.mres : e.def), 5, 95);
       if (G.d(100) <= chance) {
         const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
         f.hp = Math.max(0, f.hp - dmg);
-        G.note(`${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg}`);
+        G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg}`, { fx: "hit", foe: f.name, n: dmg });
         if (f.hp <= 0) onFoeDown(f);
       } else G.note(`${c.name}の攻撃は外れた。`);
     });
@@ -298,7 +310,7 @@
         if (C.guard) dmg = Math.floor(dmg / 2);
         if (C.ward > 0) dmg -= wardCut();
         dmg = Math.max(1, dmg);
-        G.say(`${f.name}の${e.magic ? "呪い" : "攻撃"}！ ${dmg} のダメージ。`);
+        G.log("nar", `${f.name}の${e.magic ? "呪い" : "攻撃"}！ ${dmg} のダメージ。`, { fx: "hurt", n: dmg, heavy: dmg >= S.maxHp / 4 });
         G.hurt(dmg, `${f.name}に倒された`);
       } else G.note(`${f.name}の攻撃をかわした。`);
     });
