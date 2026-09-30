@@ -346,3 +346,69 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
   .pface > .grid2 { grid-template-columns: 1fr; }
   #profFace { width: 120px; height: 150px; }
 }
+
+/* ---------------------------------------------------------------- 戦闘の演出（B1・ui/fx.js） */
+.scene { overflow: hidden; }
+.scene canvas.fxLayer { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; }
+.scene::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 2; }
+.scene.bleed::after { background: radial-gradient(ellipse at center, transparent 35%, rgba(200,20,10,.65)); animation: fxFade .52s ease-out; }
+.scene.flash::after { background: rgba(255,248,230,.75); animation: fxFade .26s ease-out; }
+.scene.shake > canvas { animation: fxShake .38s cubic-bezier(.36,.07,.19,.97); }
+.scene.quake > canvas { animation: fxQuake .56s cubic-bezier(.36,.07,.19,.97); }
+@keyframes fxFade { from { opacity: 1; } to { opacity: 0; } }
+@keyframes fxShake { 20% { transform: translate(-5px, 2px); } 40% { transform: translate(5px, -2px); } 60% { transform: translate(-3px, 1px); } 80% { transform: translate(2px, 0); } }
+@keyframes fxQuake { 10% { transform: translate(-9px, 4px) rotate(-.4deg); } 25% { transform: translate(9px, -4px) rotate(.4deg); } 40% { transform: translate(-7px, 3px); } 60% { transform: translate(5px, -2px); } 80% { transform: translate(-2px, 1px); } }
+
+/* 飛ぶ数字 */
+.foe, .scene { position: relative; }
+.dmgpop { position: absolute; right: 10px; top: 2px; z-index: 3; pointer-events: none; font-family: var(--f-display); font-weight: 700; font-size: 22px; color: var(--ng);
+  text-shadow: 0 1px 0 var(--sheet), 0 0 6px var(--sheet); font-variant-numeric: tabular-nums; animation: fxPop 1s ease-out forwards; }
+.dmgpop.wall { color: var(--accent); font-size: 16px; }
+.scene .dmgpop.you { left: 14px; right: auto; top: 10px; font-size: 30px; color: #ff6a5a; text-shadow: 0 2px 6px #000; }
+@keyframes fxPop { 0% { opacity: 0; transform: translateY(6px) scale(.8); } 15% { opacity: 1; transform: translateY(-4px) scale(1.15); } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-18px); } }
+
+/* 敵の札 */
+.foe .g .lost { position: absolute; inset: 0 auto 0 0; background: var(--crit); transition: width .5s ease-in .35s; }
+.foe .g i { transition: width .22s ease-out; }
+.foe.hit { animation: fxCardHit .38s ease-out; }
+.foe.walled { animation: fxCardWall .52s ease-out; }
+.foe.dying { animation: fxCardDie .9s ease-in forwards; }
+.foe.dying b { text-decoration: line-through; text-decoration-color: var(--ng); }
+@keyframes fxCardHit { 0% { background: var(--ng); color: var(--paper); } 20% { transform: translateX(-4px); } 45% { transform: translateX(4px); } 70% { transform: translateX(-2px); } 100% { transform: none; } }
+@keyframes fxCardWall { 0% { box-shadow: 0 0 0 0 var(--accent); } 40% { box-shadow: 0 0 0 5px var(--accent-soft); border-color: var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+@keyframes fxCardDie { 0% { background: var(--ng); color: var(--paper); opacity: 1; } 25% { transform: translateX(-3px); } 45% { transform: translateX(3px); background: var(--sheet); color: inherit; } 100% { opacity: .35; transform: translateY(4px); } }
+
+/* スマホの上部バー：ダメージで赤く光る */
+#mbar.hurt { animation: fxBar .6s ease-out; }
+@keyframes fxBar { 0% { background: var(--ng); } 100% { background: var(--paper); } }
+
+/* ボスの前口上の帯 */
+.bossBanner { position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; justify-items: center; gap: 6px; padding: 12px 16px; text-align: center; cursor: pointer;
+  background: linear-gradient(transparent 0 18%, rgba(8,4,6,.82) 18% 82%, transparent 82%); color: #f2efe6; }
+.bossBanner b { font-family: var(--f-display); font-weight: 400; font-size: clamp(20px, 3.4vw, 30px); letter-spacing: .14em; color: #ffd9c8; text-shadow: 0 0 12px rgba(255,60,40,.6); overflow-wrap: anywhere; }
+.bossBanner span { font-family: var(--f-body); font-size: clamp(13.5px, 1.9vw, 17px); line-height: 1.7; max-width: 36em; overflow-wrap: anywhere; }
+.bossBanner.in { animation: fxBannerIn .7s ease-out; }
+.bossBanner.in b { animation: fxBannerName .7s ease-out; }
+.bossBanner.out { opacity: 0; transition: opacity .4s ease-in; }
+@keyframes fxBannerIn { from { opacity: 0; clip-path: inset(50% 0 50% 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+@keyframes fxBannerName { from { letter-spacing: .5em; opacity: 0; } to { letter-spacing: .14em; opacity: 1; } }
+.l-boss { font-style: italic; border-left: 3px solid var(--ng); padding-left: 10px; }
+@media (max-width: 600px) {
+  .bossBanner { background: rgba(8,4,6,.82); padding: 8px 12px; gap: 3px; }
+  .bossBanner span { font-size: 13px; line-height: 1.55; }
+  .dmgpop { font-size: 18px; }
+  .scene .dmgpop.you { font-size: 24px; }
+}
+
+/* 動きを減らす設定：揺れ・跳ね・沈み込みをやめ、色の変化だけ残す */
+@media (prefers-reduced-motion: reduce) {
+  .scene.shake > canvas, .scene.quake > canvas { animation: none; }
+  .foe.hit { animation: fxCardHitCalm .38s ease-out; }
+  .foe.dying { animation: none; opacity: .35; }
+  .dmgpop { animation: fxPopCalm 1s linear forwards; }
+  .bossBanner.in, .bossBanner.in b { animation: none; }
+  .bossBanner.out { transition: none; }
+  .foe .g .lost, .foe .g i { transition: none; }
+}
+@keyframes fxCardHitCalm { 0% { background: var(--ng); color: var(--paper); } 100% { background: var(--sheet); } }
+@keyframes fxPopCalm { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
