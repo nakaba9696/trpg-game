@@ -118,8 +118,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.act("fac:castle");
     if (S.log.length < logN + 3) F("王城に入っても手触りの一行が増えない");
     let a = ids(G);
-    if (a.includes("castle:knight")) F("王城に元の「騎士の位を願い出る」が残っている");
-    if (!a.includes("castle:w2knight:none")) F("聖王国の王城に、後ろ盾なしの叙任が無い");
+    if (!a.includes("castle:knight")) F("聖王国の王城に、女王の御前で願い出る元の道が無い");
     if (a.includes("castle:w2knight:dran")) F("訪れていない鍛冶の都の兄君の推挙が出る");
     S.visited.w2_dranherz = true;
     a = ids(G);
@@ -127,6 +126,17 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     for (let i = 0; i < 20 && !S.title; i++) { S.gold = 1000; G.act("castle:w2knight:dran"); }
     if (S.title !== "騎士" || !S.w2_patron || S.w2_patron.id !== "dran") F("兄君の推挙で騎士になれない");
     if (!G.count("royalwrit")) F("兄君の推挙で騎士になっても叙任状が無い");
+    if (G.nationOf && S.titleAt !== "聖王国リーヴェル") F(`兄君の推挙の位の国が残らない（${S.titleAt}）`);
+    // 手配中は、兄姉の推挙も願い出られない（M3）
+    if (G.crime) {
+      const G3 = loadEngine();
+      const S3 = start(G3, 8);
+      G3.arrive("leavel"); S3.fame = 200; S3.gold = 1000; S3.visited.w2_dranherz = true;
+      G3.crime("murder"); G3.crime("murder");
+      S3.mode = "fac"; S3.fac = "castle";
+      const d = G3.facActions().flatMap((g) => g.list).find((x) => x.id === "castle:w2knight:dran");
+      if (!d || !d.disabled) F("手配中なのに兄君の推挙で騎士の位を願い出られる");
+    }
 
     const G2 = loadEngine();
     const S2 = start(G2, 6);
@@ -136,6 +146,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const all = G2.actions().flatMap((g) => g.list);
     const fifth = all.find((x) => x.id === "castle:w2knight:fifth");
     if (!all.some((x) => x.id === "castle:w2knight:first") || !fifth) F("帝国の王城で皇子を選べない");
+    if (all.some((x) => x.id === "castle:knight")) F("帝国の王城に、皇子を選ばない叙任が残っている");
     if (fifth && !fifth.disabled) F("闘技場で勝っていないのに第五皇子に仕えられる");
     G2.act("castle:w2knight:third");
     if (S2.title !== "騎士" || S2.gold !== 700 || !S2.w2_patron || S2.w2_patron.realm !== "garmund") F("第三皇子に仕えて騎士になれない（300G）");

@@ -31,10 +31,9 @@
     { id: 3, name: "騎士の部", fee: 80, fame: 80, foes: [["blackknight"], ["oni"]], gold: 450, win: 20 },
   ];
 
-  // 騎士の後ろ盾。聖王国は兄姉の都（ゲームにある都だけ。訪れたことが要る）、帝国は皇子
+  // 騎士の後ろ盾。聖王国は兄姉の都（ゲームにある都だけ。訪れたことが要る。女王の御前で願い出る元の道も残す）、帝国は皇子（元の道の代わり）
   D.W2_PATRONS = {
     leavel: [
-      { id: "none", name: "女王の御前で", sub: "名声150・500G", gold: 500 },
       { id: "dran", name: "鍛冶の都の兄君の推挙で", sub: "名声150・350G・魅力の判定", gold: 350, town: "w2_dranherz", stat: "魅力", diff: "難しい",
         ok: "兄君は、あなたを上から下まで三度眺めて言った。「その顎の線は、像にしたら映える。推そう」",
         ng: "兄君は、あなたの横顔を眺めて首を振った。「その顎では、像にならない」推挙はもらえなかった。" },
@@ -157,12 +156,15 @@
     const g = groups.find((x) => x.list.some((a) => a.id === "castle:knight"));
     if (!g) return groups;
     const realm = realmOf(S.loc);
+    // 手配中・悪名の高い者は願い出られない（M3 の m3_repute.js が castle:knight に掛けるのと同じ決まり）
+    const inf = G.infamyHere ? G.infamyHere() : 0;
+    const block = G.wanted && G.wanted() ? "手配中" : inf >= 15 ? `悪名 ${inf}。城の者が目を合わせない` : "";
     const list = (D.W2_PATRONS[realm] || []).filter((p) => !p.town || S.visited[p.town]).map((p) => ({
-      id: `castle:w2knight:${p.id}`, label: p.name, sub: `${p.sub}（今 名声${S.fame}）`,
-      disabled: S.fame < 150 || S.gold < p.gold || (p.flag && !S.flags[p.flag]), kw: ["騎士", "叙任", p.name],
+      id: `castle:w2knight:${p.id}`, label: p.name, sub: block || `${p.sub}（今 名声${S.fame}）`,
+      disabled: !!block || S.fame < 150 || S.gold < p.gold || !!(p.flag && !S.flags[p.flag]), kw: ["騎士", "叙任", p.name],
     }));
     const i = g.list.findIndex((a) => a.id === "castle:knight");
-    g.list.splice(i, 1, ...list);
+    g.list.splice(realm === "garmund" ? i : i + 1, realm === "garmund" ? 1 : 0, ...list);
     return groups;
   }
 
@@ -201,10 +203,11 @@
     const L = G.loc();
     const ruler = realm === "garmund" ? "宰相" : "女王エレオノーラ";
     S.gold -= p.gold; S.title = "騎士"; G.give("royalwrit");
+    if (G.nationOf) S.titleAt = G.nationOf(); // M3：位を授けた国（手配されると取り上げられる）
     G.log("you", "騎士の位を賜る");
     G.say(`${ruler}の剣が、あなたの肩に触れた。「汝を騎士に叙する」寄進の${p.gold}Gは、儀式の前に回収されていた。`);
     G.chron(`${L.name}で騎士に叙任される`, "trophy");
-    if (p.id !== "none") {
+    {
       const short = p.name.replace(/の推挙で$|に仕える$/, "");
       S.w2_patron = { realm, id: p.id, name: p.name, short, day: S.day };
       G.memo(realm === "garmund" ? `帝国で${short}に仕える騎士になった` : `${short}の推挙で騎士になった`);
