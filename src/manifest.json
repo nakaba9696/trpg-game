@@ -14,10 +14,12 @@
     "engine/gm.js",
     "data/enemies_2.js",
     "engine/foe_quirks.js",
-    "data/events_town2.js"
+    "data/events_town2.js",
+    "data/events_who.js"
   ],
   "ui": [
     "ui/art_monsters.js",
+    "ui/art_people.js",
     "ui/scene.js",
     "ui/ui.js",
     "ui/setup.js",
