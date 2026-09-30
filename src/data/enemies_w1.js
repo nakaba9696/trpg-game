@@ -1,5 +1,6 @@
 // 聖都の地下墓地と朧島の敵（W1）。欄の意味は enemies.js と enemies_2.js と同じ
 // 使徒（ヴェスパ・グレゴル・コノハ）は倒せる。魔人（アウレリア・宵姫）は敵にしない。docs/lore/majin.md
+// 説明文は匂わせにとどめる（魔人の名前や正体は書かない。docs/lore/reveal.md）
 // W1 の場所（locations_w1.js）と出来事（events_w1.js）から使う
 (function (G) {
   const D = (G.data = G.data || {});
@@ -21,7 +22,7 @@
     // 段 3
     w1_husk: {
       name: "祈り殻", tier: 3, hp: 26, dmg: [1, 6, 2], hit: 50, def: 5, agi: 15, will: 999, mres: 10, undead: true, gold: [0, 15], loot: [["relic", 0.04]], shape: "humanoid", eye: "#fff1c9",
-      desc: "聖女に祈りを搾り尽くされ、干からびた巡礼者。死んだことに気づかず、まだ祈りの文句を唱えている。首筋に光の輪の痣。",
+      desc: "干からびた巡礼者。死んだことに気づかず、まだ祈りの文句を唱えている。首筋に光の輪の痣。",
       look: { body: "biped", build: "lanky", skin: "#b8ac90", head: "hood", eyes: "hollow", mouth: "none", arms: "forward", outfit: "robe", cloth: "#d8d0bc", pattern: "ribs" },
       lines: {
         open: ["干からびた巡礼者が、祈りながらこちらへ歩いてくる。「聖女さま……聖女さま……もっと、お受け取りください……」"],
@@ -39,7 +40,7 @@
     },
     w1_beastpriest: {
       name: "獣憑きの司祭", tier: 3, hp: 32, dmg: [2, 6, 1], hit: 60, def: 10, agi: 50, will: 70, mres: 5, gold: [10, 40], loot: [["holysymbol", 0.15], ["potion", 0.3]], shape: "humanoid", eye: "#ff4d4d",
-      desc: "聖女の血を賜る「聖餐」を受けすぎた司祭。法衣の下から毛が生え、口が裂けはじめている。まだ説教をやめない。",
+      desc: "法衣の下から毛が生え、口が裂けはじめた司祭。首から下げた聖印に、聖餐を受けた回数が刻んである。まだ説教をやめない。",
       look: { body: "biped", build: "brute", skin: "#5a4a3e", skin2: "#8a7a68", head: "wolf", eyes: "glow", mouth: "fangs", arms: "claws", outfit: "robe", cloth: "#e8e2d0", extra: ["blood"], mood: "fierce" },
       lines: {
         open: ["「迷える子羊よ、聖女さまの血を分けてあげよう……いや、あなたの血を、分けておくれ」司祭の口が、耳まで裂けた。"],
@@ -61,7 +62,7 @@
     // 使徒（ボス）
     w1_vespa: {
       name: "異端審問官ヴェスパ", tier: 4, boss: true, hp: 90, dmg: [2, 8, 3], hit: 75, def: 25, agi: 55, will: 999, mres: 20, gold: [80, 160], loot: [["holywater", 1], ["potion", 1]], shape: "humanoid", eye: "#ff8a3a",
-      desc: "偽聖のアウレリアの使徒。鉄の仮面の女。聖女の正体に気づいた者を「異端」と呼び、火刑台へ連れていく。",
+      desc: "鉄の仮面の異端審問官。聖女さまを疑う者を「異端」と呼び、火刑台へ連れていく。仮面の下を見た者はいない。",
       look: { body: "biped", build: "lanky", skin: "#8a8c94", head: "helm", eyes: "glow", mouth: "none", weapon: "spear", outfit: "armor", cloth: "#6a1a1a", extra: ["cape", "smoke"] },
       lines: {
         open: ["鉄の仮面の奥から、平らな声。「あなたは知りすぎました。火は、すべてを清めます」"],
@@ -70,7 +71,7 @@
     },
     w1_gregor: {
       name: "墓守グレゴル", tier: 4, boss: true, hp: 110, dmg: [2, 6, 3], hit: 70, def: 15, agi: 30, will: 999, mres: 30, magic: true, gold: [100, 200], loot: [["relic", 1], ["elixir", 1]], shape: "humanoid", eye: "#7dffb0",
-      desc: "偽聖のアウレリアの使徒。地下墓地の老司祭。死者に祈りを続けさせるため、死体を歩かせている。自分が何百年生きているかは、もう数えていない。",
+      desc: "地下墓地の老司祭。死者にも祈りを続けさせるため、死体を歩かせている。自分が何年生きているかは、もう数えていない。",
       look: { body: "biped", build: "lanky", skin: "#c8c0a8", head: "human", hair: "#e8e4d8", eyes: "glow", mouth: "smirk", weapon: "staff", outfit: "robe", cloth: "#2a2a24", extra: ["beard", "runes"] },
       lines: {
         open: ["骨の祭壇の前で、老司祭が振り返った。「祈りが止むと、聖女さまがお腹を空かせる。あなたにも、祈っていただきましょう。永遠に」"],
@@ -79,7 +80,7 @@
     },
     w1_konoha: {
       name: "狐の忍コノハ", tier: 4, boss: true, hp: 85, dmg: [2, 6, 4], hit: 80, def: 20, agi: 85, will: 999, mres: 20, gold: [100, 250], loot: [["smoke", 2], ["gem", 1]], shape: "humanoid", eye: "#ffd24a",
-      desc: "月喰いの宵姫の使徒。宵姫に拾われた孤児の忍で、朧島の賭場を仕切る。いかさまの名人。主人の博打の腕を、本人以外の全員が知っている。",
+      desc: "朧島の賭場を仕切る、狐面の少女の忍。いかさまの名人。主の博打の腕前を、主以外の全員が知っている。",
       look: { body: "biped", build: "small", skin: "#f0d8c0", head: "mask", ears: "pointy", eyes: "slit", mouth: "none", tail: "thin", weapon: "katana", outfit: "garb", cloth: "#b8321f", extra: ["scarf"] },
       lines: {
         open: ["「あら、賭場で刀を抜くなんて、野暮なお方」狐面の少女は、袖から賽子と苦無を同時に出した。"],

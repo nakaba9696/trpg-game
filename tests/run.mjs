@@ -119,6 +119,64 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`敵の台詞と逃げ方（台詞あり ${Object.values(D.ENEMIES).filter((e) => e.lines).length} 種・逃げる ${Object.values(D.ENEMIES).filter((e) => e.fleeAt).length} 種）`);
 }
 
+// ---------------------------------------------------------------- 1c. 装飾品の枠（I1）
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  // データ：装飾品の効き目の欄が正しいか、I1 の品に入手先があるか
+  const sources = new Set([...D.SHOP_BASE]);
+  for (const L of Object.values(D.LOCS)) for (const it of L.shop || []) sources.add(it);
+  for (const e of Object.values(D.ENEMIES)) for (const [it] of e.loot || []) sources.add(it);
+  const addOut = (o) => { if (!o) return; for (const it of typeof o.item === "string" ? [o.item] : Object.keys(o.item || {})) sources.add(it); addOut(o.win); };
+  for (const e of D.EVENTS) for (const c of e.choices) { addOut(c.ok); addOut(c.ng); addOut(c.win); }
+  const i1 = Object.keys(D.ITEMS).filter((id) => id.startsWith("i1_"));
+  if (i1.length !== 15) fail(`I1 の品が ${i1.length} 種（15 種のはず）`);
+  for (const id of i1) if (!sources.has(id)) fail(`${id}: 入手先（店・落とし物・出来事）が無い`);
+  for (const [id, it] of Object.entries(D.ITEMS)) {
+    if (it.type !== "ring") continue;
+    for (const k of Object.keys(it.stats || {})) if (!D.STATS.includes(k)) fail(`装飾品 ${id}: 能力値 ${k} が無い`);
+    for (const k of Object.keys(it.bonus || {})) if (!["fire", "heal", "steal", "trap", "talk"].includes(k)) fail(`装飾品 ${id}: 補正の種類 ${k} が無い`);
+  }
+  // 付け外しと効き目
+  G.rand = seeded(11);
+  G.P = { trophies: {}, graves: [] };
+  const stats = {}, caps = {};
+  D.STATS.forEach((k) => { stats[k] = 40; caps[k] = 60; });
+  G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
+  const S = G.S;
+  delete S.ring; // 古いセーブには枠が無い
+  const base = { str: G.chance("筋力", 0), steal: G.gearBonus("steal"), magic: G.magicBonus(), agi: G.statEff("敏捷") };
+  if (G.ring() !== null) fail("古いセーブで装飾品があることになっている");
+  if (G.unequip("ring")) fail("何も付けていないのに外せた");
+  G.give("i1_fangring");
+  if (!G.equip("i1_fangring") || S.ring !== "i1_fangring" || S.inv.i1_fangring) fail("装飾品を装備できない");
+  if (G.chance("筋力", 0) !== base.str + 5) fail(`牙の指輪で筋力の判定が +5 にならない（${base.str}→${G.chance("筋力", 0)}）`);
+  if (!G.has("i1_fangring")) fail("装備中の装飾品を持っていないことになる");
+  G.give("i1_slipring");
+  G.equip("i1_slipring");
+  if (S.ring !== "i1_slipring" || S.inv.i1_fangring !== 1) fail("装飾品を付け替えると前の物が持ち物に戻らない");
+  if (G.gearBonus("steal") !== base.steal + 10 || G.statEff("敏捷") !== base.agi + 5) fail("すり抜けの指輪の補正が効かない");
+  G.give("i1_foxring");
+  G.equip("i1_foxring");
+  if (G.magicBonus() !== base.magic + 5 || G.gearBonus("fire") < 10) fail("狐火の指輪の魔法の補正が効かない");
+  if (!G.unequip("ring") || S.ring || S.inv.i1_foxring !== 1) fail("装飾品を外せない");
+  if (G.chance("筋力", 0) !== base.str || G.magicBonus() !== base.magic) fail("外したのに補正が残る");
+  // 呪われた指輪は外すと HP が減るが、それで死にはしない
+  G.give("i1_eyering");
+  G.equip("i1_eyering");
+  if (G.statEff("知力") !== 50 || G.statEff("魅力") !== 30) fail("覗き目の指輪の補正が効かない");
+  S.hp = 2;
+  G.unequip("ring");
+  if (S.hp !== 1 || S.over) fail(`呪われた指輪を外したあとの HP が変 ${S.hp}`);
+  S.hp = S.maxHp;
+  G.equip("i1_eyering");
+  G.unequip("ring");
+  if (S.hp !== S.maxHp - 3) fail("呪われた指輪を外しても HP が減らない");
+  if (G.equip("herb")) fail("薬草を装備できた");
+  if (failures === before) ok(`装飾品の枠（装飾品 ${Object.values(D.ITEMS).filter((it) => it.type === "ring").length} 種・I1 の品 ${i1.length} 種すべてに入手先あり）`);
+}
+
 // ---------------------------------------------------------------- 2. ランダムに遊ぶ
 {
   const G = loadEngine();
@@ -127,6 +185,10 @@ const ok = (msg) => console.log("OK   " + msg);
   const STEPS = Number(process.env.STEPS || 500);
   let deaths = 0, maxDay = 0, totalTurns = 0, bossKills = 0;
   const before = failures;
+  // I1 の品が手に入った回数（G.give を数える）
+  const gains = {};
+  const give0 = G.give;
+  G.give = (id, n) => { if (String(id).startsWith("i1_") && G.S.turn > 0) gains[id] = (gains[id] || 0) + (n || 1); return give0(id, n); };
   for (let g = 0; g < GAMES; g++) {
     G.rand = seeded(1000 + g);
     G.P = { trophies: {}, graves: [] };
@@ -149,6 +211,12 @@ const ok = (msg) => console.log("OK   " + msg);
         if (step % 17 === 0) {
           const a = acts[Math.floor(G.rand() * acts.length)];
           if (!G.parse(a.label)) fail(`game ${g}: 「${a.label}」を読み取れない`);
+        }
+        // ときどき持ち物の装備・装飾品の付け外しもする（画面の持ち物欄の代わり）
+        if (step % 23 === 11 && G.S.mode !== "combat") {
+          const gear = Object.keys(G.S.inv).filter((id) => ["weapon", "armor", "ring"].includes(G.itemInfo(id).type));
+          if (G.S.ring && G.rand() < 0.3) G.unequip("ring");
+          else if (gear.length) G.equip(gear[Math.floor(G.rand() * gear.length)]);
         }
         const a = acts[Math.floor(G.rand() * acts.length)];
         G.act(a.id);
@@ -178,6 +246,9 @@ const ok = (msg) => console.log("OK   " + msg);
     totalTurns += G.S.turn;
     bossKills += G.S.counters.bosses;
   }
+  G.give = give0;
+  const gained = Object.entries(gains).sort((a, b) => b[1] - a[1]).map(([id, n]) => `${D.ITEMS[id].name} ${n}`);
+  console.log(`NOTE ランダムプレイで I1 の品が手に入った回数（${Object.keys(gains).length}/15 種）: ${gained.join("・") || "なし"}`);
   if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
 }
 
@@ -207,6 +278,62 @@ const ok = (msg) => console.log("OK   " + msg);
   if (custom.body !== "blob" || custom.skin !== "#123456" || custom.tail !== "none") fail("絵: look の指定が効かない");
   try { G.paintMonster(ctx, 200, 240, 120, { id: "zz_unknown", shape: "dragon" }); } catch (err) { fail(`絵: データに無い敵で例外 ${err.message}`); }
   if (failures === before) ok(`モンスターの絵（${seen.size} 種が別々の見た目・ボスはオーラ・魔人は絶界）`);
+}
+
+// ---------------------------------------------------------------- 2c. 人物の絵（DOM なしの偽の canvas で描く）
+{
+  const G = loadEngine();
+  const before = failures;
+  const vmc = vm.createContext({ G });
+  for (const f of ["art_monsters.js", "art_people.js"]) vm.runInContext(readFileSync(new URL("../src/ui/" + f, import.meta.url), "utf8"), vmc);
+  const noop = () => {};
+  const grad = { addColorStop: noop };
+  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : k === "createRadialGradient" || k === "createLinearGradient" ? () => grad : noop), set: (t, k, v) => ((t[k] = v), true) });
+  G.rand = () => { throw new Error("絵が G.rand を使った"); };
+  const kinds = Object.keys(G.PEOPLE);
+  if (kinds.length < 8) fail(`人物の絵: 種類が ${kinds.length} しかない（8 以上）`);
+  const draw = (who, label) => { try { G.paintPerson(ctx, 0, 0, 96, 120, who); } catch (err) { fail(`人物の絵 ${label}: 描くと例外 ${err.message}`); } };
+  const sig = (who) => JSON.stringify(Object.assign({}, G.personLook(who), { seed: 0 }));
+  // 種類ごとに、同じ種は同じ見た目・種が違えば違う見た目
+  for (const k of kinds) {
+    if (!G.PEOPLE[k].name) fail(`人物の絵 ${k}: name が無い`);
+    for (const sex of ["男", "女", undefined]) for (let i = 0; i < 4; i++) draw({ kind: k, seed: "t" + i, sex }, `${k}/${sex}/${i}`);
+    if (sig({ kind: k, seed: "a" }) !== sig({ kind: k, seed: "a" })) fail(`人物の絵 ${k}: 同じ種なのに見た目が変わる`);
+    if (sig({ kind: k, seed: "a" }) === sig({ kind: k, seed: "b" })) fail(`人物の絵 ${k}: 種が違っても同じ見た目`);
+  }
+  // 主人公：職業ごとに違う見た目（同じ人物設定でも）
+  const prof = { name: "テスト", sex: "男", age: "24", look: "黒髪、鋭い目つき、大柄な体" };
+  const heroes = new Map();
+  for (const cls of Object.keys(G.data.CLASSES)) {
+    const who = G.heroWho(prof, cls);
+    draw(who, `主人公 ${cls}`);
+    for (const age of ["8", "70"]) draw(G.heroWho({ ...prof, age }, cls), `主人公 ${cls} ${age}歳`);
+    const L = G.personLook(who);
+    const key = [L.outfit, L.gear].join("/");
+    if (heroes.has(key)) fail(`人物の絵: 主人公 ${cls} と ${heroes.get(key)} の服と装備が同じ`);
+    heroes.set(key, cls);
+    if (L.hair !== "#1c1a1e" || L.eyes !== "sharp" || L.build !== "broad") fail(`人物の絵: 主人公 ${cls} に外見の文（黒髪・鋭い・大柄）が効かない`);
+  }
+  // 出来事の who は、ある種類（か、ある敵）を指す
+  let withWho = 0;
+  const evIds = new Set(G.data.EVENTS.map((e) => e.id));
+  for (const id of Object.keys(G.data.EVENT_WHO || {})) if (!evIds.has(id)) fail(`events_who.js: 出来事 ${id} が無い`);
+  for (const e of G.data.EVENTS) {
+    if (!G.eventWho(e)) continue;
+    withWho++;
+    const w = G.eventWho(e);
+    if (w.kind === "foe") { if (!G.data.ENEMIES[w.foe]) fail(`出来事 ${e.id}: who の敵 ${w.foe} が無い`); continue; }
+    if (!G.PEOPLE[w.kind]) fail(`出来事 ${e.id}: who の種類 ${w.kind} が無い（${kinds.join(", ")}）`);
+    draw(w, `出来事 ${e.id}`);
+  }
+  if (G.eventWho({ id: "x" }) !== null) fail("人物の絵: who の無い出来事で絵を出そうとする");
+  // 仲間（名前と職業から）
+  for (const c of [{ name: "傭兵のラグナ", cls: "傭兵" }, { name: "僧侶のセラ", cls: "僧侶" }, { name: "謎の人", cls: "謎" }, { name: "樽ゴブリンのダル", cls: "ゴブリン" }]) {
+    const w = G.companionWho(c);
+    if (w.kind === "foe") { if (!G.data.ENEMIES[w.foe]) fail(`仲間 ${c.name}: 敵 ${w.foe} が無い`); } else draw(w, `仲間 ${c.name}`);
+  }
+  if (G.companionWho({ name: "僧侶のセラ", cls: "僧侶" }).sex !== "女") fail("人物の絵: 仲間の名前から性別を拾えない");
+  if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
 }
 
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）
