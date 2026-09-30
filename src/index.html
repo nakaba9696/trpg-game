@@ -1,0 +1,95 @@
+<title>言霊の卓</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Antique&family=Zen+Old+Mincho:wght@400;700&display=swap">
+<style>
+/*@STYLE@*/
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>言霊の卓</h1>
+    <span class="sub">ヴェルド大陸 ── 剣と魔法と、残酷な神々の見世物</span>
+    <div class="tools">
+      <button class="btn" id="openWorld" type="button">世界の手引き</button>
+      <button class="btn" id="openTrophy" type="button">トロフィーと墓碑</button>
+      <button class="btn" id="newGame" type="button" hidden>新しい冒険</button>
+    </div>
+  </header>
+
+  <!-- キャラクター作成 -->
+  <main id="setup" hidden></main>
+
+  <!-- 冒険 -->
+  <main id="play" hidden>
+    <section class="stage">
+      <div id="mbar">
+        <span class="mname" id="mName"></span>
+        <div class="mbars num">
+          <span class="gauge">HP <span class="g"><i id="mHpBar" class="hp"></i></span><span id="mHp"></span></span>
+          <span class="gauge">MP <span class="g"><i id="mMpBar" class="mp"></i></span><span id="mMp"></span></span>
+          <span id="mGold"></span>
+        </div>
+        <button class="btn" id="openSheet" type="button">ステータス</button>
+      </div>
+      <figure class="scene">
+        <canvas id="scene" aria-hidden="true"></canvas>
+        <figcaption><b id="sceneTitle"></b><span id="sceneDate" class="num"></span></figcaption>
+      </figure>
+      <div id="log" aria-live="polite"></div>
+      <div id="panel"></div>
+      <form id="act">
+        <div class="freeRow">
+          <input id="free" autocomplete="off" placeholder="自由に行動を書く（例：宿で休む／ギルドの依頼を見る／オークを斬る）">
+          <button class="btn primary" id="freeBtn" type="submit">行動</button>
+        </div>
+        <div id="freeHint" hidden></div>
+      </form>
+    </section>
+    <aside id="sheetBox">
+      <div class="sheet" id="sheet"></div>
+    </aside>
+  </main>
+</div>
+
+<dialog id="dlgChron">
+  <div class="dhead"><h2 id="chronTitle">年表</h2><button class="btn" type="button" data-close>閉じる</button></div>
+  <div class="dbody">
+    <div class="epitaph" id="epitaph" hidden></div>
+    <ol class="chron" id="chronList"></ol>
+    <div class="start" id="chronActions" hidden><button class="btn primary" type="button" id="chronNew">新しい冒険を始める</button></div>
+  </div>
+</dialog>
+
+<dialog id="dlgTrophy">
+  <div class="dhead"><h2>トロフィーと墓碑</h2><button class="btn" type="button" data-close>閉じる</button></div>
+  <div class="dbody">
+    <div class="tabs" role="tablist">
+      <button class="btn" role="tab" id="tabT" aria-selected="true" type="button">トロフィー</button>
+      <button class="btn" role="tab" id="tabG" aria-selected="false" type="button">墓碑（過去の冒険者）</button>
+    </div>
+    <div id="paneT"><p class="fine" id="troSummary"></p><div class="trophies" id="troList"></div></div>
+    <div id="paneG" hidden><div class="graves" id="graveList"></div></div>
+  </div>
+</dialog>
+
+<dialog id="dlgWorld">
+  <div class="dhead"><h2>ヴェルド大陸 世界の手引き</h2><button class="btn" type="button" data-close>閉じる</button></div>
+  <div class="dbody world" id="worldBody"></div>
+</dialog>
+
+<dialog id="dlgMap">
+  <div class="dhead"><h2>大陸の地図</h2><button class="btn" type="button" data-close>閉じる</button></div>
+  <div class="dbody"><canvas id="mapCanvas" class="mapCanvas"></canvas><p class="fine">行ったことのある場所は明るく、今いる場所は赤い丸。線は陸路、点線は船。</p></div>
+</dialog>
+
+<dialog id="dlgProfile">
+  <div class="dhead"><h2 id="profTitle">人物</h2><button class="btn" type="button" data-close>閉じる</button></div>
+  <div class="dbody"><dl class="kv prof" id="profBody"></dl></div>
+</dialog>
+
+<div id="toast" hidden></div>
+
+<script>
+/*@SCRIPTS@*/
+</script>

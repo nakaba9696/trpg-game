@@ -1,0 +1,22 @@
+{
+  "engine": [
+    "data/world.js",
+    "data/characters.js",
+    "data/items.js",
+    "data/enemies.js",
+    "data/locations.js",
+    "data/events.js",
+    "data/trophies.js",
+    "engine/core.js",
+    "engine/combat.js",
+    "engine/explore.js",
+    "engine/parser.js",
+    "engine/gm.js"
+  ],
+  "ui": [
+    "ui/scene.js",
+    "ui/ui.js",
+    "ui/setup.js",
+    "main.js"
+  ]
+}
