@@ -238,7 +238,7 @@
     const pf = face("sface", heroWho(S), 72, 90);
     pf.title = "人物を見る";
     pf.onclick = () => ui.openProfile();
-    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）`));
+    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）${G.reputeLabel ? G.reputeLabel() : ""}`));
     const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
     head.append(pf, hd, close);
     return head;
