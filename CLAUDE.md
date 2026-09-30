@@ -8,7 +8,7 @@
 node tools/build.mjs && node tests/run.mjs
 ```
 - `tests/run.mjs` はデータの整合（存在しない敵・アイテム・場所を指していないか）と、決まった乱数で 150 回ランダムに遊ぶテストを行う。
-- 新しい仕組みを足したら、`tests/run.mjs` に確認を足す。新しいデータは整合チェックが自動で拾う。
+- 新しい仕組みを足したら確認を足す。`tests/checks/<id>.mjs` に置けば自動で読まれる（`export default ({ G, fail, ok, loadEngine, seeded }) => {...}`。例：`tests/checks/q3_autoload.mjs`）。新しいデータは整合チェックが自動で拾う。
 - 見た目を変えたら、描画できる環境ならスクリーンショットを PR に載せる（クラウドでは省いてよい）。
 
 ## 構成
@@ -29,13 +29,13 @@ node tools/build.mjs && node tests/run.mjs
 | `src/ui/scene.js` | 背景の絵（canvas） | A |
 | `src/ui/art_monsters.js` | モンスターの絵（部品の組み合わせ。敵のデータの `look` で指定できる） | A |
 | `src/ui/ui.js`, `src/ui/setup.js`, `src/main.js`, `src/style.css`, `src/index.html` | 画面 | U |
-| `src/manifest.json` | 読み込む順番 | 追記だけ |
+| `src/manifest.json` | 読み込む順番（順番を決めたいファイルだけ。無いものは `tools/files.mjs` が自動で足す） | 追記だけ |
 
 ## 決まり
 - **普段の遊びで Claude を呼ばない。** 判定・戦闘・出来事はすべてゲームのデータとルールで動かす。Claude を使うのは、プレイヤーが自由入力で「GM に任せる」を選んだときだけ。
 - エンジン（`src/data`・`src/engine`）は DOM に触らない。画面は `G.S` を読んで描く。テストは DOM なしでエンジンを動かす。
 - 乱数は必ず `G.rand` / `G.d` / `G.dice` / `G.pick` を使う（テストで固定できるように）。`src/ui/setup.js` の作成画面だけは例外。
-- **新しい内容は、なるべく新しいファイルに書いて `src/manifest.json` に追記する。** 例：出来事を足すなら `src/data/events_<名前>.js` を作り、中で `G.data.EVENTS.push(...)`。敵なら `Object.assign(G.data.ENEMIES, {...})`。既存の大きなファイルを並行して書き換えると衝突する。
+- **新しい内容は、なるべく新しいファイルに書く。`src/data/`・`src/engine/`・`src/ui/` に置けば自動で読まれるので、`src/manifest.json` は編集しない。** manifest に書いたファイルを順に読んだあと、書いていない `.js` を data → engine → ui、名前順で足し、`main.js` は必ず最後（`tools/files.mjs`）。順番がどうしても効くときだけ manifest に書く（書いても二重には読まない）。例：出来事を足すなら `src/data/events_<名前>.js` を作り、中で `G.data.EVENTS.push(...)`。敵なら `Object.assign(G.data.ENEMIES, {...})`。既存の大きなファイルを並行して書き換えると衝突する。
 - 外部の画像・音声・ライブラリは使わない（Artifact の制約。フォントだけ Google Fonts）。絵は canvas で描く。
 - 性的な描写は直接書かない。残酷さ・下品な笑いはよいが、ほのめかしと場面転換で済ませる。
 - 文章は日本語。地の文は二人称（あなた）か三人称。ゲームの用語は `docs/VISION.md` の用語集に合わせる。
