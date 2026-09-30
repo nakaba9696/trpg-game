@@ -4,15 +4,17 @@
 // セーブ（G.S）に足すもの。古いセーブで無くても動く（G.m2State・G.m2Comp が足りない所を埋める）
 //   S.m2 = { seq 仲間の通し番号, focus / focus2 出来事の主役の仲間 id, say / say2 その出来事で話すひとこと,
 //            doom { id, cause } 深手を負って看取りを待つ仲間, fight 始まった戦闘の覚え, day 好感度の日ごとの動きを見た日,
-//            counts { talk, betray, leave, death }, gone [{ id, name, cls, how, date, loc, cause, bond, days }] }
+//            counts { talk, betray, leave, death }, gone [{ id, name, cls, how, date, loc, cause, bond, days, keep }] }
 //     how: betray 裏切って去った / leave 去った / death 死んだ / slain 裏切って刃を向け、あなたが討った
 //   仲間ひとりずつ（S.companions[i]）：id, trait（D.M2_TRAITS の鍵）, bond 好感度 0〜100, joined 加わった日,
-//     talkDay 最後に話した日, wounds 深手の数, confided 打ち明け話を聞いた
+//     talkDay 最後に話した日, wounds 深手の数, confided 打ち明け話を聞いた,
+//     life { home 故郷, kin 家族, food 好物, habit 癖, secret 言えない過去, keep 持ち物 }（名前から決まる）
 //
 // 出来事のデータ（src/data/events_m2.js）に書けるもの
 //   m2: { pick(c, S) 主役にできる仲間, pick2(c, S) 二人目, say(c, S) ひとことの候補（配列）, say2, talk 「仲間と話す」で選ばれる,
 //         parting 好感度が尽きたときの別れ, farewell 看取り, keep 前の出来事の主役のまま続ける }
-//   文の中の {c} 主役の名前・{n} 短い名前・{m} 二人目の短い名前・{say} {say2} ひとこと・{dead} 最後に死んだ仲間の名前
+//   文の中の {c} 主役の名前・{n} 短い名前・{m} 二人目の短い名前・{say} {say2} ひとこと・{dead} 最後に死んだ仲間の名前・{deadkeep} その形見
+//   {home} {kin} {food} {habit} {secret} {keep} 主役の暮らし（D.M2_LIFE）・{mhome} {mkin} 二人目の故郷と家族
 //   結果に書けるもの：bond（数か { 性格: 数, _: 既定 }）, bond2（二人目）, m2（"betray" "rob" "leave" "doom" "die" "slain" "wound" "saved" "confide" "stay"）
 // レーン C（コア）＋ V（出来事）の M2 が管理
 (function (G) {
@@ -43,6 +45,12 @@
     if (!c.trait || !D.M2_TRAITS[c.trait]) c.trait = G.m2TraitOf(c);
     if (typeof c.bond !== "number") c.bond = 50;
     if (!c.joined) c.joined = S.day;
+    if (!c.life) {
+      // 暮らし（故郷・家族・好物・癖・言えない過去・持ち物）。名前と id から決まり、乱数を使わない
+      const L = D.M2_LIFE, h = hash(c.name + ":" + c.id);
+      c.life = {};
+      Object.keys(L).forEach((k, i) => { c.life[k] = L[k][Math.floor(h / (i * 7 + 1)) % L[k].length]; });
+    }
     return c;
   };
   G.m2Trait = (c) => D.M2_TRAITS[c.trait] || D.M2_TRAITS[G.m2TraitOf(c)];
@@ -79,7 +87,7 @@
     const i = S.companions.indexOf(c);
     if (i < 0) return false;
     S.companions.splice(i, 1);
-    const rec = { id: c.id, name: c.name, cls: c.cls, how, date: G.date(), loc: G.loc().name, cause: cause || "", bond: c.bond, days: S.day - (c.joined || S.day) };
+    const rec = { id: c.id, name: c.name, cls: c.cls, how, date: G.date(), loc: G.loc().name, cause: cause || "", bond: c.bond, days: S.day - (c.joined || S.day), keep: c.life && c.life.keep };
     m.gone.push(rec);
     if (m.gone.length > 30) m.gone.shift();
     m.lastGone = Object.assign({}, c);
@@ -108,8 +116,13 @@
     const m = G.S.m2;
     const c = G.m2Focus(), d = G.m2Focus2();
     const dead = [...(m.gone || [])].reverse().find((g) => g.how === "death" || g.how === "slain");
-    return t.replace(/\{(c|n|m|say|say2|dead)\}/g, (all, k) => {
+    const life = (x, k) => (x && x.life && x.life[k]) || { home: "故郷", kin: "家族", food: "好物", keep: "形見", habit: "", secret: "……" }[k];
+    const fill = (s) => s.replace(/\{(c|n|m|say|say2|dead|deadkeep|home|kin|food|keep|habit|secret|mhome|mkin)\}/g, (all, k) => {
       if (k === "c") return c ? c.name : "仲間";
+      if (["home", "kin", "food", "keep", "habit", "secret"].includes(k)) return life(c, k);
+      if (k === "mhome") return life(d, "home");
+      if (k === "mkin") return life(d, "kin");
+      if (k === "deadkeep") return (dead && dead.keep) || "形見";
       if (k === "n") return c ? G.m2Short(c) : "仲間";
       if (k === "m") return d ? G.m2Short(d) : "もう一人";
       if (k === "say") return m.say || "……";
@@ -117,6 +130,7 @@
       if (k === "dead") return dead ? G.m2Short(dead) : "あいつ";
       return all;
     });
+    return fill(fill(t)); // ひとこと（{say}）の中の {home} なども置き換える
   };
   const log0 = G.log;
   G.log = (k, text, extra) => log0(k, G.m2Fill(text), extra);
