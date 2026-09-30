@@ -134,6 +134,8 @@
     click: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 2400, q: 3, g: 0.12, d: 0.03 }); return tone(E, t, { f: 210, f2: 150, g: 0.12, d: 0.05 }); },
     page: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 3200, ff2: 1600, q: 0.8, a: 0.04, d: 0.12, g: 0.1 }); return hiss(E, t + 0.09, { ft: "highpass", ff: 2500, a: 0.01, d: 0.1, g: 0.07 }); },
     // 判定
+    // M7：振り直し。遠くで誰かが小さく二度、手を打つ
+    clap: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 1500, q: 1.2, a: 0.002, d: 0.06, g: 0.12, wet: 0.7 }); return hiss(E, t + 0.32, { ft: "bandpass", ff: 1400, q: 1.2, a: 0.002, d: 0.06, g: 0.1, wet: 0.7 }); },
     ok: (E, t) => { bell(E, t, 220, { g: 0.22, d: 1.0, parts: [[1, 1], [2, 0.35], [3.01, 0.2], [4.2, 0.08]] }); return tone(E, t, { f: 110, g: 0.12, d: 0.5, type: "triangle" }); },
     ng: (E, t) => { thud(E, t, { f: 160, f2: 70, g: 0.35, d: 0.18, ff: 500 }); return tone(E, t + 0.02, { type: "triangle", f: 147, f2: 131, g: 0.14, d: 0.35, ff: 600 }); },
     crit: (E, t) => {
@@ -328,6 +330,7 @@
   function cueOf(e, ctx) {
     const t = e.text || "";
     if (e.k === "dice") {
+      if (e.rr) return "clap";
       if (e.crit) return "crit";
       if (e.fumble) return "fumble";
       if (/^(攻撃|急所狙い)$/.test(e.reason)) return e.ok ? null : "swing";
