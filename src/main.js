@@ -37,7 +37,8 @@
   main.toSetup = () => {
     G.S = null;
     main.save();
-    document.body.classList.remove("sheet-open");
+    G.ui.setSheetOpen(false);
+    G.ui.setLogExpanded(false);
     $("#play").hidden = true;
     $("#newGame").hidden = true;
     $("#setup").hidden = false;

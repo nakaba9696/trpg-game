@@ -12,9 +12,12 @@
     "engine/explore.js",
     "engine/parser.js",
     "engine/gm.js",
+    "data/enemies_2.js",
+    "engine/foe_quirks.js",
     "data/events_town2.js"
   ],
   "ui": [
+    "ui/art_monsters.js",
     "ui/scene.js",
     "ui/ui.js",
     "ui/setup.js",

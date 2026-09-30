@@ -27,6 +27,7 @@ node tools/build.mjs && node tests/run.mjs
 | `src/engine/parser.js` | 自由入力の読み取り（トークンを使わない） | C |
 | `src/engine/gm.js` | GM（Claude）に任せる自由行動（任意） | C |
 | `src/ui/scene.js` | 背景の絵（canvas） | A |
+| `src/ui/art_monsters.js` | モンスターの絵（部品の組み合わせ。敵のデータの `look` で指定できる） | A |
 | `src/ui/ui.js`, `src/ui/setup.js`, `src/main.js`, `src/style.css`, `src/index.html` | 画面 | U |
 | `src/manifest.json` | 読み込む順番 | 追記だけ |
 

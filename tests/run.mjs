@@ -2,6 +2,8 @@
 // 1. データの整合（存在しない場所・敵・アイテムを参照していないか）
 // 2. ランダムに遊び続けるテスト（例外が出ないか、数値が範囲に収まるか）
 // 3. 釣り合いの測定（職業ごとの数字を出すだけ。失敗にはしない）。tests/balance.mjs
+import { readFileSync } from "node:fs";
+import vm from "node:vm";
 import { loadEngine, seeded } from "./lib.mjs";
 import { measureBalance } from "./balance.mjs";
 
@@ -65,6 +67,41 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`データの整合（場所 ${Object.keys(D.LOCS).length}・敵 ${Object.keys(D.ENEMIES).length}・アイテム ${Object.keys(D.ITEMS).length}・出来事 ${D.EVENTS.length}）`);
 }
 
+// ---------------------------------------------------------------- 1b. 敵の台詞と逃げ方（engine/foe_quirks.js）
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  for (const [id, e] of Object.entries(D.ENEMIES)) {
+    if (e.fleeAt !== undefined && !(e.fleeAt > 0 && e.fleeAt < 1)) fail(`敵 ${id}: fleeAt は 0〜1`);
+    if (e.fleeAt && e.boss) fail(`敵 ${id}: ボスは逃げない`);
+    for (const k of Object.keys(e.lines || {})) {
+      if (k === "flee") { if (typeof e.lines.flee !== "string") fail(`敵 ${id}: lines.flee は文字列`); }
+      else if (k === "open" || k === "turn") { if (!Array.isArray(e.lines[k]) || !e.lines[k].every((s) => typeof s === "string" && s)) fail(`敵 ${id}: lines.${k} は文字列の配列`); }
+      else fail(`敵 ${id}: lines.${k} は使われない`);
+    }
+  }
+  // 深手の臆病者が逃げると、倒したことにならず戦闘が終わる
+  G.rand = seeded(7);
+  G.P = { trophies: {}, graves: [] };
+  const cls = Object.keys(D.CLASSES)[0];
+  const stats = {}, caps = {};
+  D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 60; });
+  G.newGame({ cls, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
+  G.S.maxHp = G.S.hp = 999;
+  G.startCombat(["e1_crowngob"], {});
+  const kills = G.S.counters.kills;
+  let fled = false;
+  for (let i = 0; i < 20 && G.S.combat; i++) {
+    G.S.combat.foes[0].hp = 1;
+    G.combatAct("guard");
+    if (!G.S.combat) fled = G.S.counters.kills === kills;
+  }
+  if (!fled) fail("王冠ゴブリンが深手を負っても逃げない");
+  if (G.S.mode !== "explore") fail(`敵が逃げたあとの mode が変 ${G.S.mode}`);
+  if (failures === before) ok(`敵の台詞と逃げ方（台詞あり ${Object.values(D.ENEMIES).filter((e) => e.lines).length} 種・逃げる ${Object.values(D.ENEMIES).filter((e) => e.fleeAt).length} 種）`);
+}
+
 // ---------------------------------------------------------------- 2. ランダムに遊ぶ
 {
   const G = loadEngine();
@@ -125,6 +162,34 @@ const ok = (msg) => console.log("OK   " + msg);
     bossKills += G.S.counters.bosses;
   }
   if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
+}
+
+// ---------------------------------------------------------------- 2b. モンスターの絵（DOM なしの偽の canvas で描く）
+{
+  const G = loadEngine();
+  const before = failures;
+  vm.runInContext(readFileSync(new URL("../src/ui/art_monsters.js", import.meta.url), "utf8"), vm.createContext({ G }));
+  // 何を呼んでも受け流す偽の 2D 文脈
+  const noop = () => {};
+  const grad = { addColorStop: noop };
+  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : k === "createRadialGradient" || k === "createLinearGradient" ? () => grad : noop), set: (t, k, v) => ((t[k] = v), true) });
+  const seen = new Map();
+  G.rand = () => { throw new Error("絵が G.rand を使った"); };
+  for (const [id, e] of Object.entries(G.data.ENEMIES)) {
+    const a = G.monsterLook(id, e), b = G.monsterLook(id, e);
+    const sig = JSON.stringify(Object.assign({}, a, { seed: 0 }));
+    if (sig !== JSON.stringify(Object.assign({}, b, { seed: 0 }))) fail(`絵 ${id}: 同じ敵なのに見た目が変わる`);
+    if (seen.has(sig)) fail(`絵 ${id}: ${seen.get(sig)} と見た目がまったく同じ`);
+    seen.set(sig, id);
+    if (e.boss && !a.aura) fail(`絵 ${id}: ボスなのにオーラが無い`);
+    if (e.majin && !a.barrier) fail(`絵 ${id}: 魔人なのに絶界が無い`);
+    try { G.paintMonster(ctx, 200, 240, 120, { id, shape: e.shape, eye: e.eye, boss: !!e.boss }); } catch (err) { fail(`絵 ${id}: 描くと例外 ${err.message}`); }
+  }
+  // look の指定が優先され、書いていない部品は無しになる
+  const custom = G.monsterLook("zz_test", { shape: "humanoid", tier: 3, look: { body: "blob", skin: "#123456" } });
+  if (custom.body !== "blob" || custom.skin !== "#123456" || custom.tail !== "none") fail("絵: look の指定が効かない");
+  try { G.paintMonster(ctx, 200, 240, 120, { id: "zz_unknown", shape: "dragon" }); } catch (err) { fail(`絵: データに無い敵で例外 ${err.message}`); }
+  if (failures === before) ok(`モンスターの絵（${seen.size} 種が別々の見た目・ボスはオーラ・魔人は絶界）`);
 }
 
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）

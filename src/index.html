@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>言霊の卓</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,8 +12,8 @@
     <h1>言霊の卓</h1>
     <span class="sub">ヴェルド大陸 ── 剣と魔法と、残酷な神々の見世物</span>
     <div class="tools">
-      <button class="btn" id="openWorld" type="button">世界の手引き</button>
-      <button class="btn" id="openTrophy" type="button">トロフィーと墓碑</button>
+      <button class="btn" id="openWorld" type="button"><span class="wide">世界の</span>手引き</button>
+      <button class="btn" id="openTrophy" type="button">トロフィー<span class="wide">と墓碑</span></button>
       <button class="btn" id="newGame" type="button" hidden>新しい冒険</button>
     </div>
   </header>
@@ -30,12 +31,13 @@
           <span class="gauge">MP <span class="g"><i id="mMpBar" class="mp"></i></span><span id="mMp"></span></span>
           <span id="mGold"></span>
         </div>
-        <button class="btn" id="openSheet" type="button">ステータス</button>
+        <button class="btn" id="openSheet" type="button" aria-controls="sheetBox" aria-expanded="false">ステータス</button>
       </div>
       <figure class="scene">
         <canvas id="scene" aria-hidden="true"></canvas>
         <figcaption><b id="sceneTitle"></b><span id="sceneDate" class="num"></span></figcaption>
       </figure>
+      <div class="logbar"><span>記録</span><button class="btn small" id="logToggle" type="button" aria-controls="log" aria-expanded="false">広げる</button></div>
       <div id="log" aria-live="polite"></div>
       <div id="panel"></div>
       <form id="act">
