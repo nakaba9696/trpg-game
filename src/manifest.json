@@ -19,7 +19,8 @@
     "data/items_2.js",
     "data/enemies_w1.js",
     "data/locations_w1.js",
-    "data/events_w1.js"
+    "data/events_w1.js",
+    "engine/savekeys.js"
   ],
   "ui": [
     "ui/art_monsters.js",

@@ -1,7 +1,7 @@
-# 言霊の卓 開発メモ
+# Morsveld 開発メモ
 
-ブラウザで遊ぶ一人用の TRPG 風ゲーム。HTML・CSS・素の JavaScript だけで作り、`tools/build.mjs` で1枚の HTML（`dist/kotodama.html`）にまとめる。
-遊ぶ場所は claude.ai の Artifact（持ち主が `dist/kotodama.html` を公開する）。ゲームの方向性は [docs/VISION.md](docs/VISION.md)、並行作業の分け方は [docs/ROADMAP.md](docs/ROADMAP.md)。
+ブラウザで遊ぶ一人用の TRPG 風ゲーム。HTML・CSS・素の JavaScript だけで作り、`tools/build.mjs` で1枚の HTML（`dist/morsveld.html`）にまとめる。
+遊ぶ場所は claude.ai の Artifact（持ち主が `dist/morsveld.html` を公開する）。ゲームの方向性は [docs/VISION.md](docs/VISION.md)、並行作業の分け方は [docs/ROADMAP.md](docs/ROADMAP.md)。
 
 ## 検証（PR の前に必ず）
 ```
