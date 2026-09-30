@@ -562,7 +562,7 @@
     if (!S.over && G.goalDone(S) && !S.flags.goalAnnounced) {
       S.flags.goalAnnounced = true;
       G.log("title", "宿願成就");
-      G.say(`「${S.goal.text}」──あなたは、ついにそれを成し遂げた。冒険を続けることも、ここで剣を置くこともできる。`);
+      G.say(`「${S.goal.text}」──あなたは、ついにそれを成し遂げた。`);
       G.chron(`宿願を果たす：${S.goal.text}`, "trophy");
     }
     G.checkTrophies();
