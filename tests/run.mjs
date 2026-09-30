@@ -67,6 +67,23 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`データの整合（場所 ${Object.keys(D.LOCS).length}・敵 ${Object.keys(D.ENEMIES).length}・アイテム ${Object.keys(D.ITEMS).length}・出来事 ${D.EVENTS.length}）`);
 }
 
+// ---------------------------------------------------------------- 1a. どの場所にも、どの出発地からも道か船で行ける
+{
+  const G = loadEngine();
+  const D = G.data;
+  const before = failures;
+  for (const [cls, c] of Object.entries(D.CLASSES)) {
+    const seen = new Set([c.start]), queue = [c.start];
+    while (queue.length) {
+      const L = D.LOCS[queue.shift()];
+      for (const to of [...Object.keys(L?.links || {}), ...Object.keys(L?.sea || {})]) if (!seen.has(to)) { seen.add(to); queue.push(to); }
+    }
+    for (const id of Object.keys(D.LOCS)) if (!seen.has(id)) fail(`職業 ${cls}: 出発地 ${c.start} から ${id} へ行けない`);
+    for (const [id, L] of Object.entries(D.LOCS)) if (!(L.x >= 0 && L.x <= 100 && L.y >= 0 && L.y <= 100)) fail(`${id}: 地図の位置が無い`);
+  }
+  if (failures === before) ok(`どの場所にも行ける（場所 ${Object.keys(D.LOCS).length}）`);
+}
+
 // ---------------------------------------------------------------- 1b. 敵の台詞と逃げ方（engine/foe_quirks.js）
 {
   const G = loadEngine();
@@ -442,6 +459,37 @@ const ok = (msg) => console.log("OK   " + msg);
   }
   if (G.companionWho({ name: "僧侶のセラ", cls: "僧侶" }).sex !== "女") fail("人物の絵: 仲間の名前から性別を拾えない");
   if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
+}
+
+// ---------------------------------------------------------------- 保存の鍵の移し替え（古い名前 → Morsveld）
+{
+  const G = loadEngine();
+  const before = failures;
+  const mem = (init) => {
+    const m = new Map(Object.entries(init));
+    return { m, getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
+  };
+  const K = G.SAVE_KEYS;
+  if (!K || !/^morsveld-/.test(K.save) || !/^morsveld-/.test(K.profile)) fail("保存の鍵: 新しい鍵が Morsveld になっていない");
+  const save = JSON.stringify({ v: 1, chron: [{ day: 1, text: "旅立ち" }] });
+  const prof = JSON.stringify({ trophies: { first: 1 }, graves: [{ id: "g1", name: "名無し" }] });
+  // 古い鍵だけ → 新しい鍵へ移り、古い鍵は消える（冒険・年表・トロフィー・墓碑）
+  const OLD = { save: "koto" + "dama3-save", profile: "koto" + "dama3-profile" }; // 古い鍵（git grep に掛からないように分けて書く）
+  const a = mem({ [OLD.save]: save, [OLD.profile]: prof });
+  const moved = G.migrateSaveKeys(a);
+  if (a.getItem(K.save) !== save) fail("保存の鍵: 古い冒険（年表）が移らない");
+  if (a.getItem(K.profile) !== prof) fail("保存の鍵: 古いトロフィー・墓碑が移らない");
+  if (a.m.has(OLD.save) || a.m.has(OLD.profile)) fail("保存の鍵: 古い鍵が残る");
+  if (moved.length !== 2) fail("保存の鍵: 移したものの数が違う");
+  // 新しい鍵が既にある → 上書きしない
+  const b = mem({ [OLD.save]: save, [K.save]: "新しい" });
+  G.migrateSaveKeys(b);
+  if (b.getItem(K.save) !== "新しい") fail("保存の鍵: 新しいセーブを古いもので上書きする");
+  // 二度目は何もしない・保存できない環境でも落ちない
+  if (G.migrateSaveKeys(a).length) fail("保存の鍵: 二度目にも移し替える");
+  G.migrateSaveKeys(null);
+  G.migrateSaveKeys({ getItem() { throw new Error("blocked"); } });
+  if (failures === before) ok("保存の鍵の移し替え（古い鍵 → " + K.save + "・" + K.profile + "）");
 }
 
 // ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）

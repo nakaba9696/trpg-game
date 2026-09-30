@@ -2,7 +2,7 @@
 // GM（Claude）は、claude.ai で開いたときだけ使える。レーン U（UI）が管理
 (function (G) {
   const $ = (s) => document.querySelector(s);
-  const LKEY = { save: "kotodama3-save", profile: "kotodama3-profile" };
+  const LKEY = G.SAVE_KEYS;
   const lget = (k) => { try { const j = localStorage.getItem(k); return j ? JSON.parse(j) : null; } catch { return null; } };
   const lset = (k, v) => { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 
@@ -75,6 +75,7 @@
   }
 
   // ---------------------------------------------------------------- 起動
+  try { G.migrateSaveKeys(localStorage); } catch {}
   G.P = lget(LKEY.profile) || { trophies: {}, graves: [] };
   G.ui.buildWorld();
   adopt(lget(LKEY.save));
