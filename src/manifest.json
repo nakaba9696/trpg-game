@@ -16,7 +16,8 @@
     "engine/foe_quirks.js",
     "data/events_town2.js",
     "data/events_who.js",
-    "data/items_2.js"
+    "data/items_2.js",
+    "engine/savekeys.js"
   ],
   "ui": [
     "ui/art_monsters.js",
