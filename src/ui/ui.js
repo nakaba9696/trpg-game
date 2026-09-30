@@ -267,14 +267,16 @@
   // 目的・日付・装備などの表（装備の枠を足すときはここの行に足す）
   function sheetGearRows() {
     const S = G.S;
-    const w = G.weapon(), ar = G.armor();
+    const w = G.weapon(), ar = G.armor(), rg = G.ring();
     return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
       ["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
+      ["装飾品", rg ? `${rg.name}（${G.ringEffect(rg)}）` : "なし", rg ? S.ring : null],
       ["状態", S.conds.length ? S.conds.join("、") : "なし"], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
   }
   function sheetGear() {
     const kv = h("dl", "kv");
-    sheetGearRows().forEach(([k, v]) => { kv.append(h("dt", "", k), h("dd", "", v)); });
+    // 3つ目があれば、その装備を外すボタンを付ける
+    sheetGearRows().forEach(([k, v, id]) => { const dd = h("dd", "", v); if (id) itemButtons(id, G.itemInfo(id), dd, true); kv.append(h("dt", "", k), dd); });
     return kv;
   }
   // 仲間の顔
@@ -300,12 +302,13 @@
     return sheetSection("quests", `受けている依頼（${S.quests.length}）`, ul);
   }
   // 持ち物1行のボタン（装備できる種類を増やすときはここ）
-  function itemButtons(id, it, li) {
+  function itemButtons(id, it, li, worn) {
     const S = G.S;
     const free = !busy && !S.over && S.mode !== "combat";
     const mk = (label, fn) => { const b = h("button", "btn small", label); b.type = "button"; b.disabled = !free; b.onclick = () => { fn(); after(); }; li.append(b); };
     if (it.type === "use" && (it.hp || it.mp)) mk("使う", () => G.useItem(id));
     if (it.type === "weapon" || it.type === "armor") mk("装備", () => G.equip(id));
+    if (it.type === "ring") { if (worn) mk("外す", () => G.unequip("ring")); else mk("装備", () => G.equip(id)); }
   }
   function sheetInventory() {
     const S = G.S;
@@ -382,7 +385,7 @@
   async function copyLog() {
     const S = G.S;
     const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}成長${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
-    const txt = `『言霊の卓』 ${S.clsName} ${S.profile.name} ── 目的：${S.goal.text}\n` + lines.join("\n");
+    const txt = `『Morsveld』 ${S.clsName} ${S.profile.name} ── 目的：${S.goal.text}\n` + lines.join("\n");
     try { await navigator.clipboard.writeText(txt); ui.toast("ログをコピーしました"); }
     catch { const ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.append(ta); ta.select(); try { document.execCommand("copy"); ui.toast("ログをコピーしました"); } catch { ui.toast("コピーできませんでした"); } ta.remove(); }
   }
@@ -410,6 +413,7 @@
     renderLog();
     renderPanel();
     renderSheet(ups);
+    if (G.sound) G.sound.react(S); // 増えた記録と状態の変化から音を選ぶ（ui/sound.js）
     if (!prevStats) prevStats = { ...S.stats };
   };
 

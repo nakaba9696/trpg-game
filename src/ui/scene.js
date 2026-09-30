@@ -1,5 +1,6 @@
 // 背景の絵。画像ファイルは使わず、場所と時間帯ごとに canvas に描く。
-// G.paintScene(canvas, { key, phase, seed, foes: [{ id, shape, eye, boss }] })
+// G.paintScene(canvas, { key, phase, seed, foes: [{ id, shape, eye, boss }], sky })
+// sky（{ season: "春|夏|秋|冬", weather: "晴|雨|霧|雪" }）を省くと、今の場所の G.skyAt を使う
 // 敵の絵は art_monsters.js の G.paintMonster が描く（無ければ下の影で代わりにする）
 // key を足すときは SCENES に関数を1つ足す。レーン A（絵）が管理
 (function (G) {
@@ -13,10 +14,131 @@
   const mix = (a, b, t) => { const x = hex(a), y = hex(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
   const rgba = (c, a) => { const [r, g, b] = hex(c); return `rgba(${r},${g},${b},${a})`; };
 
+  // ---------------------------------------------------------------- 季節と天候（A1）
+  // 今の場所の季節と天候は engine/weather.js の G.skyAt が決める。絵はそれを読むだけ。
+  // ENV は1枚描くあいだだけ使う（木・屋根・山の雪などの小道具が読む）
+  let ENV = { season: "", weather: "", night: false, key: "", snowCap: null };
+  const SEASON_ART = { 春: "spring", 夏: "summer", 秋: "autumn", 冬: "winter" };
+  const WEATHER_ART = { 雨: "rain", 霧: "fog", 雪: "snow" };
+  // 霧の色は町ごとに違う（港は潮の白、沼は緑、魔法都市は紫、砦は煤、朧島は提灯の色）
+  const FOG = { port: "#c9d2dc", swamp: "#a8c29a", magic: "#c0b2e8", fort: "#a39888", w1_oboro: "#e8c4a4", w1_catacomb: "#b4c8be", bones: "#c8c4b4", forest: "#c4d0c4" };
+  const fogColor = () => { const c = FOG[ENV.key] || "#d6dce4"; return ENV.night ? mix(c, "#1c2230", 0.6) : c; };
+  function setEnv(key, sk, opt) {
+    ENV = { season: "", weather: "", night: !!sk.night, key, snowCap: null };
+    if (key === "realm" || key === "majin") return;
+    const at = opt.sky || (G.skyAt && G.S ? G.skyAt(G.S.loc) : null);
+    if (!at || at.still) return;
+    ENV.season = SEASON_ART[at.season] || "";
+    ENV.weather = WEATHER_ART[at.weather] || "";
+    if (ENV.season === "winter") ENV.snowCap = sk.night ? "rgba(196,208,228,.6)" : "rgba(242,246,252,.92)";
+  }
+  // 季節と天候で空の色を変える（遠景・近景の色もここから作られる）
+  function skyFor(sk) {
+    const o = Object.assign({}, sk), n = sk.night;
+    if (ENV.season === "winter") { o.top = mix(o.top, "#8a98aa", n ? 0.1 : 0.25); o.bot = mix(o.bot, "#e4eaf2", n ? 0.1 : 0.3); }
+    else if (ENV.season === "autumn") o.bot = mix(o.bot, "#f0a060", n ? 0.05 : 0.18);
+    else if (ENV.season === "summer" && !n) o.top = mix(o.top, "#2f6fd0", 0.15);
+    if (ENV.weather === "rain" || ENV.weather === "snow") {
+      const c = ENV.weather === "snow" ? "#9aa4b2" : "#4a525c";
+      o.top = mix(o.top, n ? "#101418" : c, 0.7); o.bot = mix(o.bot, n ? "#1a2028" : mix(c, "#ffffff", 0.3), 0.65);
+      o.veil = "cloud"; o.sun = null;
+    } else if (ENV.weather === "fog") {
+      const c = fogColor();
+      o.top = mix(o.top, c, n ? 0.2 : 0.4); o.bot = mix(o.bot, c, n ? 0.35 : 0.6);
+      o.veil = "fog";
+    }
+    return o;
+  }
+  // 木の色。季節ごとに、針葉樹の色・広葉樹の色（秋の紅葉・春の花）・雪
+  function foliage(color) {
+    if (!/^#/.test(color)) return { needle: color };
+    const k = ENV.night ? 0.22 : 0.55;
+    const tint = (cs) => cs.map((c) => mix(color, c, k));
+    const heavy = ENV.key === "yakumo" || ENV.key === "w1_oboro";
+    switch (ENV.season) {
+      case "summer": return { needle: mix(color, "#2f6a2a", k * 0.6) };
+      case "spring": return { needle: mix(color, "#3f7a32", k * 0.5), broad: tint(heavy ? ["#f4c0cc", "#eaa8bc", "#f8d4dc"] : ["#8ab45a", "#f0c0cc", "#6a9a48"]) };
+      case "autumn": return { needle: mix(color, "#3a4a28", k * 0.3), broad: tint(heavy ? ["#c8281a", "#e0401e", "#b01e14", "#e87a2a"] : ["#c8481e", "#e0802a", "#b8301a", "#d8a030"]) };
+      case "winter": return { needle: color, snow: ENV.snowCap };
+      default: return { needle: color };
+    }
+  }
+  // 雨雲・雪雲
+  function clouds(ctx, w, h, sk, R) {
+    const c = sk.night ? "#0c1014" : mix(sk.top, "#2a3038", 0.35);
+    for (let i = 0; i < 14; i++) {
+      const x = R() * w, y = h * (0.02 + R() * 0.25), rx = w * (0.12 + R() * 0.15), ry = h * (0.04 + R() * 0.05);
+      ctx.fillStyle = rgba(c, 0.35 + R() * 0.3);
+      ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  // 地面に季節を足す（夏の草・春の花びら・秋の落ち葉・冬の積雪）
+  function seasonPass(ctx, w, h, R) {
+    const heavy = ENV.key === "yakumo" || ENV.key === "w1_oboro";
+    const falling = (n, cols, s) => {
+      for (let i = 0; i < n; i++) {
+        const x = R() * w, y = R() * h, a = R() * Math.PI;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.fillStyle = cols[i % cols.length];
+        ctx.beginPath(); ctx.ellipse(0, 0, s * (0.8 + R() * 0.6), s * 0.45, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      }
+    };
+    const dim = ENV.night ? 0.45 : 0.9;
+    if (ENV.season === "summer") {
+      ctx.strokeStyle = mix("#07080c", "#3d6b2a", ENV.night ? 0.18 : 0.45); ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let x = 0; x < w; x += 3 + R() * 4) { const l = 5 + R() * 9; ctx.moveTo(x, h); ctx.lineTo(x + (R() - 0.5) * 5, h - l); }
+      ctx.stroke();
+    } else if (ENV.season === "spring") {
+      falling(heavy ? 90 : 24, [`rgba(250,200,215,${dim})`, `rgba(255,228,236,${dim})`], 2.4);
+    } else if (ENV.season === "autumn") {
+      const cols = heavy ? [`rgba(210,50,30,${dim})`, `rgba(235,95,35,${dim})`, `rgba(180,30,24,${dim})`] : [`rgba(205,90,35,${dim})`, `rgba(225,150,50,${dim})`, `rgba(170,60,30,${dim})`];
+      falling(heavy ? 70 : 34, cols, 2.8);
+      for (let i = 0; i < w / 5; i++) { ctx.fillStyle = cols[i % cols.length]; ctx.fillRect(R() * w, h * (0.955 + R() * 0.045), 3 + R() * 3, 1.5 + R()); }
+    } else if (ENV.season === "winter" && ENV.snowCap) {
+      ctx.fillStyle = ENV.snowCap;
+      ctx.beginPath(); ctx.moveTo(0, h);
+      for (let x = 0; x <= w; x += 12) ctx.lineTo(x, h * (0.955 + 0.012 * Math.sin(x * 0.05) + R() * 0.006));
+      ctx.lineTo(w, h); ctx.fill();
+    }
+  }
+  // 霧（敵より奥）
+  function fogPass(ctx, w, h, R) {
+    if (ENV.weather !== "fog") return;
+    const c = fogColor(), a = ENV.night ? 0.3 : 0.42;
+    ctx.fillStyle = rgba(c, a * 0.4); ctx.fillRect(0, 0, w, h);
+    for (let i = 0; i < 6; i++) {
+      const y = h * (0.4 + i * 0.1) + (R() - 0.5) * h * 0.05, bh = h * (0.08 + R() * 0.08);
+      const g = ctx.createLinearGradient(0, y - bh, 0, y + bh);
+      g.addColorStop(0, rgba(c, 0)); g.addColorStop(0.5, rgba(c, a * (0.6 + R() * 0.4))); g.addColorStop(1, rgba(c, 0));
+      ctx.fillStyle = g; ctx.fillRect(0, y - bh, w, bh * 2);
+    }
+  }
+  // 雨と雪（敵より手前）。吹雪の場所は横殴り
+  function fallPass(ctx, w, h, R) {
+    if (ENV.weather === "rain") {
+      ctx.fillStyle = "rgba(16,22,32,.18)"; ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = ENV.night ? "rgba(170,185,210,.28)" : "rgba(200,212,230,.42)"; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i < w * 0.5; i++) { const x = R() * (w + 40), y = R() * h, l = 10 + R() * 14; ctx.moveTo(x, y); ctx.lineTo(x - l * 0.25, y + l); }
+      ctx.stroke();
+      ctx.strokeStyle = ENV.night ? "rgba(170,185,210,.25)" : "rgba(210,220,235,.4)";
+      for (let i = 0; i < w / 14; i++) { const x = R() * w, y = h * (0.93 + R() * 0.06); ctx.beginPath(); ctx.ellipse(x, y, 4 + R() * 3, 1.2, 0, 0, Math.PI * 2); ctx.stroke(); }
+    } else if (ENV.weather === "snow") {
+      const storm = ENV.key === "snow" || ENV.key === "snowcity" || ENV.key === "mountain";
+      if (storm) { ctx.fillStyle = ENV.night ? "rgba(160,170,190,.14)" : "rgba(232,238,246,.22)"; ctx.fillRect(0, 0, w, h); }
+      ctx.fillStyle = ENV.night ? "rgba(220,228,240,.6)" : "rgba(255,255,255,.85)";
+      for (let i = 0; i < w * (storm ? 0.7 : 0.35); i++) {
+        const x = R() * w, y = R() * h, r = 0.8 + R() * 1.8;
+        if (storm) { ctx.save(); ctx.translate(x, y); ctx.rotate(0.25); ctx.fillRect(0, 0, r * 3.5, r * 0.6); ctx.restore(); }
+        else { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+      }
+    }
+  }
+
   const SKIES = [
     { top: "#6f8fb8", bot: "#f0c79a", sun: "#fff1c9", night: false },  // 朝
     { top: "#4f7fbf", bot: "#bcd6ec", sun: "#fffbe8", night: false },  // 昼
-    { top: "#2c2346", bot: "#e2764a", sun: "#ffc27a", night: false },  // 夕
+    { top: "#2c2346", bot: "#e2764a", sun: "#ffc27a", night: false, dusk: true },  // 夕
     { top: "#070b18", bot: "#1f2a48", sun: null, night: true },        // 夜
   ];
   const RED_SKY = { top: "#140304", bot: "#7a1c12", sun: "#ff5a3a", night: true };
@@ -27,21 +149,22 @@
     g.addColorStop(1, sk.bot);
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
-    if (sk.night) {
+    if (sk.night && !sk.veil) {
       for (let i = 0; i < 90; i++) {
         ctx.fillStyle = `rgba(255,255,255,${0.2 + R() * 0.6})`;
         ctx.fillRect(R() * w, R() * h * 0.6, 1.2, 1.2);
       }
     }
-    if (sk.night || redMoon) {
+    if (sk.veil === "cloud") clouds(ctx, w, h, sk, R);
+    if ((sk.night && !sk.veil) || redMoon) {
       const mx = w * (0.15 + R() * 0.7), my = h * 0.18, mr = h * 0.07;
       ctx.fillStyle = redMoon ? "#e0442e" : "#f1ecd6";
       ctx.shadowColor = redMoon ? "#ff3b1f" : "#fff6d8";
       ctx.shadowBlur = 30;
       ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
-    } else if (sk.sun) {
-      const sx = w * (0.2 + R() * 0.6), sy = h * (sk.bot === "#e2764a" ? 0.55 : 0.2);
+    } else if (sk.sun && sk.veil !== "cloud") {
+      const sx = w * (0.2 + R() * 0.6), sy = h * (sk.dusk ? 0.55 : 0.2);
       const sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, h * 0.35);
       sg.addColorStop(0, rgba(sk.sun, 0.9)); sg.addColorStop(0.15, rgba(sk.sun, 0.5)); sg.addColorStop(1, rgba(sk.sun, 0));
       ctx.fillStyle = sg; ctx.fillRect(0, 0, w, h);
@@ -63,6 +186,7 @@
     ctx.fill();
   }
   function peaks(ctx, w, h, base, height, n, color, snow, R) {
+    if (ENV.season === "winter") snow = ENV.snowCap || "rgba(240,245,255,.7)";
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.moveTo(0, h);
@@ -84,11 +208,21 @@
     }
   }
   function pines(ctx, w, base, size, n, color, R) {
-    ctx.fillStyle = color;
+    const leaf = foliage(color);
     for (let i = 0; i < n; i++) {
       const x = R() * w, s = size * (0.6 + R() * 0.7), y = base + R() * size * 0.3;
-      ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.55, y); ctx.lineTo(x + s * 0.55, y); ctx.fill();
+      ctx.fillStyle = color;
       ctx.fillRect(x - s * 0.06, y, s * 0.12, s * 0.3);
+      // 秋と春は、針葉樹のあいだに葉の落ちる木が混じる（並びは季節で変えない）
+      if (leaf.broad && (i * 7) % 10 < 5) {
+        ctx.fillRect(x - s * 0.08, y - s * 0.9, s * 0.16, s * 0.9);
+        ctx.fillStyle = leaf.broad[i % leaf.broad.length];
+        ctx.beginPath(); ctx.arc(x, y - s * 1.2, s * 0.55, 0, Math.PI * 2); ctx.arc(x - s * 0.35, y - s * 0.85, s * 0.35, 0, Math.PI * 2); ctx.arc(x + s * 0.35, y - s * 0.9, s * 0.38, 0, Math.PI * 2); ctx.fill();
+        continue;
+      }
+      ctx.fillStyle = leaf.needle;
+      ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.55, y); ctx.lineTo(x + s * 0.55, y); ctx.fill();
+      if (leaf.snow) { ctx.fillStyle = leaf.snow; ctx.beginPath(); ctx.moveTo(x, y - s * 2.2); ctx.lineTo(x - s * 0.22, y - s * 1.35); ctx.lineTo(x, y - s * 1.5); ctx.lineTo(x + s * 0.22, y - s * 1.35); ctx.fill(); }
     }
   }
   function buildings(ctx, w, base, hmax, color, lit, R, roofs) {
@@ -98,6 +232,11 @@
       ctx.fillStyle = color;
       ctx.fillRect(x, base - bh, bw, bh + 2);
       if (roofs) { ctx.beginPath(); ctx.moveTo(x - 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.45); ctx.lineTo(x + bw + 3, base - bh); ctx.fill(); }
+      if (ENV.snowCap) {
+        ctx.fillStyle = ENV.snowCap;
+        if (roofs) { ctx.beginPath(); ctx.moveTo(x - 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.45); ctx.lineTo(x + bw + 3, base - bh); ctx.lineTo(x + bw / 2, base - bh - bw * 0.3); ctx.fill(); }
+        else ctx.fillRect(x, base - bh - 2, bw, 3);
+      }
       if (lit) {
         for (let wy = base - bh + 8; wy < base - 8; wy += 12) for (let wx = x + 5; wx < x + bw - 6; wx += 10) {
           if (R() < 0.35) { ctx.fillStyle = R() < 0.5 ? "#ffcf6e" : "#ffb04a"; ctx.fillRect(wx, wy, 4, 5); }
@@ -111,6 +250,7 @@
     ctx.fillRect(x - tw / 2, base - th, tw, th);
     ctx.fillStyle = roof || color;
     ctx.beginPath(); ctx.moveTo(x - tw / 2 - 4, base - th); ctx.lineTo(x, base - th - tw * 1.2); ctx.lineTo(x + tw / 2 + 4, base - th); ctx.fill();
+    if (ENV.snowCap) { ctx.fillStyle = ENV.snowCap; ctx.beginPath(); ctx.moveTo(x, base - th - tw * 1.2); ctx.lineTo(x - tw * 0.35, base - th - tw * 0.6); ctx.lineTo(x + tw * 0.35, base - th - tw * 0.6); ctx.fill(); }
     if (flag) { ctx.fillStyle = flag; ctx.fillRect(x, base - th - tw * 1.2 - 14, 1.5, 14); ctx.fillRect(x + 1.5, base - th - tw * 1.2 - 14, 12, 7); }
   }
   function glow(ctx, x, y, r, color, a) {
@@ -135,7 +275,7 @@
     town(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
       ridge(ctx, w, h, h * 0.6, h * 0.08, 1, far, R);
-      buildings(ctx, w, h * 0.78, h * 0.3, mid, sk.night || sk.top === "#2c2346", R, true);
+      buildings(ctx, w, h * 0.78, h * 0.3, mid, sk.night || sk.dusk, R, true);
       tower(ctx, w * 0.62, h * 0.78, 18, h * 0.42, mid, mid, "#b0342a");
       buildings(ctx, w, h * 0.93, h * 0.18, near, sk.night, R, true);
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.92, w, h);
@@ -208,13 +348,81 @@
       for (let i = 0; i < 8; i++) { const x = w * (0.05 + i * 0.12), y = h * 0.75 + R() * 10; glow(ctx, x, y, 22, "#ff8a3a", 0.55); ctx.fillStyle = "#ff9b4a"; ctx.fillRect(x - 4, y - 6, 8, 11); }
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.9, w, h);
     },
+    // W1：聖都サンクタ（白い城壁と、光の輪を戴く大聖堂）
+    w1_holy(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      const stone = mix(sk.bot, "#e8e2d2", sk.night ? 0.25 : 0.55), gold = sk.night ? "#b89a4a" : "#e0c060";
+      ridge(ctx, w, h, h * 0.64, h * 0.06, 1, far, R);
+      buildings(ctx, w, h * 0.8, h * 0.22, mix(stone, mid, 0.45), sk.night, R, true);
+      const cx = w * 0.5, base = h * 0.8;
+      ctx.fillStyle = stone; ctx.fillRect(cx - w * 0.16, base - h * 0.3, w * 0.32, h * 0.3);
+      ctx.beginPath(); ctx.moveTo(cx - w * 0.17, base - h * 0.3); ctx.lineTo(cx, base - h * 0.44); ctx.lineTo(cx + w * 0.17, base - h * 0.3); ctx.fill();
+      for (const sx of [-1, 1]) tower(ctx, cx + sx * w * 0.13, base - h * 0.3, 16, h * 0.22, stone, gold);
+      ctx.fillStyle = mix(stone, "#000000", 0.5); ctx.beginPath(); ctx.arc(cx, base - h * 0.12, h * 0.07, Math.PI, 0); ctx.fillRect(cx - h * 0.07, base - h * 0.12, h * 0.14, h * 0.12); ctx.fill();
+      const rw = ["#c2412f", "#2f63c2", "#e0b43a"];
+      for (let i = 0; i < 9; i++) { ctx.fillStyle = rgba(rw[i % 3], sk.night ? 0.9 : 0.7); const a = (i / 9) * Math.PI * 2; ctx.beginPath(); ctx.moveTo(cx, base - h * 0.23); ctx.arc(cx, base - h * 0.23, h * 0.045, a, a + Math.PI / 4.5); ctx.fill(); }
+      // 大聖堂の上に浮かぶ光の輪（聖女の印）
+      glow(ctx, cx, base - h * 0.5, h * 0.22, "#fff1c9", sk.night ? 0.5 : 0.35);
+      ctx.strokeStyle = rgba("#fff6d8", 0.85); ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(cx, base - h * 0.5, h * 0.09, h * 0.025, 0, 0, Math.PI * 2); ctx.stroke();
+      // 参道の巡礼者の列
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.9, w, h);
+      for (let i = 0; i < 14; i++) { const x = w * (0.08 + i * 0.06) + R() * 6, y = h * 0.905; ctx.beginPath(); ctx.arc(x, y - 13, 3, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.moveTo(x - 5, y); ctx.lineTo(x, y - 11); ctx.lineTo(x + 5, y); ctx.fill(); }
+    },
+    // W1：サンクタの地下墓地の入口（墓標の丘と、骨の口を開けた霊廟）
+    w1_catacomb(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ctx.fillStyle = "rgba(10,12,18,.35)"; ctx.fillRect(0, 0, w, h);
+      ridge(ctx, w, h, h * 0.6, h * 0.05, 1, far, R);
+      tower(ctx, w * 0.82, h * 0.6, 14, h * 0.2, far, far); tower(ctx, w * 0.9, h * 0.6, 10, h * 0.14, far, far);
+      ridge(ctx, w, h, h * 0.76, h * 0.05, 0.7, mid, R);
+      ctx.fillStyle = mid;
+      for (let i = 0; i < 26; i++) { const x = R() * w, y = h * (0.74 + R() * 0.14), s = 5 + R() * 7; ctx.fillRect(x - 1, y - s * 2, 2.5, s * 2); ctx.fillRect(x - s * 0.6, y - s * 1.5, s * 1.2 + 1, 2.5); }
+      const cx = w * 0.4, base = h * 0.9;
+      ctx.fillStyle = near; ctx.fillRect(cx - 70, base - 80, 140, 80);
+      ctx.beginPath(); ctx.moveTo(cx - 80, base - 80); ctx.lineTo(cx, base - 125); ctx.lineTo(cx + 80, base - 80); ctx.fill();
+      ctx.fillRect(cx - 3, base - 150, 6, 30); ctx.fillRect(cx - 12, base - 142, 24, 5);
+      ctx.fillStyle = "#050406"; ctx.beginPath(); ctx.arc(cx, base - 40, 28, Math.PI, 0); ctx.fillRect(cx - 28, base - 40, 56, 40); ctx.fill();
+      ctx.fillStyle = "#cfc6b0";
+      for (let i = 0; i < 7; i++) { const a = Math.PI + (i + 0.5) * (Math.PI / 7); ctx.beginPath(); ctx.arc(cx + Math.cos(a) * 33, base - 40 + Math.sin(a) * 33, 4.5, 0, Math.PI * 2); ctx.fill(); }
+      for (const sx of [-1, 1]) { const x = cx + sx * 50; glow(ctx, x, base - 30, 30, "#ffb04a", 0.6); ctx.fillStyle = "#ffe0a0"; ctx.fillRect(x - 2, base - 34, 4, 8); }
+      glow(ctx, cx, base - 20, 40, "#7dffb0", 0.18);
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.9, w, h);
+      particles(ctx, w, h * 0.9, 50, "rgba(200,210,220,.12)", 3, R);
+    },
+    // W1：八雲の朧島（夜の明けない祭りの島。欠けた月には歯型）
+    w1_oboro(ctx, w, h, sk, R) {
+      const night = SKIES[3];
+      const sg = ctx.createLinearGradient(0, 0, 0, h);
+      sg.addColorStop(0, night.top); sg.addColorStop(1, "#2a1e3a");
+      ctx.fillStyle = sg; ctx.fillRect(0, 0, w, h);
+      particles(ctx, w, h * 0.55, 90, "rgba(255,255,255,.55)", 1.2, R);
+      const [far, mid, near] = layers(night);
+      const mx = w * 0.78, my = h * 0.2, mr = h * 0.09;
+      glow(ctx, mx, my, mr * 4, "#ffe8b0", 0.25);
+      ctx.fillStyle = "#f6e6c0"; ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = night.top; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(mx + mr * 0.9, my - mr * 0.5 + i * mr * 0.5, mr * 0.28, 0, Math.PI * 2); ctx.fill(); }
+      ctx.fillStyle = mix(night.bot, "#0d1a2a", 0.4); ctx.fillRect(0, h * 0.66, w, h);
+      for (let i = 0; i < 30; i++) { ctx.fillStyle = rgba("#ffb46a", 0.1 + R() * 0.2); ctx.fillRect(R() * w, h * (0.68 + R() * 0.2), 14 + R() * 30, 1.5); }
+      ctx.fillStyle = "#0c0f18"; ctx.beginPath(); ctx.moveTo(w * 0.02, h * 0.68); ctx.quadraticCurveTo(w * 0.32, h * 0.06, w * 0.6, h * 0.68); ctx.fill();
+      ctx.fillStyle = mid; ctx.fillRect(w * 0.29, h * 0.39, 26, 12); ctx.beginPath(); ctx.moveTo(w * 0.29 - 8, h * 0.39); ctx.quadraticCurveTo(w * 0.29 + 13, h * 0.33, w * 0.29 + 34, h * 0.39); ctx.fill();
+      for (let i = 0; i < 14; i++) { const t = i / 13, x = w * (0.1 + t * 0.2), y = h * (0.66 - t * 0.25); glow(ctx, x, y, 12, "#ff8a3a", 0.6); ctx.fillStyle = "#ff9b4a"; ctx.fillRect(x - 2, y - 3, 4, 6); }
+      const yx = w * 0.62, yb = h * 0.86;
+      ctx.strokeStyle = near; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(yx - 26, yb); ctx.lineTo(yx - 16, yb - 70); ctx.moveTo(yx + 26, yb); ctx.lineTo(yx + 16, yb - 70); ctx.moveTo(yx - 22, yb - 35); ctx.lineTo(yx + 22, yb - 35); ctx.stroke();
+      ctx.fillStyle = near; ctx.fillRect(yx - 24, yb - 74, 48, 6); ctx.beginPath(); ctx.moveTo(yx - 30, yb - 74); ctx.lineTo(yx, yb - 92); ctx.lineTo(yx + 30, yb - 74); ctx.fill();
+      for (let i = 0; i < 9; i++) { const x = yx - 150 + i * 38, y = yb - 78 + Math.abs(i - 4) * 9; glow(ctx, x, y, 16, "#ff6a3a", 0.55); ctx.fillStyle = i % 2 ? "#ff9b4a" : "#ffd36a"; ctx.fillRect(x - 3, y - 4, 6, 8); }
+      const tx = w * 0.14, ty = h * 0.9;
+      ctx.fillStyle = "#b8321f"; ctx.fillRect(tx - 24, ty - 52, 5, 52); ctx.fillRect(tx + 19, ty - 52, 5, 52); ctx.fillRect(tx - 32, ty - 57, 64, 6); ctx.fillRect(tx - 26, ty - 44, 52, 4);
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.9, w, h);
+      for (let i = 0; i < 5; i++) { const x = w * (0.3 + R() * 0.5), y = h * 0.9; ctx.beginPath(); ctx.arc(x, y - 12, 3.2, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.moveTo(x - 5, y); ctx.lineTo(x, y - 10); ctx.lineTo(x + 5, y); ctx.fill(); ctx.beginPath(); ctx.moveTo(x + 3, y - 4); ctx.quadraticCurveTo(x + 14, y - 8, x + 10, y - 16); ctx.lineTo(x + 6, y - 5); ctx.fill(); }
+    },
     forest(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
       ridge(ctx, w, h, h * 0.58, h * 0.06, 1, far, R);
       pines(ctx, w, h * 0.68, h * 0.12, 40, mix(far, mid, 0.5), R);
       pines(ctx, w, h * 0.82, h * 0.17, 22, mid, R);
       pines(ctx, w, h * 1.02, h * 0.28, 9, near, R);
-      if (!sk.night) for (let i = 0; i < 5; i++) { ctx.fillStyle = rgba(sk.sun || "#fff", 0.07); ctx.beginPath(); const x = R() * w; ctx.moveTo(x, 0); ctx.lineTo(x + 30, 0); ctx.lineTo(x + 110, h); ctx.lineTo(x + 60, h); ctx.fill(); }
+      if (!sk.night && !sk.veil) for (let i = 0; i < 5; i++) { ctx.fillStyle = rgba(sk.sun || "#fff", 0.07); ctx.beginPath(); const x = R() * w; ctx.moveTo(x, 0); ctx.lineTo(x + 30, 0); ctx.lineTo(x + 110, h); ctx.lineTo(x + 60, h); ctx.fill(); }
     },
     plains(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
@@ -353,6 +561,31 @@
       ctx.fillStyle = "#b39a52"; ctx.fillRect(w * 0.46, h * 0.38, w * 0.08, h * 0.33); ctx.beginPath(); ctx.arc(w * 0.5, h * 0.38, w * 0.04, Math.PI, 0); ctx.fill();
       ctx.fillStyle = "rgba(0,0,0,.25)"; for (let i = 0; i < 4; i++) { ctx.fillRect(w * (0.08 + i * 0.1), 0, 14, h * 0.71); ctx.fillRect(w * (0.62 + i * 0.1), 0, 14, h * 0.71); }
     },
+    // M1：ゼファラの学院（天井までの書架、浮かぶ灯り、床の魔法陣、結晶の窓）
+    academy(ctx, w, h, R) {
+      interior(ctx, w, h, "#3a3450", "#221e30", R);
+      const cx = w * 0.5;
+      ctx.fillStyle = "#12101c"; ctx.beginPath(); ctx.arc(cx, h * 0.3, h * 0.16, Math.PI, 0); ctx.fill(); ctx.fillRect(cx - h * 0.16, h * 0.3, h * 0.32, h * 0.26);
+      glow(ctx, cx, h * 0.34, h * 0.3, "#7fe3ff", 0.35);
+      ctx.fillStyle = "#bff4ff"; ctx.beginPath(); ctx.moveTo(cx, h * 0.18); ctx.lineTo(cx + h * 0.05, h * 0.34); ctx.lineTo(cx, h * 0.5); ctx.lineTo(cx - h * 0.05, h * 0.34); ctx.fill();
+      for (const side of [0, 1]) {
+        const x0 = side ? w * 0.66 : w * 0.04, bw = w * 0.3;
+        ctx.fillStyle = "#1a1424"; ctx.fillRect(x0, h * 0.06, bw, h * 0.66);
+        for (let s = 0; s < 6; s++) {
+          const y = h * (0.16 + s * 0.1);
+          ctx.fillStyle = "#0e0a14"; ctx.fillRect(x0, y, bw, 4);
+          for (let x = x0 + 3; x < x0 + bw - 6;) { const bk = 4 + R() * 6, bh = h * (0.05 + R() * 0.035); ctx.fillStyle = mix(["#6a2a3a", "#2a4a6a", "#5a4a2a", "#3a5a3a", "#4a3a6a"][Math.floor(R() * 5)], "#000000", 0.35); ctx.fillRect(x, y - bh, bk, bh); x += bk + 1; }
+        }
+      }
+      for (let i = 0; i < 7; i++) { const x = w * (0.2 + R() * 0.6), y = h * (0.1 + R() * 0.35); glow(ctx, x, y, 26, i % 2 ? "#c0a0ff" : "#ffd88a", 0.55); ctx.fillStyle = "#fff4d8"; ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill(); }
+      ctx.strokeStyle = rgba("#9fd8ff", 0.55); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.ellipse(cx, h * 0.86, w * 0.22, h * 0.07, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(cx, h * 0.86, w * 0.15, h * 0.045, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2, b = ((i + 2) / 6) * Math.PI * 2; ctx.moveTo(cx + Math.cos(a) * w * 0.15, h * 0.86 + Math.sin(a) * h * 0.045); ctx.lineTo(cx + Math.cos(b) * w * 0.15, h * 0.86 + Math.sin(b) * h * 0.045); } ctx.stroke();
+      glow(ctx, cx, h * 0.86, w * 0.2, "#7fc8ff", 0.2);
+      ctx.fillStyle = "#1a1424"; ctx.fillRect(w * 0.36, h * 0.66, w * 0.28, 8); ctx.fillRect(w * 0.38, h * 0.67, 6, h * 0.1); ctx.fillRect(w * 0.6, h * 0.67, 6, h * 0.1);
+      ctx.fillStyle = "#e8dcc0"; ctx.save(); ctx.translate(w * 0.47, h * 0.645); ctx.rotate(-0.06); ctx.fillRect(0, 0, w * 0.06, 6); ctx.restore();
+    },
     dungeon(ctx, w, h, R) {
       ctx.fillStyle = "#0c0b0d"; ctx.fillRect(0, 0, w, h);
       for (let i = 0; i < 5; i++) {
@@ -417,13 +650,19 @@
     if (canvas.width !== w * dpr || canvas.height !== h * dpr) { canvas.width = w * dpr; canvas.height = h * dpr; }
     const ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const R = rng(String(opt.seed || opt.key));
-    const key = opt.key;
-    if (IN[key]) IN[key](ctx, w, h, R);
+    const seed = String(opt.seed || opt.key);
+    const R = rng(seed), RE = rng(seed + ":env");
+    // 絵の決まっていない施設は、施設の名前の室内があればそれを使う（学院など）
+    const key = opt.key || (G.S && G.S.mode === "fac" && IN[G.S.fac] ? G.S.fac : opt.key);
+    if (IN[key]) { ENV = { season: "", weather: "", night: false, key, snowCap: null }; IN[key](ctx, w, h, R); }
     else {
-      const sk = key === "realm" || key === "majin" ? RED_SKY : SKIES[opt.phase || 0];
-      sky(ctx, w, h, sk, R, opt.redMoon);
+      const sk0 = key === "realm" || key === "majin" ? RED_SKY : SKIES[opt.phase || 0];
+      setEnv(key, sk0, opt);
+      const sk = skyFor(sk0);
+      sky(ctx, w, h, sk, rng(seed + ":sky"), opt.redMoon);
       (OUT[key] || OUT.plains)(ctx, w, h, sk, R);
+      seasonPass(ctx, w, h, RE);
+      fogPass(ctx, w, h, RE);
     }
     const foes = opt.foes || [];
     const n = foes.length;
@@ -434,6 +673,7 @@
       if (G.paintMonster) G.paintMonster(ctx, x, h * 0.97, s, f);
       else foe(ctx, x, h * 0.97, s, f.shape, f.eye || "#ff3a3a");
     });
+    fallPass(ctx, w, h, RE);
     vignette(ctx, w, h, 0.55);
   };
 })(globalThis.G = globalThis.G || {});

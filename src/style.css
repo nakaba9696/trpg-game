@@ -17,6 +17,8 @@
   --field: #ffffff;
   --scrim: rgba(20, 24, 28, .45);
   --shadow: 0 1px 0 rgba(28, 33, 39, .06);
+  --blood: #6e1a17;
+  --f-logo: "Cinzel", "Trajan Pro", "Times New Roman", serif;
   --f-display: "Zen Antique", "Zen Old Mincho", "Yu Mincho", serif;
   --f-body: "Zen Old Mincho", "Yu Mincho", "Hiragino Mincho ProN", serif;
   --f-ui: "BIZ UDPGothic", "Yu Gothic UI", "Hiragino Sans", sans-serif;
@@ -27,7 +29,7 @@
     --paper: #14171b; --sheet: #1b1f24; --ink: #e3e6e0; --muted: #98a2ab; --rule: #333a42;
     --accent: #93acea; --accent-soft: #263452; --ok: #6cc28f; --ng: #e57b70; --crit: #e0b04f;
     --gold: #e0b94f; --silver: #b3bcc6; --bronze: #d08a5c; --hp: #e0695d; --mp: #7f9fe6;
-    --field: #111418; --scrim: rgba(0, 0, 0, .6); --shadow: none;
+    --field: #111418; --scrim: rgba(0, 0, 0, .6); --shadow: none; --blood: #b4453c;
   }
 }
 :root[data-theme="dark"] {
@@ -35,7 +37,7 @@
   --paper: #14171b; --sheet: #1b1f24; --ink: #e3e6e0; --muted: #98a2ab; --rule: #333a42;
   --accent: #93acea; --accent-soft: #263452; --ok: #6cc28f; --ng: #e57b70; --crit: #e0b04f;
   --gold: #e0b94f; --silver: #b3bcc6; --bronze: #d08a5c; --hp: #e0695d; --mp: #7f9fe6;
-  --field: #111418; --scrim: rgba(0, 0, 0, .6); --shadow: none;
+  --field: #111418; --scrim: rgba(0, 0, 0, .6); --shadow: none; --blood: #b4453c;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -52,6 +54,16 @@ button { cursor: pointer; }
 .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding-block: 16px 10px; border-bottom: 2px solid var(--ink); }
 .top h1 { font-family: var(--f-display); font-weight: 400; font-size: 30px; margin: 0; letter-spacing: .08em; }
 .top .sub { color: var(--muted); font-size: 13px; }
+/* 題のロゴ。Mors（死）を血の色、veld を墨の色で */
+.logo, .logoBig { font-family: var(--f-logo); font-weight: 700; text-transform: uppercase; line-height: 1; white-space: nowrap; }
+.logo .mors, .logoBig .mors { color: var(--blood); }
+.top h1.logo { font-size: 26px; letter-spacing: .16em; }
+body:has(#setup:not([hidden])) .top h1.logo, body:has(#setup:not([hidden])) .top .sub { visibility: hidden; }
+.titleHero { text-align: center; padding-block: 28px 8px; }
+.logoBig { display: flex; align-items: center; justify-content: center; font-size: clamp(34px, 10.5vw, 82px); letter-spacing: .2em; padding-left: .2em; text-shadow: 0 2px 0 rgba(0, 0, 0, .08); }
+.titleHero .reading { font-family: var(--f-body); font-size: 12px; letter-spacing: .6em; padding-left: .6em; color: var(--muted); margin-top: 14px; }
+.titleHero .reading::before, .titleHero .reading::after { content: ""; display: inline-block; width: clamp(28px, 10vw, 72px); height: 1px; background: var(--blood); vertical-align: middle; margin-inline: 14px; opacity: .7; }
+.titleHero .tagline { font-family: var(--f-body); font-size: clamp(15px, 4.2vw, 18px); letter-spacing: .12em; margin: 18px 0 0; }
 .top .tools { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
 .btn { border: 1px solid var(--rule); background: var(--sheet); border-radius: 3px; padding: 5px 10px; font-size: 13px; }
 .btn:hover { border-color: var(--ink); }
@@ -274,6 +286,8 @@ dialog::backdrop { background: var(--scrim); }
   #mbar { margin-inline: -12px; padding-inline: 12px; }
   .top { padding-block: 10px 8px; gap: 4px 10px; align-items: center; }
   .top h1 { font-size: 22px; }
+  .top h1.logo { font-size: 19px; letter-spacing: .12em; }
+  .titleHero { padding-block: 16px 0; }
   .top .sub, .top .wide { display: none; }
   .top .tools { gap: 4px; }
   .top .tools .btn { padding: 6px 8px; font-size: 12px; min-height: 36px; }
@@ -346,3 +360,10 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
   .pface > .grid2 { grid-template-columns: 1fr; }
   #profFace { width: 120px; height: 150px; }
 }
+
+/* 音の設定（ui/sound.js） */
+#dlgSound { width: min(420px, calc(100vw - 32px)); }
+.dbody.sound .srow { display: grid; grid-template-columns: 5em 1fr 2.5em; align-items: center; gap: 10px; font-family: var(--f-ui); font-size: 14px; }
+.dbody.sound .srow:first-child { display: flex; }
+.dbody.sound input[type="range"] { width: 100%; accent-color: var(--accent); }
+.dbody.sound output { text-align: right; }

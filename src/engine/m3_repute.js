@@ -36,7 +36,7 @@
     if (head === "castle" && G.wanted() && arg !== "throne") {
       G.log("you", "王城の門をくぐる");
       S.fac = null;
-      G.startEvent("m3_castle");
+      G.startEvent((D.M3_CASTLE || {})[S.loc] || "m3_castle");
       return;
     }
     const gold = S.gold;

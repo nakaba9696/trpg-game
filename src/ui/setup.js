@@ -77,9 +77,17 @@
       draft.profile = fullProfile();
     }
     root.textContent = "";
+    // 題（ロゴと副題）。副題は index.html のヘッダーと同じ文
+    const hero = h("div", "titleHero");
+    const logo = h("div", "logoBig");
+    logo.setAttribute("role", "img");
+    logo.setAttribute("aria-label", "Morsveld");
+    logo.append(h("span", "mors", "Mors"), h("span", "veld", "veld"));
+    hero.append(logo, h("div", "reading", "モルスヴェルド"), h("p", "tagline", $("#tagline") ? $("#tagline").textContent : ""));
+    root.append(hero);
     const intro = h("div");
-    intro.append(h("p", "lead", "ヴェルド大陸。断界山脈の向こうには魔王の治める魔物界があり、人の世では国と国が争っている。そして時おり、剣も魔法も通じない「魔人」が現れ、街ひとつを気まぐれに滅ぼしていく。さらにその上では、神々が世界を見世物として眺めている。"));
-    const p2 = h("p", "lead", "あなたはこの大陸に生きる、ひとりの冒険者。能力値が行動の成功率を決め、使った能力値は伸びていく。まずは、あなた自身を作ろう。");
+    intro.append(h("p", "lead", "ここはヴェルド大陸。東の山脈の向こうは魔物の土地で、人の国々は砦でそれを食い止めながら、互いにいがみ合っている。ときどき、剣も魔法も通じない「魔人」というものが現れて、町をひとつ気まぐれに消していくらしい。見た者はたいてい帰ってこないので、みな嵐のようなものだと諦めている。"));
+    const p2 = h("p", "lead", "あなたにできることは、たぶん、そう多くない。それでも、今日から冒険者だ。能力値が行動の成功率を決め、使った能力値は伸びていく。まずは、あなた自身を作ろう。");
     p2.style.marginTop = "8px";
     intro.append(p2);
     root.append(intro);

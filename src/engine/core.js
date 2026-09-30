@@ -50,7 +50,7 @@
 
   // ---------------------------------------------------------------- 持ち物
   G.count = (id) => G.S.inv[id] || 0;
-  G.has = (id) => G.count(id) > 0 || G.S.weapon === id || G.S.armor === id;
+  G.has = (id) => G.count(id) > 0 || G.S.weapon === id || G.S.armor === id || G.S.ring === id;
   G.give = (id, n) => {
     n = n || 1;
     const it = G.itemInfo(id);
@@ -68,12 +68,23 @@
   };
   G.weapon = () => D.ITEMS[G.S.weapon] || D.ITEMS.fists;
   G.armor = () => D.ITEMS[G.S.armor] || null;
+  G.ring = () => D.ITEMS[G.S.ring] || null; // 装飾品（古いセーブには S.ring が無い）
   G.gearBonus = (kind) => {
     let b = 0;
     Object.keys(G.S.inv).forEach((id) => { const it = D.ITEMS[id]; if (it && it.type === "gear" && it.bonus && it.bonus[kind]) b += it.bonus[kind]; });
+    const r = G.ring();
+    if (r && r.bonus && r.bonus[kind]) b += r.bonus[kind];
     return b;
   };
-  G.magicBonus = () => (G.weapon().magic || 0) + ((G.armor() && G.armor().magic) || 0);
+  G.magicBonus = () => (G.weapon().magic || 0) + ((G.armor() && G.armor().magic) || 0) + ((G.ring() && G.ring().magic) || 0);
+  // 装飾品の効き目を短い文にする（画面と店の説明用）
+  G.ringEffect = (it) => {
+    const KIND = { fire: "炎の魔法", heal: "癒し", steal: "盗み", trap: "罠", talk: "話術" };
+    const out = Object.entries(it.stats || {}).map(([k, n]) => k + G.sign(n));
+    Object.entries(it.bonus || {}).forEach(([k, n]) => out.push((KIND[k] || k) + G.sign(n)));
+    if (it.magic) out.push("魔法" + G.sign(it.magic));
+    return out.join("・") + (it.cursed ? "・呪い" : "");
+  };
   G.equip = (id) => {
     const S = G.S;
     const it = D.ITEMS[id];
@@ -86,8 +97,29 @@
       if (S.armor) G.give(S.armor);
       G.take(id);
       S.armor = id;
+    } else if (it.type === "ring") {
+      if (G.ring() && !G.unequip("ring")) return false;
+      G.take(id);
+      S.ring = id;
     } else return false;
     G.note(`${it.name}を装備した。`);
+    return true;
+  };
+
+  // 装備を外して持ち物に戻す（今は装飾品だけ）。呪われた物は指の皮ごと持っていかれる
+  G.unequip = (slot) => {
+    const S = G.S;
+    if (slot !== "ring" || !S.ring) return false;
+    const it = G.ring();
+    if (it && it.cursed) {
+      const n = Math.min(3, S.hp - 1);
+      if (n > 0) S.hp -= n;
+      G.say(`${it.name}は、はがすようにしか外れなかった。指の皮がめくれた。`);
+      if (n > 0) G.note(`HP -${n}`);
+    }
+    G.give(S.ring);
+    S.ring = "";
+    G.note(`${it ? it.name : "装飾品"}を外した。`);
     return true;
   };
 
@@ -95,6 +127,7 @@
   G.useItem = (id) => {
     const S = G.S;
     const it = D.ITEMS[id];
+    if (it && it.type === "tome") return G.readTome(id);
     if (!S || S.over || S.mode === "combat" || !it || it.type !== "use" || !(it.hp || it.mp) || !G.take(id)) return false;
     G.log("you", `${it.name}を使う`);
     if (it.hp) { G.heal(it.hp); G.note(it.hp > 100 ? "HP が全快した。" : `HP +${it.hp}`); }
@@ -107,6 +140,7 @@
     const S = G.S;
     let v = S.stats[k];
     if (k === "敏捷" && G.armor()) v += G.armor().agi || 0;
+    if (G.ring() && G.ring().stats) v += G.ring().stats[k] || 0;
     if (S.conds.includes("毒") && (k === "筋力" || k === "体力")) v -= 10;
     if (S.conds.includes("呪い")) v -= 5;
     return v;
@@ -322,6 +356,39 @@
     return true;
   };
 
+  // ---------------------------------------------------------------- 魔法の習得（M1）
+  // 炎と癒しは誰でも使える。ほかの術（D.SPELLS）は、学院か魔導書で覚えて S.spells に持つ（古いセーブには無い）
+  G.knows = (id) => { const sp = D.SPELLS && D.SPELLS[id]; return !!sp && (!!sp.base || (G.S.spells || []).includes(id)); };
+  G.learnSpell = (id) => {
+    const S = G.S;
+    const sp = D.SPELLS && D.SPELLS[id];
+    if (!sp || G.knows(id)) return false;
+    S.spells = [...(S.spells || []), id];
+    G.note(`${sp.name}を覚えた。（${sp.hint}）`);
+    G.chron(`${sp.name}を覚える`);
+    return true;
+  };
+  // 借りた力の代償。術を大失敗したときに払う。今は借り（S.magicDebt）が積もるだけ。正気（M5）はここに繋ぐ
+  G.payDebt = (n) => {
+    const S = G.S;
+    S.magicDebt = (S.magicDebt || 0) + n;
+    G.note("どこか遠くで、帳面に何かが書き足された気がする。");
+  };
+  // 魔導書を読み解く（知力）。覚えても本は残る
+  G.tomeChance = (id) => G.chance("知力", (D.ITEMS[id] && D.ITEMS[id].learn) || "普通");
+  G.readTome = (id) => {
+    const S = G.S;
+    const it = D.ITEMS[id];
+    if (!S || S.over || S.mode === "combat" || !it || it.type !== "tome" || !S.inv[id] || G.knows(it.teach)) return false;
+    G.log("you", `${it.name}を読み解く`);
+    G.pass(1);
+    const r = G.check("知力", it.learn || "普通", "魔導書を読み解く");
+    if (r.ok) { G.say("文字の並びが、ふいに意味を持った。誰かが耳元で、読み方を教えてくれたような気がした。"); G.learnSpell(it.teach); }
+    else if (r.fumble) { G.say("読み違えた一行が、指に絡みついて離れない。"); G.payDebt(1); }
+    else G.say("頁の上で文字が泳ぐ。今日は読めそうにない。");
+    return true;
+  };
+
   // ---------------------------------------------------------------- 出来事の結果を当てはめる
   G.apply = (o) => {
     const S = G.S;
@@ -439,7 +506,7 @@
       goal: { id: opt.goal, text: opt.goalText || D.GOALS[opt.goal].text },
       stats, caps: { ...opt.caps }, startStats: { ...stats },
       maxHp: G.maxHpOf(stats), hp: G.maxHpOf(stats), maxMp: G.maxMpOf(stats), mp: G.maxMpOf(stats),
-      gold: c.gold, fame: 0, title: "", inv: { ...c.items }, weapon: c.weapon, armor: c.armor,
+      gold: c.gold, fame: 0, title: "", inv: { ...c.items }, weapon: c.weapon, armor: c.armor, ring: "",
       companions: [], loc: c.start, visited: {}, day: 1, phase: 0, turn: 0,
       mode: "explore", fac: null, event: null, combat: null, depth: 0, travel: null,
       quests: [], board: null, recruits: null, flags: {}, conds: [], memos: [], chronicle: [], log: [],
@@ -447,6 +514,7 @@
       clungUsed: false, over: "", deathCause: "", startedAt: Date.now(),
     };
     G.S = S;
+    S.spells = [...((D.SPELL_START && D.SPELL_START[opt.cls]) || [])]; // 覚えている術（M1）
     S.visited[S.loc] = true;
     const L = G.loc();
     G.chron(`${L.name}にて、${c.name}${S.profile.name}の冒険が始まる。目的は「${S.goal.text}」`, "start");
