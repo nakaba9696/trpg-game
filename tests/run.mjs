@@ -1,35 +1,13 @@
 // エンジンの自動テスト（DOM なしで動く）。node tests/run.mjs
 // 1. データの整合（存在しない場所・敵・アイテムを参照していないか）
 // 2. ランダムに遊び続けるテスト（例外が出ないか、数値が範囲に収まるか）
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import vm from "node:vm";
-import path from "node:path";
-
-const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "src");
-const manifest = JSON.parse(readFileSync(path.join(root, "manifest.json"), "utf8"));
-
-function loadEngine() {
-  const ctx = vm.createContext({ console });
-  for (const f of manifest.engine) vm.runInContext(readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
-  return ctx.G;
-}
+// 3. 釣り合いの測定（職業ごとの数字を出すだけ。失敗にはしない）。tests/balance.mjs
+import { loadEngine, seeded } from "./lib.mjs";
+import { measureBalance } from "./balance.mjs";
 
 let failures = 0;
 const fail = (msg) => { failures++; console.log("FAIL " + msg); };
 const ok = (msg) => console.log("OK   " + msg);
-
-// 決まった乱数（再現できるように）
-function seeded(seed) {
-  let s = seed >>> 0;
-  return () => {
-    s = (s + 0x6d2b79f5) >>> 0;
-    let t = s;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 // ---------------------------------------------------------------- 1. データの整合
 {
@@ -147,6 +125,13 @@ function seeded(seed) {
     bossKills += G.S.counters.bosses;
   }
   if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
+}
+
+// ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）
+try {
+  measureBalance();
+} catch (e) {
+  console.log("NOTE 釣り合いの測定を出せなかった（失敗にはしない）: " + (e.stack || e));
 }
 
 console.log(failures ? `DONE failures=${failures}` : "DONE failures=0");
