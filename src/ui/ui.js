@@ -79,6 +79,14 @@
     box.append(dice, h("span", "num", `→ ${e.roll}`));
     box.append(h("span", "verdict " + (e.crit ? "crit" : e.ok ? "ok" : "ng"), e.label));
     if (e.growth) box.append(h("span", "grow num", `${e.stat} 成長 ${e.growth[0]}→${e.growth[1]}`));
+    if (e.rr) box.append(h("span", "fine", `（振り直し。前の出目 ${e.rr.roll}）`));
+    // M7：失敗した判定の横に「振り直す（残り n）」
+    if (G.rerollTarget && G.rerollTarget(e) && !busy) {
+      const b = h("button", "btn small", `振り直す（残り ${G.rerolls()}）`);
+      b.type = "button";
+      b.onclick = () => { if (!busy) { G.act("rr:go"); after(); } };
+      box.append(b);
+    }
     return box;
   }
   const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" };
@@ -268,7 +276,7 @@
     const pf = face("sface", heroWho(S), 72, 90);
     pf.title = "人物を見る";
     pf.onclick = () => ui.openProfile();
-    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）`));
+    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）${G.reputeLabel ? G.reputeLabel() : ""}`));
     const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
     head.append(pf, hd, close);
     return head;
@@ -301,7 +309,7 @@
     return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
       ["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
       ["装飾品", rg ? `${rg.name}（${G.ringEffect(rg)}）` : "なし", rg ? S.ring : null],
-      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
+      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
   }
   function sheetGear() {
     const kv = h("dl", "kv");
@@ -342,7 +350,7 @@
     const S = G.S;
     const free = !busy && !S.over && S.mode !== "combat";
     const mk = (label, fn) => { const b = h("button", "btn small", label); b.type = "button"; b.disabled = !free; b.onclick = () => { fn(); after(); }; li.append(b); };
-    if (it.type === "use" && (it.hp || it.mp)) mk("使う", () => G.useItem(id));
+    if (it.type === "use" && (it.hp || it.mp || it.reroll)) mk("使う", () => G.useItem(id));
     if (it.type === "weapon" || it.type === "armor") mk("装備", () => G.equip(id));
     if (it.type === "ring") { if (worn) mk("外す", () => G.unequip("ring")); else mk("装備", () => G.equip(id)); }
   }
