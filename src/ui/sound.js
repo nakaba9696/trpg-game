@@ -309,7 +309,7 @@
 
   // 場所・施設・天候から環境音を選ぶ（S.weather は、天候の仕組みが入ったときのための予約）
   const SEA = { port: 1, yakumo: 1 };
-  const WINDY = { snow: 1, mountain: 1, plains: 1, realm: 1, swamp: 1, forest: 1, snowcity: 0 };
+  const WINDY = { snow: 1, mountain: 1, plains: 1, realm: 1, swamp: 1, forest: 1, snowcity: 0, e2_garden: 1, onigashima: 1 };
   snd.ambFor = (S) => {
     if (!S || S.over) return null;
     const L = G.data.LOCS[S.loc] || {};
@@ -317,7 +317,7 @@
     if (/rain|雨|嵐/.test(w) && !(S.mode === "fac") && !(L.type === "dungeon" && S.depth > 0)) return "rain";
     if (S.mode === "fac") return S.fac === "inn" || S.fac === "tavern" ? "fire" : null;
     if (L.type === "dungeon" && S.depth > 0) return L.scene === "majin" ? "dread" : "cave";
-    if (L.scene === "majin" || L.scene === "realm") return "dread";
+    if (L.scene === "majin" || L.scene === "realm" || L.scene === "e2_kitchen") return "dread";
     if (L.type === "town") return SEA[L.scene] ? "sea" : "town";
     if (WINDY[L.scene] !== undefined || L.type === "wild") return "wind";
     return null;
@@ -388,21 +388,24 @@
     try { w = G.S === S && G.weapon ? G.weapon() : null; } catch {}
     const ctx = { foes, magic: false, blunt: !!(w && BLUNT.test(w.name)) };
     const cues = [];
-    const add = (c) => { if (c && !cues.includes(c)) cues.push(c); };
+    const from = []; // 音ごとの元になった記録（戦闘の演出と同じ瞬間に鳴らすため）
+    const add = (c, e) => { if (c && !cues.includes(c)) { cues.push(c); from.push(e || null); } };
     news.forEach((e) => {
       if (e.k === "you") ctx.magic = MAGIC.test(e.text || "");
-      add(cueOf(e, ctx));
+      add(cueOf(e, ctx), e);
     });
     if (!fresh) {
-      if (S.combat && !prev.combat && S.combat.foes.some((f) => { const d = G.data.ENEMIES[f.id]; return d && (d.majin || (d.boss && d.tier >= 5)); })) cues.unshift("majin");
+      if (S.combat && !prev.combat && S.combat.foes.some((f) => { const d = G.data.ENEMIES[f.id]; return d && (d.majin || (d.boss && d.tier >= 5)); })) { cues.unshift("majin"); from.unshift(null); }
       if (S.gold > prev.gold && !cues.includes("coin")) add("coin");
       const inv = Object.values(S.inv || {}).reduce((a, n) => a + n, 0);
       if (inv > prev.inv && !cues.includes("item") && !cues.includes("coin")) add("item");
-      if (S.over === "dead" && !prev.over) { cues.length = 0; cues.push("death"); }
-      else if (S.over === "end" && !prev.over) { cues.length = 0; cues.push("trophy"); }
+      if (S.over === "dead" && !prev.over) { cues.length = from.length = 0; cues.push("death"); }
+      else if (S.over === "end" && !prev.over) { cues.length = from.length = 0; cues.push("trophy"); }
       if (!cues.length && news.length) add("page");
     }
     prev = { S, foes, gold: S.gold, inv: Object.values(S.inv || {}).reduce((a, n) => a + n, 0), combat: !!S.combat, over: S.over };
+    snd.cueFrom = from.slice(0, 5);
+    snd.cueNews = news;
     return cues.slice(0, 5);
   };
   snd.forget = () => { prev = null; seen = null; };
@@ -418,7 +421,9 @@
   snd.react = (S) => {
     hookMain();
     const cues = snd.cues(S);
-    cues.forEach((c, i) => snd.play(c, i * 0.17));
+    // 戦闘の演出（ui/fx.js）がある記録の音は、その絵が出る瞬間に鳴らす。ほかは少しずつずらす
+    const at = G.fx && G.fx.plan ? new Map(G.fx.plan(snd.cueNews).map((p) => [p.src, p.at / 1000])) : null;
+    cues.forEach((c, i) => { const e = snd.cueFrom[i]; snd.play(c, at && e && at.has(e) ? at.get(e) : i * 0.17); });
     if (S) snd.ambient(snd.ambFor(S));
   };
 
