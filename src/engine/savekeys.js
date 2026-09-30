@@ -1,4 +1,4 @@
-// ブラウザに保存するときの鍵。題を「言霊の卓」から Morsveld に変えたので、古い鍵のセーブを新しい鍵へ移す。
+// ブラウザに保存するときの鍵。題を Morsveld に変えたので、古い名前の鍵のセーブを新しい鍵へ移す。
 // storage は localStorage と同じ形（getItem・setItem・removeItem）。DOM には触らない。レーン U（UI）が管理
 (function (G) {
   G.SAVE_KEYS = { save: "morsveld-save", profile: "morsveld-profile" };

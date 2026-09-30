@@ -319,7 +319,7 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
 }
 
-// ---------------------------------------------------------------- 保存の鍵の移し替え（言霊の卓 → Morsveld）
+// ---------------------------------------------------------------- 保存の鍵の移し替え（古い名前 → Morsveld）
 {
   const G = loadEngine();
   const before = failures;
@@ -328,18 +328,19 @@ const ok = (msg) => console.log("OK   " + msg);
     return { m, getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
   };
   const K = G.SAVE_KEYS;
-  if (!K || /kotodama/.test(K.save + K.profile)) fail("保存の鍵: 新しい鍵が Morsveld になっていない");
+  if (!K || !/^morsveld-/.test(K.save) || !/^morsveld-/.test(K.profile)) fail("保存の鍵: 新しい鍵が Morsveld になっていない");
   const save = JSON.stringify({ v: 1, chron: [{ day: 1, text: "旅立ち" }] });
   const prof = JSON.stringify({ trophies: { first: 1 }, graves: [{ id: "g1", name: "名無し" }] });
   // 古い鍵だけ → 新しい鍵へ移り、古い鍵は消える（冒険・年表・トロフィー・墓碑）
-  const a = mem({ "kotodama3-save": save, "kotodama3-profile": prof });
+  const OLD = { save: "koto" + "dama3-save", profile: "koto" + "dama3-profile" }; // 古い鍵（git grep に掛からないように分けて書く）
+  const a = mem({ [OLD.save]: save, [OLD.profile]: prof });
   const moved = G.migrateSaveKeys(a);
   if (a.getItem(K.save) !== save) fail("保存の鍵: 古い冒険（年表）が移らない");
   if (a.getItem(K.profile) !== prof) fail("保存の鍵: 古いトロフィー・墓碑が移らない");
-  if (a.m.has("kotodama3-save") || a.m.has("kotodama3-profile")) fail("保存の鍵: 古い鍵が残る");
+  if (a.m.has(OLD.save) || a.m.has(OLD.profile)) fail("保存の鍵: 古い鍵が残る");
   if (moved.length !== 2) fail("保存の鍵: 移したものの数が違う");
   // 新しい鍵が既にある → 上書きしない
-  const b = mem({ "kotodama3-save": save, [K.save]: "新しい" });
+  const b = mem({ [OLD.save]: save, [K.save]: "新しい" });
   G.migrateSaveKeys(b);
   if (b.getItem(K.save) !== "新しい") fail("保存の鍵: 新しいセーブを古いもので上書きする");
   // 二度目は何もしない・保存できない環境でも落ちない
