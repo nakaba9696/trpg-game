@@ -11,14 +11,14 @@
   D.LOCS = {
     karna: {
       name: "自由都市カルナ", region: "自由都市連合", type: "town", danger: 0, scene: "town", x: 44, y: 55,
-      desc: "自由都市連合の首都。商人と傭兵と詐欺師がひしめき、金さえあれば何でも買える。冒険者ギルドの本部がある。",
+      desc: "自由都市連合の首都。商人と傭兵と詐欺師がひしめき、金さえあれば何でも買える。冒険者ギルドの本部がある。両替商の看板には、三つの国の金貨の刻印が並んでいる。",
       fac: ["inn", "tavern", "shop", "guild", "church", "train", "alley"],
       shop: ["dagger", "longsword", "axe", "rapier", "leather", "chain", "holywater", "lute"],
       links: { nerva: 2, forest: 1, plains: 2, swamp: 2, zephara: 4 },
     },
     nerva: {
       name: "港町ネルヴァ", region: "自由都市連合", type: "town", danger: 0, scene: "port", x: 22, y: 70,
-      desc: "霧深い港町。八雲への船が出る。海賊と密輸業者が昼間から酒を飲んでいる。",
+      desc: "霧深い港町。八雲への船が出る。海賊と密輸業者が昼間から酒を飲んでいる。桟橋では、耳の尖った船乗りと獣の耳の荷揚げ人足が、同じ樽に腰かけて同じ魚を焼いている。",
       fac: ["inn", "tavern", "shop", "guild", "alley"],
       shop: ["dagger", "longsword", "leather", "katana"],
       links: { karna: 2, ruins: 2 }, sea: { yakumo: { days: 5, cost: 40 } },
@@ -42,7 +42,7 @@
     },
     leavel: {
       name: "聖王都リーヴェル", region: "聖王国リーヴェル", type: "town", danger: 0, scene: "castle", capital: true, x: 14, y: 36,
-      desc: "白い城壁の王都。若き女王エレオノーラが治める。華やかな大通りの裏で、貴族たちが私腹を肥やしている。",
+      desc: "白い城壁の王都。若き女王エレオノーラが治める。華やかな大通りの裏で、貴族たちが私腹を肥やしている。城の高い窓の一つだけが、毎晩遅くまで灯っている。書庫の窓だと、門番は言う。",
       fac: ["inn", "tavern", "shop", "guild", "church", "train", "castle"],
       shop: ["longsword", "rapier", "chain", "plate", "holywater", "mithril"],
       links: { plains: 2 },
@@ -54,28 +54,28 @@
     },
     garmund: {
       name: "帝都ガルムント", region: "鉄血帝国ガルムント", type: "town", danger: 0, scene: "snowcity", capital: true, x: 28, y: 9,
-      desc: "黒い石で築かれた軍都。皇帝は病床にあり、皇子たちが刺客を放ち合っている。",
+      desc: "黒い石で築かれた軍都。皇帝は病床にあり、皇子たちが刺客を放ち合っている。辻の張り紙は「〇〇皇子を讃えよ」の上に別の皇子の名が貼り重ねられ、壁から指一本ぶん浮いている。",
       fac: ["inn", "tavern", "shop", "guild", "train", "alley", "castle"],
       shop: ["axe", "chain", "plate", "longsword", "potion"],
       links: { frost: 2 },
     },
     fort: {
       name: "黒鉄の砦", region: "人類の最前線", type: "town", danger: 0, scene: "fort", x: 62, y: 26,
-      desc: "断界山脈を越える唯一の道を塞ぐ巨大な砦。毎晩のように魔物が押し寄せる。",
+      desc: "断界山脈を越える唯一の道を塞ぐ巨大な砦。毎晩のように魔物が押し寄せる。兵の大半は帝国の訛りで話し、王国の兵と共和国の術師が、夜の見張りの順番でいつも揉めている。",
       fac: ["inn", "shop", "guild", "train"],
       shop: ["axe", "chain", "plate", "potion", "holywater"],
       links: { frost: 3, zephara: 3, mountains: 2 },
     },
     zephara: {
-      name: "魔法都市ゼファラ", region: "魔法国ゼファラ", type: "town", danger: 0, scene: "magic", x: 70, y: 50,
-      desc: "空に浮かぶ水晶塔の都。魔法を使えない者は門の外で暮らしている。",
+      name: "魔法都市ゼファラ", region: "ゼファラ共和国", type: "town", danger: 0, scene: "magic", x: 70, y: 50,
+      desc: "空に浮かぶ水晶塔の都。塔の下の議場には、エルフと獣人と、ほんのわずかな人間の代表が並ぶ。術の縁を持たない者は門の外で暮らしていて、門の外の靴屋は、塔の石畳ですり減った靴ばかり直している。東の空には、いつも雲に届く大樹の影が見える。",
       fac: ["inn", "tavern", "shop", "guild", "train", "alley"],
       shop: ["staff", "robe", "grimoire", "manawater", "elixir"],
       links: { karna: 4, fort: 3, swamp: 2 },
     },
     swamp: {
-      name: "毒沼の湿地", region: "魔法国ゼファラ", type: "wild", danger: 2, scene: "swamp", x: 60, y: 76,
-      desc: "ゼファラの廃棄物が流れ込んだ沼。溶けかけた何かがうごめいている。",
+      name: "毒沼の湿地", region: "ゼファラ共和国", type: "wild", danger: 2, scene: "swamp", x: 60, y: 76,
+      desc: "ゼファラの塔から出た滓が流し込まれる沼。溶けかけた何かがうごめいている。沼の渡し守は、何か話しかけては、誰の話だったかを忘れる。",
       pool: ["slime", "spider", "zombie", "orc"], links: { karna: 2, zephara: 2 },
     },
     mountains: {

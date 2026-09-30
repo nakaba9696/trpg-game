@@ -60,6 +60,7 @@ button { cursor: pointer; }
 .top h1.logo { font-size: 26px; letter-spacing: .16em; }
 body:has(#setup[data-step="title"]:not([hidden])) .top h1.logo, body:has(#setup[data-step="title"]:not([hidden])) .top .sub { visibility: hidden; }
 .titleHero { text-align: center; padding-block: 28px 8px; }
+#setup[data-step="title"] { margin-inline: auto; } /* PC でタイトルを真ん中に */
 .logoBig { display: flex; align-items: center; justify-content: center; font-size: clamp(34px, 10.5vw, 82px); letter-spacing: .2em; padding-left: .2em; text-shadow: 0 2px 0 rgba(0, 0, 0, .08); }
 .titleHero .reading { font-family: var(--f-body); font-size: 12px; letter-spacing: .6em; padding-left: .6em; color: var(--muted); margin-top: 14px; }
 .titleHero .reading::before, .titleHero .reading::after { content: ""; display: inline-block; width: clamp(28px, 10vw, 72px); height: 1px; background: var(--blood); vertical-align: middle; margin-inline: 14px; opacity: .7; }
@@ -174,6 +175,26 @@ body:has(#setup[data-step="title"]:not([hidden])) .top h1.logo, body:has(#setup[
 .foe .g { height: 6px; background: var(--paper); border: 1px solid var(--rule); position: relative; }
 .foe .g i { position: absolute; inset: 0 auto 0 0; background: var(--ng); }
 .foe.down { opacity: .35; }
+/* U4：狙いの敵・依頼への道の印・押せない理由・HP が危ない帯・遊び方の一行 */
+.foe { position: relative; }
+.foe.aim { box-shadow: inset 0 0 0 2px var(--ng); }
+.foe .aimTag { position: absolute; top: -9px; right: 8px; background: var(--ng); color: var(--paper); font-size: 11px; font-weight: 700; line-height: 1; padding: 3px 6px; border-radius: 3px; letter-spacing: .08em; }
+.act em { font-style: normal; font-size: 11.5px; font-weight: 700; line-height: 1.4; }
+.act .mark { color: var(--accent); }
+.act.marked { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.act .why { color: var(--ng); }
+.act:disabled:has(.why) { opacity: .6; }
+.danger { border: 1px solid var(--ng); border-left-width: 4px; color: var(--ng); background: var(--sheet); padding: 6px 10px; font-size: 13.5px; font-weight: 700; border-radius: 3px; }
+.tip { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; border: 1px dashed var(--accent); background: var(--accent-soft); padding: 7px 10px; font-size: 13px; line-height: 1.6; border-radius: 3px; }
+.tip span { flex: 1 1 16em; }
+.inv li:has(.way) { flex-wrap: wrap; }
+.inv .way { display: block; flex-basis: 100%; }
+.sheet-actions .saved { flex-basis: 100%; }
+#mbar.danger #mHp { color: var(--ng); font-weight: 700; }
+#mbar.danger .gauge:first-child .g { border-color: var(--ng); animation: hpPulse 1.2s ease-in-out infinite; }
+@keyframes hpPulse { 50% { box-shadow: 0 0 0 2px var(--ng); } }
+@media (prefers-reduced-motion: reduce) { #mbar.danger .gauge:first-child .g { animation: none; box-shadow: 0 0 0 1px var(--ng); } }
+#openWorld.fresh::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 5px; border-radius: 50%; background: var(--ng); vertical-align: 2px; }
 
 #act { position: sticky; bottom: 0; padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid var(--rule); display: grid; gap: 8px; z-index: 4; }
 .freeRow { display: flex; gap: 8px; }
@@ -264,9 +285,9 @@ dialog::backdrop { background: var(--scrim); }
 .world dd { margin: 0; }
 @media (max-width: 520px) { .world dl { grid-template-columns: 1fr; } .world dd { margin-bottom: 6px; } }
 
-#toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 30; background: var(--ink); color: var(--paper);
-  padding: 10px 18px; border-radius: 3px; font-size: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.25); max-width: calc(100vw - 32px); }
-#toast b { color: var(--gold); }
+#toast { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); z-index: 30; background: #1c2127; color: #f4f5f1;
+  padding: 10px 18px; border-radius: 3px; font-size: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.25); width: max-content; max-width: calc(100vw - 32px); pointer-events: none; display: grid; gap: 2px; }
+#toast b { color: #e0b94f; } /* 通知はどちらのテーマでも暗い地に明るい字（金の字を読めるように） */
 
 /* ---------------------------------------------------------------- スマホ（狭い画面） */
 @media (max-width: 880px) {
@@ -324,7 +345,8 @@ dialog::backdrop { background: var(--scrim); }
   .dhead h2 { font-size: 18px; }
   .dbody { padding: 12px 12px 16px; }
   .dhead .btn { min-height: 40px; }
-  #toast { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  /* スマホでは上部バーの下に出す（下の行動ボタンと入力欄を隠さない） */
+  #toast { top: calc(100px + env(safe-area-inset-top, 0px)); font-size: 13px; padding: 8px 14px; }
 }
 
 /* 人物の絵（art_people.js） */
