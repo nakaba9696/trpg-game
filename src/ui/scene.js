@@ -1,5 +1,6 @@
 // 背景の絵。画像ファイルは使わず、場所と時間帯ごとに canvas に描く。
-// G.paintScene(canvas, { key, phase, seed, foes: [{ shape, eye, boss }] })
+// G.paintScene(canvas, { key, phase, seed, foes: [{ id, shape, eye, boss }] })
+// 敵の絵は art_monsters.js の G.paintMonster が描く（無ければ下の影で代わりにする）
 // key を足すときは SCENES に関数を1つ足す。レーン A（絵）が管理
 (function (G) {
   // ---------------------------------------------------------------- 小道具
@@ -426,11 +427,13 @@
     }
     const foes = opt.foes || [];
     const n = foes.length;
-    foes.forEach((f, i) => {
-      const x = w * (n === 1 ? 0.5 : 0.3 + (0.4 * i) / Math.max(1, n - 1));
-      foe(ctx, x, h * 0.97, h * (f.boss ? 0.62 : 0.45), f.shape, f.eye || "#ff3a3a");
-    });
     if (n) { ctx.fillStyle = "rgba(90,0,0,.18)"; ctx.fillRect(0, 0, w, h); }
+    foes.forEach((f, i) => {
+      const x = w * (n === 1 ? 0.5 : 0.22 + (0.56 * i) / Math.max(1, n - 1));
+      const s = h * (f.boss ? 0.78 : 0.58) * (n > 2 ? 0.85 : 1);
+      if (G.paintMonster) G.paintMonster(ctx, x, h * 0.97, s, f);
+      else foe(ctx, x, h * 0.97, s, f.shape, f.eye || "#ff3a3a");
+    });
     vignette(ctx, w, h, 0.55);
   };
 })(globalThis.G = globalThis.G || {});

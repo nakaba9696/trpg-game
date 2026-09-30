@@ -20,7 +20,7 @@
   }
   function paint(force) {
     const S = G.S;
-    const foes = S.combat ? G.alive().map((f) => { const e = D.ENEMIES[f.id]; return { shape: e.shape, eye: e.eye, boss: !!e.boss }; }) : [];
+    const foes = S.combat ? G.alive().map((f) => { const e = D.ENEMIES[f.id]; return { id: f.id, shape: e.shape, eye: e.eye, boss: !!e.boss }; }) : [];
     const key = sceneKey();
     const sig = [key, S.phase, S.loc, S.depth, JSON.stringify(foes), $("#scene").clientWidth].join("|");
     if (!force && sig === lastPaint) return;
