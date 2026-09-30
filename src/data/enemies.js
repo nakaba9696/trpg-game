@@ -27,7 +27,7 @@
     ogre: { name: "オーガ", tier: 3, hp: 36, dmg: [2, 6, 2], hit: 55, def: 10, agi: 25, will: 60, mres: 0, gold: [10, 40], loot: [["fang", 0.6]], shape: "giant", eye: "#e05a3a", desc: "人を丸かじりにする巨人。頭は悪い。" },
     zombie: { name: "屍の群れ", tier: 3, hp: 30, dmg: [1, 8, 1], hit: 50, def: 0, agi: 15, will: 999, mres: 0, undead: true, gold: [0, 20], loot: [["relic", 0.05]], shape: "swarm", eye: "#7dffb0", desc: "呪いで動く死体。痛みを知らない。" },
     wyvern: { name: "翼竜", tier: 3, hp: 32, dmg: [2, 6, 1], hit: 60, def: 15, agi: 65, will: 80, mres: 5, gold: [0, 0], loot: [["wyvernscale", 0.6]], shape: "winged", eye: "#ffb33a", desc: "空から襲いかかる小型の竜。" },
-    deserter: { name: "帝国脱走兵", tier: 3, hp: 26, dmg: [1, 10, 1], hit: 65, def: 15, agi: 45, will: 45, mres: 0, gold: [10, 40], loot: [["chain", 0.1], ["potion", 0.3]], shape: "humanoid", eye: "#d9d9d9", bribe: 50, desc: "飢えた元兵士。腕は確か。" },
+    deserter: { name: "帝国脱走兵", tier: 3, hp: 26, dmg: [1, 10, 1], hit: 60, def: 15, agi: 45, will: 45, mres: 0, gold: [10, 40], loot: [["chain", 0.1], ["potion", 0.3]], shape: "humanoid", eye: "#d9d9d9", bribe: 50, desc: "飢えた元兵士。腕は確か。" },
     ninja: { name: "はぐれ忍", tier: 3, hp: 24, dmg: [1, 8, 3], hit: 70, def: 20, agi: 75, will: 60, mres: 10, gold: [10, 30], loot: [["smoke", 0.5]], shape: "humanoid", eye: "#ff4d4d", desc: "抜け忍。音もなく背後に立つ。" },
     mimic: { name: "ミミック", tier: 3, hp: 28, dmg: [2, 6, 1], hit: 65, def: 20, agi: 30, will: 999, mres: 0, gold: [30, 90], loot: [["gem", 0.4]], shape: "blob", eye: "#ff4d4d", desc: "宝箱のふりをした魔物。" },
 

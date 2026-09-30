@@ -31,14 +31,14 @@
     mage: {
       name: "魔法使い", start: "zephara",
       blurb: "ゼファラの学院を追われた魔法使い。炎の魔法で敵を焼く。",
-      base: { 筋力: 20, 体力: 25, 敏捷: 30, 知力: 50, 魔力: 55, 魅力: 25 },
-      weapon: "staff", armor: null, items: { grimoire: 1, herb: 1, manawater: 2 }, gold: 30, culture: "west",
+      base: { 筋力: 20, 体力: 36, 敏捷: 35, 知力: 45, 魔力: 55, 魅力: 25 },
+      weapon: "staff", armor: "leather", items: { grimoire: 1, herb: 2, manawater: 2 }, gold: 30, culture: "west",
     },
     priest: {
       name: "破戒神官", start: "leavel",
       blurb: "光天教会の神官くずれ。癒しの奇跡を使うが、信仰心はあやしい。",
-      base: { 筋力: 30, 体力: 35, 敏捷: 25, 知力: 40, 魔力: 45, 魅力: 40 },
-      weapon: "mace", armor: "leather", items: { holysymbol: 1, herb: 2, ale: 1 }, gold: 30, culture: "west",
+      base: { 筋力: 30, 体力: 40, 敏捷: 30, 知力: 35, 魔力: 45, 魅力: 35 },
+      weapon: "mace", armor: "leather", items: { holysymbol: 1, herb: 3, ale: 1 }, gold: 30, culture: "west",
     },
     samurai: {
       name: "侍", start: "nerva",
