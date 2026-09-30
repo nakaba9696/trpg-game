@@ -30,6 +30,7 @@
   window.addEventListener("resize", () => { if (G.S && !$("#play").hidden) paint(true); });
 
   // ---------------------------------------------------------------- 記録
+  // 1件の記録を要素にする。新しい種類の記録（戦闘の演出など）は logEntryEl に足す
   function checkEl(e) {
     const box = h("div", "check");
     box.append(h("span", "what", `${e.reason}【${e.stat}${e.diff ? "・" + e.diff : ""}】`), h("span", "rate num", `成功率 ${e.chance}%`));
@@ -41,61 +42,93 @@
     if (e.growth) box.append(h("span", "grow num", `${e.stat} 成長 ${e.growth[0]}→${e.growth[1]}`));
     return box;
   }
+  const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" };
+  function logEntryEl(e) {
+    if (e.k === "dice") return checkEl(e);
+    return h("p", LOG_CLS[e.k] || "l-sys", e.k === "you" ? "▶ " + e.text : e.text);
+  }
+  const LOG_KEEP = 90;
+  let logSeen = -1; // 前回描いたときの記録の数（-1 は初回）
   function renderLog() {
     const S = G.S;
     const log = $("#log");
     log.textContent = "";
-    S.log.slice(-90).forEach((e) => {
-      if (e.k === "dice") { log.append(checkEl(e)); return; }
-      const cls = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" }[e.k] || "l-sys";
-      log.append(h("p", cls, e.k === "you" ? "▶ " + e.text : e.text));
-    });
-    log.scrollTop = log.scrollHeight;
+    const shown = S.log.slice(-LOG_KEEP);
+    const fresh = logSeen < 0 ? 0 : Math.min(shown.length, Math.max(0, S.log.length - logSeen));
+    logSeen = S.log.length;
+    shown.forEach((e, i) => { const el = logEntryEl(e); if (fresh && i >= shown.length - fresh) el.classList.add("new"); log.append(el); });
+    // 新しく増えた記録の頭から読めるようにする（増えていなければ末尾）
+    const first = fresh ? log.children[shown.length - fresh] : null;
+    log.scrollTop = first ? Math.max(0, first.offsetTop - log.offsetTop - 8) : log.scrollHeight;
+    if (fresh && narrow()) {
+      // スマホでは、画面が記録より下にあるときだけ記録まで戻す
+      const top = log.getBoundingClientRect().top;
+      if (top < mbarHeight()) log.scrollIntoView({ block: "start", behavior: "smooth" });
+    }
   }
+  const narrow = () => window.matchMedia("(max-width: 880px)").matches;
+  const mbarHeight = () => { const m = $("#mbar"); return m ? m.getBoundingClientRect().height : 0; };
+  // 記録の開閉（スマホで記録を画面いっぱいに広げる）
+  ui.setLogExpanded = (on) => {
+    document.body.classList.toggle("log-open", on);
+    const b = $("#logToggle");
+    b.setAttribute("aria-expanded", on);
+    b.textContent = on ? "たたむ" : "広げる";
+  };
+  $("#logToggle").onclick = () => ui.setLogExpanded(!document.body.classList.contains("log-open"));
 
   // ---------------------------------------------------------------- 行動
-  function renderPanel() {
+  // 行動の欄 #panel は「終わりの札」「敵の札」「行動ボタン」の順に積む
+  function renderEnd(panel) {
     const S = G.S;
-    const panel = $("#panel");
-    panel.textContent = "";
-    if (S.over) {
-      const f = h("div", "fin");
-      f.append(h("b", "", S.over === "dead" ? `── ${S.profile.name}、ここに眠る ──` : `── ${S.profile.name}の物語、ここに終わる ──`));
-      const row = h("div", "start");
-      const b1 = h("button", "btn", "年表を見る"); b1.type = "button"; b1.onclick = () => ui.openChronicle(S, true);
-      const b2 = h("button", "btn primary", "新しい冒険を始める"); b2.type = "button"; b2.onclick = () => G.main.toSetup();
-      row.append(b1, b2); f.append(row); panel.append(f);
-      return;
-    }
-    if (S.combat) {
-      const foes = h("div", "foes");
-      S.combat.foes.forEach((f) => {
-        const c = h("div", "foe");
-        c.style.opacity = f.hp > 0 ? 1 : 0.35;
-        c.append(h("b", "", f.name));
-        const g = h("span", "g"); const i = h("i"); i.style.width = (f.hp / f.max) * 100 + "%"; g.append(i); c.append(g);
-        c.append(h("span", "num fine", `HP ${f.hp}/${f.max}`));
-        foes.append(c);
-      });
-      panel.append(foes);
-    }
+    const f = h("div", "fin");
+    f.append(h("b", "", S.over === "dead" ? `── ${S.profile.name}、ここに眠る ──` : `── ${S.profile.name}の物語、ここに終わる ──`));
+    const row = h("div", "start");
+    const b1 = h("button", "btn", "年表を見る"); b1.type = "button"; b1.onclick = () => ui.openChronicle(S, true);
+    const b2 = h("button", "btn primary", "新しい冒険を始める"); b2.type = "button"; b2.onclick = () => G.main.toSetup();
+    row.append(b1, b2); f.append(row); panel.append(f);
+  }
+  // 戦闘中の敵の札（B1 の演出はここに足す）
+  function foeEl(f) {
+    const c = h("div", "foe" + (f.hp > 0 ? "" : " down"));
+    c.append(h("b", "", f.name));
+    const g = h("span", "g"); const i = h("i"); i.style.width = (f.hp / f.max) * 100 + "%"; g.append(i); c.append(g);
+    c.append(h("span", "num fine", `HP ${f.hp}/${f.max}`));
+    return c;
+  }
+  function renderFoes(panel) {
+    const foes = h("div", "foes");
+    G.S.combat.foes.forEach((f) => foes.append(foeEl(f)));
+    panel.append(foes);
+  }
+  // 行動ボタン1つ
+  function actionButton(a) {
+    const b = h("button", "act");
+    b.type = "button";
+    b.disabled = !!a.disabled || busy;
+    b.append(h("b", "", a.label));
+    if (a.sub) b.append(h("span", "", a.sub));
+    b.onclick = () => { if (!busy) { G.act(a.id); after(); } };
+    return b;
+  }
+  function renderActions(panel) {
     G.actions().forEach((grp) => {
       if (!grp.list.length) return;
       const box = h("div", "agroup");
       if (grp.title) box.append(h("h3", "", grp.title));
       const list = h("div", "alist");
-      grp.list.forEach((a) => {
-        const b = h("button", "act");
-        b.type = "button";
-        b.disabled = !!a.disabled || busy;
-        b.append(h("b", "", a.label));
-        if (a.sub) b.append(h("span", "", a.sub));
-        b.onclick = () => { if (!busy) { G.act(a.id); after(); } };
-        list.append(b);
-      });
+      grp.list.forEach((a) => list.append(actionButton(a)));
       box.append(list);
       panel.append(box);
     });
+  }
+  function renderPanel() {
+    const S = G.S;
+    const panel = $("#panel");
+    panel.textContent = "";
+    if (S.over) { renderEnd(panel); return; }
+    if (S.combat) renderFoes(panel);
+    renderActions(panel);
   }
 
   // ---------------------------------------------------------------- 自由入力
@@ -150,26 +183,35 @@
   }
 
   // ---------------------------------------------------------------- キャラクターシート
-  function renderSheet(ups) {
+  // シートは小さな部品の積み重ね。新しい欄（装飾品など）は該当する部品に足すか、部品を1つ足して renderSheet に並べる
+  const sheetFold = { stats: true, quests: true, inv: true, memos: true }; // 開いている欄
+  function sheetSection(key, title, body) {
+    const d = h("details", "ssec");
+    d.open = sheetFold[key] !== false;
+    d.addEventListener("toggle", () => { sheetFold[key] = d.open; });
+    d.append(h("summary", "lab", title), body);
+    return d;
+  }
+  function sheetHead() {
     const S = G.S;
-    const sh = $("#sheet");
-    sh.textContent = "";
     const head = h("div", "shead");
     const hd = h("div");
     hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）`));
-    const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => document.body.classList.remove("sheet-open");
+    const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
     head.append(hd, close);
-    sh.append(head);
-
+    return head;
+  }
+  function sheetPools() {
+    const S = G.S;
     const pools = h("div", "pools num");
     [["HP", S.hp, S.maxHp, "hp"], ["MP", S.mp, S.maxMp, "mp"]].forEach(([n, v, m, c]) => {
       const p = h("div", "pool"); const g = h("span", "g"); const i = h("i", c); i.style.width = (m ? (v / m) * 100 : 0) + "%"; g.append(i);
       p.append(h("span", "", n), g, h("span", "n", `${v} / ${m}`)); pools.append(p);
     });
-    sh.append(pools);
-
-    const st = h("div");
-    st.append(h("div", "lab", "能力値（成功率の基準％・赤線は才能限界）"));
+    return pools;
+  }
+  function sheetStats(ups) {
+    const S = G.S;
     const list = h("div", "statlist num");
     D.STATS.forEach((k) => {
       const row = h("div", "stat" + (ups && ups[k] ? " up" : ""));
@@ -178,26 +220,38 @@
       row.append(h("span", "nm", k), h("span", "v", String(S.stats[k])), bar, h("span", "cap", `限界 ${S.caps[k]}`));
       list.append(row);
     });
-    st.append(list);
-    sh.append(st);
-
-    const kv = h("dl", "kv");
+    return sheetSection("stats", "能力値（成功率の基準％・赤線は才能限界）", list);
+  }
+  // 目的・日付・装備などの表（装備の枠を足すときはここの行に足す）
+  function sheetGearRows() {
+    const S = G.S;
     const w = G.weapon(), ar = G.armor();
-    [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
+    return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
       ["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
-      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]].forEach(([k, v]) => { kv.append(h("dt", "", k), h("dd", "", v)); });
-    sh.append(kv);
-
-    if (S.quests.length) {
-      const q = h("div");
-      q.append(h("div", "lab", "受けている依頼"));
-      const ul = h("ul", "inv");
-      S.quests.forEach((x) => ul.append(h("li", "", `${x.done ? "✔ " : ""}${x.title}${x.type === "hunt" ? `（${x.progress}/${x.need}）` : ""}`)));
-      q.append(ul); sh.append(q);
-    }
-
-    const inv = h("div");
-    inv.append(h("div", "lab", "持ち物"));
+      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
+  }
+  function sheetGear() {
+    const kv = h("dl", "kv");
+    sheetGearRows().forEach(([k, v]) => { kv.append(h("dt", "", k), h("dd", "", v)); });
+    return kv;
+  }
+  function sheetQuests() {
+    const S = G.S;
+    if (!S.quests.length) return null;
+    const ul = h("ul", "inv");
+    S.quests.forEach((x) => ul.append(h("li", "", `${x.done ? "✔ " : ""}${x.title}${x.type === "hunt" ? `（${x.progress}/${x.need}）` : ""}`)));
+    return sheetSection("quests", `受けている依頼（${S.quests.length}）`, ul);
+  }
+  // 持ち物1行のボタン（装備できる種類を増やすときはここ）
+  function itemButtons(id, it, li) {
+    const S = G.S;
+    const free = !busy && !S.over && S.mode !== "combat";
+    const mk = (label, fn) => { const b = h("button", "btn small", label); b.type = "button"; b.disabled = !free; b.onclick = () => { fn(); after(); }; li.append(b); };
+    if (it.type === "use" && (it.hp || it.mp)) mk("使う", () => G.useItem(id));
+    if (it.type === "weapon" || it.type === "armor") mk("装備", () => G.equip(id));
+  }
+  function sheetInventory() {
+    const S = G.S;
     const ul = h("ul", "inv");
     const ids = Object.keys(S.inv);
     if (!ids.length) ul.append(h("li", "none", "なし"));
@@ -205,28 +259,26 @@
       const it = G.itemInfo(id);
       const li = h("li");
       li.append(h("span", "", `${it.name}${S.inv[id] > 1 ? " ×" + S.inv[id] : ""}`));
-      const free = !busy && !S.over && S.mode !== "combat";
-      if (it.type === "use" && (it.hp || it.mp)) { const b = h("button", "btn small", "使う"); b.type = "button"; b.disabled = !free; b.onclick = () => { G.useItem(id); after(); }; li.append(b); }
-      if (it.type === "weapon" || it.type === "armor") { const b = h("button", "btn small", "装備"); b.type = "button"; b.disabled = !free; b.onclick = () => { G.equip(id); after(); }; li.append(b); }
+      itemButtons(id, it, li);
       if (it.desc) li.title = it.desc;
       ul.append(li);
     });
-    inv.append(ul);
-    sh.append(inv);
-
-    if (S.memos.length) {
-      const m = h("div");
-      m.append(h("div", "lab", "覚えていること"));
-      const ol = h("ol", "memos");
-      S.memos.slice(-10).forEach((x) => ol.append(h("li", "", x)));
-      m.append(ol); sh.append(m);
-    }
-
+    return sheetSection("inv", `持ち物（${ids.length}）`, ul);
+  }
+  function sheetMemos() {
+    const S = G.S;
+    if (!S.memos.length) return null;
+    const ol = h("ol", "memos");
+    S.memos.slice(-10).forEach((x) => ol.append(h("li", "", x)));
+    return sheetSection("memos", "覚えていること", ol);
+  }
+  function sheetButtons() {
+    const S = G.S;
     const acts = h("div", "sheet-actions");
     const mk = (label, fn) => { const b = h("button", "btn", label); b.type = "button"; b.onclick = fn; acts.append(b); return b; };
     mk("人物", () => ui.openProfile());
     mk("地図", () => ui.openMap());
-    mk("年表", () => { document.body.classList.remove("sheet-open"); ui.openChronicle(S, false); });
+    mk("年表", () => { ui.setSheetOpen(false); ui.openChronicle(S, false); });
     mk("ログをコピー", copyLog);
     if (!S.over) {
       let armed = 0;
@@ -236,9 +288,11 @@
       });
       rb.disabled = busy || S.mode === "combat";
     }
-    sh.append(acts);
-
-    // スマホの上部バー
+    return acts;
+  }
+  // スマホの上部バー（名前・HP・MP・所持金）
+  function renderMobileBar() {
+    const S = G.S;
     $("#mName").textContent = `${S.profile.name}（${S.clsName}）`;
     $("#mHp").textContent = `${S.hp}/${S.maxHp}`;
     $("#mMp").textContent = `${S.mp}/${S.maxMp}`;
@@ -246,6 +300,22 @@
     $("#mMpBar").style.width = (S.maxMp ? (S.mp / S.maxMp) * 100 : 0) + "%";
     $("#mGold").textContent = `${S.gold}G`;
   }
+  function renderSheet(ups) {
+    const sh = $("#sheet");
+    const keep = sh.scrollTop;
+    sh.textContent = "";
+    [sheetHead(), sheetPools(), sheetStats(ups), sheetGear(), sheetQuests(), sheetInventory(), sheetMemos(), sheetButtons()].forEach((el) => { if (el) sh.append(el); });
+    sh.scrollTop = keep;
+    renderMobileBar();
+  }
+  // ステータスの開閉（スマホでは全面に重ねて出す。PC では常に横にある）
+  ui.setSheetOpen = (on) => {
+    const was = document.body.classList.contains("sheet-open");
+    document.body.classList.toggle("sheet-open", on);
+    $("#openSheet").setAttribute("aria-expanded", on);
+    if (on && !was) { const c = $("#sheet .closeSheet"); if (c) c.focus({ preventScroll: true }); }
+    else if (!on && was && narrow()) $("#openSheet").focus({ preventScroll: true });
+  };
 
   async function copyLog() {
     const S = G.S;
@@ -304,7 +374,7 @@
   };
 
   ui.openMap = () => {
-    document.body.classList.remove("sheet-open");
+    ui.setSheetOpen(false);
     const dlg = $("#dlgMap");
     dlg.showModal();
     const cv = $("#mapCanvas");
@@ -420,7 +490,8 @@
   document.querySelectorAll("dialog").forEach((dl) => dl.addEventListener("click", (ev) => { if (ev.target === dl) dl.close(); }));
   $("#openTrophy").onclick = () => ui.openTrophies();
   $("#openWorld").onclick = () => $("#dlgWorld").showModal();
-  $("#openSheet").onclick = () => document.body.classList.add("sheet-open");
-  $("#sheetBox").addEventListener("click", (ev) => { if (ev.target.id === "sheetBox") document.body.classList.remove("sheet-open"); });
+  $("#openSheet").onclick = () => ui.setSheetOpen(true);
+  $("#sheetBox").addEventListener("click", (ev) => { if (ev.target.id === "sheetBox") ui.setSheetOpen(false); });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && document.body.classList.contains("sheet-open")) ui.setSheetOpen(false); });
   $("#chronNew").onclick = () => { $("#dlgChron").close(); G.main.toSetup(); };
 })(globalThis.G = globalThis.G || {});
