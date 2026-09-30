@@ -23,7 +23,7 @@
     S.ambSeen = (S.ambSeen || []).concat(a.id).slice(-RECENT);
     S.counters.ambient = (S.counters.ambient || 0) + 1;
     G.say(a.text);
-    if (a.hear) G.hear(a.hear);
+    if (a.lore && G.openLores) G.openLores(a.lore);
     return a;
   };
 

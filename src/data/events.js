@@ -157,8 +157,8 @@
       id: "werevillage", where: ["frost", "plains"], w: 2, once: true, title: "人狼の村",
       text: "怯えきった村人たちが、あなたにすがりつく。「夜になると人狼が出るんです。もう三人食われた。どうか……」村長が差し出したのは、村中からかき集めた 80G だ。",
       choices: [
-        { label: "夜を待って狩る", fight: "werewolf", win: { text: "人狼の正体は、村長の息子だった。村長は泣きながらも約束の金を払った。", gold: 80, fame: 6, chron: "人狼の村を救う。人狼の正体は村長の息子だった" }, ok: {} },
-        { label: "正体を推理する", stat: "知力", diff: "難しい", ok: { text: "足跡と噛み跡から、正体を突き止めた。村長の息子だ。昼のうちに縛り上げ、村人たちに引き渡した。", gold: 80, fame: 8, grow: { 知力: 1 }, chron: "推理で人狼の正体を暴き、村を救う" }, ng: { text: "手がかりはつかめなかった。夜が来る。", fight: "werewolf", win: { text: "人狼を倒した。村人たちは礼の金を渡した。", gold: 80, fame: 5 } } },
+        { label: "夜を待って狩る", fight: "werewolf", win: { text: "人狼の正体は、村長の息子だった。村長は泣きながらも約束の金を払った。", gold: 80, fame: 6, chron: "人狼の村を救う。人狼の正体は村長の息子だった", lore: "beast:village" }, ok: {} },
+        { label: "正体を推理する", stat: "知力", diff: "難しい", ok: { text: "足跡と噛み跡から、正体を突き止めた。村長の息子だ。昼のうちに縛り上げ、村人たちに引き渡した。", gold: 80, fame: 8, grow: { 知力: 1 }, chron: "推理で人狼の正体を暴き、村を救う", lore: "beast:village" }, ng: { text: "手がかりはつかめなかった。夜が来る。", fight: "werewolf", win: { text: "人狼を倒した。村人たちは礼の金を渡した。", gold: 80, fame: 5 } } },
         { label: "報酬を倍にしろと言う", stat: "魅力", diff: "普通", ok: { text: "村人たちは泣きながら追加の金をかき集めた。あなたは今夜、人狼を狩る。", fight: "werewolf", win: { text: "人狼を倒した。報酬は倍。村人たちの目は冷たかった。", gold: 160, fame: -2 } }, ng: { text: "「……もういい、帰ってくれ」村人たちは扉を閉ざした。" } },
       ],
     },
