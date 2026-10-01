@@ -6,7 +6,7 @@
 (function (G) {
   G.data.BOSS_LINES = Object.assign(G.data.BOSS_LINES || {}, {
     kain: { lines: [
-      "使徒は本から顔を上げない。「……三百十二。いや、三百十三」",
+      "眷属は本から顔を上げない。「……三百十二。いや、三百十三」",
       "「その声。……まだ、綴じていない声だ」",
     ] },
     shuten: { lines: [

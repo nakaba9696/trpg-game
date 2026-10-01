@@ -85,7 +85,7 @@
     },
     e1_melted: {
       name: "溶けかけた見習いたち", tier: 3, hp: 30, dmg: [1, 8, 2], hit: 50, def: 15, agi: 15, will: 999, mres: 30, gold: [5, 40], loot: [["manawater", 0.4], ["grimoire", 0.05]], shape: "blob", eye: "#c77dff",
-      desc: "ゼファラの塔から「失敗作」として沼に捨てられた魔法使いの見習いたち。溶け合った体で、まだ呪文の暗唱を続けている。魔法はほとんど効かない。",
+      desc: "エルメシアの塔から「失敗作」として沼に捨てられた魔法使いの見習いたち。溶け合った体で、まだ呪文の暗唱を続けている。魔法はほとんど効かない。",
       look: { body: "blob", skin: "#7a5a9a", skin2: "#c8a8e0", eyes: "hollow", eyeN: 3, mouth: "jaw", pattern: "scars", extra: ["bubbles", "runes", "bone"], mood: "fierce" },
       lines: {
         turn: ["溶けた口が、三つの声で同じ呪文を唱えている。最後の一節だけ、いつも間違えている。", "「……試験……明日は……試験……」", "肉の中から、見習いの印章がついた指輪がのぞいている。"],
@@ -116,12 +116,12 @@
 
     // 段 5
     e1_herald: {
-      name: "魔人の触れ役", tier: 5, hp: 62, dmg: [2, 8, 4], hit: 70, def: 20, agi: 50, will: 85, mres: 30, gold: [50, 140], loot: [["manawater", 0.4], ["elixir", 0.08]], shape: "winged", eye: "#ff5aa0",
-      desc: "魔人たちの布告を人間の国々に触れ回る使い魔。布告の中身はたいてい「来週、どこかの町を滅ぼす」。どこかは、その日の気分で決まる。",
+      name: "使徒の触れ役", tier: 5, hp: 62, dmg: [2, 8, 4], hit: 70, def: 20, agi: 50, will: 85, mres: 30, gold: [50, 140], loot: [["manawater", 0.4], ["elixir", 0.08]], shape: "winged", eye: "#ff5aa0",
+      desc: "使徒たちの布告を人間の国々に触れ回る使い魔。布告の中身はたいてい「来週、どこかの町を滅ぼす」。どこかは、その日の気分で決まる。",
       look: { body: "biped", build: "lanky", skin: "#8a3a6a", skin2: "#c86aa0", head: "plain", horns: "ram", eyes: "glow", mouth: "grin", weapon: "tome", wings: "bat", outfit: "robe", cloth: "#3a1a3a", extra: ["float", "plume"], mood: "fierce" },
       fleeAt: 0.25,
       lines: {
-        open: ["「控えよ！ 魔人の布告である！ ……えー、『来週は晴れ』。違う、これは洗濯の予定だ」", "「控えよ！ 本日滅ぼす町は……くじで決める。人間、一本引け」"],
+        open: ["「控えよ！ 使徒の布告である！ ……えー、『来週は晴れ』。違う、これは洗濯の予定だ」", "「控えよ！ 本日滅ぼす町は……くじで決める。人間、一本引け」"],
         turn: ["触れ役は巻物を読み上げた。「一つ、人間は……人間は……何だったかな」", "「布告の最中に斬りかかるとは、人間は礼儀を知らん！」", "触れ役は巻物を落とし、拾う間だけ戦いを待ってくれと言った。"],
         flee: "「続きは来週！」触れ役は巻物を抱えて、赤い空へ舞い上がった。",
       },

@@ -122,7 +122,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const chron0 = S.chronicle.length;
     G.arrive("nerva");
     if (!h.heard || !W.towns.nerva.seen) fail("焼けた町に着いても様子が分からない");
-    if (!S.chronicle.slice(chron0).some((c) => c.kind === "world" && /ネルヴァ/.test(c.text))) fail("焼けた町に着いたことが年表に残らない");
+    if (!S.chronicle.slice(chron0).some((c) => c.kind === "world" && /ヴァレンツァ/.test(c.text))) fail("焼けた町に着いたことが年表に残らない");
     if (!acts(G).find((a) => a.id === "fac:inn")?.disabled) fail("焼けた町の宿が開いている");
     const walk = acts(G).find((a) => a.id === "walk");
     if (!walk || walk.label !== "焼け跡を歩く" || !G.parse(walk.label)) fail("焼けた町で「焼け跡を歩く」にならない");

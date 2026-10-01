@@ -35,18 +35,18 @@
     oni: { name: "鬼", tier: 4, hp: 46, dmg: [2, 8, 2], hit: 65, def: 15, agi: 40, will: 70, mres: 10, gold: [20, 60], loot: [["onihorn", 0.5]], shape: "giant", eye: "#ff3a3a", desc: "八雲の鬼。酒と人肉を好む。" },
     warlock: { name: "呪術師", tier: 4, hp: 30, dmg: [2, 6, 3], hit: 70, def: 10, agi: 40, will: 70, mres: 30, magic: true, gold: [30, 80], loot: [["manawater", 0.5], ["grimoire", 0.1]], shape: "humanoid", eye: "#c77dff", desc: "禁術に手を染めた魔法使い。呪いは鎧を素通りする。" },
     chimera: { name: "キメラ", tier: 4, hp: 50, dmg: [2, 8, 1], hit: 60, def: 15, agi: 50, will: 999, mres: 10, gold: [0, 30], loot: [["gem", 0.2]], shape: "beast", eye: "#ffb33a", desc: "獅子と山羊と蛇を継ぎ合わせた怪物。" },
-    blackknight: { name: "黒騎士", tier: 4, hp: 52, dmg: [1, 12, 3], hit: 70, def: 25, agi: 35, will: 80, mres: 10, gold: [30, 100], loot: [["plate", 0.1], ["potion", 0.4]], shape: "humanoid", eye: "#ff3a3a", desc: "魔人に仕える黒い鎧の騎士。中身を見た者はいない。" },
+    blackknight: { name: "黒騎士", tier: 4, hp: 52, dmg: [1, 12, 3], hit: 70, def: 25, agi: 35, will: 80, mres: 10, gold: [30, 100], loot: [["plate", 0.1], ["potion", 0.4]], shape: "humanoid", eye: "#ff3a3a", desc: "使徒に仕える黒い鎧の騎士。中身を見た者はいない。" },
 
     // 段 5
     general: { name: "魔物将軍", tier: 5, hp: 72, dmg: [2, 10, 3], hit: 70, def: 25, agi: 45, will: 85, mres: 15, gold: [60, 150], loot: [["gem", 0.4], ["elixir", 0.1]], shape: "giant", eye: "#ff3a3a", desc: "魔物の軍勢を率いる将。" },
     kin: { name: "使徒の眷属", tier: 5, hp: 58, dmg: [2, 8, 4], hit: 70, def: 20, agi: 55, will: 90, mres: 25, gold: [40, 120], loot: [["manawater", 0.5]], shape: "winged", eye: "#c77dff", desc: "使徒が生み出した翼ある僕。" },
 
     // ボス
-    kain: { name: "使徒カイン", tier: 4, boss: true, hp: 95, dmg: [2, 8, 4], hit: 75, def: 20, agi: 60, will: 999, mres: 25, magic: true, gold: [150, 250], loot: [["apostleheart", 1]], shape: "humanoid", eye: "#c77dff", desc: "蒐集の魔人レヴィアンの使徒。遺跡の知識を漁っている。" },
+    kain: { name: "眷属カイン", tier: 4, boss: true, hp: 95, dmg: [2, 8, 4], hit: 75, def: 20, agi: 60, will: 999, mres: 25, magic: true, gold: [150, 250], loot: [["apostleheart", 1]], shape: "humanoid", eye: "#c77dff", desc: "蒐集の使徒レヴィアンの眷属。遺跡の知識を漁っている。" },
     shuten: { name: "鬼の頭目・酒呑", tier: 4, boss: true, hp: 120, dmg: [2, 10, 4], hit: 70, def: 20, agi: 45, will: 999, mres: 10, gold: [100, 200], loot: [["oniclub", 1], ["onihorn", 1]], shape: "giant", eye: "#ff3a3a", desc: "鬼ヶ島を統べる大鬼。白く光る刀を戦利品として奪ったという。" },
     bonedragon: { name: "屍竜ネクロザ", tier: 5, boss: true, hp: 150, dmg: [3, 8, 4], hit: 70, def: 25, agi: 30, will: 999, mres: 20, undead: true, gold: [200, 400], loot: [["dragonmail", 1]], shape: "dragon", eye: "#7dffb0", desc: "死してなお墓場を守る竜。その腹に一振りの剣が刺さっている。" },
-    rize: { name: "使徒リゼ", tier: 5, boss: true, hp: 120, dmg: [2, 10, 5], hit: 75, def: 25, agi: 70, will: 999, mres: 25, gold: [150, 300], loot: [["apostleheart", 1], ["elixir", 1]], shape: "humanoid", eye: "#ff3a3a", desc: "グラウの使徒。主人と同じく戦いに酔う女剣士。" },
-    graw: { name: "鏖殺の魔人グラウ", tier: 6, boss: true, majin: true, hp: 220, dmg: [2, 10, 6], hit: 80, def: 25, agi: 50, will: 999, mres: 30, gold: [500, 1000], loot: [["gem", 1], ["relic", 1]], shape: "giant", eye: "#ff2020", desc: "戦いだけを好む巨人の魔人。絶界に守られ、並の武器では傷ひとつ付かない。" },
+    rize: { name: "眷属リゼ", tier: 5, boss: true, hp: 120, dmg: [2, 10, 5], hit: 75, def: 25, agi: 70, will: 999, mres: 25, gold: [150, 300], loot: [["apostleheart", 1], ["elixir", 1]], shape: "humanoid", eye: "#ff3a3a", desc: "グラウの眷属。主人と同じく戦いに酔う女剣士。" },
+    graw: { name: "鏖殺の使徒グラウ", tier: 6, boss: true, majin: true, hp: 220, dmg: [2, 10, 6], hit: 80, def: 25, agi: 50, will: 999, mres: 30, gold: [500, 1000], loot: [["gem", 1], ["relic", 1]], shape: "giant", eye: "#ff2020", desc: "戦いだけを好む巨人の使徒。絶界に守られ、並の武器では傷ひとつ付かない。" },
     royalguard: { name: "近衛騎士団長", tier: 5, boss: true, hp: 110, dmg: [2, 8, 4], hit: 75, def: 30, agi: 50, will: 999, mres: 20, gold: [0, 0], loot: [], shape: "humanoid", eye: "#d9d9d9", desc: "王位を狙う者の前に立ちはだかる、王国最強の騎士。" },
   };
 })(globalThis.G = globalThis.G || {});

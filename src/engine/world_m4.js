@@ -1,4 +1,4 @@
-// M4：世界の出来事。日数が進むと、あなたと関係なく世界が動く（皇帝の病と代替わり、三国の戦と協定、魔人・異形の襲来）。
+// M4：世界の出来事。日数が進むと、あなたと関係なく世界が動く（皇帝の病と代替わり、三国の戦と協定、使徒の襲来）。
 // 表は src/data/world_events_m4.js（D.M4）、町で起きる出来事は src/data/events_m4.js。
 // 状態は S.world（古いセーブで無ければ、その日から始める）：
 //   { day: 最後に進めた日, plan: 筋の日取り, emp: 皇帝（sick→worse→dead→civil→new）, heir, war: { foe, since, until } | null,
@@ -38,9 +38,9 @@
   const nationOf = (id) => {
     if (M.NATION[id]) return M.NATION[id];
     const r = (D.LOCS[id] && D.LOCS[id].region) || "";
-    if (r.includes("聖王国") || r.includes("教会")) return "kingdom";
+    if (r.includes("王国") || r.includes("教会")) return "kingdom";
     if (r.includes("帝国")) return "empire";
-    if (r.includes("ゼファラ") || r.includes("共和国")) return "republic";
+    if (r.includes("エルメシア") || r.includes("共和国")) return "republic";
     if (r.includes("自由都市")) return "free";
     if (r.includes("最前線")) return "front";
     return "other";

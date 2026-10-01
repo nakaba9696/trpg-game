@@ -54,7 +54,7 @@
     beggar: K({ name: "物乞い・奴隷", desc: "路地の物乞い・奴隷・囚人・難民", age: [16, 70], outfit: ["rags"], head: ["none", "hood", "none"], chest: ["collar", "none"], cloth: ["#6a5e4e", "#5a5048", "#4a4a40"], bg: "#4a4640", eyes: ["sleepy", "round", "normal"], mouth: ["frown", "open", "flat"], brows: ["worried"], hair: ["messy", "long", "receding"], marks: { stubble: 0.5, bags: 0.6, bandage: 0.3, dirt: 0.8 } }),
     archer: K({ name: "弓使い", desc: "狩人・弓兵・森の民", age: [17, 45], outfit: ["leather", "cloak"], head: ["none", "hood", "none"], gear: ["bow"], cloth: ["#3a4a2a", "#4a3a22", "#2a3a3a"], bg: "#4a6a3a", eyes: ["sharp", "normal"], mouth: ["flat", "smirk", "smile"], brows: ["calm", "angry"], hair: ["ponytail", "long", "short", "messy"], marks: { freckles: 0.25, scar: 0.15 } }),
     adventurer: K({ name: "冒険者", desc: "旅の冒険者・剣士・同業者", age: [17, 45], outfit: ["leather", "tunic", "armor"], head: ["none", "none", "headband", "bandana"], gear: ["sword", "greatsword", "none"], cloth: ["#5a3a2a", "#3a4a5a", "#4a4a2a", "#5a2a2a"], bg: "#5a6a5a", eyes: ["normal", "sharp", "round"], mouth: ["smile", "smirk", "grin", "flat"], brows: ["calm", "raised", "angry"], hair: ["messy", "spiky", "short", "ponytail", "long"], marks: { scar: 0.3, stubble: 0.3, bandage: 0.2, freckles: 0.15 } }),
-    majin: K({ name: "魔人（人の姿）", desc: "人に化けた魔人・使徒。格の違う、どこかまぬけな存在", age: [20, 40], outfit: ["coat"], head: ["none", "crown", "horns", "horns"], chest: ["gem"], cloth: ["#1a1422", "#2a0e14", "#101a22"], trim: ["#c8a040", "#b02a3a"], bg: "#2a1030", eyes: ["glow"], mouth: ["smirk", "grin"], brows: ["raised"], hair: ["long", "slick", "parted", "wild"], skin: ["#e6ddd8", "#d4d0e2", "#cfd8dc", "#e8d4d4", "#b8a8c8"], marks: { tattoo: 0.4, monocle: 0.3, blush: 0.2 } }),
+    majin: K({ name: "使徒（人の姿）", desc: "人に化けた使徒・眷属。格の違う、どこかまぬけな存在", age: [20, 40], outfit: ["coat"], head: ["none", "crown", "horns", "horns"], chest: ["gem"], cloth: ["#1a1422", "#2a0e14", "#101a22"], trim: ["#c8a040", "#b02a3a"], bg: "#2a1030", eyes: ["glow"], mouth: ["smirk", "grin"], brows: ["raised"], hair: ["long", "slick", "parted", "wild"], skin: ["#e6ddd8", "#d4d0e2", "#cfd8dc", "#e8d4d4", "#b8a8c8"], marks: { tattoo: 0.4, monocle: 0.3, blush: 0.2 } }),
   };
   // 主人公（職業ごと）
   const HERO = {
@@ -174,7 +174,7 @@
     return w;
   };
 
-  // 施設の人：王城では、玉座の主（聖王都は灰銀の髪の国王ヴァレオン、帝都は病床の皇帝に代わる宰相）。王位を奪ったあとは出さない
+  // 施設の人：王城では、玉座の主（王都は灰銀の髪の国王ヴァレオン、帝都は病床の皇帝に代わる宰相）。王位を奪ったあとは出さない
   const FAC_WHO = {
     castle: {
       leavel: { kind: "noble", sex: "男", age: 58, name: "国王ヴァレオン", seed: "c2:valeon", look: { hair: "#b8b8bc", hairStyle: "wild", eyes: "sharp", iris: "#c8902a", mouth: "grin", brows: "angry", outfit: "plate", head: "crown", gear: "greatsword", chest: "crest", cloth: "#5a1a1a", build: "broad", marks: ["beard", "scar"], bg: "#8a6a3a" } },
@@ -632,7 +632,7 @@
       paint(ctx, L.kind === "noble" ? "#b02a3a" : "#3a9ada", lw * 0.6, () => { ctx.moveTo(cx, cy - ry * 0.75); ctx.lineTo(cx + rx * 0.08, cy - ry * 0.65); ctx.lineTo(cx, cy - ry * 0.55); ctx.lineTo(cx - rx * 0.08, cy - ry * 0.65); });
       ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
     } else if (hw === "crown") {
-      // 魔人の小さな冠は、少し傾いている
+      // 使徒の小さな冠は、少し傾いている
       ctx.save(); ctx.translate(cx + rx * 0.35, top + ry * 0.05); ctx.rotate(0.35);
       paint(ctx, "#d8b040", lw, () => { ctx.moveTo(-rx * 0.35, 0); ctx.lineTo(-rx * 0.38, -ry * 0.28); ctx.lineTo(-rx * 0.18, -ry * 0.12); ctx.lineTo(0, -ry * 0.36); ctx.lineTo(rx * 0.18, -ry * 0.12); ctx.lineTo(rx * 0.38, -ry * 0.28); ctx.lineTo(rx * 0.35, 0); ctx.closePath(); });
       paint(ctx, L.iris, 0, () => ellipse(ctx, 0, -ry * 0.07, rx * 0.05, rx * 0.05));

@@ -31,7 +31,7 @@
   // 職業ごとに、はじめから覚えている術
   D.SPELL_START = { mage: ["ice"], priest: ["ward"] };
 
-  // 学院はゼファラにある
+  // 学院はエルメシアにある
   if (D.LOCS.zephara && !D.LOCS.zephara.fac.includes("academy")) D.LOCS.zephara.fac.push("academy");
 
   // 学院の講師の口癖（匂わせ。説明はしない）

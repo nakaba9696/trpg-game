@@ -80,6 +80,7 @@
   // 読み込んだ冒険を今の冒険にする。冒険の画面を開いていれば描き直す（タイトルや作成の途中なら、そのまま）
   function adopt(sv) {
     G.S = valid(sv) ? sv : null;
+    if (G.S && G.fixOldNames) G.fixOldNames(G.S); // D5：古いセーブの国の名前
     if (!$("#play").hidden) { if (G.S) showPlay(); else main.toTitle(); }
   }
 

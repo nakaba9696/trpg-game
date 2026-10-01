@@ -25,7 +25,7 @@ export const PLANS = {
   king: { steps: ["knight", "lord", "throne"] },
   // 伝説の剣：鬼ヶ島（聖刀白夜）。強くなれば竜の墓場（魔剣）も
   sword: { steps: ["blade"] },
-  // 魔人を討つ：伝説の剣を得てから、勝てる見込みのある近い魔人の居城へ
+  // 使徒を討つ：伝説の剣を得てから、勝てる見込みのある近い使徒の居城へ
   majin: { steps: ["blade", "castle"] },
 };
 
@@ -100,7 +100,7 @@ export function makeBot(G, goal, opt = {}) {
     const def = (G.armor() ? G.armor().def : 0);
     return (atk + comp) * (S.maxHp + def * 6);
   };
-  // 危険度ごとに要る腕前（大まかに。1 = 森、4 = 山脈、6 = 魔人の城）
+  // 危険度ごとに要る腕前（大まかに。1 = 森、4 = 山脈、6 = 使徒の城）
   const NEED = [0, 0, 150, 280, 420, 600, 800];
   const safeDanger = () => { const p = power(); let d = 1; for (let i = 1; i < NEED.length; i++) if (p >= NEED[i]) d = i; return Math.min(d, 5); };
   // ボスに勝てるか：今の冒険を写して、別の乱数で n 回戦わせてみる（本物の G.S・G.P・G.rand は元に戻す）
@@ -243,7 +243,7 @@ export function makeBot(G, goal, opt = {}) {
           const p = G.chance(c.stat, c.diff || "普通", c.bonus ? G.gearBonus(c.bonus) : 0) / 100;
           s += p * outcomeScore(c.ok, S) + (1 - p) * outcomeScore(c.ng, S) + p * 3;
         } else s += outcomeScore(c.ok, S);
-        // 目的の魔人に挑む選択肢（居城の最奥の謁見）
+        // 目的の使徒に挑む選択肢（居城の最奥の謁見）
         const foe = c.fight && (Array.isArray(c.fight) ? c.fight[0] : c.fight);
         if (goal === "majin" && foe && D.ENEMIES[foe] && D.ENEMIES[foe].majin && !(G.majinSlain && G.majinSlain(S).length)) s += bossReady(foe, 1, true) ? 1000 : -1000;
         const deed = DEEDS[e.id + ":" + i];
@@ -610,7 +610,7 @@ export function makeBot(G, goal, opt = {}) {
         // 伝説の剣を持つ
         for (const k of ["volgrim", "byakuya"]) if (has(k) && S.weapon !== k && S.inv[k]) G.equip(k);
         if (G.majinSlain && G.majinSlain(S).length) continue;
-        // 魔人の居城のうち、勝てる見込みがあって近いところ（主と中ボスの両方）
+        // 使徒の居城のうち、勝てる見込みがあって近いところ（主と中ボスの両方）
         const lairs = Object.entries(D.LOCS).filter(([, L]) => L.type === "dungeon" && L.boss && D.ENEMIES[L.boss].majin)
           .map(([id, L]) => ({ id, L, d: S.loc === id ? 0 : daysTo(id) })).sort((a, b) => a.d - b.d);
         for (const { id, L } of lairs) {

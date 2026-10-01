@@ -1,4 +1,4 @@
-// E2：魔人の居城（src/engine/e2_lair.js）
+// E2：使徒の居城（src/engine/e2_lair.js）
 // - 最奥に着くと、剣が無ければ戦わずに謁見になり、挑む選択肢は出ない。toEntrance で入口に戻る
 // - 剣があれば挑めて、勝てば主の旗が立つ
 // - 用語説明の行が書き足され、出来事で開く。主を倒すと M4 のその襲来が起きなくなる
@@ -22,7 +22,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const [id, L] of lairs) {
     const ev = D.EVENTS.find((e) => e.id === L.lair.event);
     if (!ev) { fail(`${id}: 謁見の出来事 ${L.lair.event} が無い`); continue; }
-    if (!D.ENEMIES[L.boss].majin) fail(`${id}: 居城の主 ${L.boss} が魔人でない`);
+    if (!D.ENEMIES[L.boss].majin) fail(`${id}: 居城の主 ${L.boss} が使徒でない`);
     if (ev.w) fail(`${id}: 謁見の出来事はたまたま起きてはいけない（w: 0）`);
     const fight = ev.choices.filter((c) => c.fight === L.boss);
     if (fight.length !== 1 || !fight[0].cond || fight[0].win?.flag !== L.reward.flag) fail(`${id}: 挑む選択肢は剣の条件つきで1つ、勝てば ${L.reward.flag}`);
@@ -67,5 +67,5 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.S.flags.e2_mordu = true;
     if (!(before[0] > 0 && before[1] > 0) || R.hunger.w(W, 400) !== 0 || R.rot.w(W, 400) !== 0) fail("主を倒しても M4 の飢え・疫病の襲来が止まらない");
   }
-  ok(`魔人の居城（${lairs.length} か所・剣が無ければ謁見・剣があれば挑める・用語 ${trig.flat().filter(Boolean).length}・倒せば襲来が止む）`);
+  ok(`使徒の居城（${lairs.length} か所・剣が無ければ謁見・剣があれば挑める・用語 ${trig.flat().filter(Boolean).length}・倒せば襲来が止む）`);
 };

@@ -1,7 +1,7 @@
 // W2：新しい町と谷（src/data/locations_w2.js）、町の施設と王城（src/engine/explore_w2.js）
 // - 新しい町が 4〜6、どれも施設・通行人のひとこと・出来事・気候・背景の絵を持つ。三つの谷は帝国の中
 // - 畑・鍛冶場・闘技場・湯治場・狩り場の行いが、例外なく動き、約束どおりに持ち物や金が動く。闘技場では倒れる前に止められる
-// - 王城：聖王国は兄姉の都（訪れた都だけ）、帝国は皇子を選んで騎士になる。王城に入ると手触りの一行が増える
+// - 王城：王国は兄姉の都（訪れた都だけ）、帝国は皇子を選んで騎士になる。王城に入ると手触りの一行が増える
 // - 古いセーブ（W2 の項目が無い）でも動く。着いた町で用語説明が開く
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
@@ -36,9 +36,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!L.fac.some((f) => ["field", "forge", "arena", "bath", "hunt"].includes(f))) F(`${id}: その町だけの施設が無い`);
     if (!G.FAC_NAMES[L.fac[L.fac.length - 1]]) F(`${id}: 施設の名前が無い`);
   }
-  for (const id of ["w2_echo", "w2_shadow", "w2_acid"]) if (!D.LOCS[id] || D.LOCS[id].region !== "鉄血帝国ガルムント") F(`${id}: 帝国の中の谷になっていない`);
-  if (D.LOCS.zephara.region !== "ゼファラ共和国") F("ゼファラの地方が共和国になっていない");
-  if (!/門の外/.test(D.LOCS.zephara.desc) || !/大樹/.test(D.LOCS.zephara.desc)) F("ゼファラの説明に、門の外の暮らしと東の大樹が無い");
+  for (const id of ["w2_echo", "w2_shadow", "w2_acid"]) if (!D.LOCS[id] || D.LOCS[id].region !== "ノルディア帝国") F(`${id}: 帝国の中の谷になっていない`);
+  if (D.LOCS.zephara.region !== "エルメシア共和国") F("エルメシアの地方が共和国になっていない");
+  if (!/門の外/.test(D.LOCS.zephara.desc) || !/大樹/.test(D.LOCS.zephara.desc)) F("エルメシアの説明に、門の外の暮らしと東の大樹が無い");
   for (const r of D.W2_FORGE) { if (!D.ITEMS[r.give]) F(`鍛冶場：${r.give} が無い`); for (const k of Object.keys(r.need)) if (!D.ITEMS[k]) F(`鍛冶場：素材 ${k} が無い`); }
   for (const t of D.W2_ARENA) for (const fs of t.foes) for (const e of fs) if (!D.ENEMIES[e]) F(`闘技場：敵 ${e} が無い`);
   for (const ps of Object.values(D.W2_PATRONS)) for (const p of ps) if (p.town && !D.LOCS[p.town]) F(`後ろ盾 ${p.id}: 都 ${p.town} が無い`);
@@ -118,7 +118,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.act("fac:castle");
     if (S.log.length < logN + 3) F("王城に入っても手触りの一行が増えない");
     let a = ids(G);
-    if (!a.includes("castle:knight")) F("聖王国の王城に、女王の御前で願い出る元の道が無い");
+    if (!a.includes("castle:knight")) F("王国の王城に、女王の御前で願い出る元の道が無い");
     if (a.includes("castle:w2knight:dran")) F("訪れていない鍛冶の都の兄君の推挙が出る");
     S.visited.w2_dranherz = true;
     a = ids(G);
@@ -126,7 +126,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     for (let i = 0; i < 20 && !S.title; i++) { S.gold = 1000; G.act("castle:w2knight:dran"); }
     if (S.title !== "騎士" || !S.w2_patron || S.w2_patron.id !== "dran") F("兄君の推挙で騎士になれない");
     if (!G.count("royalwrit")) F("兄君の推挙で騎士になっても叙任状が無い");
-    if (G.nationOf && S.titleAt !== "聖王国リーヴェル") F(`兄君の推挙の位の国が残らない（${S.titleAt}）`);
+    if (G.nationOf && S.titleAt !== "レオネスト王国") F(`兄君の推挙の位の国が残らない（${S.titleAt}）`);
     // 手配中は、兄姉の推挙も願い出られない（M3）
     if (G.crime) {
       const G3 = loadEngine();

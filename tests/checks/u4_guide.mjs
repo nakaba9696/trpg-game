@@ -54,7 +54,7 @@ export default ({ G, fail, ok, seeded }) => {
   const t1 = G.playTip(S, P);
   if (!t1 || t1.key !== (D.LOCS[S.loc].type === "town" ? "town" : t1.key)) no("はじめの町で遊び方の一行が出ない");
   if (t1) { P.tips[t1.key] = 1; const t2 = G.playTip(S, P); if (t2 && t2.key === t1.key) no("見た遊び方の一行がまた出る"); }
-  const BANNED = /見世物|観客|客席|舞台|台本|神々|魔人|魔王|あれ」|異形/;
+  const BANNED = /見世物|観客|客席|舞台|台本|神々|使徒|魔王|あれ」/;
   Object.values(G.PLAY_TIPS).forEach((t) => { if (BANNED.test(t)) no(`遊び方の一行に世界の説明が入っている「${t}」`); });
   S.over = "dead"; if (G.playTip(S, P)) no("冒険が終わったのに遊び方の一行が出る");
 

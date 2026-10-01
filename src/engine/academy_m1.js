@@ -1,4 +1,4 @@
-// M1：ゼファラの学院（施設 academy）と、魔導書を読み解く行動。
+// M1：エルメシアの学院（施設 academy）と、魔導書を読み解く行動。
 // explore.js は書き換えず、G.exploreActions・G.exploreAct・G.facActions・G.facAct を包む。レーン B＋C（M1）が管理
 (function (G) {
   const D = G.data;

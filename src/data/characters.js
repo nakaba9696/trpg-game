@@ -30,7 +30,7 @@
     },
     mage: {
       name: "魔法使い", start: "zephara",
-      blurb: "ゼファラの学院を追われた魔法使い。炎の魔法で敵を焼く。",
+      blurb: "エルメシアの学院を追われた魔法使い。炎の魔法で敵を焼く。",
       base: { 筋力: 20, 体力: 36, 敏捷: 35, 知力: 45, 魔力: 55, 魅力: 25 },
       weapon: "staff", armor: "leather", items: { grimoire: 1, herb: 2, manawater: 2 }, gold: 30, culture: "west",
     },
@@ -49,7 +49,7 @@
   };
 
   D.GOALS = {
-    majin: { name: "魔人を討つ", text: "魔人を討ち果たす", hint: "絶界を破る剣を探し、鏖殺の魔人グラウを倒す" },
+    majin: { name: "使徒を討つ", text: "使徒を討ち果たす", hint: "絶界を破る剣を探し、鏖殺の使徒グラウを倒す" },
     king: { name: "成り上がる", text: "成り上がって一国の王になる", hint: "名声を積み、騎士、領主、そして王位へ" },
     rich: { name: "大富豪になる", text: "大陸一の大金持ちになる", hint: "所持金 10000G" },
     sword: { name: "伝説の剣を得る", text: "魔剣ヴォルグリムか聖刀白夜を手に入れる", hint: "竜の墓場か鬼ヶ島の最奥へ" },

@@ -37,14 +37,14 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   } catch (e) { fail(`悪名: 古いセーブで例外 ${e.message}`); }
   // 盗みを重ねると、その国でだけ賞金首になる
   const nation = G.nationOf();
-  if (nation !== "自由都市連合") fail(`悪名: カルナの国が ${nation}`);
+  if (nation !== "自由都市連合") fail(`悪名: ブランデールの国が ${nation}`);
   for (let i = 0; i < 4; i++) G.crime("theft");
   if (G.wanted()) fail("悪名: 盗み 4 回（24）で手配された");
   G.crime("theft");
   if (!G.wanted() || G.bounty(nation) !== 300) fail(`悪名: 盗み 5 回（30）で手配されない（悪名 ${G.infamyHere()}）`);
   if (!S.chronicle.some((c) => c.text.includes("賞金首"))) fail("悪名: 賞金首になったことが年表に無い");
   if (!G.reputeLabel().includes("手配中")) fail(`悪名: 見出しに出ない「${G.reputeLabel()}」`);
-  if (G.wanted("聖王国リーヴェル")) fail("悪名: よその国でも手配された");
+  if (G.wanted("レオネスト王国")) fail("悪名: よその国でも手配された");
   if (!D.EVENTS.find((e) => e.id === "m3_eyes").cond(S)) fail("悪名: 手配中なのに衛兵の出来事が起きない");
   S.loc = "plains";
   if (G.wanted()) fail("悪名: 国境を越えても手配されている");
@@ -73,7 +73,7 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   S = start();
   S.loc = "leavel"; S.gold = 5000; S.fame = 700; S.fac = "castle";
   G.exploreAct("castle", "knight");
-  if (S.title !== "騎士" || S.titleAt !== "聖王国リーヴェル") fail(`悪名: 騎士の位の国が残らない ${S.titleAt}`);
+  if (S.title !== "騎士" || S.titleAt !== "レオネスト王国") fail(`悪名: 騎士の位の国が残らない ${S.titleAt}`);
   G.crime("murder"); G.crime("murder");
   if (S.title) fail("悪名: 手配されても騎士の位が残る");
   const knight = G.facActions().flatMap((g) => g.list).find((x) => x.id === "castle:knight");
@@ -119,7 +119,7 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   if (ev("m3_togaoi").cond(S)) fail("悪名: 罪が消えても咎追いが来る");
   // 酒場のある町でだけ、酒場に逃げ込める
   const tav = ev("m3_togaoi").choices.findIndex((c) => c.cond);
-  S.loc = "karna"; if (!ev("m3_togaoi").choices[tav].cond(S)) fail("悪名: カルナで酒場に逃げ込めない");
+  S.loc = "karna"; if (!ev("m3_togaoi").choices[tav].cond(S)) fail("悪名: ブランデールで酒場に逃げ込めない");
   S.loc = "fort"; if (ev("m3_togaoi").choices[tav].cond(S)) fail("悪名: 酒場の無い砦で酒場に逃げ込める");
   S.loc = "karna";
   // 牢で刑期を務めると悪名が下がる

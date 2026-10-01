@@ -89,7 +89,7 @@ export function makeSmartBot(G) {
   }
   function bossReady(L, lid) {
     if (!L.boss) return false;
-    if (L.lair) return false; // 魔人の居城は、剣が無ければ挑めない（出来事で決まる）
+    if (L.lair) return false; // 使徒の居城は、剣が無ければ挑めない（出来事で決まる）
     const mids = Object.entries(L.midboss || {}).filter(([d]) => !S().flags[`mid:${lid}:${d}`]).map(([, id]) => [id]);
     return fightReady([L.boss]) && mids.every(fightReady);
   }

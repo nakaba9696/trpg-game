@@ -368,7 +368,7 @@
       for (let i = 0; i < 8; i++) { const x = w * (0.05 + i * 0.12), y = h * 0.75 + R() * 10; glow(ctx, x, y, 22, "#ff8a3a", 0.55); ctx.fillStyle = "#ff9b4a"; ctx.fillRect(x - 4, y - 6, 8, 11); }
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.9, w, h);
     },
-    // W1：聖都サンクタ（白い城壁と、光の輪を戴く大聖堂）
+    // W1：聖都エルヴィナ（白い城壁と、光の輪を戴く大聖堂）
     w1_holy(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
       const stone = mix(sk.bot, "#e8e2d2", sk.night ? 0.25 : 0.55), gold = sk.night ? "#b89a4a" : "#e0c060";
@@ -388,7 +388,7 @@
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.9, w, h);
       for (let i = 0; i < 14; i++) { const x = w * (0.08 + i * 0.06) + R() * 6, y = h * 0.905; ctx.beginPath(); ctx.arc(x, y - 13, 3, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.moveTo(x - 5, y); ctx.lineTo(x, y - 11); ctx.lineTo(x + 5, y); ctx.fill(); }
     },
-    // W1：サンクタの地下墓地の入口（墓標の丘と、骨の口を開けた霊廟）
+    // W1：エルヴィナの地下墓地の入口（墓標の丘と、骨の口を開けた霊廟）
     w1_catacomb(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
       ctx.fillStyle = "rgba(10,12,18,.35)"; ctx.fillRect(0, 0, w, h);
@@ -846,7 +846,7 @@
       ctx.fillStyle = "#b39a52"; ctx.fillRect(w * 0.46, h * 0.38, w * 0.08, h * 0.33); ctx.beginPath(); ctx.arc(w * 0.5, h * 0.38, w * 0.04, Math.PI, 0); ctx.fill();
       ctx.fillStyle = "rgba(0,0,0,.25)"; for (let i = 0; i < 4; i++) { ctx.fillRect(w * (0.08 + i * 0.1), 0, 14, h * 0.71); ctx.fillRect(w * (0.62 + i * 0.1), 0, 14, h * 0.71); }
     },
-    // M1：ゼファラの学院（天井までの書架、浮かぶ灯り、床の魔法陣、結晶の窓）
+    // M1：エルメシアの学院（天井までの書架、浮かぶ灯り、床の魔法陣、結晶の窓）
     academy(ctx, w, h, R) {
       interior(ctx, w, h, "#3a3450", "#221e30", R);
       const cx = w * 0.5;
@@ -1096,7 +1096,7 @@
   }
 
   // ---------------------------------------------------------------- 入口
-  // 迷宮の中の絵：「<場所の絵>_in」があればそれ、墓場・洞窟・魔人の城は外と同じ絵、ほかは石の通路（dungeon）
+  // 迷宮の中の絵：「<場所の絵>_in」があればそれ、墓場・洞窟・使徒の城は外と同じ絵、ほかは石の通路（dungeon）
   G.dungeonScene = (L) => (L && IN[L.scene + "_in"] ? L.scene + "_in" : L && ["bones", "cave", "majin"].includes(L.scene) ? L.scene : "dungeon");
   // 描ける絵の名前（tests/checks/a4_art.mjs が、汎用の絵に落ちている場所を探すのに使う）
   G.sceneNames = () => ({ out: Object.keys(OUT), inside: Object.keys(IN) });

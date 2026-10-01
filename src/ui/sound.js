@@ -177,7 +177,7 @@
       // 剣を抜く音
       return hiss(E, t + 0.55, { ft: "bandpass", ff: 1800, ff2: 7000, q: 6, a: 0.25, d: 0.25, g: 0.18, wet: 0.2 });
     },
-    // 魔人：地の底から湧く不協和な唸り
+    // 使徒：地の底から湧く不協和な唸り
     majin: (E, t) => {
       [41, 43.6, 58].forEach((f) => tone(E, t, { type: "sawtooth", f, f2: f * 0.9, g: 0.16, a: 1.2, hold: 0.8, d: 1.6, ff: 260, q: 2, wet: 0.4 }));
       tone(E, t, { f: 30, g: 0.35, a: 1, hold: 1, d: 1.5 });

@@ -226,12 +226,12 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   G.startCombat(["goblin"], {});
   if (!(S.sanity < 100)) f("囁きの貝殻を付けて戦っても正気が減らない");
   G.S.combat = null; G.S.mode = "explore";
-  // 魔人を見る（魔人ごとに一度）
+  // 使徒を見る（使徒ごとに一度）
   S = start("merc", 516);
   const majin = Object.keys(D.ENEMIES).find((id) => D.ENEMIES[id].majin);
   G.startCombat([majin], {}); const a1 = S.sanity; G.S.combat = null; G.S.mode = "explore";
   G.startCombat([majin], {}); const a2 = S.sanity; G.S.combat = null; G.S.mode = "explore";
-  if (!(a1 < 100 && a2 === a1)) f(`魔人を見ても正気が減らないか、二度減る（${a1}・${a2}）`);
+  if (!(a1 < 100 && a2 === a1)) f(`使徒を見ても正気が減らないか、二度減る（${a1}・${a2}）`);
 
   // ---------------------------------------------------------------- ランダムプレイで、どれくらい進むか（数えるだけ）
   const GAMES = 100, STEPS = 500;

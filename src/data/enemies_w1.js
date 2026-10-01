@@ -1,6 +1,6 @@
 // 聖都の地下墓地と朧島の敵（W1）。欄の意味は enemies.js と enemies_2.js と同じ
-// 使徒（ヴェスパ・グレゴル・コノハ）は倒せる。魔人（アウレリア・宵姫）は敵にしない。docs/lore/majin.md
-// 説明文は匂わせにとどめる（魔人の名前や正体は書かない。docs/lore/reveal.md）
+// 眷属（ヴェスパ・グレゴル・コノハ）は倒せる。使徒（アウレリア・宵姫）は敵にしない。docs/lore/majin.md
+// 説明文は匂わせにとどめる（使徒の名前や正体は書かない。docs/lore/reveal.md）
 // W1 の場所（locations_w1.js）と出来事（events_w1.js）から使う
 (function (G) {
   const D = (G.data = G.data || {});
@@ -59,7 +59,7 @@
       },
     },
 
-    // 使徒（ボス）
+    // 眷属（ボス）
     w1_vespa: {
       name: "異端審問官ヴェスパ", tier: 4, boss: true, hp: 90, dmg: [2, 8, 3], hit: 75, def: 25, agi: 55, will: 999, mres: 20, gold: [80, 160], loot: [["holywater", 1], ["potion", 1]], shape: "humanoid", eye: "#ff8a3a",
       desc: "鉄の仮面の異端審問官。聖女さまを疑う者を「異端」と呼び、火刑台へ連れていく。仮面の下を見た者はいない。",
