@@ -7,7 +7,8 @@
 (function (G) {
   const D = (G.data = G.data || {});
   const P = (k) => (c, S) => G.m10P[k](c, S);
-  const L = (k) => (c) => [D.M10.LINES[c.trait] ? D.M10.LINES[c.trait][k] : D.M10.LINES.soft[k]];
+  // キャラメモの人物（C2）は、その人のひとこと（G.c2Line）
+  const L = (k) => (c) => [(G.c2Line && G.c2Line(c, k)) || (D.M10.LINES[c.trait] ? D.M10.LINES[c.trait][k] : D.M10.LINES.soft[k])];
   const fl = (k) => (S) => !!(G.m8FlavorsOf && (G.m8FlavorsOf(S) || {})[k]);
   const m10 = (S) => S.m10 || {};
 

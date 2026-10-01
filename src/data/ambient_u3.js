@@ -32,7 +32,7 @@
     { id: "u3_nerva_net", where: ["nerva"], w: 2, text: "網を繕う漁師が、鼻歌をやめた。「夜の海じゃ歌うな。歌われたら、下手でも歌い返せ。うちの爺さんの言いつけでな」", lore: "lugu:rumor" },
     { id: "u3_nerva_fleet", where: ["nerva"], text: "桟橋の老いた船大工が、東の沖を顎でしゃくった。「わしの兄貴は、東の大地へ行く艦隊に乗った。一隻も帰らんかった。……まあ、兄貴は借金も返さんかったがな」", lore: "hikarikabe" },
     { id: "u3_nerva_widow", where: ["nerva"], text: "桟橋の先に、毎朝同じ女が立っているという。今朝もいた。沖を見ている。船は、もう十年帰っていない。" },
-    { id: "u3_leavel_knight", where: ["leavel"], w: 2, text: "白銀の鎧の若い騎士が、鏡の前で口上の練習をしている。「我が剣は女王陛下に……陛下の……」三回目で、噛んだ。" },
+    { id: "u3_leavel_knight", where: ["leavel"], w: 2, text: "白銀の鎧の若い騎士が、鏡の前で口上の練習をしている。「我が剣は国王陛下に……陛下の……」三回目で、噛んだ。" },
     { id: "u3_leavel_pilgrim", where: ["leavel"], cond: later(3), text: "巡礼の母親が、子どもの首筋を撫でながら言った。「聖女さまに触れていただいた痕よ。ありがたいねえ」子どもは、眠そうに笑っている。", lore: "mark:blessed" },
     { id: "u3_garmund_widows", where: ["garmund"], w: 2, text: "雪かきをしているのは女と年寄りばかりだ。男たちは、みんな南の砦か、皇子さまの誰かの陣にいる。" },
     { id: "u3_garmund_game", where: ["garmund"], cond: later(6), text: "宮廷の近くの酒場で、下働きの男が声をひそめた。「北の賢人さまは、駒を取るたびに謝るんだとよ。人の首を取るときは、謝らないのにな」", lore: "chezar:rumor" },

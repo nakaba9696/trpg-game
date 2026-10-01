@@ -174,10 +174,10 @@
     return w;
   };
 
-  // 施設の人：王城では、玉座の主（聖王都は退屈そうな女王、帝都は病床の皇帝に代わる宰相）。王位を奪ったあとは出さない
+  // 施設の人：王城では、玉座の主（聖王都は灰銀の髪の国王ヴァレオン、帝都は病床の皇帝に代わる宰相）。王位を奪ったあとは出さない
   const FAC_WHO = {
     castle: {
-      leavel: { kind: "noble", sex: "女", age: 34, name: "女王エレオノーラ", seed: "fac:leavel:queen", look: { head: "circlet", eyes: "sleepy", mouth: "flat", brows: "raised", hairStyle: "long", cloth: "#e8e0d0", chest: "gem", bg: "#8a7a5a" } },
+      leavel: { kind: "noble", sex: "男", age: 58, name: "国王ヴァレオン", seed: "c2:valeon", look: { hair: "#b8b8bc", hairStyle: "wild", eyes: "sharp", iris: "#c8902a", mouth: "grin", brows: "angry", outfit: "plate", head: "crown", gear: "greatsword", chest: "crest", cloth: "#5a1a1a", build: "broad", marks: ["beard", "scar"], bg: "#8a6a3a" } },
       garmund: { kind: "noble", sex: "男", age: 64, name: "宰相", seed: "fac:garmund:chancellor", look: { head: "none", eyes: "narrow", mouth: "flat", brows: "calm", hairStyle: "slick", cloth: "#1a1a22", chest: "chain", bg: "#3a3a44", marks: ["wrinkles", "bags"] } },
     },
   };
@@ -865,6 +865,7 @@
     // 耳
     const ey = cy + ry * (child ? 0.2 : 0.1);
     for (const s of [-1, 1]) paint(ctx, mix(L.skin, "#b05a4a", 0.12), U * 0.008, () => {
+      if (L.ears === "beast") return; // 獣人の耳は頭の上（beastEars）
       if (L.ears === "pointy") { ctx.moveTo(cx + s * rx * 0.9, ey - ry * 0.12); ctx.lineTo(cx + s * rx * 1.5, ey - ry * 0.55); ctx.lineTo(cx + s * rx * 0.95, ey + ry * 0.28); }
       else ellipse(ctx, cx + s * rx * 0.98, ey + ry * 0.06, rx * 0.15, ry * 0.2);
     });
@@ -884,6 +885,7 @@
     if (L.marks.includes("earring")) { ctx.strokeStyle = "#e0c050"; ctx.lineWidth = U * 0.006; ctx.beginPath(); ellipse(ctx, cx - rx * 1.0, ey + ry * 0.28, rx * 0.06, rx * 0.08); ctx.stroke(); }
     hairFront(ctx, L, cx, cy, rx, ry, U);
     headwear(ctx, L, cx, cy, rx, ry, U);
+    if (L.ears === "beast") beastEars(ctx, L, cx, cy, rx, ry, U);
     if (L.marks.includes("foxmask")) foxMask(ctx, cx - rx * 0.78, cy - ry * 0.72, rx * 0.5, U);
     // 周りを暗く
     const v = ctx.createRadialGradient(cx, y + h * 0.45, h * 0.35, cx, y + h * 0.5, h * 0.8);
@@ -891,6 +893,15 @@
     ctx.fillStyle = v; ctx.fillRect(x, y, w, h);
     ctx.restore();
   };
+
+  // 獣人の耳（look.ears = "beast"）。髪の色の三角を、頭の上の左右に立てる（C2 #119）
+  function beastEars(ctx, L, cx, cy, rx, ry, U) {
+    for (const s of [-1, 1]) {
+      const bx = cx + s * rx * 0.55, by = cy - ry * 0.78;
+      paint(ctx, L.hair, U * 0.009, () => { ctx.moveTo(bx - s * rx * 0.28, by + ry * 0.12); ctx.lineTo(bx + s * rx * 0.12, by - ry * 0.62); ctx.lineTo(bx + s * rx * 0.3, by + ry * 0.05); ctx.closePath(); });
+      paint(ctx, mix(L.skin, "#b05a4a", 0.25), 0, () => { ctx.moveTo(bx - s * rx * 0.14, by + ry * 0.04); ctx.lineTo(bx + s * rx * 0.1, by - ry * 0.4); ctx.lineTo(bx + s * rx * 0.18, by + ry * 0.0); ctx.closePath(); });
+    }
+  }
 
   // 仲間になった魔物など、人でないもの（モンスターの絵を胸から上に切り取る）
   function paintFoe(ctx, x, y, w, h, who) {
