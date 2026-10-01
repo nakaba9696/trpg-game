@@ -7,6 +7,8 @@
 // G.heroWho(profile, cls) / G.companionWho(c) / G.eventWho(e) … 主人公・仲間・出来事から who を作る
 // who = { kind, seed, sex: "男"|"女", age: 数, cls（主人公の職業 id）, text（「銀髪、鋭い目つき」のような外見の文）, look: {部品の上書き} }
 // 乱数は seed から作る（G.rand を使わない）ので、同じ人物はいつも同じ見た目になる。レーン A（絵）が管理
+// V3：光は左上から。vgrad / rgrad で塗ると影二段・光の縁が付く。目（虹彩・瞳・光・まぶた・まつ毛）・鼻・唇・筆の眉、エルフの耳、
+//     獣人の耳と顔（獣ごと。beastEars・beastCheeks）。同じ肖像は使い回す（DOM があるときだけ）
 (function (G) {
   // ---------------------------------------------------------------- 小道具
   function rng(seed) {
@@ -18,7 +20,7 @@
   const mix = (a, b, t) => { const x = hex(a), y = hex(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
   const rgba = (c, a) => { const [r, g, b] = hex(c); return `rgba(${r},${g},${b},${a})`; };
   const pickR = (R, a) => a[Math.floor(R() * a.length)];
-  const INK = "#1a1418";
+  const INK = "#2a1c1c"; // 輪郭の色（真っ黒にせず、焦げ茶で柔らかく）
   const TAU = Math.PI * 2;
 
   // ---------------------------------------------------------------- 部品の色
@@ -43,7 +45,7 @@
     priest: K({ name: "神官", desc: "光天教会の神官・修道女・巡礼", age: [22, 66], female: 0.45, outfit: ["vestment"], head: ["none", "mitre", "none", "veil"], gear: ["none", "none", "staff"], chest: ["sun"], cloth: ["#ece6d6"], trim: ["#b08a1e", "#8a2a2a", "#2e4d8f"], bg: "#b8a870", eyes: ["narrow", "normal", "smile"], mouth: ["smile", "flat", "smirk"], brows: ["raised", "calm"], hair: ["short", "slick", "receding", "long"], marks: { wrinkles: 0.3, blush: 0.2, glasses: 0.15 } }),
     noble: K({ name: "貴族", desc: "貴族・その奥方・廷臣", age: [20, 62], outfit: ["noble"], head: ["none", "circlet", "none"], chest: ["gem", "chain"], cloth: ["#5a1a3a", "#1a3a5a", "#2a4a2a", "#4a2a6a"], bg: "#6a4a6a", eyes: ["narrow", "sleepy", "normal"], mouth: ["smirk", "flat", "frown"], brows: ["raised"], hair: ["slick", "long", "bun", "parted"], marks: { mustache: 0.35, glasses: 0.15, blush: 0.25, earring: 0.3 } }),
     rogue: K({ name: "ならず者", desc: "盗賊・ごろつき・用心棒・奴隷商人", age: [18, 48], female: 0.3, outfit: ["leather", "rags", "cloak"], head: ["bandana", "none", "hood"], gear: ["daggers", "none", "sword"], cloth: ["#4a3a2a", "#2e3a2e", "#3a2a3a", "#5a3a2a"], bg: "#4a4038", eyes: ["sharp", "narrow", "normal"], mouth: ["grin", "smirk", "frown"], brows: ["angry", "raised"], hair: ["messy", "spiky", "short", "long"], marks: { scar: 0.45, stubble: 0.45, eyepatch: 0.15, earring: 0.3, tattoo: 0.2 } }),
-    child: K({ name: "子ども", desc: "町の子ども・孤児・スリの子", age: [7, 12], outfit: ["tunic", "rags", "apron"], head: ["none", "none", "cap"], cloth: ["#7a5a3a", "#5a7a8a", "#8a4a3a", "#6a7a4a"], bg: "#8a9a7a", eyes: ["round", "normal"], mouth: ["open", "smile", "frown"], brows: ["worried", "raised", "calm"], hair: ["messy", "short", "bob", "ponytail"], marks: { freckles: 0.45, blush: 0.5, bandage: 0.25 } }),
+    child: K({ name: "子ども", desc: "町の子ども・孤児・スリの子", age: [7, 12], outfit: ["tunic", "rags", "apron"], head: ["none", "none", "cap"], cloth: ["#7a5a3a", "#5a7a8a", "#8a4a3a", "#6a7a4a"], bg: "#8a9a7a", eyes: ["round", "normal"], mouth: ["open", "smile", "frown"], brows: ["worried", "raised", "calm"], hair: ["messy", "short", "bob", "ponytail", "twintail"], marks: { freckles: 0.45, blush: 0.5, bandage: 0.25 } }),
     elder: K({ name: "老人", desc: "村の長老・隠者・占い婆", age: [66, 90], outfit: ["robe", "tunic", "cloak"], head: ["none", "none", "hood", "kerchief"], gear: ["none", "staff"], cloth: ["#5a5048", "#4a4a5a", "#6a5a3a"], bg: "#6a6258", eyes: ["narrow", "sleepy", "normal"], mouth: ["flat", "smile", "open"], brows: ["worried", "calm"], hair: ["bald", "receding", "long", "bun"], marks: { wrinkles: 1, beard: 0.45, bags: 0.6 } }),
     soldier: K({ name: "兵士", desc: "帝国兵・脱走兵・傭兵団の兵", age: [18, 45], female: 0.15, outfit: ["armor", "leather"], head: ["helmet", "none", "headband"], gear: ["sword", "spear"], cloth: ["#5a2a22", "#3a3a3a", "#4a4a2a"], bg: "#5a5048", eyes: ["sharp", "normal", "sleepy"], mouth: ["frown", "flat"], brows: ["angry", "worried"], hair: ["short", "messy", "spiky"], marks: { scar: 0.4, stubble: 0.5, bandage: 0.25 } }),
     knight: K({ name: "騎士", desc: "王国の騎士・近衛・聖騎士", age: [20, 50], female: 0.3, outfit: ["plate"], head: ["none", "none", "helmet"], gear: ["greatsword", "sword"], chest: ["crest"], cloth: ["#2a4a9a", "#8a2a2a", "#e0dcd0"], bg: "#4a5a7a", eyes: ["sharp", "normal"], mouth: ["flat", "smirk"], brows: ["angry", "calm", "raised"], hair: ["parted", "short", "long", "slick"], marks: { scar: 0.25, mustache: 0.15 } }),
@@ -64,8 +66,8 @@
     priest: K({ name: "破戒神官", outfit: ["vestment"], head: ["none", "none", "veil"], gear: ["mace"], chest: ["sun"], cloth: ["#ece6d6", "#d8d2c4"], trim: ["#8a2a2a", "#2e4d8f", "#b08a1e"], bg: "#9a8a5a", eyes: ["sleepy", "normal", "narrow"], mouth: ["smirk", "smile", "grin"], brows: ["raised", "calm"], hair: ["messy", "short", "long", "parted"], marks: { stubble: 0.45, bags: 0.4, blush: 0.35 } }),
     samurai: K({ name: "侍", outfit: ["kimono"], armor: true, head: ["none", "headband", "none"], gear: ["katana"], cloth: ["#2a2a3a", "#3a2a22", "#1a2a3a", "#4a1a1a"], bg: "#6a4a3a", eyes: ["sharp", "narrow", "normal"], mouth: ["flat", "frown", "smirk"], brows: ["angry", "calm"], hair: ["topknot", "ponytail", "messy", "long"], marks: { scar: 0.25, stubble: 0.25 } }),
   };
-  const FEMALE_HAIR = ["long", "ponytail", "bob", "bun", "parted", "long"];
-  const MALE_HAIR = ["short", "messy", "spiky", "parted", "slick", "short"];
+  const FEMALE_HAIR = ["long", "ponytail", "bob", "bun", "parted", "long", "twintail", "braid"];
+  const MALE_HAIR = ["short", "messy", "spiky", "parted", "slick", "short", "swept"];
 
   // ---------------------------------------------------------------- 見た目を決める（純粋な関数）
   G.personLook = (who) => {
@@ -94,6 +96,7 @@
     if (female && ["receding", "bald"].includes(L.hairStyle)) L.hairStyle = pickR(R, ["bun", "long"]);
     if (!female && L.head === "veil") L.head = "none";
     if (!female && L.hairStyle === "bob") L.hairStyle = "messy";
+    if (!female && (L.hairStyle === "twintail" || L.hairStyle === "braid")) L.hairStyle = "ponytail";
     if (band === "old") { L.hair = pickR(R, ["#e2ded6", "#c8c4bc", "#9a9690", "#7a7672"]); }
     if (band === "mid" && R() < 0.4) L.streak = true;
     if (L.kind === "majin") { L.hair = pickR(R, ["#e8e4ec", "#1a1422", "#8a1a2a", "#4a2a6a", "#c8a040"]); L.iris = pickR(R, ["#ff3a3a", "#ffb02a", "#b04aff", "#3affc8"]); L.ears = "pointy"; }
@@ -191,9 +194,32 @@
 
   // ---------------------------------------------------------------- 描く道具
   function ellipse(ctx, x, y, rx, ry, rot) { ctx.ellipse(x, y, Math.max(0.1, rx), Math.max(0.1, ry), rot || 0, 0, TAU); }
+  // 塗って輪郭を引く。vgrad / rgrad の塗りなら、光（左上）に合わせて影を二段・光の縁・照り返しを重ねる（セル画のように境目をはっきり）
+  // 輪郭は影の側（右下）を太く引く
+  const SHADOW = "#2a1830", LIGHT = "#fff4e0";
+  function band(ctx, path, dx, dy, style) {
+    ctx.beginPath(); ctx.rect(-1e5, -1e5, 2e5, 2e5);
+    ctx.save(); ctx.translate(-dx, -dy); path(); ctx.restore();
+    ctx.fillStyle = style; ctx.fill("evenodd");
+  }
+  // 柔らかい影：ずらし幅を変えた帯を薄く重ね、境目をぼかす（絵の具を重ねたように）
+  function soft(ctx, path, dx, dy, col, a) { for (const k of [0.35, 0.65, 1.0, 1.4]) band(ctx, path, dx * k, dy * k, rgba(col, a / 3)); }
   function paint(ctx, fill, lw, path) {
+    const c = fill && fill._c;
+    const solid = !!c || (typeof fill === "string" && fill[0] === "#");
+    const base0 = c || (solid ? fill : null), edge = base0 ? mix(base0, "#140a0c", 0.7) : INK;
+    if (lw && solid) { ctx.save(); ctx.translate(lw * 0.3, lw * 0.4); ctx.beginPath(); path(); ctx.fillStyle = rgba(edge, 0.5); ctx.fill(); ctx.restore(); }
     ctx.beginPath(); path(); ctx.fillStyle = fill; ctx.fill();
-    if (lw) { ctx.lineWidth = lw; ctx.strokeStyle = INK; ctx.lineJoin = "round"; ctx.stroke(); }
+    if (c) {
+      const d = fill._d;
+      ctx.save(); ctx.beginPath(); path(); ctx.clip();
+      soft(ctx, path, d * 0.9, d * 0.7, mix(c, SHADOW, 0.55), 0.55);
+      soft(ctx, path, d * 0.3, d * 0.25, mix(c, SHADOW, 0.75), 0.35);
+      band(ctx, path, d * 0.08, d * 0.06, rgba(mix(c, "#e0a080", 0.5), 0.14));
+      soft(ctx, path, -d * 0.3, -d * 0.3, mix(c, LIGHT, 0.55), 0.35);
+      ctx.restore();
+    }
+    if (lw) { ctx.lineWidth = lw * (solid ? 0.65 : 0.85); ctx.strokeStyle = rgba(edge, 0.8); ctx.lineJoin = "round"; ctx.beginPath(); path(); ctx.stroke(); }
   }
   function line(ctx, c, w, pts) {
     ctx.beginPath(); ctx.moveTo(pts[0], pts[1]);
@@ -202,20 +228,24 @@
   }
   function vgrad(ctx, y0, y1, c) {
     const g = ctx.createLinearGradient(0, y0, 0, y1);
-    g.addColorStop(0, mix(c, "#ffffff", 0.18)); g.addColorStop(0.5, c); g.addColorStop(1, mix(c, "#000000", 0.35));
+    g.addColorStop(0, mix(c, LIGHT, 0.18)); g.addColorStop(0.5, c); g.addColorStop(1, mix(c, SHADOW, 0.35));
+    g._c = c; g._d = Math.min(Math.abs(y1 - y0) * 0.08, 40);
     return g;
   }
   function rgrad(ctx, x, y, r, c) {
     const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.35, r * 0.1, x, y, r * 1.25);
-    g.addColorStop(0, mix(c, "#ffffff", 0.2)); g.addColorStop(0.65, c); g.addColorStop(1, mix(c, "#000000", 0.16));
+    g.addColorStop(0, mix(c, LIGHT, 0.2)); g.addColorStop(0.65, c); g.addColorStop(1, mix(c, SHADOW, 0.18));
+    g._c = c; g._d = r * 0.22;
     return g;
   }
   // 顔の輪郭（上は楕円、下はあごの角ばり jaw で変わる）
   function facePath(ctx, cx, cy, rx, ry, jaw) {
     ctx.moveTo(cx - rx, cy);
     ctx.ellipse(cx, cy, rx, ry, 0, Math.PI, TAU);
-    ctx.bezierCurveTo(cx + rx, cy + ry * 0.55, cx + rx * jaw, cy + ry * 0.92, cx, cy + ry);
-    ctx.bezierCurveTo(cx - rx * jaw, cy + ry * 0.92, cx - rx, cy + ry * 0.55, cx - rx, cy);
+    // 頬はふっくら、顎の先は小さく丸く
+    ctx.bezierCurveTo(cx + rx * 1.02, cy + ry * 0.5, cx + rx * (jaw + 0.18), cy + ry * 0.84, cx + rx * 0.16, cy + ry * 0.95);
+    ctx.quadraticCurveTo(cx, cy + ry * 1.0, cx - rx * 0.16, cy + ry * 0.95);
+    ctx.bezierCurveTo(cx - rx * (jaw + 0.18), cy + ry * 0.84, cx - rx * 1.02, cy + ry * 0.5, cx - rx, cy);
   }
   const FACES = { oval: [1, 1, 0.62], round: [1.07, 0.95, 0.8], square: [1.04, 0.98, 0.9], long: [0.93, 1.08, 0.6], thin: [0.9, 1.02, 0.48] };
 
@@ -224,6 +254,16 @@
     const g = ctx.createRadialGradient(x + w * 0.5, y + h * 0.38, h * 0.05, x + w * 0.5, y + h * 0.5, h * 0.85);
     g.addColorStop(0, mix(L.bg, "#ffffff", 0.28)); g.addColorStop(0.55, L.bg); g.addColorStop(1, mix(L.bg, "#000000", 0.6));
     ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    // 背景だけに筆のにじみ（人物の顔には載せない）
+    const R = rng((L.seed || "p") + ":brush");
+    ctx.lineCap = "round";
+    for (let i = 0; i < 220; i++) {
+      // 筆のひと押し（向きのばらつく、にじんだ短い楕円）
+      const px = x + R() * w, py = y + R() * h, len = h * (0.012 + R() * 0.025), a = -0.7 + (R() - 0.5) * 2.2;
+      ctx.fillStyle = i % 2 ? "rgba(255,244,220,.04)" : "rgba(30,18,20,.05)";
+      ctx.beginPath(); ellipse(ctx, px, py, len, h * (0.004 + R() * 0.006), a); ctx.fill();
+    }
+
     if (L.kind === "majin") {
       // 立ちのぼる黒い気
       const R = rng(L.seed + ":aura");
@@ -492,6 +532,17 @@
       });
     } else if (st === "bob") {
       paint(ctx, vgrad(ctx, cy - ry, cy + ry, c.base), lw, () => { ctx.moveTo(cx - rx * 1.2, cy + ry * 0.85); ctx.ellipse(cx, cy - ry * 0.05, rx * 1.22, ry * 1.12, 0, Math.PI * 0.95, Math.PI * 2.05); ctx.lineTo(cx + rx * 1.2, cy + ry * 0.85); });
+    } else if (st === "twintail") {
+      // 頭の両横の高い所で結び、外へふくらんで垂れる
+      for (const s of [-1, 1]) {
+        paint(ctx, vgrad(ctx, cy - ry, cy + ry * 1.9, c.base), lw, () => { ctx.moveTo(cx + s * rx * 0.85, cy - ry * 0.75); ctx.bezierCurveTo(cx + s * rx * 2.0, cy - ry * 0.7, cx + s * rx * 1.9, cy + ry * 1.0, cx + s * rx * 1.35, cy + ry * 1.9); ctx.quadraticCurveTo(cx + s * rx * 1.5, cy + ry * 0.7, cx + s * rx * 1.0, cy - ry * 0.35); ctx.closePath(); });
+        ctx.strokeStyle = rgba(c.dark, 0.5); ctx.lineWidth = lw * 0.7; ctx.beginPath(); ctx.moveTo(cx + s * rx * 1.1, cy - ry * 0.55); ctx.quadraticCurveTo(cx + s * rx * 1.7, cy + ry * 0.3, cx + s * rx * 1.4, cy + ry * 1.6); ctx.stroke();
+        ctx.strokeStyle = rgba(c.light, 0.5); ctx.lineWidth = lw * 1.2; ctx.beginPath(); ctx.moveTo(cx + s * rx * 1.25, cy - ry * 0.6); ctx.quadraticCurveTo(cx + s * rx * 1.6, cy - ry * 0.2, cx + s * rx * 1.6, cy + ry * 0.3); ctx.stroke();
+        paint(ctx, "#b03a52", lw * 0.6, () => ellipse(ctx, cx + s * rx * 0.95, cy - ry * 0.72, rx * 0.14, ry * 0.09));
+      }
+      paint(ctx, vgrad(ctx, cy - ry, cy + ry, c.base), lw, () => { ctx.moveTo(cx - rx * 1.15, cy + ry * 0.5); ctx.ellipse(cx, cy - ry * 0.05, rx * 1.15, ry * 1.08, 0, Math.PI, TAU); ctx.lineTo(cx + rx * 1.15, cy + ry * 0.5); });
+    } else if (st === "braid") {
+      paint(ctx, vgrad(ctx, cy - ry, cy + ry, c.base), lw, () => { ctx.moveTo(cx - rx * 1.15, cy + ry * 0.6); ctx.ellipse(cx, cy - ry * 0.05, rx * 1.15, ry * 1.08, 0, Math.PI, TAU); ctx.lineTo(cx + rx * 1.15, cy + ry * 0.6); });
     } else if (st === "ponytail") {
       const R = rng(L.seed + ":tail"), s = R() < 0.5 ? -1 : 1;
       paint(ctx, vgrad(ctx, cy - ry, cy + ry * 1.8, c.base), lw, () => { ctx.moveTo(cx + s * rx * 0.6, cy - ry * 0.8); ctx.quadraticCurveTo(cx + s * rx * 1.9, cy - ry * 0.5, cx + s * rx * 1.5, cy + ry * 1.7); ctx.quadraticCurveTo(cx + s * rx * 1.25, cy + ry * 0.4, cx + s * rx * 0.7, cy - ry * 0.3); });
@@ -515,12 +566,12 @@
     if (st === "spiky" || st === "messy" || st === "wild") {
       const n = st === "spiky" ? 5 : 6;
       for (let i = 0; i <= n; i++) { const t = i / n; const px = cx + rx * (0.9 - t * 1.8); fr.push(px, hl + (i % 2 ? ry * (0.22 + R() * 0.12) : -ry * 0.02)); }
-    } else if (st === "parted" || st === "long" || st === "ponytail") {
+    } else if (st === "parted" || st === "long" || st === "ponytail" || st === "braid" || st === "swept") {
       const part = R() < 0.5 ? -1 : 1;
       fr.push(cx + rx * 0.9, cy - ry * 0.25, cx + part * rx * 0.15, cy - ry * 0.72, cx - rx * 0.4, cy - ry * 0.35, cx - rx * 0.9, cy - ry * 0.2);
       if (part < 0) for (let i = 0; i < fr.length; i += 2) fr[i] = 2 * cx - fr[i];
       if (part < 0) { const p = []; for (let i = fr.length - 2; i >= 0; i -= 2) p.push(fr[i], fr[i + 1]); fr.length = 0; fr.push(...p); }
-    } else if (st === "bob") {
+    } else if (st === "bob" || st === "twintail") {
       for (let i = 0; i <= 8; i++) fr.push(cx + rx * (0.9 - (i / 8) * 1.8), cy - ry * 0.22 + (i % 2 ? ry * 0.05 : 0));
     } else if (st === "receding") {
       fr.push(cx + rx * 0.95, cy - ry * 0.35, cx + rx * 0.5, cy - ry * 0.55, cx + rx * 0.25, cy - ry * 0.95, cx - rx * 0.25, cy - ry * 0.95, cx - rx * 0.5, cy - ry * 0.55, cx - rx * 0.95, cy - ry * 0.35);
@@ -529,14 +580,25 @@
       const n = 5;
       for (let i = 0; i <= n; i++) fr.push(cx + rx * (0.92 - (i / n) * 1.84), hl + (st === "slick" || st === "topknot" || st === "bun" ? -Math.sin((i / n) * Math.PI) * ry * 0.08 : (i % 2 ? ry * 0.1 : 0)));
     }
+    // 前髪は尖った毛束にする（点を足して、点と点のあいだに先の細い束を垂らす）
+    const locks = !["spiky", "messy", "wild", "receding"].includes(st);
+    if (locks && fr.length < 14) { const p = fr.slice(); fr.length = 0; for (let i = 0; i < p.length - 2; i += 2) for (let k = 0; k < 2; k++) fr.push(p[i] + (p[i + 2] - p[i]) * k / 2, p[i + 1] + (p[i + 3] - p[i + 1]) * k / 2); fr.push(p[p.length - 2], p[p.length - 1]); }
+    const fringe = () => {
+      ctx.lineTo(fr[0], fr[1]);
+      for (let i = 2; i < fr.length; i += 2) {
+        if (!locks) { ctx.lineTo(fr[i], fr[i + 1]); continue; }
+        const ax = fr[i - 2], ay = fr[i - 1], bx = fr[i], by = fr[i + 1], tx = (ax + bx) / 2 + (bx - ax) * 0.15, ty2 = Math.max(ay, by) + ry * (0.1 + R() * 0.06);
+        ctx.quadraticCurveTo(ax + (tx - ax) * 0.3, ay + (ty2 - ay) * 0.8, tx, ty2);
+        ctx.quadraticCurveTo(tx + (bx - tx) * 0.2, by + (ty2 - by) * 0.2, bx, by);
+      }
+    };
     const cap = () => {
       ctx.moveTo(lx, ty);
       if (st === "receding") { ctx.lineTo(lx, cy - ry * 0.45); } else ctx.bezierCurveTo(lx - rx * (vol - 1), cy - ry * 0.8, cx - rx * 0.6, top - ry * (vol - 1) * 2, cx, top - ry * (vol - 1) * 1.6);
       if (st !== "receding") ctx.bezierCurveTo(cx + rx * 0.6, top - ry * (vol - 1) * 2, rxp + rx * (vol - 1), cy - ry * 0.8, rxp, ty);
       else { ctx.moveTo(rxp, cy - ry * 0.45); }
       ctx.lineTo(rxp, ty);
-      ctx.lineTo(fr[0], fr[1]);
-      for (let i = 2; i < fr.length; i += 2) ctx.lineTo(fr[i], fr[i + 1]);
+      fringe();
       ctx.lineTo(lx, ty);
     };
     if (st === "receding") {
@@ -547,17 +609,35 @@
       paint(ctx, vgrad(ctx, top, cy, c.base), lw, cap);
       // 毛の流れ
       ctx.save(); ctx.beginPath(); cap(); ctx.clip();
-      for (let i = 0; i < 7; i++) { const px = cx + (R() - 0.5) * rx * 1.6; line(ctx, rgba(c.dark, 0.45), lw * 0.6, [px, top + ry * 0.2, px + (R() - 0.5) * rx * 0.3, cy - ry * 0.55]); }
-      ctx.strokeStyle = rgba(c.light, 0.55); ctx.lineWidth = ry * 0.08; ctx.beginPath(); ctx.ellipse(cx, cy - ry * 0.1, rx * 0.8, ry * 0.72, 0, Math.PI * 1.2, Math.PI * 1.6); ctx.stroke();
+      // 毛の束：つむじから前髪へ流れる暗い溝と、光を受ける筋
+      for (let i = 0; i < 9; i++) {
+        const t = (i + 0.5) / 9, sx0 = cx + rx * (-0.5 + t * 1.0), sy0 = top + ry * (0.05 + R() * 0.15), ex = cx + rx * (-1.0 + t * 2.0), ey = cy - ry * (0.32 + Math.abs(t - 0.5) * 0.2), w = rx * (0.03 + R() * 0.03);
+        ctx.fillStyle = rgba(c.dark, 0.22); ctx.beginPath(); ctx.moveTo(sx0, sy0); ctx.quadraticCurveTo((sx0 + ex) / 2 + w * 3, (sy0 + ey) / 2, ex, ey); ctx.quadraticCurveTo((sx0 + ex) / 2 + w, (sy0 + ey) / 2, sx0 + w * 0.5, sy0); ctx.fill();
+      }
+      // 光の輪（天使の輪）：毛の束で切れぎれ
+      const ringY = cy - ry * 0.68;
+      ctx.lineCap = "round";
+      for (const [wd, al] of [[ry * 0.12, 0.22], [ry * 0.06, 0.5]]) { ctx.strokeStyle = rgba(mix(c.light, "#ffffff", 0.3), al); ctx.lineWidth = wd; ctx.setLineDash([rx * 0.42, rx * 0.07, rx * 0.25, rx * 0.06]); ctx.beginPath(); ctx.ellipse(cx, ringY + ry * 0.33, rx * 0.86, ry * 0.42, 0, Math.PI * 1.12, Math.PI * 1.62); ctx.stroke(); }
+      ctx.setLineDash([]);
       if (L.streak) for (let i = 0; i < 4; i++) { const px = cx + (R() - 0.5) * rx * 1.5; line(ctx, "#e8e4dc", lw * 1.5, [px, top, px + rx * 0.1, cy - ry * 0.4]); }
       ctx.restore();
       // とがった毛先を上に
       if (st === "spiky" || st === "wild") for (let i = 0; i < 4; i++) { const a = Math.PI * (1.2 + i * 0.2), bx = cx + Math.cos(a) * rx * 1.02, by = cy - ry * 0.1 + Math.sin(a) * ry * 1.02; paint(ctx, c.base, lw, () => { ctx.moveTo(bx - Math.sin(a) * rx * 0.16, by + Math.cos(a) * rx * 0.16); ctx.lineTo(bx + Math.cos(a) * rx * 0.24 + rx * 0.1, by + Math.sin(a) * ry * 0.22); ctx.lineTo(bx + Math.sin(a) * rx * 0.16, by - Math.cos(a) * rx * 0.16); }); }
     }
     // 横の毛（長い髪・おかっぱ）
-    if (st === "long" || st === "bob" || st === "wild") {
-      const len = st === "bob" ? 0.85 : 1.55;
-      for (const s of [-1, 1]) paint(ctx, vgrad(ctx, cy - ry * 0.5, cy + ry * len, c.base), lw, () => { ctx.moveTo(cx + s * rx * 1.04, cy - ry * 0.2); ctx.quadraticCurveTo(cx + s * rx * 1.16, cy + ry * 0.5, cx + s * rx * 1.12, cy + ry * len); ctx.lineTo(cx + s * rx * 0.86, cy + ry * (len - 0.1)); ctx.quadraticCurveTo(cx + s * rx * 0.92, cy + ry * 0.3, cx + s * rx * 0.8, cy - ry * 0.25); });
+    if (st === "long" || st === "bob" || st === "wild" || st === "twintail" || st === "braid" || st === "parted" && L.sex === "女") {
+      const len = st === "bob" ? 0.85 : st === "twintail" || st === "braid" || st === "parted" ? 0.7 : 1.55;
+      // 横髪：先の尖った二本の毛束（外の束が長い）
+      for (const s of [-1, 1]) {
+        paint(ctx, vgrad(ctx, cy - ry * 0.5, cy + ry * len, c.base), lw, () => { ctx.moveTo(cx + s * rx * 1.05, cy - ry * 0.25); ctx.quadraticCurveTo(cx + s * rx * 1.18, cy + ry * len * 0.5, cx + s * rx * 1.04, cy + ry * len); ctx.quadraticCurveTo(cx + s * rx * 0.98, cy + ry * len * 0.55, cx + s * rx * 0.86, cy - ry * 0.2); ctx.closePath(); });
+        paint(ctx, vgrad(ctx, cy - ry * 0.5, cy + ry * len * 0.8, mix(c.base, LIGHT, 0.08)), lw, () => { ctx.moveTo(cx + s * rx * 0.92, cy - ry * 0.3); ctx.quadraticCurveTo(cx + s * rx * 0.98, cy + ry * len * 0.35, cx + s * rx * 0.86, cy + ry * len * 0.75); ctx.quadraticCurveTo(cx + s * rx * 0.82, cy + ry * len * 0.3, cx + s * rx * 0.74, cy - ry * 0.28); ctx.closePath(); });
+      }
+    }
+    // 三つ編み：片側の肩から胸へ垂らす（編み目の連なり）
+    if (st === "braid") {
+      const sd = rng(L.seed + ":braid")() < 0.5 ? -1 : 1;
+      for (let i = 0; i < 7; i++) { const bx = cx + sd * rx * (0.95 + i * 0.03), by = cy + ry * (0.35 + i * 0.22), r = rx * (0.2 - i * 0.012); paint(ctx, rgrad(ctx, bx, by, r, c.base), lw * 0.8, () => { ctx.ellipse(bx, by, r, ry * 0.14, sd * 0.35 * (i % 2 ? 1 : -1), 0, TAU); }); }
+      paint(ctx, "#a83a4a", lw * 0.6, () => ellipse(ctx, cx + sd * rx * 1.17, cy + ry * 1.88, rx * 0.12, ry * 0.05));
     }
     // 結った髪
     if (st === "bun") paint(ctx, rgrad(ctx, cx, top - ry * 0.1, rx * 0.4, c.base), lw, () => ellipse(ctx, cx, top - ry * 0.08, rx * 0.4, ry * 0.26));
@@ -661,80 +741,163 @@
   }
 
   // ---------------------------------------------------------------- 顔
-  function eyePair(ctx, L, cx, ey, sp, er, U) {
+  // 目：白目（上まぶたの影つき）→ 虹彩（縁が暗く下が明るい）→ 瞳 → 光の点二つ → 太い上まぶた（女はまつ毛）→ 下まぶた → 二重の線
+  function eyePair(ctx, L, cx, ey, sp, er0, U) {
     const lw = U * 0.008;
     const female = L.sex === "女";
+    const slitPupil = L.beast === "cat" || L.beast === "fox" || L.eyes === "glow";
     [-1, 1].forEach((s) => {
-      const ex = cx + s * sp;
+      // 顔は少しだけ右を向く：奥（右）の目は小さく、内へ寄る
+      const er = er0 * (s > 0 ? 0.96 : 1), ex = cx + s * sp * (s > 0 ? 0.95 : 1);
       if (s === 1 && L.marks.includes("eyepatch")) return;
       const iris = s === 1 && L.iris2 ? L.iris2 : L.iris;
       const st = L.eyes;
+      const lid = (pts, w) => { ctx.beginPath(); ctx.moveTo(pts[0], pts[1]); ctx.quadraticCurveTo(pts[2], pts[3], pts[4], pts[5]); ctx.strokeStyle = INK; ctx.lineWidth = w; ctx.lineCap = "round"; ctx.stroke(); };
       if (st === "smile") {
-        line(ctx, INK, lw * 1.6, [ex - er * 1.1, ey + er * 0.2, ex - er * 0.5, ey - er * 0.45, ex + er * 0.5, ey - er * 0.45, ex + er * 1.1, ey + er * 0.2]);
+        // 笑って細めた目：上に弓なりの太いまぶたと、頬の押し上げ
+        ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(ex - er * 1.2, ey + er * 0.25); ctx.quadraticCurveTo(ex, ey - er * 0.95, ex + er * 1.2, ey + er * 0.25); ctx.quadraticCurveTo(ex, ey - er * 0.55, ex - er * 1.2, ey + er * 0.25); ctx.fill();
+        line(ctx, rgba(mix(L.skin, SHADOW, 0.5), 0.5), lw * 0.8, [ex - er * 0.8, ey + er * 0.75, ex, ey + er * 0.9, ex + er * 0.8, ey + er * 0.75]);
+        if (female) line(ctx, INK, lw * 1.1, [ex + s * er * 1.1, ey + er * 0.15, ex + s * er * 1.45, ey - er * 0.1]);
         return;
       }
-      if (st === "narrow") {
-        line(ctx, INK, lw * 1.6, [ex - er * 1.2, ey - er * 0.05, ex + er * 1.2, ey - er * (0.05 + s * 0.12)]);
-        ctx.fillStyle = iris === "#2a2a2a" ? "#1a1a1a" : mix(iris, "#000000", 0.4); ctx.beginPath(); ellipse(ctx, ex, ey + er * 0.12, er * 0.35, er * 0.22); ctx.fill();
+      if (st === "narrow" && false) {
+        ctx.fillStyle = "#f4efe6"; ctx.beginPath(); ctx.moveTo(ex - er * 1.2, ey); ctx.quadraticCurveTo(ex, ey - er * 0.45, ex + er * 1.2, ey - er * s * 0.1); ctx.quadraticCurveTo(ex, ey + er * 0.4, ex - er * 1.2, ey); ctx.fill();
+        ctx.fillStyle = mix(iris, "#000000", 0.35); ctx.beginPath(); ellipse(ctx, ex + s * er * 0.05, ey + er * 0.02, er * 0.42, er * 0.3); ctx.fill();
+        ctx.fillStyle = "#ffffff"; ctx.beginPath(); ellipse(ctx, ex - er * 0.15, ey - er * 0.08, er * 0.1, er * 0.08); ctx.fill();
+        ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(ex - er * 1.3, ey + er * 0.05); ctx.quadraticCurveTo(ex, ey - er * 0.7, ex + er * 1.3, ey - er * s * 0.12); ctx.quadraticCurveTo(ex, ey - er * 0.32, ex - er * 1.3, ey + er * 0.05); ctx.fill();
+        line(ctx, rgba(INK, 0.5), lw * 0.7, [ex - er * 0.6, ey + er * 0.38, ex + er * 0.9, ey + er * 0.3]);
         return;
       }
       if (st === "glow") {
         ctx.fillStyle = "#1a0e14"; ctx.beginPath(); ellipse(ctx, ex, ey, er * 1.25, er * 0.62, s * -0.18); ctx.fill();
+        const gb = ctx.createRadialGradient(ex, ey, 0, ex, ey, er * 2.4); gb.addColorStop(0, rgba(iris, 0.5)); gb.addColorStop(1, rgba(iris, 0));
+        ctx.fillStyle = gb; ctx.beginPath(); ellipse(ctx, ex, ey, er * 2.4, er * 2.4); ctx.fill();
         ctx.shadowColor = iris; ctx.shadowBlur = er * 4;
-        ctx.fillStyle = iris; ctx.beginPath(); ellipse(ctx, ex, ey, er * 0.6, er * 0.55); ctx.fill();
+        const gi = ctx.createRadialGradient(ex, ey, 0, ex, ey, er * 0.62); gi.addColorStop(0, "#ffffff"); gi.addColorStop(0.35, mix(iris, "#ffffff", 0.4)); gi.addColorStop(1, iris);
+        ctx.fillStyle = gi; ctx.beginPath(); ellipse(ctx, ex, ey, er * 0.62, er * 0.55); ctx.fill();
         ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
-        ctx.fillStyle = "#0a0406"; ctx.beginPath(); ellipse(ctx, ex, ey, er * 0.12, er * 0.5); ctx.fill();
-        line(ctx, INK, lw * 1.8, [ex - s * er * 1.3, ey - er * (0.1 - 0.35), ex, ey - er * 0.7, ex + s * er * 1.35, ey - er * 0.65]);
+        ctx.fillStyle = "#0a0406"; ctx.beginPath(); ellipse(ctx, ex, ey, er * 0.1, er * 0.48); ctx.fill();
+        ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(ex - s * er * 1.35, ey + er * 0.2); ctx.quadraticCurveTo(ex, ey - er * 0.95, ex + s * er * 1.4, ey - er * 0.6); ctx.quadraticCurveTo(ex, ey - er * 0.6, ex - s * er * 1.35, ey + er * 0.2); ctx.fill();
         return;
       }
-      const tall = st === "round" ? 1.05 : st === "sharp" ? 0.62 : 0.82;
+      const tall = st === "round" ? 1.12 : st === "sharp" ? 0.72 : st === "sleepy" ? 0.85 : st === "narrow" ? 0.62 : 0.96;
       const wide = st === "round" ? 1.12 : 1.25;
-      const tilt = st === "sharp" ? s * -0.18 : 0;
+      const tilt = st === "sharp" ? s * -0.2 : 0;
       ctx.save(); ctx.translate(ex, ey); ctx.rotate(tilt);
-      ctx.beginPath(); ctx.moveTo(-er * wide, 0); ctx.quadraticCurveTo(0, -er * tall * 1.35, er * wide, 0); ctx.quadraticCurveTo(0, er * tall * 1.15, -er * wide, 0); ctx.fillStyle = "#f8f4ec"; ctx.fill();
-      ctx.save(); ctx.clip();
-      const ir = er * (st === "sharp" ? 0.55 : 0.68);
-      const g = ctx.createRadialGradient(0, -ir * 0.3, ir * 0.1, 0, 0, ir);
-      g.addColorStop(0, mix(iris, "#ffffff", 0.35)); g.addColorStop(1, mix(iris, "#000000", 0.3));
-      ctx.fillStyle = g; ctx.beginPath(); ellipse(ctx, s * er * 0.08, er * 0.05, ir, ir); ctx.fill();
-      ctx.fillStyle = "#0e0a0c"; ctx.beginPath(); ellipse(ctx, s * er * 0.08, er * 0.05, ir * 0.45, ir * 0.45); ctx.fill();
-      ctx.fillStyle = "#ffffff"; ctx.beginPath(); ellipse(ctx, s * er * 0.08 - ir * 0.35, -ir * 0.3, ir * 0.25, ir * 0.25); ctx.fill();
-      if (st === "sleepy") { ctx.fillStyle = mix(L.skin, "#000000", 0.08); ctx.fillRect(-er * 2, -er * 2, er * 4, er * 1.85); }
+      if (s < 0) ctx.scale(-1, 1); // 外側を同じ向きに描く（目尻が外）
+      const white = () => { ctx.moveTo(-er * wide, er * 0.05); ctx.bezierCurveTo(-er * wide * 0.6, -er * tall * 1.15, er * wide * 0.5, -er * tall * 1.25, er * wide, -er * tall * 0.05); ctx.bezierCurveTo(er * wide * 0.6, er * tall * 0.95, -er * wide * 0.5, er * tall * 0.95, -er * wide, er * 0.05); };
+      ctx.beginPath(); white(); ctx.fillStyle = "#faf6ee"; ctx.fill();
+      ctx.save(); ctx.beginPath(); white(); ctx.clip();
+      ctx.fillStyle = rgba(mix(L.skin, SHADOW, 0.5), 0.35); ctx.fillRect(-er * 2, -er * 2, er * 4, er * 1.55);
+      const ir = er * (st === "sharp" ? 0.68 : st === "round" ? 0.86 : 0.8);
+      const ix = -er * 0.04, iy = -er * 0.02;
+      const g = ctx.createLinearGradient(ix, iy - ir, ix, iy + ir);
+      g.addColorStop(0, mix(iris, "#000000", 0.55)); g.addColorStop(0.45, iris); g.addColorStop(1, mix(iris, "#ffffff", 0.5)); // 虹彩：上が暗く下が明るい
+      ctx.fillStyle = g; ctx.beginPath(); ellipse(ctx, ix, iy, ir, ir * 1.15); ctx.fill();
+      ctx.strokeStyle = rgba(mix(iris, "#000000", 0.6), 0.9); ctx.lineWidth = Math.max(0.6, ir * 0.12); ctx.beginPath(); ellipse(ctx, ix, iy, ir * 0.94, ir * 0.99); ctx.stroke();
+      ctx.fillStyle = "#0c080a"; ctx.beginPath(); if (slitPupil) { ctx.moveTo(ix, iy - ir * 0.85); ctx.quadraticCurveTo(ix + ir * 0.28, iy, ix, iy + ir * 0.85); ctx.quadraticCurveTo(ix - ir * 0.28, iy, ix, iy - ir * 0.85); } else ellipse(ctx, ix, iy, ir * 0.42, ir * 0.45); ctx.fill();
+      ctx.fillStyle = rgba(INK, 0.22); ctx.beginPath(); ctx.ellipse(ix, iy - ir * 0.25, ir * 1.05, ir * 0.75, 0, Math.PI, TAU); ctx.fill(); // 上まぶたの落とす影
+      ctx.fillStyle = "#ffffff"; ctx.beginPath(); ellipse(ctx, ix - ir * 0.36 * (s < 0 ? -1 : 1), iy - ir * 0.42, ir * 0.32, ir * 0.28); ctx.fill();
+      ctx.beginPath(); ellipse(ctx, ix + ir * 0.32 * (s < 0 ? -1 : 1), iy + ir * 0.5, ir * 0.13, ir * 0.11); ctx.fill();
+      if (st === "sleepy") { ctx.fillStyle = mix(L.skin, SHADOW, 0.08); ctx.fillRect(-er * 2, -er * 2, er * 4, er * 1.82); }
       ctx.restore();
-      // まぶたの線
-      const lidY = st === "sleepy" ? -er * 0.15 : 0;
-      ctx.beginPath();
-      if (st === "sleepy") { ctx.moveTo(-er * wide, 0); ctx.quadraticCurveTo(0, lidY - er * 0.2, er * wide, 0); }
-      else { ctx.moveTo(-er * wide * 1.05, er * 0.05); ctx.quadraticCurveTo(0, -er * tall * 1.4, er * wide * 1.05, er * 0.05); }
-      ctx.strokeStyle = INK; ctx.lineWidth = lw * (female ? 1.9 : 1.5); ctx.lineCap = "round"; ctx.stroke();
-      if (female) line(ctx, INK, lw * 1.2, [s * er * wide * 0.95, -er * 0.1, s * er * wide * 1.3, -er * 0.45]);
+      // 上まぶた（目尻が太い）
+      const top = st === "sleepy" ? -er * 0.18 : -er * tall * 0.95;
+      ctx.fillStyle = INK; ctx.beginPath();
+      ctx.moveTo(-er * wide * 1.05, er * 0.12);
+      ctx.bezierCurveTo(-er * wide * 0.6, top - er * 0.15, er * wide * 0.5, top - er * 0.25, er * wide * 1.12, -er * tall * 0.02 - er * 0.12);
+      ctx.lineTo(er * wide * 1.02, er * 0.12);
+      ctx.bezierCurveTo(er * wide * 0.5, top + er * 0.12, -er * wide * 0.6, top + er * 0.2, -er * wide * 1.05, er * 0.12);
+      ctx.fill();
+      if (female || L.band === "child") for (let i = 0; i < (female ? 3 : 1); i++) { // 目尻のまつげ（はね）
+        const bx = er * wide * (0.62 + i * 0.2), by = -er * tall * (0.62 - i * 0.28) - er * 0.08;
+        ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(bx - er * 0.12, by + er * 0.06); ctx.quadraticCurveTo(bx + er * 0.2, by - er * 0.12, bx + er * (0.35 + i * 0.05), by - er * (0.3 - i * 0.12)); ctx.quadraticCurveTo(bx + er * 0.12, by + er * 0.02, bx + er * 0.1, by + er * 0.12); ctx.fill(); }
+      // 下まぶたと二重
+      line(ctx, rgba(INK, 0.5), lw * 0.7, [er * wide * 0.25, er * tall * 0.95, er * wide * 0.75, er * tall * 0.7, er * wide * 1.0, er * 0.25]); // 下まぶた（目尻の側だけ）
+      if (st !== "sleepy") line(ctx, rgba(mix(L.skin, SHADOW, 0.6), 0.6), lw * 0.7, [-er * wide * 0.5, top - er * 0.32, er * wide * 0.4, top - er * 0.4, er * wide * 0.95, -er * tall * 0.3]);
+      else line(ctx, rgba(mix(L.skin, SHADOW, 0.6), 0.6), lw * 0.7, [-er * wide * 0.8, -er * 0.4, er * wide * 0.9, -er * 0.35]);
       ctx.restore();
     });
   }
-  function browPair(ctx, L, cx, ey, sp, er, U) {
-    const w = U * (L.sex === "女" ? 0.009 : 0.014) * (L.band === "old" ? 1.2 : 1);
-    const c = L.band === "old" ? mix(L.hair, "#ffffff", 0.2) : mix(L.hair, "#000000", 0.25);
-    const by = ey - er * (L.eyes === "round" ? 2.0 : 1.75);
+  // 眉：筆で払ったような形（内側が太く、外へ細く）
+  function browPair(ctx, L, cx, ey, sp0, er, U) {
+    const th = U * (L.sex === "女" ? 0.009 : 0.016) * (L.band === "old" ? 1.25 : 1) * (L.band === "child" ? 0.8 : 1);
+    const c = L.band === "old" ? mix(L.hair, "#ffffff", 0.2) : mix(L.hair, "#000000", 0.3);
+    const by = ey - er * (L.eyes === "round" ? 1.7 : 1.55);
     const b = L.brows;
     [-1, 1].forEach((s) => {
-      const ix = cx + s * sp * 0.45, ox = cx + s * sp * 1.45;
-      const iy = by + (b === "angry" ? er * 0.55 : b === "worried" ? -er * 0.45 : b === "raised" ? -er * 0.3 : 0);
-      const oy = by + (b === "worried" ? er * 0.25 : b === "raised" && s === 1 ? -er * 0.5 : 0);
-      if (s === 1 && L.marks.includes("eyepatch")) return;
-      line(ctx, c, w, [ix, iy, (ix + ox) / 2, Math.min(iy, oy) - er * 0.2, ox, oy]);
+      const sp = sp0 * (s > 0 ? 0.95 : 1);
+      const ix = cx + s * sp * 0.4, ox = cx + s * sp * 1.5;
+      const iy = by + (b === "angry" ? er * 0.6 : b === "worried" ? -er * 0.45 : b === "raised" ? -er * 0.3 : 0);
+      const oy = by + (b === "worried" ? er * 0.3 : b === "angry" ? -er * 0.15 : b === "raised" && s === 1 ? -er * 0.5 : 0);
+      const my = Math.min(iy, oy) - er * (b === "angry" ? 0.05 : 0.3), mx = (ix * 0.45 + ox * 0.55);
+      ctx.fillStyle = c; ctx.beginPath();
+      ctx.moveTo(ix, iy + th * 0.5); ctx.quadraticCurveTo(mx, my + th * 0.5, ox, oy + th * 0.15);
+      ctx.quadraticCurveTo(mx, my - th * 0.6, ix, iy - th * 0.6); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = rgba(INK, 0.5); ctx.lineWidth = U * 0.003; ctx.stroke();
     });
   }
+  // 鼻：鼻筋の影（光の反対の右側）、鼻先の光、小鼻
+  function noseDraw(ctx, L, cx, ey, er, ny, rx, U) {
+    const lw = U * 0.007;
+    const k = L.band === "child" ? 0.7 : L.sex === "女" ? 0.85 : 1;
+    const sh = rgba(mix(L.skin, SHADOW, 0.55), 0.38);
+    if ((L.band === "young" || L.band === "child") && !L.beast) {
+      // 若い顔の鼻は小さく：鼻先の右の影と光だけ
+      ctx.fillStyle = sh; ctx.beginPath(); ctx.moveTo(cx + rx * 0.05, ny - rx * 0.16); ctx.quadraticCurveTo(cx + rx * 0.09, ny - rx * 0.02, cx + rx * 0.02, ny + rx * 0.03); ctx.quadraticCurveTo(cx + rx * 0.05, ny - rx * 0.05, cx + rx * 0.05, ny - rx * 0.16); ctx.fill();
+      ctx.fillStyle = rgba(mix(L.skin, LIGHT, 0.7), 0.6); ctx.beginPath(); ellipse(ctx, cx - rx * 0.015, ny - rx * 0.04, rx * 0.03, rx * 0.02); ctx.fill();
+      line(ctx, rgba(mix(L.skin, "#4a1a10", 0.5), 0.6), lw * 0.8, [cx - rx * 0.03, ny + rx * 0.03, cx + rx * 0.02, ny + rx * 0.035]);
+      return;
+    }
+    ctx.fillStyle = sh; ctx.beginPath(); ctx.moveTo(cx + rx * 0.04, ey + er * 0.4); ctx.quadraticCurveTo(cx + rx * 0.14 * k, ny - rx * 0.12, cx + rx * 0.15 * k, ny); ctx.quadraticCurveTo(cx + rx * 0.05, ny + rx * 0.04, cx + rx * 0.02, ny - rx * 0.06); ctx.quadraticCurveTo(cx + rx * 0.06, ey + er * 1.4, cx + rx * 0.04, ey + er * 0.4); ctx.fill();
+    ctx.fillStyle = rgba(mix(L.skin, LIGHT, 0.7), 0.6); ctx.beginPath(); ellipse(ctx, cx - rx * 0.02, ny - rx * 0.05, rx * 0.05 * k, rx * 0.035 * k); ctx.fill();
+    ctx.fillStyle = rgba(mix(L.skin, SHADOW, 0.5), 0.3); ctx.beginPath(); ellipse(ctx, cx + rx * 0.02, ny + rx * 0.07, rx * 0.12 * k, rx * 0.03); ctx.fill();
+    if (L.beast && /wolf|dog|bear|fox|rat/.test(L.beast)) {
+      // 獣の鼻先（小さく黒く、濡れて光る）
+      ctx.fillStyle = L.beast === "rat" ? "#d88a90" : "#2a1a1a"; ctx.beginPath(); ctx.moveTo(cx - rx * 0.09 * k, ny - rx * 0.03); ctx.quadraticCurveTo(cx, ny - rx * 0.08, cx + rx * 0.09 * k, ny - rx * 0.03); ctx.quadraticCurveTo(cx, ny + rx * 0.08, cx - rx * 0.09 * k, ny - rx * 0.03); ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,.6)"; ctx.beginPath(); ellipse(ctx, cx - rx * 0.03, ny - rx * 0.04, rx * 0.025, rx * 0.012); ctx.fill();
+      line(ctx, rgba(INK, 0.6), lw * 0.8, [cx, ny + rx * 0.03, cx, ny + rx * 0.1]);
+      return;
+    }
+    if (L.beast === "cat") { ctx.fillStyle = mix(L.skin, "#d06070", 0.5); ctx.beginPath(); ctx.moveTo(cx - rx * 0.06, ny - rx * 0.03); ctx.lineTo(cx + rx * 0.06, ny - rx * 0.03); ctx.lineTo(cx, ny + rx * 0.04); ctx.fill(); }
+    line(ctx, rgba(mix(L.skin, "#4a1a10", 0.6), 0.85), lw, [cx - rx * 0.09 * k, ny + rx * 0.02, cx - rx * 0.05 * k, ny + rx * 0.05]);
+    line(ctx, rgba(mix(L.skin, "#4a1a10", 0.6), 0.85), lw * 1.2, [cx + rx * 0.06 * k, ny + rx * 0.05, cx + rx * 0.11 * k, ny + rx * 0.02]);
+  }
+  // 口：上唇は暗く、下唇は光を受ける。歯と舌。獣人は口の端から牙
   function mouthDraw(ctx, L, cx, my, mw, U) {
     const lw = U * 0.009, m = L.mouth;
-    const lip = L.sex === "女" ? mix(L.skin, "#b03a3a", 0.45) : mix(L.skin, "#6a2a2a", 0.45);
-    if (m === "smile") line(ctx, lip, lw * 1.3, [cx - mw, my - mw * 0.15, cx - mw * 0.4, my + mw * 0.22, cx + mw * 0.4, my + mw * 0.22, cx + mw, my - mw * 0.15]);
-    else if (m === "frown") line(ctx, lip, lw * 1.3, [cx - mw * 0.85, my + mw * 0.2, cx, my - mw * 0.05, cx + mw * 0.85, my + mw * 0.2]);
-    else if (m === "smirk") line(ctx, lip, lw * 1.3, [cx - mw * 0.8, my + mw * 0.05, cx + mw * 0.3, my + mw * 0.08, cx + mw * 0.95, my - mw * 0.25]);
-    else if (m === "grin" || m === "open") {
-      paint(ctx, "#4a1a1e", lw * 0.8, () => { if (m === "grin") { ctx.moveTo(cx - mw, my - mw * 0.1); ctx.quadraticCurveTo(cx, my + mw * 0.9, cx + mw, my - mw * 0.1); ctx.quadraticCurveTo(cx, my + mw * 0.12, cx - mw, my - mw * 0.1); } else ellipse(ctx, cx, my + mw * 0.15, mw * 0.45, mw * 0.4); });
-      if (m === "grin") paint(ctx, "#f4efe4", 0, () => { ctx.moveTo(cx - mw * 0.85, my); ctx.quadraticCurveTo(cx, my + mw * 0.25, cx + mw * 0.85, my); ctx.quadraticCurveTo(cx, my + mw * 0.4, cx - mw * 0.85, my); });
-    } else line(ctx, lip, lw * 1.3, [cx - mw * 0.75, my + mw * 0.05, cx + mw * 0.75, my + mw * 0.05]);
-    if (L.sex === "女" && m !== "grin" && m !== "open") { ctx.fillStyle = rgba(lip, 0.45); ctx.beginPath(); ellipse(ctx, cx, my + mw * 0.22, mw * 0.35, mw * 0.12); ctx.fill(); }
+    const female = L.sex === "女";
+    const lip = female ? mix(L.skin, "#b8404a", 0.42) : mix(L.skin, "#7a3a32", 0.38);
+    const dark = mix(lip, "#3a0e12", 0.5);
+    const fang = L.beast && /wolf|dog|cat|fox/.test(L.beast) || L.kind === "majin";
+    if (m === "grin" || m === "open") {
+      const inside = () => { if (m === "grin") { ctx.moveTo(cx - mw, my - mw * 0.12); ctx.quadraticCurveTo(cx, my - mw * 0.02, cx + mw, my - mw * 0.12); ctx.quadraticCurveTo(cx + mw * 0.6, my + mw * 0.75, cx, my + mw * 0.78); ctx.quadraticCurveTo(cx - mw * 0.6, my + mw * 0.75, cx - mw, my - mw * 0.12); } else ellipse(ctx, cx, my + mw * 0.15, mw * 0.45, mw * 0.42); };
+      paint(ctx, "#3a1014", lw * 0.8, inside);
+      ctx.save(); ctx.beginPath(); inside(); ctx.clip();
+      ctx.fillStyle = "#c8505a"; ctx.beginPath(); ellipse(ctx, cx, my + mw * (m === "grin" ? 0.75 : 0.55), mw * 0.5, mw * 0.3); ctx.fill();
+      ctx.fillStyle = "#f6f1e6"; ctx.beginPath(); ctx.rect(cx - mw, my - mw * 0.3, mw * 2, mw * (m === "grin" ? 0.32 : 0.18)); ctx.fill();
+      ctx.restore();
+      if (m === "grin") line(ctx, rgba(INK, 0.7), lw * 0.8, [cx - mw * 1.05, my - mw * 0.2, cx - mw * 0.95, my - mw * 0.02]);
+      ctx.fillStyle = rgba(mix(lip, LIGHT, 0.4), 0.6); ctx.beginPath(); ellipse(ctx, cx - mw * 0.15, my + mw * (m === "grin" ? 0.92 : 0.66), mw * 0.25, mw * 0.06); ctx.fill();
+    } else {
+      // 閉じた口：口の線 → 上唇の影 → 下唇の光 → 口角
+      const pts = m === "smile" ? [cx - mw, my - mw * 0.15, cx, my + mw * 0.25, cx + mw, my - mw * 0.15]
+        : m === "frown" ? [cx - mw * 0.85, my + mw * 0.2, cx, my - mw * 0.06, cx + mw * 0.85, my + mw * 0.2]
+        : m === "smirk" ? [cx - mw * 0.8, my + mw * 0.08, cx + mw * 0.2, my + mw * 0.12, cx + mw * 0.95, my - mw * 0.25]
+        : [cx - mw * 0.75, my + mw * 0.04, cx, my + mw * 0.08, cx + mw * 0.75, my + mw * 0.04];
+      if (female) { ctx.fillStyle = rgba(lip, 0.75); ctx.beginPath(); ctx.moveTo(pts[0], pts[1]); ctx.quadraticCurveTo(pts[2] - mw * 0.3, pts[3] - mw * 0.32, pts[2], pts[3] - mw * 0.18); ctx.quadraticCurveTo(pts[2] + mw * 0.3, pts[3] - mw * 0.32, pts[4], pts[5]); ctx.quadraticCurveTo(pts[2], pts[3] + mw * 0.42, pts[0], pts[1]); ctx.fill(); }
+      else { ctx.fillStyle = rgba(lip, 0.45); ctx.beginPath(); ctx.moveTo(pts[0], pts[1]); ctx.quadraticCurveTo(pts[2], pts[3] + mw * 0.4, pts[4], pts[5]); ctx.quadraticCurveTo(pts[2], pts[3] + mw * 0.1, pts[0], pts[1]); ctx.fill(); }
+      ctx.beginPath(); ctx.moveTo(pts[0], pts[1]); ctx.quadraticCurveTo(pts[2] * 2 - (pts[0] + pts[4]) / 2, pts[3] * 2 - (pts[1] + pts[5]) / 2, pts[4], pts[5]);
+      ctx.strokeStyle = dark; ctx.lineWidth = lw * 1.3; ctx.lineCap = "round"; ctx.stroke();
+      ctx.fillStyle = rgba(mix(lip, LIGHT, 0.55), 0.55); ctx.beginPath(); ellipse(ctx, cx - mw * 0.12, my + mw * 0.32, mw * 0.28, mw * 0.06); ctx.fill();
+      ctx.fillStyle = rgba(mix(L.skin, SHADOW, 0.5), 0.15); ctx.beginPath(); ellipse(ctx, cx, my + mw * 0.6, mw * 0.3, mw * 0.07); ctx.fill(); // 下唇の下の影
+      if (m === "smirk") line(ctx, dark, lw, [pts[4], pts[5], pts[4] + mw * 0.08, pts[5] - mw * 0.1]);
+    }
+    if (fang) for (const s of m === "smirk" ? [1] : [-1, 1]) {
+      const fx = cx + s * mw * 0.55, fy = m === "grin" ? my - mw * 0.04 : my + mw * 0.06;
+      ctx.fillStyle = "#fbf8f0"; ctx.beginPath(); ctx.moveTo(fx - mw * 0.1, fy); ctx.lineTo(fx + mw * 0.1, fy); ctx.lineTo(fx + s * mw * 0.02, fy + mw * 0.3); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = rgba(INK, 0.7); ctx.lineWidth = lw * 0.5; ctx.stroke();
+    }
   }
 
   // ---------------------------------------------------------------- 印（傷・髭・皺など）
@@ -744,14 +907,14 @@
     if (has("stubble") || has("dirt")) {
       ctx.save(); ctx.beginPath(); facePath(ctx, cx, cy, rx, ry, jaw); ctx.clip();
       if (has("stubble")) { ctx.fillStyle = rgba(mix(L.hair, "#2a2a2a", 0.4), 0.17); ctx.beginPath(); ellipse(ctx, cx, cy + ry * 0.85, rx * 0.95, ry * 0.45); ctx.fill(); }
-      if (has("dirt")) { const R = rng(L.seed + ":dirt"); ctx.fillStyle = rgba("#4a3a22", 0.25); for (let i = 0; i < 5; i++) { ctx.beginPath(); ellipse(ctx, cx + (R() - 0.5) * rx * 1.4, cy + (R() - 0.2) * ry * 0.9, rx * 0.15, ry * 0.08); ctx.fill(); } }
+      if (has("dirt")) { const R = rng(L.seed + ":dirt"); for (let i = 0; i < 3; i++) { const px = cx + (R() - 0.5) * rx * 1.4, py = cy + (0.2 + R() * 0.6) * ry; const gd = ctx.createRadialGradient(px, py, 0, px, py, rx * 0.16); gd.addColorStop(0, rgba("#5a4028", 0.14)); gd.addColorStop(1, rgba("#5a4028", 0)); ctx.fillStyle = gd; ctx.beginPath(); ellipse(ctx, px, py, rx * 0.18, ry * 0.07, (R() - 0.5)); ctx.fill(); } }
       ctx.restore();
     }
     if (has("gaunt")) for (const s of [-1, 1]) line(ctx, rgba(mix(L.skin, "#000000", 0.4), 0.6), lw, [cx + s * rx * 0.62, cy + ry * 0.3, cx + s * rx * 0.55, cy + ry * 0.62]);
     if (has("blush")) { ctx.fillStyle = rgba("#e05a5a", 0.25); for (const s of [-1, 1]) { ctx.beginPath(); ellipse(ctx, cx + s * sp * 1.1, ey + er * 1.9, er * 1.1, er * 0.55); ctx.fill(); } }
     if (has("freckles")) { const R = rng(L.seed + ":frk"); ctx.fillStyle = rgba(mix(L.skin, "#6a3a1a", 0.6), 0.75); for (const s of [-1, 1]) for (let i = 0; i < 6; i++) { ctx.beginPath(); ellipse(ctx, cx + s * (sp * 0.6 + R() * sp * 0.8), ey + er * (1.6 + R() * 1.1), U * 0.0045, U * 0.0045); ctx.fill(); } }
     if (has("wrinkles")) {
-      const c = rgba(mix(L.skin, "#000000", 0.45), 0.55);
+      const c = rgba(mix(L.skin, "#000000", 0.45), 0.32);
       for (let i = 0; i < 2; i++) line(ctx, c, lw * 0.8, [cx - rx * 0.45, cy - ry * (0.48 - i * 0.1), cx, cy - ry * (0.52 - i * 0.1), cx + rx * 0.45, cy - ry * (0.48 - i * 0.1)]);
       for (const s of [-1, 1]) { line(ctx, c, lw * 0.8, [cx + s * rx * 0.3, cy + ry * 0.4, cx + s * rx * 0.42, cy + ry * 0.66]); line(ctx, c, lw * 0.7, [cx + s * (sp + er * 1.4), ey, cx + s * (sp + er * 1.9), ey - er * 0.3]); line(ctx, c, lw * 0.7, [cx + s * (sp + er * 1.4), ey + er * 0.3, cx + s * (sp + er * 1.9), ey + er * 0.6]); }
     }
@@ -787,8 +950,8 @@
     if (has("scar")) {
       const R = rng(L.seed + ":scar"), s = R() < 0.5 ? -1 : 1;
       const x0 = cx + s * sp * 0.5, y0 = ey - er * 1.8, x1 = cx + s * sp * 1.5, y1 = ey + er * 3;
-      line(ctx, rgba("#8a3a3a", 0.8), lw * 1.2, [x0, y0, x1, y1]);
-      for (let i = 1; i < 4; i++) { const t = i / 4, px = x0 + (x1 - x0) * t, py = y0 + (y1 - y0) * t; line(ctx, rgba("#8a3a3a", 0.7), lw * 0.8, [px - er * 0.35, py + er * 0.1, px + er * 0.35, py - er * 0.1]); }
+      line(ctx, rgba("#a05050", 0.45), lw * 0.9, [x0, y0, x1, y1]);
+      for (let i = 1; i < 4; i++) { const t = i / 4, px = x0 + (x1 - x0) * t, py = y0 + (y1 - y0) * t; line(ctx, rgba("#a05050", 0.3), lw * 0.6, [px - er * 0.3, py + er * 0.1, px + er * 0.3, py - er * 0.1]); }
     }
     if (has("bandage")) {
       const bx = cx - sp * 1.1, by = ey + er * 2.2;
@@ -820,6 +983,90 @@
     }
   }
 
+  // ---------------------------------------------------------------- 耳
+  // 横の耳：人は丸く内側に C の線、エルフは長く後ろ上へ伸びる
+  function sideEars(ctx, L, cx, ey, rx, ry, U) {
+    const lw = U * 0.008, c = mix(L.skin, "#c06a5a", 0.1), inner = rgba(mix(L.skin, "#8a3a30", 0.45), 0.6);
+    for (const s of [-1, 1]) {
+      if (L.ears === "pointy") {
+        const bx = cx + s * rx * 0.9, path = () => { ctx.moveTo(bx, ey - ry * 0.1); ctx.quadraticCurveTo(bx + s * rx * 0.35, ey - ry * 0.35, bx + s * rx * 0.85, ey - ry * 0.72); ctx.quadraticCurveTo(bx + s * rx * 0.55, ey - ry * 0.05, bx + s * rx * 0.25, ey + ry * 0.2); ctx.quadraticCurveTo(bx + s * rx * 0.08, ey + ry * 0.32, bx + s * rx * 0.02, ey + ry * 0.25); ctx.closePath(); };
+        paint(ctx, rgrad(ctx, bx + s * rx * 0.35, ey - ry * 0.2, rx * 0.35, c), lw, path);
+        ctx.fillStyle = inner; ctx.beginPath(); ctx.moveTo(bx + s * rx * 0.08, ey - ry * 0.02); ctx.quadraticCurveTo(bx + s * rx * 0.4, ey - ry * 0.3, bx + s * rx * 0.72, ey - ry * 0.6); ctx.quadraticCurveTo(bx + s * rx * 0.4, ey - ry * 0.05, bx + s * rx * 0.12, ey + ry * 0.15); ctx.fill();
+      } else {
+        const ex = cx + s * rx * 0.98, ey2 = ey + ry * 0.06;
+        paint(ctx, rgrad(ctx, ex, ey2, rx * 0.15, c), lw, () => { ctx.moveTo(ex - s * rx * 0.05, ey2 - ry * 0.2); ctx.quadraticCurveTo(ex + s * rx * 0.2, ey2 - ry * 0.26, ex + s * rx * 0.18, ey2); ctx.quadraticCurveTo(ex + s * rx * 0.15, ey2 + ry * 0.2, ex - s * rx * 0.03, ey2 + ry * 0.2); ctx.closePath(); });
+        ctx.strokeStyle = inner; ctx.lineWidth = lw * 0.9; ctx.beginPath(); ctx.moveTo(ex + s * rx * 0.02, ey2 - ry * 0.12); ctx.quadraticCurveTo(ex + s * rx * 0.13, ey2 - ry * 0.1, ex + s * rx * 0.1, ey2 + ry * 0.04); ctx.quadraticCurveTo(ex + s * rx * 0.06, ey2 + ry * 0.1, ex + s * rx * 0.02, ey2 + ry * 0.06); ctx.stroke();
+      }
+    }
+  }
+  // 獣人の頭の上の耳。獣ごとに形・付き方・毛色を変える（狼は高くとがる、犬は先が折れる、猫は低く幅広、熊は小さく丸い、狐は大きく先が黒い）
+  function beastEars(ctx, L, cx, cy, rx, ry, U) {
+    const lw = U * 0.008, kind = L.beast || "wolf";
+    const fur = L.hair || "#6a5a4a", dark = mix(fur, SHADOW, 0.45), light = mix(fur, LIGHT, 0.35);
+    const pink = mix(L.skin, "#d07a80", 0.45);
+    const inner = kind === "fox" || kind === "wolf" ? mix(fur, "#f4ece0", 0.65) : kind === "bear" ? mix(fur, "#e0b090", 0.45) : pink;
+    // 耳の中の毛：付け根から先へ向かう、細い筋を数本
+    const tufts = (pts, n, c) => { ctx.strokeStyle = c; ctx.lineWidth = lw * 0.6; ctx.lineCap = "round"; for (let i = 0; i < n; i++) { const t = (i + 0.5) / n, x0 = pts[0] + (pts[2] - pts[0]) * t, y0 = pts[1] + (pts[3] - pts[1]) * t; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x0 + (pts[4] - x0) * 0.3, y0 + (pts[5] - y0) * 0.25, x0 + (pts[4] - x0) * 0.42, y0 + (pts[5] - y0) * 0.5); ctx.stroke(); } };
+    for (const s of [-1, 1]) {
+      if (kind === "wolf" || kind === "fox" || kind === "cat" || kind === "dog") {
+        const spec = { wolf: [0.52, 0.34, 0.78, 0.12], fox: [0.55, 0.42, 0.9, 0.18], cat: [0.66, 0.36, 0.55, 0.3], dog: [0.6, 0.36, 0.62, 0.2] }[kind];
+        const bx = cx + s * rx * spec[0], by = cy - ry * 0.7, w = rx * spec[1], h = ry * spec[2], lean = spec[3];
+        const tip = [bx + s * w * lean * 2.2, by - h];
+        const outer = () => { ctx.moveTo(bx - s * w * 0.95, by + h * 0.15); ctx.quadraticCurveTo(bx - s * w * 0.6, by - h * 0.6, tip[0], tip[1]); ctx.quadraticCurveTo(bx + s * w * 1.1, by - h * 0.45, bx + s * w * 1.05, by + h * 0.2); ctx.closePath(); };
+        if (kind === "dog") {
+          // 犬：頭の上の横から、顔の脇へふわりと垂れる耳（先が丸く、少し外へ開く）
+          const ax = cx + s * rx * 0.62, ay = cy - ry * 0.88, ex2 = cx + s * rx * 1.22, ey2 = cy - ry * 0.02;
+          const drop = () => { ctx.moveTo(ax - s * rx * 0.18, ay + ry * 0.04); ctx.bezierCurveTo(ax + s * rx * 0.25, ay - ry * 0.12, ex2 + s * rx * 0.2, ey2 - ry * 0.55, ex2 + s * rx * 0.08, ey2 - ry * 0.05); ctx.quadraticCurveTo(ex2 - s * rx * 0.05, ey2 + ry * 0.12, ex2 - s * rx * 0.2, ey2 - ry * 0.05); ctx.bezierCurveTo(ex2 - s * rx * 0.28, ey2 - ry * 0.4, ax + s * rx * 0.1, ay + ry * 0.2, ax - s * rx * 0.18, ay + ry * 0.04); ctx.closePath(); };
+          paint(ctx, vgrad(ctx, ay, ey2, fur), lw, drop);
+          ctx.save(); ctx.beginPath(); drop(); ctx.clip();
+          ctx.fillStyle = rgba(dark, 0.45); ctx.beginPath(); ellipse(ctx, ex2 - s * rx * 0.02, ey2 - ry * 0.05, rx * 0.16, ry * 0.12); ctx.fill();
+          ctx.strokeStyle = rgba(light, 0.55); ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.quadraticCurveTo(ax + s * rx * 0.3, ay + ry * 0.15, ex2 - s * rx * 0.05, ey2 - ry * 0.35); ctx.stroke();
+          ctx.restore();
+          continue;
+        }
+        paint(ctx, vgrad(ctx, by - h, by + h * 0.2, fur), lw, outer);
+        ctx.fillStyle = inner; ctx.beginPath(); ctx.moveTo(bx - s * w * 0.5, by + h * 0.05); ctx.quadraticCurveTo(bx - s * w * 0.3, by - h * 0.45, tip[0] + (bx - tip[0]) * 0.18, tip[1] + h * 0.18); ctx.quadraticCurveTo(bx + s * w * 0.6, by - h * 0.35, bx + s * w * 0.6, by + h * 0.08); ctx.fill();
+        tufts([bx - s * w * 0.45, by + h * 0.05, bx + s * w * 0.55, by + h * 0.05, tip[0], tip[1]], kind === "cat" ? 3 : 4, rgba(kind === "cat" ? "#ffffff" : mix(inner, LIGHT, 0.5), 0.85));
+        if (kind === "fox") paint(ctx, "#2a1c18", lw * 0.8, () => { ctx.moveTo(tip[0], tip[1]); ctx.lineTo(tip[0] + (bx - s * w * 0.6 - tip[0]) * 0.3, tip[1] + h * 0.3); ctx.lineTo(tip[0] + (bx + s * w * 1.05 - tip[0]) * 0.3, tip[1] + h * 0.3); ctx.closePath(); });
+        if (kind === "wolf") { ctx.strokeStyle = rgba(dark, 0.8); ctx.lineWidth = lw * 1.2; ctx.beginPath(); ctx.moveTo(tip[0], tip[1] + h * 0.05); ctx.quadraticCurveTo(bx + s * w * 0.9, by - h * 0.4, bx + s * w * 1.0, by + h * 0.1); ctx.stroke(); }
+        // 付け根の毛
+        for (let i = 0; i < 4; i++) paint(ctx, i % 2 ? light : fur, lw * 0.6, () => { const px = bx - s * w * 0.8 + s * i * w * 0.55; ctx.moveTo(px - w * 0.25, by + h * 0.2); ctx.lineTo(px + s * w * 0.08, by - h * 0.12); ctx.lineTo(px + w * 0.25, by + h * 0.2); ctx.closePath(); });
+      } else if (kind === "bear" || kind === "rat") {
+        const big = kind === "rat" ? 1.35 : 1;
+        const bx = cx + s * rx * (kind === "rat" ? 0.75 : 0.7), by = cy - ry * (kind === "rat" ? 0.72 : 0.92), r = rx * 0.27 * big;
+        paint(ctx, rgrad(ctx, bx, by, r, kind === "rat" ? mix(fur, "#b0a0a0", 0.4) : fur), lw, () => ellipse(ctx, bx, by, r, r * 0.92));
+        ctx.fillStyle = inner; ctx.beginPath(); ellipse(ctx, bx + s * r * 0.05, by + r * 0.08, r * 0.58, r * 0.52); ctx.fill();
+        ctx.fillStyle = rgba(SHADOW, 0.3); ctx.beginPath(); ellipse(ctx, bx + s * r * 0.1, by + r * 0.2, r * 0.4, r * 0.25); ctx.fill();
+        if (kind === "bear") for (let i = 0; i < 5; i++) { const a = Math.PI * (1.1 + i * 0.2); line(ctx, rgba(light, 0.8), lw * 0.6, [bx + Math.cos(a) * r * 0.9, by + Math.sin(a) * r * 0.85, bx + Math.cos(a) * r * 1.08, by + Math.sin(a) * r * 1.02]); }
+      } else if (kind === "rabbit") {
+        const bx = cx + s * rx * 0.4, by = cy - ry * 0.85, w = rx * 0.24, h = ry * 1.1;
+        const path = () => { ctx.moveTo(bx - w * 0.7, by + h * 0.1); ctx.bezierCurveTo(bx - w * 1.1 + s * w * 0.6, by - h * 0.6, bx + s * w * 0.6 - w * 0.4, by - h * 1.05, bx + s * w * 0.9, by - h); ctx.bezierCurveTo(bx + s * w * 1.6 + w * 0.3, by - h * 0.9, bx + w * 1.0, by - h * 0.4, bx + w * 0.7, by + h * 0.1); ctx.closePath(); };
+        paint(ctx, vgrad(ctx, by - h, by, fur), lw, path);
+        ctx.fillStyle = pink; ctx.beginPath(); ctx.ellipse(bx + s * w * 0.35, by - h * 0.45, w * 0.38, h * 0.42, s * 0.25, 0, TAU); ctx.fill();
+      } else {
+        // 鳥：耳のあたりから後ろへ伸びる羽の房（三枚。光を受ける上の羽は明るい）
+        for (let i = 2; i >= 0; i--) {
+          const fx = cx + s * rx * (0.9 + i * 0.04), fy = cy - ry * (0.05 + i * 0.16);
+          paint(ctx, vgrad(ctx, fy - ry * 0.1, fy + ry * 0.1, i === 1 ? mix(fur, "#ffffff", 0.25) : fur), lw, () => { ctx.moveTo(fx, fy + ry * 0.06); ctx.quadraticCurveTo(fx + s * rx * 0.35, fy - ry * (0.1 + i * 0.06), fx + s * rx * (0.62 + i * 0.05), fy - ry * (0.2 + i * 0.12)); ctx.quadraticCurveTo(fx + s * rx * 0.3, fy + ry * 0.04, fx, fy + ry * 0.06); ctx.closePath(); });
+          line(ctx, rgba(dark, 0.7), lw * 0.6, [fx + s * rx * 0.05, fy + ry * 0.03, fx + s * rx * (0.55 + i * 0.05), fy - ry * (0.17 + i * 0.12)]);
+        }
+      }
+    }
+  }
+  // 獣人の頬：ひげの付け根の点（猫・狐・鼠）、頬の毛（狼・熊）
+  function beastCheeks(ctx, L, cx, cy, rx, ry, U) {
+    const k = L.beast, lw = U * 0.007;
+    if (k === "cat" || k === "fox" || k === "rat") {
+      ctx.fillStyle = rgba(mix(L.skin, SHADOW, 0.6), 0.6);
+      for (const s of [-1, 1]) for (let i = 0; i < 3; i++) { ctx.beginPath(); ellipse(ctx, cx + s * rx * (0.32 + i * 0.07), cy + ry * (0.5 + (i % 2) * 0.05), U * 0.003, U * 0.003); ctx.fill(); }
+      for (const s of [-1, 1]) for (let i = 0; i < 2; i++) line(ctx, rgba(INK, 0.45), lw * 0.6, [cx + s * rx * 0.62, cy + ry * (0.48 + i * 0.07), cx + s * rx * 1.12, cy + ry * (0.42 + i * 0.12)]);
+    }
+    if (k === "wolf" || k === "bear" || k === "dog") {
+      const fur = L.hair || "#6a5a4a";
+      for (const s of [-1, 1]) paint(ctx, fur, lw * 0.8, () => { const bx = cx + s * rx * 0.98, by = cy + ry * 0.25; ctx.moveTo(bx, by - ry * 0.18); ctx.lineTo(bx + s * rx * 0.16, by - ry * 0.04); ctx.lineTo(bx + s * rx * 0.02, by + ry * 0.02); ctx.lineTo(bx + s * rx * 0.14, by + ry * 0.14); ctx.lineTo(bx - s * rx * 0.04, by + ry * 0.2); ctx.closePath(); });
+    }
+  }
+
   // 頭の横に掛けた狐の面
   function foxMask(ctx, x, y, r, U) {
     const lw = U * 0.007;
@@ -845,11 +1092,12 @@
     const fs = FACES[L.face] || FACES.oval;
     const hs = child ? 1.12 : 1;
     const rx = U * 0.162 * fs[0] * hs * (L.sex === "女" ? 0.96 : 1), ry = U * 0.196 * fs[1] * hs;
-    const jaw = fs[2] * (L.sex === "女" ? 0.9 : 1);
+    const young = L.band === "young" || L.band === "child";
+    const jaw = fs[2] * (L.sex === "女" ? 0.74 : 0.9) * (young ? 0.88 : 1); // 若い顔ほど顎を細く
     const cx = x + w * 0.5;
     const cy = y + h * (child ? 0.44 : 0.39) + (L.hunch ? h * 0.04 : 0);
     const bottom = y + h;
-    const neckW = rx * (L.sex === "女" ? 0.42 : L.build === "broad" ? 0.58 : 0.5);
+    const neckW = rx * (L.sex === "女" ? 0.34 : L.build === "broad" ? 0.52 : 0.42) * (L.band === "child" ? 0.9 : 1);
     const y0 = cy + ry * (child ? 1.08 : 1.18);
     const S = { skin: L.skin };
     // 影の地面
@@ -863,37 +1111,51 @@
     // 首の影
     ctx.fillStyle = rgba("#000000", 0.18); ctx.beginPath(); ellipse(ctx, cx, cy + ry * 0.95, neckW * 1.1, ry * 0.18); ctx.fill();
     // 耳
-    const ey = cy + ry * (child ? 0.2 : 0.1);
+    const ey = cy + ry * (child ? 0.27 : young ? 0.2 : 0.15); // 目は顔の中央より少し下
     // 獣人は横の耳を描かず、頭の上の耳を描く（L.ears === "none"。src/ui/r1_race.js）
-    if (L.ears !== "none") for (const s of [-1, 1]) paint(ctx, mix(L.skin, "#b05a4a", 0.12), U * 0.008, () => {
-      if (L.ears === "pointy") { ctx.moveTo(cx + s * rx * 0.9, ey - ry * 0.12); ctx.lineTo(cx + s * rx * 1.5, ey - ry * 0.55); ctx.lineTo(cx + s * rx * 0.95, ey + ry * 0.28); }
-      else ellipse(ctx, cx + s * rx * 0.98, ey + ry * 0.06, rx * 0.15, ry * 0.2);
-    });
+    if (L.ears !== "none") sideEars(ctx, L, cx, ey, rx, ry, U);
     // 顔
     paint(ctx, rgrad(ctx, cx, cy, rx, L.skin), U * 0.009, () => facePath(ctx, cx, cy, rx, ry, jaw));
-    const sp = rx * 0.4, er = rx * (child ? 0.2 : 0.155) * (L.sex === "女" ? 1.06 : 1);
-    const my = cy + ry * (child ? 0.62 : 0.66), mw = rx * (child ? 0.22 : 0.28);
+    // 目は大きめ（若い女ほど大きく、歳とともに落ち着く）
+    const sp = rx * 0.44, er = rx * (child ? 0.27 : L.band === "young" ? (L.sex === "女" ? 0.25 : 0.215) : L.band === "mid" ? (L.sex === "女" ? 0.215 : 0.185) : 0.16);
+    const fx = cx + rx * 0.03; // 顔の向き（ほんの少し右へ）
+    const my = cy + ry * (child ? 0.66 : 0.69), mw = rx * (child ? 0.15 : L.sex === "女" ? 0.17 : 0.21);
+    // 顔の起伏：前髪の落とす影、頬の赤み、あごの下の影
+    ctx.save(); ctx.beginPath(); facePath(ctx, cx, cy, rx, ry, jaw); ctx.clip();
+    if (L.hairStyle !== "bald") { const gh = ctx.createLinearGradient(0, cy - ry, 0, cy - ry * 0.25); gh.addColorStop(0, rgba(mix(L.skin, SHADOW, 0.6), 0.55)); gh.addColorStop(1, rgba(mix(L.skin, SHADOW, 0.6), 0)); ctx.fillStyle = gh; ctx.fillRect(cx - rx * 1.2, cy - ry * 1.1, rx * 2.4, ry * 0.9); }
+    for (const s2 of [-1, 1]) { const gc = ctx.createRadialGradient(cx + s2 * rx * 0.55, ey + er * 2, 0, cx + s2 * rx * 0.55, ey + er * 2, rx * 0.35); gc.addColorStop(0, rgba("#ec6a6a", L.band === "child" ? 0.26 : L.band === "young" ? (L.sex === "女" ? 0.24 : 0.12) : 0.1)); gc.addColorStop(1, rgba("#e06a5a", 0)); ctx.fillStyle = gc; ctx.fillRect(cx - rx * 1.2, cy - ry, rx * 2.4, ry * 2.2); }
+    // 奥（右）の頬は光から外れる
+    const gs = ctx.createLinearGradient(cx + rx * 0.35, 0, cx + rx * 1.05, 0); gs.addColorStop(0, rgba(mix(L.skin, SHADOW, 0.5), 0)); gs.addColorStop(1, rgba(mix(L.skin, SHADOW, 0.5), 0.28));
+    ctx.fillStyle = gs; ctx.fillRect(cx, cy - ry * 1.2, rx * 1.2, ry * 2.4);
+    ctx.restore();
+    if (L.beast) beastCheeks(ctx, L, cx, cy, rx, ry, U);
     marksUnder(ctx, L, cx, cy, rx, ry, ey, sp, er, U, jaw);
     beard(ctx, L, cx, cy, rx, ry, U, jaw);
-    eyePair(ctx, L, cx, ey, sp, er, U);
-    browPair(ctx, L, cx, ey, sp, er, U);
-    // 鼻
-    const nose = mix(L.skin, "#5a2a1a", 0.45);
-    line(ctx, nose, U * 0.007, [cx + rx * 0.03, ey + er * 0.8, cx + rx * 0.1, cy + ry * 0.42, cx - rx * 0.04, cy + ry * 0.46]);
-    mouthDraw(ctx, L, cx, my, mw, U);
+    eyePair(ctx, L, fx, ey, sp, er, U);
+    browPair(ctx, L, fx, ey, sp, er, U);
+    noseDraw(ctx, L, fx + rx * 0.02, ey, er, cy + ry * (child ? 0.38 : 0.42), rx, U);
+    mouthDraw(ctx, L, fx, my, mw, U);
     marksOver(ctx, L, cx, cy, rx, ry, ey, sp, er, my, mw, U);
     if (L.marks.includes("earring")) { ctx.strokeStyle = "#e0c050"; ctx.lineWidth = U * 0.006; ctx.beginPath(); ellipse(ctx, cx - rx * 1.0, ey + ry * 0.28, rx * 0.06, rx * 0.08); ctx.stroke(); }
     hairFront(ctx, L, cx, cy, rx, ry, U);
-    if (L.beast && G.r1PaintEars) G.r1PaintEars(ctx, L, cx, cy, rx, ry, U, { ey, mix, INK });
+    if (L.beast) beastEars(ctx, L, cx, cy, rx, ry, U);
     headwear(ctx, L, cx, cy, rx, ry, U);
     if (L.marks.includes("foxmask")) foxMask(ctx, cx - rx * 0.78, cy - ry * 0.72, rx * 0.5, U);
-    // 周りを暗く
-    const v = ctx.createRadialGradient(cx, y + h * 0.45, h * 0.35, cx, y + h * 0.5, h * 0.8);
-    v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.35)");
-    ctx.fillStyle = v; ctx.fillRect(x, y, w, h);
+    finish(ctx, L, x, y, w, h);
     ctx.restore();
   };
 
+  // 仕上げ：色をくすませ（彩度を落として暖かい灰に寄せる）、筆の跡を重ね、周りを暗くする（絵画の挿絵のように）
+  function finish(ctx, L, x, y, w, h) {
+    ctx.save();
+    ctx.globalCompositeOperation = "saturation"; ctx.globalAlpha = 0.14; ctx.fillStyle = "#807870"; ctx.fillRect(x, y, w, h);
+    ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = 0.18; ctx.fillStyle = "#e8d8bc"; ctx.fillRect(x, y, w, h);
+    ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
+    const v = ctx.createRadialGradient(x + w * 0.45, y + h * 0.4, h * 0.3, x + w * 0.5, y + h * 0.5, h * 0.82);
+    v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(14,8,10,.38)");
+    ctx.fillStyle = v; ctx.fillRect(x, y, w, h);
+    ctx.restore();
+  }
   // 仲間になった魔物など、人でないもの（モンスターの絵を胸から上に切り取る）
   function paintFoe(ctx, x, y, w, h, who) {
     const L = { bg: "#5a6a4a", kind: "foe", iris: "#ff3a3a", seed: "foe" };
@@ -907,6 +1169,9 @@
   }
 
   // 画面から呼ぶ入口。canvas の見た目の大きさに合わせて描き直す
+  // 同じ人物・同じ大きさの肖像は一度だけ描いて使い回す（DOM が無いとき＝テストでは毎回描く）
+  const PCACHE = new Map();
+  const PCACHE_MAX = 40;
   G.drawPortrait = (cv, who) => {
     if (!cv || !who) return;
     const rect = cv.getBoundingClientRect();
@@ -921,6 +1186,17 @@
     const ctx = cv.getContext("2d");
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, w, hh);
-    if (who.kind === "foe") paintFoe(ctx, 0, 0, w, hh, who); else G.paintPerson(ctx, 0, 0, w, hh, who);
+    const can = typeof document !== "undefined" && typeof ctx.drawImage === "function";
+    if (!can) { if (who.kind === "foe") paintFoe(ctx, 0, 0, w, hh, who); else G.paintPerson(ctx, 0, 0, w, hh, who); return; }
+    const key = w + "x" + hh + "|" + JSON.stringify(who);
+    let sp = PCACHE.get(key);
+    if (!sp) {
+      sp = document.createElement("canvas"); sp.width = w; sp.height = hh;
+      const sc = sp.getContext("2d");
+      if (who.kind === "foe") paintFoe(sc, 0, 0, w, hh, who); else G.paintPerson(sc, 0, 0, w, hh, who);
+      PCACHE.set(key, sp);
+      if (PCACHE.size > PCACHE_MAX) PCACHE.delete(PCACHE.keys().next().value);
+    } else { PCACHE.delete(key); PCACHE.set(key, sp); }
+    ctx.drawImage(sp, 0, 0);
   };
 })(globalThis.G = globalThis.G || {});
