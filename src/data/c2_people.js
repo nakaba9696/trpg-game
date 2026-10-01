@@ -34,8 +34,8 @@
       },
     }),
     nora: P({
-      name: "ノラミ", short: "ノラ", full: "ノラミ", nation: "レオネスト", role: "森に住む獣人の娘。化け物に村を潰され、犯人を探している。とにかく明るい愛すべきあほで、勘が鋭い。ときどき沈む。弓が下手で狩りの落ちこぼれだったが、肉弾戦は抜群", sex: "女", age: 18, race: "beast", beast: "wolf",
-      who: { kind: "archer", sex: "女", age: 18, seed: "c2:nora", look: { hair: "#9a6a3a", hairStyle: "wild", eyes: "round", mouth: "grin", brows: "raised", outfit: "leather", head: "none", gear: "none", cloth: "#5a4a2a", build: "normal", ears: "none", beast: "wolf", marks: ["dirt"], bg: "#4a6a3a" } },
+      name: "ノラミ", short: "ノラ", full: "ノラミ", nation: "レオネスト", role: "森に住む獣人の娘。化け物に村を潰され、犯人を探している。とにかく明るい愛すべきあほで、勘が鋭い。ときどき沈む。弓が下手で狩りの落ちこぼれだったが、肉弾戦は抜群", sex: "女", age: 18, race: "beast", beast: "dog",
+      who: { kind: "archer", sex: "女", age: 18, seed: "c2:nora", look: { hair: "#9a6a3a", hairStyle: "wild", eyes: "round", mouth: "grin", brows: "raised", outfit: "leather", head: "none", gear: "none", cloth: "#5a4a2a", build: "normal", ears: "none", beast: "dog", marks: ["dirt"], bg: "#4a6a3a" } },
       join: {
         cls: "森の獣人", desc: "ノラと呼んで、と言った", power: 56, dmg: 2, trait: "loyal", bond: 54, home: ["karna"],
         life: { home: "森の奥の、無くなった村", kin: "村の長老", food: "焼いた木の実", habit: "耳をぴくりと動かして、風上の匂いを嗅いでいる", secret: "あの日、村にいなかったのは、狩りの追試を受けていたから。追試には、まだ受かっていない", keep: "長老にもらった、引けない弓" },
