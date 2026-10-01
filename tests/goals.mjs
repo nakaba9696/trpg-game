@@ -67,7 +67,7 @@ export function measureGoals(opts = {}) {
 function stageOf(goal, S) {
   const blade = ["volgrim", "byakuya"].some((k) => (S.inv && S.inv[k]) || S.weapon === k);
   if (goal === "king") return S.title || "無位";
-  if (goal === "sword") return blade ? "剣" : S.visited.onigashima ? "鬼ヶ島に着いた" : S.visited.yakumo ? "八雲に着いた" : "大陸";
+  if (goal === "sword") return blade ? "剣" : S.visited.onigashima ? "鬼ヶ島に着いた" : S.visited.yakumo ? "シェルアークに着いた" : "大陸";
   if (goal === "majin") return S.flags.graw ? "討った" : S.visited.majincastle ? "居城に着いた" : blade ? "剣" : "剣なし";
   if (goal === "rich") return S.gold >= 10000 ? "10000G" : S.gold >= 3000 ? "3000G〜" : S.gold >= 1000 ? "1000G〜" : "〜1000G";
   return S.day >= 30 ? "30日〜" : "〜30日";

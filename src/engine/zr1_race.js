@@ -141,7 +141,7 @@
       if (key === "name" && r.race !== "human") {
         const R = D.RACES[r.race];
         const pool = R.names && D.PROFILE.names[R.names] && D.PROFILE.names[R.names][dr.sex];
-        // 八雲の生まれは八雲の名前のまま。ほかの生まれは、種族の響きと生まれの響きを混ぜる
+        // シェルアークの生まれはシェルアークの名前のまま。ほかの生まれは、種族の響きと生まれの響きを混ぜる
         const yakumo = (D.ORIGINS[dr.origin] || {}).culture === "yakumo";
         if (pool && !yakumo && rnd() < (R.nameRate || 0)) return pool[Math.floor(rnd() * pool.length)];
       }

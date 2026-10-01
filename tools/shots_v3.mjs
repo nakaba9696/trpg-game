@@ -25,8 +25,8 @@ const sheet = async (kind) => {
       { kind: "soldier", sex: "男", age: 40, seed: "v3:bear", name: "熊の獣人（兵士）", look: { beast: "bear", ears: "none", hair: "#5a3a22", build: "broad", marks: ["beard"] } },
       // ここから下は確かめ用（既定の一覧には出さない。ONLY に番号を書く）
       { kind: "child", seed: "v3:c1", name: "子ども" }, { kind: "elder", seed: "v3:e1", name: "老人" }, { kind: "priest", seed: "v3:p1", name: "神官" }, { kind: "knight", seed: "v3:k1", sex: "女", name: "騎士" },
-      { kind: "ronin", seed: "v3:r1", name: "八雲の人" }, { kind: "host", seed: "v3:h1", name: "宿の主" }, { kind: "mage", seed: "v3:m1", name: "魔法使い" }, { kind: "beggar", seed: "v3:b1", name: "物乞い" },
-      { kind: "hero", cls: "samurai", seed: "v3:hs", sex: "男", age: 30, name: "主人公（侍）" }, { kind: "adventurer", seed: "v3:fox", sex: "女", name: "狐の獣人", look: { beast: "fox", ears: "none", hair: "#c86a2a" } },
+      { kind: "ronin", seed: "v3:r1", name: "シェルアークの人" }, { kind: "host", seed: "v3:h1", name: "宿の主" }, { kind: "mage", seed: "v3:m1", name: "魔法使い" }, { kind: "beggar", seed: "v3:b1", name: "物乞い" },
+      { kind: "hero", cls: "samurai", seed: "v3:hs", sex: "男", age: 30, name: "主人公（島の剣士）" }, { kind: "adventurer", seed: "v3:fox", sex: "女", name: "狐の獣人", look: { beast: "fox", ears: "none", hair: "#c86a2a" } },
       { kind: "villager", seed: "v3:rab", sex: "女", name: "兎の獣人", look: { beast: "rabbit", ears: "none", hair: "#e8e0d8" } }, { kind: "sailor", seed: "v3:bird", name: "鳥の獣人", look: { beast: "bird", ears: "none", hair: "#3a5a8a" } }];
     let list0 = kind === "monsters" ? FOES.map((id) => ({ id, name: G.data.ENEMIES[id].name })) : PEOPLE;
     let list = kind === "monsters" ? list0 : list0.slice(0, 12);

@@ -155,7 +155,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.act("back");
     if (!G.eventTags().includes("m4_war_home")) fail("戦の最中の町に m4_war_home の印が無い");
     S.loc = "yakumo";
-    if (G.m4Markup("yakumo") || G.eventTags().includes("m4_war")) fail("戦と関係のない八雲まで値が上がる");
+    if (G.m4Markup("yakumo") || G.eventTags().includes("m4_war")) fail("戦と関係のないシェルアークまで値が上がる");
     W.war = null;
 
     // 噂：届いた話を酒場で聞く

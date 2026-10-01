@@ -10,7 +10,7 @@
     // ---------------------------------------------------------------- 武器
     i1_spoon: { name: "使徒の匙", type: "weapon", dmg: [1, 8, 1], stat: "筋力", hit: 0, price: 80, desc: "使徒が食後に放り投げた匙。人の手には長剣ほどもある。まだ少しスープの匂いがする。" },
     i1_chickenflail: { name: "鳴き鶏のフレイル", type: "weapon", dmg: [2, 4, 0], stat: "筋力", hit: -5, price: 45, desc: "鎖の先に鉄の鶏。当たるたびにコケッと鳴る。作った鍛冶屋は本気だった。" },
-    i1_umbrella: { name: "仕込み番傘", type: "weapon", dmg: [1, 6, 2], stat: "敏捷", hit: 5, vital: 10, price: 160, desc: "開けば雨よけ、抜けば刃。八雲の粋人が好む。" },
+    i1_umbrella: { name: "仕込み番傘", type: "weapon", dmg: [1, 6, 2], stat: "敏捷", hit: 5, vital: 10, price: 160, desc: "開けば雨よけ、抜けば刃。シェルアークの粋人が好む。" },
     i1_scythe: { name: "見習い死神の大鎌", type: "weapon", dmg: [2, 6, 1], stat: "筋力", hit: -10, vital: 5, price: 260, desc: "刃に『実習用』と彫ってある。持ち主はどこかで叱られているだろう。" },
     i1_baton: { name: "気まぐれ神の指揮棒", type: "weapon", dmg: [1, 4, 0], stat: "筋力", hit: -5, magic: 15, price: 300, desc: "神さまの持ち物だった、と露店の男は言い張る。振ると、どこかで誰かが拍子を取る気がする。魔法がよく通る。" },
 

@@ -68,7 +68,7 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   if (G.infamyHere() !== D.CRIMES.murder.inf || S.sin !== D.CRIMES.murder.sin) fail(`悪名: 衛兵を倒しても人殺しにならない（悪名 ${G.infamyHere()}・罪 ${S.sin}）`);
   S = start();
   S.loc = "wasteland"; G.crime("murder");
-  if (Object.keys(S.repute || {}).length || S.sin !== D.CRIMES.murder.sin) fail("悪名: 魔物界の罪が国の悪名になった／罪の匂いが残らない");
+  if (Object.keys(S.repute || {}).length || S.sin !== D.CRIMES.murder.sin) fail("悪名: 使徒領の罪が国の悪名になった／罪の匂いが残らない");
   // 手配された国の位は取り上げられ、城では位を願い出られない
   S = start();
   S.loc = "leavel"; S.gold = 5000; S.fame = 700; S.fac = "castle";

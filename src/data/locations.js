@@ -18,7 +18,7 @@
     },
     nerva: {
       name: "港町ヴァレンツァ", region: "自由都市連合", type: "town", danger: 0, scene: "port", x: 22, y: 70,
-      desc: "潮と魚の脂の匂い。霧の向こうで霧笛が鳴り、八雲へ渡る船の帆が濡れて重く垂れている。昼間から酒を飲んでいるのが海賊なのか密輸屋なのか、聞く者はいない。桟橋では、耳の尖った船乗りと獣の耳の荷揚げ人足が、同じ樽に腰かけて同じ魚を焼いている。",
+      desc: "潮と魚の脂の匂い。霧の向こうで霧笛が鳴り、シェルアークの島々へ渡る船の帆が濡れて重く垂れている。昼間から酒を飲んでいるのが海賊なのか密輸屋なのか、聞く者はいない。桟橋では、耳の尖った船乗りと獣の耳の荷揚げ人足が、同じ樽に腰かけて同じ魚を焼いている。",
       fac: ["inn", "tavern", "shop", "guild", "alley"],
       shop: ["dagger", "longsword", "leather", "katana"],
       links: { karna: 2, ruins: 2 }, sea: { yakumo: { days: 5, cost: 40 } },
@@ -29,10 +29,10 @@
       pool: ["goblin", "wolf", "barrelgob", "dogu"], links: { karna: 1, ruins: 2 },
     },
     ruins: {
-      name: "古代遺跡ロゥム", region: "自由都市連合", type: "dungeon", danger: 2, scene: "ruins", x: 40, y: 84,
+      name: "エル・ナフ遺構", region: "自由都市連合", type: "dungeon", danger: 2, scene: "ruins", x: 40, y: 84,
       desc: "崩れた柱が、草の中に白い肋骨のように並んでいる。神々の時代のものだと言われる遺跡だ。入口の石段は、数えるたびに段の数が違う。近ごろ奥に「あれ」とは違う何かが住みついたと、発掘人たちは嫌がって、日が傾く前に引き上げていく。",
       pool: ["goblin", "orc", "spider", "slime", "zombie", "mimic"], floors: 4, boss: "kain",
-      reward: { flag: "kain", fame: 40, chron: "古代遺跡ロゥムの最奥で、眷属カインを討ち取る", text: "カインの体が崩れ、遺跡の奥に古い壁画が現れた。三柱の神と、それを見下ろす巨大な目が描かれている。" },
+      reward: { flag: "kain", fame: 40, chron: "エル・ナフ遺構の最奥で、眷属カインを討ち取る", text: "カインの体が崩れ、遺跡の奥に古い壁画が現れた。三柱の神と、それを見下ろす巨大な目が描かれている。" },
       links: { forest: 2, nerva: 2 },
     },
     plains: {
@@ -91,29 +91,29 @@
       links: { mountains: 2 },
     },
     wasteland: {
-      name: "魔物界・灰の荒野", region: "魔物界", type: "wild", danger: 5, scene: "realm", x: 90, y: 50,
+      name: "使徒領・灰の荒野", region: "使徒領", type: "wild", danger: 5, scene: "realm", x: 90, y: 50,
       desc: "空が赤い。灰が雪のように降りつづき、歩いた跡はすぐに埋まる。遠くを魔物の群れが行き交っている。ときおり使徒が気まぐれに姿を見せるというが、見た者の話は、いつも途中で終わる。",
       pool: ["general", "kin", "chimera", "ogre", "oni"], links: { mountains: 3, majincastle: 3 },
     },
     majincastle: {
-      name: "鏖殺の使徒の居城", region: "魔物界", type: "dungeon", danger: 6, scene: "majin", x: 91, y: 80,
+      name: "鏖殺の使徒の居城", region: "使徒領", type: "dungeon", danger: 6, scene: "majin", x: 91, y: 80,
       desc: "骨と鉄で組まれた城。門は開いたままで、番兵もいない。奥の広間から、刃を研ぐ音だけが規則正しく聞こえてくる。主の使徒グラウは、強者が訪ねてくるのを待っている。",
       pool: ["general", "kin", "blackknight"], floors: 4, midboss: { 3: "rize" }, boss: "graw",
       reward: { flag: "graw", fame: 200, trophy: "majin", chron: "鏖殺の使徒グラウを討ち果たす。人の手で使徒が倒れたのは、百年ぶりのことだった", text: "巨人の体が膝をつき、笑った。「……よい戦いだった。次の千年も、こう、あれば……」使徒グラウは灰になって崩れた。空のどこかで、誰かが拍手をした気がした。" },
       links: { wasteland: 3 },
     },
     yakumo: {
-      name: "八雲・鬼灯の港", region: "八雲", type: "town", danger: 0, scene: "yakumo", x: 8, y: 90,
-      desc: "朱い鳥居と提灯の港町。焦がした醤の匂いと、耳慣れない言葉の抑揚。侍と忍が、同じ屋台で黙って蕎麦をすすっている。沖の鬼ヶ島からは、夜ごと太鼓の音が聞こえる。",
+      name: "島の都シェルアーク", region: "シェルアーク", type: "town", danger: 0, scene: "yakumo", x: 8, y: 90,
+      desc: "島から島へ渡し板が架かった、海の上の都。干した魚と樽の匂い、王都とはまるで違う訛り。王国の旗は港の端に一本だけで、桟橋ごとに顔役がいて、荷の値も揉め事の始末も自分たちで決める。沖の鬼ヶ島からは、夜ごと太鼓の音が聞こえる。",
       fac: ["inn", "tavern", "shop", "train", "guild"],
       shop: ["katana", "domaru", "riceball", "smoke", "potion"],
       links: { onigashima: 2 }, sea: { nerva: { days: 5, cost: 40 } },
     },
     onigashima: {
-      name: "鬼ヶ島の洞窟", region: "八雲", type: "dungeon", danger: 3, scene: "onigashima", x: 20, y: 96,
-      desc: "鬼の住む島の洞窟。岩肌は湿って生温かく、奥から酒と脂の匂いが流れてくる。笑い声が、腹の底に響く。いちばん奥で、大鬼・酒呑が宴を開いている。",
+      name: "鬼ヶ島の洞窟", region: "シェルアーク", type: "dungeon", danger: 3, scene: "onigashima", x: 20, y: 96,
+      desc: "鬼の住む島の洞窟。岩肌は湿って生温かく、奥から酒と脂の匂いが流れてくる。笑い声が、腹の底に響く。いちばん奥で、鬼の頭目ゴズが宴を開いている。",
       pool: ["oni", "ninja", "zombie", "ogre"], floors: 4, boss: "shuten",
-      reward: { flag: "shuten", item: "byakuya", fame: 50, trophy: "byakuya", chron: "鬼ヶ島で酒呑を討ち、聖刀白夜を取り戻す", text: "酒呑が倒れた宝物庫の奥に、白く光る刀が突き立っていた。抜くと、刀身が月のように澄んだ光を放った。聖刀白夜。" },
+      reward: { flag: "shuten", item: "byakuya", fame: 50, trophy: "byakuya", chron: "鬼ヶ島で鬼の頭目ゴズを討ち、聖刀白夜を取り戻す", text: "ゴズが倒れた宝物庫の奥に、白く光る刀が突き立っていた。抜くと、刀身が月のように澄んだ光を放った。聖刀白夜。" },
       links: { yakumo: 2 },
     },
   };
