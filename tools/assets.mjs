@@ -1,7 +1,7 @@
 // 持ち主が作った画像（assets/ の webp・png・jpg）を data URI にして、HTML に埋め込む（tools/build.mjs が呼ぶ）。
-// Artifact は外から読み込めないので、画像は HTML の中に入れる。ゲームからは G.ASSETS["portraits/<id>"] で引く。
+// Artifact は外から読み込めないので、画像は HTML の中に入れる。ゲームからは G.ASSETS["portraits/<id>"]・G.ASSETS["monsters/<id>"]（V6）で引く。
 // 鍵は assets/ からの道筋から拡張子を除いたもの（assets/portraits/dil.webp → "portraits/dil"）。同じ鍵が二つあれば webp を使う。
-// 何を描くかの一覧は docs/art/portraits.md。レーン A（絵）の V4 が管理
+// 何を描くかの一覧は docs/art/portraits.md（人物）・docs/art/monsters.md（魔物）。上限（LIMIT）は assets/ の下を全部合わせて数える。レーン A（絵）の V4・V6 が管理
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import path from "node:path";
 
