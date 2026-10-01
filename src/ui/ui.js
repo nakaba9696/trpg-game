@@ -447,7 +447,7 @@
     renderMobileBar();
     drawFaces();
   }
-  // ステータスの開閉（スマホでは全面に重ねて出す。PC では常に横にある）
+  // ステータスの開閉（必要なときだけ開く窓。スマホは全面、PC は右に重ねて出す。V1）
   ui.setSheetOpen = (on) => {
     const was = document.body.classList.contains("sheet-open");
     document.body.classList.toggle("sheet-open", on);
