@@ -23,7 +23,7 @@
     { key: "day100", name: "百日の旅", tier: "銀", desc: "百日を生き延びた", test: (S) => S.day >= 100 && S.over !== "dead" },
     { key: "explorer", name: "大陸踏破", tier: "金", desc: "すべての場所を訪れた", test: (S) => Object.keys(G.data.LOCS).every((k) => S.visited[k]) },
     { key: "kain", name: "眷属殺し", tier: "銀", desc: "眷属カインを討った", test: (S) => !!S.flags.kain },
-    { key: "shuten", name: "鬼退治", tier: "銀", desc: "鬼の頭目・酒呑を討った", test: (S) => !!S.flags.shuten },
+    { key: "shuten", name: "鬼退治", tier: "銀", desc: "鬼の頭目ゴズを討った", test: (S) => !!S.flags.shuten },
     { key: "dragon", name: "竜殺し", tier: "金", desc: "屍竜ネクロザを討った", test: (S) => !!S.flags.bonedragon },
     { key: "volgrim", name: "魔剣の主", tier: "金", desc: "魔剣ヴォルグリムを手にした" },
     { key: "byakuya", name: "聖刀の主", tier: "金", desc: "聖刀白夜を手にした" },

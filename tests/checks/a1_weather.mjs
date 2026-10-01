@@ -46,7 +46,7 @@ export default ({ G, fail, ok, seeded }) => {
   if ([...seen.garmund].some((x) => !x.startsWith("冬"))) fail("帝都ノルディアに冬でない日がある");
   if ([...seen.w1_holy].some((x) => x.endsWith("雨"))) fail("聖都エルヴィナに雨が降った");
   if ([...seen.w1_oboro].some((x) => !x.startsWith("秋"))) fail("朧島の季節が進んだ");
-  if (seen.wasteland.size) fail("魔物界に季節がある");
+  if (seen.wasteland.size) fail("使徒領に季節がある");
   // 古いセーブ（wseed も id も weather も無い）でも動き、G.rand を使わない
   const S0 = G.S; G.S = { loc: "karna", day: 100 };
   try { G.skyAt(); G.syncWeather(); if (!G.S.weather) fail("古いセーブで S.weather が入らない"); } catch (err) { fail(`古いセーブで例外 ${err.message}`); }

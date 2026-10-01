@@ -31,7 +31,7 @@
       desc: "鍛冶の都の釘。樽の底に、土の匂いがする。鍛冶屋が夜のうちに一度、鉄を土に埋めるからだという。" },
     q4_saltfish: { name: "塩漬け魚の樽", from: "nerva", price: 25, want: { garmund: 1.3, w2_nagris: 1.2, zephara: 1.15, fort: 1.2 },
       desc: "霧の港の塩漬け。樽に焼き印がある。荷揚げ人足の誰かが、印の横に小さく自分の娘の名前を彫っている。" },
-    q4_silk: { name: "八雲の絹", from: "yakumo", price: 90, want: { leavel: 1.35, zephara: 1.3, karna: 1.15, w1_holy: 1.2 },
+    q4_silk: { name: "シェルアークの絹", from: "yakumo", price: 90, want: { leavel: 1.35, zephara: 1.3, karna: 1.15, w1_holy: 1.2 },
       desc: "薄くて、指に吸いつく絹。包みの紙に、鬼灯の判が押してある。王都の仕立屋が、借金をしてでも欲しがる。" },
     q4_crystal: { name: "水晶の粉の小箱", from: "zephara", price: 70, want: { w2_dranherz: 1.35, garmund: 1.25, karna: 1.1 },
       desc: "塔を削った滓だと、門の外の靴屋は言う。鍛冶の都では、これを混ぜると刃が鳴るらしい。" },

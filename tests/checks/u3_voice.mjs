@@ -84,7 +84,7 @@ export default ({ fail, loadEngine, seeded }) => {
     const startOpen = [].concat(D.LORE_ON.goal[goal0] || []).length;
     if (!secs().includes("大陸と国") || !secs().includes("人と暮らし")) fail("はじめの手引きに、大陸と国・人と暮らしが無い");
     const first = [D.WORLD.intro, ...D.WORLD.all.flatMap(([, r]) => r.flatMap(([k, v]) => [k, v]))].join("\n");
-    const secret = first.match(/十三|七十二|ヴォルグリム|白夜|魔王の座|使徒|絶界|ロゥム|古言|世界樹/);
+    const secret = first.match(/十三|七十二|ヴォルグリム|白夜|魔王の座|使徒|絶界|ロゥム|ルヴェナール|古言|世界樹/);
     if (secret) fail(`はじめの手引きに、物語で知るはずの「${secret[0]}」がある`);
     if (Object.values(S.lore).flat().length !== startOpen) fail(`はじめから用語説明が開いている：${JSON.stringify(S.lore)}`);
     if (!startOpen && loreSecs.length) fail("はじめから世界観の節が見える");

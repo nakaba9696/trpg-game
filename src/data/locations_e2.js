@@ -8,7 +8,7 @@
 
   Object.assign(D.LOCS, {
     e2_kitchen: {
-      name: "肉の谷の大厨房", region: "魔物界", type: "dungeon", danger: 5, scene: "e2_kitchen", x: 82, y: 66,
+      name: "肉の谷の大厨房", region: "使徒領", type: "dungeon", danger: 5, scene: "e2_kitchen", x: 82, y: 66,
       desc: "灰の荒野の南、肉の谷の底に建つ城ほどもある厨房。煙突から昼も夜も湯気が上がり、谷じゅうに煮込みの匂いが立ちこめている。働いているのは料理人と、生きている食材だという。帰ってきた者の話は、口の数のところでいつも食い違う。",
       pool: ["e2_cookgob", "e2_meatling", "ogre", "oni", "general"], floors: 4, midboss: { 3: "e2_marmit" }, boss: "e2_gormoa",
       lair: { event: "e2_gormoa_table" },

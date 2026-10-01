@@ -323,7 +323,7 @@
     V.torch(P, w * 0.4, h * 0.6, u * 1.8, { col: "#ff6a2a" });
     V.dim(P, 0.4);
   };
-  // 古代遺跡ロゥム：天井の崩れた大広間（上から光）。折れた柱、壁の碑文、顔を削られた像
+  // エル・ナフ遺構：天井の崩れた大広間（上から光）。折れた柱、壁の碑文、顔を削られた像
   IN.ruins_in = (P) => {
     const { w, h, u, ctx, R } = P;
     const r = V.room(P, { wall: "#8a8270", floor: "#5a5448", tex: "stone", floorTex: "stone", backY: h * 0.1, backH: h * 0.55, amb: 0.65 });

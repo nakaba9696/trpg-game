@@ -1,5 +1,5 @@
 // 背景の絵（V2）：町。国ごとに見た目を変える（王国は白い城壁、帝国は雪と黒鉄、共和国は魔法の塔、
-// ブランデールは市場、ヴァレンツァは港と霧、エルヴィナは聖堂、八雲は和風）。道具は scene_v2.js の G.SV2
+// ブランデールは市場、ヴァレンツァは港と霧、エルヴィナは聖堂、シェルアークは和風）。道具は scene_v2.js の G.SV2
 (function (G) {
   const V = G.SV2;
   if (!V) return;
@@ -22,7 +22,7 @@
     ctx.beginPath(); ctx.moveTo(x - s * 0.1, base - s * 1.18); ctx.lineTo(x, base - s * 1.27); ctx.lineTo(x + s * 0.1, base - s * 1.18); ctx.fill();
     if (on) V.light(P, x, base - s * 1.1, s * 2.4, o.col || "#ffc66a", 1.1, true);
   }
-  // 提灯（八雲。赤い紙に墨の字）
+  // 提灯（朧島。赤い紙に墨の字）
   function lantern(P, x, y, s, o) {
     const { ctx } = P;
     o = o || {};
@@ -180,7 +180,7 @@
     ctx.beginPath(); ctx.moveTo(x, base - s * 1.3); ctx.lineTo(x, base - s * 1.65); ctx.stroke();
     for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(x - s * 0.04, base - s * (1.35 + i * 0.05)); ctx.lineTo(x + s * 0.04, base - s * (1.35 + i * 0.05)); ctx.stroke(); }
   }
-  // 桜（八雲。春は花、秋は紅葉）
+  // 桜（シェルアーク。春は花、秋は紅葉）
   function sakura(P, x, base, s, d) {
     const cols = P.season === "spring" ? ["#f4c0cc", "#f8d8e0", "#ffeef2", "#d898a8"] : P.season === "autumn" ? ["#c8281a", "#e8502a", "#f08a3a", "#901a10"] : null;
     V.tree(P, x, base, s, { d, leaves: cols, wide: 0.5, trunk: "#3a2a24" });
@@ -456,38 +456,36 @@
     V.frame(P, { color: "#2a3020" });
   };
 
-  // ---------------------------------------------------------------- 八雲・鬼灯の港（朱い鳥居、五重塔、提灯の連なり、瓦屋根、桜）
+  // ---------------------------------------------------------------- 島の都シェルアーク（南西の島々。島から島へ渡し板、帆船、灯台、桟橋ごとの小屋）
   OUT.yakumo = (P) => {
-    const { u, w, h, hz, cx, ctx, R } = P;
-    // 遠くの富士のような山と海
-    V.mountains(P, { base: hz - u * 1, height: u * 18, d: 0.8, color: "#6a7898", snow: 0.35, round: true, scale: 1.4 });
-    V.water(P, { top: hz, bottom: hz + u * 4, color: "#2a4a6a", reflect: 0.4 });
-    ship(P, w * 0.8, hz + u * 2.2, u * 4, { d: 0.6, masts: 1, sail: "#e8d8b8" });
-    V.ground(P, { top: hz + u * 4, color: "#8a7a62", tex: "dirt" });
-    // 奥の町並み（瓦屋根）と五重塔
-    V.houseRow(P, { base: hz + u * 5, size: 4, d: 0.5, walls: ["#e8dcc4", "#d8c8a8", "#c8b494"], roofs: ["#3a3a44", "#4a4040"], roofType: "japan", chimney: 0, lit: 0.6 });
-    pagoda(P, cx + u * 22, hz + u * 5, u * 18, 0.45);
-    V.road(P, { top: hz + u * 6, wt: u * 5, wb: w * 0.6, color: "#a89880" });
-    // 鳥居（参道の奥）
-    torii(P, cx, hz + u * 8, u * 13, 0.3);
-    V.houseRow(P, { base: hz + u * 10, size: 7, d: 0.25, gap: [cx - u * 8, cx + u * 8], walls: ["#ece0c8", "#dccca8", "#c8a888"], roofs: ["#33333a", "#3a3438"], roofType: "japan", chimney: 0, lit: 0.6, house: { timber: "#3a2a20" } });
-    // 桜（季節で花と紅葉）
-    sakura(P, cx - u * 24, hz + u * 14, u * 14, 0.15);
-    sakura(P, cx + u * 30, hz + u * 16, u * 16, 0.1);
-    // 手前の家（格子と暖簾）
-    const near = nearHouses(P, { walls: ["#e4d4b4", "#d4c09c"], roofs: ["#2e2e34"], roofType: "japan", house: { timber: "#3a2618" }, size: 22 });
-    for (const [x0, x1, y] of [[near.lx - u * 14, near.lx, h - u * 13], [near.rx, near.rx + u * 14, h - u * 12]]) { for (let x = x0; x < x1; x += u * 2.2) { ctx.fillStyle = P.c(x % 2 ? "#2a3a6a" : "#3a2a5a"); ctx.fillRect(x, y, u * 2, u * 4); } }
-    // 提灯の連なり（参道に渡した綱）
-    const string = (x0, y0, x1, y1, sag, n, s) => {
-      ctx.strokeStyle = P.dark("#2a1e14", 0, 0.2); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo((x0 + x1) / 2, (y0 + y1) / 2 + sag * 2, x1, y1); ctx.stroke();
-      for (let i = 1; i < n; i++) { const t = i / n, x = lerp(x0, x1, t), y = (1 - t) * (1 - t) * y0 + 2 * t * (1 - t) * ((y0 + y1) / 2 + sag * 2) + t * t * y1; lantern(P, x, y + s * 0.7, s, { col: i % 3 ? "#d8402a" : "#e8a030" }); }
-    };
-    string(near.lx, h - u * 26, near.rx, h - u * 25, u * 4, 9, u * 1.8);
-    string(cx - u * 16, hz + u * 2, cx + u * 16, hz + u * 2.5, u * 1.2, 9, u * 0.8);
-    V.frame(P, { color: "#2a2018" });
+    const { u, w, h, hz, cx, ctx } = P;
+    // 沖の島々（低く丸い島が重なる）と海
+    V.mountains(P, { base: hz, height: u * 7, d: 0.8, color: "#5a7a6a", round: true, scale: 2.2 });
+    V.water(P, { top: hz, color: "#2a5a72", reflect: 0.45 });
+    ship(P, w * 0.18, hz + u * 2, u * 4, { d: 0.6, masts: 2, sail: "#e8dcc0" });
+    ship(P, w * 0.82, hz + u * 3, u * 5, { d: 0.5, masts: 1, sail: "#d8c8a0" });
+    // 灯台の島（右奥）
+    const lx = cx + u * 26, ly = hz + u * 3;
+    ctx.fillStyle = P.c("#6a6a58", 0.5); ctx.beginPath(); ctx.ellipse(lx, ly, u * 9, u * 2.4, 0, Math.PI, 0); ctx.fill();
+    ctx.fillStyle = P.c("#e8e0d0", 0.5); ctx.fillRect(lx - u * 1.2, ly - u * 13, u * 2.4, u * 13);
+    ctx.fillStyle = P.c("#a84a3a", 0.5); for (let i = 0; i < 3; i++) ctx.fillRect(lx - u * 1.2, ly - u * (11 - i * 4), u * 2.4, u * 1.4);
+    ctx.fillStyle = P.c("#ffe2a0", 0.5); ctx.fillRect(lx - u * 0.9, ly - u * 15, u * 1.8, u * 2);
+    if (P.night || P.dusk || P.overcast) V.light(P, lx, ly - u * 14, u * 8, "#ffd27a", 1.1, true);
+    // 中ほどの島の町並み（白い壁と赤茶の屋根）
+    V.houseRow(P, { base: hz + u * 6, size: 4, d: 0.45, walls: ["#ece4d4", "#e0d4bc", "#d8c8a8"], roofs: ["#a85a3a", "#8a4a32"], chimney: 0, lit: 0.6 });
+    // 島から島へ渡した板の橋
+    ctx.strokeStyle = P.dark("#5a4430", 0, 0.3); ctx.lineWidth = Math.max(2, u * 0.8);
+    ctx.beginPath(); ctx.moveTo(cx - u * 30, hz + u * 9); ctx.quadraticCurveTo(cx - u * 10, hz + u * 11, cx + u * 8, hz + u * 8.5); ctx.stroke();
+    ctx.lineWidth = 1; for (let x = cx - u * 30; x < cx + u * 8; x += u * 2.5) { ctx.beginPath(); ctx.moveTo(x, hz + u * 9.6); ctx.lineTo(x, hz + u * 12); ctx.stroke(); }
+    V.water(P, { top: hz + u * 12, bottom: h - u * 10, color: "#245068", reflect: 0.3 });
+    // 手前の桟橋と、顔役の小屋
+    V.ground(P, { top: h - u * 10, color: "#7a6448", tex: "dirt" });
+    nearHouses(P, { walls: ["#e4dccc", "#d4c4a4"], roofs: ["#9a5034"], size: 22 });
+    for (let i = 0; i < 4; i++) lamp(P, w * (0.14 + i * 0.24), h - u * 10, u * 9);
+    V.frame(P, { color: "#1e2a30" });
   };
 
-  // ---------------------------------------------------------------- 八雲・朧島（夜の明けない祭りの島。歯型の欠けた月、海に立つ鳥居、無数の提灯）
+  // ---------------------------------------------------------------- シェルアーク・朧島（夜の明けない祭りの島。歯型の欠けた月、海に立つ鳥居、無数の提灯）
   OUT.w1_oboro = (P) => {
     const { u, w, h, hz, cx, ctx, R } = P;
     V.moon(P, P.sun.x, P.sun.y, u * 4, "#f4e0c0", [[0.85, -0.2, 0.28], [0.95, 0.25, 0.22], [0.7, 0.55, 0.18]]);

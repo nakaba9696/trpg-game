@@ -5,7 +5,7 @@
 // - 古いセーブ（S.u7lore が無い）は、訪れた場所から静かに開き直す
 // - 150 回のランダムな遊びの終わりには、いくつも開いている
 const PROFILE = { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" };
-const MOVED = ["ヴェルド", "レオネスト王国", "ノルディア帝国", "エルメシア共和国", "自由都市連合", "八雲", "三国の協定", "人と種族", "光天教会", "遺跡の品", "格", "術", "凶暴な魔物", "間の抜けた魔物"];
+const MOVED = ["ヴェルド", "レオネスト王国", "ノルディア帝国", "エルメシア共和国", "自由都市連合", "シェルアーク", "三国の協定", "人と種族", "光天教会", "遺跡の品", "格", "術", "凶暴な魔物", "間の抜けた魔物"];
 
 export default ({ fail, loadEngine, seeded }) => {
   const start = (G, cls, goal) => {
@@ -58,7 +58,7 @@ export default ({ fail, loadEngine, seeded }) => {
     G.rand = seeded(2);
     start(G, "mage");
     G.S.log.forEach((e) => put("はじめの記録", e.text));
-    const BAD = /協定|三国|三大国|三つの大国|盟主が代わ|精霊と契約|契約のある|議席|世界を作|創世|父なる神|悪魔のもの|天災|国難|魔物界|人の世界|後継を争|刺客を放ち/;
+    const BAD = /協定|三国|三大国|三つの大国|盟主が代わ|精霊と契約|契約のある|議席|世界を作|創世|父なる神|悪魔のもの|天災|国難|魔物界|使徒領|人の世界|後継を争|刺客を放ち/;
     texts.forEach(([w, t]) => { const m = String(t).match(BAD); if (m) fail(`${w}：世界の大枠を説明している「${m[0]}」`); });
   }
 
@@ -100,8 +100,8 @@ export default ({ fail, loadEngine, seeded }) => {
     S.mode = "explore"; S.combat = null;
     G.give("relic");
     if (!has("遺跡の品")) fail("古代の遺物を拾っても「遺跡の品」が開かない");
-    G.memo("酒場の噂：南の海の八雲には、侍がいるらしい");
-    if (!has("八雲")) fail("八雲の噂（memo）を聞いても「八雲」が開かない");
+    G.memo("酒場の噂：南の海のシェルアークには、鬼の島があるらしい");
+    if (!has("シェルアーク")) fail("シェルアークの噂（memo）を聞いても「シェルアーク」が開かない");
     G.arrive("zephara"); G.endTurn();
     if (!has("エルメシア共和国") || !(S.lore.u7_races || []).includes("elf")) fail("共和国の都に着いても「エルメシア共和国」「人と種族（エルフ）」が開かない");
     // 同じ見出しの節は一つにまとまる

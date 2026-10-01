@@ -1057,7 +1057,7 @@
   function seasonGround(P) {
     const { ctx, w, h, R } = P;
     if (P.inside) return;
-    if (P.season === "autumn" || (P.season === "spring" && (P.key === "yakumo" || P.key === "w1_oboro"))) {
+    if (P.season === "autumn" || (P.season === "spring" && P.key === "w1_oboro")) {
       const cols = P.season === "autumn" ? ["#b83a1c", "#d8782a", "#e0a838"] : ["#f4c4cf", "#ffdce4"];
       for (let i = 0; i < w / 4; i++) { const y = P.hz + Math.pow(R(), 0.6) * (h - P.hz), dd = P.depth(y); ctx.fillStyle = rgba(P.c(cols[i % cols.length], 0.3 * (1 - dd)), 0.8); ctx.beginPath(); ctx.ellipse(R() * w, y, P.u * (0.2 + dd * 0.6), P.u * (0.1 + dd * 0.25), R() * 3, 0, Math.PI * 2); ctx.fill(); }
     }
@@ -1174,8 +1174,8 @@
     if (P.weather === "rain") list.push({ type: "rain", drops: Array.from({ length: N(1100) }, () => [Rw(), Rw(), 0.6 + Rw() * 0.6]) });
     if (P.weather === "snow") list.push({ type: "snow", storm, flakes: Array.from({ length: N(storm ? 900 : 1600) }, () => [Rw(), Rw(), 0.5 + Rw() * 1.5, Rw() * 6]) });
     if (P.weather === "fog") list.push({ type: "fog", wisps: Array.from({ length: 6 }, () => [Rw(), 0.45 + Rw() * 0.5, 0.25 + Rw() * 0.3, 0.3 + Rw() * 0.7]) });
-    const petals = P.season === "spring" && !P.inside ? ((P.key === "yakumo" || P.key === "w1_oboro") ? ["#f8c8d4", "#ffe2ea"] : ["#f8d0da"]) : P.season === "autumn" && !P.inside ? ["#c8481e", "#e0902a", "#b8301a", "#d8a830"] : null;
-    if (petals && P.weather !== "rain" && P.weather !== "snow") list.push({ type: "petal", cols: petals, bits: Array.from({ length: Math.round(N(9000) * ((P.key === "yakumo" || P.key === "w1_oboro") ? 2.5 : 1)) }, () => [Rw(), Rw(), 0.6 + Rw(), Rw() * 6]) });
+    const petals = P.season === "spring" && !P.inside ? (P.key === "w1_oboro" ? ["#f8c8d4", "#ffe2ea"] : ["#f8d0da"]) : P.season === "autumn" && !P.inside ? ["#c8481e", "#e0902a", "#b8301a", "#d8a830"] : null;
+    if (petals && P.weather !== "rain" && P.weather !== "snow") list.push({ type: "petal", cols: petals, bits: Array.from({ length: Math.round(N(9000) * (P.key === "w1_oboro" ? 2.5 : 1)) }, () => [Rw(), Rw(), 0.6 + Rw(), Rw() * 6]) });
     if (P.ash) list.push({ type: "ash", col: P.ash, bits: Array.from({ length: N(2500) }, () => [Rw(), Rw(), 0.5 + Rw(), Rw() * 6]) });
     if (P.embers) list.push({ type: "ember", col: P.embers.col || "#ffa040", x: P.embers.x, y: P.embers.y, spread: P.embers.spread, bits: Array.from({ length: 40 }, () => [Rw(), Rw(), 0.5 + Rw(), Rw() * 6]) });
     if (P.fireflies) list.push({ type: "firefly", col: P.fireflies, bits: Array.from({ length: 24 }, () => [Rw(), 0.5 + Rw() * 0.45, Rw() * 6, 0.5 + Rw()]) });

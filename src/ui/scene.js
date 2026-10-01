@@ -142,7 +142,7 @@
     { top: "#070b18", bot: "#1f2a48", sun: null, night: true },        // 夜
   ];
   const RED_SKY = { top: "#140304", bot: "#7a1c12", sun: "#ff5a3a", night: true };
-  // 魔物界の空（赤い空。季節も天候も無い）
+  // 使徒領の空（赤い空。季節も天候も無い）
   const RED = { realm: 1, majin: 1, e2_kitchen: 1 };
 
   function sky(ctx, w, h, sk, R, redMoon) {
@@ -409,7 +409,7 @@
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.9, w, h);
       particles(ctx, w, h * 0.9, 50, "rgba(200,210,220,.12)", 3, R);
     },
-    // W1：八雲の朧島（夜の明けない祭りの島。欠けた月には歯型）
+    // W1：シェルアークの朧島（夜の明けない祭りの島。欠けた月には歯型）
     w1_oboro(ctx, w, h, sk, R) {
       const night = SKIES[3];
       const sg = ctx.createLinearGradient(0, 0, 0, h);
@@ -932,7 +932,7 @@
       ctx.fillStyle = "#8a1a1a"; ctx.beginPath(); ctx.ellipse(w * 0.55, h * 0.9, 34, 7, 0, 0, Math.PI); ctx.fill(); ctx.fillStyle = "#c8a040"; ctx.fillRect(w * 0.55 - 34, h * 0.9 - 1, 68, 2);
       ctx.fillStyle = "#d8d0bc"; for (let i = 0; i < 8; i++) { ctx.save(); ctx.translate(w * (0.35 + R() * 0.3), h * (0.93 + R() * 0.05)); ctx.rotate(R() * 3); ctx.fillRect(-8, -1.5, 16, 3); ctx.restore(); }
     },
-    // 古代遺跡ロゥム：天井の崩れた大広間。折れた柱、壁一面の自慢の碑文、顔を削られた大きな像
+    // エル・ナフ遺構：天井の崩れた大広間。折れた柱、壁一面の自慢の碑文、顔を削られた大きな像
     ruins_in(ctx, w, h, R) {
       interior(ctx, w, h, "#4a4640", "#2a2824", R);
       ctx.fillStyle = "rgba(20,18,16,.55)";

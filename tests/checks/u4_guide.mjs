@@ -40,7 +40,7 @@ export default ({ G, fail, ok, seeded }) => {
   // 押せない理由
   S.mp = 0; S.gold = 10;
   if (G.lockReason({ label: "炎の魔法", sub: "魔力 50%・MP3", disabled: true }, S) !== "MP が足りない") no("MP が足りない理由が出ない");
-  if (G.lockReason({ label: "船で八雲へ", sub: "5日・40G", disabled: true }, S) !== "所持金が足りない") no("所持金が足りない理由が出ない");
+  if (G.lockReason({ label: "船でシェルアークへ", sub: "5日・40G", disabled: true }, S) !== "所持金が足りない") no("所持金が足りない理由が出ない");
   if (G.lockReason({ label: "魔力の水（1）", sub: "MP+6", disabled: false }, S) !== "") no("押せるボタンに理由が付いた");
   if (G.lockReason({ label: "逃げる", sub: "逃げられない", disabled: true }, S) !== "") no("理由が書いてあるボタンに、さらに理由が付いた");
 

@@ -8,7 +8,7 @@
 
   // 場所ごとの気候。rain / fog：その日が雨・霧になる割合。
   // cold：1 = 寒い（春が遅く、秋のあとすぐ冬）、2 = 一年じゅう冬（雨は雪になる）。
-  // season：季節が止まっている場所。still：季節も天候も無い（魔物界）。
+  // season：季節が止まっている場所。still：季節も天候も無い（使徒領）。
   // 書いていない場所は _default。新しい場所は、ここに1行足せば気候が付く
   D.CLIMATE = Object.assign(D.CLIMATE || {}, {
     _default: { rain: 0.18, fog: 0.12 },
@@ -67,7 +67,7 @@
     return { season, weather, still: false, label: season + "・" + weather };
   };
 
-  // 今いる場所の天候を S.weather に写す（「晴」「雨」「霧」「雪」。魔物界は ""）。
+  // 今いる場所の天候を S.weather に写す（「晴」「雨」「霧」「雪」。使徒領は ""）。
   // 環境音（ui/sound.js）はこれを読んで雨の音にする。古いセーブは次の行動で入る
   G.syncWeather = () => {
     const S = G.S;

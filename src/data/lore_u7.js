@@ -15,7 +15,7 @@
   Object.assign(D.LORE, {
     // ---------------------------------------------------------------- 大陸と国
     u7_veld: { sec: "大陸と国", title: "ヴェルド", lines: [
-      ["first", "南北に歩いて一月ほどの大陸。西が人の世界で、東の断界山脈より向こうは魔物の土地だという。", { hint: ["魔物界", "魔物の土地"] }],
+      ["first", "南北に歩いて一月ほどの大陸。西が人の世界で、東の断界山脈より向こうは化け物の棲む土地だという。", { hint: ["使徒領", "化け物の棲む土地"] }],
       ["fort", "黒鉄の砦が、断界山脈を越えるただ一本の道を塞いでいる。", { hint: ["黒鉄の砦"] }],
     ] },
     u7_leonest: { sec: "大陸と国", title: "レオネスト王国", lines: [
@@ -32,12 +32,12 @@
       ["seat", "精霊と契約した者だけが議席を持ち、契約のない者は門の外で暮らす。"],
     ] },
     u7_free: { sec: "大陸と国", title: "自由都市連合", lines: [
-      ["first", "三国のどこにも属さないと言い張る、商人と傭兵の都市の寄り合い。首都はブランデール。"],
+      ["first", "王国の中にありながら、王子さまから自治を許された商人と傭兵の町の寄り合い。いちばん大きいのはブランデール。王子さまへの上納金さえ払えば、口出しはされない。"],
       ["nerva", "港町ヴァレンツァは外海への自由港。金さえあれば、たいていの物は手に入る。"],
     ] },
-    u7_yakumo: { sec: "大陸と国", title: "八雲", lines: [
-      ["first", "南西の海の島国。港町ヴァレンツァからの船でだけ行ける。", { hint: ["八雲"] }],
-      ["land", "侍と忍の国で、鬼も出るという。", { hint: ["鬼ヶ島", "鬼の島"] }],
+    u7_yakumo: { sec: "大陸と国", title: "シェルアーク", lines: [
+      ["first", "南西の海の島々の都。王国の第七王子の領地ということになっているが、島の者は王都より海を見て暮らしている。港町ヴァレンツァからの船で行ける。", { hint: ["シェルアーク"] }],
+      ["land", "島ごとに顔役がいて、たいていのことは自分たちで決める。沖には、鬼の棲む岩の島もあるという。", { hint: ["鬼ヶ島", "鬼の島"] }],
     ] },
     u7_pact: { sec: "大陸と国", title: "三国の協定", lines: [
       ["first", "王国・帝国・共和国の三国は、不可侵の協定を十年ごとに結び直してきた。次の結び直しは1130年。", { hint: ["協定"] }],
@@ -91,8 +91,8 @@
   // その地方の場所に初めて着いた（出発の町も、最初の手番の終わりに開く）
   const region = {
     "自由都市連合": "u7_free", "レオネスト王国": "u7_leonest", "ノルディア帝国": "u7_nordia", "エルメシア共和国": ["u7_elmesia", "u7_races:elf"],
-    "八雲": ["u7_yakumo", "u7_yakumo:land"], "人類の最前線": ["u7_veld:fort", "u7_nordia", "u7_pact:doubt", "u7_fierce:horde"],
-    "人と魔の境": ["u7_veld", "u7_veld:fort", "u7_fierce:horde"], "魔物界": ["u7_veld", "u7_fierce:horde"], "光天教会領": ["u7_church", "u7_church:verm"],
+    "シェルアーク": ["u7_yakumo", "u7_yakumo:land"], "人類の最前線": ["u7_veld:fort", "u7_nordia", "u7_pact:doubt", "u7_fierce:horde"],
+    "人と魔の境": ["u7_veld", "u7_veld:fort", "u7_fierce:horde"], "使徒領": ["u7_veld", "u7_fierce:horde"], "光天教会領": ["u7_church", "u7_church:verm"],
   };
   Object.entries(region).forEach(([k, t]) => add("region", k, t));
 
@@ -120,7 +120,7 @@
   // 遺跡の品（D.ITEMS の relic: true も lore_u7.js が見る）
   add("item", "relic", ["u7_relic", "u7_relic:market"]);
 
-  // 会った人物の国（C2 の人物の nation）・会った人の種族（自分・仲間・C2 の人物）・職業（侍は海を渡ってきた。魔法使いは術を学んだ）
+  // 会った人物の国（C2 の人物の nation）・会った人の種族（自分・仲間・C2 の人物）・職業（島の剣士は海を渡ってきた。魔法使いは術を学んだ）
   D.LORE_ON.nation = Object.assign(D.LORE_ON.nation || {}, { "レオネスト": "u7_leonest", "ノルディア": "u7_nordia", "エルメシア": "u7_elmesia" });
   D.LORE_ON.race = Object.assign(D.LORE_ON.race || {}, { elf: "u7_races:elf", beast: "u7_races:beast" });
   D.LORE_ON.cls = Object.assign(D.LORE_ON.cls || {}, { samurai: ["u7_yakumo", "u7_yakumo:land"], mage: "u7_jutsu" });
