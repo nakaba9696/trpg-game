@@ -39,6 +39,29 @@ export default ({ fail, loadEngine, seeded }) => {
     }
   }
 
+  // ---- 作成画面と冒頭の文は、世界の大枠を説明しない（三国の関係・協定・世界の成り立ち・教会の教え・格・術の成り立ち）
+  {
+    const G = loadEngine();
+    const D = G.data;
+    const texts = [["WORLD.intro", D.WORLD.intro]];
+    const put = (w, t) => { if (t) texts.push([w, typeof t === "string" ? t : JSON.stringify(t)]); };
+    Object.entries(D.CLASSES).forEach(([k, c]) => put(`職業 ${k}`, c.blurb));
+    Object.entries(D.GOALS).forEach(([k, g]) => { put(`目的 ${k}`, g.text); put(`目的 ${k}`, g.hint); });
+    Object.entries(D.AGES || {}).forEach(([k, a]) => put(`年齢 ${k}`, a.blurb));
+    Object.entries(D.ORIGINS || {}).forEach(([k, o]) => { put(`生まれ ${k}`, o.blurb); put(`生まれ ${k}`, o.home); });
+    Object.entries(D.RACES || {}).forEach(([k, r]) => put(`種族 ${k}`, r.blurb));
+    Object.entries(D.BEASTS || {}).forEach(([k, b]) => { put(`獣 ${k}`, b.blurb); put(`獣 ${k}`, b.temper); });
+    put("導入", D.PROLOGUE);
+    put("種族の導入", D.R1_TEXT && D.R1_TEXT.prologue);
+    Object.values(D.CLASSES).forEach((c) => put(`出発の町 ${c.start}`, D.LOCS[c.start].desc));
+    // はじめの手番の地の文（新しく始めた直後の記録）
+    G.rand = seeded(2);
+    start(G, "mage");
+    G.S.log.forEach((e) => put("はじめの記録", e.text));
+    const BAD = /協定|三国|三大国|三つの大国|盟主が代わ|精霊と契約|契約のある|議席|世界を作|創世|父なる神|悪魔のもの|天災|国難|魔物界|人の世界|後継を争|刺客を放ち/;
+    texts.forEach(([w, t]) => { const m = String(t).match(BAD); if (m) fail(`${w}：世界の大枠を説明している「${m[0]}」`); });
+  }
+
   // ---- GM には全部
   {
     const G = loadEngine();
