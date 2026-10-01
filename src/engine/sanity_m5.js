@@ -1,7 +1,7 @@
 // 正気・獣の病・代償つきの品（M5）。文と表は src/data/sanity_m5.js、設定は docs/lore/curses.md 3.・4.
 // 状態（どれも古いセーブには無い。無ければ 正気 100・獣 0 として扱う）：
 //   S.sanity 0〜100 … 知りすぎる・術の借り（S.magicDebt）・魔人を見る・呪われた品で減る。宿・酒場・懺悔・まぬけな魔物で戻る
-//   S.beast  0〜5   … 獣の病。噛まれる・赤い酒・聖餐の血でうつり、日が経つと進む。1〜2段なら教会で祓える
+//   S.beast  0〜5   … 獣の病。疫医ベルナ（plague のある敵・出来事）からだけうつり（M9 #103、src/engine/m9_plague.js）、日が経つと進む。1〜2段なら教会で祓える
 //   S.m5 = { day, clock, seen: {魔人 id: true}, low, trueName, forgot }
 //   S.fate  "mad" | "beast" … 正気 0・獣 5 で冒険が終わったとき（M6 #55 の「選べない終わり方」が拾う）
 // 終わり方は死と同じく S.over = "dead" にし、年表に kind "fate" の行、墓碑に fate を残す。
@@ -177,10 +177,8 @@
       if (!t || S.over) return;
       if (t.sanity) G.addSanity(-t.sanity);
       if (t.name) forgetName(S, x);
-      if (t.beast) {
-        if (G.beastOf(S)) x.clock = (x.clock || 0) + t.beast;
-        else if (G.rand() < 0.08 * t.beast) { G.say("指輪の石が、どくんと脈を打った。"); G.infect(); }
-      }
+      // 病をうつしはしない。かかっている者の病を早めるだけ（M9）
+      if (t.beast && G.beastOf(S)) x.clock = (x.clock || 0) + t.beast;
     });
     if (S.over || !G.beastOf(S)) return;
     x.clock = (x.clock || 0) + 1;
@@ -308,7 +306,8 @@
     const hp0 = S.hp;
     const foeHp = () => C.foes.reduce((a, f) => a + Math.max(0, f.hp), 0);
     const before = foeHp();
-    const biters = C.foes.filter((f) => f.hp > 0 && D.ENEMIES[f.id].bite).map((f) => D.ENEMIES[f.id].bite);
+    // 病を持つ者（疫医ベルナ。M9）。一度の戦いでうつる・進むのは一段まで
+    const carriers = C.m9 ? [] : C.foes.filter((f) => f.hp > 0 && D.ENEMIES[f.id].plague).map((f) => D.ENEMIES[f.id].plague);
     let usedMorning = false;
     if (kind === "item") { const it = D.ITEMS[arg.split(":")[1]]; usedMorning = !!(it && it.sanity && S.inv[arg.split(":")[1]]); }
     baseCombatAct(arg);
@@ -329,8 +328,8 @@
       G.note(`指輪の石が温かくなった。HP +${n}`);
       if (G.rand() < 0.1) G.note("指輪が、小さくげっぷをした。");
     }
-    // 噛まれる
-    if (S.hp < hp0 && biters.length && G.rand() < Math.max(...biters)) { G.note(M.BITE); G.infect(); }
+    // 病を持つ者に傷を負わされる
+    if (S.hp < hp0 && carriers.length && G.rand() < Math.max(...carriers)) { C.m9 = true; G.m9Infect("fight"); }
     if (usedMorning) G.addSanity(D.ITEMS[arg.split(":")[1]].sanity);
   };
 

@@ -330,7 +330,7 @@
     return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
       ["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
       ["装飾品", rg ? `${rg.name}（${G.ringEffect(rg)}）` : "なし", rg ? S.ring : null],
-      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
+      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ...(G.m10Rows ? G.m10Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
   }
   function sheetGear() {
     const kv = h("dl", "kv");
@@ -348,6 +348,8 @@
       el.append(face("cface", G.companionWho(c), 44, 55));
       const t = h("div");
       t.append(h("b", "", c.name), h("span", "fine", c.desc || ""));
+      if (G.m8CompLabel) t.append(h("span", "fine", G.m8CompLabel(c)));
+      if (G.m10Label && G.m10Label(c)) t.append(h("span", "fine", G.m10Label(c)));
       el.append(t);
       box.append(el);
     });
@@ -439,7 +441,7 @@
     const sh = $("#sheet");
     const keep = sh.scrollTop;
     sh.textContent = "";
-    [sheetHead(), sheetPools(), sheetStats(ups), sheetGear(), sheetCompanions(), sheetQuests(), sheetInventory(), sheetMemos(), sheetButtons()].forEach((el) => { if (el) sh.append(el); });
+    [sheetHead(), sheetPools(), sheetStats(ups), G.m8ui ? G.m8ui.sheet() : null, sheetGear(), sheetCompanions(), sheetQuests(), sheetInventory(), sheetMemos(), sheetButtons()].forEach((el) => { if (el) sh.append(el); });
     sh.scrollTop = keep;
     renderMobileBar();
     drawFaces();
@@ -574,6 +576,7 @@
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
       ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${run.stats[k]}`).join(" ")));
+      if (G.m8ui && G.m8ui.graveLine(run)) ep.append(h("span", "", G.m8ui.graveLine(run)));
     } else ep.hidden = true;
     const list = $("#chronList");
     list.textContent = "";
