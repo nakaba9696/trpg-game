@@ -1,7 +1,7 @@
 // W2：新しい町と谷（src/data/locations_w2.js）、町の施設と王城（src/engine/explore_w2.js）
 // - 新しい町が 4〜6、どれも施設・通行人のひとこと・出来事・気候・背景の絵を持つ。三つの谷は帝国の中
 // - 畑・鍛冶場・闘技場・湯治場・狩り場の行いが、例外なく動き、約束どおりに持ち物や金が動く。闘技場では倒れる前に止められる
-// - 王城：王国は兄姉の都（訪れた都だけ）、帝国は皇子を選んで騎士になる。王城に入ると手触りの一行が増える
+// - 王城：王国は兄姉の都（訪れた都だけ）、帝国は四騎士の誰に仕えるかを選んで騎士になる。王城に入ると手触りの一行が増える
 // - 古いセーブ（W2 の項目が無い）でも動く。着いた町で用語説明が開く
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
@@ -145,18 +145,18 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G2.act("fac:castle");
     const all = G2.actions().flatMap((g) => g.list);
     const fifth = all.find((x) => x.id === "castle:w2knight:fifth");
-    if (!all.some((x) => x.id === "castle:w2knight:first") || !fifth) F("帝国の王城で皇子を選べない");
-    if (all.some((x) => x.id === "castle:knight")) F("帝国の王城に、皇子を選ばない叙任が残っている");
-    if (fifth && !fifth.disabled) F("闘技場で勝っていないのに第五皇子に仕えられる");
+    if (!all.some((x) => x.id === "castle:w2knight:first") || !fifth) F("帝国の王城で仕える四騎士を選べない");
+    if (all.some((x) => x.id === "castle:knight")) F("帝国の王城に、四騎士を選ばない叙任が残っている");
+    if (fifth && !fifth.disabled) F("闘技場で勝っていないのにヴァルグに仕えられる");
     G2.act("castle:w2knight:third");
-    if (S2.title !== "騎士" || S2.gold !== 700 || !S2.w2_patron || S2.w2_patron.realm !== "garmund") F("第三皇子に仕えて騎士になれない（300G）");
-    if (!(G2.loreOf(S2).kouji || []).length) F("皇子に仕えても用語説明「皇子たち」が開かない");
-    // 仕えた皇子が倒れる出来事（第三皇子は倒れない）
+    if (S2.title !== "騎士" || S2.gold !== 700 || !S2.w2_patron || S2.w2_patron.realm !== "garmund") F("エルナに仕えて騎士になれない（300G）");
+    if (!(G2.loreOf(S2).kouji || []).length) F("四騎士に仕えても用語説明「陣と婿取り」が開かない");
+    // 仕えた騎士が深手を負って陣を畳む出来事（エルナの陣は畳まれない）
     const ev = G2.data.EVENTS.find((e) => e.id === "w2_princefell");
     S2.day += 30;
-    if (ev.cond(S2)) F("第三皇子に仕えているのに、皇子が倒れる出来事が起きる");
+    if (ev.cond(S2)) F("エルナに仕えているのに、陣が畳まれる出来事が起きる");
     S2.w2_patron.id = "first";
-    if (!ev.cond(S2)) F("第一皇子に仕えて日が経っても、皇子が倒れる出来事が起きない");
+    if (!ev.cond(S2)) F("ダリオに仕えて日が経っても、陣が畳まれる出来事が起きない");
   }
 
   // ---------------------------------------------------------------- 古いセーブ・ランダムに遊ぶ
