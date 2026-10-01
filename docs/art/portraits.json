@@ -1,0 +1,890 @@
+{
+ "about": "Morsveld の人物の絵の一覧。tags は Stable Diffusion のポジティブプロンプトに入れる、その人の特徴だけ（画風・品質・構図は持ち主の側で足す）。tools/portraits.mjs で docs/art/portraits.md を作る",
+ "size": {
+  "width": 512,
+  "height": 640,
+  "format": "webp",
+  "maxKB": 80,
+  "framing": "縦長・胸から上・顔が上から 1/3 あたり"
+ },
+ "heroAge": {
+  "mid": "middle-aged, 45 years old",
+  "old": "old man / old woman, wrinkles, grey hair, 65 years old"
+ },
+ "beasts": {
+  "wolf": "wolf ears, wolf tail",
+  "dog": "dog ears, floppy ears, dog tail",
+  "fox": "fox ears, fox tail",
+  "cat": "cat ears, cat tail",
+  "bear": "bear ears, round ears, bear tail",
+  "rabbit": "rabbit ears, rabbit tail",
+  "bird": "head wings, feathered ears, bird tail",
+  "rat": "mouse ears, round ears, mouse tail"
+ },
+ "portraits": [
+  {
+   "id": "dil",
+   "group": "c2",
+   "name": "ディル",
+   "file": "assets/portraits/dil.webp",
+   "tags": "1boy, young man, 24 years old, brown hair, messy hair, narrow eyes, sly smirk, slim, worn vest, rolled-up sleeves, daggers on belt, holding an old book",
+   "memo": "本好きでずる賢い港町の青年。にやりと何か企んでいる顔"
+  },
+  {
+   "id": "kaidel",
+   "group": "c2",
+   "name": "カイデル",
+   "file": "assets/portraits/kaidel.webp",
+   "tags": "1boy, man, 30 years old, dark brown hair, spiky hair, headband, big grin, scar on face, bandages, stubble, muscular, broad shoulders, red leather armor, torn clothes, fists",
+   "memo": "傷だらけの凄腕傭兵。お気楽で、迷ったら殴る。屈託のない笑い"
+  },
+  {
+   "id": "nora",
+   "group": "c2",
+   "name": "ノラミ（ノラ）",
+   "file": "assets/portraits/nora.webp",
+   "tags": "1girl, dog girl, dog ears, floppy ears, dog tail, 18 years old, brown hair, messy hair, wild hair, brown eyes, round eyes, big grin, fang, leather hunter clothes, dirt on face, energetic",
+   "memo": "森の犬の獣人。明るい愛すべきあほ。歯を見せて笑う"
+  },
+  {
+   "id": "sheila",
+   "group": "c2",
+   "name": "シェイラ",
+   "file": "assets/portraits/sheila.webp",
+   "tags": "1girl, princess, 18 years old, long hair, blonde hair, half-closed eyes, sleepy eyes, expressionless, petite, slim, blue hooded cloak, gem pendant, holding a book",
+   "memo": "第七王子の姫。大人しそうで実はお転婆。眠たげな目で「うん、」"
+  },
+  {
+   "id": "rui",
+   "group": "c2",
+   "name": "ルイ",
+   "file": "assets/portraits/rui.webp",
+   "tags": "1girl, child, 9 years old, small child, blue hair, short hair, bob cut, half-closed eyes, expressionless, white ancient robe, simple clothes",
+   "memo": "遺跡で眠っていた無口な女の子。表情が動かない。子どもらしく"
+  },
+  {
+   "id": "zerina",
+   "group": "c2",
+   "name": "ゼリナ",
+   "file": "assets/portraits/zerina.webp",
+   "tags": "1girl, 23 years old, red hair, ponytail, freckles, closed eyes, big grin, kerchief, merchant vest, coin pouch, confident",
+   "memo": "関西言葉の商人の娘。物怖じしない、金が大好き。にかっと笑う"
+  },
+  {
+   "id": "elnea",
+   "group": "c2",
+   "name": "エルネア",
+   "file": "assets/portraits/elnea.webp",
+   "tags": "1girl, elf, pointy ears, 19 years old, short, plump, brown hair, short hair, messy bob cut, round eyes, worried eyebrows, open mouth, blush, work apron, soot on face, holding a crystal ore",
+   "memo": "エルフの鉱石おたくの技師。容姿に自信がなく、おどおど。「〜っす」"
+  },
+  {
+   "id": "natalia",
+   "group": "c2",
+   "name": "ナタリア",
+   "file": "assets/portraits/natalia.webp",
+   "tags": "1girl, 24 years old, black hair, single braid, half-closed eyes, grin, blush, drunk, martial artist, dark blue martial arts uniform, holding a sake bottle",
+   "memo": "王国十指の格闘家。酒好きで、ほろ酔いの笑い。実力は本物"
+  },
+  {
+   "id": "valeon",
+   "group": "c2",
+   "name": "ヴァレオン",
+   "file": "assets/portraits/valeon.webp",
+   "tags": "1boy, old man, king, 58 years old, grey hair, silver hair, wild hair, grey beard, amber eyes, fierce grin, scar, muscular, crown, red royal cape, plate armor, greatsword",
+   "memo": "レオネストの国王。好戦家で若返った鋼の体。獰猛に笑う"
+  },
+  {
+   "id": "raios",
+   "group": "c2",
+   "name": "ライオス",
+   "file": "assets/portraits/raios.webp",
+   "tags": "1boy, prince, 32 years old, dark blonde hair, long hair, low ponytail, blue eyes, gentle smile, laughing, tall, muscular, blue plate armor, crest",
+   "memo": "第一王子。誠実で包容力のある完璧超人。よく高笑いする"
+  },
+  {
+   "id": "serios",
+   "group": "c2",
+   "name": "セリオス",
+   "file": "assets/portraits/serios.webp",
+   "tags": "1boy, prince, 30 years old, silver hair, long hair, handsome, half-closed eyes, aloof, slender, dark grey coat, gem brooch, paint stains",
+   "memo": "第二王子。銀髪の天才肌、浮世離れした芸術家。遠くを見る顔"
+  },
+  {
+   "id": "farina",
+   "group": "c2",
+   "name": "ファリナ",
+   "file": "assets/portraits/farina.webp",
+   "tags": "1girl, princess, 28 years old, black hair, long hair, low ponytail, glasses, cold eyes, narrow eyes, serious expression, dark blue noble dress, chain necklace",
+   "memo": "第三王子（女）。冷静な完璧主義者。笑わない。冷たい視線"
+  },
+  {
+   "id": "greol",
+   "group": "c2",
+   "name": "グレオル",
+   "file": "assets/portraits/greol.webp",
+   "tags": "1boy, prince, 27 years old, brown hair, short hair, tan skin, scar on cheek, frown, stern, muscular, dull worn armor, sword",
+   "memo": "第四王子。生真面目で口下手な武人。むすっと真っすぐ"
+  },
+  {
+   "id": "neilas",
+   "group": "c2",
+   "name": "ネイラス",
+   "file": "assets/portraits/neilas.webp",
+   "tags": "1boy, prince, 24 years old, black hair, messy hair, androgynous, pale skin, half-closed eyes, eye bags, shy, worried eyebrows, white lab coat",
+   "memo": "第五王子。儚く中性的な引きこもりの研究者。目を合わせない"
+  },
+  {
+   "id": "tiria",
+   "group": "c2",
+   "name": "ティリア",
+   "file": "assets/portraits/tiria.webp",
+   "tags": "1girl, princess, 23 years old, light brown hair, soft hair, braid, closed eyes, gentle smile, freckles, kerchief, modest green dress, apron, dirt on cheek",
+   "memo": "第六王子（女）。現場主義でにこやかな愛され姫。少し天然"
+  },
+  {
+   "id": "sixth",
+   "group": "c2",
+   "name": "第六騎士団の団長",
+   "file": "assets/portraits/sixth.webp",
+   "tags": "1boy, knight captain, 33 years old, black hair, slicked back hair, narrow eyes, expressionless, slim, black plate armor, crest, sword",
+   "memo": "王国最強の剣。寡黙で何を考えているか分からない"
+  },
+  {
+   "id": "angelica",
+   "group": "c2",
+   "name": "アンジェリカ",
+   "file": "assets/portraits/angelica.webp",
+   "tags": "1girl, woman, 31 years old, dirty blonde hair, hair bun, military cap, sharp eyes, angry, shouting, open mouth, blue military uniform, armor, holding a pistol",
+   "memo": "王国軍の女隊長。敵だが抜けていて人がいい。おばさん呼ばわりに怒る"
+  },
+  {
+   "id": "captain",
+   "group": "c2",
+   "name": "寡黙な隊長",
+   "file": "assets/portraits/captain.webp",
+   "tags": "1boy, man, 28 years old, dark brown hair, short hair, stubble, calm, stoic, blue military uniform, armor, spear, broad shoulders",
+   "memo": "アンジェリカと組む隊長。寡黙で任務に忠実"
+  },
+  {
+   "id": "doctor",
+   "group": "c2",
+   "name": "博士",
+   "file": "assets/portraits/doctor.webp",
+   "tags": "1boy, old man, 61 years old, white hair, receding hairline, monocle, wrinkles, round eyes, creepy smile, white lab coat, keys",
+   "memo": "使徒を研究する学者。倫理を気にしない。にこにこして不気味"
+  },
+  {
+   "id": "hermes",
+   "group": "c2",
+   "name": "ヘル爺",
+   "file": "assets/portraits/hermes.webp",
+   "tags": "1boy, old man, 62 years old, white hair, wild hair, white beard, round eyes, big grin, explorer hat, brown coat, dirt, energetic",
+   "memo": "元気な考古学者の爺さん。遺跡が生きがい"
+  },
+  {
+   "id": "yurina",
+   "group": "c2",
+   "name": "ユリナ",
+   "file": "assets/portraits/yurina.webp",
+   "tags": "1girl, 27 years old, red hair, short hair, closed eyes, smirk, slim, dark leather swordsman outfit, sword",
+   "memo": "直轄特殊部隊の剣士。糸目で飄々と笑う、戦うと冷徹"
+  },
+  {
+   "id": "ferida",
+   "group": "c2",
+   "name": "フェリダ",
+   "file": "assets/portraits/ferida.webp",
+   "tags": "1girl, 26 years old, blonde hair, ponytail, sharp eyes, confident smirk, white plate armor, crest, lance",
+   "memo": "王国十指《雷突の乙女》。王国一の槍使い"
+  },
+  {
+   "id": "sig",
+   "group": "c2",
+   "name": "シグ",
+   "file": "assets/portraits/sig.webp",
+   "tags": "1boy, man, 38 years old, bald, brown beard, scar, stern, angry eyebrows, very muscular, large build, heavy dark plate armor, battle axe",
+   "memo": "王国十指《戦場の鉄塊》。王国最強の盾"
+  },
+  {
+   "id": "raisha",
+   "group": "c2",
+   "name": "ライーシャ",
+   "file": "assets/portraits/raisha.webp",
+   "tags": "1girl, 28 years old, dark grey hair, long hair, half-closed eyes, eye bags, glaring, bored expression, black cloak, sword",
+   "memo": "王国十指の天才剣士。目つきが悪く、いつも気だるそう"
+  },
+  {
+   "id": "zork",
+   "group": "c2",
+   "name": "ゾルク",
+   "file": "assets/portraits/zork.webp",
+   "tags": "1boy, man, 43 years old, grey hair, receding hairline, eyepatch, scar, stubble, sharp eyes, smirk, wide-brimmed hat, dark long coat, chain, sword",
+   "memo": "王国十指《首狩りゾルク》。非公認の賞金稼ぎ"
+  },
+  {
+   "id": "bride",
+   "group": "c2",
+   "name": "大槌の姉さん",
+   "file": "assets/portraits/bride.webp",
+   "tags": "1girl, woman, 34 years old, blonde hair, hair bun, closed eyes, big grin, blush, muscular, armor, large war hammer",
+   "memo": "めちゃくちゃ強い、婚期を逃したお姉さん。豪快に笑う"
+  },
+  {
+   "id": "boku",
+   "group": "c2",
+   "name": "「ボク」の娘",
+   "file": "assets/portraits/boku.webp",
+   "tags": "1girl, tomboy, 17 years old, brown hair, short hair, bob cut, glasses, cap, round eyes, open mouth, excited, green coat, holding a notebook",
+   "memo": "ボーイッシュで自分をボクと呼ぶおたく。早口で話している"
+  },
+  {
+   "id": "greiol",
+   "group": "c2",
+   "name": "グレイオル",
+   "file": "assets/portraits/greiol.webp",
+   "tags": "1boy, emperor, 42 years old, black hair, slicked back hair, sharp eyes, expressionless, scars, very tall, muscular, black military uniform, white fur cape, sword at hip",
+   "memo": "ノルディアの皇帝。寡黙で冷徹な現実主義者。カリスマ"
+  },
+  {
+   "id": "dario",
+   "group": "c2",
+   "name": "ダリオ",
+   "file": "assets/portraits/dario.webp",
+   "tags": "1boy, old man, 59 years old, white hair, short hair, white beard, steel mask covering half of face, artificial eye, wrinkles, frown, huge, white plate armor, greatsword",
+   "memo": "帝国四騎士《氷壁の父》。巨漢の老騎士。不動・実直"
+  },
+  {
+   "id": "erna",
+   "group": "c2",
+   "name": "エルナ",
+   "file": "assets/portraits/erna.webp",
+   "tags": "1girl, woman, 38 years old, red hair, short hair, military cap, expressionless, narrow eyes, black military coat, crest",
+   "memo": "帝国四騎士。命令をタスクとして処理する無表情。片足は義足（胸から上には出ない）"
+  },
+  {
+   "id": "valg",
+   "group": "c2",
+   "name": "ヴァルグ",
+   "file": "assets/portraits/valg.webp",
+   "tags": "1boy, wolf boy, wolf ears, wolf tail, man, 33 years old, grey hair, wild hair, golden eyes, sharp eyes, fierce grin, fangs, scar, stubble, muscular, dark leather armor, sword",
+   "memo": "帝国四騎士。狼の獣人、元野盗の首領。荒々しいが頭が切れる"
+  },
+  {
+   "id": "malvina",
+   "group": "c2",
+   "name": "マルヴィナ",
+   "file": "assets/portraits/malvina.webp",
+   "tags": "1girl, woman, blonde hair, long hair, black cloth mask covering lower face, glowing left eye, cyan eye, calm, black cloak, staff, bandages",
+   "memo": "帝国四騎士の女軍師。顔の下半分を布で覆い、左目が光る。年は分からない"
+  },
+  {
+   "id": "katia",
+   "group": "c2",
+   "name": "カティア",
+   "file": "assets/portraits/katia.webp",
+   "tags": "1girl, princess, 19 years old, blonde hair, ponytail, blue eyes, determined, serious expression, white plate armor, crest, sword",
+   "memo": "皇帝の一人娘。正義感が強く真っすぐな努力家"
+  },
+  {
+   "id": "alicia",
+   "group": "c2",
+   "name": "アリシア",
+   "file": "assets/portraits/alicia.webp",
+   "tags": "1girl, elf, high elf, long pointy ears, blonde hair, medium hair, hair between eyes, blue eyes, sharp eyes, piercing gaze, haughty, circlet, white noble dress, gem",
+   "memo": "エルメシアの最高議長。ハイエルフ（見た目は二十代前半、三百歳超）。女王のような圧"
+  },
+  {
+   "id": "chancellor",
+   "group": "named",
+   "name": "帝国の宰相",
+   "file": "assets/portraits/chancellor.webp",
+   "tags": "1boy, old man, 64 years old, grey hair, slicked back hair, narrow eyes, wrinkles, eye bags, expressionless, black formal clothes, chain of office",
+   "memo": "帝都の王城の玉座の脇。病床の皇帝に代わる宰相。表情を出さない"
+  },
+  {
+   "id": "gaston",
+   "group": "named",
+   "name": "茹で騎士ガストン",
+   "file": "assets/portraits/gaston.webp",
+   "tags": "1boy, knight, 34 years old, black hair, flushed face, red face, sweat, stubble, worried eyebrows, open mouth, plate armor, no helmet",
+   "memo": "ゴルモアの大鍋で茹でられかけた騎士。真っ赤で情けない顔"
+  },
+  {
+   "id": "joachim",
+   "group": "named",
+   "name": "脱走兵ヨアヒム",
+   "file": "assets/portraits/joachim.webp",
+   "tags": "1boy, soldier, 35 years old, dark brown hair, stubble, eye bags, tired, worried eyebrows, imperial military uniform, snow on shoulders",
+   "memo": "凍えた帝国の脱走兵。もう人を殺したくない"
+  },
+  {
+   "id": "mirza",
+   "group": "named",
+   "name": "享楽の使徒ミルザ",
+   "file": "assets/portraits/mirza.webp",
+   "tags": "1girl, girl, petite, black hair, long hair, red eyes, glowing eyes, smirk, small crown, black frilled dress, holding a parasol",
+   "memo": "人の姿の使徒。日傘の少女。格が違うのにどこかまぬけ。にんまり"
+  },
+  {
+   "id": "zalve",
+   "group": "named",
+   "name": "契約の使徒ザルヴェ",
+   "file": "assets/portraits/zalve.webp",
+   "tags": "1boy, man, 45 years old, black hair, short hair, narrow eyes, smirk, silver monocle, gaunt, money changer, dark green vest, abacus",
+   "memo": "ブランデールの両替商（使徒）。嘘はつかないが全部は言わない"
+  },
+  {
+   "id": "borg",
+   "group": "named",
+   "name": "取り立て屋ボルグ",
+   "file": "assets/portraits/borg.webp",
+   "tags": "1boy, man, 40 years old, huge man, messy hair, scar, stubble, grin, missing fingers, ragged clothes, debt collector",
+   "memo": "ザルヴェの眷属。熊のような大男"
+  },
+  {
+   "id": "aurelia",
+   "group": "named",
+   "name": "生き聖女アウレリア",
+   "file": "assets/portraits/aurelia.webp",
+   "tags": "1girl, saint, 26 years old, blonde hair, long hair, halo of light, closed eyes, holy smile, white and gold robe, sun emblem, staff",
+   "memo": "聖都の「生き聖女」（正体は偽聖の使徒）。大げさな聖女の笑み"
+  },
+  {
+   "id": "yoihime",
+   "group": "named",
+   "name": "月喰いの宵姫",
+   "file": "assets/portraits/yoihime.webp",
+   "tags": "1girl, woman, 28 years old, long hair, fox mask, juunihitoe, red layered kimono, folding fan, smirk",
+   "memo": "朧島の狐面の女（使徒）。祭りと博打が好き。面で顔は見せない"
+  },
+  {
+   "id": "konoha",
+   "group": "named",
+   "name": "狐の忍コノハ",
+   "file": "assets/portraits/konoha.webp",
+   "tags": "1girl, 15 years old, fox mask on head, long hair, mischievous smile, red kimono, dice cup",
+   "memo": "宵姫の眷属。賭場の壺振りの少女。いかさまが上手"
+  },
+  {
+   "id": "mordu",
+   "group": "named",
+   "name": "腐爛の使徒モルドゥ",
+   "file": "assets/portraits/mordu.webp",
+   "tags": "1boy, old man, tall, gardener, mud and moss on clothes, wide-brimmed hat, flowers on hat, pale skin, glowing eyes, polite smile",
+   "memo": "毒沼の庭師（使徒）。穏やかで丁寧、悪意がない"
+  },
+  {
+   "id": "berna",
+   "group": "named",
+   "name": "疫医ベルナ",
+   "file": "assets/portraits/berna.webp",
+   "tags": "1girl, plague doctor, beak mask, black hooded coat, gloves, medicine bottles",
+   "memo": "モルドゥの眷属の医者。嘴の仮面で顔は見せない。声は若い女"
+  },
+  {
+   "id": "azlag",
+   "group": "named",
+   "name": "天墜の使徒アズラグ",
+   "file": "assets/portraits/azlag.webp",
+   "tags": "1boy, man, 40 years old, huge man, one black dragon wing, blonde hair, glowing eyes, frown, crossed arms, black coat",
+   "memo": "黒い翼竜の使徒の人の姿。片翼の大男。転んだのを無かったことにする"
+  },
+  {
+   "id": "chezar",
+   "group": "named",
+   "name": "盤上の使徒シェザール（北の賢人）",
+   "file": "assets/portraits/chezar.webp",
+   "tags": "1boy, old man, 72 years old, white hair, slicked back hair, monocle, mustache, wrinkles, smirk, noble military coat, holding a chess piece",
+   "memo": "宮廷の老将の姿の使徒。駒に話しかける"
+  },
+  {
+   "id": "yura",
+   "group": "named",
+   "name": "微睡の使徒ユラ",
+   "file": "assets/portraits/yura.webp",
+   "tags": "child, androgynous, 9 years old, silver hair, messy hair, sleepy eyes, yawning, pajamas, holding a pillow",
+   "memo": "眠そうな子どもの姿の使徒。子どもらしく"
+  },
+  {
+   "id": "walker",
+   "group": "named",
+   "name": "灰色の外套の旅人",
+   "file": "assets/portraits/walker.webp",
+   "tags": "1boy, man, ageless, brown hair, short hair, half-closed eyes, gentle smile, stubble, old grey cloak, traveler",
+   "memo": "年の分からない旅人。何でも珍しそうに喜ぶ"
+  },
+  {
+   "id": "captain_east",
+   "group": "named",
+   "name": "東へ出る船の船長",
+   "file": "assets/portraits/captain_east.webp",
+   "tags": "1boy, old man, 52 years old, eyepatch, beard, sea captain, captain hat, navy coat",
+   "memo": "東の果てへ出る片目の船長"
+  },
+  {
+   "id": "hans",
+   "group": "named",
+   "name": "宿の主人ハンス",
+   "file": "assets/portraits/hans.webp",
+   "tags": "1boy, middle-aged man, 58 years old, bald, kind smile, blush, apron, innkeeper",
+   "memo": "宿の主人。宿帳の年齢の欄で筆を止める"
+  },
+  {
+   "id": "greta",
+   "group": "named",
+   "name": "宿の女将グレタ",
+   "file": "assets/portraits/greta.webp",
+   "tags": "1girl, middle-aged woman, 50 years old, hair bun, smile, kerchief, apron, innkeeper",
+   "memo": "宿の女将。世話焼き"
+  },
+  {
+   "id": "gert",
+   "group": "named",
+   "name": "パン屋の老人ゲルト",
+   "file": "assets/portraits/gert.webp",
+   "tags": "1boy, old man, 80 years old, white hair, wrinkles, flour on face, baker, apron",
+   "memo": "粉だらけのパン屋の老人"
+  },
+  {
+   "id": "albert",
+   "group": "named",
+   "name": "司祭アルベルト",
+   "file": "assets/portraits/albert.webp",
+   "tags": "1boy, priest, 36 years old, grey hair, long hair, pince-nez, white priest vestment, sun emblem",
+   "memo": "鼻眼鏡の司祭。眼鏡を押し上げる癖"
+  },
+  {
+   "id": "dominik",
+   "group": "named",
+   "name": "串焼き屋のドミニク",
+   "file": "assets/portraits/dominik.webp",
+   "tags": "1boy, middle-aged man, 40 years old, mustache, grin, headband, apron, grilling skewers",
+   "memo": "串焼き屋の親父"
+  },
+  {
+   "id": "neumann",
+   "group": "named",
+   "name": "古道具屋のノイマン",
+   "file": "assets/portraits/neumann.webp",
+   "tags": "1boy, old man, 57 years old, grey hair, narrow eyes, small smile, glasses, vest, antique dealer, holding a silver ring",
+   "memo": "古道具屋。品物をじっと見せる"
+  },
+  {
+   "id": "kind_adventurer_m",
+   "group": "companion",
+   "name": "仲間：冒険者（傭兵・剣士）（男）",
+   "file": "assets/portraits/kind_adventurer_m.webp",
+   "tags": "1boy, young man, 25 years old, adventurer, leather armor, sword",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_adventurer_f",
+   "group": "companion",
+   "name": "仲間：冒険者（傭兵・剣士）（女）",
+   "file": "assets/portraits/kind_adventurer_f.webp",
+   "tags": "1girl, young woman, 25 years old, adventurer, leather armor, sword",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_archer_m",
+   "group": "companion",
+   "name": "仲間：弓使い（男）",
+   "file": "assets/portraits/kind_archer_m.webp",
+   "tags": "1boy, young man, 25 years old, hunter, archer, green hooded cloak, bow, quiver",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_archer_f",
+   "group": "companion",
+   "name": "仲間：弓使い（女）",
+   "file": "assets/portraits/kind_archer_f.webp",
+   "tags": "1girl, young woman, 25 years old, hunter, archer, green hooded cloak, bow, quiver",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_priest_m",
+   "group": "companion",
+   "name": "仲間：神官・僧侶（男）",
+   "file": "assets/portraits/kind_priest_m.webp",
+   "tags": "1boy, young man, 25 years old, priest, white vestment, sun emblem",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_priest_f",
+   "group": "companion",
+   "name": "仲間：神官・僧侶（女）",
+   "file": "assets/portraits/kind_priest_f.webp",
+   "tags": "1girl, young woman, 25 years old, priest, white vestment, sun emblem",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_mage_m",
+   "group": "companion",
+   "name": "仲間：魔法使い（男）",
+   "file": "assets/portraits/kind_mage_m.webp",
+   "tags": "1boy, young man, 25 years old, mage, dark blue robe, staff",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_mage_f",
+   "group": "companion",
+   "name": "仲間：魔法使い（女）",
+   "file": "assets/portraits/kind_mage_f.webp",
+   "tags": "1girl, young woman, 25 years old, mage, dark blue robe, staff",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_rogue_m",
+   "group": "companion",
+   "name": "仲間：ならず者・盗賊（男）",
+   "file": "assets/portraits/kind_rogue_m.webp",
+   "tags": "1boy, young man, 25 years old, rogue, bandana, dark leather clothes, dagger, scar",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_rogue_f",
+   "group": "companion",
+   "name": "仲間：ならず者・盗賊（女）",
+   "file": "assets/portraits/kind_rogue_f.webp",
+   "tags": "1girl, young woman, 25 years old, rogue, bandana, dark leather clothes, dagger, scar",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_soldier_m",
+   "group": "companion",
+   "name": "仲間：兵士（槍兵・元帝国兵）（男）",
+   "file": "assets/portraits/kind_soldier_m.webp",
+   "tags": "1boy, young man, 25 years old, soldier, armor, spear",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_soldier_f",
+   "group": "companion",
+   "name": "仲間：兵士（槍兵・元帝国兵）（女）",
+   "file": "assets/portraits/kind_soldier_f.webp",
+   "tags": "1girl, young woman, 25 years old, soldier, armor, spear",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_ronin_m",
+   "group": "companion",
+   "name": "仲間：侍・浪人（男）",
+   "file": "assets/portraits/kind_ronin_m.webp",
+   "tags": "1boy, young man, 25 years old, samurai, kimono, katana",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_ronin_f",
+   "group": "companion",
+   "name": "仲間：侍・浪人（女）",
+   "file": "assets/portraits/kind_ronin_f.webp",
+   "tags": "1girl, young woman, 25 years old, samurai, kimono, katana",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_knight_m",
+   "group": "companion",
+   "name": "仲間：騎士（男）",
+   "file": "assets/portraits/kind_knight_m.webp",
+   "tags": "1boy, young man, 25 years old, knight, plate armor, crest, sword",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_knight_f",
+   "group": "companion",
+   "name": "仲間：騎士（女）",
+   "file": "assets/portraits/kind_knight_f.webp",
+   "tags": "1girl, young woman, 25 years old, knight, plate armor, crest, sword",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_sailor_m",
+   "group": "companion",
+   "name": "仲間：船乗り（男）",
+   "file": "assets/portraits/kind_sailor_m.webp",
+   "tags": "1boy, young man, 25 years old, sailor, striped shirt, bandana, earring",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_sailor_f",
+   "group": "companion",
+   "name": "仲間：船乗り（女）",
+   "file": "assets/portraits/kind_sailor_f.webp",
+   "tags": "1girl, young woman, 25 years old, sailor, striped shirt, bandana, earring",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_merchant_m",
+   "group": "companion",
+   "name": "仲間：商人（男）",
+   "file": "assets/portraits/kind_merchant_m.webp",
+   "tags": "1boy, young man, 25 years old, merchant, vest, coin pouch",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_merchant_f",
+   "group": "companion",
+   "name": "仲間：商人（女）",
+   "file": "assets/portraits/kind_merchant_f.webp",
+   "tags": "1girl, young woman, 25 years old, merchant, vest, coin pouch",
+   "memo": "名前の決まっていない仲間。種類の顔"
+  },
+  {
+   "id": "kind_child_m",
+   "group": "companion",
+   "name": "仲間：子ども（男）",
+   "file": "assets/portraits/kind_child_m.webp",
+   "tags": "1boy, boy, child, 10 years old, simple clothes, small",
+   "memo": "仲間の子ども。子どもらしく"
+  },
+  {
+   "id": "kind_child_f",
+   "group": "companion",
+   "name": "仲間：子ども（女）",
+   "file": "assets/portraits/kind_child_f.webp",
+   "tags": "1girl, girl, child, 10 years old, simple clothes, small",
+   "memo": "仲間の子ども。子どもらしく"
+  },
+  {
+   "id": "hero_merc_m_human",
+   "group": "hero",
+   "name": "主人公：傭兵・男・人間",
+   "file": "assets/portraits/hero_merc_m_human.webp",
+   "tags": "1boy, young man, 20 years old, mercenary, leather armor, sword",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_merc_m_elf",
+   "group": "hero",
+   "name": "主人公：傭兵・男・エルフ",
+   "file": "assets/portraits/hero_merc_m_elf.webp",
+   "tags": "1boy, young man, elf, pointy ears, 20 years old, mercenary, leather armor, sword",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_merc_m_beast",
+   "group": "hero",
+   "name": "主人公：傭兵・男・獣人（狼）",
+   "file": "assets/portraits/hero_merc_m_beast.webp",
+   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, mercenary, leather armor, sword",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_merc_f_human",
+   "group": "hero",
+   "name": "主人公：傭兵・女・人間",
+   "file": "assets/portraits/hero_merc_f_human.webp",
+   "tags": "1girl, young woman, 20 years old, mercenary, leather armor, sword",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_merc_f_elf",
+   "group": "hero",
+   "name": "主人公：傭兵・女・エルフ",
+   "file": "assets/portraits/hero_merc_f_elf.webp",
+   "tags": "1girl, young woman, elf, pointy ears, 20 years old, mercenary, leather armor, sword",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_merc_f_beast",
+   "group": "hero",
+   "name": "主人公：傭兵・女・獣人（狼）",
+   "file": "assets/portraits/hero_merc_f_beast.webp",
+   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, mercenary, leather armor, sword",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_thief_m_human",
+   "group": "hero",
+   "name": "主人公：盗賊・男・人間",
+   "file": "assets/portraits/hero_thief_m_human.webp",
+   "tags": "1boy, young man, 20 years old, thief, dark hooded cloak, daggers",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_thief_m_elf",
+   "group": "hero",
+   "name": "主人公：盗賊・男・エルフ",
+   "file": "assets/portraits/hero_thief_m_elf.webp",
+   "tags": "1boy, young man, elf, pointy ears, 20 years old, thief, dark hooded cloak, daggers",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_thief_m_beast",
+   "group": "hero",
+   "name": "主人公：盗賊・男・獣人（狼）",
+   "file": "assets/portraits/hero_thief_m_beast.webp",
+   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, thief, dark hooded cloak, daggers",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_thief_f_human",
+   "group": "hero",
+   "name": "主人公：盗賊・女・人間",
+   "file": "assets/portraits/hero_thief_f_human.webp",
+   "tags": "1girl, young woman, 20 years old, thief, dark hooded cloak, daggers",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_thief_f_elf",
+   "group": "hero",
+   "name": "主人公：盗賊・女・エルフ",
+   "file": "assets/portraits/hero_thief_f_elf.webp",
+   "tags": "1girl, young woman, elf, pointy ears, 20 years old, thief, dark hooded cloak, daggers",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_thief_f_beast",
+   "group": "hero",
+   "name": "主人公：盗賊・女・獣人（狼）",
+   "file": "assets/portraits/hero_thief_f_beast.webp",
+   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, thief, dark hooded cloak, daggers",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_mage_m_human",
+   "group": "hero",
+   "name": "主人公：魔法使い・男・人間",
+   "file": "assets/portraits/hero_mage_m_human.webp",
+   "tags": "1boy, young man, 20 years old, mage, robe, wizard hat, staff",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_mage_m_elf",
+   "group": "hero",
+   "name": "主人公：魔法使い・男・エルフ",
+   "file": "assets/portraits/hero_mage_m_elf.webp",
+   "tags": "1boy, young man, elf, pointy ears, 20 years old, mage, robe, wizard hat, staff",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_mage_m_beast",
+   "group": "hero",
+   "name": "主人公：魔法使い・男・獣人（狼）",
+   "file": "assets/portraits/hero_mage_m_beast.webp",
+   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, mage, robe, wizard hat, staff",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_mage_f_human",
+   "group": "hero",
+   "name": "主人公：魔法使い・女・人間",
+   "file": "assets/portraits/hero_mage_f_human.webp",
+   "tags": "1girl, young woman, 20 years old, mage, robe, wizard hat, staff",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_mage_f_elf",
+   "group": "hero",
+   "name": "主人公：魔法使い・女・エルフ",
+   "file": "assets/portraits/hero_mage_f_elf.webp",
+   "tags": "1girl, young woman, elf, pointy ears, 20 years old, mage, robe, wizard hat, staff",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_mage_f_beast",
+   "group": "hero",
+   "name": "主人公：魔法使い・女・獣人（狼）",
+   "file": "assets/portraits/hero_mage_f_beast.webp",
+   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, mage, robe, wizard hat, staff",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_priest_m_human",
+   "group": "hero",
+   "name": "主人公：破戒神官・男・人間",
+   "file": "assets/portraits/hero_priest_m_human.webp",
+   "tags": "1boy, young man, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_priest_m_elf",
+   "group": "hero",
+   "name": "主人公：破戒神官・男・エルフ",
+   "file": "assets/portraits/hero_priest_m_elf.webp",
+   "tags": "1boy, young man, elf, pointy ears, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_priest_m_beast",
+   "group": "hero",
+   "name": "主人公：破戒神官・男・獣人（狼）",
+   "file": "assets/portraits/hero_priest_m_beast.webp",
+   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_priest_f_human",
+   "group": "hero",
+   "name": "主人公：破戒神官・女・人間",
+   "file": "assets/portraits/hero_priest_f_human.webp",
+   "tags": "1girl, young woman, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_priest_f_elf",
+   "group": "hero",
+   "name": "主人公：破戒神官・女・エルフ",
+   "file": "assets/portraits/hero_priest_f_elf.webp",
+   "tags": "1girl, young woman, elf, pointy ears, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_priest_f_beast",
+   "group": "hero",
+   "name": "主人公：破戒神官・女・獣人（狼）",
+   "file": "assets/portraits/hero_priest_f_beast.webp",
+   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_samurai_m_human",
+   "group": "hero",
+   "name": "主人公：侍・男・人間",
+   "file": "assets/portraits/hero_samurai_m_human.webp",
+   "tags": "1boy, young man, 20 years old, samurai, kimono, light armor, katana, topknot",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_samurai_m_elf",
+   "group": "hero",
+   "name": "主人公：侍・男・エルフ",
+   "file": "assets/portraits/hero_samurai_m_elf.webp",
+   "tags": "1boy, young man, elf, pointy ears, 20 years old, samurai, kimono, light armor, katana, topknot",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_samurai_m_beast",
+   "group": "hero",
+   "name": "主人公：侍・男・獣人（狼）",
+   "file": "assets/portraits/hero_samurai_m_beast.webp",
+   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, samurai, kimono, light armor, katana, topknot",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_samurai_f_human",
+   "group": "hero",
+   "name": "主人公：侍・女・人間",
+   "file": "assets/portraits/hero_samurai_f_human.webp",
+   "tags": "1girl, young woman, 20 years old, samurai, kimono, light armor, katana, ponytail",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_samurai_f_elf",
+   "group": "hero",
+   "name": "主人公：侍・女・エルフ",
+   "file": "assets/portraits/hero_samurai_f_elf.webp",
+   "tags": "1girl, young woman, elf, pointy ears, 20 years old, samurai, kimono, light armor, katana, ponytail",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  },
+  {
+   "id": "hero_samurai_f_beast",
+   "group": "hero",
+   "name": "主人公：侍・女・獣人（狼）",
+   "file": "assets/portraits/hero_samurai_f_beast.webp",
+   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, samurai, kimono, light armor, katana, ponytail",
+   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+  }
+ ]
+}

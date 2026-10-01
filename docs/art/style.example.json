@@ -1,0 +1,17 @@
+{
+  "_comment": "これを docs/art/style.local.json に写して、持ち主の画風に書き換える（style.local.json は git に入れない）。プロンプト ＝ prefix ＋ 一覧の特徴のタグ ＋ prompt",
+  "url": "http://127.0.0.1:7860",
+  "prefix": "",
+  "prompt": "masterpiece, best quality, anime style, upper body, looking at viewer, simple background, <lora:your_style:0.8>",
+  "negative": "lowres, bad anatomy, bad hands, text, watermark, signature, nsfw",
+  "width": 512,
+  "height": 640,
+  "steps": 28,
+  "cfg_scale": 6,
+  "sampler_name": "DPM++ 2M",
+  "scheduler": "Karras",
+  "seed": -1,
+  "override_settings": { "sd_model_checkpoint": "your_model.safetensors" },
+  "webpQuality": 80,
+  "comfy": { "url": "http://127.0.0.1:8188", "checkpoint": "your_model.safetensors" }
+}

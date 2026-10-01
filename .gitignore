@@ -1,3 +1,4 @@
 dist/
 node_modules/
 *.log
+docs/art/style.local.json
