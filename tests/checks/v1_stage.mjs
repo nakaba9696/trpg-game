@@ -3,6 +3,7 @@
 //   ・タイトルと人物づくりの背景が scene.js にある場面を指す
 //   ・同じ絵かどうかの印（G.stage.sig）が、絵の中身で変わり、同じ中身では変わらない
 //   ・画面の側に必要なもの（背景の層・絵の窓・文章の窓・フェード）がある
+//   ・明暗（ui/v1_theme.js）：覚えた値の読み書きが壊れても動く。明るい版と暗い版で、色の変数が同じだけそろっている
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
@@ -43,5 +44,33 @@ export default ({ G, fail: failTo, ok }) => {
   if (!/prefers-reduced-motion[^{]*\{\s*\.bgLayer\s*\{\s*transition:\s*none/.test(css)) fail("動きを減らす設定でフェードを止めていない");
   if (!html.includes('class="tome"')) fail("index.html に文章の窓（.tome）が無い");
   if (!js.includes('canvas.id === "scene"')) fail("v1_stage.js が #scene への描画を背景に回していない");
-  if (!bad) ok("V1：背景の大きさ・タイトルの背景・切り替えの印・画面の部品");
+
+  // 明暗の切り替え
+  vm.runInContext(src("ui/v1_theme.js"), vm.createContext({ G }));
+  const th = G.theme;
+  if (!th || typeof th.load !== "function" || typeof th.current !== "function" || typeof th.flip !== "function") fail("G.theme.load / current / flip が無い");
+  else {
+    const mem = {}; const okStore = { getItem: (k) => (k in mem ? mem[k] : null), setItem: (k, v) => { mem[k] = String(v); } };
+    const broken = { getItem: () => { throw new Error("blocked"); }, setItem: () => { throw new Error("blocked"); } };
+    if (th.load(okStore) !== null) fail("明暗：何も覚えていないのに値がある");
+    th.save(okStore, "dark");
+    if (th.load(okStore) !== "dark") fail("明暗：覚えた値を読めない");
+    mem[th.KEY] = "purple";
+    if (th.load(okStore) !== null) fail("明暗：壊れた値を読んでしまう");
+    if (th.load(broken) !== null || th.save(broken, "light") !== false || th.load(null) !== null) fail("明暗：保存できないときに例外が出る");
+    if (th.current(null, true) !== "dark" || th.current(null, false) !== "light") fail("明暗：はじめは端末の設定に従わない");
+    if (th.current("light", true) !== "light" || th.current("dark", false) !== "dark") fail("明暗：選んだものが端末の設定より優先されない");
+    if (th.flip("dark") !== "light" || th.flip("light") !== "dark") fail("明暗：切り替えが変");
+  }
+  // 色の変数：明るい版（:root）と暗い版（[data-theme="dark"]）で同じ名前がそろう。V1 の窓で使う変数はどちらにもある
+  const block = (re) => { const m = css.match(re); return m ? new Set([...m[1].matchAll(/(--[\w-]+)\s*:/g)].map((x) => x[1])) : null; };
+  const light = block(/^:root \{([^}]*)\}/m), dark = block(/:root\[data-theme="dark"\] \{([^}]*)\}/);
+  if (!light || !dark) fail("明暗：style.css に :root と :root[data-theme=\"dark\"] の色の組が無い");
+  else {
+    for (const k of light) if (!/^--f-/.test(k) && !dark.has(k)) fail(`明暗：暗い版に ${k} が無い`);
+    for (const k of dark) if (!light.has(k)) fail(`明暗：明るい版に ${k} が無い`);
+    for (const k of ["--win", "--win-edge", "--orn", "--btn-a", "--box", "--bar-bg", "--dlg-a", "--face-bg", "--pic-filter"]) if (!light.has(k)) fail(`明暗：色の変数 ${k} が無い`);
+    if (!/prefers-color-scheme: dark\)\s*\{\s*:root:not\(\[data-theme="light"\]\)/.test(css)) fail("明暗：端末の設定（prefers-color-scheme）に従っていない");
+  }
+  if (!bad) ok("V1：背景の大きさ・タイトルの背景・切り替えの印・画面の部品・明暗");
 };
