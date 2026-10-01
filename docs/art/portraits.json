@@ -327,7 +327,7 @@
    "group": "named",
    "name": "微笑の使徒カルマトス",
    "file": "assets/portraits/mirza.webp",
-   "tags": "1boy, young man, beautiful, androgynous face, silver hair, long hair, red eyes, glowing eyes, gentle smile, luxurious robe, gold embroidery, holding a parasol, puppet strings on fingers",
+   "tags": "1boy, young man, beautiful, androgynous face, silver hair, long hair, red eyes, glowing eyes, gentle smile, luxurious robe, gold embroidery, holding a parasol, puppet strings on fingers, too many rings, looking down on viewer, dark aura",
    "memo": "人の姿の使徒（使徒リスト 28）。銀髪の美青年。豪奢な衣で、いつも微笑んでいる。人の苦しむ顔を愛でる"
   },
   {
@@ -335,7 +335,7 @@
    "group": "named",
    "name": "砂塵の使徒ドレイゼ",
    "file": "assets/portraits/zalve.webp",
-   "tags": "1boy, man, 45 years old, sandy hair, short hair, narrow eyes, smirk, silver monocle, gaunt, money changer, sand-colored vest, sand spilling from sleeves, hourglass",
+   "tags": "1boy, man, 45 years old, sandy hair, short hair, narrow eyes, smirk, silver monocle, gaunt, money changer, sand-colored vest, sand spilling from sleeves, hourglass, ringed eyes, hair crumbling into sand, cracks of light on skin",
    "memo": "ブランデールの両替商（使徒リスト 64）。砂の体。袖から砂がこぼれる。嘘はつかないが全部は言わない"
   },
   {
@@ -351,7 +351,7 @@
    "group": "named",
    "name": "生き聖女ユヴァリエ",
    "file": "assets/portraits/aurelia.webp",
-   "tags": "1girl, saint, 26 years old, blonde hair, long hair, large glowing butterfly wings, merciful smile, half-closed eyes, white and gold robe, sun emblem, staff",
+   "tags": "1girl, saint, 26 years old, blonde hair, long hair, large glowing butterfly wings, merciful smile, half-closed eyes, white and gold robe, sun emblem, staff, heterochromia, eye pattern on wings, floating hair",
    "memo": "聖都の「生き聖女」（正体は蝶翅の使徒、使徒リスト 40）。蝶の羽を後光だと思われている。慈悲深そうな微笑み"
   },
   {
@@ -359,7 +359,7 @@
    "group": "named",
    "name": "香煙の使徒ベリエラ",
    "file": "assets/portraits/yoihime.webp",
-   "tags": "1girl, woman, 28 years old, long black hair, face half hidden by incense smoke, sheer veil, narrow eyes, calm smile, layered purple robe, hanging censer on a chain, smoke",
+   "tags": "1girl, woman, 28 years old, long black hair, face half hidden by incense smoke, sheer veil, narrow eyes, calm smile, layered purple robe, hanging censer on a chain, smoke, glowing golden eyes, hair dissolving into smoke, floating hair",
    "memo": "朧島の、香の煙をまとった女（使徒リスト 18）。煙で顔ははっきり見えない。争いを嫌い、祭りと賽遊びが好き"
   },
   {
@@ -375,7 +375,7 @@
    "group": "named",
    "name": "苔衣の使徒セグリトス",
    "file": "assets/portraits/mordu.webp",
-   "tags": "1boy, old man, tall, gardener, bark-like skin, moss and ivy on clothes, mushrooms, spores, wide-brimmed hat, flowers on hat, glowing eyes, polite smile",
+   "tags": "1boy, old man, tall, gardener, bark-like skin, moss and ivy on clothes, mushrooms, spores, wide-brimmed hat, flowers on hat, glowing eyes, polite smile, black sclera, roots growing from fingers",
    "memo": "毒沼の庭師（使徒リスト 7。本体は樹皮に覆われたのろい獣）。穏やかで丁寧、悪意がない"
   },
   {
@@ -391,7 +391,7 @@
    "group": "named",
    "name": "剣翼の使徒ヴァルグレア",
    "file": "assets/portraits/azlag.webp",
-   "tags": "1boy, man, 40 years old, huge man, one black bird wing made of blades, blonde hair, glowing eyes, frown, crossed arms, black coat",
+   "tags": "1boy, man, 40 years old, huge man, one black bird wing made of blades, blonde hair, glowing eyes, frown, crossed arms, black coat, slit pupils, golden eyes, feathers in hair",
    "memo": "刃を撃ち出す黒い鳥の使徒（使徒リスト 62）の人の姿。片翼の大男。転んだのを無かったことにする"
   },
   {
@@ -399,7 +399,7 @@
    "group": "named",
    "name": "百面の使徒ディエラン（北の賢人）",
    "file": "assets/portraits/chezar.webp",
-   "tags": "1boy, old man, 72 years old, white hair, slicked back hair, monocle, mustache, mask-like face, expressionless, noble military coat, holding a chess piece, many masks hanging at belt",
+   "tags": "1boy, old man, 72 years old, white hair, slicked back hair, monocle, mustache, mask-like face, expressionless, noble military coat, holding a chess piece, many masks hanging at belt, porcelain skin, cracked skin, eyes on clothing",
    "memo": "仮面をいくつも持つ使徒（使徒リスト 23）。今は宮廷の老将の面で、宰相の客分の軍師。駒に話しかける"
   },
   {
@@ -407,7 +407,7 @@
    "group": "named",
    "name": "逆夢の使徒ベルファス",
    "file": "assets/portraits/yura.webp",
-   "tags": "toddler, androgynous, 3 years old, silver hair, messy hair, eyes closed, sleeping, floating upside down, pajamas, holding a pillow",
+   "tags": "toddler, androgynous, 3 years old, silver hair, messy hair, eyes closed, sleeping, floating upside down, pajamas, holding a pillow, floating hair, faint glow, crescent moon",
    "memo": "眠り続ける幼子の姿の使徒（使徒リスト 2）。いつも目を閉じて眠っている。逆さの夢に出る。子どもらしく"
   },
   {

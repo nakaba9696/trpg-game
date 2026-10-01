@@ -1,5 +1,5 @@
 {
- "_about": "魔物の絵の一覧（tools/gen_portraits.mjs --monsters が読む）。名前は敵のデータから node tools/monsters.mjs で作り直す。tags は特徴だけ（画風・構図・背景は docs/art/style_monsters.json）。human: true は人の姿の敵（style_monsters.json の human で後置き・ネガティブを替える）。same_as: <id> はその絵を使う（作らない）。",
+ "_about": "魔物の絵の一覧（tools/gen_portraits.mjs --monsters が読む）。名前は敵のデータから node tools/monsters.mjs で作り直す。tags は特徴だけ（画風・構図・背景は docs/art/style_monsters.json）。human: true は人の姿の敵（style_monsters.json の human で後置き・ネガティブを替える）。same_as: <id> はその絵を使う（作らない）。style: \"eldritch\" は人の形を持たない格上の存在（使徒の異形の姿・天災の格の化物など）で、docs/art/style_eldritch.json（別のモデル）で作る。無ければ style_monsters.json。",
  "size": {
   "width": 512,
   "height": 512,
@@ -205,6 +205,7 @@
    "name": "屍竜ネクロザ",
    "boss": true,
    "tags": "skeletal dragon, undead dragon, bone dragon, huge, ribcage, sword stuck in ribs, glowing green eyes, tattered bone wings, ghostly green fire, long neck, skull",
+   "style": "eldritch",
    "memo": "ボス。墓場を守る屍竜。腹に剣が刺さっている"
   },
   {
@@ -219,7 +220,7 @@
   {
    "id": "graw",
    "file": "assets/monsters/graw.webp",
-   "name": "鏖殺の使徒グラウ",
+   "name": "黒鎧の使徒エンバルダ",
    "boss": true,
    "tags": "giant, colossal, muscular, grey skin, glowing red eyes, horns, scars, battle-hungry grin, broken armor, chains, holding giant greatsword, glowing aura, barrier",
    "memo": "使徒（ボス）。戦いだけを好む巨人。絶界に守られている。圧倒的に"
@@ -287,6 +288,7 @@
    "file": "assets/monsters/e1_melted.webp",
    "name": "溶けかけた見習いたち",
    "tags": "blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles, runes",
+   "style": "eldritch",
    "memo": "溶け合った見習いたち。おぞましい"
   },
   {
@@ -348,7 +350,7 @@
   {
    "id": "w1_tanuki",
    "file": "assets/monsters/w1_tanuki.webp",
-   "name": "祭りの化け狸",
+   "name": "祭りの煙小鬼",
    "tags": "tanuki, raccoon dog, standing, round belly, leaf on head, tail, grin, blush, holding sake bottle",
    "memo": "祭りの化け狸。化けるのが下手。まぬけ"
   },
@@ -373,9 +375,10 @@
   {
    "id": "e2_gormoa",
    "file": "assets/monsters/e2_gormoa.webp",
-   "name": "暴食の使徒ゴルモア",
+   "name": "灼け口の使徒テルグリス",
    "boss": true,
    "tags": "giant, enormously fat, obese, three mouths, mouth on belly, long tongue, drooling, pink skin, spots, small horns, three eyes, beard, bib, loincloth, holding club, barrier",
+   "style": "eldritch",
    "memo": "使徒（ボス）。丘のように太った暴食の使徒。おぞましく、少しまぬけ"
   },
   {
@@ -404,9 +407,10 @@
   {
    "id": "e2_mordu",
    "file": "assets/monsters/e2_mordu.webp",
-   "name": "腐爛の使徒モルドゥ",
+   "name": "苔衣の使徒セグリトス",
    "boss": true,
    "tags": "plant monster, tall, gardener, covered in mud and moss, wilted flowers growing from head, wide-brimmed hat, one glowing eye, long claws, holding pitchfork, pollen, spores, rotting",
+   "style": "eldritch",
    "memo": "使徒（ボス）の魔物の姿。泥と苔の庭師。甘い腐臭"
   },
   {
