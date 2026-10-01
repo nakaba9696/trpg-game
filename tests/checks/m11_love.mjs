@@ -24,7 +24,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const a of Object.values(T.AP)) texts.push(a.who, a.chron, ...a.story);
   for (const t of texts) {
     if (/見世物|観客|客席|舞台|台本|神々|魔王|使徒|眷属/.test(t)) F(`見せる文に書かない言葉がある「${t}」`);
-    if (/宵姫|ザルヴェ|ミルザ|ユラ|ルイ/.test(t)) F(`格の違う相手の名前か、子どもの姿の者が出る「${t}」`);
+    if (/ベリエラ|ドレイゼ|カルマトス|ベルファス|宵姫|ザルヴェ|ミルザ|ユラ|ルイ/.test(t)) F(`格の違う相手の名前か、子どもの姿の者が出る「${t}」`);
   }
   for (const k of ["spark", "confess", "propose", "part", "cold"]) if (!(T.MON_LINES[k] || []).length) F(`魔物の子分の ${k} のひとことが無い`);
   for (const t of ["m11_mon", "m11_ap"]) if (!D.TROPHIES.some((x) => x.key === t)) F(`トロフィー ${t} が無い`);

@@ -2,7 +2,7 @@
 // 麦の都グランベール（w2_granbel）・鍛冶の都ドランヘルツ（w2_dranherz）・闘技の都ザルグロス（w2_zalgros）
 // 懺悔の谷（w2_echo）・影の谷（w2_shadow）・酸の谷（w2_acid）・湯の町アミュレイン（w2_amyrein）・狩り場の町ナグリス（w2_nagris）
 // 語りは docs/lore/voice.md：住人は説明役ではなく、その日の用事の途中にいる。谷の本当のことは書かない（docs/lore/strata.md 7.）
-// 使う印（S.flags）：w2_statue 鍛冶の都の兄君の像のモデルになった / w2_princefell 仕えた皇子が倒れた（explore_w2.js の S.w2_patron）
+// 使う印（S.flags）：w2_statue 鍛冶の都の兄君の像のモデルになった / w2_princefell 仕えた四騎士が深手を負って陣を畳んだ（explore_w2.js の S.w2_patron。印の名は皇子だったころのまま）
 // レーン V（出来事）と W（場所）が管理
 (function (G) {
   const D = (G.data = G.data || {});
@@ -61,10 +61,10 @@
     {
       id: "w2_princefell", where: ["garmund", "w2_zalgros"], w: 8, once: true, title: "剥がされる張り紙", who: { kind: "villager", sex: "男", age: 40 },
       cond: (S) => !!(S.w2_patron && S.w2_patron.realm === "garmund" && S.w2_patron.id !== "third" && S.day >= S.w2_patron.day + 15),
-      text: "張り紙屋が脚立の上で手を止め、あなたを見下ろした。「あんたの皇子さま、昨夜、亡くなったよ。熱が出たって話だ。……そこ、剥がすのを手伝ってくれるかい。下のほうに、あんたの名前も書いてあるんだ」",
+      text: "張り紙屋が脚立の上で手を止め、あなたを見下ろした。「あんたの騎士さま、北の防衛線で深手を負って、陣を畳んだよ。陛下の盾になったって話だ。……そこ、剥がすのを手伝ってくれるかい。下のほうに、あんたの名前も書いてあるんだ」",
       choices: [
-        { label: "別の皇子の陣を訪ねる", stat: "魅力", diff: "難しい", bonus: "talk", ok: { text: "第三皇子の陣の軍師は、盤から顔を上げずに言った。「空いた駒は、拾う」あなたの名前は、新しい張り紙の一番下に、小さく書き直された。", fame: -5, flag: "w2_princefell", lore: "kouji:fall", chron: "仕えた皇子が死に、第三皇子の陣に拾われる" }, ng: { text: "どの陣でも門前払いだった。騎士の位だけが残った。誰も呼ばない、名ばかりの位だ。", fame: -15, flag: "w2_princefell", lore: "kouji:fall", chron: "仕えた皇子が死に、帝都で居場所を失う" } },
-        { label: "張り紙を剥がして、帝都を離れる", ok: { text: "自分の名前の書いてある紙を剥がし、小さく畳んで懐に入れた。張り紙屋は、そこに新しい紙を貼った。糊が乾く前に、別の名前の上にまた紙が重ねられた。", fame: -10, flag: "w2_princefell", lore: "kouji:fall", memo: "仕えた皇子の張り紙から、自分の名前を剥がした" } },
+        { label: "別の陣を訪ねる", stat: "魅力", diff: "難しい", bonus: "talk", ok: { text: "エルナの陣の天幕で、宰相の客分の老将が、盤から顔を上げずに言った。「空いた駒は、拾う」あなたの名前は、新しい張り紙の一番下に、小さく書き直された。", fame: -5, flag: "w2_princefell", lore: "kouji:fall", chron: "仕えた騎士の陣が畳まれ、エルナの陣に拾われる" }, ng: { text: "どの陣でも門前払いだった。騎士の位だけが残った。誰も呼ばない、名ばかりの位だ。", fame: -15, flag: "w2_princefell", lore: "kouji:fall", chron: "仕えた騎士の陣が畳まれ、帝都で居場所を失う" } },
+        { label: "張り紙を剥がして、帝都を離れる", ok: { text: "自分の名前の書いてある紙を剥がし、小さく畳んで懐に入れた。張り紙屋は、そこに新しい紙を貼った。糊が乾く前に、別の名前の上にまた紙が重ねられた。", fame: -10, flag: "w2_princefell", lore: "kouji:fall", memo: "仕えた騎士の陣の張り紙から、自分の名前を剥がした" } },
       ],
     },
 

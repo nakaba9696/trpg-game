@@ -42,14 +42,14 @@ export default ({ fail, ok, loadEngine }) => {
   // ---- 表に出る名前
   const want = {
     leavel: "王都レオネスト", garmund: "帝都ノルディア", zephara: "首都エルメシア",
-    karna: "自由都市ブランデール", nerva: "港町ヴァレンツァ", w1_holy: "聖都エルヴィナ", majincastle: "鏖殺の使徒の居城",
+    karna: "自由都市ブランデール", nerva: "港町ヴァレンツァ", w1_holy: "聖都エルヴィナ", majincastle: "黒鎧の使徒の居城",
   };
   for (const [id, name] of Object.entries(want)) if (D.LOCS[id] && D.LOCS[id].name !== name) F(`${id} の名前が「${D.LOCS[id].name}」（${name} のはず）`);
   const regions = new Set(Object.values(D.LOCS).map((L) => L.region));
   for (const r of ["レオネスト王国", "ノルディア帝国", "エルメシア共和国"]) if (!regions.has(r)) F(`地方「${r}」が無い`);
   if (D.GOALS && D.GOALS.majin && D.GOALS.majin.name !== "使徒を討つ") F(`目的 majin の名前が「${D.GOALS.majin.name}」`);
   if (D.ENEMIES.kain && !/眷属/.test(D.ENEMIES.kain.name)) F(`カインが眷属と呼ばれていない（${D.ENEMIES.kain.name}）`);
-  if (D.ENEMIES.graw && !/使徒/.test(D.ENEMIES.graw.name)) F(`グラウが使徒と呼ばれていない（${D.ENEMIES.graw.name}）`);
+  if (D.ENEMIES.graw && !/使徒/.test(D.ENEMIES.graw.name)) F(`エンバルダ（graw）が使徒と呼ばれていない（${D.ENEMIES.graw.name}）`);
   if (!D.LORE || !D.LORE.shito || D.LORE.shito.title !== "眷属") F("用語説明 shito の題が「眷属」でない");
   if (!D.LORE || !D.LORE.majin || D.LORE.majin.title !== "使徒") F("用語説明 majin の題が「使徒」でない");
 

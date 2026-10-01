@@ -54,7 +54,7 @@
     },
     garmund: {
       name: "帝都ノルディア", region: "ノルディア帝国", type: "town", danger: 0, scene: "snowcity", capital: true, x: 28, y: 9,
-      desc: "黒い石で築かれた軍都。煙突の煙はまっすぐに上がり、軍靴の音はどこまでも揃っている。どの戸口にも、皇帝さまのご快癒を祈る札が貼ってある。辻の張り紙は「〇〇皇子を讃えよ」の上に別の皇子の名が貼り重ねられ、壁から指一本ぶん浮いている。",
+      desc: "黒い石で築かれた軍都。煙突の煙はまっすぐに上がり、軍靴の音はどこまでも揃っている。どの戸口にも、北の陣の武運を祈る札が貼ってある。辻の張り紙は「〇〇閣下の陣に加われ」の上に別の陣の名が貼り重ねられ、壁から指一本ぶん浮いている。",
       fac: ["inn", "tavern", "shop", "guild", "train", "alley", "castle"],
       shop: ["axe", "chain", "plate", "longsword", "potion"],
       links: { frost: 2 },
@@ -96,10 +96,10 @@
       pool: ["general", "kin", "chimera", "ogre", "oni"], links: { mountains: 3, majincastle: 3 },
     },
     majincastle: {
-      name: "鏖殺の使徒の居城", region: "使徒領", type: "dungeon", danger: 6, scene: "majin", x: 91, y: 80,
-      desc: "骨と鉄で組まれた城。門は開いたままで、番兵もいない。奥の広間から、刃を研ぐ音だけが規則正しく聞こえてくる。主の使徒グラウは、強者が訪ねてくるのを待っている。",
+      name: "黒鎧の使徒の居城", region: "使徒領", type: "dungeon", danger: 6, scene: "majin", x: 91, y: 80,
+      desc: "骨と鉄で組まれた城。門は開いたままで、番兵もいない。奥の広間から、重い鎧の擦れる音だけが、規則正しく聞こえてくる。門をくぐっただけで、膝が笑いはじめた。主の使徒エンバルダは、強者が訪ねてくるのを待っている。",
       pool: ["general", "kin", "blackknight"], floors: 4, midboss: { 3: "rize" }, boss: "graw",
-      reward: { flag: "graw", fame: 200, trophy: "majin", chron: "鏖殺の使徒グラウを討ち果たす。人の手で使徒が倒れたのは、百年ぶりのことだった", text: "巨人の体が膝をつき、笑った。「……よい戦いだった。次の千年も、こう、あれば……」使徒グラウは灰になって崩れた。空のどこかで、誰かが拍手をした気がした。" },
+      reward: { flag: "graw", fame: 200, trophy: "majin", chron: "黒鎧の使徒エンバルダを討ち果たす。人の手で使徒が倒れたのは、百年ぶりのことだった", text: "黒い鎧が膝をつき、兜の奥で笑った。「……よい戦いだった。抜かせて、もらえるかと、思ったが……」背の大剣は、最後まで鞘の中だった。使徒エンバルダは灰になって崩れた。空のどこかで、誰かが拍手をした気がした。" },
       links: { wasteland: 3 },
     },
     yakumo: {
