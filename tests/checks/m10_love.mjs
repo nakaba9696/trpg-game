@@ -49,7 +49,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const [a, b] = S.companions;
   if (G.m10Sex(a) !== "女" || G.m10Sex(b) !== "男") F(`名前から性別を推せない（${G.m10Sex(a)} ${G.m10Sex(b)}）`);
   if (G.m10Compat(a) < 1) F(`同じ性格（義理堅い）の相性が上がらない（${G.m10Compat(a)}）`);
-  if (G.m10Can({ name: "樽ゴブリンのダル", cls: "ゴブリン" })) F("ゴブリンの子分と恋仲になれる");
+  if (!G.m10Can({ name: "樽ゴブリンのダル", cls: "ゴブリン" })) F("ゴブリンの子分と恋仲になれない（M11：遠いが道はある）");
   // 気配
   a.bond = 70; b.bond = 30;
   if (!G.m10P.spark(a, S) || G.m10P.spark(b, S)) F("気配の立つ線が変");
