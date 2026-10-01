@@ -16,7 +16,7 @@
   const mix = (a, b, t) => { const x = hex(a), y = hex(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
   const rgba = (c, a) => { const [r, g, b] = hex(c); return `rgba(${r},${g},${b},${a})`; };
   const pickR = (R, a) => a[Math.floor(R() * a.length)];
-  const INK = "#140e12"; // 輪郭の色
+  const INK = "#2a1c1c"; // 輪郭の色（真っ黒にせず、焦げ茶で柔らかく） // 輪郭の色
   const TAU = Math.PI * 2;
 
   // ---------------------------------------------------------------- 決めてある見た目（今いる敵）
@@ -138,6 +138,8 @@
     ctx.save(); ctx.translate(-dx, -dy); path(); ctx.restore();
     ctx.fillStyle = style; ctx.fill("evenodd");
   }
+  // 柔らかい影：ずらし幅を変えた帯を薄く重ね、境目をぼかす（絵の具を重ねたように）
+  function soft(ctx, path, dx, dy, col, a) { for (const k of [0.35, 0.65, 1.0, 1.4]) band(ctx, path, dx * k, dy * k, rgba(col, a / 3)); }
   // 決まった種の小さな乱数（質感の描き込み用。G.rand は使わない）
   function rngN(n) { let s = Math.floor(Math.abs(n)) | 0; return () => { s = (Math.imul(s ^ (s >>> 15), 2246822507) + 0x9e3779b9) | 0; return ((s >>> 0) % 10007) / 10007; }; }
   // 質感の描き込み（形で切り抜いた中で呼ぶ）
@@ -208,21 +210,22 @@
   function paint(ctx, fill, lw, path) {
     const vol = fill && fill.sh;
     const solid = vol || (typeof fill === "string" && fill[0] === "#");
-    if (lw && solid) { ctx.save(); ctx.translate(lw * 0.45, lw * 0.65); ctx.beginPath(); path(); ctx.fillStyle = INK; ctx.fill(); ctx.restore(); }
+    const base0 = vol ? fill.c : solid ? fill : null, edge = base0 ? mix(base0, "#120a0c", 0.72) : INK;
+    if (lw && solid) { ctx.save(); ctx.translate(lw * 0.35, lw * 0.5); ctx.beginPath(); path(); ctx.fillStyle = rgba(edge, 0.6); ctx.fill(); ctx.restore(); }
     ctx.beginPath(); path(); ctx.fillStyle = vol ? fillOf(ctx, fill) : fill; ctx.fill();
     if (vol) {
       const { r, c, t } = fill, d = r * 0.3;
       ctx.save(); ctx.beginPath(); path(); ctx.clip();
       if (t) texture(ctx, fill, lw || 1);
-      band(ctx, path, d * 0.95, d * 1.15, rgba(mix(c, SHADOW, 0.6), 0.62));            // 影
-      band(ctx, path, d * 0.36, d * 0.44, rgba(mix(c, SHADOW, 0.8), 0.55));           // いちばん暗いところ
-      band(ctx, path, d * 0.12, d * 0.14, rgba(mix(c, "#c89a70", 0.5), 0.22));          // 照り返し
-      band(ctx, path, -d * 0.3, -d * 0.36, rgba(mix(c, LIGHT, 0.65), 0.42));             // 光の当たる縁
+      soft(ctx, path, d * 0.95, d * 1.15, mix(c, SHADOW, 0.6), 0.7);            // 影
+      soft(ctx, path, d * 0.36, d * 0.44, mix(c, SHADOW, 0.8), 0.5);            // いちばん暗いところ
+      band(ctx, path, d * 0.1, d * 0.12, rgba(mix(c, "#b89878", 0.5), 0.16));    // 照り返し
+      soft(ctx, path, -d * 0.3, -d * 0.36, mix(c, LIGHT, 0.55), 0.4);           // 光の当たる側
       const gl = GLOSSY[t] || 0;
       if (gl) { ctx.fillStyle = rgba("#ffffff", 0.35 + gl * 0.3); ctx.beginPath(); ellipse(ctx, fill.x - r * 0.42, fill.y - r * 0.5, r * 0.16, r * 0.08, -0.6); ctx.fill(); ctx.fillStyle = rgba("#ffffff", 0.5 * gl); ctx.beginPath(); ellipse(ctx, fill.x - r * 0.25, fill.y - r * 0.62, r * 0.04, r * 0.03); ctx.fill(); }
       ctx.restore();
     }
-    if (lw) { ctx.lineWidth = lw * (solid ? 0.8 : 1); ctx.strokeStyle = INK; ctx.lineJoin = "round"; ctx.beginPath(); path(); ctx.stroke(); }
+    if (lw) { ctx.lineWidth = lw * (solid ? 0.7 : 0.9); ctx.strokeStyle = rgba(edge, 0.85); ctx.lineJoin = "round"; ctx.beginPath(); path(); ctx.stroke(); }
   }
   // 毛の房（手足や体の縁から外へ飛び出す毛）
   function furEdge(ctx, pts, w, c, lw) {
@@ -1238,11 +1241,29 @@
       const sc = sp.getContext("2d");
       sc.setTransform(k, 0, 0, k, -(x - hw) * k, 0);
       paintMonsterNow(sc, x, base, s, f);
+      finishSprite(sc, x - hw, hw * 2, base, s, key);
       CACHE.set(key, sp);
       if (CACHE.size > CACHE_MAX) CACHE.delete(CACHE.keys().next().value);
     } else { CACHE.delete(key); CACHE.set(key, sp); }
     ctx.drawImage(sp, x - hw, 0, hw * 2, hh);
   };
+  // 仕上げ（別の canvas に描いた絵だけ）：色をくすませ、筆の跡を重ね、足元から闇に沈める。描いた所だけに効く（source-atop）
+  function finishSprite(ctx, x0, w, base, s, key) {
+    ctx.save();
+    ctx.globalCompositeOperation = "source-atop";
+    ctx.fillStyle = "rgba(92,82,74,.24)"; ctx.fillRect(x0, 0, w, base + s);
+    const g = ctx.createLinearGradient(0, base - s * 0.95, 0, base);
+    g.addColorStop(0, "rgba(10,6,10,0)"); g.addColorStop(0.7, "rgba(10,6,10,.28)"); g.addColorStop(1, "rgba(10,6,10,.6)");
+    ctx.fillStyle = g; ctx.fillRect(x0, base - s, w, s * 1.2);
+    const R = rngN(key.length * 131 + s * 7);
+    ctx.lineCap = "round";
+    for (let i = 0; i < 380; i++) {
+      const px = x0 + R() * w, py = base - R() * s * 1.6, len = s * (0.012 + R() * 0.03), a = -0.75 + (R() - 0.5) * 2.2;
+      ctx.fillStyle = i % 2 ? "rgba(255,240,215,.05)" : "rgba(20,12,16,.07)";
+      ctx.beginPath(); ellipse(ctx, px, py, len, s * (0.004 + R() * 0.006), a); ctx.fill();
+    }
+    ctx.restore();
+  }
   function paintMonsterNow(ctx, x, base, s, f) {
     let e = (G.data && G.data.ENEMIES && G.data.ENEMIES[f.id]) || { shape: f.shape, eye: f.eye, boss: f.boss };
     // 出来事の絵（art_people.js）は、敵の見た目を少し変えて描ける（{ id, look }。look が敵のデータの look に重なる）

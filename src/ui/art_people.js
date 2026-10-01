@@ -20,7 +20,7 @@
   const mix = (a, b, t) => { const x = hex(a), y = hex(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
   const rgba = (c, a) => { const [r, g, b] = hex(c); return `rgba(${r},${g},${b},${a})`; };
   const pickR = (R, a) => a[Math.floor(R() * a.length)];
-  const INK = "#1a1418";
+  const INK = "#2a1c1c"; // 輪郭の色（真っ黒にせず、焦げ茶で柔らかく）
   const TAU = Math.PI * 2;
 
   // ---------------------------------------------------------------- 部品の色
@@ -201,21 +201,24 @@
     ctx.save(); ctx.translate(-dx, -dy); path(); ctx.restore();
     ctx.fillStyle = style; ctx.fill("evenodd");
   }
+  // 柔らかい影：ずらし幅を変えた帯を薄く重ね、境目をぼかす（絵の具を重ねたように）
+  function soft(ctx, path, dx, dy, col, a) { for (const k of [0.35, 0.65, 1.0, 1.4]) band(ctx, path, dx * k, dy * k, rgba(col, a / 3)); }
   function paint(ctx, fill, lw, path) {
     const c = fill && fill._c;
     const solid = !!c || (typeof fill === "string" && fill[0] === "#");
-    if (lw && solid) { ctx.save(); ctx.translate(lw * 0.45, lw * 0.6); ctx.beginPath(); path(); ctx.fillStyle = INK; ctx.fill(); ctx.restore(); }
+    const base0 = c || (solid ? fill : null), edge = base0 ? mix(base0, "#140a0c", 0.7) : INK;
+    if (lw && solid) { ctx.save(); ctx.translate(lw * 0.3, lw * 0.4); ctx.beginPath(); path(); ctx.fillStyle = rgba(edge, 0.5); ctx.fill(); ctx.restore(); }
     ctx.beginPath(); path(); ctx.fillStyle = fill; ctx.fill();
     if (c) {
       const d = fill._d;
       ctx.save(); ctx.beginPath(); path(); ctx.clip();
-      band(ctx, path, d * 0.9, d * 0.7, rgba(mix(c, SHADOW, 0.55), 0.5));
-      band(ctx, path, d * 0.3, d * 0.25, rgba(mix(c, SHADOW, 0.75), 0.4));
-      band(ctx, path, d * 0.1, d * 0.08, rgba(mix(c, "#e0a080", 0.5), 0.18));
-      band(ctx, path, -d * 0.3, -d * 0.3, rgba(mix(c, LIGHT, 0.6), 0.35));
+      soft(ctx, path, d * 0.9, d * 0.7, mix(c, SHADOW, 0.55), 0.55);
+      soft(ctx, path, d * 0.3, d * 0.25, mix(c, SHADOW, 0.75), 0.35);
+      band(ctx, path, d * 0.08, d * 0.06, rgba(mix(c, "#e0a080", 0.5), 0.14));
+      soft(ctx, path, -d * 0.3, -d * 0.3, mix(c, LIGHT, 0.55), 0.35);
       ctx.restore();
     }
-    if (lw) { ctx.lineWidth = lw * (solid ? 0.8 : 1); ctx.strokeStyle = INK; ctx.lineJoin = "round"; ctx.beginPath(); path(); ctx.stroke(); }
+    if (lw) { ctx.lineWidth = lw * (solid ? 0.65 : 0.85); ctx.strokeStyle = rgba(edge, 0.8); ctx.lineJoin = "round"; ctx.beginPath(); path(); ctx.stroke(); }
   }
   function line(ctx, c, w, pts) {
     ctx.beginPath(); ctx.moveTo(pts[0], pts[1]);
@@ -693,12 +696,13 @@
 
   // ---------------------------------------------------------------- 顔
   // 目：白目（上まぶたの影つき）→ 虹彩（縁が暗く下が明るい）→ 瞳 → 光の点二つ → 太い上まぶた（女はまつ毛）→ 下まぶた → 二重の線
-  function eyePair(ctx, L, cx, ey, sp, er, U) {
+  function eyePair(ctx, L, cx, ey, sp, er0, U) {
     const lw = U * 0.008;
     const female = L.sex === "女";
     const slitPupil = L.beast === "cat" || L.beast === "fox" || L.eyes === "glow";
     [-1, 1].forEach((s) => {
-      const ex = cx + s * sp;
+      // 顔は少しだけ右を向く：奥（右）の目は小さく、内へ寄る
+      const er = er0 * (s > 0 ? 0.9 : 1), ex = cx + s * sp * (s > 0 ? 0.88 : 1);
       if (s === 1 && L.marks.includes("eyepatch")) return;
       const iris = s === 1 && L.iris2 ? L.iris2 : L.iris;
       const st = L.eyes;
@@ -768,12 +772,13 @@
     });
   }
   // 眉：筆で払ったような形（内側が太く、外へ細く）
-  function browPair(ctx, L, cx, ey, sp, er, U) {
+  function browPair(ctx, L, cx, ey, sp0, er, U) {
     const th = U * (L.sex === "女" ? 0.012 : 0.02) * (L.band === "old" ? 1.25 : 1) * (L.band === "child" ? 0.8 : 1);
     const c = L.band === "old" ? mix(L.hair, "#ffffff", 0.2) : mix(L.hair, "#000000", 0.3);
     const by = ey - er * (L.eyes === "round" ? 2.05 : 1.85);
     const b = L.brows;
     [-1, 1].forEach((s) => {
+      const sp = sp0 * (s > 0 ? 0.88 : 1);
       const ix = cx + s * sp * 0.4, ox = cx + s * sp * 1.5;
       const iy = by + (b === "angry" ? er * 0.6 : b === "worried" ? -er * 0.45 : b === "raised" ? -er * 0.3 : 0);
       const oy = by + (b === "worried" ? er * 0.3 : b === "angry" ? -er * 0.15 : b === "raised" && s === 1 ? -er * 0.5 : 0);
@@ -1052,33 +1057,53 @@
     if (L.ears !== "none") sideEars(ctx, L, cx, ey, rx, ry, U);
     // 顔
     paint(ctx, rgrad(ctx, cx, cy, rx, L.skin), U * 0.009, () => facePath(ctx, cx, cy, rx, ry, jaw));
-    const sp = rx * 0.42, er = rx * (child ? 0.22 : 0.175) * (L.sex === "女" ? 1.06 : 1);
+    const sp = rx * 0.41, er = rx * (child ? 0.2 : 0.158) * (L.sex === "女" ? 1.05 : 1);
+    const fx = cx + rx * 0.07; // 顔の向き（目・鼻・口を少し右へ寄せる）
     const my = cy + ry * (child ? 0.62 : 0.66), mw = rx * (child ? 0.22 : 0.28);
     // 顔の起伏：前髪の落とす影、頬の赤み、あごの下の影
     ctx.save(); ctx.beginPath(); facePath(ctx, cx, cy, rx, ry, jaw); ctx.clip();
     if (L.hairStyle !== "bald") { const gh = ctx.createLinearGradient(0, cy - ry, 0, cy - ry * 0.25); gh.addColorStop(0, rgba(mix(L.skin, SHADOW, 0.6), 0.55)); gh.addColorStop(1, rgba(mix(L.skin, SHADOW, 0.6), 0)); ctx.fillStyle = gh; ctx.fillRect(cx - rx * 1.2, cy - ry * 1.1, rx * 2.4, ry * 0.9); }
     for (const s2 of [-1, 1]) { const gc = ctx.createRadialGradient(cx + s2 * rx * 0.55, ey + er * 2, 0, cx + s2 * rx * 0.55, ey + er * 2, rx * 0.35); gc.addColorStop(0, rgba("#e06a5a", L.band === "child" ? 0.22 : 0.13)); gc.addColorStop(1, rgba("#e06a5a", 0)); ctx.fillStyle = gc; ctx.fillRect(cx - rx * 1.2, cy - ry, rx * 2.4, ry * 2.2); }
+    // 奥（右）の頬は光から外れる
+    const gs = ctx.createLinearGradient(cx + rx * 0.35, 0, cx + rx * 1.05, 0); gs.addColorStop(0, rgba(mix(L.skin, SHADOW, 0.5), 0)); gs.addColorStop(1, rgba(mix(L.skin, SHADOW, 0.5), 0.45));
+    ctx.fillStyle = gs; ctx.fillRect(cx, cy - ry * 1.2, rx * 1.2, ry * 2.4);
     ctx.restore();
     if (L.beast) beastCheeks(ctx, L, cx, cy, rx, ry, U);
     marksUnder(ctx, L, cx, cy, rx, ry, ey, sp, er, U, jaw);
     beard(ctx, L, cx, cy, rx, ry, U, jaw);
-    eyePair(ctx, L, cx, ey, sp, er, U);
-    browPair(ctx, L, cx, ey, sp, er, U);
-    noseDraw(ctx, L, cx, ey, er, cy + ry * (child ? 0.38 : 0.42), rx, U);
-    mouthDraw(ctx, L, cx, my, mw, U);
+    eyePair(ctx, L, fx, ey, sp, er, U);
+    browPair(ctx, L, fx, ey, sp, er, U);
+    noseDraw(ctx, L, fx + rx * 0.02, ey, er, cy + ry * (child ? 0.38 : 0.42), rx, U);
+    mouthDraw(ctx, L, fx, my, mw, U);
     marksOver(ctx, L, cx, cy, rx, ry, ey, sp, er, my, mw, U);
     if (L.marks.includes("earring")) { ctx.strokeStyle = "#e0c050"; ctx.lineWidth = U * 0.006; ctx.beginPath(); ellipse(ctx, cx - rx * 1.0, ey + ry * 0.28, rx * 0.06, rx * 0.08); ctx.stroke(); }
     hairFront(ctx, L, cx, cy, rx, ry, U);
     if (L.beast) beastEars(ctx, L, cx, cy, rx, ry, U);
     headwear(ctx, L, cx, cy, rx, ry, U);
     if (L.marks.includes("foxmask")) foxMask(ctx, cx - rx * 0.78, cy - ry * 0.72, rx * 0.5, U);
-    // 周りを暗く
-    const v = ctx.createRadialGradient(cx, y + h * 0.45, h * 0.35, cx, y + h * 0.5, h * 0.8);
-    v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.35)");
-    ctx.fillStyle = v; ctx.fillRect(x, y, w, h);
+    finish(ctx, L, x, y, w, h);
     ctx.restore();
   };
 
+  // 仕上げ：色をくすませ（彩度を落として暖かい灰に寄せる）、筆の跡を重ね、周りを暗くする（絵画の挿絵のように）
+  function finish(ctx, L, x, y, w, h) {
+    ctx.save();
+    ctx.globalCompositeOperation = "saturation"; ctx.globalAlpha = 0.32; ctx.fillStyle = "#807870"; ctx.fillRect(x, y, w, h);
+    ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = 0.35; ctx.fillStyle = "#e8d8bc"; ctx.fillRect(x, y, w, h);
+    ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
+    const R = rng((L.seed || "p") + ":brush");
+    ctx.lineCap = "round";
+    for (let i = 0; i < 220; i++) {
+      // 筆のひと押し（向きのばらつく、にじんだ短い楕円）
+      const px = x + R() * w, py = y + R() * h, len = h * (0.012 + R() * 0.025), a = -0.7 + (R() - 0.5) * 2.2;
+      ctx.fillStyle = i % 2 ? "rgba(255,244,220,.04)" : "rgba(30,18,20,.05)";
+      ctx.beginPath(); ellipse(ctx, px, py, len, h * (0.004 + R() * 0.006), a); ctx.fill();
+    }
+    const v = ctx.createRadialGradient(x + w * 0.45, y + h * 0.4, h * 0.3, x + w * 0.5, y + h * 0.5, h * 0.82);
+    v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(14,8,10,.5)");
+    ctx.fillStyle = v; ctx.fillRect(x, y, w, h);
+    ctx.restore();
+  }
   // 仲間になった魔物など、人でないもの（モンスターの絵を胸から上に切り取る）
   function paintFoe(ctx, x, y, w, h, who) {
     const L = { bg: "#5a6a4a", kind: "foe", iris: "#ff3a3a", seed: "foe" };
