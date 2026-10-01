@@ -6,13 +6,10 @@
 //   ・人が変わる・いなくなるときはフェードで出入り（動きを減らす設定では切り替えるだけ）
 // 画像（G.ASSETS。v4_assets.js）がある人だけ大きく立たせ、canvas の絵の人は今の小さな額（ui.js の #who）のまま
 // （canvas の絵は小さな額向けに作ってあり、大きくすると粗さが目立つため）。敵（戦闘）の絵は変えない。
-// V8：場面の表情（G.moodOf(S)。src/engine/v8_moods.js）があり、その人の差分の絵があればそれを出す。同じ人のまま表情が変わったら、
-//   顔だけを軽くフェードで入れ替える（MOOD_FADE。style.css の #stand .standFace.next と合わせる）。差分が無ければ通常の絵のまま
 // ui.js の G.ui.render を包むだけ。レーン U（画面）が管理
 (function (G) {
   const stand = (G.stand = {});
   const FADE = 450; // 出入りの長さ（ミリ秒。style.css の #stand .standFig と合わせる）
-  const MOOD_FADE = 300; // 表情の入れ替えの長さ（V8。style.css の #stand .standFace.next と合わせる）
 
   // 今話している人（ui.js の paintWho と同じ決め方）。いなければ null。戦闘中は出さない
   stand.whoOf = (S) => {
@@ -44,12 +41,6 @@
     return { w: Math.round(w), h: Math.round(h), under: Math.max(0, Math.round(h - sceneH)), narrow };
   };
   stand.FADE = FADE;
-  stand.MOOD_FADE = MOOD_FADE;
-  // その場の表情を付けた who（V8。表情が無ければそのまま）。印（sig）は表情を付けない who で取る（表情が変わっても人は出入りしない）
-  stand.withMood = (who, S) => {
-    const mood = who && G.moodOf ? G.moodOf(S) : null;
-    return mood ? Object.assign({}, who, { mood }) : who;
-  };
 
   if (typeof document === "undefined" || typeof window === "undefined") return;
   const ui = G.ui;
@@ -58,7 +49,7 @@
   const calm = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   let box = null; // #stand（絵の窓の中。立ち絵の層を重ねる）
-  let cur = null; // { el, sig, who, key（今の顔の絵の鍵。表情の差分を含む）}
+  let cur = null; // { el, sig, who }
   function ensure() {
     const scene = $(".scene");
     if (!scene) return null;
@@ -80,16 +71,12 @@
     scene.style.setProperty("--stand-w", f.w + "px");
     return f;
   }
-  const canvas = () => {
-    const cv = document.createElement("canvas");
-    cv.className = "standFace";
-    cv.width = 512; cv.height = 640;
-    return cv;
-  };
   function make(who) {
     const el = document.createElement("div");
     el.className = "standFig";
-    const cv = canvas();
+    const cv = document.createElement("canvas");
+    cv.className = "standFace";
+    cv.width = 512; cv.height = 640;
     const name = document.createElement("span");
     name.className = "standName";
     name.textContent = stand.nameOf(who);
@@ -101,20 +88,6 @@
     if (calm()) return el.remove();
     setTimeout(() => el.remove(), FADE + 50);
   }
-  // 同じ人のまま表情が変わった：新しい顔を上に重ねてフェードで入れ、古い顔を外す
-  function swapFace(face, key) {
-    cur.key = key;
-    const el = cur.el;
-    const olds = Array.from(el.querySelectorAll("canvas.standFace"));
-    const cv = canvas();
-    cv.classList.add("next");
-    el.insertBefore(cv, el.querySelector(".standName"));
-    if (G.drawPortrait) G.drawPortrait(cv, face);
-    const done = () => olds.forEach((o) => o.remove());
-    if (calm()) { cv.classList.add("in"); return done(); }
-    requestAnimationFrame(() => requestAnimationFrame(() => cv.classList.add("in")));
-    setTimeout(done, MOOD_FADE + 50);
-  }
   function update() {
     const S = G.S, scene = $(".scene");
     const play = $("#play");
@@ -122,19 +95,14 @@
     const big = stand.big(who);
     if (scene) scene.classList.toggle("standing", big);
     const sig = big ? stand.sig(who) : "";
-    const face = big ? stand.withMood(who, S) : who;
-    const key = big && G.v4PortraitKey ? G.v4PortraitKey(face) : "";
-    if (cur && cur.sig === sig) {
-      if (big) { size(); if (cur.key !== key) swapFace(face, key); }
-      return;
-    }
+    if (cur && cur.sig === sig) { if (big) size(); return; }
     if (cur) { leave(cur.el); cur = null; }
     if (!big || !ensure()) return;
     size();
     const el = make(who);
     box.append(el);
-    cur = { el, sig, who, key };
-    if (G.drawPortrait) G.drawPortrait(el.querySelector("canvas"), face);
+    cur = { el, sig, who };
+    if (G.drawPortrait) G.drawPortrait(el.querySelector("canvas"), who);
     // 次の描画でフェードを始める（足した直後に on を付けると、フェードせずに出てしまう）
     if (calm()) el.classList.add("on");
     else requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("on")));

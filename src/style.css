@@ -782,11 +782,7 @@ dialog::backdrop { -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px
   #stand .standFig { right: -4%; }
   #stand .standName { font-size: 13px; top: 10px; left: auto; right: 8%; }
 }
-/* V8：同じ人のまま表情が変わったら、新しい顔を上に重ねて軽くフェードで入れる（v5_stand.js の MOOD_FADE と合わせる） */
-#stand .standFace.next { position: absolute; inset: 0; opacity: 0; transition: opacity .3s ease; }
-#stand .standFace.next.in { opacity: 1; }
-@media (prefers-reduced-motion: reduce) { #stand .standFig { transition: none; transform: none; }
-  #stand .standFace.next { transition: none; } }
+@media (prefers-reduced-motion: reduce) { #stand .standFig { transition: none; transform: none; } }
 :root { --stand-filter: sepia(.08) saturate(.95); }
 :root[data-theme="dark"] { --stand-filter: sepia(.12) saturate(.88) brightness(.88); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --stand-filter: sepia(.12) saturate(.88) brightness(.88); } }

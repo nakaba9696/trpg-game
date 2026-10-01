@@ -132,26 +132,34 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const vmc = vm.createContext({ console, G, Image: class { addEventListener() {} } });
   for (const f of ["art_monsters.js", "art_people.js", "r1_race.js", "v4_assets.js", "v5_stand.js", "v8_moods.js"]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
   const st = G.stand;
-  if (!G.v8MoodKey || !st || !st.withMood) return F("G.v8MoodKey・G.stand.withMood が無い");
+  if (!G.v8MoodKey || !G.v8WithMood || !st) return F("G.v8MoodKey・G.v8WithMood が無い");
   G.ASSETS = { "portraits/nora": "data:image/webp;base64,AA==", "portraits/nora_sorrow": "data:image/webp;base64,AA==" };
   const nora = st.whoOf({ mode: "event", event: "c2_nora_sniff", flags: {} });
   if (!nora) return F("出来事 c2_nora_sniff の人が拾えない");
   if (G.v4PortraitKey(nora) !== "nora") F("表情の無いときに通常の絵にならない");
-  const sad = st.withMood(nora, { mode: "event", event: "c2_nora_sniff", mood: "sorrow", flags: {} });
+  const sadS = { mode: "event", event: "c2_nora_sniff", mood: "sorrow", flags: {} };
+  const sad = G.v8WithMood(nora, sadS);
   if (G.v4PortraitKey(sad) !== "nora_sorrow") F("差分の絵があるのに、その表情の絵にならない");
-  const glad = st.withMood(nora, { mode: "event", event: "c2_nora_sniff", mood: "joy", flags: {} });
+  const glad = G.v8WithMood(nora, { mode: "event", event: "c2_nora_sniff", mood: "joy", flags: {} });
   if (G.v4PortraitKey(glad) !== "nora") F("差分の絵が無い表情で、通常の絵に戻らない");
-  if (st.withMood(nora, { mode: "event", event: "c2_nora_sniff", flags: {} }) !== nora) F("古いセーブ（S.mood 無し）で who を変えている");
+  if (G.v8WithMood(nora, { mode: "event", event: "c2_nora_sniff", flags: {} }) !== nora) F("古いセーブ（S.mood 無し）で who を変えている");
   if (st.sig(nora) !== st.sig(st.whoOf({ mode: "event", event: "c2_nora", flags: {} }))) F("同じ人の印が変わる");
-  if (!st.big(sad) || st.sig(nora) === "") F("表情のある人を大きく立たせない");
+  if (!st.big(sad)) F("表情のある人を大きく立たせない");
   if (G.v8MoodKey("nora", "angry") !== "nora" || G.v8MoodKey(null, "joy") !== null) F("4 種でない表情・鍵の無い人を差分にしている");
+  // 立ち絵の顔（canvas.standFace）だけ、その場の表情で描く。小さな額などは今のまま
+  const saveS = G.S;
+  G.S = sadS;
+  const cvOf = (cls) => ({ classList: { contains: (c) => c === cls }, dataset: {}, width: 0, height: 0, getBoundingClientRect: () => ({ width: 0, height: 0 }), getContext: () => new Proxy({}, { get: () => () => ({ addColorStop() {} }) }) });
+  const standCv = cvOf("standFace"), smallCv = cvOf("whoFace");
+  try { G.drawPortrait(standCv, nora); G.drawPortrait(smallCv, nora); } catch (e) { F("立ち絵の顔を描くところで止まる：" + e.message); }
+  if (standCv.dataset.v8key !== "nora_sorrow") F(`立ち絵の顔が、その場の表情の絵にならない（${standCv.dataset.v8key}）`);
+  if (smallCv.dataset.v8key !== undefined) F("立ち絵でない額にまで表情を付けている");
+  G.S = saveS;
   G.ASSETS = {};
   if (G.v4PortraitKey(sad) !== null) F("画像が無いのに差分の鍵を返す");
-
-  // style.css：顔の入れ替えのフェード
-  const css = readFileSync(new URL("../../src/style.css", import.meta.url), "utf8");
-  if (!/#stand \.standFace\.next \{[^}]*transition: opacity \.3s/.test(css)) F("style.css に表情の入れ替えのフェード（.3s。v5_stand.js の MOOD_FADE）が無い");
-  if (st.MOOD_FADE !== 300) F("v5_stand.js の MOOD_FADE が style.css（.3s）と合わない");
+  // 画面の配置（V9）とぶつからないよう、V5 のファイルと style.css には手を入れず、包むだけ
+  const v5 = readFileSync(new URL("../../src/ui/v5_stand.js", import.meta.url), "utf8");
+  if (/v8|mood/i.test(v5)) F("v5_stand.js に V8 の表情が書かれている（src/ui/v8_moods.js で包む）");
 
   // 生成：--variants の説明
   const gen = readFileSync(new URL("../../tools/gen_portraits.mjs", import.meta.url), "utf8");
