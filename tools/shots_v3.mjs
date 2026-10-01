@@ -19,10 +19,10 @@ const sheet = async (kind) => {
   const data = await page.evaluate(({ kind, FOES, K, ONLY }) => {
     const P = G.data.C2_PEOPLE || {};
     const who = (id) => Object.assign({ name: P[id].name }, P[id].who);
-    const PEOPLE = [who("dil"), who("nora"), who("sheila"), who("rui"), who("elnea"), who("valeon"), who("valg"), who("doctor"), who("malvina"),
+    const PEOPLE = [who("nora"), who("sheila"), who("rui"), who("zerina"), who("elnea"), who("natalia"), who("dil"), who("kaidel"), who("valeon"), who("valg"), who("malvina"), who("doctor"),
+      { kind: "majin", seed: "v3:majin", name: "使徒（人の姿）" },
       { kind: "rogue", sex: "女", age: 22, seed: "v3:cat", name: "猫の獣人（盗賊）", look: { beast: "cat", ears: "none", hair: "#2a2420", outfit: "cloak", gear: "daggers" } },
       { kind: "soldier", sex: "男", age: 40, seed: "v3:bear", name: "熊の獣人（兵士）", look: { beast: "bear", ears: "none", hair: "#5a3a22", build: "broad", marks: ["beard"] } },
-      { kind: "majin", seed: "v3:majin", name: "使徒（人の姿）" },
       // ここから下は確かめ用（既定の一覧には出さない。ONLY に番号を書く）
       { kind: "child", seed: "v3:c1", name: "子ども" }, { kind: "elder", seed: "v3:e1", name: "老人" }, { kind: "priest", seed: "v3:p1", name: "神官" }, { kind: "knight", seed: "v3:k1", sex: "女", name: "騎士" },
       { kind: "ronin", seed: "v3:r1", name: "八雲の人" }, { kind: "host", seed: "v3:h1", name: "宿の主" }, { kind: "mage", seed: "v3:m1", name: "魔法使い" }, { kind: "beggar", seed: "v3:b1", name: "物乞い" },
