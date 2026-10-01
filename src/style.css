@@ -53,18 +53,16 @@ button { cursor: pointer; }
 /* ヘッダー */
 .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding-block: 16px 10px; border-bottom: 2px solid var(--ink); }
 .top h1 { font-family: var(--f-display); font-weight: 400; font-size: 30px; margin: 0; letter-spacing: .08em; }
-.top .sub { color: var(--muted); font-size: 13px; }
 /* 題のロゴ。Mors（死）を血の色、veld を墨の色で */
 .logo, .logoBig { font-family: var(--f-logo); font-weight: 700; text-transform: uppercase; line-height: 1; white-space: nowrap; }
 .logo .mors, .logoBig .mors { color: var(--blood); }
 .top h1.logo { font-size: 26px; letter-spacing: .16em; }
-body:has(#setup[data-step="title"]:not([hidden])) .top h1.logo, body:has(#setup[data-step="title"]:not([hidden])) .top .sub { visibility: hidden; }
+body:has(#setup[data-step="title"]:not([hidden])) .top h1.logo { visibility: hidden; }
 .titleHero { text-align: center; padding-block: 28px 8px; }
 #setup[data-step="title"] { margin-inline: auto; } /* PC でタイトルを真ん中に */
 .logoBig { display: flex; align-items: center; justify-content: center; font-size: clamp(34px, 10.5vw, 82px); letter-spacing: .2em; padding-left: .2em; text-shadow: 0 2px 0 rgba(0, 0, 0, .08); }
 .titleHero .reading { font-family: var(--f-body); font-size: 12px; letter-spacing: .6em; padding-left: .6em; color: var(--muted); margin-top: 14px; }
 .titleHero .reading::before, .titleHero .reading::after { content: ""; display: inline-block; width: clamp(28px, 10vw, 72px); height: 1px; background: var(--blood); vertical-align: middle; margin-inline: 14px; opacity: .7; }
-.titleHero .tagline { font-family: var(--f-body); font-size: clamp(15px, 4.2vw, 18px); letter-spacing: .12em; margin: 18px 0 0; }
 .top .tools { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
 .btn { border: 1px solid var(--rule); background: var(--sheet); border-radius: 3px; padding: 5px 10px; font-size: 13px; }
 .btn:hover { border-color: var(--ink); }
@@ -314,7 +312,7 @@ dialog::backdrop { background: var(--scrim); }
   .top h1 { font-size: 22px; }
   .top h1.logo { font-size: 19px; letter-spacing: .12em; }
   .titleHero { padding-block: 16px 0; }
-  .top .sub, .top .wide { display: none; }
+  .top .wide { display: none; }
   .top .tools { gap: 4px; }
   .top .tools .btn { padding: 6px 8px; font-size: 12px; min-height: 36px; }
   .scene canvas { height: clamp(110px, 32vw, 150px); }
