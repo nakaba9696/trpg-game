@@ -330,7 +330,7 @@
     return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
       ["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
       ["装飾品", rg ? `${rg.name}（${G.ringEffect(rg)}）` : "なし", rg ? S.ring : null],
-      ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ...(G.m10Rows ? G.m10Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
+      ...(G.r1Rows ? G.r1Rows(S) : []), ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ...(G.m10Rows ? G.m10Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
   }
   function sheetGear() {
     const kv = h("dl", "kv");
@@ -348,6 +348,7 @@
       el.append(face("cface", G.companionWho(c), 44, 55));
       const t = h("div");
       t.append(h("b", "", c.name), h("span", "fine", c.desc || ""));
+      if (G.r1CompLabel && G.r1CompLabel(c)) t.append(h("span", "fine", G.r1CompLabel(c)));
       if (G.m8CompLabel) t.append(h("span", "fine", G.m8CompLabel(c)));
       if (G.m10Label && G.m10Label(c)) t.append(h("span", "fine", G.m10Label(c)));
       el.append(t);
@@ -517,7 +518,7 @@
     $("#profTitle").textContent = `${p.name}（${S.clsName}）`;
     const dl = $("#profBody");
     dl.textContent = "";
-    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", `「${p.quote}」`], ["好きなもの", p.like], ["苦手なもの", p.dislike], ["目的", S.goal.text]]
+    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", `「${p.quote}」`], ["好きなもの", p.like], ["苦手なもの", p.dislike], ["目的", S.goal.text]]
       .forEach(([k, v]) => { if (v) dl.append(h("dt", "", k), h("dd", "", v)); });
     let pf = $("#profFace");
     if (!pf) { pf = face("profface", null, 150, 188); pf.id = "profFace"; dl.before(pf); }
@@ -572,7 +573,8 @@
       const name = run.profile ? run.profile.name : run.name;
       const cls = run.clsName || run.cls;
       if (run.profile && run.cls) ep.append(face("eface", heroWho(run), 64, 80));
-      ep.append(h("b", "", end === "dead" ? `${cls} ${name}、ここに眠る` : `${cls} ${name}、物語を終える`));
+      const race = G.r1GraveLine ? G.r1GraveLine(run) : "";
+      ep.append(h("b", "", end === "dead" ? `${race ? race + "の" : ""}${cls} ${name}、ここに眠る` : `${race ? race + "の" : ""}${cls} ${name}、物語を終える`));
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
       ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${run.stats[k]}`).join(" ")));
