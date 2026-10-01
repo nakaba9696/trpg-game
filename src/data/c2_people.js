@@ -268,7 +268,7 @@
   // ---------------------------------------------------------------- 敵（出会いや続き物で戦う相手）
   Object.assign(D.ENEMIES, {
     c2_nora: {
-      name: "獣人の娘", tier: 2, hp: 26, dmg: [1, 7, 2], hit: 62, def: 6, agi: 70, will: 60, mres: 0, gold: [0, 0], shape: "humanoid", eye: "#e8b24a",
+      name: "獣人の娘", tier: 1, hp: 18, dmg: [1, 4, 1], hit: 55, def: 4, agi: 70, will: 60, mres: 0, gold: [0, 0], shape: "humanoid", eye: "#e8b24a",
       desc: "森の色の外套の娘。耳が逆立っている。弓を背負っているが、一度も構えない。拳で来る。",
       look: { body: "biped", build: "normal", skin: "#d8a878", head: "human", hair: "#9a6a3a", eyes: "glow", mouth: "fangs", weapon: "none", outfit: "rags", cloth: "#5a4a2a", extra: ["fur", "wildhair"], mood: "fierce" },
       lines: {
