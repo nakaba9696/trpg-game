@@ -864,8 +864,8 @@
     ctx.fillStyle = rgba("#000000", 0.18); ctx.beginPath(); ellipse(ctx, cx, cy + ry * 0.95, neckW * 1.1, ry * 0.18); ctx.fill();
     // 耳
     const ey = cy + ry * (child ? 0.2 : 0.1);
-    for (const s of [-1, 1]) paint(ctx, mix(L.skin, "#b05a4a", 0.12), U * 0.008, () => {
-      if (L.ears === "beast") return; // 獣人の耳は頭の上（beastEars）
+    // 獣人は横の耳を描かず、頭の上の耳を描く（L.ears === "none"。src/ui/r1_race.js）
+    if (L.ears !== "none") for (const s of [-1, 1]) paint(ctx, mix(L.skin, "#b05a4a", 0.12), U * 0.008, () => {
       if (L.ears === "pointy") { ctx.moveTo(cx + s * rx * 0.9, ey - ry * 0.12); ctx.lineTo(cx + s * rx * 1.5, ey - ry * 0.55); ctx.lineTo(cx + s * rx * 0.95, ey + ry * 0.28); }
       else ellipse(ctx, cx + s * rx * 0.98, ey + ry * 0.06, rx * 0.15, ry * 0.2);
     });
@@ -884,8 +884,8 @@
     marksOver(ctx, L, cx, cy, rx, ry, ey, sp, er, my, mw, U);
     if (L.marks.includes("earring")) { ctx.strokeStyle = "#e0c050"; ctx.lineWidth = U * 0.006; ctx.beginPath(); ellipse(ctx, cx - rx * 1.0, ey + ry * 0.28, rx * 0.06, rx * 0.08); ctx.stroke(); }
     hairFront(ctx, L, cx, cy, rx, ry, U);
+    if (L.beast && G.r1PaintEars) G.r1PaintEars(ctx, L, cx, cy, rx, ry, U, { ey, mix, INK });
     headwear(ctx, L, cx, cy, rx, ry, U);
-    if (L.ears === "beast") beastEars(ctx, L, cx, cy, rx, ry, U);
     if (L.marks.includes("foxmask")) foxMask(ctx, cx - rx * 0.78, cy - ry * 0.72, rx * 0.5, U);
     // 周りを暗く
     const v = ctx.createRadialGradient(cx, y + h * 0.45, h * 0.35, cx, y + h * 0.5, h * 0.8);
@@ -893,15 +893,6 @@
     ctx.fillStyle = v; ctx.fillRect(x, y, w, h);
     ctx.restore();
   };
-
-  // 獣人の耳（look.ears = "beast"）。髪の色の三角を、頭の上の左右に立てる（C2 #119）
-  function beastEars(ctx, L, cx, cy, rx, ry, U) {
-    for (const s of [-1, 1]) {
-      const bx = cx + s * rx * 0.55, by = cy - ry * 0.78;
-      paint(ctx, L.hair, U * 0.009, () => { ctx.moveTo(bx - s * rx * 0.28, by + ry * 0.12); ctx.lineTo(bx + s * rx * 0.12, by - ry * 0.62); ctx.lineTo(bx + s * rx * 0.3, by + ry * 0.05); ctx.closePath(); });
-      paint(ctx, mix(L.skin, "#b05a4a", 0.25), 0, () => { ctx.moveTo(bx - s * rx * 0.14, by + ry * 0.04); ctx.lineTo(bx + s * rx * 0.1, by - ry * 0.4); ctx.lineTo(bx + s * rx * 0.18, by + ry * 0.0); ctx.closePath(); });
-    }
-  }
 
   // 仲間になった魔物など、人でないもの（モンスターの絵を胸から上に切り取る）
   function paintFoe(ctx, x, y, w, h, who) {

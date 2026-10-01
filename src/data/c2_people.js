@@ -4,7 +4,7 @@
 //
 // D.C2_PEOPLE[id]：シートの一人ずつ
 //   name 呼び名 / short 仲間になってからの短い呼び名（無ければ name）/ full シートの名前 / nation シートの国（レオネスト・ノルディア・エルメシア。D5 #105 が国名をそろえる）/ role 役どころ（GM と確認用）
-//   sex / age / race（人間・エルフ・獣人。R1 #120 が種族の仕組みを作る）/ who 人物の絵（art_people.js。seed を固定して、出来事と仲間で同じ顔）
+//   sex / age / race（R1 の種族の鍵：human・elf・beast）/ beast 獣人の元の獣（D.BEASTS の鍵）/ who 人物の絵（art_people.js。seed を固定して、出来事と仲間で同じ顔）
 //   仲間になる者だけ join：{ cls 肩書き, desc 加わったときの一言, power, dmg, heal, fire, trait 性格（D.M2_TRAITS の鍵）, bond 好感度の始まり,
 //     home 誘える町（場所の id）, life 暮らし（M2）, t 技能の才（M8）, f 暮らしの才（M8）, noLove 恋の相手にしない }
 // D.C2_VOICE[id]：仲間のひとこと（M2 の talk / betray / die を差し替える）と、恋のひとこと（M10 の spark / confess / propose / part / cold）
@@ -16,7 +16,7 @@
   D.C2_PEOPLE = {
     // ---------------------------------------------------------------- 仲間になる者
     dil: P({
-      name: "ディル", full: "ディル", nation: "レオネスト", role: "港町の、天涯孤独で本好きの青年。腕っぷしは弱いが頭が回り、卑怯な手も平気で使う", sex: "男", age: 24, race: "人間",
+      name: "ディル", full: "ディル", nation: "レオネスト", role: "港町の、天涯孤独で本好きの青年。腕っぷしは弱いが頭が回り、卑怯な手も平気で使う", sex: "男", age: 24, race: "human",
       who: { kind: "adventurer", sex: "男", age: 24, seed: "c2:dil", look: { hair: "#4a3020", hairStyle: "messy", eyes: "narrow", mouth: "smirk", brows: "raised", outfit: "vest", head: "none", gear: "daggers", chest: "none", cloth: "#4a4a3a", build: "slim", marks: [], bg: "#4a5a6a" } },
       join: {
         cls: "港町の若者", desc: "本と悪知恵", power: 38, dmg: 0, trait: "lazy", bond: 58, home: ["nerva"],
@@ -25,7 +25,7 @@
       },
     }),
     kaidel: P({
-      name: "カイデル", full: "カイデル", nation: "レオネスト", role: "傷だらけで流れてきた凄腕の傭兵。古武道の使い手。お気楽で後先を考えず、迷ったら殴る。親を殺した敵を追っている", sex: "男", age: 30, race: "人間",
+      name: "カイデル", full: "カイデル", nation: "レオネスト", role: "傷だらけで流れてきた凄腕の傭兵。古武道の使い手。お気楽で後先を考えず、迷ったら殴る。親を殺した敵を追っている", sex: "男", age: 30, race: "human",
       who: { kind: "adventurer", sex: "男", age: 30, seed: "c2:kaidel", look: { hair: "#2e2420", hairStyle: "spiky", eyes: "smile", mouth: "grin", brows: "raised", outfit: "leather", head: "headband", gear: "none", cloth: "#6a2a22", build: "broad", marks: ["scar", "bandage", "stubble"], bg: "#6a4a3a" } },
       join: {
         cls: "傭兵", desc: "拳ひとつ。後先は考えない", power: 62, dmg: 2, trait: "soft", bond: 56, home: ["nerva", "karna"],
@@ -34,8 +34,8 @@
       },
     }),
     nora: P({
-      name: "ノラミ", short: "ノラ", full: "ノラミ", nation: "レオネスト", role: "森に住む獣人の娘。化け物に村を潰され、犯人を探している。とにかく明るい愛すべきあほで、勘が鋭い。ときどき沈む。弓が下手で狩りの落ちこぼれだったが、肉弾戦は抜群", sex: "女", age: 18, race: "獣人",
-      who: { kind: "archer", sex: "女", age: 18, seed: "c2:nora", look: { hair: "#9a6a3a", hairStyle: "wild", eyes: "round", mouth: "grin", brows: "raised", outfit: "leather", head: "none", gear: "none", cloth: "#5a4a2a", build: "normal", ears: "beast", marks: ["dirt"], bg: "#4a6a3a" } },
+      name: "ノラミ", short: "ノラ", full: "ノラミ", nation: "レオネスト", role: "森に住む獣人の娘。化け物に村を潰され、犯人を探している。とにかく明るい愛すべきあほで、勘が鋭い。ときどき沈む。弓が下手で狩りの落ちこぼれだったが、肉弾戦は抜群", sex: "女", age: 18, race: "beast", beast: "wolf",
+      who: { kind: "archer", sex: "女", age: 18, seed: "c2:nora", look: { hair: "#9a6a3a", hairStyle: "wild", eyes: "round", mouth: "grin", brows: "raised", outfit: "leather", head: "none", gear: "none", cloth: "#5a4a2a", build: "normal", ears: "none", beast: "wolf", marks: ["dirt"], bg: "#4a6a3a" } },
       join: {
         cls: "森の獣人", desc: "ノラと呼んで、と言った", power: 56, dmg: 2, trait: "loyal", bond: 54, home: ["karna"],
         life: { home: "森の奥の、無くなった村", kin: "村の長老", food: "焼いた木の実", habit: "耳をぴくりと動かして、風上の匂いを嗅いでいる", secret: "あの日、村にいなかったのは、狩りの追試を受けていたから。追試には、まだ受かっていない", keep: "長老にもらった、引けない弓" },
@@ -43,7 +43,7 @@
       },
     }),
     sheila: P({
-      name: "シェイラ", full: "シェイラ・レオネスト", nation: "レオネスト", role: "王国の第七王子（いちばん下の姫）。田舎の城の主。本が好きで、使徒の伝承に詳しい。大人しそうに見えてお転婆。傭兵を雇って国の犯罪の芽を独自に調べている。「うん、」から話す", sex: "女", age: 18, race: "人間",
+      name: "シェイラ", full: "シェイラ・レオネスト", nation: "レオネスト", role: "王国の第七王子（いちばん下の姫）。田舎の城の主。本が好きで、使徒の伝承に詳しい。大人しそうに見えてお転婆。傭兵を雇って国の犯罪の芽を独自に調べている。「うん、」から話す", sex: "女", age: 18, race: "human",
       who: { kind: "noble", sex: "女", age: 18, seed: "c2:sheila", look: { hair: "#d8bc70", hairStyle: "long", eyes: "sleepy", mouth: "flat", brows: "calm", outfit: "cloak", head: "none", gear: "none", chest: "gem", cloth: "#3a4a6a", build: "slim", marks: [], bg: "#6a5a7a" } },
       join: {
         cls: "田舎の城の主", desc: "本を一冊、抱えている", power: 40, dmg: 0, heal: true, trait: "just", bond: 56, home: ["leavel"],
@@ -52,7 +52,7 @@
       },
     }),
     rui: P({
-      name: "ルイ", full: "ルイ（アールリュミナ＝エン＝ルヴェナール）", nation: "レオネスト", role: "遺跡で眠っていた、青い髪の無口な女の子。なぜか術が使え、怪力。記憶が無い。〔進〕使徒が生まれる前の古い王国ルヴェナールの王女で、封印されて眠っていた。王族を守る刻印のせいで怪力", sex: "女", age: 9, race: "人間",
+      name: "ルイ", full: "ルイ（アールリュミナ＝エン＝ルヴェナール）", nation: "レオネスト", role: "遺跡で眠っていた、青い髪の無口な女の子。なぜか術が使え、怪力。記憶が無い。〔進〕使徒が生まれる前の古い王国ルヴェナールの王女で、封印されて眠っていた。王族を守る刻印のせいで怪力", sex: "女", age: 9, race: "human",
       who: { kind: "child", sex: "女", age: 9, seed: "c2:rui", look: { hair: "#3a5a9a", hairStyle: "bob", eyes: "narrow", mouth: "flat", brows: "calm", outfit: "robe", head: "none", gear: "none", chest: "none", cloth: "#d8d4e0", build: "slim", marks: [], bg: "#3a4a6a" } },
       join: {
         cls: "遺跡の子", desc: "ひとことも喋らない", power: 66, dmg: 3, fire: true, trait: "loyal", bond: 60, home: ["nerva"], noLove: true,
@@ -61,7 +61,7 @@
       },
     }),
     zerina: P({
-      name: "ゼリナ", full: "ゼリナ・バルダロッサ", nation: "レオネスト", role: "関西言葉の商人の娘。誰にも物怖じしない。金が大好きで、儲かるなら何でも売る。小さい子が大好き。ルイを気に入って一行に絡む。ディルとはよく喧嘩する", sex: "女", age: 23, race: "人間",
+      name: "ゼリナ", full: "ゼリナ・バルダロッサ", nation: "レオネスト", role: "関西言葉の商人の娘。誰にも物怖じしない。金が大好きで、儲かるなら何でも売る。小さい子が大好き。ルイを気に入って一行に絡む。ディルとはよく喧嘩する", sex: "女", age: 23, race: "human",
       who: { kind: "merchant", sex: "女", age: 23, seed: "c2:zerina", look: { hair: "#9a3a22", hairStyle: "ponytail", eyes: "smile", mouth: "grin", brows: "raised", outfit: "vest", head: "kerchief", gear: "none", chest: "coins", cloth: "#6a2a2a", build: "normal", marks: ["freckles"], bg: "#8a7446" } },
       join: {
         cls: "商人", desc: "がめつい。けど、気前もいい", power: 34, dmg: 0, trait: "greedy", bond: 50, home: ["karna", "nerva"],
@@ -70,7 +70,7 @@
       },
     }),
     elnea: P({
-      name: "エルネア", full: "エルネア・クラウセ", nation: "エルメシア", role: "ドランヘルツの鍛冶ギルド・精晶設備管理課の技師。エルフの娘。鉱石おたくで、鉱石の話になると早口で早歩き。エルフの目では不器量らしく、容姿に自信がない。おどおどして語尾に「〜っす」", sex: "女", age: 19, race: "エルフ",
+      name: "エルネア", full: "エルネア・クラウセ", nation: "エルメシア", role: "ドランヘルツの鍛冶ギルド・精晶設備管理課の技師。エルフの娘。鉱石おたくで、鉱石の話になると早口で早歩き。エルフの目では不器量らしく、容姿に自信がない。おどおどして語尾に「〜っす」", sex: "女", age: 19, race: "elf",
       who: { kind: "villager", sex: "女", age: 19, seed: "c2:elnea", look: { hair: "#7a5230", hairStyle: "bob", eyes: "round", mouth: "open", brows: "worried", outfit: "apron", head: "none", gear: "none", chest: "keys", cloth: "#5a4a3a", build: "normal", ears: "pointy", marks: ["dirt", "blush"], bg: "#7a5a3a" } },
       join: {
         cls: "鍛冶ギルドの技師", desc: "鉱石の話になると早口になる", power: 36, dmg: 1, trait: "coward", bond: 55, home: ["w2_dranherz"],
@@ -79,7 +79,7 @@
       },
     }),
     natalia: P({
-      name: "ナタリア", full: "ナタリア＝アストレア", nation: "レオネスト", role: "王国十指の一人。黒髪三つ編みの格闘家。古武術の正統後継者。酒癖が悪いくせに酒が大好き。実力は本物", sex: "女", age: 24, race: "人間",
+      name: "ナタリア", full: "ナタリア＝アストレア", nation: "レオネスト", role: "王国十指の一人。黒髪三つ編みの格闘家。古武術の正統後継者。酒癖が悪いくせに酒が大好き。実力は本物", sex: "女", age: 24, race: "human",
       who: { kind: "adventurer", sex: "女", age: 24, seed: "c2:natalia", look: { hair: "#1c1a1e", hairStyle: "ponytail", eyes: "sleepy", mouth: "grin", brows: "raised", outfit: "kimono", head: "none", gear: "none", chest: "none", cloth: "#2a3a4a", build: "normal", marks: ["blush"], bg: "#5a4a3a" } },
       join: {
         cls: "拳法家", desc: "王国十指の一人。酒くさい", power: 68, dmg: 3, trait: "drunk", bond: 50, home: ["leavel"],
@@ -89,59 +89,59 @@
     }),
 
     // ---------------------------------------------------------------- 名のある人物（王国）
-    valeon: P({ name: "ヴァレオン", full: "ヴァレオン・レオネスト", nation: "レオネスト", role: "レオネスト王国の国王。灰銀の髪と髭、鋼の体、燃える琥珀の目。五十八。筋金入りの好戦家で、使徒の気配があれば現場へ向かおうとし、側近が毎日止める。地方は子どもたちに任せ、最近ますます若返った。兄弟を使徒ゴルヴァンに殺され、自分の手で討つのが目標。使徒を討った者に興味を持つ", sex: "男", age: 58, race: "人間",
+    valeon: P({ name: "ヴァレオン", full: "ヴァレオン・レオネスト", nation: "レオネスト", role: "レオネスト王国の国王。灰銀の髪と髭、鋼の体、燃える琥珀の目。五十八。筋金入りの好戦家で、使徒の気配があれば現場へ向かおうとし、側近が毎日止める。地方は子どもたちに任せ、最近ますます若返った。兄弟を使徒ゴルヴァンに殺され、自分の手で討つのが目標。使徒を討った者に興味を持つ", sex: "男", age: 58, race: "human",
       who: { kind: "noble", sex: "男", age: 58, seed: "c2:valeon", look: { hair: "#b8b8bc", hairStyle: "wild", eyes: "sharp", iris: "#c8902a", mouth: "grin", brows: "angry", outfit: "plate", head: "crown", gear: "greatsword", chest: "crest", cloth: "#5a1a1a", build: "broad", marks: ["beard", "scar"], bg: "#8a6a3a" } } }),
-    raios: P({ name: "ライオス", full: "ライオス・レオネスト", nation: "レオネスト", role: "第一王子。三十二。濃い金髪を後ろで束ね、穏やかな青い目。大柄。誠実で包容力があり、武も知も人柄もそろった王位継承の筆頭。努力家で慢心がない。よく高笑いする。弟妹が大好き", sex: "男", age: 32, race: "人間",
+    raios: P({ name: "ライオス", full: "ライオス・レオネスト", nation: "レオネスト", role: "第一王子。三十二。濃い金髪を後ろで束ね、穏やかな青い目。大柄。誠実で包容力があり、武も知も人柄もそろった王位継承の筆頭。努力家で慢心がない。よく高笑いする。弟妹が大好き", sex: "男", age: 32, race: "human",
       who: { kind: "knight", sex: "男", age: 32, seed: "c2:raios", look: { hair: "#c8a040", hairStyle: "ponytail", eyes: "smile", iris: "#2a4a6a", mouth: "grin", brows: "raised", outfit: "plate", head: "none", gear: "greatsword", chest: "crest", cloth: "#2a4a9a", build: "broad", marks: [], bg: "#4a6a8a" } } }),
-    serios: P({ name: "セリオス", full: "セリオス・レオネスト", nation: "レオネスト", role: "第二王子。三十。銀髪で端整な天才肌。芸術家気質で浮世離れしている。抽象的な物言いだが実績で一目置かれる。鍛冶の都ドランヘルツを治める。妹に過保護", sex: "男", age: 30, race: "人間",
+    serios: P({ name: "セリオス", full: "セリオス・レオネスト", nation: "レオネスト", role: "第二王子。三十。銀髪で端整な天才肌。芸術家気質で浮世離れしている。抽象的な物言いだが実績で一目置かれる。鍛冶の都ドランヘルツを治める。妹に過保護", sex: "男", age: 30, race: "human",
       who: { kind: "noble", sex: "男", age: 30, seed: "c2:serios", look: { hair: "#c8ccd4", hairStyle: "long", eyes: "sleepy", mouth: "flat", brows: "calm", outfit: "coat", head: "none", gear: "none", chest: "gem", cloth: "#3a3a4a", build: "slim", marks: ["dirt"], bg: "#5a5a6a" } } }),
-    farina: P({ name: "ファリナ", full: "ファリナ・レオネスト", nation: "レオネスト", role: "第三王子（女）。二十八。長い黒髪を低めのポニーテールに、眼鏡と冷たい目。冷静・理性的・完璧主義。笑顔はめったに見せないが破壊力がある。優秀な政策家。妹が絡むと豹変する", sex: "女", age: 28, race: "人間",
+    farina: P({ name: "ファリナ", full: "ファリナ・レオネスト", nation: "レオネスト", role: "第三王子（女）。二十八。長い黒髪を低めのポニーテールに、眼鏡と冷たい目。冷静・理性的・完璧主義。笑顔はめったに見せないが破壊力がある。優秀な政策家。妹が絡むと豹変する", sex: "女", age: 28, race: "human",
       who: { kind: "noble", sex: "女", age: 28, seed: "c2:farina", look: { hair: "#1c1a1e", hairStyle: "ponytail", eyes: "narrow", mouth: "flat", brows: "calm", outfit: "noble", head: "none", gear: "none", chest: "chain", cloth: "#1a3a5a", build: "slim", marks: ["glasses"], bg: "#4a4a5a" } } }),
-    greol: P({ name: "グレオル", full: "グレオル・レオネスト", nation: "レオネスト", role: "第四王子。二十七。短い茶髪、頬の傷、くすんだ鎧。浅黒い。騎士の鑑のような武人で、生真面目で不器用だがまっすぐ。口下手。民や軍に慕われる。剣は王国でも指折り", sex: "男", age: 27, race: "人間",
+    greol: P({ name: "グレオル", full: "グレオル・レオネスト", nation: "レオネスト", role: "第四王子。二十七。短い茶髪、頬の傷、くすんだ鎧。浅黒い。騎士の鑑のような武人で、生真面目で不器用だがまっすぐ。口下手。民や軍に慕われる。剣は王国でも指折り", sex: "男", age: 27, race: "human",
       who: { kind: "knight", sex: "男", age: 27, seed: "c2:greol", look: { hair: "#6a4a2a", hairStyle: "short", skin: "#b07a52", eyes: "normal", mouth: "frown", brows: "angry", outfit: "armor", head: "none", gear: "sword", chest: "none", cloth: "#4a4a40", build: "broad", marks: ["scar"], bg: "#5a5048" } } }),
-    neilas: P({ name: "ネイラス", full: "ネイラス・レオネスト", nation: "レオネスト", role: "第五王子。二十四。ぼさぼさの黒髪にいつも研究衣。儚く中性的。寡黙で繊細な引きこもり。人と話すのが壊滅的に苦手で、きょうだいとだけ自然に話せる。古代文明の研究に貢献している。妹を愛している", sex: "男", age: 24, race: "人間",
+    neilas: P({ name: "ネイラス", full: "ネイラス・レオネスト", nation: "レオネスト", role: "第五王子。二十四。ぼさぼさの黒髪にいつも研究衣。儚く中性的。寡黙で繊細な引きこもり。人と話すのが壊滅的に苦手で、きょうだいとだけ自然に話せる。古代文明の研究に貢献している。妹を愛している", sex: "男", age: 24, race: "human",
       who: { kind: "mage", sex: "男", age: 24, seed: "c2:neilas", look: { hair: "#1c1a1e", hairStyle: "messy", eyes: "sleepy", mouth: "flat", brows: "worried", outfit: "robe", head: "none", gear: "none", chest: "none", cloth: "#d8d4c8", build: "slim", marks: ["bags"], bg: "#4a4a5a" } } }),
-    tiria: P({ name: "ティリア", full: "ティリア・レオネスト", nation: "レオネスト", role: "第六王子（女）。二十三。栗色の柔らかい髪を三つ編みに。いつもにこやかで、現場主義。ときどき天然。誰にでも分け隔てなく接する愛され姫。麦の都グランベールを治める。妹を溺愛し、妹に何かあると息が乱れる", sex: "女", age: 23, race: "人間",
+    tiria: P({ name: "ティリア", full: "ティリア・レオネスト", nation: "レオネスト", role: "第六王子（女）。二十三。栗色の柔らかい髪を三つ編みに。いつもにこやかで、現場主義。ときどき天然。誰にでも分け隔てなく接する愛され姫。麦の都グランベールを治める。妹を溺愛し、妹に何かあると息が乱れる", sex: "女", age: 23, race: "human",
       who: { kind: "noble", sex: "女", age: 23, seed: "c2:tiria", look: { hair: "#7a5230", hairStyle: "ponytail", eyes: "smile", mouth: "smile", brows: "raised", outfit: "apron", head: "kerchief", gear: "none", chest: "none", cloth: "#6a7a4a", build: "normal", marks: ["dirt", "freckles"], bg: "#8a9a5a" } } }),
-    sixth: P({ name: "第六騎士団の団長", full: "王国騎士団隊長（名はシートに無い）", nation: "レオネスト", role: "第六騎士団の団長。三十三。寡黙で何を考えているか分からないが、王国最強と言われる剣。第六王子ティリアの城に配属されている。何でも自分一人で片付けてしまうので、指揮は苦手", sex: "男", age: 33, race: "人間",
+    sixth: P({ name: "第六騎士団の団長", full: "王国騎士団隊長（名はシートに無い）", nation: "レオネスト", role: "第六騎士団の団長。三十三。寡黙で何を考えているか分からないが、王国最強と言われる剣。第六王子ティリアの城に配属されている。何でも自分一人で片付けてしまうので、指揮は苦手", sex: "男", age: 33, race: "human",
       who: { kind: "knight", sex: "男", age: 33, seed: "c2:sixth", look: { hair: "#2a2a2a", hairStyle: "slick", eyes: "narrow", mouth: "flat", brows: "calm", outfit: "plate", head: "none", gear: "sword", chest: "crest", cloth: "#2a2a3a", build: "slim", marks: [], bg: "#3a3a4a" } } }),
-    angelica: P({ name: "アンジェリカ", full: "アンジェリカ", nation: "レオネスト", role: "王国軍の女隊長。三十一。基地に忍び込んだ者を追って、事あるごとに一行に絡む。実力者で敵だが、ところどころ抜けていて人がいい。おばさんと言われると怒る。銃の名手（銃はオーパーツ）。学校の成績は一番だった。離島の故郷で祖母と二人暮らし", sex: "女", age: 31, race: "人間",
+    angelica: P({ name: "アンジェリカ", full: "アンジェリカ", nation: "レオネスト", role: "王国軍の女隊長。三十一。基地に忍び込んだ者を追って、事あるごとに一行に絡む。実力者で敵だが、ところどころ抜けていて人がいい。おばさんと言われると怒る。銃の名手（銃はオーパーツ）。学校の成績は一番だった。離島の故郷で祖母と二人暮らし", sex: "女", age: 31, race: "human",
       who: { kind: "soldier", sex: "女", age: 31, seed: "c2:angelica", look: { hair: "#b89a58", hairStyle: "bun", eyes: "sharp", mouth: "open", brows: "angry", outfit: "armor", head: "cap", gear: "none", chest: "crest", cloth: "#3e5a8a", build: "normal", marks: [], bg: "#5a6478" } } }),
-    captain: P({ name: "寡黙な隊長", full: "軍の隊長（名はシートに無い）", nation: "レオネスト", role: "アンジェリカと組む王国軍の隊長。二十八。寡黙で任務に忠実、部下に慕われる。アンジェリカとは凸凹だが仲がいい。国のために尽くしてきたが、研究所で本当のことを知り、一行を逃がし、実験体として化け物にされる", sex: "男", age: 28, race: "人間",
+    captain: P({ name: "寡黙な隊長", full: "軍の隊長（名はシートに無い）", nation: "レオネスト", role: "アンジェリカと組む王国軍の隊長。二十八。寡黙で任務に忠実、部下に慕われる。アンジェリカとは凸凹だが仲がいい。国のために尽くしてきたが、研究所で本当のことを知り、一行を逃がし、実験体として化け物にされる", sex: "男", age: 28, race: "human",
       who: { kind: "soldier", sex: "男", age: 28, seed: "c2:captain", look: { hair: "#3a2a1c", hairStyle: "short", eyes: "normal", mouth: "flat", brows: "calm", outfit: "armor", head: "none", gear: "spear", chest: "crest", cloth: "#3e5a8a", build: "broad", marks: ["stubble"], bg: "#5a6478" } } }),
-    doctor: P({ name: "博士", full: "博士（名はシートに無い）", nation: "レオネスト", role: "王国に雇われた学者。使徒の力を研究している。知識欲がすさまじく、結果のためには倫理を気にせず非道な実験をする。今ではなく数十年先の人間のために研究している、らしい", sex: "男", age: 61, race: "人間",
+    doctor: P({ name: "博士", full: "博士（名はシートに無い）", nation: "レオネスト", role: "王国に雇われた学者。使徒の力を研究している。知識欲がすさまじく、結果のためには倫理を気にせず非道な実験をする。今ではなく数十年先の人間のために研究している、らしい", sex: "男", age: 61, race: "human",
       who: { kind: "mage", sex: "男", age: 61, seed: "c2:doctor", look: { hair: "#e2ded6", hairStyle: "receding", eyes: "round", mouth: "smile", brows: "raised", outfit: "robe", head: "none", gear: "none", chest: "keys", cloth: "#e8e4dc", build: "slim", marks: ["monocle", "wrinkles"], bg: "#4a5a5a" } } }),
-    hermes: P({ name: "ヘル爺", full: "ヘルメス・ヴァンドール", nation: "レオネスト", role: "使徒研究に没頭する考古学者。六十二。通称ヘル爺。古代都市や遺跡を調べるのが生きがい。年の割にとても元気。元・王国大学考古学部長で、今は後任に譲って趣味で調べている変わり者。王やネイラス王子とも知り合い", sex: "男", age: 62, race: "人間",
+    hermes: P({ name: "ヘル爺", full: "ヘルメス・ヴァンドール", nation: "レオネスト", role: "使徒研究に没頭する考古学者。六十二。通称ヘル爺。古代都市や遺跡を調べるのが生きがい。年の割にとても元気。元・王国大学考古学部長で、今は後任に譲って趣味で調べている変わり者。王やネイラス王子とも知り合い", sex: "男", age: 62, race: "human",
       who: { kind: "elder", sex: "男", age: 62, seed: "c2:hermes", look: { hair: "#e2ded6", hairStyle: "wild", eyes: "round", mouth: "grin", brows: "raised", outfit: "coat", head: "hat", gear: "none", chest: "keys", cloth: "#6a5a3a", build: "slim", marks: ["beard", "wrinkles", "dirt"], bg: "#7a6a4a" } } }),
-    yurina: P({ name: "ユリナ", full: "ユリナ・クラヴィス", nation: "レオネスト", role: "王国剣士団・直轄特殊部隊（第二王子付き）。二十七。赤いショートヘアに糸目、飄々とした笑み。物腰は柔らかいが戦うときは冷徹。王国十指に入る。第二王子の密命で炭鉱の秘密を探る。炭鉱で錆鎧（ゼブラン）の分かれ身を迎え撃って死ぬ", sex: "女", age: 27, race: "人間",
+    yurina: P({ name: "ユリナ", full: "ユリナ・クラヴィス", nation: "レオネスト", role: "王国剣士団・直轄特殊部隊（第二王子付き）。二十七。赤いショートヘアに糸目、飄々とした笑み。物腰は柔らかいが戦うときは冷徹。王国十指に入る。第二王子の密命で炭鉱の秘密を探る。炭鉱で錆鎧（ゼブラン）の分かれ身を迎え撃って死ぬ", sex: "女", age: 27, race: "human",
       who: { kind: "adventurer", sex: "女", age: 27, seed: "c2:yurina", look: { hair: "#9a3a22", hairStyle: "bob", eyes: "smile", mouth: "smirk", brows: "calm", outfit: "leather", head: "none", gear: "sword", chest: "none", cloth: "#2a2a3a", build: "slim", marks: [], bg: "#4a3a3a" } } }),
-    ferida: P({ name: "フェリダ", full: "フェリダ＝シュテラ", nation: "レオネスト", role: "王国十指の一人。二十六。槍騎兵団。《雷突の乙女》。高速の突進と精密な槍さばきで名を上げた、王国一の槍使い", sex: "女", age: 26, race: "人間",
+    ferida: P({ name: "フェリダ", full: "フェリダ＝シュテラ", nation: "レオネスト", role: "王国十指の一人。二十六。槍騎兵団。《雷突の乙女》。高速の突進と精密な槍さばきで名を上げた、王国一の槍使い", sex: "女", age: 26, race: "human",
       who: { kind: "knight", sex: "女", age: 26, seed: "c2:ferida", look: { hair: "#d8bc70", hairStyle: "ponytail", eyes: "sharp", mouth: "smirk", brows: "raised", outfit: "plate", head: "none", gear: "spear", chest: "crest", cloth: "#e0dcd0", build: "slim", marks: [], bg: "#6a7a9a" } } }),
-    sig: P({ name: "シグ", full: "シグ＝ドラガン", nation: "レオネスト", role: "王国十指の一人。三十八。重装戦斧兵団の隊長。《戦場の鉄塊》。人間離れした力と耐久で正面突破する、王国最強の盾", sex: "男", age: 38, race: "人間",
+    sig: P({ name: "シグ", full: "シグ＝ドラガン", nation: "レオネスト", role: "王国十指の一人。三十八。重装戦斧兵団の隊長。《戦場の鉄塊》。人間離れした力と耐久で正面突破する、王国最強の盾", sex: "男", age: 38, race: "human",
       who: { kind: "soldier", sex: "男", age: 38, seed: "c2:sig", look: { hair: "#4a3020", hairStyle: "bald", eyes: "normal", mouth: "flat", brows: "angry", outfit: "plate", head: "none", gear: "greatsword", chest: "none", cloth: "#3a3a3a", build: "broad", marks: ["beard", "scar"], bg: "#5a5048" } } }),
-    raisha: P({ name: "ライーシャ", full: "ライーシャ＝クローデル", nation: "レオネスト", role: "王国十指の一人。二十八。目つきが悪く、いつも気だるそうな天才剣士。静かに淡々と斬る", sex: "女", age: 28, race: "人間",
+    raisha: P({ name: "ライーシャ", full: "ライーシャ＝クローデル", nation: "レオネスト", role: "王国十指の一人。二十八。目つきが悪く、いつも気だるそうな天才剣士。静かに淡々と斬る", sex: "女", age: 28, race: "human",
       who: { kind: "adventurer", sex: "女", age: 28, seed: "c2:raisha", look: { hair: "#4a4a5a", hairStyle: "long", eyes: "sleepy", mouth: "flat", brows: "angry", outfit: "cloak", head: "none", gear: "sword", chest: "none", cloth: "#2a2a2a", build: "slim", marks: ["bags"], bg: "#3a3a44" } } }),
-    zork: P({ name: "ゾルク", full: "ゾルク＝ブライアン", nation: "レオネスト", role: "王国十指の一人。四十三。無所属の賞金稼ぎ。《首狩りゾルク》。王国非公認だが実力は本物で、実績により渋々十指に認められた", sex: "男", age: 43, race: "人間",
+    zork: P({ name: "ゾルク", full: "ゾルク＝ブライアン", nation: "レオネスト", role: "王国十指の一人。四十三。無所属の賞金稼ぎ。《首狩りゾルク》。王国非公認だが実力は本物で、実績により渋々十指に認められた", sex: "男", age: 43, race: "human",
       who: { kind: "rogue", sex: "男", age: 43, seed: "c2:zork", look: { hair: "#5a5a58", hairStyle: "receding", eyes: "sharp", mouth: "smirk", brows: "angry", outfit: "coat", head: "hat", gear: "sword", chest: "chain", cloth: "#2a2420", build: "broad", marks: ["stubble", "scar", "eyepatch"], bg: "#4a3a2a" } } }),
-    bride: P({ name: "大槌の姉さん", full: "（名はシートに無い）めちゃくちゃ強い、婚期を逃したお姉さん", nation: "", role: "めちゃくちゃ強い。婚期を逃したお姉さん", sex: "女", age: 34, race: "人間",
+    bride: P({ name: "大槌の姉さん", full: "（名はシートに無い）めちゃくちゃ強い、婚期を逃したお姉さん", nation: "", role: "めちゃくちゃ強い。婚期を逃したお姉さん", sex: "女", age: 34, race: "human",
       who: { kind: "adventurer", sex: "女", age: 34, seed: "c2:bride", look: { hair: "#c8a040", hairStyle: "bun", eyes: "smile", mouth: "grin", brows: "raised", outfit: "armor", head: "none", gear: "mace", chest: "none", cloth: "#6a3a5a", build: "broad", marks: ["blush"], bg: "#6a4a5a" } } }),
-    boku: P({ name: "「ボク」の娘", full: "（名はシートに無い）ボーイッシュな、自分をボクと呼ぶおたくの娘", nation: "", role: "ボーイッシュで、自分をボクと呼ぶ。おたく", sex: "女", age: 17, race: "人間",
+    boku: P({ name: "「ボク」の娘", full: "（名はシートに無い）ボーイッシュな、自分をボクと呼ぶおたくの娘", nation: "", role: "ボーイッシュで、自分をボクと呼ぶ。おたく", sex: "女", age: 17, race: "human",
       who: { kind: "mage", sex: "女", age: 17, seed: "c2:boku", look: { hair: "#4a3a2a", hairStyle: "bob", eyes: "round", mouth: "open", brows: "raised", outfit: "coat", head: "cap", gear: "none", chest: "none", cloth: "#3a5a4a", build: "slim", marks: ["glasses"], bg: "#3a5a5a" } } }),
 
     // ---------------------------------------------------------------- 名のある人物（帝国・共和国）
-    greiol: P({ name: "グレイオル", full: "グレイオル・ノルディア", nation: "ノルディア", role: "ノルディア帝国の皇帝。四十二。漆黒の半軍装に白銀の毛皮の外套、常に剣を帯びる。百九十二の長身。寡黙で冷徹な現実主義者。判断が早く妥協しない。自ら戦場に立ち、体じゅうに傷。強者を尊び、弱者にも役割を与えて国を保つ。カリスマがある", sex: "男", age: 42, race: "人間",
+    greiol: P({ name: "グレイオル", full: "グレイオル・ノルディア", nation: "ノルディア", role: "ノルディア帝国の皇帝。四十二。漆黒の半軍装に白銀の毛皮の外套、常に剣を帯びる。百九十二の長身。寡黙で冷徹な現実主義者。判断が早く妥協しない。自ら戦場に立ち、体じゅうに傷。強者を尊び、弱者にも役割を与えて国を保つ。カリスマがある", sex: "男", age: 42, race: "human",
       who: { kind: "noble", sex: "男", age: 42, seed: "c2:greiol", look: { hair: "#1c1a1e", hairStyle: "slick", eyes: "sharp", mouth: "flat", brows: "angry", outfit: "coat", head: "none", gear: "sword", chest: "chain", cloth: "#14141a", build: "broad", marks: ["scar"], bg: "#3a3a44" } } }),
-    dario: P({ name: "ダリオ", full: "ダリオ・フロストヘルム", nation: "ノルディア", role: "帝国四騎士の一人。帝都防衛軍総帥・北部使徒防衛線司令。五十九。巨漢の老騎士で、顔の半分が義眼と鋼の仮面。不動・実直・規律第一。民からは《氷壁の父》。負けない戦を徹底する。皇帝の少年時代の教育係", sex: "男", age: 59, race: "人間",
+    dario: P({ name: "ダリオ", full: "ダリオ・フロストヘルム", nation: "ノルディア", role: "帝国四騎士の一人。帝都防衛軍総帥・北部使徒防衛線司令。五十九。巨漢の老騎士で、顔の半分が義眼と鋼の仮面。不動・実直・規律第一。民からは《氷壁の父》。負けない戦を徹底する。皇帝の少年時代の教育係", sex: "男", age: 59, race: "human",
       who: { kind: "knight", sex: "男", age: 59, seed: "c2:dario", look: { hair: "#e2ded6", hairStyle: "short", eyes: "normal", mouth: "frown", brows: "angry", outfit: "plate", head: "none", gear: "greatsword", chest: "crest", cloth: "#e0dcd0", build: "broad", marks: ["eyepatch", "wrinkles", "beard"], bg: "#5a6a7a" } } }),
-    erna: P({ name: "エルナ", full: "エルナ・イゼルハウト", nation: "ノルディア", role: "帝国四騎士の一人。機動部隊を運用する。三十八。赤い短髪に軍帽、無表情、抑揚のない声。命令を「タスク」として処理する冷血と言われる。皇帝に忠誠。使徒に片足を奪われ、義足を武器にしている", sex: "女", age: 38, race: "人間",
+    erna: P({ name: "エルナ", full: "エルナ・イゼルハウト", nation: "ノルディア", role: "帝国四騎士の一人。機動部隊を運用する。三十八。赤い短髪に軍帽、無表情、抑揚のない声。命令を「タスク」として処理する冷血と言われる。皇帝に忠誠。使徒に片足を奪われ、義足を武器にしている", sex: "女", age: 38, race: "human",
       who: { kind: "soldier", sex: "女", age: 38, seed: "c2:erna", look: { hair: "#9a3a22", hairStyle: "short", eyes: "narrow", mouth: "flat", brows: "calm", outfit: "coat", head: "cap", gear: "none", chest: "crest", cloth: "#2a2a2a", build: "slim", marks: [], bg: "#4a4a4a" } } }),
-    valg: P({ name: "ヴァルグ", full: "ヴァルグ・ヴェルグリム", nation: "ノルディア", role: "帝国四騎士の一人。機動斥候・辺境対応。狼の獣人。三十三。元は辺境の野盗団の首領で、皇帝に一騎打ちで負けて心から従った。鼻と耳で地形・敵・罠を見分け、剣も超一流。荒々しいが頭がよく、軍略も使う。皇帝の右腕", sex: "男", age: 33, race: "獣人",
-      who: { kind: "soldier", sex: "男", age: 33, seed: "c2:valg", look: { hair: "#5a5a58", hairStyle: "wild", eyes: "sharp", iris: "#c8a040", mouth: "grin", brows: "angry", outfit: "leather", head: "none", gear: "sword", chest: "none", cloth: "#3a3a3a", build: "broad", ears: "beast", marks: ["scar", "stubble"], bg: "#4a5a5a" } } }),
-    malvina: P({ name: "マルヴィナ", full: "マルヴィナ・クレイモア", nation: "ノルディア", role: "帝国四騎士の一人。使徒対策の専門家。金髪に黒衣の女軍師、年は分からない（二十代後半に見える）。顔の下半分を黒い布で覆い、左目がいつも仄かに光る。使徒ラウゼアの災いで潰れた辺境の村のただ一人の生き残り。使徒由来の武具の部隊を率いる。皇帝に命を救われたことを密かに覚えている", sex: "女", age: 28, race: "人間",
+    valg: P({ name: "ヴァルグ", full: "ヴァルグ・ヴェルグリム", nation: "ノルディア", role: "帝国四騎士の一人。機動斥候・辺境対応。狼の獣人。三十三。元は辺境の野盗団の首領で、皇帝に一騎打ちで負けて心から従った。鼻と耳で地形・敵・罠を見分け、剣も超一流。荒々しいが頭がよく、軍略も使う。皇帝の右腕", sex: "男", age: 33, race: "beast", beast: "wolf",
+      who: { kind: "soldier", sex: "男", age: 33, seed: "c2:valg", look: { hair: "#5a5a58", hairStyle: "wild", eyes: "sharp", iris: "#c8a040", mouth: "grin", brows: "angry", outfit: "leather", head: "none", gear: "sword", chest: "none", cloth: "#3a3a3a", build: "broad", ears: "none", beast: "wolf", marks: ["scar", "stubble"], bg: "#4a5a5a" } } }),
+    malvina: P({ name: "マルヴィナ", full: "マルヴィナ・クレイモア", nation: "ノルディア", role: "帝国四騎士の一人。使徒対策の専門家。金髪に黒衣の女軍師、年は分からない（二十代後半に見える）。顔の下半分を黒い布で覆い、左目がいつも仄かに光る。使徒ラウゼアの災いで潰れた辺境の村のただ一人の生き残り。使徒由来の武具の部隊を率いる。皇帝に命を救われたことを密かに覚えている", sex: "女", age: 28, race: "human",
       who: { kind: "mage", sex: "女", age: 28, seed: "c2:malvina", look: { hair: "#dcbc62", hairStyle: "long", eyes: "glow", iris: "#7affd8", mouth: "flat", brows: "calm", outfit: "cloak", head: "none", gear: "staff", chest: "none", cloth: "#14141a", build: "slim", marks: ["bandage"], bg: "#2a2a3a" } } }),
-    katia: P({ name: "カティア", full: "カティア・ノルディア", nation: "ノルディア", role: "皇帝の一人娘。十九。金髪碧眼。正義感が強く真面目でまっすぐな努力家。剣も一通り修めた。平民にも丁寧で、軍で慕われる。四騎士を押し切る胆力があるが、恋やおしゃれには疎い。父の冷たい判断に疑問を抱きつつ、尊敬と忠誠のあいだで揺れる", sex: "女", age: 19, race: "人間",
+    katia: P({ name: "カティア", full: "カティア・ノルディア", nation: "ノルディア", role: "皇帝の一人娘。十九。金髪碧眼。正義感が強く真面目でまっすぐな努力家。剣も一通り修めた。平民にも丁寧で、軍で慕われる。四騎士を押し切る胆力があるが、恋やおしゃれには疎い。父の冷たい判断に疑問を抱きつつ、尊敬と忠誠のあいだで揺れる", sex: "女", age: 19, race: "human",
       who: { kind: "knight", sex: "女", age: 19, seed: "c2:katia", look: { hair: "#dcbc62", hairStyle: "ponytail", eyes: "round", iris: "#2a4a6a", mouth: "flat", brows: "angry", outfit: "plate", head: "none", gear: "sword", chest: "crest", cloth: "#e0dcd0", build: "slim", marks: [], bg: "#5a6a7a" } } }),
-    alicia: P({ name: "アリシア", full: "アリシア・セレイン＝ロスティア", nation: "エルメシア", role: "エルメシア共和国の最高議長。ハイエルフの女。見た目は二十代前半、三百歳を超える。人を射抜く目。冷静沈着で高圧的、すべてに女王のような圧がある。精霊契約の都レヴァンデルの生まれで、術も剣も一流。世界樹の根源に一度だけ触れたと言われる", sex: "女", age: 22, race: "エルフ",
+    alicia: P({ name: "アリシア", full: "アリシア・セレイン＝ロスティア", nation: "エルメシア", role: "エルメシア共和国の最高議長。ハイエルフの女。見た目は二十代前半、三百歳を超える。人を射抜く目。冷静沈着で高圧的、すべてに女王のような圧がある。精霊契約の都レヴァンデルの生まれで、術も剣も一流。世界樹の根源に一度だけ触れたと言われる", sex: "女", age: 22, race: "elf",
       who: { kind: "noble", sex: "女", age: 22, seed: "c2:alicia", look: { hair: "#dcbc62", hairStyle: "long", eyes: "sharp", iris: "#3a8aca", mouth: "flat", brows: "calm", outfit: "noble", head: "circlet", gear: "sword", chest: "gem", cloth: "#e8e4ec", build: "slim", ears: "pointy", marks: [], bg: "#3a5a4a" } } }),
   };
 

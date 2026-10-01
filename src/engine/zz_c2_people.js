@@ -3,7 +3,7 @@
 //
 // セーブ（G.S）に足すもの。古いセーブで無くても動く（G.c2State が埋める）
 //   S.c2 = { met { id: 出会った日 }, joined { id: 加わった日 }, gone { id: "death" | "betray" | "leave" | "dead"（出来事で死んだ） } }
-//   仲間ひとりずつ：c.c2 キャラメモの人物の id（無ければ、ふつうの仲間）・c.race 種族・c.who 人物の絵
+//   仲間ひとりずつ：c.c2 キャラメモの人物の id（無ければ、ふつうの仲間）・c.race・c.beast 種族と元の獣（R1 の仕組み）・c.who 人物の絵
 //
 // 出来事のデータ（src/data/events_c2.js）に書けるもの
 //   出来事に c2: [id...] その出来事に出てくる人物（始まったら「出会った」に数える）。c2talk: id 「話す」でその人の話になる
@@ -48,7 +48,7 @@
     const p = P()[id], j = p.join;
     return {
       name: p.name, cls: j.cls, power: j.power, dmg: j.dmg || 0, desc: j.desc, heal: !!j.heal, fire: !!j.fire,
-      c2: id, trait: j.trait, sex: p.sex, age: p.age, race: p.race, who: Object.assign({}, p.who, { look: Object.assign({}, p.who.look) }),
+      c2: id, trait: j.trait, sex: p.sex, age: p.age, race: p.race, beast: p.beast || "", who: Object.assign({}, p.who, { look: Object.assign({}, p.who.look) }),
       life: Object.assign({}, j.life), m8: { t: Object.assign({}, j.t), f: Object.assign({}, j.f), known: false },
     };
   };

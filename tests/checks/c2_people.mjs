@@ -32,7 +32,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   for (const [id, p] of Object.entries(P)) {
     if (!evs.some((e) => ids(e).includes(id))) F(`${p.name}が出てくる出来事が無い`);
     if (!p.who || !p.who.kind || p.who.seed !== "c2:" + id) F(`${p.name}の絵（who）が無いか、seed が c2:${id} でない`);
-    if (!["人間", "エルフ", "獣人"].includes(p.race)) F(`${p.name}の種族が変 ${p.race}`);
+    if (!D.RACES[p.race] || (p.race === "beast") !== !!D.BEASTS[p.beast]) F(`${p.name}の種族が変 ${p.race} ${p.beast}`);
     if (p.join) {
       if (!JOIN.includes(id)) F(`${p.name}は仲間になる者の一覧に無い`);
       const j = p.join;
@@ -73,8 +73,8 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       if (!G.PEOPLE[p.who.kind]) F(`${p.name}の絵の種類 ${p.who.kind} が無い`);
       const L = G.personLook(p.who);
       if (L.sex !== p.sex) F(`${p.name}の絵の性別が違う`);
-      if (p.race === "エルフ" && L.ears !== "pointy") F(`${p.name}（エルフ）の耳がとがっていない`);
-      if (p.race === "獣人" && L.ears !== "beast") F(`${p.name}（獣人）に獣の耳が無い`);
+      if (p.race === "elf" && L.ears !== "pointy") F(`${p.name}（エルフ）の耳がとがっていない`);
+      if (p.race === "beast" && L.beast !== p.beast) F(`${p.name}（獣人）に元の獣の耳が無い`);
       if (p.join) { const w = G.companionWho(G.c2Make ? G.c2Make(Object.keys(P).find((k) => P[k] === p)) : {}); if (w.seed !== p.who.seed) F(`${p.name}の仲間の絵が出来事の絵と違う`); }
     }
     const w = G.facWho({ mode: "fac", fac: "castle", loc: "leavel", flags: {} });
@@ -123,7 +123,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     const p = P[id];
     if (!c) { F(`${p.name}が出会いの流れで仲間にならない（${S.mode} ${S.event}）`); continue; }
     if (!G.c2Met(id, S) || !S.c2.joined[id]) F(`${p.name}が出会った・加わったと記録されない`);
-    if (c.trait !== p.join.trait || c.sex !== p.sex || c.age !== p.age || c.race !== p.race || c.bond !== p.join.bond) F(`${p.name}の性格・性別・歳・種族・好感度がシートと違う`);
+    if (c.trait !== p.join.trait || c.sex !== p.sex || c.age !== p.age || c.race !== p.race || (c.beast || "") !== (p.beast || "") || G.r1Comp(c).race !== p.race || c.bond !== p.join.bond) F(`${p.name}の性格・性別・歳・種族・好感度がシートと違う`);
     if (c.life.food !== p.join.life.food || !c.m8 || c.m8.t.lore !== p.join.t.lore || c.m8.known) F(`${p.name}の暮らしか才が違う`);
     if (G.m2Trait(c).talk[0] !== D.C2_VOICE[id].talk[0] || G.m2Trait(c).die !== D.C2_VOICE[id].die) F(`${p.name}のひとことがその人のものでない`);
     if (!p.join.noLove && G.c2Line(c, "confess") !== D.C2_VOICE[id].confess) F(`${p.name}の恋のひとことがその人のものでない`);
