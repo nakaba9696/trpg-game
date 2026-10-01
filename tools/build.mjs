@@ -1,6 +1,6 @@
 // src/ を1枚の HTML（dist/morsveld.html）にまとめる。Artifact として公開するのはこのファイル。
 // node tools/build.mjs
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import vm from "node:vm";
@@ -18,7 +18,9 @@ const js = assetsScript(assets) + files.map((f) => `// ==== ${f}\n` + readFileSy
 if (/<\/script/i.test(js)) throw new Error("スクリプトの中に </script が含まれている");
 new vm.Script(js, { filename: "bundle.js" }); // 構文だけ確かめる
 
-const css = readFileSync(path.join(src, "style.css"), "utf8");
+// 見た目は style.css のあとに、src/ui/ の .css を名前順に足す（新しい画面の見た目は新しいファイルに書ける。例：ui/v9_pc.css）
+const uiCss = readdirSync(path.join(src, "ui")).filter((n) => n.endsWith(".css")).sort();
+const css = [readFileSync(path.join(src, "style.css"), "utf8"), ...uiCss.map((n) => `/* ==== ui/${n} */\n` + readFileSync(path.join(src, "ui", n), "utf8"))].join("\n");
 let html = readFileSync(path.join(src, "index.html"), "utf8");
 html = html.replace("/*@STYLE@*/", () => css).replace("/*@SCRIPTS@*/", () => js);
 

@@ -29,7 +29,7 @@ node tools/build.mjs && node tests/run.mjs
 | `src/ui/scene.js` | 背景の絵（canvas） | A |
 | `src/ui/art_monsters.js` | モンスターの絵（部品の組み合わせ。敵のデータの `look` で指定できる） | A |
 | `assets/`・`src/ui/v4_assets.js` | 持ち主が作った画像（ビルドで HTML に埋め込む。`tools/assets.mjs`。描く物の一覧は `docs/art/portraits.md`） | A |
-| `src/ui/ui.js`, `src/ui/setup.js`, `src/main.js`, `src/style.css`, `src/index.html` | 画面 | U |
+| `src/ui/ui.js`, `src/ui/setup.js`, `src/main.js`, `src/style.css`, `src/index.html` | 画面（`src/ui/*.css` は style.css のあとに名前順で足される。PC 向けの配置は `src/ui/v9_pc.*`） | U |
 | `src/manifest.json` | 読み込む順番（順番を決めたいファイルだけ。無いものは `tools/files.mjs` が自動で足す） | 追記だけ |
 
 ## 決まり
