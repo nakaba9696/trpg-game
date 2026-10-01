@@ -37,7 +37,7 @@
     { id: "u3_garmund_widows", where: ["garmund"], w: 2, text: "雪かきをしているのは女と年寄りばかりだ。男たちは、みんな南の砦か、皇子さまの誰かの陣にいる。" },
     { id: "u3_garmund_game", where: ["garmund"], cond: later(6), text: "宮廷の近くの酒場で、下働きの男が声をひそめた。「北の賢人さまは、駒を取るたびに謝るんだとよ。人の首を取るときは、謝らないのにな」", lore: "chezar:rumor" },
     { id: "u3_fort_sky", where: ["fort"], w: 2, text: "見張りの兵が、空ばかり見ている。「下は魔物、上は……上はいいんだ。上を見てりゃ、少なくとも最初に分かる」", lore: "azlag:rumor" },
-    { id: "u3_fort_king", where: ["fort"], text: "砦の古参兵が、山脈の向こうを見ながら言った。「向こうには王様がいるんだとよ。魔物の王様だ。寝てるって話だがな」新兵が小声で、寝ててくれ、と言った。", lore: ["maou", "maou:rumor"] },
+    { id: "u3_fort_king", where: ["fort"], text: "砦の古参兵が、山脈の向こうを見ながら言った。「向こうに何がいるのか、誰も知らねえ。知ってるやつは帰ってこねえからな」新兵が小声で、知りたくない、と言った。" },
     { id: "u3_fort_cook", where: ["fort"], text: "砦の炊事番が、鍋をかき回しながら新兵の数を数えている。先月より、鍋が一つ少ない。" },
     { id: "u3_zephara_smoke", where: ["zephara"], w: 2, text: "学院の塔から紫の煙が上がった。通りの誰も見上げない。パン屋だけが、窓を閉めた。" },
     { id: "u3_zephara_mute", where: ["zephara"], text: "魔法の使えない荷運びの男が、荷の上の印章を指でなぞっている。字は読めないが、形で覚えているらしい。" },
@@ -45,7 +45,7 @@
     { id: "u3_yakumo_oni", where: ["yakumo"], text: "侍の子が、刀の手入れをしながら言った。「鬼ってのは、もとは約束を破った人なんだと。だから、おれは約束しない」" },
 
     // ---------------------------------------------------------------- 先へ進むほど（遠い影）
-    { id: "u3_maou_brawl", where: ["town"], cond: later(4), text: "酒場の前で、酔っ払い二人が、魔王は寝てるのか死んでるのかで殴り合いを始めた。どちらも、見たことはない。", lore: "maou:rumor" },
+    { id: "u3_maou_brawl", where: ["town"], cond: later(4), text: "酒場の前で、酔っ払い二人が、山の向こうの化け物と海の底の化け物のどっちがでかいかで殴り合いを始めた。どちらも、見たことはない。" },
     { id: "u3_twomoons", where: ["town", "wild"], cond: later(7), text: "年寄りが孫の頭を押さえて言った。「月が二つの晩は、上を見るんじゃない」孫は、見たそうにしている。", lore: "tojizuki" },
     { id: "u3_bellhoods", where: ["town"], cond: later(5), text: "揃いの灰色の頭巾の一団が、鐘楼に登っていく。宿の女将が舌打ちした。「また鐘の人たちだよ。今夜は眠れないね」", lore: "gyoushou" },
     { id: "u3_bellcount", where: ["town"], cond: (S) => S.day >= 8 && !!(S.lore && S.lore.gyoushou), text: "夜通し鳴った鐘が、明け方にぴたりと止んだ。鐘楼から「……九百九十八だった！」「九百九十九だ！」と言い争う声が降ってくる。", lore: "gyoushou:count" },

@@ -1,5 +1,5 @@
 // D6：灰色の古い外套の旅人。長く遊ぶと、ときどき、いろいろな町や道で出会う。
-// 正体は書かない（docs/lore/gods.md の〔秘〕。プレイヤーに見える文・用語説明・memo・年表のどこにも書かない。tests/checks/d6_walker.mjs が確かめる）。
+// 何者なのかは決めない（GM も。docs/lore/world.md 13.）。何かの正体として書かない（tests/checks/d6_walker.mjs が言葉を確かめる）。
 // 旅人は丁寧で、少しずれていて、人の暮らしが珍しい。争いは止めない。説明もしない。何も起こさずに去る。
 // 一つの場面は一度きり。前の出会いから日が空かないと次は出ない（S.counters.d6_last。数えるのは src/engine/d6_walker.js）。
 // 用語説明（D.LORE）を足すので、lore_u3.js より後に読まれる名前にしてある（data は名前順。src/manifest.json は触らない）。
