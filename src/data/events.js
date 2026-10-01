@@ -1,11 +1,13 @@
 // 出来事。場所に着いたとき・探索したとき・町を歩いたときに起きる。
 // where: 起きる場所のタグ（town / wild / dungeon / capital / port / snow / realm / 場所の id / any）
 // w: 起きやすさ、once: 一度きり、cond(S): 起きる条件
+// mood: 話している人の表情（V8。"joy"・"anger"・"sorrow"・"fun"、推さずに通常なら "normal"）。無ければ文から推す（src/engine/v8_moods.js）
 // choices: { label, stat, diff, bonus（持ち物の補正の種類）, cost（先に払う金）, need（必要な持ち物）, cond(S), ok, ng }
 //   stat が無い選択肢は判定なしで ok になる
 // 結果（ok / ng）: text, hp, mp, gold, fame, item（id か {id: 個数}）, remove, grow {能力値: 数}, days,
 //   companion（"random" か {name, cls, power, dmg, desc}）, flag, chron（年表）, trophy, memo（覚えておくこと）,
-//   cond（状態を足す）, cure（状態を消す）, heal: "full", fight（敵 id か id の配列）, win（戦いに勝ったあとの結果）, next（続く出来事の id）
+//   cond（状態を足す）, cure（状態を消す）, heal: "full", fight（敵 id か id の配列）, win（戦いに勝ったあとの結果）, next（続く出来事の id）,
+//   mood（V8。続く出来事の表情に持ち越す。続く出来事に mood が無く、文からも推せないとき）
 // レーン V（出来事）が管理。新しい出来事は、この配列に追記する
 (function (G) {
   const D = (G.data = G.data || {});
