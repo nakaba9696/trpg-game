@@ -4,9 +4,9 @@ seed は固定（nora 1001・sheila 1002。4通りとも同じ）。ほかの設
 
 | 組 | モデル | prefix に足したタグ | ノラ | シェイラ |
 |---|---|---|---|---|
-| A | `waiIllustriousSDXL_v160.safetensors [a5f58eb1c3]` | なし | ![](A/nora.webp) | ![](A/sheila.webp) |
+| A | `waiIllustriousSDXL_v160.safetensors [a5f58eb1c3]` | なし | （不適切な出力のため削除） | ![](A/sheila.webp) |
 | B | `waiIllustriousSDXL_v160.safetensors [a5f58eb1c3]` | `(detailed face:1.4), sharp focus, (artbook style:1.2), illustrative, intricate details, pop art` | ![](B/nora.webp) | ![](B/sheila.webp) |
-| C | `waiIllustriousSDXL_v140.safetensors [bdb59bac77]` | なし | ![](C/nora.webp) | ![](C/sheila.webp) |
+| C | `waiIllustriousSDXL_v140.safetensors [bdb59bac77]` | なし | （不適切な出力のため削除） | ![](C/sheila.webp) |
 | D | `waiIllustriousSDXL_v140.safetensors [bdb59bac77]` | B と同じ | ![](D/nora.webp) | ![](D/sheila.webp) |
 
 - 生成：`node tools/gen_portraits.mjs --only <id> --force --new-seed`（一覧の seed を使わず、style.local.json の seed を使う）。512×640 に cwebp で縮めた。
