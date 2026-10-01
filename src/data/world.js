@@ -2,10 +2,12 @@
 (function (G) {
   const D = (G.data = G.data || {});
 
-  // 手引き（プレイヤーが読む）。はじめに載るのは、この世界の普通の人が知っていること（町・国・暮らしの言葉）だけ。語り方は docs/lore/voice.md
-  // 世界観の項目は、物語の中で知ったときに一行ずつ書き足される（src/data/lore_u3.js・src/engine/lore.js）
+  // 世界の説明。D.WORLD.all（下の sections）と gmIntro は GM（Claude）に渡す全部。語り方は docs/lore/voice.md
+  // プレイヤーが読む手引きは、短い intro と D.WORLD.start（はじめから載る最小限）だけ。ほかの項目は物語の中で知ったときに一行ずつ書き足される
+  // （src/data/lore_u3.js・src/data/lore_u7.js・src/engine/lore.js・src/engine/lore_u7.js）
   D.WORLD = {
-    intro:
+    intro: "ヴェルド暦1127年、春。街道の外には化け物が出て、町には酒と噂がある。ここから先のことは、歩いて確かめるしかない。",
+    gmIntro:
       "ヴェルド大陸。暦はヴェルド暦1127年、春。人の世界には三つの大国――西のレオネスト王国、北のノルディア帝国、エルメシア共和国――があり、百年あまり前に結んだ不可侵の協定のもとで、にらみ合ったまま小競り合いを続けている。世界には人の手に負えない化け物がいて、人はそれを「あれ」と呼び、縄張りを避けて道を引き、見張り塔の鐘で知らせ合って暮らしている。東の断界山脈の向こうは魔物の土地で、黒鉄の砦がただ一本の道を塞いでいる。ろくでもない世の中だが、酒はうまいし、笑い話にも事欠かない。",
     sections: [
       ["大陸と国", [
@@ -39,7 +41,7 @@
 
   // GM（Claude）に渡す世界の説明
   D.worldPrompt = function () {
-    let s = "# 世界「ヴェルド大陸」\n" + D.WORLD.intro + "\n";
+    let s = "# 世界「ヴェルド大陸」\n" + (D.WORLD.gmIntro || D.WORLD.intro) + "\n";
     (D.WORLD.all || D.WORLD.sections).forEach(([h, rows]) => {
       s += `\n## ${h}\n` + rows.map(([k, v]) => `- ${k}：${v}`).join("\n") + "\n";
     });
@@ -159,18 +161,45 @@
   );
 
 
-  // ---------------------------------------------------------------- U3：手引きは「分かったことの帳面」
-  // D.WORLD.all がはじめから載る節（GM にも渡す）。D.WORLD.sections を読むと、それに開いた用語説明の節を足して返す（画面はこちらを読む）。
-  // 返した配列に push すると元の表に足される（他のファイルが D.WORLD.sections.push(...) しても消えない）
+  // ---------------------------------------------------------------- U3・U7：手引きは「分かったことの帳面」
+  // D.WORLD.all は GM に渡す全部の節。手引き（画面）は D.WORLD.sections を読む：はじめから載る最小限（D.WORLD.start と出発の町の一行）に、
+  // 物語で開いた用語説明（G.loreSections）を足して返す。同じ見出しの節は一つにまとめる（「大陸と国」「人と暮らし」「魔物」は lore_u7.js の項目が並ぶ）。
+  // 返した配列に push すると元の表（all と start の両方）に足される（他のファイルが D.WORLD.sections.push(...) しても消えない）
   const ALL = D.WORLD.sections;
   D.WORLD.all = ALL;
+  const row = (k) => ALL.flatMap(([, r]) => r).find(([x]) => x === k);
+  D.WORLD.start = [
+    ["大陸と国", []],
+    ["人と暮らし", [row("冒険者ギルド"), row("金貨と暦")]],
+  ];
+  // 出発の町の一行（D.CLASSES の start）。無い町は場所の名前と地方だけ
+  D.WORLD.home = {
+    karna: "冒険を始める町。商人と傭兵の町で、冒険者ギルドの本部がある。話はまず値段から始まる。",
+    nerva: "冒険を始める港町。浜には外海からの船が並び、魚と潮と安酒の匂いがする。",
+    zephara: "冒険を始める都。魔法使いの学院があり、門の外にも人が暮らしている。",
+    leavel: "冒険を始める王都。石の城壁の内に、市と教会と酒場がひしめいている。",
+  };
+  const homeRow = (S) => {
+    const id = S && D.CLASSES && D.CLASSES[S.cls] ? D.CLASSES[S.cls].start : S && S.loc;
+    const L = D.LOCS && D.LOCS[id];
+    if (!L) return null;
+    return [L.name, D.WORLD.home[id] || `冒険を始めた場所。${L.region}にある。`];
+  };
   Object.defineProperty(D.WORLD, "sections", {
     configurable: true,
     enumerable: true,
     get() {
-      const out = ALL.concat(G.S && G.loreSections ? G.loreSections(G.S) : []);
-      out.push = (...x) => ALL.push(...x);
-      return out;
+      const out = D.WORLD.start.map(([h, rows]) => [h, rows.slice()]);
+      const home = homeRow(G.S);
+      if (home) out[0][1].unshift(home);
+      (G.S && G.loreSections ? G.loreSections(G.S) : []).forEach(([h, rows]) => {
+        const same = out.find(([x]) => x === h);
+        if (same) same[1].push(...rows);
+        else out.push([h, rows]);
+      });
+      const res = out.filter(([, rows]) => rows.length);
+      res.push = (...x) => { D.WORLD.start.push(...x); return ALL.push(...x); };
+      return res;
     },
   });
 })(globalThis.G = globalThis.G || {});

@@ -34,7 +34,7 @@
     return w;
   };
 
-  // 頭の上の耳（art_people.js の paintPerson が、髪の前・帽子の前に呼ぶ）
+  // 頭の上の耳。V3 から art_people.js が自分で描く（beastEars）。これは前の描き方として残す
   // 形：tri 三角（狼・狐・猫）・round 丸（熊・鼠）・long 長い（兎）・tuft 羽の房（鳥）・flop 垂れ耳（犬）
   const SHAPE = { wolf: ["tri", 1.0, 0.95], dog: ["flop", 0.95, 1.1], fox: ["tri", 1.15, 1.05], cat: ["tri", 0.8, 0.9], bear: ["round", 0.75, 0.75], rat: ["round", 1.05, 1.0], rabbit: ["long", 0.7, 2.0], bird: ["tuft", 1.0, 1.0] };
   G.r1PaintEars = (ctx, L, cx, cy, rx, ry, U, k) => {
