@@ -8,6 +8,7 @@
 - タグはその魔物の**特徴だけ**。画風・品質・構図・背景・ネガティブは [style_monsters.json](style_monsters.json) で足す（人物の `style.json` とは別）。
 - できた画像は表の「ファイル」の名前で置く（例：`assets/monsters/goblin.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、戦闘ではその敵をこの画像で描く（`src/ui/v6_monsters.js`。白い背景は周りをぼかして消す）。無い敵は今の canvas の絵のまま。
 - 作るのは `node tools/gen_portraits.mjs --monsters`（`--only goblin,slime`・`--force`・`--dry`・`--keep`・`--new-seed` は人物と同じ。手順は [README.md](README.md)）。
+- 「**異形**」と書いた魔物（一覧の `style: "eldritch"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。
 - 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。
 
 ## 使徒・ボス（12）
@@ -18,15 +19,15 @@
 |---|---|---|---|
 | `assets/monsters/kain.webp` | 眷属カイン | 1boy, young man, scholar, silver hair, glasses, cold smile, long dark coat, holding glowing book, floating pages, ancient runes | ボス。蒐集の使徒レヴィアンの眷属。冷たい学者 |
 | `assets/monsters/shuten.webp` | 鬼の頭目ゴズ | oni, oni chief, huge, red skin, two large horns, wild white hair, fangs, scars, muscular, samurai armor pieces, tiger skin, holding glowing katana, white glowing sword, sake gourd | ボス。鬼ヶ島の大鬼。白く光る刀を持つ |
-| `assets/monsters/bonedragon.webp` | 屍竜ネクロザ | skeletal dragon, undead dragon, bone dragon, huge, ribcage, sword stuck in ribs, glowing green eyes, tattered bone wings, ghostly green fire, long neck, skull | ボス。墓場を守る屍竜。腹に剣が刺さっている |
+| `assets/monsters/bonedragon.webp` | 屍竜ネクロザ<br>**異形** | skeletal dragon, undead dragon, bone dragon, huge, ribcage, sword stuck in ribs, glowing green eyes, tattered bone wings, ghostly green fire, long neck, skull | ボス。墓場を守る屍竜。腹に剣が刺さっている |
 | `assets/monsters/rize.webp` | 眷属リゼ | 1girl, woman, swordswoman, short black hair, crazy smile, wild eyes, scar, dark armor, holding sword, blood splatter, battle stance | ボス。グラウの眷属。戦いに酔う女剣士 |
-| `assets/monsters/graw.webp` | 鏖殺の使徒グラウ | giant, colossal, muscular, grey skin, glowing red eyes, horns, scars, battle-hungry grin, broken armor, chains, holding giant greatsword, glowing aura, barrier | 使徒（ボス）。戦いだけを好む巨人。絶界に守られている。圧倒的に |
+| `assets/monsters/graw.webp` | 黒鎧の使徒エンバルダ | giant, colossal, muscular, grey skin, glowing red eyes, horns, scars, battle-hungry grin, broken armor, chains, holding giant greatsword, glowing aura, barrier | 使徒（ボス）。戦いだけを好む巨人。絶界に守られている。圧倒的に |
 | `assets/monsters/royalguard.webp` | 近衛騎士団長 | 1boy, man, knight commander, royal guard, grey hair, stern, ornate plate armor, white armor, gold trim, blue cape, holding longsword, shield | ボス。王国最強の騎士 |
 | `assets/monsters/w1_vespa.webp` | 異端審問官ヴェスパ | inquisitor, iron mask, full face mask, tall, thin, grey armor, red cape, holding spear, torch, smoke | ボス。鉄仮面の異端審問官 |
 | `assets/monsters/w1_gregor.webp` | 墓守グレゴル | 1boy, old man, necromancer, priest, white hair, long beard, gaunt, glowing eyes, smirk, black robe, holding staff, runes | ボス。死体を歩かせる老司祭 |
-| `assets/monsters/e2_gormoa.webp` | 暴食の使徒ゴルモア | giant, enormously fat, obese, three mouths, mouth on belly, long tongue, drooling, pink skin, spots, small horns, three eyes, beard, bib, loincloth, holding club, barrier | 使徒（ボス）。丘のように太った暴食の使徒。おぞましく、少しまぬけ |
+| `assets/monsters/e2_gormoa.webp` | 灼け口の使徒テルグリス<br>**異形** | giant, enormously fat, obese, three mouths, mouth on belly, long tongue, drooling, pink skin, spots, small horns, three eyes, beard, bib, loincloth, holding club, barrier | 使徒（ボス）。丘のように太った暴食の使徒。おぞましく、少しまぬけ |
 | `assets/monsters/e2_marmit.webp` | 料理長マルミット | 1boy, old man, chef, white hair, stubble, smirk, lanky, white apron, blood on apron, holding meat cleaver | ボス。人を見ると部位を数える料理長 |
-| `assets/monsters/e2_mordu.webp` | 腐爛の使徒モルドゥ | plant monster, tall, gardener, covered in mud and moss, wilted flowers growing from head, wide-brimmed hat, one glowing eye, long claws, holding pitchfork, pollen, spores, rotting | 使徒（ボス）の魔物の姿。泥と苔の庭師。甘い腐臭 |
+| `assets/monsters/e2_mordu.webp` | 苔衣の使徒セグリトス<br>**異形** | plant monster, tall, gardener, covered in mud and moss, wilted flowers growing from head, wide-brimmed hat, one glowing eye, long claws, holding pitchfork, pollen, spores, rotting | 使徒（ボス）の魔物の姿。泥と苔の庭師。甘い腐臭 |
 | `assets/monsters/w2_ironwarden.webp` | 溶けかけた機械兵 | iron golem, giant robot, ancient machine, huge, melted metal, acid, rust, glowing eyes, heavy armor, holding club, steam | ボス。半分溶けた鉄の巨人 |
 
 ## 魔物（42）
@@ -59,7 +60,7 @@
 | `assets/monsters/e1_frogprophet.webp` | 沼の預言蛙 | giant frog, green skin, spots, wide mouth, grin, googly eyes, rune necklace, sitting, drooling | 死の預言を外し続ける大蛙。まぬけ |
 | `assets/monsters/e1_sweeper.webp` | 掃除人形 | stone golem, ancient automaton, stone doll, stubby body, single eye, glowing eye, cracks, runes, holding broom | 遺跡を掃除する石の人形。人をほこりと見なす |
 | `assets/monsters/e1_lantern.webp` | 提灯お化け | chouchin obake, paper lantern, lantern monster, one eye, long tongue, flame, burnt paper, floating | 化け提灯。自分の火で焦げる。まぬけ |
-| `assets/monsters/e1_melted.webp` | 溶けかけた見習いたち | blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles, runes | 溶け合った見習いたち。おぞましい |
+| `assets/monsters/e1_melted.webp` | 溶けかけた見習いたち<br>**異形** | blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles, runes | 溶け合った見習いたち。おぞましい |
 | `assets/monsters/e1_sleepgiant.webp` | 寝返り巨人 | giant, huge, fat, beard, wild hair, eyes closed, sleepy, drooling, snot bubble, loincloth | 寝たまま歩く巨人。まぬけで規模が大きい |
 | `assets/monsters/e1_bonepicker.webp` | 骨並べ | skeleton, tall, lanky, skull head, hollow eyes, ragged cloth, bone pouch, holding bone club, carrying bones | 骨を大きさ順に並べる魔物。不気味 |
 | `assets/monsters/e1_herald.webp` | 使徒の触れ役 | imp, demon messenger, purple skin, ram horns, bat wings, glowing eyes, grin, dark robe, holding scroll, feather plume, floating | 使徒の布告を触れ回る使い魔。陽気で邪悪 |
@@ -68,7 +69,7 @@
 | `assets/monsters/w1_husk.webp` | 祈り殻 | undead, mummified pilgrim, dried corpse, hood, white robe, hollow eyes, praying hands, halo mark on neck, ribs | 死んだと気づかない巡礼者。哀しく不気味 |
 | `assets/monsters/w1_choir.webp` | 聖歌の髑髏 | floating skull, singing skull, open jaw, cracked skull, choir collar, musical notes, ghostly glow | 首だけの聖歌隊（群れだが一つで描く） |
 | `assets/monsters/w1_beastpriest.webp` | 獣憑きの司祭 | werewolf, wolf head, priest, white vestment, holy symbol necklace, claws, fangs, glowing eyes, blood, preaching | 獣憑きの司祭。まだ説教をやめない |
-| `assets/monsters/w1_tanuki.webp` | 祭りの化け狸 | tanuki, raccoon dog, standing, round belly, leaf on head, tail, grin, blush, holding sake bottle | 祭りの化け狸。化けるのが下手。まぬけ |
+| `assets/monsters/w1_tanuki.webp` | 祭りの煙小鬼 | tanuki, raccoon dog, standing, round belly, leaf on head, tail, grin, blush, holding sake bottle | 祭りの化け狸。化けるのが下手。まぬけ |
 | `assets/monsters/e2_cookgob.webp` | 見習い料理ゴブリン | goblin, green skin, pointy ears, big nose, chef hat, apron, sweat, worried, holding peeler, potato | 必死で働く見習いゴブリン。まぬけ |
 | `assets/monsters/e2_meatling.webp` | 逃げた食材 | flesh blob, meat monster, raw meat, bones sticking out, three eyes, open jaw, bubbling | 逃げた肉の塊。おぞましい |
 | `assets/monsters/e2_planted.webp` | 植えられた人 | undead, person buried to the waist in soil, flowers growing from head, reaching arms, open mouth, hollow eyes, flower bed | 花壇に植えられた人。不気味 |

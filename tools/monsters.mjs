@@ -40,6 +40,7 @@ export function renderMonstersMd(data) {
   L.push("- タグはその魔物の**特徴だけ**。画風・品質・構図・背景・ネガティブは [style_monsters.json](style_monsters.json) で足す（人物の `style.json` とは別）。");
   L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/monsters/goblin.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、戦闘ではその敵をこの画像で描く（`src/ui/v6_monsters.js`。白い背景は周りをぼかして消す）。無い敵は今の canvas の絵のまま。");
   L.push("- 作るのは `node tools/gen_portraits.mjs --monsters`（`--only goblin,slime`・`--force`・`--dry`・`--keep`・`--new-seed` は人物と同じ。手順は [README.md](README.md)）。");
+  L.push("- 「**異形**」と書いた魔物（一覧の `style: \"eldritch\"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。");
   L.push("- 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。");
   L.push("");
   for (const [g, title, note] of GROUPS) {
@@ -48,7 +49,7 @@ export function renderMonstersMd(data) {
     L.push("| ファイル | 名前 | 特徴のタグ | メモ |", "|---|---|---|---|");
     for (const m of rows) {
       const tags = m.same_as ? `（\`${m.same_as}\` と同じ絵）` : cell(m.tags);
-      L.push(`| \`${m.file}\` | ${cell(m.name)}${Number.isInteger(m.seed) ? `<br>seed ${m.seed}` : ""} | ${tags} | ${cell(m.memo)} |`);
+      L.push(`| \`${m.file}\` | ${cell(m.name)}${m.style === "eldritch" ? "<br>**異形**" : ""}${Number.isInteger(m.seed) ? `<br>seed ${m.seed}` : ""} | ${tags} | ${cell(m.memo)} |`);
     }
     L.push("");
   }
