@@ -570,3 +570,16 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
 .dbody.sound .srow:first-child { display: flex; }
 .dbody.sound input[type="range"] { width: 100%; accent-color: var(--accent); }
 .dbody.sound output { text-align: right; }
+/* 才（M8・ui/m8_talent.js） */
+.m8tal { display: grid; grid-template-columns: repeat(auto-fill, minmax(156px, 1fr)); gap: 2px 10px; margin-block: 6px; }
+.m8row { display: grid; grid-template-columns: 3.3em auto minmax(0, 1fr); align-items: center; gap: 6px; font-size: 13.5px; }
+.m8row .lvn { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.m8row .nm { white-space: nowrap; }
+.m8row.lv0 .nm { color: var(--muted); }
+.m8row.lv2 .lvn { color: var(--ink); }
+.m8row.lv3 .lvn { color: var(--crit); font-weight: 700; }
+.m8pips { display: inline-flex; gap: 3px; }
+.m8pips i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--muted); }
+.m8pips i.on { background: var(--ink); border-color: var(--ink); }
+.m8row.lv3 .m8pips i.on { background: var(--crit); border-color: var(--crit); }
+.m8box { margin-top: 12px; }
