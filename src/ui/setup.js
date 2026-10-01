@@ -74,7 +74,7 @@
     logo.setAttribute("role", "img");
     logo.setAttribute("aria-label", "Morsveld");
     logo.append(h("span", "mors", "Mors"), h("span", "veld", "veld"));
-    hero.append(logo, h("div", "reading", "モルスヴェルド"), h("p", "tagline", $("#tagline") ? $("#tagline").textContent : ""));
+    hero.append(logo, h("div", "reading", "モルスヴェルド")); // 副題は置かない（持ち主の決定 #56）
     root.append(hero);
 
     const menu = h("div", "titleMenu");
