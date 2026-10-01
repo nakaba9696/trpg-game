@@ -1,14 +1,16 @@
 // V4：持ち主が作った人物の絵（assets/portraits/<id>.webp。ビルドで G.ASSETS["portraits/<id>"] に埋め込まれる。tools/assets.mjs）を描く。
 // art_people.js の入口 G.drawPortrait を包むだけ。画像があればそれを描き、無ければ（または読めなければ）今の canvas の絵に戻す。
 // どの人にどの画像を使うか（G.v4PortraitKey(who)）：
-//   キャラメモの人（who.seed "c2:<id>"）→ portraits/<id>
-//   名のある人（下の NAMED。出来事の id・seed・仲間の名前で当てる）→ portraits/<id>
-//   主人公 → portraits/hero_<職業>_<m|f>_<human|elf|beast>[_<獣>][_mid|_old]。職業・性別・種族が合うもののうち、獣・年齢が一番近いもの
-//   仲間（G.companionWho で作った who）→ portraits/kind_<種類>_<m|f>[_elf|_beast[_<獣>]]
+//   名のある人＝どの冒険でも同じ一人＝一枚。キャラメモの人（who.seed "c2:<id>"）→ portraits/<id>、
+//     出来事・施設の人（下の NAMED。出来事の id・seed・仲間の名前で当てる）→ portraits/<id>
+//   型（冒険ごとに乱数で作られる人）。性別・種族が合うもののうち、獣・年齢が一番近いもの。人間の型しか無ければエルフ・獣人は今の絵
+//     主人公 → portraits/hero_<職業>_<m|f>[_elf|_beast[_<獣>]][_mid|_old]
+//     名もない人（仲間・出来事の町の人）→ portraits/kind_<種類>_<m|f>[_elf|_beast[_<獣>]]（13 歳未満は child、60 歳以上は elder の型）
+// 名のある人は、どの出来事でも同じ顔になるよう、canvas の絵の who も一つに固定する（最初の出来事の who。キャラメモの人はそのデータの who）
 // 描く物の一覧と、Stable Diffusion に入れる特徴のタグは docs/art/portraits.md（機械で読める形は docs/art/portraits.json）。レーン A（絵）
 (function (G) {
   const NAMED = {
-    erna: { events: ["m3_castle_g"] }, // 鉄の右足の女騎士（キャラメモの人だが、この出来事では seed を持たない）
+    erna: { c2: true, events: ["m3_castle_g"] }, // 鉄の右足の女騎士（キャラメモの人だが、この出来事では seed を持たない）
     chancellor: { seeds: ["fac:garmund:chancellor"] },
     gaston: { events: ["e2_kitchen_pot"], names: ["茹で騎士ガストン"] },
     joachim: { events: ["deserter_help"], names: ["脱走兵ヨアヒム"] },
@@ -47,33 +49,60 @@
   };
   const raceOf = (who) => {
     const lk = who.look || {};
-    return lk.beast ? { race: "beast", beast: lk.beast } : lk.ears === "pointy" ? { race: "elf" } : { race: "human" };
+    return lk.beast ? ["_beast_" + lk.beast, "_beast"] : lk.ears === "pointy" ? ["_elf"] : [""];
   };
   const first = (list) => list.find(has) || null;
-
-  G.v4PortraitKey = (who) => {
-    if (!who || who.kind === "foe") return null;
+  const named = (who) => {
     const seed = String(who.seed || "");
-    if (who.kind === "hero") {
-      const s = sexOf(who), r = raceOf(who), base = `hero_${who.cls || "merc"}_${s}`;
-      const age = Number(who.age) || 24;
-      const bands = age >= 60 ? ["_old", "_mid", ""] : age >= 38 ? ["_mid", "", "_old"] : ["", "_mid", "_old"];
-      const bases = r.race === "beast" ? [`${base}_beast_${r.beast}`, `${base}_beast`] : [`${base}_${r.race}`];
-      return first(bases.flatMap((b) => bands.map((x) => b + x)));
-    }
-    if (seed.startsWith("c2:") && has(seed.slice(3))) return seed.slice(3);
-    if (BY_SEED[seed] && has(BY_SEED[seed])) return BY_SEED[seed];
-    for (const [id, m] of Object.entries(NAMED)) if ((m.names || []).some((n) => seed.includes(n)) && has(id)) return id;
-    if (who.v4 === "comp" && who.kind) {
-      const s = sexOf(who), r = raceOf(who), base = `kind_${who.kind}_${s}`;
-      return first(r.race === "beast" ? [`${base}_beast_${r.beast}`, `${base}_beast`] : r.race === "elf" ? [`${base}_elf`] : [base]);
-    }
+    if (seed.startsWith("c2:")) return seed.slice(3);
+    if (seed.startsWith("v4:")) return seed.slice(3);
+    if (BY_SEED[seed]) return BY_SEED[seed];
+    for (const [id, m] of Object.entries(NAMED)) if ((m.names || []).some((n) => seed.includes(n))) return id;
     return null;
   };
 
-  // 仲間の who に印を付ける（仲間の種類の絵は、仲間にだけ使う。出来事の町の人は今の絵のまま）
-  const comp0 = G.companionWho;
-  if (comp0) G.companionWho = (c) => { const w = comp0(c); if (w && w.kind !== "foe") w.v4 = "comp"; return w; };
+  G.v4PortraitKey = (who) => {
+    if (!who || who.kind === "foe") return null;
+    if (who.kind === "hero") {
+      const age = Number(who.age) || 24;
+      const bands = age >= 60 ? ["_old", "_mid", ""] : age >= 38 ? ["_mid", "", "_old"] : ["", "_mid", "_old"];
+      const base = `hero_${who.cls || "merc"}_${sexOf(who)}`;
+      return first(raceOf(who).flatMap((r) => bands.map((x) => base + r + x)));
+    }
+    const id = named(who);
+    if (id) return has(id) ? id : null; // 名のある人に型の絵は使わない
+    if (!who.kind || who.kind === "majin") return null;
+    const age = Number(who.age) || 0;
+    const kind = age > 0 && age < 13 ? "child" : age >= 60 ? "elder" : who.kind;
+    return first(raceOf(who).map((r) => `kind_${kind}_${sexOf(who)}${r}`));
+  };
+
+  // 名のある人の who を一つに固定する（出来事ごとに seed が違うと、canvas の絵の顔が出来事ごとに変わるため）
+  const fixed = {};
+  const ev0 = G.eventWho, comp0 = G.companionWho;
+  const canon = (id) => {
+    if (fixed[id]) return fixed[id];
+    const m = NAMED[id], D = G.data || {};
+    let w = null;
+    if (m.c2 && D.C2_PEOPLE && D.C2_PEOPLE[id]) w = D.C2_PEOPLE[id].who;
+    else if (ev0 && m.events && D.EVENTS) { const e = D.EVENTS.find((x) => x.id === m.events[0]); w = e && ev0(e); }
+    if (!w) return null;
+    w = JSON.parse(JSON.stringify(w));
+    if (!String(w.seed || "").startsWith("c2:")) w.seed = "v4:" + id;
+    return (fixed[id] = w);
+  };
+  const copy = (w) => JSON.parse(JSON.stringify(w));
+  if (ev0) G.eventWho = (e) => {
+    const id = e && BY_SEED["ev:" + e.id];
+    const w = id && canon(id);
+    return w ? copy(w) : ev0(e);
+  };
+  if (comp0) G.companionWho = (c) => {
+    const name = String((c && c.name) || "");
+    if (!(c && c.who)) for (const [id, m] of Object.entries(NAMED)) if ((m.names || []).some((n) => name.includes(n))) { const w = canon(id); if (w) return copy(w); }
+    return comp0(c);
+  };
+  G.v4Canon = canon;
 
   // ---------------------------------------------------------------- 描く
   const imgs = {}; // 鍵 → Image（一度だけ作る）

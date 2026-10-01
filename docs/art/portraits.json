@@ -11,6 +11,10 @@
   "mid": "middle-aged, 45 years old",
   "old": "old man / old woman, wrinkles, grey hair, 65 years old"
  },
+ "races": {
+  "elf": "elf, pointy ears",
+  "beast": "wolf ears, wolf tail"
+ },
  "beasts": {
   "wolf": "wolf ears, wolf tail",
   "dog": "dog ears, floppy ears, dog tail",
@@ -471,420 +475,356 @@
    "memo": "古道具屋。品物をじっと見せる"
   },
   {
-   "id": "kind_adventurer_m",
-   "group": "companion",
-   "name": "仲間：冒険者（傭兵・剣士）（男）",
-   "file": "assets/portraits/kind_adventurer_m.webp",
-   "tags": "1boy, young man, 25 years old, adventurer, leather armor, sword",
-   "memo": "名前の決まっていない仲間。種類の顔"
+   "id": "kind_villager_m",
+   "group": "people",
+   "name": "町の人（男）",
+   "file": "assets/portraits/kind_villager_m.webp",
+   "tags": "1boy, man, 30 years old, townsperson, simple tunic",
+   "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
-   "id": "kind_adventurer_f",
-   "group": "companion",
-   "name": "仲間：冒険者（傭兵・剣士）（女）",
-   "file": "assets/portraits/kind_adventurer_f.webp",
-   "tags": "1girl, young woman, 25 years old, adventurer, leather armor, sword",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_archer_m",
-   "group": "companion",
-   "name": "仲間：弓使い（男）",
-   "file": "assets/portraits/kind_archer_m.webp",
-   "tags": "1boy, young man, 25 years old, hunter, archer, green hooded cloak, bow, quiver",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_archer_f",
-   "group": "companion",
-   "name": "仲間：弓使い（女）",
-   "file": "assets/portraits/kind_archer_f.webp",
-   "tags": "1girl, young woman, 25 years old, hunter, archer, green hooded cloak, bow, quiver",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_priest_m",
-   "group": "companion",
-   "name": "仲間：神官・僧侶（男）",
-   "file": "assets/portraits/kind_priest_m.webp",
-   "tags": "1boy, young man, 25 years old, priest, white vestment, sun emblem",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_priest_f",
-   "group": "companion",
-   "name": "仲間：神官・僧侶（女）",
-   "file": "assets/portraits/kind_priest_f.webp",
-   "tags": "1girl, young woman, 25 years old, priest, white vestment, sun emblem",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_mage_m",
-   "group": "companion",
-   "name": "仲間：魔法使い（男）",
-   "file": "assets/portraits/kind_mage_m.webp",
-   "tags": "1boy, young man, 25 years old, mage, dark blue robe, staff",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_mage_f",
-   "group": "companion",
-   "name": "仲間：魔法使い（女）",
-   "file": "assets/portraits/kind_mage_f.webp",
-   "tags": "1girl, young woman, 25 years old, mage, dark blue robe, staff",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_rogue_m",
-   "group": "companion",
-   "name": "仲間：ならず者・盗賊（男）",
-   "file": "assets/portraits/kind_rogue_m.webp",
-   "tags": "1boy, young man, 25 years old, rogue, bandana, dark leather clothes, dagger, scar",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_rogue_f",
-   "group": "companion",
-   "name": "仲間：ならず者・盗賊（女）",
-   "file": "assets/portraits/kind_rogue_f.webp",
-   "tags": "1girl, young woman, 25 years old, rogue, bandana, dark leather clothes, dagger, scar",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_soldier_m",
-   "group": "companion",
-   "name": "仲間：兵士（槍兵・元帝国兵）（男）",
-   "file": "assets/portraits/kind_soldier_m.webp",
-   "tags": "1boy, young man, 25 years old, soldier, armor, spear",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_soldier_f",
-   "group": "companion",
-   "name": "仲間：兵士（槍兵・元帝国兵）（女）",
-   "file": "assets/portraits/kind_soldier_f.webp",
-   "tags": "1girl, young woman, 25 years old, soldier, armor, spear",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_ronin_m",
-   "group": "companion",
-   "name": "仲間：侍・浪人（男）",
-   "file": "assets/portraits/kind_ronin_m.webp",
-   "tags": "1boy, young man, 25 years old, samurai, kimono, katana",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_ronin_f",
-   "group": "companion",
-   "name": "仲間：侍・浪人（女）",
-   "file": "assets/portraits/kind_ronin_f.webp",
-   "tags": "1girl, young woman, 25 years old, samurai, kimono, katana",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_knight_m",
-   "group": "companion",
-   "name": "仲間：騎士（男）",
-   "file": "assets/portraits/kind_knight_m.webp",
-   "tags": "1boy, young man, 25 years old, knight, plate armor, crest, sword",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_knight_f",
-   "group": "companion",
-   "name": "仲間：騎士（女）",
-   "file": "assets/portraits/kind_knight_f.webp",
-   "tags": "1girl, young woman, 25 years old, knight, plate armor, crest, sword",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_sailor_m",
-   "group": "companion",
-   "name": "仲間：船乗り（男）",
-   "file": "assets/portraits/kind_sailor_m.webp",
-   "tags": "1boy, young man, 25 years old, sailor, striped shirt, bandana, earring",
-   "memo": "名前の決まっていない仲間。種類の顔"
-  },
-  {
-   "id": "kind_sailor_f",
-   "group": "companion",
-   "name": "仲間：船乗り（女）",
-   "file": "assets/portraits/kind_sailor_f.webp",
-   "tags": "1girl, young woman, 25 years old, sailor, striped shirt, bandana, earring",
-   "memo": "名前の決まっていない仲間。種類の顔"
+   "id": "kind_villager_f",
+   "group": "people",
+   "name": "町の人（女）",
+   "file": "assets/portraits/kind_villager_f.webp",
+   "tags": "1girl, woman, 30 years old, townsperson, simple tunic",
+   "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
    "id": "kind_merchant_m",
-   "group": "companion",
-   "name": "仲間：商人（男）",
+   "group": "people",
+   "name": "商人（男）",
    "file": "assets/portraits/kind_merchant_m.webp",
-   "tags": "1boy, young man, 25 years old, merchant, vest, coin pouch",
-   "memo": "名前の決まっていない仲間。種類の顔"
+   "tags": "1boy, man, 30 years old, merchant, vest, coin pouch",
+   "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
    "id": "kind_merchant_f",
-   "group": "companion",
-   "name": "仲間：商人（女）",
+   "group": "people",
+   "name": "商人（女）",
    "file": "assets/portraits/kind_merchant_f.webp",
-   "tags": "1girl, young woman, 25 years old, merchant, vest, coin pouch",
-   "memo": "名前の決まっていない仲間。種類の顔"
+   "tags": "1girl, woman, 30 years old, merchant, vest, coin pouch",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_guard_m",
+   "group": "people",
+   "name": "衛兵（男）",
+   "file": "assets/portraits/kind_guard_m.webp",
+   "tags": "1boy, man, 30 years old, town guard, helmet, tabard, spear",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_guard_f",
+   "group": "people",
+   "name": "衛兵（女）",
+   "file": "assets/portraits/kind_guard_f.webp",
+   "tags": "1girl, woman, 30 years old, town guard, helmet, tabard, spear",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_priest_m",
+   "group": "people",
+   "name": "神官・修道女（男）",
+   "file": "assets/portraits/kind_priest_m.webp",
+   "tags": "1boy, man, 30 years old, priest, white vestment, sun emblem",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_priest_f",
+   "group": "people",
+   "name": "神官・修道女（女）",
+   "file": "assets/portraits/kind_priest_f.webp",
+   "tags": "1girl, woman, 30 years old, priest, white vestment, sun emblem",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_noble_m",
+   "group": "people",
+   "name": "貴族（男）",
+   "file": "assets/portraits/kind_noble_m.webp",
+   "tags": "1boy, man, 30 years old, noble, elegant clothes, jewelry",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_noble_f",
+   "group": "people",
+   "name": "貴族（女）",
+   "file": "assets/portraits/kind_noble_f.webp",
+   "tags": "1girl, woman, 30 years old, noble, elegant clothes, jewelry",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_rogue_m",
+   "group": "people",
+   "name": "ならず者・盗賊（男）",
+   "file": "assets/portraits/kind_rogue_m.webp",
+   "tags": "1boy, man, 30 years old, rogue, bandana, dark leather clothes, dagger, scar",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_rogue_f",
+   "group": "people",
+   "name": "ならず者・盗賊（女）",
+   "file": "assets/portraits/kind_rogue_f.webp",
+   "tags": "1girl, woman, 30 years old, rogue, bandana, dark leather clothes, dagger, scar",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_soldier_m",
+   "group": "people",
+   "name": "兵士・傭兵団の兵（男）",
+   "file": "assets/portraits/kind_soldier_m.webp",
+   "tags": "1boy, man, 30 years old, soldier, armor, spear",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_soldier_f",
+   "group": "people",
+   "name": "兵士・傭兵団の兵（女）",
+   "file": "assets/portraits/kind_soldier_f.webp",
+   "tags": "1girl, woman, 30 years old, soldier, armor, spear",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_knight_m",
+   "group": "people",
+   "name": "騎士（男）",
+   "file": "assets/portraits/kind_knight_m.webp",
+   "tags": "1boy, man, 30 years old, knight, plate armor, crest, sword",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_knight_f",
+   "group": "people",
+   "name": "騎士（女）",
+   "file": "assets/portraits/kind_knight_f.webp",
+   "tags": "1girl, woman, 30 years old, knight, plate armor, crest, sword",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_sailor_m",
+   "group": "people",
+   "name": "船乗り（男）",
+   "file": "assets/portraits/kind_sailor_m.webp",
+   "tags": "1boy, man, 30 years old, sailor, striped shirt, bandana, earring",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_sailor_f",
+   "group": "people",
+   "name": "船乗り（女）",
+   "file": "assets/portraits/kind_sailor_f.webp",
+   "tags": "1girl, woman, 30 years old, sailor, striped shirt, bandana, earring",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_mage_m",
+   "group": "people",
+   "name": "魔法使い（男）",
+   "file": "assets/portraits/kind_mage_m.webp",
+   "tags": "1boy, man, 30 years old, mage, dark blue robe, staff",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_mage_f",
+   "group": "people",
+   "name": "魔法使い（女）",
+   "file": "assets/portraits/kind_mage_f.webp",
+   "tags": "1girl, woman, 30 years old, mage, dark blue robe, staff",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_ronin_m",
+   "group": "people",
+   "name": "八雲の人（侍・巫女）（男）",
+   "file": "assets/portraits/kind_ronin_m.webp",
+   "tags": "1boy, man, 30 years old, samurai, kimono, katana",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_ronin_f",
+   "group": "people",
+   "name": "八雲の人（侍・巫女）（女）",
+   "file": "assets/portraits/kind_ronin_f.webp",
+   "tags": "1girl, woman, 30 years old, samurai, kimono, katana",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_host_m",
+   "group": "people",
+   "name": "宿や酒場の主（男）",
+   "file": "assets/portraits/kind_host_m.webp",
+   "tags": "1boy, man, 30 years old, innkeeper, apron, friendly smile",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_host_f",
+   "group": "people",
+   "name": "宿や酒場の主（女）",
+   "file": "assets/portraits/kind_host_f.webp",
+   "tags": "1girl, woman, 30 years old, innkeeper, apron, friendly smile",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_beggar_m",
+   "group": "people",
+   "name": "物乞い・囚人（男）",
+   "file": "assets/portraits/kind_beggar_m.webp",
+   "tags": "1boy, man, 30 years old, ragged clothes, dirty, tired",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_beggar_f",
+   "group": "people",
+   "name": "物乞い・囚人（女）",
+   "file": "assets/portraits/kind_beggar_f.webp",
+   "tags": "1girl, woman, 30 years old, ragged clothes, dirty, tired",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_archer_m",
+   "group": "people",
+   "name": "弓使い・狩人（男）",
+   "file": "assets/portraits/kind_archer_m.webp",
+   "tags": "1boy, man, 30 years old, hunter, archer, green hooded cloak, bow",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_archer_f",
+   "group": "people",
+   "name": "弓使い・狩人（女）",
+   "file": "assets/portraits/kind_archer_f.webp",
+   "tags": "1girl, woman, 30 years old, hunter, archer, green hooded cloak, bow",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_adventurer_m",
+   "group": "people",
+   "name": "冒険者（男）",
+   "file": "assets/portraits/kind_adventurer_m.webp",
+   "tags": "1boy, man, 30 years old, adventurer, leather armor, sword",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_adventurer_f",
+   "group": "people",
+   "name": "冒険者（女）",
+   "file": "assets/portraits/kind_adventurer_f.webp",
+   "tags": "1girl, woman, 30 years old, adventurer, leather armor, sword",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_elder_m",
+   "group": "people",
+   "name": "老人（男）",
+   "file": "assets/portraits/kind_elder_m.webp",
+   "tags": "1boy, old man, old, wrinkles, grey hair, 70 years old, simple robe",
+   "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_elder_f",
+   "group": "people",
+   "name": "老人（女）",
+   "file": "assets/portraits/kind_elder_f.webp",
+   "tags": "1girl, old woman, old, wrinkles, grey hair, 70 years old, simple robe",
+   "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
    "id": "kind_child_m",
-   "group": "companion",
-   "name": "仲間：子ども（男）",
+   "group": "people",
+   "name": "子ども（男）",
    "file": "assets/portraits/kind_child_m.webp",
    "tags": "1boy, boy, child, 10 years old, simple clothes, small",
-   "memo": "仲間の子ども。子どもらしく"
+   "memo": "名もない子ども。子どもらしく"
   },
   {
    "id": "kind_child_f",
-   "group": "companion",
-   "name": "仲間：子ども（女）",
+   "group": "people",
+   "name": "子ども（女）",
    "file": "assets/portraits/kind_child_f.webp",
    "tags": "1girl, girl, child, 10 years old, simple clothes, small",
-   "memo": "仲間の子ども。子どもらしく"
+   "memo": "名もない子ども。子どもらしく"
   },
   {
-   "id": "hero_merc_m_human",
+   "id": "hero_merc_m",
    "group": "hero",
-   "name": "主人公：傭兵・男・人間",
-   "file": "assets/portraits/hero_merc_m_human.webp",
+   "name": "主人公：傭兵・男",
+   "file": "assets/portraits/hero_merc_m.webp",
    "tags": "1boy, young man, 20 years old, mercenary, leather armor, sword",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_merc_m_elf",
+   "id": "hero_merc_f",
    "group": "hero",
-   "name": "主人公：傭兵・男・エルフ",
-   "file": "assets/portraits/hero_merc_m_elf.webp",
-   "tags": "1boy, young man, elf, pointy ears, 20 years old, mercenary, leather armor, sword",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_merc_m_beast",
-   "group": "hero",
-   "name": "主人公：傭兵・男・獣人（狼）",
-   "file": "assets/portraits/hero_merc_m_beast.webp",
-   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, mercenary, leather armor, sword",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_merc_f_human",
-   "group": "hero",
-   "name": "主人公：傭兵・女・人間",
-   "file": "assets/portraits/hero_merc_f_human.webp",
+   "name": "主人公：傭兵・女",
+   "file": "assets/portraits/hero_merc_f.webp",
    "tags": "1girl, young woman, 20 years old, mercenary, leather armor, sword",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_merc_f_elf",
+   "id": "hero_thief_m",
    "group": "hero",
-   "name": "主人公：傭兵・女・エルフ",
-   "file": "assets/portraits/hero_merc_f_elf.webp",
-   "tags": "1girl, young woman, elf, pointy ears, 20 years old, mercenary, leather armor, sword",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_merc_f_beast",
-   "group": "hero",
-   "name": "主人公：傭兵・女・獣人（狼）",
-   "file": "assets/portraits/hero_merc_f_beast.webp",
-   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, mercenary, leather armor, sword",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_thief_m_human",
-   "group": "hero",
-   "name": "主人公：盗賊・男・人間",
-   "file": "assets/portraits/hero_thief_m_human.webp",
+   "name": "主人公：盗賊・男",
+   "file": "assets/portraits/hero_thief_m.webp",
    "tags": "1boy, young man, 20 years old, thief, dark hooded cloak, daggers",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_thief_m_elf",
+   "id": "hero_thief_f",
    "group": "hero",
-   "name": "主人公：盗賊・男・エルフ",
-   "file": "assets/portraits/hero_thief_m_elf.webp",
-   "tags": "1boy, young man, elf, pointy ears, 20 years old, thief, dark hooded cloak, daggers",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_thief_m_beast",
-   "group": "hero",
-   "name": "主人公：盗賊・男・獣人（狼）",
-   "file": "assets/portraits/hero_thief_m_beast.webp",
-   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, thief, dark hooded cloak, daggers",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_thief_f_human",
-   "group": "hero",
-   "name": "主人公：盗賊・女・人間",
-   "file": "assets/portraits/hero_thief_f_human.webp",
+   "name": "主人公：盗賊・女",
+   "file": "assets/portraits/hero_thief_f.webp",
    "tags": "1girl, young woman, 20 years old, thief, dark hooded cloak, daggers",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_thief_f_elf",
+   "id": "hero_mage_m",
    "group": "hero",
-   "name": "主人公：盗賊・女・エルフ",
-   "file": "assets/portraits/hero_thief_f_elf.webp",
-   "tags": "1girl, young woman, elf, pointy ears, 20 years old, thief, dark hooded cloak, daggers",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_thief_f_beast",
-   "group": "hero",
-   "name": "主人公：盗賊・女・獣人（狼）",
-   "file": "assets/portraits/hero_thief_f_beast.webp",
-   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, thief, dark hooded cloak, daggers",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_mage_m_human",
-   "group": "hero",
-   "name": "主人公：魔法使い・男・人間",
-   "file": "assets/portraits/hero_mage_m_human.webp",
+   "name": "主人公：魔法使い・男",
+   "file": "assets/portraits/hero_mage_m.webp",
    "tags": "1boy, young man, 20 years old, mage, robe, wizard hat, staff",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_mage_m_elf",
+   "id": "hero_mage_f",
    "group": "hero",
-   "name": "主人公：魔法使い・男・エルフ",
-   "file": "assets/portraits/hero_mage_m_elf.webp",
-   "tags": "1boy, young man, elf, pointy ears, 20 years old, mage, robe, wizard hat, staff",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_mage_m_beast",
-   "group": "hero",
-   "name": "主人公：魔法使い・男・獣人（狼）",
-   "file": "assets/portraits/hero_mage_m_beast.webp",
-   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, mage, robe, wizard hat, staff",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_mage_f_human",
-   "group": "hero",
-   "name": "主人公：魔法使い・女・人間",
-   "file": "assets/portraits/hero_mage_f_human.webp",
+   "name": "主人公：魔法使い・女",
+   "file": "assets/portraits/hero_mage_f.webp",
    "tags": "1girl, young woman, 20 years old, mage, robe, wizard hat, staff",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_mage_f_elf",
+   "id": "hero_priest_m",
    "group": "hero",
-   "name": "主人公：魔法使い・女・エルフ",
-   "file": "assets/portraits/hero_mage_f_elf.webp",
-   "tags": "1girl, young woman, elf, pointy ears, 20 years old, mage, robe, wizard hat, staff",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_mage_f_beast",
-   "group": "hero",
-   "name": "主人公：魔法使い・女・獣人（狼）",
-   "file": "assets/portraits/hero_mage_f_beast.webp",
-   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, mage, robe, wizard hat, staff",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_priest_m_human",
-   "group": "hero",
-   "name": "主人公：破戒神官・男・人間",
-   "file": "assets/portraits/hero_priest_m_human.webp",
+   "name": "主人公：破戒神官・男",
+   "file": "assets/portraits/hero_priest_m.webp",
    "tags": "1boy, young man, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_priest_m_elf",
+   "id": "hero_priest_f",
    "group": "hero",
-   "name": "主人公：破戒神官・男・エルフ",
-   "file": "assets/portraits/hero_priest_m_elf.webp",
-   "tags": "1boy, young man, elf, pointy ears, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_priest_m_beast",
-   "group": "hero",
-   "name": "主人公：破戒神官・男・獣人（狼）",
-   "file": "assets/portraits/hero_priest_m_beast.webp",
-   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_priest_f_human",
-   "group": "hero",
-   "name": "主人公：破戒神官・女・人間",
-   "file": "assets/portraits/hero_priest_f_human.webp",
+   "name": "主人公：破戒神官・女",
+   "file": "assets/portraits/hero_priest_f.webp",
    "tags": "1girl, young woman, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_priest_f_elf",
+   "id": "hero_samurai_m",
    "group": "hero",
-   "name": "主人公：破戒神官・女・エルフ",
-   "file": "assets/portraits/hero_priest_f_elf.webp",
-   "tags": "1girl, young woman, elf, pointy ears, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_priest_f_beast",
-   "group": "hero",
-   "name": "主人公：破戒神官・女・獣人（狼）",
-   "file": "assets/portraits/hero_priest_f_beast.webp",
-   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_samurai_m_human",
-   "group": "hero",
-   "name": "主人公：侍・男・人間",
-   "file": "assets/portraits/hero_samurai_m_human.webp",
+   "name": "主人公：侍・男",
+   "file": "assets/portraits/hero_samurai_m.webp",
    "tags": "1boy, young man, 20 years old, samurai, kimono, light armor, katana, topknot",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
-   "id": "hero_samurai_m_elf",
+   "id": "hero_samurai_f",
    "group": "hero",
-   "name": "主人公：侍・男・エルフ",
-   "file": "assets/portraits/hero_samurai_m_elf.webp",
-   "tags": "1boy, young man, elf, pointy ears, 20 years old, samurai, kimono, light armor, katana, topknot",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_samurai_m_beast",
-   "group": "hero",
-   "name": "主人公：侍・男・獣人（狼）",
-   "file": "assets/portraits/hero_samurai_m_beast.webp",
-   "tags": "1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, samurai, kimono, light armor, katana, topknot",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_samurai_f_human",
-   "group": "hero",
-   "name": "主人公：侍・女・人間",
-   "file": "assets/portraits/hero_samurai_f_human.webp",
+   "name": "主人公：侍・女",
+   "file": "assets/portraits/hero_samurai_f.webp",
    "tags": "1girl, young woman, 20 years old, samurai, kimono, light armor, katana, ponytail",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_samurai_f_elf",
-   "group": "hero",
-   "name": "主人公：侍・女・エルフ",
-   "file": "assets/portraits/hero_samurai_f_elf.webp",
-   "tags": "1girl, young woman, elf, pointy ears, 20 years old, samurai, kimono, light armor, katana, ponytail",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_samurai_f_beast",
-   "group": "hero",
-   "name": "主人公：侍・女・獣人（狼）",
-   "file": "assets/portraits/hero_samurai_f_beast.webp",
-   "tags": "1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, samurai, kimono, light armor, katana, ponytail",
-   "memo": "主人公の若者。外見の文で変わる髪や目の色は入れない"
+   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   }
  ]
 }

@@ -10,10 +10,10 @@ export const JSON_PATH = path.join(here, "..", "docs", "art", "portraits.json");
 export const MD_PATH = path.join(here, "..", "docs", "art", "portraits.md");
 
 const GROUPS = [
-  ["c2", "キャラメモの人物", "持ち主のスプレッドシート「キャラメモ」の人（`src/data/c2_people.js`）。出来事でも仲間になってからも同じ絵を使う。"],
-  ["named", "名のある人物", "出来事や施設に出る、名前の決まった人（使徒の人の姿・眷属・店や宿の主など）。どの出来事に出るかは `src/ui/v4_assets.js` の `NAMED`。"],
-  ["companion", "仲間の種類", "名前の決まっていない仲間（雇った傭兵など）。種類と性別で一枚。"],
-  ["hero", "主人公", "職業 × 性別 × 種族。年齢は若者が基本（下の「主人公の年齢・獣人の獣」で足せる）。外見の文で変わる髪や目の色は入れていない。"],
+  ["c2", "名のある人物：キャラメモ", "持ち主のスプレッドシート「キャラメモ」の人（`src/data/c2_people.js`。id はデータの id）。時間軸は同じなので、どの冒険で会っても同じ一人＝一枚。出来事でも仲間になってからも同じ絵。"],
+  ["named", "名のある人物：出来事・施設", "出来事や施設に出る、名前の決まった人（使徒の人の姿・眷属・宰相・店や宿の主など。使徒は `D.MAJIN` の id）。どの出来事に出るかは `src/ui/v4_assets.js` の `NAMED`。どの出来事でも同じ顔に固定してある。"],
+  ["hero", "型：主人公", "冒険ごとに作られる主人公は一人ずつ作れないので、職業 × 性別の型に当てる（人間・若者が基本。エルフ・獣人・年齢は下の「型の足し方」）。外見の文で変わる髪や目の色は入れていない。"],
+  ["people", "型：名もない人", "名もない仲間・出来事の町の人など。人物の種類 × 性別。13 歳未満は子ども、60 歳以上は老人の型を使う。"],
 ];
 const cell = (s) => String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
 
@@ -28,22 +28,23 @@ export function renderPortraitsMd(data) {
   L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は今の canvas の絵のまま。");
   L.push("- png・jpg でもよい（同じ名前なら webp を使う）。埋め込みの合計が 12MB を超えるとビルドとテストが止まる（`tools/assets.mjs`）。");
   L.push("");
-  L.push("## 主人公の年齢・獣人の獣", "");
-  L.push("主人公は、職業・性別・種族が合う画像のうち、獣・年齢が一番近いものを使う。表の行は若者・狼が基本。足したいときは：", "");
-  L.push(`- 中年：ファイル名の後ろに \`_mid\`（例：\`hero_merc_m_human_mid.webp\`）。タグの \`young man\` / \`young woman\`・\`20 years old\` を \`${heroAge.mid}\` に替える。`);
-  L.push(`- 老人：\`_old\`。\`${heroAge.old}\` に替える。`);
-  L.push("- 獣人の獣：`hero_<職業>_<m|f>_beast_<獣>`（例：`hero_thief_f_beast_cat.webp`）。狼の耳と尻尾のタグを次に替える。獣ごとの画像が無ければ `_beast`（狼）を使う。");
-  L.push("");
-  L.push("| 獣 | 耳と尻尾のタグ |", "|---|---|");
-  for (const [k, t] of Object.entries(beasts)) L.push(`| \`${k}\` | ${cell(t)} |`);
-  L.push("");
-  L.push("仲間の種類も同じように、エルフなら `kind_<種類>_<m|f>_elf`、獣人なら `kind_<種類>_<m|f>_beast[_<獣>]` を置ける（無ければ今の絵）。", "");
+  const types = [];
+  types.push("## 型の足し方（任意）", "");
+  types.push("型の画像は、性別・種族が合うもののうち、獣・年齢が一番近いものを使う。表の行は人間だけなので、エルフ・獣人は下の画像を足すまで今の canvas の絵のまま。足したいときは、ファイル名の後ろに付けて、タグを替える：", "");
+  types.push(`- エルフ：\`_elf\`（例：\`hero_mage_f_elf.webp\`・\`kind_villager_f_elf.webp\`）。\`${data.races.elf}\` を足す。`);
+  types.push(`- 獣人：\`_beast_<獣>\`（例：\`hero_thief_m_beast_cat.webp\`）か、獣を問わない \`_beast\`。下の表の耳と尻尾のタグを足す。`);
+  types.push(`- 主人公の中年：さらに後ろに \`_mid\`（例：\`hero_merc_m_mid.webp\`）。\`young man\` / \`young woman\`・\`20 years old\` を \`${heroAge.mid}\` に替える。老人は \`_old\` で \`${heroAge.old}\`。`);
+  types.push("");
+  types.push("| 獣 | 耳と尻尾のタグ |", "|---|---|");
+  for (const [k, t] of Object.entries(beasts)) types.push(`| \`${k}\` | ${cell(t)} |`);
+  types.push("");
   for (const [g, title, note] of GROUPS) {
     const rows = portraits.filter((p) => p.group === g);
     L.push(`## ${title}（${rows.length}）`, "", note, "");
     L.push("| ファイル | 名前 | 特徴のタグ | メモ |", "|---|---|---|---|");
     for (const p of rows) L.push(`| \`${p.file}\` | ${cell(p.name)} | ${cell(p.tags)} | ${cell(p.memo)} |`);
     L.push("");
+    if (g === "people") L.push(...types);
   }
   return L.join("\n");
 }

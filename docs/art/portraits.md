@@ -9,30 +9,9 @@
 - できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は今の canvas の絵のまま。
 - png・jpg でもよい（同じ名前なら webp を使う）。埋め込みの合計が 12MB を超えるとビルドとテストが止まる（`tools/assets.mjs`）。
 
-## 主人公の年齢・獣人の獣
+## 名のある人物：キャラメモ（34）
 
-主人公は、職業・性別・種族が合う画像のうち、獣・年齢が一番近いものを使う。表の行は若者・狼が基本。足したいときは：
-
-- 中年：ファイル名の後ろに `_mid`（例：`hero_merc_m_human_mid.webp`）。タグの `young man` / `young woman`・`20 years old` を `middle-aged, 45 years old` に替える。
-- 老人：`_old`。`old man / old woman, wrinkles, grey hair, 65 years old` に替える。
-- 獣人の獣：`hero_<職業>_<m|f>_beast_<獣>`（例：`hero_thief_f_beast_cat.webp`）。狼の耳と尻尾のタグを次に替える。獣ごとの画像が無ければ `_beast`（狼）を使う。
-
-| 獣 | 耳と尻尾のタグ |
-|---|---|
-| `wolf` | wolf ears, wolf tail |
-| `dog` | dog ears, floppy ears, dog tail |
-| `fox` | fox ears, fox tail |
-| `cat` | cat ears, cat tail |
-| `bear` | bear ears, round ears, bear tail |
-| `rabbit` | rabbit ears, rabbit tail |
-| `bird` | head wings, feathered ears, bird tail |
-| `rat` | mouse ears, round ears, mouse tail |
-
-仲間の種類も同じように、エルフなら `kind_<種類>_<m|f>_elf`、獣人なら `kind_<種類>_<m|f>_beast[_<獣>]` を置ける（無ければ今の絵）。
-
-## キャラメモの人物（34）
-
-持ち主のスプレッドシート「キャラメモ」の人（`src/data/c2_people.js`）。出来事でも仲間になってからも同じ絵を使う。
+持ち主のスプレッドシート「キャラメモ」の人（`src/data/c2_people.js`。id はデータの id）。時間軸は同じなので、どの冒険で会っても同じ一人＝一枚。出来事でも仲間になってからも同じ絵。
 
 | ファイル | 名前 | 特徴のタグ | メモ |
 |---|---|---|---|
@@ -71,9 +50,9 @@
 | `assets/portraits/katia.webp` | カティア | 1girl, princess, 19 years old, blonde hair, ponytail, blue eyes, determined, serious expression, white plate armor, crest, sword | 皇帝の一人娘。正義感が強く真っすぐな努力家 |
 | `assets/portraits/alicia.webp` | アリシア | 1girl, elf, high elf, long pointy ears, blonde hair, medium hair, hair between eyes, blue eyes, sharp eyes, piercing gaze, haughty, circlet, white noble dress, gem | エルメシアの最高議長。ハイエルフ（見た目は二十代前半、三百歳超）。女王のような圧 |
 
-## 名のある人物（22）
+## 名のある人物：出来事・施設（22）
 
-出来事や施設に出る、名前の決まった人（使徒の人の姿・眷属・店や宿の主など）。どの出来事に出るかは `src/ui/v4_assets.js` の `NAMED`。
+出来事や施設に出る、名前の決まった人（使徒の人の姿・眷属・宰相・店や宿の主など。使徒は `D.MAJIN` の id）。どの出来事に出るかは `src/ui/v4_assets.js` の `NAMED`。どの出来事でも同じ顔に固定してある。
 
 | ファイル | 名前 | 特徴のタグ | メモ |
 |---|---|---|---|
@@ -100,68 +79,79 @@
 | `assets/portraits/dominik.webp` | 串焼き屋のドミニク | 1boy, middle-aged man, 40 years old, mustache, grin, headband, apron, grilling skewers | 串焼き屋の親父 |
 | `assets/portraits/neumann.webp` | 古道具屋のノイマン | 1boy, old man, 57 years old, grey hair, narrow eyes, small smile, glasses, vest, antique dealer, holding a silver ring | 古道具屋。品物をじっと見せる |
 
-## 仲間の種類（22）
+## 型：主人公（10）
 
-名前の決まっていない仲間（雇った傭兵など）。種類と性別で一枚。
-
-| ファイル | 名前 | 特徴のタグ | メモ |
-|---|---|---|---|
-| `assets/portraits/kind_adventurer_m.webp` | 仲間：冒険者（傭兵・剣士）（男） | 1boy, young man, 25 years old, adventurer, leather armor, sword | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_adventurer_f.webp` | 仲間：冒険者（傭兵・剣士）（女） | 1girl, young woman, 25 years old, adventurer, leather armor, sword | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_archer_m.webp` | 仲間：弓使い（男） | 1boy, young man, 25 years old, hunter, archer, green hooded cloak, bow, quiver | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_archer_f.webp` | 仲間：弓使い（女） | 1girl, young woman, 25 years old, hunter, archer, green hooded cloak, bow, quiver | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_priest_m.webp` | 仲間：神官・僧侶（男） | 1boy, young man, 25 years old, priest, white vestment, sun emblem | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_priest_f.webp` | 仲間：神官・僧侶（女） | 1girl, young woman, 25 years old, priest, white vestment, sun emblem | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_mage_m.webp` | 仲間：魔法使い（男） | 1boy, young man, 25 years old, mage, dark blue robe, staff | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_mage_f.webp` | 仲間：魔法使い（女） | 1girl, young woman, 25 years old, mage, dark blue robe, staff | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_rogue_m.webp` | 仲間：ならず者・盗賊（男） | 1boy, young man, 25 years old, rogue, bandana, dark leather clothes, dagger, scar | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_rogue_f.webp` | 仲間：ならず者・盗賊（女） | 1girl, young woman, 25 years old, rogue, bandana, dark leather clothes, dagger, scar | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_soldier_m.webp` | 仲間：兵士（槍兵・元帝国兵）（男） | 1boy, young man, 25 years old, soldier, armor, spear | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_soldier_f.webp` | 仲間：兵士（槍兵・元帝国兵）（女） | 1girl, young woman, 25 years old, soldier, armor, spear | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_ronin_m.webp` | 仲間：侍・浪人（男） | 1boy, young man, 25 years old, samurai, kimono, katana | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_ronin_f.webp` | 仲間：侍・浪人（女） | 1girl, young woman, 25 years old, samurai, kimono, katana | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_knight_m.webp` | 仲間：騎士（男） | 1boy, young man, 25 years old, knight, plate armor, crest, sword | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_knight_f.webp` | 仲間：騎士（女） | 1girl, young woman, 25 years old, knight, plate armor, crest, sword | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_sailor_m.webp` | 仲間：船乗り（男） | 1boy, young man, 25 years old, sailor, striped shirt, bandana, earring | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_sailor_f.webp` | 仲間：船乗り（女） | 1girl, young woman, 25 years old, sailor, striped shirt, bandana, earring | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_merchant_m.webp` | 仲間：商人（男） | 1boy, young man, 25 years old, merchant, vest, coin pouch | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_merchant_f.webp` | 仲間：商人（女） | 1girl, young woman, 25 years old, merchant, vest, coin pouch | 名前の決まっていない仲間。種類の顔 |
-| `assets/portraits/kind_child_m.webp` | 仲間：子ども（男） | 1boy, boy, child, 10 years old, simple clothes, small | 仲間の子ども。子どもらしく |
-| `assets/portraits/kind_child_f.webp` | 仲間：子ども（女） | 1girl, girl, child, 10 years old, simple clothes, small | 仲間の子ども。子どもらしく |
-
-## 主人公（30）
-
-職業 × 性別 × 種族。年齢は若者が基本（下の「主人公の年齢・獣人の獣」で足せる）。外見の文で変わる髪や目の色は入れていない。
+冒険ごとに作られる主人公は一人ずつ作れないので、職業 × 性別の型に当てる（人間・若者が基本。エルフ・獣人・年齢は下の「型の足し方」）。外見の文で変わる髪や目の色は入れていない。
 
 | ファイル | 名前 | 特徴のタグ | メモ |
 |---|---|---|---|
-| `assets/portraits/hero_merc_m_human.webp` | 主人公：傭兵・男・人間 | 1boy, young man, 20 years old, mercenary, leather armor, sword | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_merc_m_elf.webp` | 主人公：傭兵・男・エルフ | 1boy, young man, elf, pointy ears, 20 years old, mercenary, leather armor, sword | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_merc_m_beast.webp` | 主人公：傭兵・男・獣人（狼） | 1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, mercenary, leather armor, sword | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_merc_f_human.webp` | 主人公：傭兵・女・人間 | 1girl, young woman, 20 years old, mercenary, leather armor, sword | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_merc_f_elf.webp` | 主人公：傭兵・女・エルフ | 1girl, young woman, elf, pointy ears, 20 years old, mercenary, leather armor, sword | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_merc_f_beast.webp` | 主人公：傭兵・女・獣人（狼） | 1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, mercenary, leather armor, sword | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_thief_m_human.webp` | 主人公：盗賊・男・人間 | 1boy, young man, 20 years old, thief, dark hooded cloak, daggers | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_thief_m_elf.webp` | 主人公：盗賊・男・エルフ | 1boy, young man, elf, pointy ears, 20 years old, thief, dark hooded cloak, daggers | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_thief_m_beast.webp` | 主人公：盗賊・男・獣人（狼） | 1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, thief, dark hooded cloak, daggers | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_thief_f_human.webp` | 主人公：盗賊・女・人間 | 1girl, young woman, 20 years old, thief, dark hooded cloak, daggers | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_thief_f_elf.webp` | 主人公：盗賊・女・エルフ | 1girl, young woman, elf, pointy ears, 20 years old, thief, dark hooded cloak, daggers | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_thief_f_beast.webp` | 主人公：盗賊・女・獣人（狼） | 1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, thief, dark hooded cloak, daggers | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_mage_m_human.webp` | 主人公：魔法使い・男・人間 | 1boy, young man, 20 years old, mage, robe, wizard hat, staff | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_mage_m_elf.webp` | 主人公：魔法使い・男・エルフ | 1boy, young man, elf, pointy ears, 20 years old, mage, robe, wizard hat, staff | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_mage_m_beast.webp` | 主人公：魔法使い・男・獣人（狼） | 1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, mage, robe, wizard hat, staff | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_mage_f_human.webp` | 主人公：魔法使い・女・人間 | 1girl, young woman, 20 years old, mage, robe, wizard hat, staff | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_mage_f_elf.webp` | 主人公：魔法使い・女・エルフ | 1girl, young woman, elf, pointy ears, 20 years old, mage, robe, wizard hat, staff | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_mage_f_beast.webp` | 主人公：魔法使い・女・獣人（狼） | 1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, mage, robe, wizard hat, staff | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_priest_m_human.webp` | 主人公：破戒神官・男・人間 | 1boy, young man, 20 years old, priest, white vestment, sun emblem, mace, disheveled | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_priest_m_elf.webp` | 主人公：破戒神官・男・エルフ | 1boy, young man, elf, pointy ears, 20 years old, priest, white vestment, sun emblem, mace, disheveled | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_priest_m_beast.webp` | 主人公：破戒神官・男・獣人（狼） | 1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, priest, white vestment, sun emblem, mace, disheveled | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_priest_f_human.webp` | 主人公：破戒神官・女・人間 | 1girl, young woman, 20 years old, priest, white vestment, sun emblem, mace, disheveled | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_priest_f_elf.webp` | 主人公：破戒神官・女・エルフ | 1girl, young woman, elf, pointy ears, 20 years old, priest, white vestment, sun emblem, mace, disheveled | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_priest_f_beast.webp` | 主人公：破戒神官・女・獣人（狼） | 1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, priest, white vestment, sun emblem, mace, disheveled | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_samurai_m_human.webp` | 主人公：侍・男・人間 | 1boy, young man, 20 years old, samurai, kimono, light armor, katana, topknot | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_samurai_m_elf.webp` | 主人公：侍・男・エルフ | 1boy, young man, elf, pointy ears, 20 years old, samurai, kimono, light armor, katana, topknot | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_samurai_m_beast.webp` | 主人公：侍・男・獣人（狼） | 1boy, young man, wolf boy, wolf ears, wolf tail, 20 years old, samurai, kimono, light armor, katana, topknot | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_samurai_f_human.webp` | 主人公：侍・女・人間 | 1girl, young woman, 20 years old, samurai, kimono, light armor, katana, ponytail | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_samurai_f_elf.webp` | 主人公：侍・女・エルフ | 1girl, young woman, elf, pointy ears, 20 years old, samurai, kimono, light armor, katana, ponytail | 主人公の若者。外見の文で変わる髪や目の色は入れない |
-| `assets/portraits/hero_samurai_f_beast.webp` | 主人公：侍・女・獣人（狼） | 1girl, young woman, wolf girl, wolf ears, wolf tail, 20 years old, samurai, kimono, light armor, katana, ponytail | 主人公の若者。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_merc_m.webp` | 主人公：傭兵・男 | 1boy, young man, 20 years old, mercenary, leather armor, sword | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_merc_f.webp` | 主人公：傭兵・女 | 1girl, young woman, 20 years old, mercenary, leather armor, sword | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_thief_m.webp` | 主人公：盗賊・男 | 1boy, young man, 20 years old, thief, dark hooded cloak, daggers | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_thief_f.webp` | 主人公：盗賊・女 | 1girl, young woman, 20 years old, thief, dark hooded cloak, daggers | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_mage_m.webp` | 主人公：魔法使い・男 | 1boy, young man, 20 years old, mage, robe, wizard hat, staff | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_mage_f.webp` | 主人公：魔法使い・女 | 1girl, young woman, 20 years old, mage, robe, wizard hat, staff | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_priest_m.webp` | 主人公：破戒神官・男 | 1boy, young man, 20 years old, priest, white vestment, sun emblem, mace, disheveled | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_priest_f.webp` | 主人公：破戒神官・女 | 1girl, young woman, 20 years old, priest, white vestment, sun emblem, mace, disheveled | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_samurai_m.webp` | 主人公：侍・男 | 1boy, young man, 20 years old, samurai, kimono, light armor, katana, topknot | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+| `assets/portraits/hero_samurai_f.webp` | 主人公：侍・女 | 1girl, young woman, 20 years old, samurai, kimono, light armor, katana, ponytail | 主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない |
+
+## 型：名もない人（34）
+
+名もない仲間・出来事の町の人など。人物の種類 × 性別。13 歳未満は子ども、60 歳以上は老人の型を使う。
+
+| ファイル | 名前 | 特徴のタグ | メモ |
+|---|---|---|---|
+| `assets/portraits/kind_villager_m.webp` | 町の人（男） | 1boy, man, 30 years old, townsperson, simple tunic | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_villager_f.webp` | 町の人（女） | 1girl, woman, 30 years old, townsperson, simple tunic | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_merchant_m.webp` | 商人（男） | 1boy, man, 30 years old, merchant, vest, coin pouch | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_merchant_f.webp` | 商人（女） | 1girl, woman, 30 years old, merchant, vest, coin pouch | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_guard_m.webp` | 衛兵（男） | 1boy, man, 30 years old, town guard, helmet, tabard, spear | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_guard_f.webp` | 衛兵（女） | 1girl, woman, 30 years old, town guard, helmet, tabard, spear | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_priest_m.webp` | 神官・修道女（男） | 1boy, man, 30 years old, priest, white vestment, sun emblem | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_priest_f.webp` | 神官・修道女（女） | 1girl, woman, 30 years old, priest, white vestment, sun emblem | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_noble_m.webp` | 貴族（男） | 1boy, man, 30 years old, noble, elegant clothes, jewelry | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_noble_f.webp` | 貴族（女） | 1girl, woman, 30 years old, noble, elegant clothes, jewelry | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_rogue_m.webp` | ならず者・盗賊（男） | 1boy, man, 30 years old, rogue, bandana, dark leather clothes, dagger, scar | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_rogue_f.webp` | ならず者・盗賊（女） | 1girl, woman, 30 years old, rogue, bandana, dark leather clothes, dagger, scar | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_soldier_m.webp` | 兵士・傭兵団の兵（男） | 1boy, man, 30 years old, soldier, armor, spear | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_soldier_f.webp` | 兵士・傭兵団の兵（女） | 1girl, woman, 30 years old, soldier, armor, spear | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_knight_m.webp` | 騎士（男） | 1boy, man, 30 years old, knight, plate armor, crest, sword | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_knight_f.webp` | 騎士（女） | 1girl, woman, 30 years old, knight, plate armor, crest, sword | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_sailor_m.webp` | 船乗り（男） | 1boy, man, 30 years old, sailor, striped shirt, bandana, earring | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_sailor_f.webp` | 船乗り（女） | 1girl, woman, 30 years old, sailor, striped shirt, bandana, earring | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_mage_m.webp` | 魔法使い（男） | 1boy, man, 30 years old, mage, dark blue robe, staff | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_mage_f.webp` | 魔法使い（女） | 1girl, woman, 30 years old, mage, dark blue robe, staff | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_ronin_m.webp` | 八雲の人（侍・巫女）（男） | 1boy, man, 30 years old, samurai, kimono, katana | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_ronin_f.webp` | 八雲の人（侍・巫女）（女） | 1girl, woman, 30 years old, samurai, kimono, katana | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_host_m.webp` | 宿や酒場の主（男） | 1boy, man, 30 years old, innkeeper, apron, friendly smile | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_host_f.webp` | 宿や酒場の主（女） | 1girl, woman, 30 years old, innkeeper, apron, friendly smile | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_beggar_m.webp` | 物乞い・囚人（男） | 1boy, man, 30 years old, ragged clothes, dirty, tired | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_beggar_f.webp` | 物乞い・囚人（女） | 1girl, woman, 30 years old, ragged clothes, dirty, tired | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_archer_m.webp` | 弓使い・狩人（男） | 1boy, man, 30 years old, hunter, archer, green hooded cloak, bow | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_archer_f.webp` | 弓使い・狩人（女） | 1girl, woman, 30 years old, hunter, archer, green hooded cloak, bow | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_adventurer_m.webp` | 冒険者（男） | 1boy, man, 30 years old, adventurer, leather armor, sword | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_adventurer_f.webp` | 冒険者（女） | 1girl, woman, 30 years old, adventurer, leather armor, sword | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_elder_m.webp` | 老人（男） | 1boy, old man, old, wrinkles, grey hair, 70 years old, simple robe | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_elder_f.webp` | 老人（女） | 1girl, old woman, old, wrinkles, grey hair, 70 years old, simple robe | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_child_m.webp` | 子ども（男） | 1boy, boy, child, 10 years old, simple clothes, small | 名もない子ども。子どもらしく |
+| `assets/portraits/kind_child_f.webp` | 子ども（女） | 1girl, girl, child, 10 years old, simple clothes, small | 名もない子ども。子どもらしく |
+
+## 型の足し方（任意）
+
+型の画像は、性別・種族が合うもののうち、獣・年齢が一番近いものを使う。表の行は人間だけなので、エルフ・獣人は下の画像を足すまで今の canvas の絵のまま。足したいときは、ファイル名の後ろに付けて、タグを替える：
+
+- エルフ：`_elf`（例：`hero_mage_f_elf.webp`・`kind_villager_f_elf.webp`）。`elf, pointy ears` を足す。
+- 獣人：`_beast_<獣>`（例：`hero_thief_m_beast_cat.webp`）か、獣を問わない `_beast`。下の表の耳と尻尾のタグを足す。
+- 主人公の中年：さらに後ろに `_mid`（例：`hero_merc_m_mid.webp`）。`young man` / `young woman`・`20 years old` を `middle-aged, 45 years old` に替える。老人は `_old` で `old man / old woman, wrinkles, grey hair, 65 years old`。
+
+| 獣 | 耳と尻尾のタグ |
+|---|---|
+| `wolf` | wolf ears, wolf tail |
+| `dog` | dog ears, floppy ears, dog tail |
+| `fox` | fox ears, fox tail |
+| `cat` | cat ears, cat tail |
+| `bear` | bear ears, round ears, bear tail |
+| `rabbit` | rabbit ears, rabbit tail |
+| `bird` | head wings, feathered ears, bird tail |
+| `rat` | mouse ears, round ears, mouse tail |
