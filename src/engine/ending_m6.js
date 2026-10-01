@@ -75,9 +75,11 @@
   G.endTurn = () => { baseEndTurn(); m6Check(); };
 
   // 出来事の結果 { m6end: 節目 } で物語を終える（節目の出来事・光の壁）
+  // { m6reach: 節目 } は、出来事の中で「旅を続ける」を選んだ節目。着いたことにし、もう尋ねない（光の壁から戻ったとき）
   const baseApply = G.apply;
   G.apply = (o) => {
     baseApply(o);
+    if (o && o.m6reach && G.S && !G.S.over) { const s = st(G.S); s.reached[o.m6reach] = s.reached[o.m6reach] ?? G.S.day; s.offered[o.m6reach] = true; }
     if (o && o.m6end && G.S && !G.S.over) G.endStory(o.m6end);
   };
 
