@@ -33,7 +33,8 @@
     S.fac = null;
     G.log("title", "戦闘");
     if (S.combat.boss) bossIntro(ids);
-    G.say(`${foes.map((f) => f.name).join("、")}が立ちはだかった！`);
+    const names = foes.map((f) => f.name).join("、");
+    G.say(G.voiceLine ? G.voiceLine("meet", { foes: names }, `${names}が立ちはだかった！`) : `${names}が立ちはだかった！`); // 語り（D7）
     const first = D.ENEMIES[ids[0]];
     if (first.desc) G.note(first.desc);
     if (opt.firstStrike) G.note("不意を突いた。敵は深手を負っている。");
@@ -194,7 +195,7 @@
       G.log("you", "逃げる");
       const fast = Math.max(...G.alive().map((f) => G.foeData(f).agi));
       const r = G.check("敏捷", 10 - fast, "逃走");
-      if (r.ok) { G.say("うまく逃げ切った。"); return endCombat("fled"); }
+      if (r.ok) { G.say(G.voiceLine ? G.voiceLine("fled", null, "うまく逃げ切った。") : "うまく逃げ切った。"); return endCombat("fled"); }
       G.say("回り込まれた！");
     } else if (kind === "item") {
       const it = D.ITEMS[itemId];
@@ -325,6 +326,8 @@
     S.combat = null;
     S.mode = "explore";
     if (how === "win") {
+      const after = G.voiceLine && G.voiceLine("win", null, ""); // 語り（D7）
+      if (after) G.say(after);
       let gold = 0;
       let fame = 0;
       C.foes.forEach((f) => {

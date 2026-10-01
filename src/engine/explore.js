@@ -79,10 +79,12 @@
     if (G.rand() < 0.55) { const e = G.randomEvent(); if (e) { G.startEvent(e); return; } }
     G.say(G.pick([
       "露店の呼び込みと、酔っ払いの歌と、どこかの喧嘩の音。いつもの町だ。",
-      "路地の奥で、衛兵が浮浪者を蹴り飛ばしている。誰も気にしない。",
-      "広場で吟遊詩人が、使徒に滅ぼされた街の歌を歌っている。客は少ない。",
-      "焼き栗の匂いにつられて、つい一袋買ってしまった。",
-      "壁に貼られた手配書の中に、見覚えのある顔があった気がする。",
+      "路地の奥で、衛兵が浮浪者を蹴り飛ばしている。誰も足を止めない。",
+      "広場で吟遊詩人が、使徒に滅ぼされた街の歌を歌っている。客は少ない。帽子の中には、銅貨が二枚。",
+      "焼き栗の匂いにつられて、つい一袋買ってしまった。半分は焦げていた。",
+      "壁に貼られた手配書の中に、見覚えのある顔があった気がする。近づいてみると、雨に滲んで、誰でもなかった。",
+      "洗濯物の下をくぐる。二階の窓から、赤ん坊の泣き声と、それをあやす下手な歌が降ってくる。",
+      "井戸端で女たちが笑っている。あなたが通りかかると、声が少しだけ低くなった。",
     ]));
   }
 
@@ -96,7 +98,7 @@
     if (r < 0.8) { G.startCombat(encounter(L), {}); return; }
     const gold = G.d(10 * Math.max(1, L.danger)) + 3;
     S.gold += gold;
-    G.say(G.pick(["草むらで、誰かが落とした財布を見つけた。", "倒木の下に、旅人の遺品が埋もれていた。", "崖の割れ目に、光る物が挟まっていた。"]));
+    G.say(G.pick(["草むらの中で、つま先が何かを蹴った。誰かが落とした財布だ。持ち主の姿は、どこにもない。", "倒木の下に、旅人の荷が埋もれていた。革は腐り、中身だけが乾いている。", "崖の割れ目で、何かが日の光を照り返した。手を差し入れると、冷たい金属に触れた。"]));
     G.note(`${gold}G を手に入れた。`);
     if (G.rand() < 0.3) { G.give("herb"); G.note("薬草を手に入れた。"); }
   }
@@ -117,9 +119,9 @@
     S.clungUsed = false;
     G.heal(Math.ceil(S.maxHp * 0.6));
     S.mp = S.maxMp;
-    G.say("焚き火のそばで浅い眠りについた。");
+    G.say("焚き火のはぜる音を聞きながら、浅い眠りについた。");
     G.note("HP が回復し、MP が全快した。");
-    if (G.rand() < 0.12 + 0.05 * L.danger) { G.say("物音で目が覚めた。囲まれている！"); G.startCombat(encounter(L), {}); }
+    if (G.rand() < 0.12 + 0.05 * L.danger) { G.say("物音で目が覚めた。火の向こうの暗がりに、目がいくつも光っている。"); G.startCombat(encounter(L), {}); }
   }
 
   function deeper() {
@@ -130,16 +132,17 @@
     S.depth++;
     S.quests.forEach((q) => { if (q.type === "delve" && !q.done && q.loc === S.loc && S.depth >= q.need) { q.done = true; G.note(`依頼「${q.title}」を達成した。ギルドに報告しよう。`); } });
     G.log("title", `${L.name} 地下${S.depth}階`);
+    if (G.voiceLine && S.depth < L.floors) { const t = G.voiceLine("descend", null, ""); if (t) G.say(t); } // 語り（D7）
     const bf = bossFlag(L);
     if (S.depth >= L.floors) {
       if (!S.flags[bf]) {
         const boss = D.ENEMIES[L.boss];
-        G.say(`最奥の広間。${boss.name}が待ち構えていた。`);
+        G.say(`最奥の広間。空気が重い。${boss.name}が、待っていた。`);
         const rw = L.reward || {};
         G.startCombat([L.boss], { win: { text: rw.text, flag: bf, item: rw.item, fame: rw.fame, trophy: rw.trophy, chron: rw.chron } });
         return;
       }
-      G.say("最奥の広間は静まり返っている。主はもういない。");
+      G.say("最奥の広間は静まり返っている。主はもういない。天井から、埃がゆっくり降りてくる。");
       return;
     }
     const mid = L.midboss && L.midboss[S.depth];
@@ -154,7 +157,7 @@
     if (r < 0.8) { const e = G.randomEvent(); if (e) { G.startEvent(e); return; } }
     const gold = G.d(20 * L.danger) + 10;
     S.gold += gold;
-    G.say("崩れた壁の奥に、古い金貨が散らばっていた。");
+    G.say("崩れた壁の奥で、明かりを何かが照り返した。古い金貨だ。持ち主の骨は、見当たらない。");
     G.note(`${gold}G を手に入れた。`);
     if (G.rand() < 0.25) { const it = G.pick(["potion", "gem", "manawater"]); G.give(it); G.note(`${D.ITEMS[it].name}を手に入れた。`); }
   }
