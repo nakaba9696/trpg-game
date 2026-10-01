@@ -62,6 +62,13 @@ export default ({ G, fail, ok }) => {
   if (order.some((v, i) => i && v < order[i - 1])) fail("一覧で、名のある人物が型より先に並んでいない");
   const missC2 = Object.keys(D.C2_PEOPLE).filter((id) => !seen.has(id));
   if (missC2.length) fail(`キャラメモの人が一覧に無い：${missC2.join("、")}`);
+  // 持ち主の絵柄の設定（tools/gen_portraits.mjs が読む）：読めて、縦横の比が一覧の大きさと同じ（縮めても歪まない）
+  let style = null;
+  try { style = JSON.parse(readFileSync(new URL("../../docs/art/style.json", import.meta.url), "utf8")); } catch (e) { fail("docs/art/style.json が読めない：" + e.message); }
+  if (style) {
+    if (!style.url || typeof style.prefix !== "string" || typeof style.negative !== "string") fail("docs/art/style.json に url・prefix・negative が無い");
+    if (style.width && style.height && Math.abs(style.width / style.height - data.size.width / data.size.height) > 0.01) fail(`style.json の大きさ ${style.width}×${style.height} が一覧の ${data.size.width}×${data.size.height} と縦横の比が違う`);
+  }
   if (readFileSync(MD_PATH, "utf8") !== renderPortraitsMd(data)) fail("docs/art/portraits.md が json と合っていない（node tools/portraits.mjs で作り直す）");
 
   // ---------------------------------------------------------------- 名のある人は、どこで会っても同じ顔
