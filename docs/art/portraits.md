@@ -57,20 +57,20 @@
 
 | ファイル | 名前 | 特徴のタグ | メモ |
 |---|---|---|---|
-| `assets/portraits/chancellor.webp` | 帝国の宰相 | 1boy, old man, 64 years old, grey hair, slicked back hair, narrow eyes, wrinkles, eye bags, expressionless, black formal clothes, chain of office | 帝都の王城の玉座の脇。病床の皇帝に代わる宰相。表情を出さない |
-| `assets/portraits/gaston.webp` | 茹で騎士ガストン | 1boy, knight, 34 years old, black hair, flushed face, red face, sweat, stubble, worried eyebrows, open mouth, plate armor, no helmet | ゴルモアの大鍋で茹でられかけた騎士。真っ赤で情けない顔 |
+| `assets/portraits/chancellor.webp` | 帝国の宰相 | 1boy, old man, 64 years old, grey hair, slicked back hair, narrow eyes, wrinkles, eye bags, expressionless, black formal clothes, chain of office | 帝都の王城の玉座の脇。北の陣にいることの多い皇帝に代わって謁見を仕切る宰相。表情を出さない |
+| `assets/portraits/gaston.webp` | 茹で騎士ガストン | 1boy, knight, 34 years old, black hair, flushed face, red face, sweat, stubble, worried eyebrows, open mouth, plate armor, no helmet | テルグリスの大鍋で茹でられかけた騎士。真っ赤で情けない顔 |
 | `assets/portraits/joachim.webp` | 脱走兵ヨアヒム | 1boy, soldier, 35 years old, dark brown hair, stubble, eye bags, tired, worried eyebrows, imperial military uniform, snow on shoulders | 凍えた帝国の脱走兵。もう人を殺したくない |
-| `assets/portraits/mirza.webp` | 享楽の使徒ミルザ | 1girl, girl, petite, black hair, long hair, red eyes, glowing eyes, smirk, small crown, black frilled dress, holding a parasol | 人の姿の使徒。日傘の少女。格が違うのにどこかまぬけ。にんまり |
-| `assets/portraits/zalve.webp` | 契約の使徒ザルヴェ | 1boy, man, 45 years old, black hair, short hair, narrow eyes, smirk, silver monocle, gaunt, money changer, dark green vest, abacus | ブランデールの両替商（使徒）。嘘はつかないが全部は言わない |
-| `assets/portraits/borg.webp` | 取り立て屋ボルグ | 1boy, man, 40 years old, huge man, messy hair, scar, stubble, grin, missing fingers, ragged clothes, debt collector | ザルヴェの眷属。熊のような大男 |
-| `assets/portraits/aurelia.webp` | 生き聖女アウレリア | 1girl, saint, 26 years old, blonde hair, long hair, halo of light, closed eyes, holy smile, white and gold robe, sun emblem, staff | 聖都の「生き聖女」（正体は偽聖の使徒）。大げさな聖女の笑み |
-| `assets/portraits/yoihime.webp` | 月喰いの宵姫 | 1girl, woman, 28 years old, long hair, fox mask, juunihitoe, red layered kimono, folding fan, smirk | 朧島の狐面の女（使徒）。祭りと博打が好き。面で顔は見せない |
-| `assets/portraits/konoha.webp` | 狐の忍コノハ | 1girl, 15 years old, fox mask on head, long hair, mischievous smile, red kimono, dice cup | 宵姫の眷属。賭場の壺振りの少女。いかさまが上手 |
-| `assets/portraits/mordu.webp` | 腐爛の使徒モルドゥ | 1boy, old man, tall, gardener, mud and moss on clothes, wide-brimmed hat, flowers on hat, pale skin, glowing eyes, polite smile | 毒沼の庭師（使徒）。穏やかで丁寧、悪意がない |
-| `assets/portraits/berna.webp` | 疫医ベルナ | 1girl, plague doctor, beak mask, black hooded coat, gloves, medicine bottles | モルドゥの眷属の医者。嘴の仮面で顔は見せない。声は若い女 |
-| `assets/portraits/azlag.webp` | 天墜の使徒アズラグ | 1boy, man, 40 years old, huge man, one black dragon wing, blonde hair, glowing eyes, frown, crossed arms, black coat | 黒い翼竜の使徒の人の姿。片翼の大男。転んだのを無かったことにする |
-| `assets/portraits/chezar.webp` | 盤上の使徒シェザール（北の賢人） | 1boy, old man, 72 years old, white hair, slicked back hair, monocle, mustache, wrinkles, smirk, noble military coat, holding a chess piece | 宮廷の老将の姿の使徒。駒に話しかける |
-| `assets/portraits/yura.webp` | 微睡の使徒ユラ | child, androgynous, 9 years old, silver hair, messy hair, sleepy eyes, yawning, pajamas, holding a pillow | 眠そうな子どもの姿の使徒。子どもらしく |
+| `assets/portraits/mirza.webp` | 微笑の使徒カルマトス | 1boy, young man, beautiful, androgynous face, silver hair, long hair, red eyes, glowing eyes, gentle smile, luxurious robe, gold embroidery, holding a parasol, puppet strings on fingers | 人の姿の使徒（使徒リスト 28）。銀髪の美青年。豪奢な衣で、いつも微笑んでいる。人の苦しむ顔を愛でる |
+| `assets/portraits/zalve.webp` | 砂塵の使徒ドレイゼ | 1boy, man, 45 years old, sandy hair, short hair, narrow eyes, smirk, silver monocle, gaunt, money changer, sand-colored vest, sand spilling from sleeves, hourglass | ブランデールの両替商（使徒リスト 64）。砂の体。袖から砂がこぼれる。嘘はつかないが全部は言わない |
+| `assets/portraits/borg.webp` | 取り立て屋ボルグ | 1boy, man, 40 years old, huge man, messy hair, scar, stubble, grin, missing fingers, ragged clothes, debt collector | ドレイゼの眷属。熊のような大男 |
+| `assets/portraits/aurelia.webp` | 生き聖女ユヴァリエ | 1girl, saint, 26 years old, blonde hair, long hair, large glowing butterfly wings, merciful smile, half-closed eyes, white and gold robe, sun emblem, staff | 聖都の「生き聖女」（正体は蝶翅の使徒、使徒リスト 40）。蝶の羽を後光だと思われている。慈悲深そうな微笑み |
+| `assets/portraits/yoihime.webp` | 香煙の使徒ベリエラ | 1girl, woman, 28 years old, long black hair, face half hidden by incense smoke, sheer veil, narrow eyes, calm smile, layered purple robe, hanging censer on a chain, smoke | 朧島の、香の煙をまとった女（使徒リスト 18）。煙で顔ははっきり見えない。争いを嫌い、祭りと賽遊びが好き |
+| `assets/portraits/konoha.webp` | 香炉番のシオン | 1girl, 15 years old, long hair, mischievous smile, purple robe, small censer on a chain, dice cup, smoke | ベリエラの眷属。賭場の壺振りの少女。いかさまが上手（id はもとの名のまま） |
+| `assets/portraits/mordu.webp` | 苔衣の使徒セグリトス | 1boy, old man, tall, gardener, bark-like skin, moss and ivy on clothes, mushrooms, spores, wide-brimmed hat, flowers on hat, glowing eyes, polite smile | 毒沼の庭師（使徒リスト 7。本体は樹皮に覆われたのろい獣）。穏やかで丁寧、悪意がない |
+| `assets/portraits/berna.webp` | 疫医ベルナ | 1girl, plague doctor, beak mask, black hooded coat, gloves, medicine bottles | セグリトスの眷属の医者。嘴の仮面で顔は見せない。声は若い女 |
+| `assets/portraits/azlag.webp` | 剣翼の使徒ヴァルグレア | 1boy, man, 40 years old, huge man, one black bird wing made of blades, blonde hair, glowing eyes, frown, crossed arms, black coat | 刃を撃ち出す黒い鳥の使徒（使徒リスト 62）の人の姿。片翼の大男。転んだのを無かったことにする |
+| `assets/portraits/chezar.webp` | 百面の使徒ディエラン（北の賢人） | 1boy, old man, 72 years old, white hair, slicked back hair, monocle, mustache, mask-like face, expressionless, noble military coat, holding a chess piece, many masks hanging at belt | 仮面をいくつも持つ使徒（使徒リスト 23）。今は宮廷の老将の面で、宰相の客分の軍師。駒に話しかける |
+| `assets/portraits/yura.webp` | 逆夢の使徒ベルファス | toddler, androgynous, 3 years old, silver hair, messy hair, eyes closed, sleeping, floating upside down, pajamas, holding a pillow | 眠り続ける幼子の姿の使徒（使徒リスト 2）。いつも目を閉じて眠っている。逆さの夢に出る。子どもらしく |
 | `assets/portraits/walker.webp` | 灰色の外套の旅人 | 1boy, man, ageless, brown hair, short hair, half-closed eyes, gentle smile, stubble, old grey cloak, traveler | 年の分からない旅人。何でも珍しそうに喜ぶ |
 | `assets/portraits/captain_east.webp` | 東へ出る船の船長 | 1boy, old man, 52 years old, eyepatch, beard, sea captain, captain hat, navy coat | 東の果てへ出る片目の船長 |
 | `assets/portraits/hans.webp` | 宿の主人ハンス | 1boy, middle-aged man, 58 years old, bald, kind smile, blush, apron, innkeeper | 宿の主人。宿帳の年齢の欄で筆を止める |

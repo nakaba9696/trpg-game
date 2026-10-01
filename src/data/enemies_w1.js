@@ -1,5 +1,5 @@
 // 聖都の地下墓地と朧島の敵（W1）。欄の意味は enemies.js と enemies_2.js と同じ
-// 眷属（ヴェスパ・グレゴル・コノハ）は倒せる。使徒（アウレリア・宵姫）は敵にしない。docs/lore/majin.md
+// 眷属（ヴェスパ・グレゴル・シオン）は倒せる。使徒（ユヴァリエ・ベリエラ）は敵にしない。docs/lore/majin.md
 // 説明文は匂わせにとどめる（使徒の名前や正体は書かない。docs/lore/reveal.md）
 // W1 の場所（locations_w1.js）と出来事（events_w1.js）から使う
 (function (G) {
@@ -48,14 +48,14 @@
       },
     },
     w1_tanuki: {
-      name: "祭りの化け狸", tier: 3, hp: 22, dmg: [1, 6, 2], hit: 55, def: 10, agi: 55, will: 30, mres: 20, gold: [10, 50], loot: [["ale", 0.6], ["riceball", 0.4]], shape: "small", eye: "#f09a3e", bribe: 15,
-      desc: "朧島の祭りで屋台を出している狸。化けるのが下手で、いつも尻尾が出ている。売り物の半分は葉っぱ。",
-      look: { body: "biped", build: "stubby", skin: "#8a6a4a", skin2: "#e0cca8", head: "plain", ears: "round", eyes: "googly", mouth: "grin", tail: "thin", weapon: "bottle", outfit: "none", extra: ["blush"], mood: "silly" },
+      name: "祭りの煙小鬼", tier: 3, hp: 22, dmg: [1, 6, 2], hit: 55, def: 10, agi: 55, will: 30, mres: 20, gold: [10, 50], loot: [["ale", 0.6], ["riceball", 0.4]], shape: "small", eye: "#f09a3e", bribe: 15,
+      desc: "朧島の祭りで屋台を出している小鬼。島の香の煙を吸って人に化けるが、下手で、いつも袖や耳から煙が漏れている。売り物の半分は香の灰。",
+      look: { body: "biped", build: "stubby", skin: "#6a6a7a", skin2: "#c8c0d0", head: "plain", ears: "pointy", eyes: "googly", mouth: "grin", weapon: "bottle", outfit: "none", extra: ["blush", "smoke"], mood: "silly" },
       fleeAt: 0.4,
       lines: {
-        open: ["「へい、らっしゃい！ ……おっと、お代がまだで？」狸は葉っぱの小判を握りしめ、腹鼓を打った。"],
-        turn: ["狸はあなたに化けてみせた。尻尾が出ている。", "狸は腹鼓を打ちすぎて、自分でむせた。"],
-        flee: "「覚えてやがれ、ポン！」狸は煙と葉っぱを残して消えた。",
+        open: ["「へい、らっしゃい！ ……おっと、お代がまだで？」小鬼は灰を固めた金貨を握りしめ、煙を噴いた。"],
+        turn: ["小鬼はあなたに化けてみせた。耳から煙が出ている。", "小鬼は煙を噴きすぎて、自分でむせた。"],
+        flee: "「覚えてやがれ、ぷしゅう！」小鬼は煙と灰を残して消えた。",
       },
     },
 
@@ -79,12 +79,12 @@
       },
     },
     w1_konoha: {
-      name: "狐の忍コノハ", tier: 4, boss: true, hp: 85, dmg: [2, 6, 4], hit: 80, def: 20, agi: 85, will: 999, mres: 20, gold: [100, 250], loot: [["smoke", 2], ["gem", 1]], shape: "humanoid", eye: "#ffd24a",
-      desc: "朧島の賭場を仕切る、狐面の少女の忍。いかさまの名人。主の博打の腕前を、主以外の全員が知っている。",
-      look: { body: "biped", build: "small", skin: "#f0d8c0", head: "mask", ears: "pointy", eyes: "slit", mouth: "none", tail: "thin", weapon: "katana", outfit: "garb", cloth: "#b8321f", extra: ["scarf"] },
+      name: "香炉番のシオン", tier: 4, boss: true, hp: 85, dmg: [2, 6, 4], hit: 80, def: 20, agi: 85, will: 999, mres: 20, gold: [100, 250], loot: [["smoke", 2], ["gem", 1]], shape: "humanoid", eye: "#ffd24a",
+      desc: "朧島の賭場を仕切る、香炉を提げた少女。煙に紛れて動く、いかさまの名人。主の博打の腕前を、主以外の全員が知っている。",
+      look: { body: "biped", build: "small", skin: "#f0d8c0", head: "human", hair: "#3a2a4a", ears: "pointy", eyes: "slit", mouth: "smirk", weapon: "dagger", outfit: "garb", cloth: "#5a2a6a", extra: ["scarf", "smoke", "longhair"] },
       lines: {
-        open: ["「あら、賭場で刀を抜くなんて、野暮なお方」狐面の少女は、袖から賽子と苦無を同時に出した。"],
-        turn: ["コノハの姿が三つに分かれた。二つは葉っぱだった。", "「姫さまには内緒ですよ。わたしが負けたなんて」"],
+        open: ["「あら、賭場で剣を抜くなんて、野暮なお方」香炉の少女は、袖から賽子と細い刃を同時に出した。"],
+        turn: ["煙の中で、シオンの姿が三つに分かれた。二つは煙だった。", "「姫さまには内緒ですよ。わたしが負けたなんて」"],
       },
     },
   });

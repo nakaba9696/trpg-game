@@ -52,7 +52,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const id of M.EVENTS) if (!D.EVENTS.some((e) => e.id === id)) f(`出来事 ${id} が無い`);
   if (!D.EVENTS.find((e) => e.id === "e2_berna_clinic").choices.some((c) => c.ok && c.ok.plague)) f("ベルナの天幕で病がうつる選択肢が無い");
   // 見せない言葉・病の仕組みを説明しない
-  const BANNED = /見世物|観客|客席|舞台|台本|赤牙病|疫医|使徒|モルドゥ/;
+  const BANNED = /見世物|観客|客席|舞台|台本|赤牙病|疫医|使徒|セグリトス|モルドゥ/;
   const mine = JSON.stringify([M.INFECT, D.EVENTS.filter((e) => e.id.startsWith("m9_")), D.Q4 && D.Q4.BEAST_HINT, (D.LORE.beast || { lines: [] }).lines], (k, v) => (typeof v === "function" ? undefined : v));
   if (BANNED.test(mine)) f(`プレイヤーに見える文に書かない言葉がある：${mine.match(BANNED)[0]}`);
 

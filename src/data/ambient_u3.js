@@ -34,7 +34,7 @@
     { id: "u3_nerva_widow", where: ["nerva"], text: "桟橋の先に、毎朝同じ女が立っているという。今朝もいた。沖を見ている。船は、もう十年帰っていない。" },
     { id: "u3_leavel_knight", where: ["leavel"], w: 2, text: "白銀の鎧の若い騎士が、鏡の前で口上の練習をしている。「我が剣は国王陛下に……陛下の……」三回目で、噛んだ。" },
     { id: "u3_leavel_pilgrim", where: ["leavel"], cond: later(3), text: "巡礼の母親が、子どもの首筋を撫でながら言った。「聖女さまに触れていただいた痕よ。ありがたいねえ」子どもは、眠そうに笑っている。", lore: "mark:blessed" },
-    { id: "u3_garmund_widows", where: ["garmund"], w: 2, text: "雪かきをしているのは女と年寄りばかりだ。男たちは、みんな南の砦か、皇子さまの誰かの陣にいる。" },
+    { id: "u3_garmund_widows", where: ["garmund"], w: 2, text: "雪かきをしているのは女と年寄りばかりだ。男たちは、みんな北の防衛線か、四騎士さまの誰かの陣にいる。" },
     { id: "u3_garmund_game", where: ["garmund"], cond: later(6), text: "宮廷の近くの酒場で、下働きの男が声をひそめた。「北の賢人さまは、駒を取るたびに謝るんだとよ。人の首を取るときは、謝らないのにな」", lore: "chezar:rumor" },
     { id: "u3_fort_sky", where: ["fort"], w: 2, text: "見張りの兵が、空ばかり見ている。「下は魔物、上は……上はいいんだ。上を見てりゃ、少なくとも最初に分かる」", lore: "azlag:rumor" },
     { id: "u3_fort_king", where: ["fort"], text: "砦の古参兵が、山脈の向こうを見ながら言った。「向こうに何がいるのか、誰も知らねえ。知ってるやつは帰ってこねえからな」新兵が小声で、知りたくない、と言った。" },

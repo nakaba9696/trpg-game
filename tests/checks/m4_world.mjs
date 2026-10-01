@@ -1,6 +1,6 @@
 // M4：世界の出来事（src/engine/world_m4.js・src/data/world_events_m4.js・src/data/events_m4.js）
 // - 表の整合（襲来ごとに居合わせる出来事がある・用語のきっかけがある・見える文に禁じた言葉が無い）
-// - 長く進めると、皇帝が死に・新しい皇帝が立ち・戦が始まって終わり・1130年に協定の結び直しがあり・町が襲われる
+// - 長く進めると、皇帝が北へ出陣して深手を負い（死なない）・皇女の婿が決まり・戦が始まって終わり・1130年に協定の結び直しがあり・町が襲われる
 // - 焼けた町では施設が閉まり、着くと様子が分かって年表に残る。戦の町では値が上がる。酒場で噂が届く。居合わせると出来事が起きる
 // - 古いセーブ（S.world が無い）でも動く
 // - ランダムプレイで何回起きたかを NOTE に出す
@@ -84,9 +84,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!W) fail("S.world ができない");
     else {
       W.hist.forEach((h) => { kinds[h.kind] = (kinds[h.kind] || 0) + 1; if (h.kind === "raid") raidDays.push(h.day); });
-      if (!kinds.emp_worse) fail("皇帝の病が重くならない");
-      if (!kinds.emp_dead) fail("三年たっても皇帝が死なない");
-      if (!kinds.heir || !W.heir) fail("新しい皇帝が立たない");
+      if (!kinds.emp_worse) fail("皇帝が北へ出陣しない");
+      if (!kinds.emp_dead) fail("三年たっても皇帝が戦傷を負わない");
+      if (!kinds.heir || !W.heir) fail("皇女の婿が決まらない");
       if (!kinds.war) fail("戦が始まらない");
       if (!kinds.truce && !W.war) fail("戦が終わらない");
       if (!W.treaty || !(kinds.treaty_ok || kinds.treaty_broken)) fail("1130年の協定の結び直しが無い");
