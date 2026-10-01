@@ -8,11 +8,12 @@
 
 1. WebUI を `--api` を付けて起動する（例：`webui-user.bat` の `COMMANDLINE_ARGS` に `--api`）。
 2. `docs/art/style.example.json` を `docs/art/style.local.json` に写し、書き換える（git には入らない）。
+   - **画面の欄に入れた絵柄の文は API では使われない。** WebUI の Styles に保存して `"styles": ["名前"]` に書くか、下の `prefix`・`suffix`・`negative` に書く。
    - `prefix`・`suffix`：画風・品質のタグ・LoRA（一覧の特徴のタグの前と後ろに付く）。`negative`：ネガティブ。
    - `sampler_name`・`scheduler`・`steps`・`cfg_scale`・`width`・`height`・`seed`（-1 で毎回変わる）・`clip_skip`。
    - hires fix：`enable_hr`・`hr_scale`・`hr_upscaler`・`hr_second_pass_steps`・`denoising_strength`。
    - `override_settings`：`sd_model_checkpoint`（モデル）など。ほかに渡したい項目は `extra` に書く。
-3. `node tools/gen_portraits.mjs --dry` でプロンプトと seed を確かめ、`node tools/gen_portraits.mjs` で、まだ画像の無い人をすべて作る（`--only dil,nora` でその人だけ）。
+3. `node tools/gen_portraits.mjs --dry` で送るプロンプト・styles・seed を確かめ、`node tools/gen_portraits.mjs` で、まだ画像の無い人をすべて作る（`--only dil,nora` でその人だけ）。
 4. 絵を見る。
    - 気に入った名のある人物は `node tools/gen_portraits.mjs --keep dil,nora` で、そのときの seed を一覧に書き戻す（作り直しても同じ見た目を保ちやすくなる）。
    - 気に入らない人は `node tools/gen_portraits.mjs --only <id> --force --new-seed` で別の seed で作り直す（一覧に seed が無い人は `--new-seed` なしでも毎回変わる）。

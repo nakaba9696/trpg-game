@@ -1,6 +1,6 @@
 // 持ち主のパソコンで、手元の Stable Diffusion（AUTOMATIC1111 / Forge の API）に人物の絵を作らせる（CI・テストでは動かさない）。手順は docs/art/README.md。
 // docs/art/portraits.json を読み、まだ assets/portraits/<id>.(webp|png|jpg) が無い人だけ、/sdapi/v1/txt2img に送って保存する。
-// プロンプト ＝ 画風の前置き（style.local.json の prefix）＋ 一覧の特徴のタグ ＋ 画風の後置き（suffix）。ほかの設定も docs/art/style.local.json から。
+// プロンプト ＝ 画風の前置き（style.local.json の prefix）＋ 一覧の特徴のタグ ＋ 画風の後置き（suffix）＋ WebUI の Styles（styles に名前）。ほかの設定も docs/art/style.local.json から。
 // seed：一覧にその人の seed が書いてあればそれを使う（名のある人の見た目を保つ）。無ければ style.local.json の seed（-1 なら毎回変わる）。
 //   使った seed は docs/art/seeds.local.json（git に入れない）に残る。気に入ったら --keep <id> で一覧に書き戻す。
 //
@@ -69,8 +69,9 @@ if (only) for (const id of only) if (!list.some((p) => p.id === id)) console.war
 if (!todo.length) { console.log("作る絵はない（--force で作り直す）"); process.exit(0); }
 
 // ---------------------------------------------------------------- 送る
-// style.local.json の項目をそのまま txt2img に渡す（無いものは WebUI の既定）。hires fix は enable_hr・hr_scale・hr_upscaler・denoising_strength など
-const PASS = ["negative_prompt", "sampler_name", "scheduler", "steps", "cfg_scale", "width", "height", "enable_hr", "hr_scale", "hr_upscaler", "hr_second_pass_steps", "hr_resize_x", "hr_resize_y", "denoising_strength", "restore_faces", "clip_skip", "override_settings"];
+// style.local.json の項目をそのまま txt2img に渡す（無いものは WebUI の既定）。hires fix は enable_hr・hr_scale・hr_upscaler・denoising_strength など。
+// styles は WebUI の「Styles」（styles.csv）に保存した名前の配列。API は画面の入力欄の文を使わないので、汎用の絵柄はここか prefix・suffix・negative に書く
+const PASS = ["styles", "negative_prompt", "sampler_name", "scheduler", "steps", "cfg_scale", "width", "height", "enable_hr", "hr_scale", "hr_upscaler", "hr_second_pass_steps", "hr_resize_x", "hr_resize_y", "denoising_strength", "restore_faces", "clip_skip", "override_settings"];
 function bodyOf(p) {
   const b = { prompt: promptOf(p), seed: seedOf(p), batch_size: 1, n_iter: 1, width: 512, height: 640, override_settings_restore_afterwards: true };
   for (const k of PASS) if (style[k] !== undefined) b[k] = style[k];
@@ -114,7 +115,7 @@ function save(id, png) {
 console.log(`${todo.length} 人（AUTOMATIC1111 / Forge${dry ? "・送らない" : ""}${cwebp || dry ? "" : "・cwebp が無いので png で保存"}）`);
 let made = 0;
 for (const p of todo) {
-  if (dry) { const b = bodyOf(p); console.log(`\n[${p.id}] ${p.name}  seed ${b.seed}${Number.isInteger(p.seed) && !newSeed ? "（一覧）" : ""}\n  + ${b.prompt}\n  - ${b.negative_prompt || ""}`); continue; }
+  if (dry) { const b = bodyOf(p); console.log(`\n[${p.id}] ${p.name}  seed ${b.seed}${Number.isInteger(p.seed) && !newSeed ? "（一覧）" : ""}\n  + ${b.prompt}\n  - ${b.negative_prompt || ""}${b.styles && b.styles.length ? `\n  styles: ${b.styles.join(", ")}（WebUI の Styles の文が、さらに足される）` : ""}`); continue; }
   process.stdout.write(`${p.id}（${p.name}）… `);
   try {
     const { png, seed } = await txt2img(p);
