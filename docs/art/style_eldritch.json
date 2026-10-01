@@ -1,0 +1,19 @@
+{
+ "_comment": "異形の絵の設定（V7）。docs/art/monsters.json で style: \"eldritch\" の魔物だけ、tools/gen_portraits.mjs --monsters がこちらを使う（人の形を持たない格上の存在。一般の魔物は style_monsters.json）。手元だけで変えたいときは docs/art/style_eldritch.local.json（git に入れない）に同じ名前の項目を書く。モデルは Lightning 系なので steps・cfg は小さく、モデルの説明に合わせて調整する。sd_model_checkpoint はファイル名だけでも WebUI が見つける（ハッシュは WebUI の表示に合わせて後で足してよい）",
+ "prefix": "dark fantasy illustration, oil painting, painterly, muted colors, dramatic lighting, ominous",
+ "suffix": "no humans, creature, solo, full body, simple background, white background",
+ "negative": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, 1girl, 1boy, human, humanoid face, multiple monsters, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, anime, cartoon, chibi, cute",
+ "styles": [],
+ "sampler_name": "DPM++ SDE",
+ "scheduler": "Karras",
+ "steps": 7,
+ "cfg_scale": 2,
+ "width": 1024,
+ "height": 1024,
+ "seed": -1,
+ "enable_hr": false,
+ "override_settings": {
+  "sd_model_checkpoint": "dreamshaperXL_lightningDPMSDE.safetensors"
+ },
+ "webpQuality": 75
+}

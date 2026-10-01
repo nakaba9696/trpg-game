@@ -35,3 +35,10 @@
 - 設定は人物と別の [style_monsters.json](style_monsters.json)（最初は人物と同じモデル・同じ絵柄。後置きは `no humans, monster, creature, …, white background`）。手元だけで変えるなら `docs/art/style_monsters.local.json`。人の姿の敵（一覧の `human: true`）は `human` の後置き・ネガティブに替わる。
 - 作る：`node tools/gen_portraits.mjs --monsters --dry --only goblin,slime` でプロンプトを確かめ、`node tools/gen_portraits.mjs --monsters --only goblin,slime` で作る（引数なしなら、まだ画像の無い魔物をすべて）。`--force`・`--keep`・`--new-seed` も人物と同じ。1024×1024 で作り、512×512 の webp に縮めて `assets/monsters/<id>.webp` に置く。
 - ゲームは戦闘でその敵を画像で描き（`src/ui/v6_monsters.js`）、白い背景は縁から消して周りをぼかす。画像の無い敵は今の canvas の絵。埋め込みの上限（12MB）は人物と魔物を合わせて数えるので、魔物は 1 枚 60KB 以下を目安に。
+
+## 異形と、人の姿の使徒（V7）
+
+- 魔物は基本 [style_monsters.json](style_monsters.json)（人物と同じモデル）。ゴブリン・スライム・獣・亜人・まぬけな魔物はこれでよい。
+- **人の形を持たない格上の存在**（使徒の異形の姿・天災の格の化物・不気味な異形）だけ、[monsters.json](monsters.json) の行に `"style": "eldritch"` を付ける。`--monsters` で作るとき、その行は [style_eldritch.json](style_eldritch.json)（`dreamshaperXL_lightningDPMSDE.safetensors`・暗い油彩の挿絵）に替わる。数は絞る（魔物全体の 2 割まで。テストが見る）。ふつうの魔物を先に、異形を後にまとめて送るので、モデルの入れ替えは一度で済む。
+  - Lightning 系のモデルなので、既定は steps 7・cfg 2・sampler `DPM++ SDE`・scheduler `Karras`。**モデルの説明に合わせて調整する**（手元だけなら `docs/art/style_eldritch.local.json`）。`sd_model_checkpoint` はファイル名だけでも動く。WebUI に出るハッシュ（`[xxxxxxxxxx]`）は後で足してよい。
+- **人の姿の使徒**（[portraits.json](portraits.json) のカルマトス・ドレイゼ・ユヴァリエ・ベリエラ・セグリトス・ヴァルグレア・ディエラン・ベルファス）は、モデルを替えずに**特徴のタグで異質さ**を出す（人ではない目・輪郭の歪み・まとう気配・ずれた意匠・表情）。一人ずつ伝承に合わせて選んでいる。`no halo` と衝突する `halo` は使わない。

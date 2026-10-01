@@ -15,6 +15,8 @@
 // --monsters  魔物の絵（V6）：一覧は docs/art/monsters.json、設定は docs/art/style_monsters.json（＋ style_monsters.local.json）、
 //   保存は assets/monsters/<id>.webp（512×512）、seed は docs/art/seeds_monsters.local.json。ほかの引数は同じ
 //   一覧で human: true の敵は、設定の human の suffix・negative に替わる。same_as: <id> の敵は作らない（その絵を使う）
+//   一覧で style: "eldritch" の魔物（人の形を持たない格上の存在。V7）は docs/art/style_eldritch.json（＋ style_eldritch.local.json）で作る（別のモデル）。
+//   モデルの入れ替えを減らすため、ふつうの魔物を先に、異形を後にまとめて送る
 // --variants  喜怒哀楽の差分（V8）：一覧に variants がある人の、基本の絵（assets/portraits/<id>.webp）を元に /sdapi/v1/img2img で作り、
 //   assets/portraits/<id>_<joy|anger|sorrow|fun>.webp に置く。同じ人に見えるよう、seed は基本と同じ（一覧の seed か seeds.local.json）、
 //   プロンプトは基本の表情（face）を差分の表情のタグに差し替えるだけ、denoising_strength は設定の variants.denoising（既定 0.4。0.35〜0.45 で）。
@@ -73,26 +75,40 @@ if (flag("--keep")) {
 }
 
 // 設定：style.json ＋ style.local.json（override_settings だけは中身ごと合わせる）
-const sharedPath = path.join(art, `${KIND.style}.json`);
-if (!existsSync(sharedPath)) { console.error(`${path.relative(root, sharedPath)} が無い`); process.exit(1); }
-const style = readJson(sharedPath);
-if (existsSync(stylePath)) {
-  const local = readJson(stylePath);
-  const os = Object.assign({}, style.override_settings, local.override_settings);
-  Object.assign(style, local);
-  if (Object.keys(os).length) style.override_settings = os;
-  console.log(`（${path.relative(root, stylePath)} で上書き：${Object.keys(local).filter((k) => !k.startsWith("_")).join("・")}）`);
+function loadStyle(name, localPath) {
+  const shared = path.join(art, `${name}.json`);
+  if (!existsSync(shared)) { console.error(`${path.relative(root, shared)} が無い`); process.exit(1); }
+  const st = readJson(shared);
+  if (existsSync(localPath)) {
+    const local = readJson(localPath);
+    const os = Object.assign({}, st.override_settings, local.override_settings);
+    Object.assign(st, local);
+    if (Object.keys(os).length) st.override_settings = os;
+    console.log(`（${path.relative(root, localPath)} で上書き：${Object.keys(local).filter((k) => !k.startsWith("_")).join("・")}）`);
+  }
+  return st;
 }
+const style = loadStyle(KIND.style, stylePath);
+// 異形（魔物の一覧の style: "eldritch"）は別の設定。使うときだけ読む。url は魔物の設定のもの
+const STYLES = { monsters: style };
+const baseOf = (p) => {
+  if (!MON || p.style !== "eldritch") return style;
+  if (!STYLES.eldritch) STYLES.eldritch = loadStyle("style_eldritch", path.join(art, "style_eldritch.local.json"));
+  return STYLES.eldritch;
+};
 
 const join = (...a) => a.map((s) => String(s || "").trim().replace(/^,|,$/g, "").trim()).filter(Boolean).join(", ");
 // 人の姿の敵（魔物の一覧の human: true）は、設定の human の項目で後置き・ネガティブを替える
-const styleOf = (p) => (p.human && style.human ? Object.assign({}, style, style.human) : style);
-const promptOf = (p, face) => join(style.prefix, p.tags, face === undefined ? p.face : face, styleOf(p).suffix);
-const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : style.seed ?? -1);
+const styleOf = (p) => { const b = baseOf(p); return p.human && b.human ? Object.assign({}, b, b.human) : b; };
+const promptOf = (p, face) => join(baseOf(p).prefix, p.tags, face === undefined ? p.face : face, styleOf(p).suffix);
+const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : baseOf(p).seed ?? -1);
 
 const exists = (id) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(outDir, `${id}.${e}`)));
+const isEld = (p) => MON && p.style === "eldritch";
 const VARIANTS = flag("--variants") && !MON;
 const todo = list.filter((p) => !p.same_as && (!only || only.has(p.id)) && (force || !exists(p.id)));
+todo.sort((a, b) => isEld(a) - isEld(b)); // 異形を後にまとめる（並びは安定）
+const lastEld = todo.filter(isEld).pop();
 if (only && !VARIANTS) for (const id of only) if (!list.some((p) => p.id === id)) console.warn(`一覧に ${id} がいない`);
 if (!todo.length && !VARIANTS) { console.log("作る絵はない（--force で作り直す）"); process.exit(0); }
 
@@ -101,11 +117,12 @@ if (!todo.length && !VARIANTS) { console.log("作る絵はない（--force で�
 // styles は WebUI の「Styles」（styles.csv）に保存した名前の配列。API は画面の入力欄の文を使わないので、汎用の絵柄はここか prefix・suffix・negative に書く
 const PASS = ["styles", "negative_prompt", "sampler_name", "scheduler", "steps", "cfg_scale", "width", "height", "enable_hr", "hr_scale", "hr_upscaler", "hr_second_pass_steps", "hr_resize_x", "hr_resize_y", "denoising_strength", "restore_faces", "clip_skip", "override_settings"];
 function bodyOf(p) {
-  const b = { prompt: promptOf(p), seed: seedOf(p), batch_size: 1, n_iter: 1, override_settings_restore_afterwards: true };
+  // 異形が続くあいだはモデルを戻さない（最後の異形のあとで戻す）
+  const b = { prompt: promptOf(p), seed: seedOf(p), batch_size: 1, n_iter: 1, override_settings_restore_afterwards: !isEld(p) || p === lastEld };
   const st = styleOf(p);
   for (const k of PASS) if (st[k] !== undefined) b[k] = st[k];
   if (st.negative !== undefined && b.negative_prompt === undefined) b.negative_prompt = st.negative;
-  return Object.assign(b, style.extra || {});
+  return Object.assign(b, baseOf(p).extra || {});
 }
 async function txt2img(p) {
   const url = (style.url || "http://127.0.0.1:7860").replace(/\/$/, "") + "/sdapi/v1/txt2img";
@@ -122,7 +139,8 @@ async function txt2img(p) {
 let cwebp = null;
 try { execFileSync("cwebp", ["-version"], { stdio: "ignore" }); cwebp = "cwebp"; } catch {}
 const size = data.size || (MON ? { width: 512, height: 512 } : { width: 512, height: 640 });
-const quality = style.webpQuality || 80;
+const qualityOf = (p) => baseOf(p).webpQuality || style.webpQuality || 80;
+let quality = style.webpQuality || 80; // 今の絵の webp の質（回すときに一体ずつ替える）
 const kindOf = (buf) => (buf.slice(0, 4).toString("latin1") === "RIFF" && buf.slice(8, 12).toString("latin1") === "WEBP" ? "webp" : buf[0] === 0xff && buf[1] === 0xd8 ? "jpg" : buf[0] === 0x89 && buf[1] === 0x50 ? "png" : "?");
 const api = (p) => (style.url || "http://127.0.0.1:7860").replace(/\/$/, "") + p;
 async function call(p, method, body) {
@@ -181,14 +199,17 @@ if (VARIANTS) { await runVariants(); process.exit(0); }
 // ---------------------------------------------------------------- 回す
 console.log(`${todo.length} ${KIND.unit}（${api("")}${dry ? "・送らない" : ""}・${size.width}×${size.height} に縮めて保存：${cwebp ? "cwebp" : "WebUI（cwebp が無い）"}）`);
 if (dry) {
-  const show = Object.assign({}, bodyOf(todo[0]));
-  delete show.prompt; delete show.negative_prompt; delete show.seed;
-  console.log("送る設定：" + JSON.stringify(show));
+  for (const p of [todo[0], todo.find(isEld)].filter((p, i, a) => p && a.indexOf(p) === i)) {
+    const show = Object.assign({}, bodyOf(p));
+    delete show.prompt; delete show.negative_prompt; delete show.seed;
+    console.log(`送る設定${isEld(p) ? "（異形：style_eldritch.json）" : ""}：` + JSON.stringify(show));
+  }
 }
 let made = 0;
 for (const p of todo) {
-  if (dry) { const b = bodyOf(p); console.log(`\n[${p.id}] ${p.name}  seed ${b.seed}${Number.isInteger(p.seed) && !newSeed ? "（一覧）" : ""}\n  + ${b.prompt}\n  - ${b.negative_prompt || ""}${b.styles && b.styles.length ? `\n  styles: ${b.styles.join(", ")}（WebUI の Styles の文が、さらに足される）` : ""}`); continue; }
-  process.stdout.write(`${p.id}（${p.name}）… `);
+  if (dry) { const b = bodyOf(p); console.log(`\n[${p.id}] ${p.name}${isEld(p) ? "（異形）" : ""}  seed ${b.seed}${Number.isInteger(p.seed) && !newSeed ? "（一覧）" : ""}\n  + ${b.prompt}\n  - ${b.negative_prompt || ""}${b.styles && b.styles.length ? `\n  styles: ${b.styles.join(", ")}（WebUI の Styles の文が、さらに足される）` : ""}`); continue; }
+  process.stdout.write(`${p.id}（${p.name}${isEld(p) ? "・異形" : ""}）… `);
+  quality = qualityOf(p);
   try {
     const { png, seed } = await txt2img(p);
     const small = await shrink(p.id, png);
