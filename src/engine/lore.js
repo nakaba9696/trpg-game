@@ -18,6 +18,13 @@
     return S.lore;
   };
 
+  // 同じ項目の行が一度に二つ開いても、書き足しの知らせは一行だけ（U6）。今の手番の記録（最後の「あなた」の行より後）に同じ行があれば出さない
+  const notedNow = (text) => {
+    const log = G.S.log || [];
+    for (let i = log.length - 1; i >= 0 && log[i].k !== "you"; i--) if (log[i].text === text) return true;
+    return false;
+  };
+
   // "<項目>:<行>" を開く。新しく開いたら true
   G.openLore = (trig, quiet) => {
     const S = G.S;
@@ -36,7 +43,7 @@
       seen[id] = seen[id] || [];
       if (!seen[id].includes(key)) seen[id].push(key);
     }
-    if (!quiet) G.note(`手引きに書き足された：${e.title}`);
+    if (!quiet && !notedNow(`手引きに書き足された：${e.title}`)) G.note(`手引きに書き足された：${e.title}`);
     return true;
   };
   G.openLores = (x, quiet) => list(x).forEach((t) => G.openLore(t, quiet));

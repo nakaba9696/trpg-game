@@ -179,6 +179,11 @@ body:has(#setup[data-step="title"]:not([hidden])) .top h1.logo, body:has(#setup[
 .foe { position: relative; }
 .foe.aim { box-shadow: inset 0 0 0 2px var(--ng); }
 .foe .aimTag { position: absolute; top: -9px; right: 8px; background: var(--ng); color: var(--paper); font-size: 11px; font-weight: 700; line-height: 1; padding: 3px 6px; border-radius: 3px; letter-spacing: .08em; }
+/* U6：札を押して狙いを替える */
+.foe.pick { cursor: pointer; }
+.foe.pick:not(.aim):hover { box-shadow: inset 0 0 0 1px var(--ng); background: var(--paper); }
+.foe.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.aimHint { margin: 4px 0 0; }
 .act em { font-style: normal; font-size: 11.5px; font-weight: 700; line-height: 1.4; }
 .act .mark { color: var(--accent); }
 .act.marked { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
@@ -510,6 +515,8 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
 .creStats .srow { display: grid; grid-template-columns: 36px 3em 2.4em minmax(0, 1fr) auto; grid-template-areas: "lk nm v bar pm" "lk det det det det"; align-items: center; gap: 2px 8px; padding: 6px 0; border-bottom: 1px dashed var(--rule); font-size: 13.5px; }
 .creStats .srow:last-child { border-bottom: 0; }
 .creStats .lock { grid-area: lk; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; color: var(--muted); }
+.creStats .lock { height: 40px; grid-auto-rows: auto; align-content: center; gap: 1px; }
+.creStats .lock small { font-size: 9.5px; line-height: 1; letter-spacing: 0; white-space: nowrap; }
 .creStats .locked .lock { color: var(--paper); background: var(--ink); border-color: var(--ink); }
 .creStats .nm { grid-area: nm; font-family: var(--f-body); }
 .creStats .v { grid-area: v; font-weight: 700; font-size: 18px; text-align: right; }
@@ -570,3 +577,6 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
 .dbody.sound .srow:first-child { display: flex; }
 .dbody.sound input[type="range"] { width: 100%; accent-color: var(--accent); }
 .dbody.sound output { text-align: right; }
+
+/* ---------------------------------------------------------------- U6：スマホで行動ボタンが隠れているときの「行動へ」 */
+#toActs { position: fixed; right: 16px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); z-index: 5; box-shadow: 0 2px 8px rgba(0, 0, 0, .25); background: var(--ink); color: var(--paper); border-color: var(--ink); }
