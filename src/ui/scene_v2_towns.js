@@ -670,7 +670,7 @@
     ctx.beginPath(); ctx.moveTo(cx - u * 20, hz - u * 13.5); ctx.quadraticCurveTo(cx, hz - u * 8, cx + u * 14, hz - u * 19.5); ctx.stroke();
     for (let t = 0.05; t < 1; t += 0.05) { const x = lerp(cx - u * 20, cx + u * 14, t), y = (1 - t) * (1 - t) * (hz - u * 13.5) + 2 * t * (1 - t) * (hz - u * 8) + t * t * (hz - u * 19.5); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - u * 1.5); ctx.stroke(); }
     // 葉の天蓋と木漏れ日
-    for (let i = 0; i < 40; i++) { ctx.fillStyle = P.dark(R() < 0.5 ? "#2a4a24" : "#3a5a2a", 0, 0.4); ctx.beginPath(); ctx.arc(R() * w, R() * u * 8 - u * 2, u * (3 + R() * 5), 0, Math.PI * 2); ctx.fill(); }
+    V.blurred(P, u * 0.5, () => { const c2 = P.ctx; for (let i = 0; i < 160; i++) { const r = u * (1.5 + R() * 3); c2.fillStyle = P.dark(R() < 0.5 ? "#2a4a24" : "#3a5a2a", 0, 0.4 + R() * 0.2); c2.beginPath(); c2.ellipse(R() * w, Math.pow(R(), 1.5) * u * 10 - u * 2, r * 1.3, r, R() * 3, 0, Math.PI * 2); c2.fill(); } });
     if (!P.night) { ctx.save(); ctx.globalCompositeOperation = "lighter"; for (let i = 0; i < 6; i++) { const x = R() * w; const g = ctx.createLinearGradient(x, 0, x + u * 10, h); g.addColorStop(0, rgba(P.sun.col, 0.12)); g.addColorStop(1, rgba(P.sun.col, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + u * 2, 0); ctx.lineTo(x + u * 14, h); ctx.lineTo(x + u * 8, h); ctx.fill(); } ctx.restore(); }
     V.lamp(P, cx - u * 6, h - u * 6, u * 7, { col: "#ffc070" });
     // 吊るした獲物（毛皮）

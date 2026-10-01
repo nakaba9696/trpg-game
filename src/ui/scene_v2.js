@@ -52,13 +52,14 @@
   // 霧の色は町ごとに違う（scene.js と同じ）
   const FOG = { port: "#c9d2dc", swamp: "#a8c29a", magic: "#c0b2e8", fort: "#a39888", w1_oboro: "#e8c4a4", w1_catacomb: "#b4c8be", bones: "#c8c4b4", forest: "#c4d0c4", w2_acid: "#b4d89a", w2_spa: "#eceef2", w2_forge: "#b0a8a0", w2_shadow: "#b8b4ac" };
   // 時間帯ごとの空（天頂・中ほど・地平）と、光（太陽・月）の色、地上の明るさ（環境光）
+  // 色調は「くすんだセピア・深い青緑・墨色」。派手な色は避け、仕上げ（painterly）でさらに褪せさせる
   const SKY = [
-    { top: "#4f6c9e", mid: "#b49cb4", hor: "#f4c79a", sun: "#ffe0a8", amb: [1, 0.9, 0.8], shadow: "#3a3458", lightK: 0.35, sx: 0.2, sy: -0.1 },   // 朝
-    { top: "#3566ad", mid: "#77a3d6", hor: "#d4e4ee", sun: "#fff6dc", amb: [1, 1, 0.97], shadow: "#2c3a58", lightK: 0.12, sx: 0.68, sy: 0.14 }, // 昼
-    { top: "#221d48", mid: "#9a4a5c", hor: "#f39a54", sun: "#ffad5c", amb: [0.92, 0.64, 0.56], shadow: "#3a2040", lightK: 0.7, sx: 0.78, sy: -0.03 }, // 夕
-    { top: "#02050d", mid: "#0b1430", hor: "#24345a", sun: "#f1ecd6", amb: [0.2, 0.25, 0.42], shadow: "#04060e", lightK: 1, sx: 0.24, sy: 0.15, moon: true }, // 夜
+    { top: "#46586a", mid: "#8c8686", hor: "#d6bc94", sun: "#f0d6a4", amb: [0.92, 0.85, 0.74], shadow: "#2e2c38", lightK: 0.35, sx: 0.2, sy: -0.1 },   // 朝
+    { top: "#4a6470", mid: "#8a9c9a", hor: "#cfc8b0", sun: "#f2e6c8", amb: [0.9, 0.9, 0.84], shadow: "#26302e", lightK: 0.12, sx: 0.68, sy: 0.14 }, // 昼
+    { top: "#262430", mid: "#6a4844", hor: "#c48a58", sun: "#e8a464", amb: [0.84, 0.62, 0.52], shadow: "#2a1c20", lightK: 0.7, sx: 0.78, sy: -0.03 }, // 夕
+    { top: "#04080b", mid: "#0e1a20", hor: "#203238", sun: "#e2dcc6", amb: [0.18, 0.24, 0.3], shadow: "#030608", lightK: 1, sx: 0.24, sy: 0.15, moon: true }, // 夜
   ];
-  const RED_SKY = { top: "#100203", mid: "#460b09", hor: "#b0341c", sun: "#ff5a3a", amb: [0.78, 0.38, 0.32], shadow: "#1a0204", lightK: 0.9, sx: 0.7, sy: 0.18, moon: true, red: true };
+  const RED_SKY = { top: "#120705", mid: "#381410", hor: "#8a3420", sun: "#d8583a", amb: [0.7, 0.38, 0.32], shadow: "#160404", lightK: 0.9, sx: 0.7, sy: 0.18, moon: true, red: true };
 
   // 1枚描くための道具箱 P を作る（幅・高さから地平線と単位 u を決める）
   function makeP(ctx, w, h, opt, key, inside) {
@@ -135,8 +136,8 @@
   }
   function cloudColors(P) {
     if (P.red) return { lit: "#c0402a", shade: "#30080a" };
-    if (P.overcast) return P.night ? { lit: "#20262e", shade: "#0b0e13" } : P.weather === "snow" ? { lit: "#d4dae2", shade: "#8a94a2" } : { lit: "#8a929c", shade: "#454c56" };
-    return [{ lit: "#ffe4cc", shade: "#9a88a8" }, { lit: "#ffffff", shade: "#b4c2d6" }, { lit: "#ffbe86", shade: "#5c3858" }, { lit: "#34405e", shade: "#10162a" }][P.phase];
+    if (P.overcast) return P.night ? { lit: "#1e2628", shade: "#0a0e10" } : P.weather === "snow" ? { lit: "#d4d6d4", shade: "#868e8e" } : { lit: "#848c8a", shade: "#424a4a" };
+    return [{ lit: "#e8d2b4", shade: "#76707c" }, { lit: "#ece4d2", shade: "#8a9490" }, { lit: "#d8a476", shade: "#4a3436" }, { lit: "#2c383c", shade: "#0c1214" }][P.phase];
   }
   function paintSky(P) {
     const { ctx, w, h, hz, R, sky } = P;
@@ -192,10 +193,10 @@
     const cc = cloudColors(P);
     const R2 = rng(P.seed + ":cloud");
     const cnt = P.overcast ? 9 + Math.round(w / 160) : P.night ? 3 : 3 + Math.round(R2() * 4);
-    for (let i = 0; i < cnt; i++) {
+    blurred(P, P.u * 0.5, () => { for (let i = 0; i < cnt; i++) {
       const y = hz * (P.overcast ? 0.05 + R2() * 0.55 : 0.1 + R2() * 0.5), cw = P.u * (P.overcast ? 30 + R2() * 40 : 14 + R2() * 26);
       cloud(P, R2() * w, y, cw, cw * (0.22 + R2() * 0.12), { lit: cc.lit, shade: cc.shade, a: P.overcast ? 0.75 : 0.7 + R2() * 0.25 });
-    }
+    } });
     // 地平の帯雲と、地平の明るみ
     for (let i = 0; i < 5; i++) {
       const y = hz * (0.72 + R2() * 0.22), cw = w * (0.2 + R2() * 0.35), x = R2() * w;
@@ -228,8 +229,21 @@
   Object.assign(V, { paintSky, cloud, moon });
 
   // ---------------------------------------------------------------- 地形
+  // ぼかした層：別の canvas に描いてから、一度だけぼかして重ねる（遠景・雲。形ごとにぼかすと重い）
+  function blurred(P, px, fn) {
+    if (!P.mk || !P.cv || !(px > 0.3)) return fn();
+    const main = P.ctx, c = P.mk(P.cv.width, P.cv.height), lc = c.getContext("2d");
+    lc.setTransform(P.dpr, 0, 0, P.dpr, 0, 0);
+    P.ctx = lc;
+    try { return fn(); } finally {
+      P.ctx = main;
+      main.save(); main.setTransform(1, 0, 0, 1, 0, 0); main.filter = `blur(${(px * P.dpr).toFixed(1)}px)`; main.drawImage(c, 0, 0); main.filter = "none"; main.restore();
+    }
+  }
+  V.blurred = blurred;
   // 山並み：揺らぎで稜線を作り、光の反対側の斜面を影にする。雪線より上は雪
-  function mountains(P, o) {
+  function mountains(P, o) { return blurred(P, (o.d || 0) > 0.3 ? P.u * 0.3 * o.d : 0, () => mountains0(P, o)); }
+  function mountains0(P, o) {
     const { ctx, w, R } = P;
     const base = o.base, H = o.height, d = o.d || 0, col = o.color || "#5a6478";
     const f = fbm(R, 3), f2 = fbm(R, 4), ph = R() * 50, sc = o.scale || 4;
@@ -485,7 +499,8 @@
     }
   }
   // 遠くの森の帯（木の頭を並べる。遠いほど霞む）
-  function forestBand(P, o) {
+  function forestBand(P, o) { return blurred(P, (o.d || 0.5) > 0.3 ? P.u * 0.4 * (o.d || 0.5) : 0, () => forestBand0(P, o)); }
+  function forestBand0(P, o) {
     const { ctx, w, R } = P;
     const base = o.base, s = o.size, d = o.d || 0.5, kind = o.kind || "mixed";
     const cols = leafColors(P, o.color) || ["#4a5448", "#6a7466", "#3a4438"];
@@ -650,7 +665,8 @@
     ctx.fillStyle = ao; ctx.fillRect(x, base - bh * 0.25, bw, bh * 0.25);
   }
   // 家並み（左から右へ、幅と高さを揺らして並べる）
-  function houseRow(P, o) {
+  function houseRow(P, o) { return blurred(P, (o.d || 0) >= 0.45 ? P.u * 0.15 : 0, () => houseRow0(P, o)); }
+  function houseRow0(P, o) {
     const { R, w } = P;
     let x = (o.from == null ? -P.u * 4 : o.from);
     const to = o.to == null ? w + P.u * 4 : o.to;
@@ -1050,7 +1066,76 @@
       ctx.fillStyle = rgba(P.night ? mix(P.fogC, "#1c2230", 0.6) : P.fogC, 0.18); ctx.fillRect(0, 0, w, h);
     }
   }
-  Object.assign(V, { emit, grain });
+  // 絵画風の仕上げ（前半）：色を褪せさせ（彩度を落とす）、ぼかした写しを重ねてにじませ、影を青緑・光をセピアに寄せる
+  function wash(P) {
+    const { ctx, w, h, cv, dpr, mk } = P;
+    if (!cv || !mk) return;
+    const tmp = mk(cv.width, cv.height), t = tmp.getContext("2d");
+    t.filter = "saturate(0.6) contrast(1.04)"; t.drawImage(cv, 0, 0); t.filter = "none";
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = "copy"; ctx.drawImage(tmp, 0, 0);
+    ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 0.38; ctx.filter = `blur(${(1.4 * dpr).toFixed(1)}px)`; ctx.drawImage(tmp, 0, 0);
+    ctx.filter = "none"; ctx.globalAlpha = 1; ctx.restore();
+    ctx.save();
+    ctx.globalCompositeOperation = "soft-light";
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, "rgba(40,74,76,.45)"); g.addColorStop(0.6, "rgba(60,70,60,.25)"); g.addColorStop(1, "rgba(58,40,24,.4)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = "multiply"; ctx.fillStyle = "rgba(230,214,184,.42)"; ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  }
+  // 紙（繊維と斑）。一度だけ作る
+  function paperTile(mk) {
+    if (V._paper) return V._paper;
+    const N = 256, c = mk(N, N);
+    if (!c) return null;
+    const g = c.getContext("2d"), img = g.createImageData(N, N), Rp = rng("paper"), f = noise(Rp, 16);
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const i = (y * N + x) * 4, m = f((x / N) * 16 + Math.sin(y * 0.05) * 2) * 0.5 + f((y / N) * 16 + 7) * 0.5;
+      const v = 222 + m * 26 + (Rp() - 0.5) * 22;
+      img.data[i] = v; img.data[i + 1] = v - 6; img.data[i + 2] = v - 18; img.data[i + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+    g.strokeStyle = "rgba(120,100,70,.18)"; g.lineWidth = 0.6;
+    for (let i = 0; i < 160; i++) { const x = Rp() * N, y = Rp() * N, a = Rp() * Math.PI, l = 4 + Rp() * 14; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(a + 0.5) * l * 0.5, y + Math.sin(a + 0.5) * l * 0.5, x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); }
+    return (V._paper = c);
+  }
+  // 絵画風の仕上げ（後半）：絵の具の溜まり（斑）、かすれた筆の跡、紙の質感、墨色の縁
+  function paperFinish(P) {
+    const { ctx, w, h, mk } = P;
+    if (!mk) return;
+    const Rf = rng(P.seed + ":paper");
+    ctx.save();
+    // 絵の具の溜まり（輪郭の濃い淡い斑）
+    ctx.globalCompositeOperation = "multiply";
+    for (let i = 0; i < 14; i++) {
+      const x = Rf() * w, y = Rf() * h, r = Math.max(w, h) * (0.06 + Rf() * 0.16);
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      const a = 0.06 + Rf() * 0.08;
+      g.addColorStop(0, `rgba(150,128,100,${a})`); g.addColorStop(0.6, `rgba(160,140,110,${a * 0.6})`); g.addColorStop(1, "rgba(200,184,160,0)");
+      ctx.save(); ctx.translate(x, y); ctx.rotate(Rf() * 3); ctx.scale(1, 0.4 + Rf() * 0.5); ctx.translate(-x, -y);
+      ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); ctx.restore();
+    }
+    // かすれた筆の跡（横に流れる細い明暗）
+    ctx.globalCompositeOperation = "soft-light";
+    ctx.lineCap = "round";
+    for (let i = 0; i < 26; i++) {
+      const y = Rf() * h, x = Rf() * w, l = Math.min(w, h) * (0.05 + Rf() * 0.12), a = (Rf() - 0.5) * 1.2;
+      ctx.strokeStyle = Rf() < 0.5 ? "rgba(255,246,226,.07)" : "rgba(30,26,20,.07)"; ctx.lineWidth = P.u * (0.8 + Rf() * 1.6);
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + Math.cos(a) * l * 0.5, y + Math.sin(a) * l * 0.5 + (Rf() - 0.5) * l * 0.2, x + Math.cos(a) * l, y + Math.sin(a) * l); ctx.stroke();
+    }
+    // 紙の質感
+    const tile = paperTile(mk);
+    const pat = tile && ctx.createPattern(tile, "repeat");
+    if (pat) { ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = 0.6; ctx.fillStyle = pat; ctx.fillRect(0, 0, w, h); ctx.globalAlpha = 1; }
+    // 墨色の縁（四隅が沈む）
+    ctx.globalCompositeOperation = "multiply";
+    const vg = ctx.createRadialGradient(w / 2, h * 0.5, Math.min(w, h) * 0.3, w / 2, h * 0.5, Math.hypot(w, h) * 0.6);
+    vg.addColorStop(0, "rgba(255,255,255,0)"); vg.addColorStop(1, "rgba(70,58,44,.75)");
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  }
+  Object.assign(V, { emit, grain, wash, paperFinish });
 
   // ---------------------------------------------------------------- 毎コマ重ねるもの
   // 炎（松明・暖炉・篝火）：涙の形を三重にし、時間で揺らす
@@ -1170,6 +1255,7 @@
     if (!inside) paintSky(P);
     fn(P);
     if (!inside) seasonGround(P);
+    wash(P);
     emit(P);
     // 濡れた道に映る灯り
     if (P.wetRoad) {
@@ -1178,7 +1264,7 @@
       for (const L of P.lights) if (L.y < P.h && L.k * P.lightK > 0.2) { const g = ctx.createLinearGradient(0, P.hz, 0, P.h); g.addColorStop(0, rgba(L.col, 0)); g.addColorStop(0.5, rgba(L.col, 0.12 * L.k)); g.addColorStop(1, rgba(L.col, 0)); ctx.fillStyle = g; ctx.fillRect(L.x - L.r * 0.04, Math.max(P.hz, L.y), L.r * 0.08, P.h - Math.max(P.hz, L.y)); }
       ctx.restore();
     }
-    grain(P);
+    paperFinish(P);
   }
   V.paintBase = paintBase;
 

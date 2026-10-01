@@ -153,7 +153,7 @@
       mist(P, hz - u * 2, 1, 0.18 * d, P.haze);
     }
     // 天蓋
-    for (let i = 0; i < 70; i++) { const x = R() * w, y = R() * hz * 0.45, r = u * (4 + R() * 7), c = canopy[Math.floor(R() * Math.min(3, canopy.length))]; ctx.fillStyle = R() < 0.6 ? P.dark(c, 0.15, 0.45) : P.lit(c, 0.15, 0.25); ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+    V.blurred(P, u * 0.5, () => { const c2 = P.ctx; for (let i = 0; i < 260; i++) { const x = R() * w, y = Math.pow(R(), 1.6) * hz * 0.55, r = u * (1.5 + R() * 3.5), c = canopy[Math.floor(R() * Math.min(3, canopy.length))]; c2.fillStyle = R() < 0.65 ? P.dark(c, 0.15, 0.5) : P.lit(c, 0.15, 0.2); c2.beginPath(); c2.ellipse(x, y, r * 1.3, r, R() * 3, 0, Math.PI * 2); c2.fill(); } });
     shafts(P, 9, 0.09);
     // 苔むした小道
     V.road(P, { top: hz + u * 2, x: cx + u * 3, x1: cx - u * 4, wt: u * 2, wb: w * 0.4, color: "#5a4a34" });
