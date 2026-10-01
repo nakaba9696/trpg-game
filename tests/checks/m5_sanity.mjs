@@ -165,17 +165,24 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   G.act("fac:church");
   if (S.mode !== "explore" || S.fac) f("毛と牙を隠せないのに教会に入れる");
   if (!D.EVENTS.find((e) => e.id === "m5_inspect").cond(S)) f("3 段で門の検めが起きない");
-  // 噛まれてうつる
+  // 獣の病がうつるのは疫医ベルナからだけ（M9 #103）。人狼に噛まれてもうつらない。くわしくは tests/checks/m9_plague.mjs
   S = start("merc", 508);
-  let bitten = false;
-  for (let i = 0; i < 30 && !bitten; i++) {
+  for (let i = 0; i < 30; i++) {
     G.startCombat(["werewolf"], {});
     const w = D.ENEMIES.werewolf, hit = w.hit; w.hit = 999;
     try { for (let k = 0; k < 5 && S.combat; k++) G.combatAct("guard"); } finally { w.hit = hit; }
     S.combat = null; S.mode = "explore";
-    bitten = G.beastOf(S) > 0;
   }
-  if (!bitten) f("人狼に噛まれても病がうつらない");
+  if (G.beastOf(S) > 0) f("人狼に噛まれて病がうつった（うつすのは疫医ベルナだけ）");
+  let pricked = false;
+  for (let i = 0; i < 30 && !pricked; i++) {
+    G.startCombat(["e2_berna"], {});
+    const b = D.ENEMIES.e2_berna, hit = b.hit; b.hit = 999;
+    try { for (let k = 0; k < 5 && S.combat; k++) G.combatAct("guard"); } finally { b.hit = hit; }
+    S.combat = null; S.mode = "explore";
+    pricked = G.beastOf(S) > 0;
+  }
+  if (!pricked) f("疫医ベルナに傷を負わされても病がうつらない");
   // 5 段で終わる。次の冒険で、その名の獣に会うことがある
   S = start("merc", 509, { profile: { name: "ガルド", sex: "男", age: 30, history: "テスト用", personality: "無口" } });
   G.P.graves = [];
@@ -255,5 +262,5 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   }
   console.log(`NOTE M5 ランダムプレイ ${GAMES} 回：正気が 70 を割った ${r.lowSan}・40 を割った ${r.edge}・発狂 ${r.mad}／獣の病にかかった ${r.sick}・3 段に達した ${r.deep}・獣になった ${r.beast}／平均 ${Math.round(r.turns / GAMES)} 手番`);
 
-  if (!bad) ok(`M5 正気・獣の病・代償つきの品（出来事 ${m5ev.length}・品 ${m5items.length}・古いセーブ・術の借り・症状・懺悔・発狂・獣・祓い・前の冒険の獣・品の代償）`);
+  if (!bad) ok(`M5 正気・獣の病・代償つきの品（出来事 ${m5ev.length}・品 ${m5items.length}・古いセーブ・術の借り・症状・懺悔・発狂・獣・祓い・人狼ではうつらない・ベルナからうつる・前の冒険の獣・品の代償）`);
 };
