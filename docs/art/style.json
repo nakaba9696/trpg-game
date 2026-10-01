@@ -14,7 +14,7 @@
  "seed": -1,
  "enable_hr": false,
  "override_settings": {
-  "sd_model_checkpoint": "waiIllustriousSDXL_v160.safetensors [a5f58eb1c3]"
+  "sd_model_checkpoint": "obsessionIllustrious_v30.safetensors [71be7a1bed]"
  },
  "webpQuality": 80
 }
