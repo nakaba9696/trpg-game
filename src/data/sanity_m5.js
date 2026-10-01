@@ -1,5 +1,6 @@
 // 正気と獣の病の文と表（M5）。仕組みは src/engine/sanity_m5.js、設定は docs/lore/curses.md 3.・4.
 // 症状は数字より先に文で出す。病の出どころ・正気が減るわけは書かない（docs/lore/voice.md）
+// 獣の病がうつるのは疫医ベルナからだけ（M9 #103。src/data/m9_plague.js・src/engine/m9_plague.js）
 // 用語説明（U3 の D.LORE）があれば、「病と呪い」の節に行を足す。無ければ何もしない
 (function (G) {
   const D = (G.data = G.data || {});
@@ -60,8 +61,7 @@
     BEAST_WORD: ["", "夜目が利く・生肉が気になる", "爪が硬い・血の匂いが分かる", "腕の毛と牙を隠している", "月の夜の記憶がない"],
     BEAST_CHRON: [null, "生肉の匂いが気になりはじめる", "爪が硬く伸びるようになる", "腕の毛と牙を、袖と襟で隠して歩くようになる", "月の夜の記憶が抜けるようになる"],
     BEAST_CURE: "熱が引いた。夜が、ただの暗い夜に戻った。生肉の匂いも、もう気にならない。",
-    BITE: "噛まれた傷が、妙に熱い。",
-    DAYS_PER_STAGE: 8, // 病がひとりでに一段進む日数
+        DAYS_PER_STAGE: 8, // 病がひとりでに一段進む日数
 
     // 終わり方（M6 #55 の「選べない終わり方」。S.fate・墓碑の fate・年表の kind "fate" で残す）
     END_MAD: {
@@ -88,8 +88,8 @@
         "stele:0": { sanity: -5 },
         "w1_bonewall:0": { sanity: -12 },
         "w1_bonewall:1": { sanity: -3 },
-        "w1_beastnight:2": { beast: "infect" },
-        "w1_bloodfont:0": { beast: "infect" },
+        "w1_beastnight:2": { sanity: -4 },
+        "w1_bloodfont:0": { sanity: -6 },
       },
       majin: -12,       // 魔人にはじめて会ったとき（魔人ごとに一度）
       boss: -6,         // 迷宮の主・ボスをはじめて見たとき

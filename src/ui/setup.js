@@ -328,6 +328,7 @@
     box.append(list);
     box.append(h("p", "fine", "数値がそのまま成功率の基準（％）。使った能力値は、冒険の中で才能限界まで伸びていく。能力の名前に触れると説明が出る。"));
     root.append(box);
+    if (G.m8ui) root.append(G.m8ui.creBox(cre.talents(draft), cre.flavors && cre.flavors(draft)));
 
     const nav = h("div", "creNav");
     const next = btn("次へ：確かめる", "primary", () => go("sheet"), "s-next");
@@ -385,6 +386,7 @@
     });
     const sb = h("section");
     sb.append(h("h3", "", "能力値"), stl, h("p", "fine num", `HP ${G.maxHpOf(o.stats)} ／ MP ${G.maxMpOf(o.stats)} ／ 所持金 ${c.gold}G`));
+    if (G.m8ui && o.talents) sb.append(G.m8ui.sheetPart(o.talents, o.flavors));
     const it = (id) => (D.ITEMS[id] ? D.ITEMS[id].name : id);
     const gear = [c.weapon, c.armor].filter(Boolean).map(it).concat(Object.entries(c.items).map(([id, n]) => `${it(id)}${n > 1 ? "×" + n : ""}`));
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
