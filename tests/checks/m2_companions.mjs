@@ -12,7 +12,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   texts.push(...D.M2_FRAGMENTS);
   for (const L of Object.values(D.M2_LIFE)) texts.push(...L);
   // 見世物にかかわる言葉は書かない。仲間は世界の説明役ではないので、上位の存在の名前も出さない
-  for (const t of texts) if (/見世物|観客|客席|舞台|台本|神々|魔王|魔人/.test(t)) fail(`M2: 見せる文に書かない言葉がある「${t}」`);
+  for (const t of texts) if (/見世物|観客|客席|舞台|台本|神々|魔王|使徒/.test(t)) fail(`M2: 見せる文に書かない言葉がある「${t}」`);
   for (const [k, t] of Object.entries(D.M2_TRAITS)) if (!["steal", "knife", "sell", "leave"].includes(t.style) || t.talk.length < 3) fail(`M2: 性格 ${k} の欄が足りない`);
   // 今の性格の表（characters.js）は、どれも決まった性格に当たる
   for (const p of D.PROFILE.personality) if (!Object.values(D.M2_TRAITS).some((t) => t.re.test(p))) fail(`M2: 性格「${p}」に当たる M2 の性格が無い`);

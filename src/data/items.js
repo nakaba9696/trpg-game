@@ -1,5 +1,5 @@
 // アイテム。type: weapon / armor / use（消耗品）/ gear（持っているだけで効く）/ loot（売り物）/ key（大事な物）
-// weapon: dmg [個数, 面, 加算], stat = 命中に使う能力値, hit = 命中補正, pierce = 魔人の絶界を破る
+// weapon: dmg [個数, 面, 加算], stat = 命中に使う能力値, hit = 命中補正, pierce = 使徒の絶界を破る
 // armor: def = 受けるダメージを減らす, agi = 敏捷の補正
 // use: hp / mp の回復、escape = 戦闘から必ず逃げる、holy = 不死の敵に 3D6 の聖なるダメージ
 // gear: bonus = { 行動の種類: 成功率の補正 }（fire / heal / steal / trap / talk）
@@ -19,8 +19,8 @@
     rapier: { name: "細剣", type: "weapon", dmg: [1, 6, 1], stat: "敏捷", hit: 10, vital: 5, price: 110, desc: "素早い突き。敏捷で戦う。" },
     mithril: { name: "ミスリルの剣", type: "weapon", dmg: [1, 8, 5], stat: "筋力", hit: 10, price: 700, desc: "軽く、鋼より硬い。" },
     oniclub: { name: "鬼の金棒", type: "weapon", dmg: [2, 8, 2], stat: "筋力", hit: -15, price: 400, desc: "鬼が振るっていた鉄の棒。" },
-    volgrim: { name: "魔剣ヴォルグリム", type: "weapon", dmg: [2, 6, 6], stat: "筋力", hit: 10, pierce: true, key: true, price: 0, desc: "意思を持つ呪われた魔剣。口が悪い。魔人の絶界を斬り裂く。" },
-    byakuya: { name: "聖刀白夜", type: "weapon", dmg: [2, 6, 5], stat: "筋力", hit: 15, pierce: true, key: true, price: 0, desc: "白く光る刀。魔人の絶界を斬り裂く。" },
+    volgrim: { name: "魔剣ヴォルグリム", type: "weapon", dmg: [2, 6, 6], stat: "筋力", hit: 10, pierce: true, key: true, price: 0, desc: "意思を持つ呪われた魔剣。口が悪い。使徒の絶界を斬り裂く。" },
+    byakuya: { name: "聖刀白夜", type: "weapon", dmg: [2, 6, 5], stat: "筋力", hit: 15, pierce: true, key: true, price: 0, desc: "白く光る刀。使徒の絶界を斬り裂く。" },
 
     // 防具
     leather: { name: "革の鎧", type: "armor", def: 1, agi: 0, price: 30 },
@@ -55,7 +55,7 @@
     relic: { name: "古代の遺物", type: "loot", price: 300 },
     onihorn: { name: "鬼の角", type: "loot", price: 120 },
     wyvernscale: { name: "翼竜の鱗", type: "loot", price: 90 },
-    apostleheart: { name: "使徒の心臓", type: "loot", price: 800, desc: "まだ脈打っている。" },
+    apostleheart: { name: "眷属の心臓", type: "loot", price: 800, desc: "まだ脈打っている。" },
 
     // 大事な物
     package: { name: "ギルドの荷物", type: "key", price: 0, desc: "依頼の届け物。中身は聞かないのが決まり。" },

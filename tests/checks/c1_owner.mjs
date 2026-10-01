@@ -1,5 +1,5 @@
 // C1：持ち主の決定（#39・#50・#51）
-// - 二振りの剣に代償は無い：魔人を斬っても、代償の状態が増えない
+// - 二振りの剣に代償は無い：使徒を斬っても、代償の状態が増えない
 // - 銃は遺物のレア物：店の品揃えに出ない。手に入る所は限られる。撃つと弾が減り、弾が無ければ撃てず、絶界には効かない
 // - 光の壁：触れたあと「ここで物語を終える／旅を続ける」を選べる。続けたあと、別の節目でも終えられる
 export default ({ fail: fail0, ok, loadEngine, seeded }) => {
@@ -36,7 +36,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
         S.mode = "explore"; S.combat = null;
       }
       const added = Object.keys(S).filter((x) => !keys0.has(x) && /hunger|white|volgrim|byakuya|edge|bleach/i.test(x));
-      if (added.length) fail(`${it.name}で魔人を斬ると代償の状態が増える：${added.join("・")}`);
+      if (added.length) fail(`${it.name}で使徒を斬ると代償の状態が増える：${added.join("・")}`);
       if (JSON.stringify((S.companions || []).map((c) => c.bond)) !== comp0) fail(`${it.name}で斬ると仲間の好感度が変わる`);
       if (S.chronicle.slice(chron0).some((c) => /―{2,}|黒塗り/.test(c.text || ""))) fail(`${it.name}で斬ると年表が黒塗りになる`);
     }
@@ -98,14 +98,14 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
           if (again && !again.disabled) fail("弾が無いのに撃てる");
         } else if (S.counters.kills <= kills && !S.over) fail("撃って戦闘が終わったのに倒した数が増えない");
       }
-      // 絶界には効かない（何度撃っても魔人は傷つかない）
+      // 絶界には効かない（何度撃っても使徒は傷つかない）
       S.combat = null; S.mode = "explore";
       G.give(ammo, 30);
       G.startCombat([majinId], {});
       const foe = S.combat.foes[0];
       const hp0 = foe.hp;
       for (let i = 0; i < 10 && S.mode === "combat" && !S.over; i++) { S.hp = S.maxHp; G.act("cb:c1shot:" + id); }
-      if (foe.hp !== hp0) fail(`銃で魔人に傷が入る（${hp0}→${foe.hp}）`);
+      if (foe.hp !== hp0) fail(`銃で使徒に傷が入る（${hp0}→${foe.hp}）`);
     }
   }
 

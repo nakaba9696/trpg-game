@@ -27,7 +27,7 @@ export default ({ G, fail: failTo, ok, seeded }) => {
   const fresh = () => G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
   const fxOf = (from) => G.S.log.slice(from).filter((e) => e.fx);
 
-  // ボス戦の始まりに前口上。魔人には絶界の fx
+  // ボス戦の始まりに前口上。使徒には絶界の fx
   fresh();
   G.S.maxHp = G.S.hp = 9999;
   let mark = G.S.log.length;

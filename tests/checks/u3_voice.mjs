@@ -111,7 +111,7 @@ export default ({ fail, loadEngine, seeded }) => {
     const G2 = loadEngine();
     const S2 = newGame(G2, 4);
     S2.flags = {}; G2.startCombat(["graw"], {});
-    if (!(S2.lore.zekkai || []).includes("first") || !S2.lore.majin) fail("魔人に会っても「魔人」「絶界」が開かない");
+    if (!(S2.lore.zekkai || []).includes("first") || !S2.lore.majin) fail("使徒に会っても「使徒」「絶界」が開かない");
   }
 
   // ---- 最初の町で、10 手番のうちに通行人に出会う

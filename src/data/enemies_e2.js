@@ -1,5 +1,5 @@
-// 魔人二体と、その使徒と居城の魔物（E2）。欄の意味は enemies.js と enemies_2.js と同じ。
-// 魔人は majin（絶界）なので、魔剣ヴォルグリムか聖刀白夜でしか傷つかない。
+// 使徒二体と、その眷属と居城の魔物（E2）。欄の意味は enemies.js と enemies_2.js と同じ。
+// 使徒は majin（絶界）なので、魔剣ヴォルグリムか聖刀白夜でしか傷つかない。
 // 名前と説明は戦うと見える。正体や世界の仕組みは書かない（docs/lore/voice.md）。
 // 居城の迷宮は locations_e2.js、関われる出来事は events_e2.js。レーン E（敵）が管理
 (function (G) {
@@ -8,13 +8,13 @@
   Object.assign(D.ENEMIES, {
     // ---------------------------------------------------------------- 暴食のゴルモア（大厨房）
     e2_gormoa: {
-      name: "暴食の魔人ゴルモア", tier: 6, boss: true, majin: true, hp: 240, dmg: [3, 8, 4], hit: 70, def: 20, agi: 20, will: 999, mres: 30,
+      name: "暴食の使徒ゴルモア", tier: 6, boss: true, majin: true, hp: 240, dmg: [3, 8, 4], hit: 70, def: 20, agi: 20, will: 999, mres: 30,
       gold: [400, 900], loot: [["gem", 1], ["elixir", 1]], shape: "giant", eye: "#ffb000",
       desc: "丘のように太ったもの。口が三つある。剣は、体に届く前に何かに弾かれる。",
       look: { body: "biped", build: "giant", size: 1.18, skin: "#d8987a", skin2: "#f0c8a8", head: "ogre", eyes: "googly", eyeN: 3, mouth: "tongue", horns: "nubs", arms: "hands", weapon: "club", outfit: "loin", cloth: "#efe8da", pattern: "spots", extra: ["drool", "blush", "beard"], hair: "#6a3a2a", mood: "silly" },
       lines: {
         open: ["「おお、今日の食材は自分で歩いてくるのか！ 活きがいい！」三つの口が同時に笑った。", "「待て待て、斬りかかる前に聞かせろ。お前、何味だ？」"],
-        turn: ["文句を言う口が「筋が多い」と言った。食べる口は、それでもよだれを垂らしている。", "それは戦いの最中に、懐から骨付き肉を出してかじった。", "「甘い？ 甘いのか？ いや、分かっている。分かっているとも」魔人は目をそらした。", "味わう口が、あなたの汗をなめた。「……塩が足りん」"],
+        turn: ["文句を言う口が「筋が多い」と言った。食べる口は、それでもよだれを垂らしている。", "それは戦いの最中に、懐から骨付き肉を出してかじった。", "「甘い？ 甘いのか？ いや、分かっている。分かっているとも」使徒は目をそらした。", "味わう口が、あなたの汗をなめた。「……塩が足りん」"],
       },
     },
     e2_marmit: {
@@ -49,7 +49,7 @@
 
     // ---------------------------------------------------------------- 腐爛のモルドゥ（腐れ庭園）
     e2_mordu: {
-      name: "腐爛の魔人モルドゥ", tier: 6, boss: true, majin: true, magic: true, hp: 200, dmg: [2, 10, 4], hit: 75, def: 15, agi: 30, will: 999, mres: 40,
+      name: "腐爛の使徒モルドゥ", tier: 6, boss: true, majin: true, magic: true, hp: 200, dmg: [2, 10, 4], hit: 75, def: 15, agi: 30, will: 999, mres: 40,
       gold: [300, 700], loot: [["gem", 1], ["relic", 1]], shape: "humanoid", eye: "#c8ff6a",
       desc: "泥と苔に覆われた背の高い庭師。帽子の下は、しおれた花でいっぱい。歩くたびに甘い匂いがする。その匂いは、鎧の隙間から入り込む。",
       look: { body: "biped", build: "lanky", size: 1.12, skin: "#5a6a3a", skin2: "#9aa86a", head: "plain", hair: "#3a4a22", eyes: "glow", eyeN: 1, mouth: "smirk", arms: "claws", weapon: "spear", outfit: "robe", cloth: "#3e4a2c", pattern: "spots", extra: ["wildhair", "smoke", "drool"], mood: "fierce" },
@@ -74,7 +74,7 @@
       look: { body: "biped", build: "normal", skin: "#8a9a6a", head: "human", hair: "#4a3a22", eyes: "hollow", mouth: "o", arms: "forward", outfit: "rags", cloth: "#5a5040", pattern: "spots", extra: ["sweat", "drool"], mood: "fierce" },
       lines: {
         open: ["「たすけて……ちがう、にげて……ちがう、こっちへ……」声がまとまらない。"],
-        turn: ["頭の花が、ゆっくりとあなたのほうを向いた。", "「水を……水を……」根が、あなたの足首を探っている。", "胸の名札には、ゼファラの町の名前が書いてある。"],
+        turn: ["頭の花が、ゆっくりとあなたのほうを向いた。", "「水を……水を……」根が、あなたの足首を探っている。", "胸の名札には、エルメシアの町の名前が書いてある。"],
       },
     },
     e2_rotbloom: {

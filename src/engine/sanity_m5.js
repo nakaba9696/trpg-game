@@ -1,8 +1,8 @@
 // 正気・獣の病・代償つきの品（M5）。文と表は src/data/sanity_m5.js、設定は docs/lore/curses.md 3.・4.
 // 状態（どれも古いセーブには無い。無ければ 正気 100・獣 0 として扱う）：
-//   S.sanity 0〜100 … 知りすぎる・術の借り（S.magicDebt）・魔人を見る・呪われた品で減る。宿・酒場・懺悔・まぬけな魔物で戻る
+//   S.sanity 0〜100 … 知りすぎる・術の借り（S.magicDebt）・使徒を見る・呪われた品で減る。宿・酒場・懺悔・まぬけな魔物で戻る
 //   S.beast  0〜5   … 獣の病。疫医ベルナ（plague のある敵・出来事）からだけうつり（M9 #103、src/engine/m9_plague.js）、日が経つと進む。1〜2段なら教会で祓える
-//   S.m5 = { day, clock, seen: {魔人 id: true}, low, trueName, forgot }
+//   S.m5 = { day, clock, seen: {使徒 id: true}, low, trueName, forgot }
 //   S.fate  "mad" | "beast" … 正気 0・獣 5 で冒険が終わったとき（M6 #55 の「選べない終わり方」が拾う）
 // 終わり方は死と同じく S.over = "dead" にし、年表に kind "fate" の行、墓碑に fate を残す。
 // core.js・combat.js・explore.js は書き換えず、関数を包む。レーン C（M5）が管理
@@ -280,7 +280,7 @@
     if (old) C.foes.forEach((f) => { if (f.id === "m5_oldbeast") f.name = `首に「${old.name}」の布を巻いた獣`; });
     const x = st(S);
     x.seen = x.seen || {};
-    // 恐ろしいものを、はじめて見たとき（魔人・ボス・不死の群れ）
+    // 恐ろしいものを、はじめて見たとき（使徒・ボス・不死の群れ）
     ids.forEach((id) => {
       const e = D.ENEMIES[id];
       if (!e || x.seen[id]) return;

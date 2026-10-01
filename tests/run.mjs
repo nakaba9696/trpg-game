@@ -201,7 +201,7 @@ const ok = (msg) => console.log("OK   " + msg);
   for (const e of D.EVENTS) for (const c of e.choices) { addOut(c.ok); addOut(c.ng); addOut(c.win); }
   for (const [id] of tomes) if (!sources.has(id)) fail(`魔導書 ${id}: 入手先が無い`);
   for (const id of NEW) if (!D.SPELLS[id].school && !tomes.some(([tid, it]) => it.teach === id && sources.has(tid))) fail(`術 ${id}: 覚える手段が無い`);
-  if (!D.LOCS.zephara.fac.includes("academy")) fail("ゼファラに学院が無い");
+  if (!D.LOCS.zephara.fac.includes("academy")) fail("エルメシアに学院が無い");
 
   const start = (cls, seed) => {
     G.rand = seeded(seed);
@@ -226,7 +226,7 @@ const ok = (msg) => console.log("OK   " + msg);
   // 学院で覚える（成功するまで通う）
   S = start("merc", 24);
   S.loc = "zephara"; S.gold = 5000; S.stats.知力 = 95;
-  if (!acts().some((a) => a.id === "fac:academy")) fail("ゼファラの町に学院が出ない");
+  if (!acts().some((a) => a.id === "fac:academy")) fail("エルメシアの町に学院が出ない");
   G.act("fac:academy");
   if (S.mode !== "fac" || S.fac !== "academy") fail("学院に入れない");
   const lec = acts().find((a) => a.id === "academy:ward");
@@ -285,12 +285,12 @@ const ok = (msg) => console.log("OK   " + msg);
   G.S.combat.foes[0].hex = 3; G.S.combat.foes[0].hp = 1;
   G.combatAct("guard");
   if (G.S.combat || G.S.mode !== "explore") fail("呪いで敵が倒れても戦闘が終わらない");
-  // 魔人には絶界で効かない
+  // 使徒には絶界で効かない
   const majin = Object.keys(D.ENEMIES).find((id) => D.ENEMIES[id].majin);
   G.startCombat([majin], {});
   const m = G.S.combat.foes[0];
   always(() => { G.combatAct("curse"); G.combatAct("ice"); });
-  if (G.S.combat && (m.hex || m.frozen || m.hp < m.max)) fail("魔人に術が効いた");
+  if (G.S.combat && (m.hex || m.frozen || m.hp < m.max)) fail("使徒に術が効いた");
   G.S.combat = null; G.S.mode = "explore";
   // 大失敗で借りを返す
   G.startCombat(["goblin"], {});
@@ -396,14 +396,14 @@ const ok = (msg) => console.log("OK   " + msg);
     if (seen.has(sig)) fail(`絵 ${id}: ${seen.get(sig)} と見た目がまったく同じ`);
     seen.set(sig, id);
     if (e.boss && !a.aura) fail(`絵 ${id}: ボスなのにオーラが無い`);
-    if (e.majin && !a.barrier) fail(`絵 ${id}: 魔人なのに絶界が無い`);
+    if (e.majin && !a.barrier) fail(`絵 ${id}: 使徒なのに絶界が無い`);
     try { G.paintMonster(ctx, 200, 240, 120, { id, shape: e.shape, eye: e.eye, boss: !!e.boss }); } catch (err) { fail(`絵 ${id}: 描くと例外 ${err.message}`); }
   }
   // look の指定が優先され、書いていない部品は無しになる
   const custom = G.monsterLook("zz_test", { shape: "humanoid", tier: 3, look: { body: "blob", skin: "#123456" } });
   if (custom.body !== "blob" || custom.skin !== "#123456" || custom.tail !== "none") fail("絵: look の指定が効かない");
   try { G.paintMonster(ctx, 200, 240, 120, { id: "zz_unknown", shape: "dragon" }); } catch (err) { fail(`絵: データに無い敵で例外 ${err.message}`); }
-  if (failures === before) ok(`モンスターの絵（${seen.size} 種が別々の見た目・ボスはオーラ・魔人は絶界）`);
+  if (failures === before) ok(`モンスターの絵（${seen.size} 種が別々の見た目・ボスはオーラ・使徒は絶界）`);
 }
 
 // ---------------------------------------------------------------- 2c. 人物の絵（DOM なしの偽の canvas で描く）

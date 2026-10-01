@@ -23,7 +23,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   if (!nar) F("語り手（連れ合い）が無い");
   else texts.push(...nar.open, ...nar.hear, ...nar.gap, ...nar.close);
   texts.push(...D.M6.AFTER.soon.spouse);
-  for (const t of texts) if (/見世物|観客|客席|舞台|台本|神々|魔王|魔人/.test(t)) F(`見せる文に書かない言葉がある「${t}」`);
+  for (const t of texts) if (/見世物|観客|客席|舞台|台本|神々|魔王|使徒/.test(t)) F(`見せる文に書かない言葉がある「${t}」`);
   for (const k of Object.keys(D.M2_TRAITS)) for (const w of ["spark", "confess", "propose", "part", "cold"]) if (!T.LINES[k] || !T.LINES[k][w]) F(`性格 ${k} の ${w} のひとことが無い`);
   for (const t of ["m10_love", "m10_wed", "m10_home", "m10_child"]) if (!D.TROPHIES.some((x) => x.key === t)) F(`トロフィー ${t} が無い`);
 

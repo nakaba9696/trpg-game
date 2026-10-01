@@ -43,8 +43,8 @@ export default ({ G, fail, ok, seeded }) => {
   }
   for (const s of ["夏", "秋", "冬"]) if (!seasons.has(s)) fail(`季節「${s}」がどこにも来ない`);
   for (const w of ["雨", "霧", "雪"]) if (!weathers.has(w)) fail(`「${w}」がどこにも来ない`);
-  if ([...seen.garmund].some((x) => !x.startsWith("冬"))) fail("帝都ガルムントに冬でない日がある");
-  if ([...seen.w1_holy].some((x) => x.endsWith("雨"))) fail("聖都サンクタに雨が降った");
+  if ([...seen.garmund].some((x) => !x.startsWith("冬"))) fail("帝都ノルディアに冬でない日がある");
+  if ([...seen.w1_holy].some((x) => x.endsWith("雨"))) fail("聖都エルヴィナに雨が降った");
   if ([...seen.w1_oboro].some((x) => !x.startsWith("秋"))) fail("朧島の季節が進んだ");
   if (seen.wasteland.size) fail("魔物界に季節がある");
   // 古いセーブ（wseed も id も weather も無い）でも動き、G.rand を使わない

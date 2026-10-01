@@ -756,7 +756,7 @@
       ctx.beginPath(); ctx.moveTo(px - U * 0.05, py); ctx.quadraticCurveTo(px - U * 0.07, py - h * 0.6, px + (R() - 0.5) * U * 0.1, py - h); ctx.quadraticCurveTo(px + U * 0.06, py - h * 0.5, px + U * 0.05, py); ctx.fill();
     }
   }
-  // 絶界：人の武器を弾く、魔人を包む光の殻
+  // 絶界：人の武器を弾く、使徒を包む光の殻
   function barrier(ctx, L, x, base, U, R) {
     const cy = base - U * 0.58, rx = U * 0.78, ry = U * 0.72;
     const c1 = "#ffe2a8", c2 = L.aura || "#ff3030";
