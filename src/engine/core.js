@@ -214,7 +214,7 @@
     if (S.over) return;
     S.over = "end";
     S.mode = "over";
-    G.say(`${S.profile.name}は剣を置いた。冒険は、ここで幕を閉じる。`);
+    G.say(`${S.profile.name}は剣を置いた。冒険は、ここで終わる。`);
     G.chron(G.goalDone(S) ? "宿願を果たし、冒険から身を引く" : "冒険から身を引く", "end");
     G.finishRun();
   };
