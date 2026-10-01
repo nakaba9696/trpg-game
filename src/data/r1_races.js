@@ -83,6 +83,12 @@
       mod: { 筋力: -3, 体力: -2, 知力: 2, 魅力: 3 }, talents: ["talk", "stealth"],
       ages: { young: [15, 21], prime: [22, 38], old: [39, 60] }, traits: ["nose", "ears"],
     },
+    dog: {
+      name: "犬", blurb: "鼻が利き、疲れを知らない。人懐っこく、誰とでもすぐ仲良くなる。",
+      temper: "人懐っこい。一度なついた相手には、どこまでもついていく",
+      mod: { 体力: 2, 魅力: 2, 知力: -2, 敏捷: -2 }, talents: ["wild", "talk"],
+      ages: { young: [15, 20], prime: [21, 36], old: [37, 55] }, traits: ["nose"],
+    },
   };
   D.BEAST_KEYS = Object.keys(D.BEASTS);
 

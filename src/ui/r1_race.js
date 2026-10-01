@@ -35,8 +35,8 @@
   };
 
   // 頭の上の耳（art_people.js の paintPerson が、髪の前・帽子の前に呼ぶ）
-  // 形：tri 三角（狼・狐・猫）・round 丸（熊・鼠）・long 長い（兎）・tuft 羽の房（鳥）
-  const SHAPE = { wolf: ["tri", 1.0, 0.95], fox: ["tri", 1.15, 1.05], cat: ["tri", 0.8, 0.9], bear: ["round", 0.75, 0.75], rat: ["round", 1.05, 1.0], rabbit: ["long", 0.7, 2.0], bird: ["tuft", 1.0, 1.0] };
+  // 形：tri 三角（狼・狐・猫）・round 丸（熊・鼠）・long 長い（兎）・tuft 羽の房（鳥）・flop 垂れ耳（犬）
+  const SHAPE = { wolf: ["tri", 1.0, 0.95], dog: ["flop", 0.95, 1.1], fox: ["tri", 1.15, 1.05], cat: ["tri", 0.8, 0.9], bear: ["round", 0.75, 0.75], rat: ["round", 1.05, 1.0], rabbit: ["long", 0.7, 2.0], bird: ["tuft", 1.0, 1.0] };
   G.r1PaintEars = (ctx, L, cx, cy, rx, ry, U, k) => {
     const [shape, wMul, hMul] = SHAPE[L.beast] || SHAPE.wolf;
     const fur = L.hair || "#6a5a4a";
@@ -61,6 +61,13 @@
         ctx.fillStyle = fur; ctx.fill(); stroke();
         ctx.beginPath(); ctx.ellipse(bx + s * w * 0.4, by - h * 0.48, w * 0.45, h * 0.48, s * 0.18, 0, Math.PI * 2);
         ctx.fillStyle = inner; ctx.fill();
+      } else if (shape === "flop") {
+        // 垂れ耳：頭の上の横から、顔の脇へ垂れる。先は少し濃い
+        const ex = cx + s * rx * 0.98, ey = cy - ry * 0.5;
+        ctx.ellipse(ex, ey, w * 0.55, h * 0.85, s * -0.25, 0, Math.PI * 2);
+        ctx.fillStyle = fur; ctx.fill(); stroke();
+        ctx.beginPath(); ctx.ellipse(ex + s * w * 0.06, ey + h * 0.45, w * 0.36, h * 0.32, s * -0.25, 0, Math.PI * 2);
+        ctx.fillStyle = k.mix(fur, k.INK, 0.25); ctx.fill();
       } else {
         // 羽の房：耳のあたりから、後ろへ三枚
         for (let i = 0; i < 3; i++) {
