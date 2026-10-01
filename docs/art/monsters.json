@@ -1,0 +1,495 @@
+{
+ "_about": "魔物の絵の一覧（tools/gen_portraits.mjs --monsters が読む）。名前は敵のデータから node tools/monsters.mjs で作り直す。tags は特徴だけ（画風・構図・背景は docs/art/style_monsters.json）。human: true は人の姿の敵（style_monsters.json の human で後置き・ネガティブを替える）。same_as: <id> はその絵を使う（作らない）。",
+ "size": {
+  "width": 512,
+  "height": 512,
+  "format": "webp",
+  "maxKB": 60,
+  "framing": "正方形・全身・白い無地の背景（ゲームで周りをぼかしてなじませる）"
+ },
+ "people": {
+  "c2_nora": "nora",
+  "c2_angelica": "angelica",
+  "c2_zork": "zork",
+  "w1_konoha": "konoha",
+  "e2_berna": "berna"
+ },
+ "monsters": [
+  {
+   "id": "goblin",
+   "file": "assets/monsters/goblin.webp",
+   "name": "ゴブリン",
+   "tags": "goblin, green skin, pointy ears, big nose, crooked teeth, yellow eyes, hunched, short, skinny, holding rusty dagger, ragged loincloth",
+   "memo": "群れる小鬼。まぬけで憎めない"
+  },
+  {
+   "id": "wolf",
+   "file": "assets/monsters/wolf.webp",
+   "name": "飢えた野犬",
+   "tags": "feral dog, wild dog, skinny, visible ribs, matted grey fur, bared teeth, growling, drooling, four legs, scars",
+   "memo": "痩せこけた野犬。哀れで、少し怖い"
+  },
+  {
+   "id": "barrelgob",
+   "file": "assets/monsters/barrelgob.webp",
+   "name": "樽ゴブリン",
+   "tags": "goblin, green skin, pointy ears, big nose, wearing barrel, barrel armor, drunk, red face, blush, holding beer mug, beer foam, short, hiccup",
+   "memo": "酒樽をかぶったゴブリン。いつも酔っている。まぬけ"
+  },
+  {
+   "id": "dogu",
+   "file": "assets/monsters/dogu.webp",
+   "name": "ドグー",
+   "tags": "clay golem, dogu, clay figurine, round body, slit eyes, goggle eyes, cracked clay, brown clay, stubby arms, stubby legs, heavy",
+   "memo": "泥の丸い人形。のろくて硬い。とぼけた顔"
+  },
+  {
+   "id": "bandit",
+   "file": "assets/monsters/bandit.webp",
+   "name": "街道の盗賊",
+   "human": true,
+   "tags": "1boy, man, bandit, former farmer, thin, gaunt, stubble, sunken cheeks, nervous, ragged clothes, patched tunic, straw hat, holding pitchfork",
+   "memo": "食い詰めた元農民。怖いというより哀れ"
+  },
+  {
+   "id": "orc",
+   "file": "assets/monsters/orc.webp",
+   "name": "オーク",
+   "tags": "orc, pig face, pig nose, tusks, grey-green skin, huge, muscular, fat belly, angry, holding battle axe, leather armor, fur",
+   "memo": "豚面の大男。力任せ"
+  },
+  {
+   "id": "werewolf",
+   "file": "assets/monsters/werewolf.webp",
+   "name": "人狼",
+   "tags": "werewolf, wolf head, grey fur, muscular, standing on two legs, long claws, fangs, glowing yellow eyes, torn shirt, torn trousers",
+   "memo": "昼は人、夜は獣。荒々しい"
+  },
+  {
+   "id": "spider",
+   "file": "assets/monsters/spider.webp",
+   "name": "大蜘蛛",
+   "tags": "giant spider, black spider, hairy legs, eight legs, multiple eyes, red eyes, large fangs, venom dripping, spider web",
+   "memo": "牛ほどの大蜘蛛。不気味"
+  },
+  {
+   "id": "slime",
+   "file": "assets/monsters/slime.webp",
+   "name": "酸のスライム",
+   "tags": "slime, green slime, acid slime, translucent body, bubbles, bones inside, dissolving, dripping, amorphous",
+   "memo": "酸のスライム。溶けかけた骨が中に浮く"
+  },
+  {
+   "id": "banditboss",
+   "file": "assets/monsters/banditboss.webp",
+   "name": "山賊の頭",
+   "human": true,
+   "tags": "1boy, man, bandit leader, huge man, eyepatch, black beard, scar on face, grin, fur cloak, leather armor, holding broadsword",
+   "memo": "片目の山賊の頭。話は分かる"
+  },
+  {
+   "id": "guard",
+   "file": "assets/monsters/guard.webp",
+   "name": "町の衛兵",
+   "human": true,
+   "tags": "1boy, man, town guard, mustache, bored, chainmail, blue tabard, kettle hat, holding spear",
+   "memo": "町の衛兵。賄賂にも忠実"
+  },
+  {
+   "id": "ogre",
+   "file": "assets/monsters/ogre.webp",
+   "name": "オーガ",
+   "tags": "ogre, giant, huge, fat, bald, ugly, underbite, small eyes, drooling, grey-brown skin, loincloth, holding tree trunk, club",
+   "memo": "人を丸かじりにする巨人。頭は悪い"
+  },
+  {
+   "id": "zombie",
+   "file": "assets/monsters/zombie.webp",
+   "name": "屍の群れ",
+   "tags": "zombie, undead, rotting corpse, grey skin, torn clothes, exposed ribs, missing jaw, glowing eyes, outstretched arms, shambling",
+   "memo": "呪いで動く死体（群れだが一体で描く）"
+  },
+  {
+   "id": "wyvern",
+   "file": "assets/monsters/wyvern.webp",
+   "name": "翼竜",
+   "tags": "wyvern, small dragon, green scales, bat wings, spread wings, two legs, long tail, tail stinger, sharp teeth, flying",
+   "memo": "空から襲う小型の竜"
+  },
+  {
+   "id": "deserter",
+   "file": "assets/monsters/deserter.webp",
+   "name": "帝国脱走兵",
+   "human": true,
+   "tags": "1boy, man, deserter, soldier, imperial soldier, gaunt, stubble, tired eyes, dented armor, torn cape, holding sword",
+   "memo": "飢えた元兵士。腕は確か"
+  },
+  {
+   "id": "ninja",
+   "file": "assets/monsters/ninja.webp",
+   "name": "はぐれ忍",
+   "human": true,
+   "tags": "1boy, ninja, black ninja outfit, face mask, covered mouth, sharp eyes, scarf, holding kunai, crouching",
+   "memo": "抜け忍。音もなく背後に立つ"
+  },
+  {
+   "id": "mimic",
+   "file": "assets/monsters/mimic.webp",
+   "name": "ミミック",
+   "tags": "mimic, treasure chest, chest monster, wooden chest, open lid, long tongue, sharp teeth, eyes inside chest, gold coins, drooling",
+   "memo": "宝箱のふりをした魔物"
+  },
+  {
+   "id": "oni",
+   "file": "assets/monsters/oni.webp",
+   "name": "鬼",
+   "tags": "oni, red skin, two horns, huge, muscular, fangs, wild black hair, tiger skin loincloth, holding kanabo, sake gourd",
+   "memo": "沖の島の鬼。酒と人肉を好む"
+  },
+  {
+   "id": "warlock",
+   "file": "assets/monsters/warlock.webp",
+   "name": "呪術師",
+   "human": true,
+   "tags": "1boy, man, warlock, dark hooded robe, gaunt, pale skin, glowing eyes, holding staff, cursed runes, purple flames, dark magic",
+   "memo": "禁術の魔法使い"
+  },
+  {
+   "id": "chimera",
+   "file": "assets/monsters/chimera.webp",
+   "name": "キメラ",
+   "tags": "chimera, lion body, lion head, goat head, snake tail, snake head, mane, fangs, four legs, stitches",
+   "memo": "獅子と山羊と蛇の継ぎ合わせ"
+  },
+  {
+   "id": "blackknight",
+   "file": "assets/monsters/blackknight.webp",
+   "name": "黒騎士",
+   "tags": "living armor, black knight, full armor, black armor, closed helmet, glowing eyes in helmet, holding greatsword, tattered black cape, no face",
+   "memo": "使徒に仕える黒い鎧。中身は見えない"
+  },
+  {
+   "id": "general",
+   "file": "assets/monsters/general.webp",
+   "name": "魔物将軍",
+   "tags": "demon general, giant, horned helmet, heavy armor, spiked armor, red skin, tusks, muscular, holding halberd, war banner, cape",
+   "memo": "魔物の軍勢を率いる将。威圧"
+  },
+  {
+   "id": "kin",
+   "file": "assets/monsters/kin.webp",
+   "name": "使徒の眷属",
+   "tags": "demon, gargoyle, winged demon, bat wings, black skin, horns, long claws, glowing red eyes, slender, long tail",
+   "memo": "使徒が生み出した翼ある僕"
+  },
+  {
+   "id": "kain",
+   "file": "assets/monsters/kain.webp",
+   "name": "眷属カイン",
+   "boss": true,
+   "human": true,
+   "tags": "1boy, young man, scholar, silver hair, glasses, cold smile, long dark coat, holding glowing book, floating pages, ancient runes",
+   "memo": "ボス。蒐集の使徒レヴィアンの眷属。冷たい学者"
+  },
+  {
+   "id": "shuten",
+   "file": "assets/monsters/shuten.webp",
+   "name": "鬼の頭目ゴズ",
+   "boss": true,
+   "tags": "oni, oni chief, huge, red skin, two large horns, wild white hair, fangs, scars, muscular, samurai armor pieces, tiger skin, holding glowing katana, white glowing sword, sake gourd",
+   "memo": "ボス。鬼ヶ島の大鬼。白く光る刀を持つ"
+  },
+  {
+   "id": "bonedragon",
+   "file": "assets/monsters/bonedragon.webp",
+   "name": "屍竜ネクロザ",
+   "boss": true,
+   "tags": "skeletal dragon, undead dragon, bone dragon, huge, ribcage, sword stuck in ribs, glowing green eyes, tattered bone wings, ghostly green fire, long neck, skull",
+   "memo": "ボス。墓場を守る屍竜。腹に剣が刺さっている"
+  },
+  {
+   "id": "rize",
+   "file": "assets/monsters/rize.webp",
+   "name": "眷属リゼ",
+   "boss": true,
+   "human": true,
+   "tags": "1girl, woman, swordswoman, short black hair, crazy smile, wild eyes, scar, dark armor, holding sword, blood splatter, battle stance",
+   "memo": "ボス。グラウの眷属。戦いに酔う女剣士"
+  },
+  {
+   "id": "graw",
+   "file": "assets/monsters/graw.webp",
+   "name": "鏖殺の使徒グラウ",
+   "boss": true,
+   "tags": "giant, colossal, muscular, grey skin, glowing red eyes, horns, scars, battle-hungry grin, broken armor, chains, holding giant greatsword, glowing aura, barrier",
+   "memo": "使徒（ボス）。戦いだけを好む巨人。絶界に守られている。圧倒的に"
+  },
+  {
+   "id": "royalguard",
+   "file": "assets/monsters/royalguard.webp",
+   "name": "近衛騎士団長",
+   "boss": true,
+   "human": true,
+   "tags": "1boy, man, knight commander, royal guard, grey hair, stern, ornate plate armor, white armor, gold trim, blue cape, holding longsword, shield",
+   "memo": "ボス。王国最強の騎士"
+  },
+  {
+   "id": "e1_crowngob",
+   "file": "assets/monsters/e1_crowngob.webp",
+   "name": "王冠ゴブリン",
+   "tags": "goblin, green skin, pointy ears, big nose, googly eyes, grin, paper crown, red cape, holding dagger, sweat, short, proud",
+   "memo": "紙の王冠のゴブリン王。家来はいない。まぬけ"
+  },
+  {
+   "id": "e1_bowshroom",
+   "file": "assets/monsters/e1_bowshroom.webp",
+   "name": "おじぎ茸",
+   "tags": "mushroom monster, giant mushroom, pink spotted cap, bowing, dot eyes, blush, spores, stubby legs",
+   "memo": "おじぎする茸。まぬけで憎めない"
+  },
+  {
+   "id": "e1_tollrat",
+   "file": "assets/monsters/e1_tollrat.webp",
+   "name": "関所ネズミの群れ",
+   "tags": "giant rat, standing on hind legs, brown fur, buck teeth, whiskers, smug, small pouch, holding pebble, toll sign",
+   "memo": "関所を名乗るネズミ（群れだが一匹で描く）。まぬけ"
+  },
+  {
+   "id": "e1_frostgrave",
+   "file": "assets/monsters/e1_frostgrave.webp",
+   "name": "凍えた旅人",
+   "tags": "undead, frozen corpse, pale blue skin, frost, icicles, hollow eyes, white hair, scarf, ragged cloak, snow on shoulders, walking, outstretched arms",
+   "memo": "凍えて死んだ旅人。哀しく不気味"
+  },
+  {
+   "id": "e1_frogprophet",
+   "file": "assets/monsters/e1_frogprophet.webp",
+   "name": "沼の預言蛙",
+   "tags": "giant frog, green skin, spots, wide mouth, grin, googly eyes, rune necklace, sitting, drooling",
+   "memo": "死の預言を外し続ける大蛙。まぬけ"
+  },
+  {
+   "id": "e1_sweeper",
+   "file": "assets/monsters/e1_sweeper.webp",
+   "name": "掃除人形",
+   "tags": "stone golem, ancient automaton, stone doll, stubby body, single eye, glowing eye, cracks, runes, holding broom",
+   "memo": "遺跡を掃除する石の人形。人をほこりと見なす"
+  },
+  {
+   "id": "e1_lantern",
+   "file": "assets/monsters/e1_lantern.webp",
+   "name": "提灯お化け",
+   "tags": "chouchin obake, paper lantern, lantern monster, one eye, long tongue, flame, burnt paper, floating",
+   "memo": "化け提灯。自分の火で焦げる。まぬけ"
+  },
+  {
+   "id": "e1_melted",
+   "file": "assets/monsters/e1_melted.webp",
+   "name": "溶けかけた見習いたち",
+   "tags": "blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles, runes",
+   "memo": "溶け合った見習いたち。おぞましい"
+  },
+  {
+   "id": "e1_sleepgiant",
+   "file": "assets/monsters/e1_sleepgiant.webp",
+   "name": "寝返り巨人",
+   "tags": "giant, huge, fat, beard, wild hair, eyes closed, sleepy, drooling, snot bubble, loincloth",
+   "memo": "寝たまま歩く巨人。まぬけで規模が大きい"
+  },
+  {
+   "id": "e1_bonepicker",
+   "file": "assets/monsters/e1_bonepicker.webp",
+   "name": "骨並べ",
+   "tags": "skeleton, tall, lanky, skull head, hollow eyes, ragged cloth, bone pouch, holding bone club, carrying bones",
+   "memo": "骨を大きさ順に並べる魔物。不気味"
+  },
+  {
+   "id": "e1_herald",
+   "file": "assets/monsters/e1_herald.webp",
+   "name": "使徒の触れ役",
+   "tags": "imp, demon messenger, purple skin, ram horns, bat wings, glowing eyes, grin, dark robe, holding scroll, feather plume, floating",
+   "memo": "使徒の布告を触れ回る使い魔。陽気で邪悪"
+  },
+  {
+   "id": "e1_ashhound",
+   "file": "assets/monsters/e1_ashhound.webp",
+   "name": "灰喰い犬",
+   "tags": "hellhound, black dog, ash, lava cracks, glowing cracks, embers, glowing eyes, fangs, spiked tail, four legs",
+   "memo": "灰の荒野の犬。人は残飯"
+  },
+  {
+   "id": "w1_candlemite",
+   "file": "assets/monsters/w1_candlemite.webp",
+   "name": "蝋燭かじり",
+   "tags": "giant caterpillar, larva, pale yellow, wax, candle on back, googly eyes, crying, tears",
+   "memo": "蝋燭をかじる芋虫。泣き虫。まぬけ"
+  },
+  {
+   "id": "w1_husk",
+   "file": "assets/monsters/w1_husk.webp",
+   "name": "祈り殻",
+   "tags": "undead, mummified pilgrim, dried corpse, hood, white robe, hollow eyes, praying hands, halo mark on neck, ribs",
+   "memo": "死んだと気づかない巡礼者。哀しく不気味"
+  },
+  {
+   "id": "w1_choir",
+   "file": "assets/monsters/w1_choir.webp",
+   "name": "聖歌の髑髏",
+   "tags": "floating skull, singing skull, open jaw, cracked skull, choir collar, musical notes, ghostly glow",
+   "memo": "首だけの聖歌隊（群れだが一つで描く）"
+  },
+  {
+   "id": "w1_beastpriest",
+   "file": "assets/monsters/w1_beastpriest.webp",
+   "name": "獣憑きの司祭",
+   "tags": "werewolf, wolf head, priest, white vestment, holy symbol necklace, claws, fangs, glowing eyes, blood, preaching",
+   "memo": "獣憑きの司祭。まだ説教をやめない"
+  },
+  {
+   "id": "w1_tanuki",
+   "file": "assets/monsters/w1_tanuki.webp",
+   "name": "祭りの化け狸",
+   "tags": "tanuki, raccoon dog, standing, round belly, leaf on head, tail, grin, blush, holding sake bottle",
+   "memo": "祭りの化け狸。化けるのが下手。まぬけ"
+  },
+  {
+   "id": "w1_vespa",
+   "file": "assets/monsters/w1_vespa.webp",
+   "name": "異端審問官ヴェスパ",
+   "boss": true,
+   "human": true,
+   "tags": "inquisitor, iron mask, full face mask, tall, thin, grey armor, red cape, holding spear, torch, smoke",
+   "memo": "ボス。鉄仮面の異端審問官"
+  },
+  {
+   "id": "w1_gregor",
+   "file": "assets/monsters/w1_gregor.webp",
+   "name": "墓守グレゴル",
+   "boss": true,
+   "human": true,
+   "tags": "1boy, old man, necromancer, priest, white hair, long beard, gaunt, glowing eyes, smirk, black robe, holding staff, runes",
+   "memo": "ボス。死体を歩かせる老司祭"
+  },
+  {
+   "id": "e2_gormoa",
+   "file": "assets/monsters/e2_gormoa.webp",
+   "name": "暴食の使徒ゴルモア",
+   "boss": true,
+   "tags": "giant, enormously fat, obese, three mouths, mouth on belly, long tongue, drooling, pink skin, spots, small horns, three eyes, beard, bib, loincloth, holding club, barrier",
+   "memo": "使徒（ボス）。丘のように太った暴食の使徒。おぞましく、少しまぬけ"
+  },
+  {
+   "id": "e2_marmit",
+   "file": "assets/monsters/e2_marmit.webp",
+   "name": "料理長マルミット",
+   "boss": true,
+   "human": true,
+   "tags": "1boy, old man, chef, white hair, stubble, smirk, lanky, white apron, blood on apron, holding meat cleaver",
+   "memo": "ボス。人を見ると部位を数える料理長"
+  },
+  {
+   "id": "e2_cookgob",
+   "file": "assets/monsters/e2_cookgob.webp",
+   "name": "見習い料理ゴブリン",
+   "tags": "goblin, green skin, pointy ears, big nose, chef hat, apron, sweat, worried, holding peeler, potato",
+   "memo": "必死で働く見習いゴブリン。まぬけ"
+  },
+  {
+   "id": "e2_meatling",
+   "file": "assets/monsters/e2_meatling.webp",
+   "name": "逃げた食材",
+   "tags": "flesh blob, meat monster, raw meat, bones sticking out, three eyes, open jaw, bubbling",
+   "memo": "逃げた肉の塊。おぞましい"
+  },
+  {
+   "id": "e2_mordu",
+   "file": "assets/monsters/e2_mordu.webp",
+   "name": "腐爛の使徒モルドゥ",
+   "boss": true,
+   "tags": "plant monster, tall, gardener, covered in mud and moss, wilted flowers growing from head, wide-brimmed hat, one glowing eye, long claws, holding pitchfork, pollen, spores, rotting",
+   "memo": "使徒（ボス）の魔物の姿。泥と苔の庭師。甘い腐臭"
+  },
+  {
+   "id": "e2_planted",
+   "file": "assets/monsters/e2_planted.webp",
+   "name": "植えられた人",
+   "tags": "undead, person buried to the waist in soil, flowers growing from head, reaching arms, open mouth, hollow eyes, flower bed",
+   "memo": "花壇に植えられた人。不気味"
+  },
+  {
+   "id": "e2_rotbloom",
+   "file": "assets/monsters/e2_rotbloom.webp",
+   "name": "腐れ花",
+   "tags": "flower monster, giant flower, pink petals, fanged mouth, single eye, antlers, pollen, drooling, vines",
+   "memo": "眠らせる腐れ花"
+  },
+  {
+   "id": "m5_feverfolk",
+   "file": "assets/monsters/m5_feverfolk.webp",
+   "name": "熱に浮いた村人",
+   "human": true,
+   "tags": "1boy, man, farmer, feverish, glowing eyes, sweat, fangs, hairy arms, claws, ragged clothes, needle marks on arm",
+   "memo": "獣になりかけの村人"
+  },
+  {
+   "id": "m5_remnant",
+   "file": "assets/monsters/m5_remnant.webp",
+   "name": "成れの果て",
+   "tags": "beast, wolf, four legs, dark fur, scars, glowing eyes, fangs, drooling, torn apron string around neck",
+   "memo": "成れの果ての獣。哀しい"
+  },
+  {
+   "id": "m5_nightwatch",
+   "file": "assets/monsters/m5_nightwatch.webp",
+   "name": "夜番崩れ",
+   "human": true,
+   "tags": "1boy, man, huge man, night watchman, hairy, black beard, glowing eyes, lantern on belt, leather armor, holding hatchet, chipped blade",
+   "memo": "夜番崩れの大男"
+  },
+  {
+   "id": "m5_oldbeast",
+   "file": "assets/monsters/m5_oldbeast.webp",
+   "name": "首に布を巻いた獣",
+   "tags": "beast, large wolf, four legs, brown fur, visible ribs, glowing eyes, fangs, cloth tied around neck, embroidered cloth",
+   "memo": "首に名前入りの布を巻いた獣。哀しい"
+  },
+  {
+   "id": "m3_hunter",
+   "file": "assets/monsters/m3_hunter.webp",
+   "name": "賞金稼ぎ",
+   "human": true,
+   "tags": "1boy, man, bounty hunter, hooded cloak, scar, smirk, holding sword, wanted posters, pouch",
+   "memo": "賞金稼ぎ"
+  },
+  {
+   "id": "w2_ironwarden",
+   "file": "assets/monsters/w2_ironwarden.webp",
+   "name": "溶けかけた機械兵",
+   "boss": true,
+   "tags": "iron golem, giant robot, ancient machine, huge, melted metal, acid, rust, glowing eyes, heavy armor, holding club, steam",
+   "memo": "ボス。半分溶けた鉄の巨人"
+  },
+  {
+   "id": "c2_captainbeast",
+   "file": "assets/monsters/c2_captainbeast.webp",
+   "name": "隊長だったもの",
+   "tags": "monster, giant, mutated soldier, three arms, extra arm, torn blue military uniform, insignia patch, glowing eyes, fangs, drooling, scars, holding club",
+   "memo": "隊長だったもの。哀しくおぞましい"
+  },
+  {
+   "id": "c2_rustspawn",
+   "file": "assets/monsters/c2_rustspawn.webp",
+   "name": "錆鎧の分かれ身",
+   "tags": "living armor, empty armor, giant knight, rusty armor, chains inside helmet, glowing eyes, holding greatsword, rust particles, smoke, pauldrons",
+   "memo": "錆鎧の分かれ身。兜の中は鎖"
+  },
+  {
+   "id": "m2_traitor",
+   "file": "assets/monsters/m2_traitor.webp",
+   "name": "裏切った仲間",
+   "human": true,
+   "tags": "1boy, man, hooded, scarf, smirk, ragged cloak, holding dagger",
+   "memo": "裏切った仲間"
+  }
+ ]
+}
