@@ -1,0 +1,155 @@
+/* V9：PC 向けの画面（ui/v9_pc.js）。body.v9pc（幅 1000・高さ 560 以上で冒険中）のときだけ効く。スマホ・狭い窓は style.css のまま。
+   場所の数字（--v9-*）は v9_pc.js の G.v9.layout が画面の大きさから決めて <html> に付ける */
+:root { --v9-head: 52px; --v9-fs: 16px; --v9-m: 24px; --v9-glow: rgba(255, 226, 160, .5); --v9-dimfig: brightness(.62) saturate(.7) sepia(.15); }
+:root[data-theme="dark"] { --v9-glow: rgba(255, 214, 140, .32); --v9-dimfig: brightness(.5) saturate(.6) sepia(.2); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --v9-glow: rgba(255, 214, 140, .32); --v9-dimfig: brightness(.5) saturate(.6) sepia(.2); } }
+
+/* PC 以外では出さない部品 */
+#v9place, .v9key { display: none; }
+#v9cast { display: none; }
+#v9foes { display: none; }
+
+/* ---------------------------------------------------------------- 全体：一枚の舞台。ページは動かさない */
+body.v9pc { overflow: hidden; height: 100vh; padding: 0; }
+body.v9pc .wrap { max-width: none; }
+body.v9pc #play { display: block; padding: 0; max-width: none; margin: 0; }
+body.v9pc .stage { display: block; }
+
+/* 見出しの帯：題・場所と日付・道具のボタン */
+body.v9pc .top { position: fixed; inset: 0 0 auto 0; z-index: 6; height: var(--v9-head); padding: 0 var(--v9-m); align-items: center; flex-wrap: nowrap; gap: 0 22px; border: 0;
+  background: linear-gradient(rgba(4, 9, 9, .82), rgba(4, 9, 9, .5) 70%, rgba(4, 9, 9, 0)); }
+body.v9pc .top h1.logo { font-size: 20px; }
+body.v9pc #v9place { display: flex; align-items: baseline; gap: 14px; min-width: 0; color: #e4d9bf; text-shadow: 0 1px 3px #000; white-space: nowrap; }
+body.v9pc #v9place b { font-family: var(--f-display); font-weight: 400; font-size: 20px; letter-spacing: .08em; color: #f3e8cc; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 0 12px rgba(234, 214, 166, .25), 0 1px 3px #000; }
+body.v9pc #v9place span { font-size: 13px; letter-spacing: .06em; opacity: .9; }
+body.v9pc #v9place::before { content: ""; width: 1px; height: 18px; background: rgba(234, 214, 166, .4); align-self: center; }
+body.v9pc .top .tools { flex-wrap: nowrap; }
+body.v9pc .top .tools .btn { padding: 4px 10px; font-size: 12.5px; }
+body.v9pc .scene figcaption { display: none; }
+
+/* 控えめなステータス：左上の小さな札。押すとステータスの窓 */
+body.v9pc #mbar { position: fixed; left: var(--v9-m); top: calc(var(--v9-head) + 6px); z-index: 5; width: auto; max-width: min(360px, calc(var(--v9-cw) - var(--v9-m) * 2));
+  margin: 0; padding: 6px 10px; gap: 2px 10px; border: 1px solid var(--win-edge); border-radius: 2px; background: var(--bar-bg); box-shadow: 0 4px 16px rgba(0, 0, 0, .35); }
+body.v9pc #mbar .mname { font-size: 15px; }
+body.v9pc #mbar .mbars { font-size: 12px; gap: 2px 10px; }
+body.v9pc #mbar .gauge .g { width: 56px; }
+body.v9pc #mbar .btn { padding: 3px 9px; font-size: 12px; }
+body.v9pc #mbar.hasface .mface { width: 32px; height: 40px; }
+body.v9pc.v9combat #mbar { max-width: min(360px, calc(var(--v9-cw) - var(--v9-m))); }
+
+/* ---------------------------------------------------------------- 文章の窓（右〜中央）と、その下の選択肢 */
+body.v9pc .tome { position: fixed; left: var(--v9-tx); top: var(--v9-ty); width: var(--v9-tw); height: var(--v9-th); z-index: 4; margin: 0;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto auto; gap: 10px; padding: 22px 28px 0; }
+body.v9pc .logbar { display: none; }
+body.v9pc #log { max-height: none; height: 100%; min-height: 5em; overflow-y: auto; border: 0; padding: 0 6px 6px 0; font-size: var(--v9-fs); line-height: 1.95; gap: .55em; overscroll-behavior: contain; scrollbar-width: thin; }
+body.v9pc #log .v9old { display: none; }
+body.v9pc #log .new { animation: v9in .6s ease-out both; }
+body.v9pc #log .l-title { font-size: calc(var(--v9-fs) + 1px); margin-top: 0 !important; border-top: 0; padding-top: 0; }
+body.v9pc #log .l-title::after { content: ""; display: block; height: 1px; margin-top: 6px; background: linear-gradient(90deg, var(--win-edge), transparent); }
+body.v9pc #log .l-you { font-size: 13.5px; opacity: .85; }
+@keyframes v9in { from { opacity: 0; transform: translateY(6px); filter: blur(1px); } }
+body.v9pc #panel { max-height: 46vh; overflow-y: auto; scrollbar-width: thin; gap: 8px; padding: 10px 2px 2px; border-top: 1px solid var(--rule); }
+body.v9pc .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; }
+body.v9pc #act { margin-inline: -28px; padding-inline: 28px; padding-block: 8px 12px; position: static; }
+body.v9pc #act .freeRow input { padding: 6px 10px; }
+
+/* 選択肢の番号（1〜9 のキー） */
+body.v9pc .v9key { display: grid; place-items: center; position: absolute; left: 0; top: 9px; width: 18px; height: 18px; font: 700 11px/1 var(--f-ui); color: var(--accent);
+  border: 1px solid var(--win-edge); border-radius: 2px; background: var(--check-bg); }
+body.v9pc .act:has(.v9key) { padding-left: 28px; }
+body.v9pc .act:has(.v9key)::before { content: none; }
+body.v9pc .act:hover:not(:disabled) .v9key, body.v9pc .act:focus-visible .v9key { color: var(--win-solid); background: var(--accent); border-color: var(--accent); }
+
+/* 手引きの用語（マウスを乗せると短い説明） */
+.v9term { text-decoration: underline dotted var(--accent); text-underline-offset: 4px; text-decoration-thickness: 1px; cursor: help; }
+.v9term:hover { color: var(--head); }
+#v9tip { position: fixed; z-index: 40; max-width: 300px; padding: 7px 11px; display: grid; gap: 2px; pointer-events: none; font-size: 13px; line-height: 1.6;
+  background: var(--win-solid); color: var(--ink); border: 1px solid var(--win-edge); border-radius: 2px; box-shadow: 0 6px 20px rgba(0, 0, 0, .4); }
+#v9tip b { font-family: var(--f-display); font-weight: 400; font-size: 14px; color: var(--head); letter-spacing: .06em; }
+
+/* 記録の窓 */
+#dlgLog { width: min(720px, calc(100vw - 32px)); }
+.v9logAll { font-family: var(--f-body); font-size: 15.5px; line-height: 1.85; gap: 8px; max-height: calc(100vh - 140px); overflow-y: auto; }
+.v9logAll > * { margin: 0; }
+.v9logAll .v9term { text-decoration: none; cursor: auto; }
+
+/* ---------------------------------------------------------------- 絵：背景の上の層（戦闘の魔物・演出）と、立ち絵 */
+body.v9pc .scene { position: fixed; inset: 0; z-index: 3; height: auto; margin: 0; pointer-events: none; overflow: visible; }
+body.v9pc .scene > canvas.fxLayer, body.v9pc #v9foes { display: block; position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+body.v9pc .scene .bossBanner { pointer-events: auto; }
+body.v9pc #stand, body.v9pc #who { display: none !important; }
+body.v9pc .scene .dmgpop.you { left: calc(var(--v9-cw) * .45); top: 42%; font-size: 36px; }
+
+/* 立ち絵の場所（左）。話している人が前に、仲間は後ろに少し暗く */
+body.v9pc #v9cast { display: block; position: fixed; left: var(--v9-cx); top: var(--v9-cy); width: var(--v9-cw); height: var(--v9-ch); z-index: 2; pointer-events: none; }
+.v9fig { position: absolute; bottom: 0; left: calc(var(--x) - var(--h) * .4); width: calc(var(--h) * .8); height: var(--h);
+  opacity: 0; transform: translateX(-28px); filter: var(--stand-filter) brightness(calc(1 - var(--dim, 0)));
+  transition: opacity .48s ease, transform .48s ease, left .48s ease, width .48s ease, height .48s ease, filter .48s ease; }
+.v9fig.on { opacity: 1; transform: none; }
+.v9fig.out { opacity: 0; transform: translateX(-18px); }
+.v9fig:not(.front) { filter: var(--stand-filter) var(--v9-dimfig); }
+.v9fig.front { filter: var(--stand-filter) drop-shadow(0 0 28px rgba(0, 0, 0, .35)); }
+.v9fig .v9face { display: block; width: 100%; height: 100%; border: 0; background: transparent; }
+/* 持ち主の画像のある人：無地の背景の縁をぼかし、足元を闇に沈める */
+.v9fig.img .v9face {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent), linear-gradient(transparent, #000 14%, #000 62%, transparent 96%);
+  mask-image: linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent), linear-gradient(transparent, #000 14%, #000 62%, transparent 96%);
+  -webkit-mask-composite: source-in; mask-composite: intersect; }
+/* canvas の絵の人：額に入れて、少し浮かせる（大きくすると粗さが目立つので小さめ） */
+.v9fig.card { height: calc(var(--h) * .56); width: calc(var(--h) * .448); left: calc(var(--x) - var(--h) * .224); bottom: calc(var(--h) * .2); }
+.v9fig.card .v9face { border: 1px solid var(--win-edge); outline: 1px solid rgba(0, 0, 0, .6); outline-offset: 3px; background: var(--face-bg); box-shadow: 0 10px 30px rgba(0, 0, 0, .55); }
+.v9fig .v9name { position: absolute; left: 10%; bottom: 14%; max-width: 86%; padding: 3px 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-family: var(--f-display); font-size: 16px; letter-spacing: .12em; color: #f3e8cc; text-shadow: 0 1px 3px #000;
+  background: linear-gradient(90deg, rgba(4, 9, 9, .74), rgba(4, 9, 9, .55) 70%, transparent); border-left: 2px solid var(--accent); }
+.v9fig.card .v9name { bottom: -34px; left: 0; font-size: 14px; }
+.v9fig:not(.front) .v9name { opacity: 0; }
+body.v9pc:not(.v9combat) #v9cast:not(:has(.front)) .v9fig .v9name { opacity: .85; font-size: 13px; }
+
+/* ---------------------------------------------------------------- 戦闘：魔物は中央〜右に大きく、味方は左に小さく、文章と行動は下の帯 */
+body.v9pc.v9combat .scene { inset: auto; left: var(--v9-sx); top: var(--v9-sy); width: var(--v9-sw); height: var(--v9-sh); }
+body.v9pc.v9combat .scene::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse 80% 70% at 60% 45%, transparent 40%, rgba(70, 0, 0, .35)); }
+body.v9pc.v9combat .tome { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); grid-template-rows: minmax(0, 1fr) auto; column-gap: 26px; padding-top: 18px; }
+body.v9pc.v9combat #log { grid-row: 1 / span 2; font-size: 15px; line-height: 1.8; border-right: 1px solid var(--rule); padding-right: 14px; }
+body.v9pc.v9combat #panel { grid-column: 2; max-height: none; border-top: 0; padding-top: 0; }
+body.v9pc.v9combat #act { grid-column: 2; margin-inline: 0 -28px; padding-inline: 0 28px; }
+body.v9pc.v9combat .alist { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+body.v9pc.v9combat .v9fig .v9name { font-size: 13px; bottom: 6%; }
+/* 敵の札は魔物の上に並べる（下の帯は文章と行動だけ）。文章の窓は backdrop-filter で fixed の基準になるので、窓からの位置で置く */
+body.v9pc.v9combat #panel { position: static; }
+body.v9pc.v9combat #panel .foes { position: absolute; z-index: 5; left: calc(var(--v9-sx) - var(--v9-tx)); top: calc(var(--v9-sy) - var(--v9-ty) + 8px); width: var(--v9-sw); display: flex; justify-content: center; gap: 10px; pointer-events: none; }
+body.v9pc.v9combat #panel .foe { pointer-events: auto; min-width: 160px; box-shadow: 0 4px 14px rgba(0, 0, 0, .45); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+body.v9pc.v9combat #panel .aimHint { position: absolute; z-index: 5; left: calc(var(--v9-sx) - var(--v9-tx)); width: var(--v9-sw); top: calc(var(--v9-sy) - var(--v9-ty) + 84px); text-align: center; margin: 0; color: #e4d9bf; text-shadow: 0 1px 3px #000; pointer-events: none; }
+body.v9pc.v9combat .v9fig.card .v9name { bottom: -30px; }
+
+/* 通知は見出しの帯の下、立ち絵の場所の真ん中に（場所と日付に掛けない） */
+body.v9pc #toast { top: calc(var(--v9-head) + 100px); left: calc(var(--v9-cw) / 2); max-width: calc(var(--v9-cw) - 24px); }
+/* 血しぶき・光の演出（B1）は画面全体に */
+body.v9pc .scene::after { position: fixed; inset: 0; }
+
+/* ---------------------------------------------------------------- 演出：暗転（場面の切り替え）・光（大成功・トロフィー）・ほのかな明るみ（出会い）・揺れ（大失敗）・死 */
+#v9veil { position: fixed; inset: 0; z-index: 7; pointer-events: none; opacity: 0; background: #050707; }
+body.v9dim #v9veil { animation: v9dim .9s ease-in-out; }
+body.v9glow #v9veil { background: radial-gradient(ellipse at 50% 40%, var(--v9-glow), transparent 70%); mix-blend-mode: screen; animation: v9glow .9s ease-out; }
+body.v9meet #v9veil { background: radial-gradient(ellipse at 28% 55%, var(--v9-glow), transparent 60%); mix-blend-mode: screen; animation: v9meet .9s ease-out; }
+body.v9dark #v9veil { background: radial-gradient(ellipse at center, rgba(40, 0, 0, .3), #050707 85%); animation: v9dark 2.4s ease-in-out; }
+body.v9shake #backdrop .bgLayer.on, body.v9shake #v9cast { animation: v9shake .5s cubic-bezier(.36, .07, .19, .97); }
+@keyframes v9dim { 0% { opacity: 0; } 40% { opacity: .82; } 100% { opacity: 0; } }
+@keyframes v9glow { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes v9meet { 0% { opacity: 0; } 35% { opacity: .7; } 100% { opacity: 0; } }
+@keyframes v9dark { 0% { opacity: 0; } 50% { opacity: .75; } 100% { opacity: 0; } }
+@keyframes v9shake { 20% { transform: translate(-4px, 1px); } 40% { transform: translate(4px, -1px); } 60% { transform: translate(-2px, 1px); } 80% { transform: translate(1px, 0); } }
+
+/* 動きを減らす設定：出入りは切り替えるだけ。揺れ・光・暗転はしない */
+@media (prefers-reduced-motion: reduce) {
+  .v9fig, .v9fig.out { transition: none; transform: none; }
+  body.v9pc #log .new { animation: none; }
+  #v9veil { display: none; }
+  body.v9shake #backdrop .bgLayer.on, body.v9shake #v9cast { animation: none; }
+}
+
+/* 少し低い画面（高さ 560〜720）：文字と隙間を詰める */
+@media (max-height: 720px) {
+  body.v9pc .tome { padding-top: 16px; }
+  body.v9pc #panel { max-height: 42vh; }
+  body.v9pc .act { min-height: 38px; padding-block: 5px; }
+}
