@@ -28,6 +28,7 @@ node tools/build.mjs && node tests/run.mjs
 | `src/engine/gm.js` | GM（Claude）に任せる自由行動（任意） | C |
 | `src/ui/scene.js` | 背景の絵（canvas） | A |
 | `src/ui/art_monsters.js` | モンスターの絵（部品の組み合わせ。敵のデータの `look` で指定できる） | A |
+| `assets/`・`src/ui/v4_assets.js` | 持ち主が作った画像（ビルドで HTML に埋め込む。`tools/assets.mjs`。描く物の一覧は `docs/art/portraits.md`） | A |
 | `src/ui/ui.js`, `src/ui/setup.js`, `src/main.js`, `src/style.css`, `src/index.html` | 画面 | U |
 | `src/manifest.json` | 読み込む順番（順番を決めたいファイルだけ。無いものは `tools/files.mjs` が自動で足す） | 追記だけ |
 
@@ -36,7 +37,7 @@ node tools/build.mjs && node tests/run.mjs
 - エンジン（`src/data`・`src/engine`）は DOM に触らない。画面は `G.S` を読んで描く。テストは DOM なしでエンジンを動かす。
 - 乱数は必ず `G.rand` / `G.d` / `G.dice` / `G.pick` を使う（テストで固定できるように）。`src/ui/setup.js` の作成画面だけは例外。
 - **新しい内容は、なるべく新しいファイルに書く。`src/data/`・`src/engine/`・`src/ui/` に置けば自動で読まれるので、`src/manifest.json` は編集しない。** manifest に書いたファイルを順に読んだあと、書いていない `.js` を data → engine → ui、名前順で足し、`main.js` は必ず最後（`tools/files.mjs`）。順番がどうしても効くときだけ manifest に書く（書いても二重には読まない）。例：出来事を足すなら `src/data/events_<名前>.js` を作り、中で `G.data.EVENTS.push(...)`。敵なら `Object.assign(G.data.ENEMIES, {...})`。既存の大きなファイルを並行して書き換えると衝突する。
-- 外部の画像・音声・ライブラリは使わない（Artifact の制約。フォントだけ Google Fonts）。絵は canvas で描く。
+- 外から読み込まない（Artifact の制約。フォントだけ Google Fonts）。絵は canvas で描く。持ち主が作った画像は `assets/` に置けば HTML に埋め込まれる（`docs/art/`）。
 - 性的な描写は直接書かない。残酷さ・下品な笑いはよいが、ほのめかしと場面転換で済ませる。
 - 文章は日本語。地の文は二人称（あなた）か三人称。ゲームの用語は `docs/VISION.md` の用語集に合わせる。
 - セーブの形（`G.S`）に項目を足すときは、古いセーブで項目が無くても動くように書く（`S.foo || 既定値`）。
