@@ -109,6 +109,17 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     }
   }
 
+  // ---- 機械も遺物（持ち主の追加の決定）：機械の敵の説明は「遺跡から出た」ことに触れ、今の世で作ったとは書かない
+  {
+    const made = /(工房|鍛冶|職人).{0,10}(作った|作る|作られ|打った|造った)/;
+    for (const [id, e] of Object.entries(D.ENEMIES)) {
+      if (!/機械|鉄の巨人|大筒/.test(e.name + (e.desc || ""))) continue;
+      if (!/遺跡|遺物|掘り出/.test(e.desc || "")) fail(`敵 ${e.name}：機械なのに、遺跡から出たものだと分からない`);
+      if (made.test(e.desc || "")) fail(`敵 ${e.name}：機械を今の世で作ったように書いてある`);
+    }
+    for (const id of guns) if (made.test(D.ITEMS[id].desc || "")) fail(`${D.ITEMS[id].name}：今の世で作ったように書いてある`);
+  }
+
   // ---- #51 光の壁のあとも旅を続けられる
   {
     const S = start(51);

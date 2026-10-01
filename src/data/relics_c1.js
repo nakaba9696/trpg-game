@@ -1,4 +1,4 @@
-// C1：銃は失われた時代の遺物（オーパーツ）で、レア物（持ち主の決定 #50）。今の世で作られている武器ではない。
+// C1：銃は失われた時代の遺物（オーパーツ）で、レア物（持ち主の決定 #50）。今の世で作られている武器ではない。機械（機械兵・大筒）も同じ。
 // 店の品揃え（SHOP_BASE・場所の shop）には入れない。手に入るのは、迷宮の最奥の手前・野の異形の骸・町の闇市・
 // 帝国脱走兵の懐（弾だけ、ごく稀）。弾も貴重で、撃つたびに一つ減る。魔人の絶界には効かない。
 // 銃は装備しない（type "gear"）。持っていれば戦闘に「撃つ」が出る（src/engine/relics_c1.js）。
@@ -25,6 +25,10 @@
 
   // 帝国脱走兵の懐に、ごく稀に雷玉（帝国が掘り出した筒を抱え込んでいる、という噂の手触り）
   if (D.ENEMIES.deserter) D.ENEMIES.deserter.loot = [...(D.ENEMIES.deserter.loot || []), ["c1_raidama", 0.04]];
+
+  // 機械も同じく遺物（持ち主の追加の決定：遺跡から出たオーパーツで、一部の銃や機械が使える世界）。
+  // 酸の谷の機械兵は、帝国が作ったものではなく、遺跡から掘り出して見張りに立てたもの（元の表は src/data/items_w2.js）
+  if (D.ENEMIES.w2_ironwarden) D.ENEMIES.w2_ironwarden.desc = "帝国が遺跡から掘り出し、酸の谷の見張りに立てた鉄の巨人。作り方を知る者は、帝国にもいない。半分溶けたまま、今も持ち場を離れない。中に人は乗っていない。";
 
   const deepest = (S) => { const L = D.LOCS[S.loc]; return !!L && L.type === "dungeon" && (S.depth || 0) >= Math.max(1, (L.floors || 1) - 1); };
 
@@ -91,7 +95,10 @@
     ] };
     // 光の壁に触れて、旅を続けたとき（src/data/epilogue_m6.js の m6_wall_touch）
     if (D.LORE.clap) D.LORE.clap.lines.push(["wall", "東の果てで、壁に手のひらを当てたときに聞いた。"]);
+    // 酸の谷の機械兵を止めたとき
+    if (D.LORE.sannotani) D.LORE.sannotani.lines.push(["seat", "鉄の巨人の胸の席には、帝国の兵が座っていた跡があった。巨人を打った鍛冶の印は、どこにも無かった。"]);
     const on = D.LORE_ON;
     on.item = Object.assign(on.item || {}, { c1_raizutsu: "tsutsu:found", c1_kouzutsu: "tsutsu:husk" });
+    on.flag = Object.assign(on.flag || {}, { w2_ironwarden: "sannotani:seat" });
   }
 })(globalThis.G = globalThis.G || {});
