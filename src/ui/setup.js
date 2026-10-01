@@ -301,9 +301,10 @@
       row.title = D.STAT_HINT[k];
       const lk = btn(draft.locks[k] ? "鍵" : "−", "lock", () => { if (!cre.toggleLock(draft, k)) { G.ui.toast && G.ui.toast("鍵は " + D.LOCK_MAX + " つまで", "どれかの鍵を外してから"); return; } setup.show(); }, "lk-" + k);
       lk.setAttribute("aria-pressed", String(!!draft.locks[k]));
-      lk.setAttribute("aria-label", `${k}に鍵をかける（振り直しても変わらない）`);
+      lk.setAttribute("aria-label", draft.locks[k] ? `${k}の鍵を外す（今は振り直しても変わらない）` : `${k}に鍵をかける（振り直しても変わらない）`);
+      lk.title = draft.locks[k] ? "鍵を外す" : "鍵をかける（振り直しても変わらない）";
       lk.textContent = "";
-      lk.append(lockIcon(!!draft.locks[k]));
+      lk.append(lockIcon(!!draft.locks[k]), h("small", "", draft.locks[k] ? "鍵" : "鍵なし"));
       const v = cre.value(draft, k), cap = cre.cap(draft, k);
       const b = h("span", "bar"); const i = h("i"); i.style.width = v + "%"; const u = h("u"); u.style.left = `calc(${cap}% - 1px)`; b.append(i, u);
       const pm = h("span", "pm");

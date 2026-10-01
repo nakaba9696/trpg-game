@@ -150,8 +150,25 @@
   function renderFoes(panel) {
     const foes = h("div", "foes");
     const aim = G.target && G.target();
-    G.S.combat.foes.forEach((f) => { const el = foeEl(f); if (f === aim) { el.classList.add("aim"); el.prepend(h("span", "aimTag", "狙い")); } foes.append(el); });
+    // U6：生きている敵が二体以上なら、札を押すと狙いが替わる
+    const pick = G.setAim && G.alive().length > 1;
+    G.S.combat.foes.forEach((f, i) => {
+      const el = foeEl(f);
+      if (f === aim) { el.classList.add("aim"); el.prepend(h("span", "aimTag", "狙い")); }
+      if (pick && f.hp > 0) {
+        el.classList.add("pick");
+        el.tabIndex = 0;
+        el.setAttribute("role", "button");
+        el.setAttribute("aria-pressed", String(f === aim));
+        el.setAttribute("aria-label", f === aim ? `${f.name}（狙っている）` : `${f.name}を狙う`);
+        const go = () => { if (busy || f === aim) return; if (G.setAim(i)) { G.main.save(); ui.render(); const c = $(`#panel .foe[data-foe="${CSS.escape(f.name)}"]`); if (c) c.focus(); } };
+        el.onclick = go;
+        el.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } };
+      }
+      foes.append(el);
+    });
     panel.append(foes);
+    if (pick) panel.append(h("p", "fine aimHint", "敵の札を押すと、狙う相手を替えられる（手番は進まない）"));
   }
   // 行動ボタン1つ
   function actionButton(a) {

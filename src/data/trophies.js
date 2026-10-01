@@ -5,7 +5,7 @@
   const D = (G.data = G.data || {});
 
   D.TROPHIES = [
-    { key: "first_step", name: "旅立ち", tier: "銅", desc: "初めての冒険を始めた", test: (S) => S.turn >= 1 },
+    { key: "first_step", name: "旅立ち", tier: "銅", desc: "初めての冒険を始めた", test: (S) => !!S },
     { key: "first_win", name: "初陣", tier: "銅", desc: "初めて敵を倒した", test: (S) => S.counters.kills >= 1 },
     { key: "crit", name: "天運", tier: "銅", desc: "判定で大成功を出した", test: (S) => S.counters.crits >= 1 },
     { key: "fumble", name: "天に見放された", tier: "銅", desc: "判定で大失敗を出した", test: (S) => S.counters.fumbles >= 1 },
