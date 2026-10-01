@@ -174,10 +174,10 @@
     return w;
   };
 
-  // 施設の人：王城では、玉座の主（聖王都は退屈そうな女王、帝都は病床の皇帝に代わる宰相）。王位を奪ったあとは出さない
+  // 施設の人：王城では、玉座の主（聖王都は灰銀の髪の国王ヴァレオン、帝都は病床の皇帝に代わる宰相）。王位を奪ったあとは出さない
   const FAC_WHO = {
     castle: {
-      leavel: { kind: "noble", sex: "女", age: 34, name: "女王エレオノーラ", seed: "fac:leavel:queen", look: { head: "circlet", eyes: "sleepy", mouth: "flat", brows: "raised", hairStyle: "long", cloth: "#e8e0d0", chest: "gem", bg: "#8a7a5a" } },
+      leavel: { kind: "noble", sex: "男", age: 58, name: "国王ヴァレオン", seed: "c2:valeon", look: { hair: "#b8b8bc", hairStyle: "wild", eyes: "sharp", iris: "#c8902a", mouth: "grin", brows: "angry", outfit: "plate", head: "crown", gear: "greatsword", chest: "crest", cloth: "#5a1a1a", build: "broad", marks: ["beard", "scar"], bg: "#8a6a3a" } },
       garmund: { kind: "noble", sex: "男", age: 64, name: "宰相", seed: "fac:garmund:chancellor", look: { head: "none", eyes: "narrow", mouth: "flat", brows: "calm", hairStyle: "slick", cloth: "#1a1a22", chest: "chain", bg: "#3a3a44", marks: ["wrinkles", "bags"] } },
     },
   };

@@ -42,7 +42,7 @@
     },
     leavel: {
       name: "聖王都リーヴェル", region: "聖王国リーヴェル", type: "town", danger: 0, scene: "castle", capital: true, x: 14, y: 36,
-      desc: "白い城壁の王都。若き女王エレオノーラが治める。華やかな大通りの裏で、貴族たちが私腹を肥やしている。城の高い窓の一つだけが、毎晩遅くまで灯っている。書庫の窓だと、門番は言う。",
+      desc: "白い城壁の王都。灰銀の髪の国王ヴァレオンが治める。華やかな大通りの裏で、貴族たちが私腹を肥やしている。王はよく城を空けて化け物を狩りに出るので、門番は王の馬の蹄の音を聞き分けられる。",
       fac: ["inn", "tavern", "shop", "guild", "church", "train", "castle"],
       shop: ["longsword", "rapier", "chain", "plate", "holywater", "mithril"],
       links: { plains: 2 },
