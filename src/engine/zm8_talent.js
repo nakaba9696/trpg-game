@@ -1,8 +1,9 @@
 // M8：人の才（技能ごとの才能 Lv0〜3）と伸びしろ。表は src/data/m8_talents.js。DOM には触らない。
 // 名前の頭の z は、src/engine/u5_creation.js（G.cre）より後に読ませるため（manifest を書き換えずに G.cre を包む）。
 //
-// 状態：S.m8 = { t: { 技能: Lv }, src: "roll"（作成で振った）/ "guess"（古いセーブで推した） }。古いセーブでは無くても動く（G.m8Of が職業と能力値から推して付ける）
-//   仲間（M2）ひとりずつ：c.m8 = { t: { 技能: Lv }, known: 見立て済みか }。無ければ名前から決まる（乱数を使わない）
+// 状態：S.m8 = { t: { 技能: Lv }, f: { 暮らしの才: Lv }, src: "roll"（作成で振った）/ "guess"（古いセーブで推した） }。古いセーブでは無くても動く（G.m8Of が職業と能力値から推して付ける）
+//   暮らしの才（D.FLAVORS）は判定に効かない。シート・見立て・出来事の文の端（D.FLAVOR_ASIDE）・人生の物語・墓碑に顔を出す
+//   仲間（M2）ひとりずつ：c.m8 = { t: { 技能: Lv }, f: { 暮らしの才: Lv }, known: 見立て済みか }。無ければ名前から決まる（乱数を使わない）
 //   墓碑：g.talents・g.talentLine
 // 効き目：
 //   判定（G.check / G.chance）… 技能の段階で成功率 ±0 / ±0 / +6 / +12（才なしは伸びにくいだけ）（D.TALENT_LV）。どの技能かは判定の理由（攻撃・術の名前など）か能力値で決まる
@@ -38,6 +39,33 @@
     });
     return t;
   };
+  // 暮らしの才を振る（0〜3 個）
+  G.m8RollFlavors = (rnd) => {
+    const c = D.FLAVOR_COUNT;
+    const r = rnd();
+    const n = r < c[0] ? 0 : r < c[1] ? 1 : r < c[2] ? 2 : 3;
+    const pool = D.FLAVOR_KEYS.slice();
+    const f = {};
+    for (let i = 0; i < n && pool.length; i++) {
+      const k = pool.splice(Math.floor(rnd() * pool.length), 1)[0];
+      const q = rnd();
+      f[k] = q < D.FLAVOR_ODDS[0] ? 3 : q < D.FLAVOR_ODDS[1] ? 2 : 1;
+    }
+    return f;
+  };
+  // 名前から決まった乱数（古いセーブ・出来事で加わった仲間。G.rand を進めない）
+  const fixedRand = (key) => { let s = hash(key) || 1; return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; };
+  G.m8FlavorsOf = (S) => {
+    S = S || G.S;
+    if (!S) return {};
+    G.m8Of(S);
+    if (!S.m8.f) S.m8.f = G.m8RollFlavors(fixedRand(`${(S.profile && S.profile.name) || ""}:${S.id || ""}:m8f`));
+    return S.m8.f;
+  };
+  // 暮らしの才を高い順に
+  G.m8FlavorList = (f) => Object.keys(f || {}).filter((k) => D.FLAVORS[k]).sort((a, b) => f[b] - f[a]);
+  G.m8FlavorText = (f) => G.m8FlavorList(f).map((k) => D.FLAVORS[k].name + (f[k] >= 2 ? `（${LV(f[k]).name}）` : "")).join("・");
+
   // 古いセーブ：職業と能力値から推す（乱数を使わない）
   G.m8Guess = (S) => {
     const main = G.m8Main(S.cls);
@@ -140,14 +168,16 @@
   });
 
   // ---------------------------------------------------------------- 新しい冒険
+  // 作成画面を通らないときの暮らしの才は、人物と能力値から決める（G.rand を進めない）
+  const seedOf = (opt) => fixedRand(`${opt.cls}:${JSON.stringify(opt.stats || {})}:${(opt.profile && opt.profile.name) || ""}:m8f`);
   const newGame0 = G.newGame;
   G.newGame = (opt) => {
     const S = newGame0(opt);
-    if (opt.talents) S.m8 = { t: { ...opt.talents }, src: "roll" };
+    if (opt.talents) S.m8 = { t: { ...opt.talents }, f: { ...(opt.flavors || G.m8RollFlavors(seedOf(opt))) }, src: "roll" };
     else {
       // 作成画面を通らない始まり（テストなど）：作成と同じ分布で振り、伸びしろも同じように足す
       const t = G.m8Roll(opt.cls, G.rand);
-      S.m8 = { t, src: "roll" };
+      S.m8 = { t, f: G.m8RollFlavors(seedOf(opt)), src: "roll" };
       D.STATS.forEach((k) => { S.caps[k] = Math.min(99, S.caps[k] + G.m8CapBonus(t, k)); });
     }
     G.m8Of(S);
@@ -168,13 +198,15 @@
       const keep = {};
       if (dr.talents) KEYS().forEach((k) => { if (dr.locks && dr.locks[T()[k].stat] && dr.talents[k] !== undefined) keep[k] = dr.talents[k]; });
       dr.talents = G.m8Roll(dr.cls, rnd, keep);
+      dr.flavors = G.m8RollFlavors(rnd);
       return roll0(dr, rnd);   // 最後に fit（限界を超えたボーナスを戻す）が走る
     };
     const cap0 = cre.cap;
     cre.cap = (dr, k) => Math.min(99, cap0(dr, k) + (dr.talents ? G.m8CapBonus(dr.talents, k) : 0));
     cre.talents = (dr) => { if (!dr.talents) dr.talents = G.m8Roll(dr.cls, Math.random); return dr.talents; };
+    cre.flavors = (dr) => { if (!dr.flavors) dr.flavors = G.m8RollFlavors(Math.random); return dr.flavors; };
     const opts0 = cre.options;
-    cre.options = (dr, rnd) => Object.assign(opts0(dr, rnd), { talents: { ...cre.talents(dr) } });
+    cre.options = (dr, rnd) => Object.assign(opts0(dr, rnd), { talents: { ...cre.talents(dr) }, flavors: { ...cre.flavors(dr) } });
   }
 
   // ---------------------------------------------------------------- 仲間（M2）
@@ -189,11 +221,8 @@
   // 仲間の才。無ければ名前から決まった数で付ける（乱数を進めない。古いセーブの仲間・出来事で加わった仲間）
   G.m8Comp = (c) => {
     if (!c) return null;
-    if (!c.m8 || !c.m8.t) {
-      let s = hash(`${c.name}:${c.id || ""}:m8`) || 1;
-      const r = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
-      c.m8 = { t: compTalents(c, r), known: false };
-    }
+    if (!c.m8 || !c.m8.t) c.m8 = { t: compTalents(c, fixedRand(`${c.name}:${c.id || ""}:m8`)), known: false };
+    if (!c.m8.f) c.m8.f = G.m8RollFlavors(fixedRand(`${c.name}:${c.id || ""}:m8f`));
     return c.m8;
   };
   G.m8CompMain = (c) => { const t = G.m8Comp(c).t; return KEYS().reduce((b, k) => (t[k] > t[b] ? k : b), compMain(c)); };
@@ -202,7 +231,7 @@
   const gen0 = G.genCompanion;
   G.genCompanion = () => {
     const c = gen0();
-    c.m8 = { t: compTalents(c, G.rand), known: false };
+    c.m8 = { t: compTalents(c, G.rand), f: G.m8RollFlavors(fixedRand(`${c.name}:${c.power}:${G.S ? G.S.day + ":" + G.S.turn : ""}:m8f`)), known: false };
     c.power = G.clamp(c.power + POWER[c.m8.t[compMain(c)]], 25, 95);
     return c;
   };
@@ -216,7 +245,7 @@
     const ok = add0(c);
     if (ok && S && S.companions.length > n) {
       const nc = S.companions[S.companions.length - 1];
-      if (src && src.m8) nc.m8 = { t: { ...src.m8.t }, known: !!src.m8.known };
+      if (src && src.m8) nc.m8 = { t: { ...src.m8.t }, f: { ...(src.m8.f || {}) }, known: !!src.m8.known };
       G.m8Comp(nc);
     }
     return ok;
@@ -226,8 +255,9 @@
     if (!m.known) return "才は、まだ見えない";
     const best = G.m8Best(m.t);
     const k = G.m8CompMain(c);
-    if (!best.length) return m.t[k] ? `${T()[k].name}は人並み` : "取り立てた才は無い";
-    return best.map((x) => `${T()[x].name}の才（${LV(m.t[x]).name}）`).join("・");
+    const fl = G.m8FlavorText(m.f);
+    const main = !best.length ? (m.t[k] ? `${T()[k].name}は人並み` : fl ? "" : "取り立てた才は無い") : best.map((x) => `${T()[x].name}の才（${LV(m.t[x]).name}）`).join("・");
+    return [main, fl && `暮らしの才：${fl}`].filter(Boolean).join("・");
   };
   // 見立てる。言葉を一人ずつ記録に出す
   const tell = (c) => {
@@ -323,6 +353,27 @@
     return r;
   };
 
+  // ---------------------------------------------------------------- 暮らしの才が、出来事の文の端に顔を出す
+  // 仲間の出来事（m2）・一度きりの出来事には添えない
+  const start0 = G.startEvent;
+  G.startEvent = (ev) => {
+    const ok = start0(ev);
+    const S = G.S;
+    const e = ok && S && D.EVENTS.find((x) => x.id === S.event);
+    if (e && !e.m2 && !e.once && S.mode === "event") {
+      const f = G.m8FlavorsOf(S);
+      const keys = G.m8FlavorList(f);
+      // 添えるかどうかは日・手番・出来事で決める（G.rand を進めず、ほかの乱数の並びを変えない。同じ遊び方なら同じに出る）
+      const r = fixedRand(`${S.day}:${S.turn}:${e.id}:${(S.profile && S.profile.name) || ""}`);
+      if (keys.length && r() < D.FLAVOR_ASIDE) {
+        const tags = G.eventTags();
+        const hit = keys.filter((k) => D.FLAVORS[k].aside && D.FLAVORS[k].aside.where.some((w) => tags.includes(w)));
+        if (hit.length) G.say(D.FLAVORS[hit[Math.floor(r() * hit.length)]].aside.text);
+      }
+    }
+    return ok;
+  };
+
   // ---------------------------------------------------------------- 人生の物語（M6）と墓碑
   const lineFor = (t, table) => {
     const best = G.m8Best(t);
@@ -332,15 +383,25 @@
     return { t: table.none, v: {} };
   };
   const fillV = (s, v) => String(s).replace(/\{(\w)\}/g, (a, k) => (v[k] !== undefined ? v[k] : a));
-  G.m8GraveLine = (t) => { const r = lineFor(t, D.M8_TEXT.grave); return fillV(r.t, r.v); };
+  // 墓碑の一行。技能の才が目立たず暮らしの才があれば、そちらを
+  G.m8GraveLine = (t, f) => {
+    const fk = G.m8FlavorList(f)[0];
+    const fl = fk ? D.FLAVORS[fk].grave : "";
+    if (!G.m8Best(t).length && fl) return fl;
+    const r = lineFor(t, D.M8_TEXT.grave);
+    return [fillV(r.t, r.v), fl].filter(Boolean).join("。");
+  };
   if (G.m6Compose) {
     const compose0 = G.m6Compose;
     G.m6Compose = (S) => {
       const story = compose0(S);
       const t = S && (S.m8 ? S.m8.t : S.talents);
+      const f = S && (S.m8 ? S.m8.f : S.flavors);
       if (story && t && story.life && story.life.length) {
         const r = lineFor(t, D.M8_TEXT.story);
-        if (r.t !== D.M8_TEXT.story.none || G.rand() < 0.5) story.life[0] += fillV(G.pick(r.t), r.v);
+        const fk = G.m8FlavorList(f)[0];
+        if (r.t !== D.M8_TEXT.story.none || (!fk && G.rand() < 0.5)) story.life[0] += fillV(G.pick(r.t), r.v);
+        if (fk) story.life[0] += D.FLAVORS[fk].story;
       }
       return story;
     };
@@ -349,11 +410,12 @@
   G.finishRun = () => {
     const S = G.S;
     const t = S && G.m8Of(S);
+    const f = S && G.m8FlavorsOf(S);
     const cb = G.onFinish;
     G.onFinish = () => {
       G.onFinish = cb;
       const g = G.P.graves[0];
-      if (g && S && g.id === S.id && t) Object.assign(g, { talents: { ...t }, talentLine: G.m8GraveLine(t) });
+      if (g && S && g.id === S.id && t) Object.assign(g, { talents: { ...t }, flavors: { ...f }, talentLine: G.m8GraveLine(t, f) });
       if (cb) cb();
     };
     try { finish0(); } finally { G.onFinish = cb; }

@@ -593,3 +593,10 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
 
 /* ---------------------------------------------------------------- U6：スマホで行動ボタンが隠れているときの「行動へ」 */
 #toActs { position: fixed; right: 16px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); z-index: 5; box-shadow: 0 2px 8px rgba(0, 0, 0, .25); background: var(--ink); color: var(--paper); border-color: var(--ink); }
+/* 暮らしの才（M8） */
+.m8fl { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 6px 0; font-size: 13px; }
+.m8fl .lab { color: var(--muted); font-size: 12px; margin-right: 2px; }
+.m8chip { border: 1px solid var(--rule); border-radius: 999px; padding: 0 9px; background: var(--field); }
+.m8chip small { margin-left: 4px; color: var(--muted); font-size: 11px; }
+.m8chip.lv3 { border-color: var(--crit); }
+.m8chip.lv3 small { color: var(--crit); }

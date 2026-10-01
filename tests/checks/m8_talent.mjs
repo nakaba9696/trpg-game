@@ -6,6 +6,7 @@
 // - 古いセーブ（S.m8 が無い）でも動き、職業と能力値から推す（乱数を進めない）
 // - 仲間：はじめは見えない。見立て屋で分かる。長く旅をしても分かる
 // - 才が変わる出来事・人生の物語と墓碑の一行
+// - 暮らしの才：たくさんの種類・判定に効かない・古いセーブで決まる・出来事の文の端・墓碑と物語・作成・仲間の見立て
 export default ({ G, fail, ok, seeded }) => {
   const D = G.data;
   let n = 0;
@@ -177,6 +178,46 @@ export default ({ G, fail, ok, seeded }) => {
   if (S.story && !S.story.life[0].includes("剣の才")) f("人生の物語に才の一行が無い");
   if (g && G.m6StoryOf) { const st = G.m6StoryOf(Object.assign({}, g, { story: null })); if (st && !st.life[0].includes("剣")) f("墓碑から読む物語に才の一行が無い"); }
   if (S.chronicle[0] && !S.chronicle.some((x) => x.text.includes("剣の才"))) f("年表に生まれつきの才が残らない");
+
+  // ---------------------------------------------------------------- 暮らしの才（フレーバー）
+  if (!(D.FLAVOR_KEYS.length >= 12)) f(`暮らしの才が ${D.FLAVOR_KEYS.length} 種（たくさん用意する）`);
+  D.FLAVOR_KEYS.forEach((k) => { const x = D.FLAVORS[k]; if (!x.name || !x.story || !x.grave || !x.aside || !x.aside.text) f(`暮らしの才 ${k} の文が欠けている`); });
+  const fr = seeded(81);
+  const sizes = [0, 0, 0, 0];
+  for (let i = 0; i < 2000; i++) sizes[Object.keys(G.m8RollFlavors(fr)).length]++;
+  if (!(sizes[2] + sizes[3] > 400 && sizes[0] < 600)) f(`暮らしの才の数の分布がおかしい（${sizes.join("/")}）`);
+  ok(`m8 暮らしの才の数（2000 人）：0個 ${sizes[0]}・1個 ${sizes[1]}・2個 ${sizes[2]}・3個 ${sizes[3]}`);
+  // 判定に効かない
+  S = start("merc", 82, flat(1));
+  const c0 = G.chance("敏捷", 0);
+  S.m8.f = { cook: 3, fish: 2 };
+  if (G.chance("敏捷", 0) !== c0) f("暮らしの才が判定に効いた");
+  // 古いセーブ：名前から決まる
+  delete S.m8.f;
+  const f1 = JSON.stringify(G.m8FlavorsOf(S));
+  delete S.m8.f;
+  if (JSON.stringify(G.m8FlavorsOf(S)) !== f1) f("古いセーブの暮らしの才が毎回同じでない");
+  // 出来事の文の端に顔を出す
+  S = start("merc", 83, flat(1));
+  S.m8.f = { beasts: 1 };
+  const aside = D.FLAVORS.beasts.aside.text;
+  let seen = 0;
+  const townEv = D.EVENTS.find((e) => e.id === "brawl");
+  for (let i = 0; i < 200 && !seen; i++) { S.mode = "explore"; S.turn = i; G.startEvent(townEv); if (S.log.some((x) => x.text === aside)) seen++; }
+  if (!seen) f("暮らしの才が出来事の文に出ない");
+  // 墓碑・物語・作成
+  S = start("merc", 84, flat(1));
+  S.m8.f = { fish: 2 };
+  G.die("テストで倒れた");
+  if (!G.P.graves[0].talentLine.includes(D.FLAVORS.fish.grave)) f(`技能の才が目立たないとき、墓碑に暮らしの才が出ない（${G.P.graves[0].talentLine}）`);
+  if (S.story && !S.story.life[0].includes(D.FLAVORS.fish.story)) f("人生の物語に暮らしの才が出ない");
+  if (G.cre) { const dr = G.cre.fresh(seeded(85)); const o = G.cre.options(dr, seeded(86)); if (!o.flavors || JSON.stringify(o.flavors) !== JSON.stringify(dr.flavors)) f("作成の暮らしの才が渡らない"); }
+  // 仲間の見立てに出る
+  S = start("merc", 87, flat(1));
+  G.addCompanion({ name: "剣士のジーク", cls: "剣士", power: 50, dmg: 1, desc: "傲慢な自信家" });
+  const cc = S.companions[0];
+  cc.m8.f = { song: 1 }; cc.m8.known = true;
+  if (!G.m8CompLabel(cc).includes("歌")) f("見立てた仲間の暮らしの才が出ない");
 
   if (!n) ok("m8: 才（分布・作成・判定・成長・古いセーブ・仲間・出来事・墓碑）");
 };
