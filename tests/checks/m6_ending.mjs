@@ -143,6 +143,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (S.event !== "m6_wall") fail("光の壁：壁に着かない");
     const day = S.day;
     G.chooseEvent(0);
+    if (S.event !== "m6_wall_touch") fail("光の壁：触れたあと、終えるか続けるかを尋ねない");
+    G.chooseEvent(0);
     if (S.over !== "end" || S.ending?.id !== "wall" || !(day >= 41)) fail(`光の壁：触れても終わらない（${S.over}・${S.ending?.id}）`);
     checkStory("光の壁", S.story, false);
     if (S.story.epitaph !== M6.EPITAPH.wall) fail("光の壁：墓碑の一行が違う");
