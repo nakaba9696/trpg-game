@@ -79,7 +79,7 @@ export default ({ fail, loadEngine, seeded }) => {
     const S = newGame(G, 3); // 目的は D.GOALS の最初
     const secs = () => D.WORLD.sections.map(([t]) => t);
     const rows = () => D.WORLD.sections.flatMap(([, r]) => r.map(([k]) => k));
-    const loreSecs = D.LORE_SECS.filter((t) => secs().includes(t));
+    const loreSecs = D.LORE_SECS.filter((t) => secs().includes(t) && !D.WORLD.start.some(([h]) => h === t)); // はじめから載る節（U7）は除く
     const goal0 = Object.keys(D.GOALS)[0];
     const startOpen = [].concat(D.LORE_ON.goal[goal0] || []).length;
     if (!secs().includes("大陸と国") || !secs().includes("人と暮らし")) fail("はじめの手引きに、大陸と国・人と暮らしが無い");
