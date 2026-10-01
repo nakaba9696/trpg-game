@@ -31,7 +31,7 @@
     { key: "knight", name: "叙任", tier: "銀", desc: "騎士の位を得た", test: (S) => ["騎士", "領主", "国王"].includes(S.title) },
     { key: "lord", name: "領主", tier: "金", desc: "領地を持つ身になった", test: (S) => ["領主", "国王"].includes(S.title) },
     { key: "king", name: "王", tier: "金", desc: "一国の王になった", test: (S) => S.title === "国王" },
-    { key: "mirza", name: "享楽の使徒との邂逅", tier: "銀", desc: "享楽の使徒ミルザに出会い、生き延びた" },
+    { key: "mirza", name: "微笑の使徒との邂逅", tier: "銀", desc: "微笑の使徒カルマトスに出会い、生き延びた" },
     { key: "god", name: "赤い月の拍手", tier: "銀", desc: "赤い月の夜、空の高いところで誰かが手を打った" },
     { key: "goal", name: "宿願成就", tier: "金", desc: "冒険の目的を果たした", test: (S) => G.goalDone(S) },
     { key: "retire", name: "物語の結末", tier: "金", desc: "目的を果たして引退した", test: (S) => S.over === "end" && G.goalDone(S) },

@@ -1,7 +1,7 @@
-// M4：世界の出来事。日数が進むと、あなたと関係なく世界が動く（皇帝の病と代替わり、三国の戦と協定、使徒の襲来）。
+// M4：世界の出来事。日数が進むと、あなたと関係なく世界が動く（帝国の皇帝の出陣と戦傷・宮廷の争いと皇女の婿取り、三国の戦と協定、使徒の襲来）。
 // 表は src/data/world_events_m4.js（D.M4）、町で起きる出来事は src/data/events_m4.js。
 // 状態は S.world（古いセーブで無ければ、その日から始める）：
-//   { day: 最後に進めた日, plan: 筋の日取り, emp: 皇帝（sick→worse→dead→civil→new）, heir, war: { foe, since, until } | null,
+//   { day: 最後に進めた日, plan: 筋の日取り, emp: 帝国の筋（sick 平時→worse 皇帝の出陣→dead 皇帝の戦傷→civil 派閥と婿取りの争い→new 婿が決まる。名は古いセーブのまま）, heir（皇女の婿）, war: { foe, since, until } | null,
 //     warDone, lastWar, treaty: ""|"renewed"|"broken", towns: { 町 id: { st, by, since, until, seen, h } }, hist: [...], nextRaid, here }
 //   hist の一件：{ id, day, kind, loc, by?, heir?, foe?, heard: ""|"seen"|"rumor"|"notice"|"here" }。M6（人生の物語）は G.m4History() で読む
 // プレイヤーに伝わるのは、着いた町の様子・町をぶらついたときの張り紙と通行人・酒場の噂・閉まった店だけ。聞いたときに年表（kind "world"）に残る。
@@ -83,7 +83,7 @@
     const war = G.m4WarAt(id, S);
     if (war === "home" || war === "fort") off["fac:train"] = off["fac:train"] || "教官は戦に取られた";
     if (id === "garmund") {
-      if (W.emp === "dead" && S.day - (W.deadDay || 0) < 20) off["fac:tavern"] = off["fac:tavern"] || "喪中につき休み";
+      if (W.emp === "dead" && S.day - (W.deadDay || 0) < 20) off["fac:tavern"] = off["fac:tavern"] || "陛下のご平癒まで休み";
       if (W.emp === "civil") off["fac:tavern"] = off["fac:tavern"] || "外出禁止令で、日暮れ前に閉めている";
     }
     delete off["fac:castle"]; // 王への道は閉じない（滅んだ町に王城は無い）
@@ -161,7 +161,7 @@
 
   function daily(W, day, S) {
     const P = W.plan;
-    // 皇帝
+    // 皇帝（出陣→戦傷→床のあいだの争い→皇女の婿）
     if (W.emp === "sick" && day >= P.worse) { W.emp = "worse"; add(W, day, "emp_worse", "garmund"); }
     else if (W.emp === "worse" && day >= P.dead) {
       if (!W.rallied && G.rand() < 0.2) { W.rallied = true; P.dead = day + rng(150, 300); add(W, day, "emp_rally", "garmund"); }

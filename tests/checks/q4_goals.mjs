@@ -2,7 +2,7 @@
 // - 丈夫な体（HP 999）で、行動の一覧から選ぶだけで、目的の節目まで届く（道筋が切れていない）
 // - 節目で尋ねられ、終えられ、人生の物語とその後が出る
 // - 節目の前も、節目で尋ねられている最中も、「旅を続ける」を選んだあとも、保存して読み込んで（JSON に通して）続きが遊べる
-// - 使徒を討つ：グラウでない使徒でも目的と節目になる／交易：仕入れて遠くで売ると儲かる・荷車・町が満腹になる・古いセーブ
+// - 使徒を討つ：エンバルダ（graw）でない使徒でも目的と節目になる／交易：仕入れて遠くで売ると儲かる・荷車・町が満腹になる・古いセーブ
 // - 獣の病がはじめてうつった手番に、教会のことを口にする人がいる
 import { makeBot, startRun } from "../bots.mjs";
 
@@ -74,26 +74,26 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     else rows.push(`${goal} ${done.turn}手番・${done.day}日`);
   }
 
-  // ---------------------------------------------------------------- 使徒を討つ：グラウでない使徒
+  // ---------------------------------------------------------------- 使徒を討つ：エンバルダ（graw）でない使徒
   {
     const S = startRun(G, { goal: "majin", cls: "samurai", seed: 11, seeded });
     const flags = G.majinFlags();
     for (const f of ["graw", "e2_mordu", "e2_gormoa"]) if (!flags.includes(f)) fail(`使徒の旗 ${f} を数えない（${flags.join(",")}）`);
     S.flags.e2_mordu = true;
-    if (!G.goalDone(S)) fail("モルドゥを討っても、目的を果たしたことにならない");
+    if (!G.goalDone(S)) fail("セグリトス（e2_mordu）を討っても、目的を果たしたことにならない");
     G.endTurn();
-    if (S.m6.pending !== "majin_other") fail(`モルドゥを討っても、使徒の節目で尋ねられない（${S.m6.pending}）`);
-    if (!S.log.some((e) => e.k === "title" && e.text === "宿願成就")) fail("モルドゥを討っても、宿願成就が出ない");
+    if (S.m6.pending !== "majin_other") fail(`セグリトス（e2_mordu）を討っても、使徒の節目で尋ねられない（${S.m6.pending}）`);
+    if (!S.log.some((e) => e.k === "title" && e.text === "宿願成就")) fail("セグリトス（e2_mordu）を討っても、宿願成就が出ない");
     G.endStory(S.m6.pending);
-    checkStory("モルドゥを討って終える", S.story, false);
+    checkStory("セグリトスを討って終える", S.story, false);
     const L = G.m6LifeOf(S);
     const h = D.M6.HIGHLIGHTS.find((x) => x.key === "majin_other");
-    if (!h || !h.test(L)) fail("モルドゥを討った人生の出来事が拾われない");
-    // グラウなら、元の節目（majin）
+    if (!h || !h.test(L)) fail("セグリトスを討った人生の出来事が拾われない");
+    // エンバルダ（graw）なら、元の節目（majin）
     const S2 = startRun(G, { goal: "majin", cls: "samurai", seed: 12, seeded });
     S2.flags.graw = true;
     G.endTurn();
-    if (S2.m6.pending !== "majin") fail(`グラウを討ったのに、節目が ${S2.m6.pending}`);
+    if (S2.m6.pending !== "majin") fail(`エンバルダ（graw）を討ったのに、節目が ${S2.m6.pending}`);
   }
 
   // ---------------------------------------------------------------- 交易
@@ -157,5 +157,5 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     for (const t of [...D.Q4.BEAST_HINT.town, ...D.Q4.BEAST_HINT.wild, D.Q4.BEAST_HINT.alone]) if (BANNED.test(t)) fail("獣の病の手がかりに見せない言葉");
   }
 
-  if (!failures) ok(`目的の道筋（丈夫な体のボットで節目まで：${rows.join("・")}。保存と読み込み・続けて終える・交易・グラウでない使徒・獣の病の手がかり）`);
+  if (!failures) ok(`目的の道筋（丈夫な体のボットで節目まで：${rows.join("・")}。保存と読み込み・続けて終える・交易・エンバルダ（graw）でない使徒・獣の病の手がかり）`);
 };
