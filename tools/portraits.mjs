@@ -26,6 +26,7 @@ export function renderPortraitsMd(data) {
   L.push(`- 大きさ：**${size.width}×${size.height}**（${size.framing}）。形式：**${size.format}**、1枚 **${size.maxKB}KB 以下**。`);
   L.push("- タグはその人の**特徴だけ**。画風・品質（masterpiece・anime style など）・構図・ネガティブは持ち主の側で足す。");
   L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は今の canvas の絵のまま。");
+  L.push("- 作るのは `node tools/gen_portraits.mjs`（AUTOMATIC1111 / Forge の API。手順は [README.md](README.md)）。名のある人物は、気に入った絵の seed を `--keep <id>` で一覧に残す（名前の下に出る）。作り直すときはその seed を使う。");
   L.push("- png・jpg でもよい（同じ名前なら webp を使う）。埋め込みの合計が 12MB を超えるとビルドとテストが止まる（`tools/assets.mjs`）。");
   L.push("");
   const types = [];
@@ -42,7 +43,7 @@ export function renderPortraitsMd(data) {
     const rows = portraits.filter((p) => p.group === g);
     L.push(`## ${title}（${rows.length}）`, "", note, "");
     L.push("| ファイル | 名前 | 特徴のタグ | メモ |", "|---|---|---|---|");
-    for (const p of rows) L.push(`| \`${p.file}\` | ${cell(p.name)} | ${cell(p.tags)} | ${cell(p.memo)} |`);
+    for (const p of rows) L.push(`| \`${p.file}\` | ${cell(p.name)}${Number.isInteger(p.seed) ? `<br>seed ${p.seed}` : ""} | ${cell(p.tags)} | ${cell(p.memo)} |`);
     L.push("");
     if (g === "people") L.push(...types);
   }

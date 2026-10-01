@@ -39,6 +39,7 @@ export default ({ G, fail, ok }) => {
     seen.add(p.id);
     if (p.file !== `assets/portraits/${p.id}.webp`) fail(`一覧の ${p.id} のファイル名が違う：${p.file}`);
     if (!p.tags || !p.name || !p.memo) fail(`一覧の ${p.id} にタグ・名前・メモのどれかが無い`);
+    if (p.seed !== undefined && !(Number.isInteger(p.seed) && p.seed >= 0)) fail(`一覧の ${p.id} の seed が 0 以上の整数でない：${p.seed}`);
     if (BAD.test(p.tags)) fail(`一覧の ${p.id} のタグに、画風・構図・性的な言葉がある：${p.tags.match(BAD)[0]}`);
     let m;
     if (p.group === "c2") { if (!D.C2_PEOPLE[p.id]) fail(`一覧の ${p.id} がキャラメモの人にいない`); }
