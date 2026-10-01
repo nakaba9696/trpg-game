@@ -16,6 +16,15 @@ const GROUPS = [
   ["people", "型：名もない人", "名もない仲間・出来事の町の人など。人物の種類 × 性別。13 歳未満は子ども、60 歳以上は老人の型を使う。"],
 ];
 const cell = (s) => String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
+// 喜怒哀楽の差分（V8。src/engine/v8_moods.js の G.MOODS と同じ並び）
+export const MOODS = ["joy", "anger", "sorrow", "fun"];
+const MOOD_NAME = { joy: "喜", anger: "怒", sorrow: "哀", fun: "楽" };
+const tagsCell = (p) => {
+  let t = cell(p.tags);
+  if (p.face) t += `<br>表情：${cell(p.face)}`;
+  if (p.variants) t += MOODS.filter((m) => p.variants[m]).map((m) => `<br>${MOOD_NAME[m]}（\`_${m}\`）：${cell(p.variants[m])}`).join("");
+  return t;
+};
 
 export function renderPortraitsMd(data) {
   const { size, heroAge, beasts, portraits } = data;
@@ -27,6 +36,7 @@ export function renderPortraitsMd(data) {
   L.push("- タグはその人の**特徴だけ**。画風・品質（masterpiece・anime style など）・構図・ネガティブは持ち主の側で足す。");
   L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は今の canvas の絵のまま。");
   L.push("- 作るのは `node tools/gen_portraits.mjs`（AUTOMATIC1111 / Forge の API。手順は [README.md](README.md)）。名のある人物は、気に入った絵の seed を `--keep <id>` で一覧に残す（名前の下に出る）。作り直すときはその seed を使う。");
+  L.push("- **表情**は基本の絵の顔（プロンプトでは特徴のタグの後ろに付く）。**喜・怒・哀・楽**がある人は、基本の絵から差分を作る（`node tools/gen_portraits.mjs --variants`。img2img で表情のタグだけ差し替える）。ファイルは `<id>_joy.webp`・`_anger`・`_sorrow`・`_fun`。無ければ基本の絵のまま。");
   L.push("- png・jpg でもよい（同じ名前なら webp を使う）。埋め込みの合計が 12MB を超えるとビルドとテストが止まる（`tools/assets.mjs`）。");
   L.push("");
   const types = [];
@@ -43,7 +53,7 @@ export function renderPortraitsMd(data) {
     const rows = portraits.filter((p) => p.group === g);
     L.push(`## ${title}（${rows.length}）`, "", note, "");
     L.push("| ファイル | 名前 | 特徴のタグ | メモ |", "|---|---|---|---|");
-    for (const p of rows) L.push(`| \`${p.file}\` | ${cell(p.name)}${Number.isInteger(p.seed) ? `<br>seed ${p.seed}` : ""} | ${cell(p.tags)} | ${cell(p.memo)} |`);
+    for (const p of rows) L.push(`| \`${p.file}\` | ${cell(p.name)}${Number.isInteger(p.seed) ? `<br>seed ${p.seed}` : ""} | ${tagsCell(p)} | ${cell(p.memo)} |`);
     L.push("");
     if (g === "people") L.push(...types);
   }

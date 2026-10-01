@@ -17,6 +17,10 @@
 //   一覧で human: true の敵は、設定の human の suffix・negative に替わる。same_as: <id> の敵は作らない（その絵を使う）
 //   一覧で style: "eldritch" の魔物（人の形を持たない格上の存在。V7）は docs/art/style_eldritch.json（＋ style_eldritch.local.json）で作る（別のモデル）。
 //   モデルの入れ替えを減らすため、ふつうの魔物を先に、異形を後にまとめて送る
+// --variants  喜怒哀楽の差分（V8）：一覧に variants がある人の、基本の絵（assets/portraits/<id>.webp）を元に /sdapi/v1/img2img で作り、
+//   assets/portraits/<id>_<joy|anger|sorrow|fun>.webp に置く。同じ人に見えるよう、seed は基本と同じ（一覧の seed か seeds.local.json）、
+//   プロンプトは基本の表情（face）を差分の表情のタグに差し替えるだけ、denoising_strength は設定の variants.denoising（既定 0.4。0.35〜0.45 で）。
+//   基本の絵が無い人は飛ばす。--only・--force・--dry も使える（--only dil,nora か、--only dil_joy で一枚だけ）
 // 外部のライブラリは使わない（Node 18 以上の fetch）。
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -96,16 +100,17 @@ const baseOf = (p) => {
 const join = (...a) => a.map((s) => String(s || "").trim().replace(/^,|,$/g, "").trim()).filter(Boolean).join(", ");
 // 人の姿の敵（魔物の一覧の human: true）は、設定の human の項目で後置き・ネガティブを替える
 const styleOf = (p) => { const b = baseOf(p); return p.human && b.human ? Object.assign({}, b, b.human) : b; };
-const promptOf = (p) => join(baseOf(p).prefix, p.tags, styleOf(p).suffix);
+const promptOf = (p, face) => join(baseOf(p).prefix, p.tags, face === undefined ? p.face : face, styleOf(p).suffix);
 const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : baseOf(p).seed ?? -1);
 
 const exists = (id) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(outDir, `${id}.${e}`)));
 const isEld = (p) => MON && p.style === "eldritch";
+const VARIANTS = flag("--variants") && !MON;
 const todo = list.filter((p) => !p.same_as && (!only || only.has(p.id)) && (force || !exists(p.id)));
 todo.sort((a, b) => isEld(a) - isEld(b)); // 異形を後にまとめる（並びは安定）
 const lastEld = todo.filter(isEld).pop();
-if (only) for (const id of only) if (!list.some((p) => p.id === id)) console.warn(`一覧に ${id} がいない`);
-if (!todo.length) { console.log("作る絵はない（--force で作り直す）"); process.exit(0); }
+if (only && !VARIANTS) for (const id of only) if (!list.some((p) => p.id === id)) console.warn(`一覧に ${id} がいない`);
+if (!todo.length && !VARIANTS) { console.log("作る絵はない（--force で作り直す）"); process.exit(0); }
 
 // ---------------------------------------------------------------- 送る
 // 設定の項目をそのまま txt2img に渡す（無いものは WebUI の既定）。hires fix は enable_hr・hr_scale・hr_upscaler・denoising_strength など。
@@ -189,6 +194,8 @@ function save(id, { buf, ext }) {
   return out;
 }
 
+if (VARIANTS) { await runVariants(); process.exit(0); }
+
 // ---------------------------------------------------------------- 回す
 console.log(`${todo.length} ${KIND.unit}（${api("")}${dry ? "・送らない" : ""}・${size.width}×${size.height} に縮めて保存：${cwebp ? "cwebp" : "WebUI（cwebp が無い）"}）`);
 if (dry) {
@@ -222,3 +229,56 @@ for (const p of todo) {
 }
 const M_ = MON ? " --monsters" : "";
 if (!dry) console.log(`\n${made} 枚 作った。気に入った絵は${M_} --keep <id> で seed を一覧に残す。気に入らない絵は${M_} --only <id> --force --new-seed で作り直す。終わったら node tools/build.mjs`);
+
+// ---------------------------------------------------------------- --variants：喜怒哀楽の差分（V8）
+async function runVariants() {
+  const MOODS = P.MOODS;
+  const v = Object.assign({ denoising: 0.4 }, style.variants || {});
+  const baseFile = (id) => ["webp", "png", "jpg", "jpeg"].map((e) => path.join(outDir, `${id}.${e}`)).find((f) => existsSync(f));
+  const jobs = [];
+  for (const p of list.filter((x) => x.variants)) {
+    const base = baseFile(p.id);
+    for (const m of MOODS) {
+      const id = `${p.id}_${m}`;
+      if (!p.variants[m] || (only && !only.has(p.id) && !only.has(id))) continue;
+      if (!base) { if (only) console.warn(`${id}：基本の絵（assets/portraits/${p.id}.webp）が無いので飛ばす`); continue; }
+      if (!force && exists(id)) continue;
+      jobs.push({ p, m, id, base });
+    }
+  }
+  if (only) for (const id of only) if (!list.some((p) => p.variants && (p.id === id || MOODS.some((m) => `${p.id}_${m}` === id)))) console.warn(`差分のある人に ${id} がいない`);
+  const seedOfVariant = (p) => (Number.isInteger(p.seed) ? p.seed : seeds[p.id] && Number.isInteger(seeds[p.id].seed) ? seeds[p.id].seed : -1);
+  const bodyOfVariant = ({ p, m, base }) => {
+    const b = bodyOf(p);
+    delete b.enable_hr;
+    return Object.assign(b, {
+      prompt: promptOf(p, p.variants[m]), seed: seedOfVariant(p),
+      init_images: [readFileSync(base).toString("base64")], denoising_strength: v.denoising, resize_mode: 0,
+    }, v.extra || {});
+  };
+  if (!jobs.length) { console.log("作る差分はない（基本の絵が無い人は飛ばす。--force で作り直す）"); return; }
+  console.log(`差分 ${jobs.length} 枚（${api("")}${dry ? "・送らない" : ""}・img2img・denoising ${v.denoising}・${size.width}×${size.height} に縮めて保存：${cwebp ? "cwebp" : "WebUI（cwebp が無い）"}）`);
+  let made = 0;
+  const warned = new Set();
+  for (const j of jobs) {
+    const b = bodyOfVariant(j);
+    if (b.seed < 0 && !warned.has(j.p.id)) { warned.add(j.p.id); console.warn(`${j.p.id}：基本の絵の seed が分からない（一覧にも seeds.local.json にも無い）。seed -1 で作る（元の絵から作るので顔はおおむね保たれる）`); }
+    if (dry) { console.log(`\n[${j.id}] ${j.p.name}  seed ${b.seed}  元：${path.relative(root, j.base)}\n  + ${b.prompt}`); continue; }
+    process.stdout.write(`${j.id}（${j.p.name}）… `);
+    try {
+      const res = await fetch(api("/sdapi/v1/img2img"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b) });
+      if (!res.ok) throw new Error(`${api("/sdapi/v1/img2img")} が ${res.status}：${(await res.text()).slice(0, 300)}`);
+      const r = await res.json();
+      if (!r.images || !r.images[0]) throw new Error("画像が返ってこない");
+      const small = await shrink(j.id, Buffer.from(r.images[0].split(",").pop(), "base64"));
+      const out = save(j.id, small);
+      console.log(`${path.relative(root, out)}  ${(small.buf.length / 1024).toFixed(0)}KB`);
+      made++;
+    } catch (e) {
+      if (e.message === "STOP") { console.log("保存しない"); console.error("\ncwebp を入れてから、もう一度動かす（docs/art/README.md）。"); process.exit(1); }
+      console.log("失敗：" + e.message);
+      if (/ECONNREFUSED|fetch failed/.test(e.message + (e.cause ? e.cause.message : ""))) { console.error("Stable Diffusion に繋がらない。WebUI を --api で起動しているか（style.json の url）"); process.exit(1); }
+    }
+  }
+  if (!dry) console.log(`\n差分を ${made} 枚 作った。顔が変わりすぎたら style.local.json の variants.denoising を下げて（0.35 など）--force で作り直す。終わったら node tools/build.mjs`);
+}

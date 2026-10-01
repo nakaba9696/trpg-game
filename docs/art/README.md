@@ -22,6 +22,13 @@
 **画面の欄に入れた絵柄の文は API では使われない。** WebUI の Styles に保存して `style.json` の `"styles": ["名前"]` に書くか、`prefix`・`suffix`・`negative` に書く。
 自分のパソコンだけで設定を変えたいときは、`docs/art/style.local.json` に変えたい項目だけを書く（`style.json` の上に重なる。git には入らない）。使った seed は `docs/art/seeds.local.json`（git には入らない）に残る。このスクリプトは CI やテストでは動かさない。
 
+## 喜怒哀楽の差分（V8）
+
+- 一覧の `face` は基本の表情、`variants` は喜（`joy`）・怒（`anger`）・哀（`sorrow`）・楽（`fun`）の表情のタグ（仲間の 8 人と主要な数人）。ファイルは `assets/portraits/<id>_joy.webp` など。無い差分は通常の絵のまま。
+- 作る：基本の絵（`assets/portraits/<id>.webp`）ができてから `node tools/gen_portraits.mjs --variants --dry` で確かめ、`node tools/gen_portraits.mjs --variants` で作る（`--only nora` でその人だけ、`--only nora_joy` で一枚だけ、`--force` で作り直す）。基本の絵を元に img2img（`/sdapi/v1/img2img`）で、seed は基本と同じ（`--keep` した seed か `seeds.local.json`）、表情のタグだけ差し替える。基本の絵が無い人は飛ばす。
+- 顔が変わりすぎるなら `style.local.json` に `"variants": { "denoising": 0.35 }`、表情が変わらなければ 0.45 に。1 枚 30KB 前後なので、15 人 × 4 で 2MB ほど（埋め込みの上限 12MB に入る）。
+- ゲームは出来事の `mood`（無ければ文から推す）で、その場の表情の差分を立ち絵に出す（`src/engine/v8_moods.js`・`src/ui/v8_moods.js`）。
+
 ## 魔物の絵（V6）
 
 - 一覧は [monsters.md](monsters.md)（元は [monsters.json](monsters.json)。名前は敵のデータから取るので、敵の名前が変わったら `node tools/monsters.mjs` で作り直す）。人物の一覧に載っている人の姿の敵（コノハ・ベルナなど）は人物の側に任せる。
