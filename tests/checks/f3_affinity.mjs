@@ -17,6 +17,9 @@ const FACE = {
   mirza: "微笑", zalve: "全部は言わない", borg: "熊のような大男", aurelia: "慈悲深", yoihime: "祭りと賽遊び", konoha: "いかさまの名人", mordu: "穏やか",
   berna: "嘴の仮面", azlag: "無かったことに", chezar: "駒", yura: "いつも眠って", walker: "何でも珍しそうに喜ぶ", captain_east: "帰らなかった",
   hans: "宿帳の年齢の欄", greta: "世話焼き", gert: "粉だらけ", albert: "眼鏡", dominik: "怒る", neumann: "じっと見せる",
+  // C4（src/data/zc4_people.js）
+  bertrand: "だらしなくて気さく", ilse: "自信満々", tula: "口が悪い", mirlene: "おっとり", salphiel: "年寄りのような話し方", musette: "糸は見えない",
+  gerhard: "豪快", bartolo: "糸目", clarisse: "真面目", titta: "口が悪い", iori: "眠そう", dorothea: "自分の顔に自信",
 };
 
 export default ({ G, fail }) => {
