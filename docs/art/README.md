@@ -25,8 +25,9 @@
 ## 喜怒哀楽の差分（V8）
 
 - 一覧の `face` は基本の表情、`variants` は喜（`joy`）・怒（`anger`）・哀（`sorrow`）・楽（`fun`）の表情のタグ（仲間の 8 人と主要な数人）。ファイルは `assets/portraits/<id>_joy.webp` など。無い差分は通常の絵のまま。
-- 作る：基本の絵（`assets/portraits/<id>.webp`）ができてから `node tools/gen_portraits.mjs --variants --dry` で確かめ、`node tools/gen_portraits.mjs --variants` で作る（`--only nora` でその人だけ、`--only nora_joy` で一枚だけ、`--force` で作り直す）。基本の絵を元に img2img（`/sdapi/v1/img2img`）で、seed は基本と同じ（`--keep` した seed か `seeds.local.json`）、表情のタグだけ差し替える。基本の絵が無い人は飛ばす。
-- 顔が変わりすぎるなら `style.local.json` に `"variants": { "denoising": 0.35 }`、表情が変わらなければ 0.45 に。1 枚 30KB 前後なので、15 人 × 4 で 2MB ほど（埋め込みの上限 12MB に入る）。
+- 作る：基本の絵（`assets/portraits/<id>.webp`）ができてから `node tools/gen_portraits.mjs --variants --dry` で確かめ、`node tools/gen_portraits.mjs --variants` で作る（`--only nora` でその人だけ、`--only nora_joy` で一枚だけ、`--force` で作り直す）。基本の絵を元に img2img（`/sdapi/v1/img2img`）で、seed は基本と同じ（`--keep` した seed か `seeds.local.json`）、見た目（`identity`）とポーズ（`tags`）は一字一句同じで、表情のタグだけ差し替える。基本の絵が無い人は飛ばす。
+- 強さ（denoising）は `style.json` の `variants.denoising`（既定 0.35）。顔が変わりすぎるなら `style.local.json` に `"variants": { "denoising": 0.3 }`、表情が変わらなければ 0.45 に。
+- 名のある人物の `identity` は見た目を固定するタグ（髪の色は2語・長さ・髪型、目の色と形、肌、眉、傷やそばかすなどの印、服の色と形、いつも身につけている物、年齢と体格）。差分で別人にならないよう、色や髪型はここに書き、`tags` にはポーズと手に持つ物だけを書く（V10）。1 枚 30KB 前後なので、15 人 × 4 で 2MB ほど（埋め込みの上限 12MB に入る）。
 - ゲームは出来事の `mood`（無ければ文から推す）で、その場の表情の差分を立ち絵に出す（`src/engine/v8_moods.js`・`src/ui/v8_moods.js`）。
 
 ## 魔物の絵（V6）
