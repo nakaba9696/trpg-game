@@ -77,7 +77,7 @@
     noteT = setTimeout(() => { box.querySelectorAll(".f2line-note").forEach((x) => x.remove()); if (!box.children.length) box.hidden = true; }, 4200);
   };
   G.onCodex = (kind, id) => {
-    const nm = kind === "item" ? (D.ITEMS[id] || {}).name : kind === "person" ? F2.personName(id) : (D.ENEMIES[id] || {}).name;
+    const nm = kind === "item" ? (D.ITEMS[id] || {}).name : kind === "person" ? F2.personName(id) : (F2.foe(id) || {}).name;
     if (nm) announce(nm);
   };
 
@@ -85,7 +85,7 @@
   const GLYPH = { weapon: "剣", armor: "鎧", ring: "環", use: "薬", loot: "材", relic: "遺", other: "品" };
   // 魔物を小さな canvas に描く。会っていなければ影だけ
   const paintFoe = (cv, id, shadow) => {
-    const e = D.ENEMIES[id];
+    const e = F2.foe(id);
     const w = cv.width, hh = cv.height;
     const ctx = cv.getContext("2d");
     ctx.clearRect(0, 0, w, hh);
@@ -161,11 +161,11 @@
     const cnt = G.codexCount();
     sum.textContent = `出会った魔物 ${cnt.foes}／${cnt.foesAll}　倒した種類 ${cnt.kills}`;
     F2.regions().forEach((r) => {
-      const mine = ids.filter((id) => G.codexFoeRegion(id) === r).sort((a, b) => (D.ENEMIES[a].tier || 0) - (D.ENEMIES[b].tier || 0) || !!D.ENEMIES[a].boss - !!D.ENEMIES[b].boss);
+      const mine = ids.filter((id) => G.codexFoeRegion(id) === r).sort((a, b) => (F2.foe(a).tier || 0) - (F2.foe(b).tier || 0) || !!F2.foe(a).boss - !!F2.foe(b).boss);
       if (!mine.length) return;
       const grid = group(r, mine.filter((id) => c.foes[id]).length, mine.length);
       mine.forEach((id) => {
-        const e = D.ENEMIES[id];
+        const e = F2.foe(id);
         const rec = c.foes[id];
         const b = cell(rec ? e.name : "？？？", !!rec, G.codexIsFresh("foe", id), () => showFoe(id));
         b.prepend(foeCanvas(id, 56, !rec));
@@ -292,11 +292,11 @@
     reveal();
   }
   function showFoe(id) {
-    const e = D.ENEMIES[id];
+    const e = F2.foe(id);
     const rec = G.codexFoe(id);
     if (!e || !rec) return showUnknown();
     detail.textContent = "";
-    const apostle = F2.isApostle(e) && !rec.kills;
+    const apostle = F2.isApostle(e) && !F2.killed(id);
     detail.append(foeCanvas(id, 160, false));
     detail.append(h("h3", "f2title", e.name));
     if (apostle) {
@@ -363,6 +363,7 @@
   }
   F2.open = (key) => {
     if (G.S && G.codexSeed) G.codexSeed(G.S);
+    if (F2.syncSlain) F2.syncSlain();
     show(key || cur);
     if (!dlg.open) dlg.showModal();
     const first = list.querySelector(".f2cell.fresh") || list.querySelector("button.f2cell") || list.querySelector(".f2cell");

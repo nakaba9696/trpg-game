@@ -391,6 +391,7 @@ export function makeSmartBot(G) {
     if (o.fame) v += o.fame;
     if (o.dropCompanion) v -= 6;
     if (o.fight) v -= fightPenalty(G.resolveFoes ? G.resolveFoes(o.fight) : o.fight);
+    if (o.e3fight) v -= 200; // 使徒に挑む（E3）。条件をそろえずに挑むのは無謀なので、筋のよい遊び方では選ばない
     return v;
   }
   function fightPenalty(ids) {

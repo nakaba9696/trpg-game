@@ -19,6 +19,8 @@
    - 気に入らない人は `node tools/gen_portraits.mjs --only <id> --force --new-seed` で作り直す。
 6. できた `assets/portraits/` と、`--keep` したなら `docs/art/portraits.json`・`portraits.md` を、配り役（Claude）に渡すか、コミットする。`node tools/build.mjs && node tests/run.mjs` で埋め込みと大きさを確かめられる。
 
+**男の人物**（identity・tags に 1boy / male などがある人）は `style_male.json` を style.json の上に重ねて作る（持ち主の絵柄は可愛い女の子向けなので、男は絵師名を外して美形の男性に寄せる）。手元で変えるときは `style_male.local.json`。
+
 **画面の欄に入れた絵柄の文は API では使われない。** WebUI の Styles に保存して `style.json` の `"styles": ["名前"]` に書くか、`prefix`・`suffix`・`negative` に書く。
 自分のパソコンだけで設定を変えたいときは、`docs/art/style.local.json` に変えたい項目だけを書く（`style.json` の上に重なる。git には入らない）。使った seed は `docs/art/seeds.local.json`（git には入らない）に残る。このスクリプトは CI やテストでは動かさない。
 

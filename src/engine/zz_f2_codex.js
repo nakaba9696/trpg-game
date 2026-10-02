@@ -19,7 +19,9 @@
   // 図鑑に載せない物：素手と、データに無い物（"x:" の拾い物）
   F2.SKIP_ITEMS = new Set(["fists"]);
   F2.itemIds = () => Object.keys(D.ITEMS).filter((id) => !F2.SKIP_ITEMS.has(id));
-  F2.foeIds = () => Object.keys(D.ENEMIES);
+  // E3 の使徒は、戦いが始まるまで D.ENEMIES に入っていない（D.E3.FOES）。図鑑には両方を載せる
+  F2.foe = (id) => D.ENEMIES[id] || ((D.E3 && D.E3.FOES) || {})[id] || null;
+  F2.foeIds = () => [...new Set([...Object.keys(D.ENEMIES), ...Object.keys((D.E3 && D.E3.FOES) || {})])];
   F2.isApostle = (e) => !!(e && e.majin);
 
   // ---------------------------------------------------------------- 記録
@@ -55,7 +57,7 @@
     return true;
   };
   G.codexMeet = (id, quiet) => {
-    if (!D.ENEMIES[id]) return false;
+    if (!F2.foe(id)) return false;
     const c = G.codex();
     if (c.foes[id]) return false;
     c.foes[id] = Object.assign(stamp(), { kills: 0 });
@@ -64,15 +66,27 @@
     return true;
   };
   G.codexKill = (id, quiet, n) => {
-    if (!D.ENEMIES[id]) return false;
+    if (!F2.foe(id)) return false;
     G.codexMeet(id, true);
     const f = G.codex().foes[id];
     const first = !f.kills;
     f.kills = (f.kills || 0) + (n || 1);
     if (first) { const s = stamp(); f.kby = s.by; f.kdate = s.date; }
-    if (first && !quiet && F2.isApostle(D.ENEMIES[id])) notify("foe", id);
+    if (first && !quiet && F2.isApostle(F2.foe(id))) notify("foe", id);
     changed();
     return first;
+  };
+  // 倒したことがあるか（図鑑の数か、E3 が冒険をまたいで残す G.P.slain）
+  F2.killed = (id) => !!(((G.codex().foes[id] || {}).kills || 0) > 0 || (G.e3EverSlain && G.e3EverSlain(id)));
+  // E3 が残した倒した使徒（G.P.slain）を図鑑に写す（倒した数は多いほう）
+  F2.syncSlain = () => {
+    Object.entries((G.P && G.P.slain) || {}).forEach(([id, r]) => {
+      if (!F2.foe(id)) return;
+      G.codexMeet(id, true);
+      const f = G.codex().foes[id];
+      const n = typeof r === "number" ? r : (r && r.n) || 0;
+      if ((f.kills || 0) < n) { f.kills = n; if (!f.kby) { f.kby = (r && r.by) || ""; f.kdate = (r && r.date) || ""; } changed(); }
+    });
   };
   G.codexHasItem = (id) => !!G.codex().items[id];
   G.codexFoe = (id) => G.codex().foes[id] || null;
@@ -232,7 +246,7 @@
   // ---------------------------------------------------------------- 今の冒険から埋め直す（一度だけ）
   const foeByName = (name) => {
     const n = String(name || "").replace(/[A-E]$/, "");
-    return F2.foeIds().find((id) => D.ENEMIES[id].name === n) || null;
+    return F2.foeIds().find((id) => F2.foe(id).name === n) || null;
   };
   G.codexSeed = (S) => {
     if (!S || S.f2codex) return false;
@@ -292,6 +306,7 @@
     if (G.S && !G.S.f2codex) G.codexSeed(G.S);
     baseEndTurn();
     if (G.S) F2.syncPeople(G.S);
+    F2.syncSlain();
   };
   const baseFinish = G.finishRun;
   G.finishRun = () => { if (G.S) F2.syncPeople(G.S); baseFinish(); };
@@ -339,7 +354,7 @@
     if (index) return index;
     const item = {}, foe = {};
     const addI = (id, rank, text) => { if (!D.ITEMS[id]) return; const a = (item[id] = item[id] || []); if (!a.some((x) => x.text === text)) a.push({ rank, text, n: a.length }); };
-    const addF = (id, rank, text, region) => { if (!D.ENEMIES[id]) return; const a = (foe[id] = foe[id] || []); if (!a.some((x) => x.text === text)) a.push({ rank, text, region, n: a.length }); };
+    const addF = (id, rank, text, region) => { if (!F2.foe(id)) return; const a = (foe[id] = foe[id] || []); if (!a.some((x) => x.text === text)) a.push({ rank, text, region, n: a.length }); };
 
     // 商店
     const shops = {};
@@ -352,7 +367,7 @@
     if (Q4.CART) addI(Q4.CART.id, 0, `${as(Q4.CART.sold).map((l) => (D.LOCS[l] || {}).name).filter(Boolean).slice(0, 2).join("・")}で買う`);
     // 敵の落とし物（確率の高い順）
     const drops = [];
-    Object.entries(D.ENEMIES).forEach(([eid, e]) => as(e.loot).forEach(([id, p]) => drops.push([id, p, e.name, e.boss ? 1 : 0])));
+    F2.foeIds().map((eid) => [eid, F2.foe(eid)]).forEach(([eid, e]) => as(e.loot).forEach(([id, p]) => drops.push([id, p, e.name, e.boss ? 1 : 0])));
     // 並の敵を先に（主の落とし物は最後）、確率の高い順
     drops.sort((a, b) => a[3] - b[3] || b[1] - a[1]).forEach(([id, , nm, boss]) => addI(id, boss ? 2 : 1, `${nm}が落とす`));
     // 迷宮の主・中ボス・出現表
@@ -373,6 +388,15 @@
           addF(id, 2, place ? `${place}（${evName(e)}）` : evName(e), locs.length ? locs[0].region : "");
         });
       }, new Set());
+    });
+    // E3 の使徒：会う出来事の場所（無ければ居城の最奥。場所の boss で上に入っている）
+    as(G.e3List ? G.e3List() : []).forEach((a) => {
+      if (a.drop && a.drop.id && F2.foe(a.foe)) addI(a.drop.id, 2, `${F2.foe(a.foe).name}の骸から`);
+      const m = a.meet;
+      if (!m) return;
+      const locs = as(m.where).map((w) => D.LOCS[w]).filter(Boolean);
+      if (locs.length) locs.forEach((L) => addF(a.foe, 0, L.name, L.region));
+      else as(m.where).forEach((w) => WHERE_WORD[w] && addF(a.foe, 0, WHERE_WORD[w] === "各地" ? "各地" : `${WHERE_WORD[w]}のどこか`, ""));
     });
     // 鍛冶場（W2）
     as(D.W2_FORGE).forEach((r) => addI(r.give, 2, "鍛冶場で打たせる"));
@@ -454,10 +478,11 @@
 
   // 魔物の性能。level：まだ倒していなければ一部を「？」に。使徒は倒すまで性能を伏せる（名前と伝承の一行だけ）
   G.codexFoeStats = (id) => {
-    const e = D.ENEMIES[id];
+    const e = F2.foe(id);
     const rec = G.codexFoe(id);
     if (!e || !rec) return [];
-    const killed = (rec.kills || 0) > 0;
+    const killed = F2.killed(id);
+    const e3 = G.e3Codex ? G.e3Codex(id) : null; // E3 の使徒：倒すと、弱る条件の短い言葉も見える
     const q = "？";
     if (F2.isApostle(e) && !killed) return [];
     const traits = [];
@@ -485,6 +510,7 @@
       ["弱点", killed ? weak.join("・") || "なし" : q],
       ["落とす物", killed ? loot.join("・") || "なし" : q],
       ["金", killed ? (e.gold && e.gold[1] ? `${e.gold[0]}〜${e.gold[1]}G` : "なし") : q],
+      ...(killed && e3 && e3.keys && e3.keys.length ? [["弱る条件", e3.keys.join("・")]] : []),
     ];
   };
 
@@ -498,10 +524,9 @@
   };
   // 魔物：data/f2_bestiary.js の説明。無ければ desc。使徒は倒すまで伝承の一行だけ
   G.codexFoeText = (id) => {
-    const e = D.ENEMIES[id];
+    const e = F2.foe(id);
     if (!e) return "";
-    const rec = G.codexFoe(id);
-    if (F2.isApostle(e) && !(rec && rec.kills)) return (D.F2_APOSTLE || {})[id] || "その名を口にする者は少ない。";
+    if (F2.isApostle(e) && !F2.killed(id)) return (D.F2_APOSTLE || {})[id] || "その名を口にする者は少ない。";
     return (D.F2_BESTIARY || {})[id] || e.desc || "";
   };
 

@@ -80,7 +80,9 @@ export default ({ fail, loadEngine, seeded }) => {
     const D = G.data;
     G.P = { trophies: {}, graves: [] };
     start(G, 4);
-    const apostles = Object.keys(D.ENEMIES).filter((id) => D.ENEMIES[id].majin);
+    // E3 の使徒（D.E3.FOES。戦うまで D.ENEMIES に入らない）も全員
+    const apostles = G.f2.foeIds().filter((id) => G.f2.foe(id).majin);
+    if (D.E3 && apostles.length < Object.keys(D.E3.LIST).length) fail(`図鑑の使徒が E3 の表より少ない（${apostles.length}）`);
     if (!apostles.length) fail("使徒がいない");
     for (const id of apostles) {
       G.codexMeet(id, true);
@@ -89,6 +91,19 @@ export default ({ fail, loadEngine, seeded }) => {
       if (!line || line === (D.F2_BESTIARY || {})[id]) fail(`使徒 ${id} の説明が、倒す前から伝承の一行になっていない`);
       G.codexKill(id, true);
       if (!G.codexFoeStats(id).length) fail(`使徒 ${id} を倒しても性能が見えない`);
+    }
+    // E3 が冒険をまたいで残した「倒した使徒」（G.P.slain）からも、性能が見える
+    if (D.E3) {
+      const G2 = loadEngine();
+      G2.P = { trophies: {}, graves: [] };
+      start(G2, 10);
+      const foe = Object.keys(G2.data.E3.FOES)[0];
+      G2.P.slain = { [foe]: { n: 2, by: "傭兵 テスト", date: "" } };
+      G2.endTurn();
+      if (!G2.codexFoe(foe) || G2.codexFoe(foe).kills !== 2) fail("E3 の倒した使徒が図鑑に写らない");
+      if (!G2.codexFoeStats(foe).length) fail("E3 で倒した使徒の性能が見えない");
+      if (G2.data.E3.LIST && G2.e3Codex(foe) && G2.e3Codex(foe).keys && G2.e3Codex(foe).keys.length && !G2.codexFoeStats(foe).some(([k]) => k === "弱る条件")) fail("倒した使徒の弱る条件が見えない");
+      if (!G2.codexFoeWhere(foe).length) fail(`E3 の使徒 ${foe} の出現場所が引けない`);
     }
   }
 
