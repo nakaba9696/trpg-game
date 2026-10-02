@@ -675,6 +675,154 @@
    "memo": "古道具屋。品物をじっと見せる"
   },
   {
+   "id": "bertrand",
+   "group": "c2",
+   "name": "ベルトラン",
+   "type": "ojisan",
+   "file": "assets/portraits/bertrand.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 52 years old, tall, lean, weathered skin, dark brown hair, grey streaked hair, long hair, loose low ponytail, messy bangs, grey eyes, droopy eyes, sleepy eyes, thick eyebrows, stubble, nasolabial folds, wrinkles at eyes, paint-stained loose white shirt, open collar, long worn brown coat, sword wrapped in cloth on shoulder, charcoal stains on fingers",
+   "tags": "holding a sketchbook and a stick of charcoal, relaxed posture",
+   "face": "lazy smirk, half-closed eyes",
+   "variants": {
+    "joy": "grin, laughing, closed eyes",
+    "anger": "serious, cold stare, frown, sharp eyes",
+    "sorrow": "sad smile, looking down, tired",
+    "fun": "smirk, one eye closed, mischievous"
+   },
+   "memo": "C4・仲間。ブランデールの酒場の二階のだらしない絵描きのおじさん。剣は桁違い。眠たげな目、無精髭、絵の具だらけのシャツ、布を巻いた剣"
+  },
+  {
+   "id": "ilse",
+   "group": "c2",
+   "name": "イルゼ",
+   "file": "assets/portraits/ilse.webp",
+   "identity": "1girl, adult, woman, 29 years old, tall, slender, pale skin, dark red hair, wine red hair, long hair, wavy hair, side-swept bangs, amber eyes, sharp eyes, mole under eye, thin eyebrows, monocle on right eye, dark green long coat with many pockets, high collar, silver chain, black gloves, folding fan",
+   "tags": "holding a closed folding fan to chin, hand on hip",
+   "face": "smug smile, confident",
+   "variants": {
+    "joy": "triumphant smile, closed eyes, smug",
+    "anger": "flustered, annoyed, pout",
+    "sorrow": "sad, looking away, forced smile",
+    "fun": "laughing, hand over mouth, smug"
+   },
+   "memo": "C4・仲間。帝国の密偵あがりの自称軍師。自信家で策は半分当たる。ワイン色の波打つ長髪、片眼鏡、扇、緑の外套"
+  },
+  {
+   "id": "tula",
+   "group": "c2",
+   "name": "トゥーラ",
+   "file": "assets/portraits/tula.webp",
+   "identity": "1girl, teenage girl, 14 years old, short, stocky, small, tan skin, chestnut brown hair, brown hair, short hair, messy hair, bear ears, round ears, amber eyes, round eyes, thick eyebrows, bandaged knuckles, dirt on cheek, oversized padded brown work jacket, rolled-up sleeves, fur cap, wooden carrying frame on back",
+   "tags": "arms crossed",
+   "face": "scowl, frown",
+   "variants": {
+    "joy": "embarrassed smile, blush, looking away",
+    "anger": "angry, shouting, fangs",
+    "sorrow": "teary eyes, frown, biting lip",
+    "fun": "grin, teeth, fist raised"
+   },
+   "memo": "C4・仲間。帝国の坑夫長屋の熊の獣人の娘。背は低いが怪力、口が悪くて世話焼き。茶色のはね髪、丸い熊の耳、大きすぎる作業着、背負子"
+  },
+  {
+   "id": "mirlene",
+   "group": "c2",
+   "name": "ミルレーネ",
+   "file": "assets/portraits/mirlene.webp",
+   "identity": "1girl, elf, pointy ears, adult, young woman, slender, tall, pale skin, pale blonde hair, platinum blonde hair, very long hair, straight hair, hime cut, blue eyes, droopy eyes, gentle eyes, long eyelashes, silver circlet with blue gem, white and pale blue robe, long sleeves, silver staff",
+   "tags": "holding a bundle of sealed letters to her chest, holding staff",
+   "face": "gentle smile",
+   "variants": {
+    "joy": "happy smile, closed eyes",
+    "anger": "determined, serious, frown",
+    "sorrow": "sad, teary eyes, looking into distance",
+    "fun": "laughing softly, hand over mouth"
+   },
+   "memo": "C4・仲間。共和国の名家のエルフの令嬢。おっとりして騙されやすいが芯が強い。東の艦隊の許嫁を待つ。銀に近い金の長髪、銀の額飾り、封をした手紙の束"
+  },
+  {
+   "id": "salphiel",
+   "group": "c2",
+   "name": "薄布の娘（使徒サルフィエル）",
+   "file": "assets/portraits/salphiel.webp",
+   "identity": "1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin",
+   "tags": "holding a silver basin with water, ash floating in water",
+   "face": "gentle eyes, calm",
+   "memo": "C4・使徒（刻印の環の三十三・国難・友好）。湯の町の湖の、薄布で顔を隠した小さな娘。年寄りの口ぶりで人を子ら扱いする。白い衣と金の刺繍、銀の水盤。人ではない気配は目の淡い光だけで"
+  },
+  {
+   "id": "musette",
+   "group": "c2",
+   "name": "人形遣いの爺さん（眷属ミュゼット）",
+   "file": "assets/portraits/musette.webp",
+   "identity": "1girl, petite, young girl, pale skin, lilac hair, grey hair, bob cut, straight bangs, violet eyes, half-closed eyes, very long eyelashes, expressionless, black frock coat too large for her, white cravat, sewing needles stuck in sleeve, thread wrapped around fingers",
+   "tags": "sitting on the shoulder of a giant wooden marionette of an old gentleman in a tailcoat, holding a needle and thread",
+   "face": "expressionless, blank stare",
+   "memo": "C4・眷属。日傘の若君の人形師。老紳士の大きな操り人形の中にいる、まつげの長い無表情な小娘。薄紫のおかっぱ、大きすぎる燕尾服、糸を巻いた指"
+  },
+  {
+   "id": "gerhard",
+   "group": "c2",
+   "name": "ゲルハルト",
+   "type": "ojisan",
+   "file": "assets/portraits/gerhard.webp",
+   "identity": "1boy, male focus, adult, old man, 56 years old, very tall, muscular, broad shoulders, tan skin, grey hair, ash grey hair, short hair, crew cut, blue eyes, sharp eyes, thick eyebrows, short grey beard, scar across nose, deep wrinkles, battered dark steel armor, fur-lined cloak, greatsword on back",
+   "tags": "crouching, holding a small wooden horse toy",
+   "face": "big grin",
+   "memo": "C4・町。黒鉄の砦の砦主。熱血で民思い、宝箱が好き。冬ごとに名前を失う。白髪まじりの短髪、灰色の短い髭、傷だらけの鎧、木彫りの馬"
+  },
+  {
+   "id": "bartolo",
+   "group": "c2",
+   "name": "バルトロ",
+   "type": "brute",
+   "file": "assets/portraits/bartolo.webp",
+   "identity": "1boy, male focus, adult, man, 44 years old, huge man, burly, big belly, tan skin, black hair, dark hair, slicked back hair, short hair, narrow eyes, squinting eyes, black eyes, thick eyebrows, stubble, scar on chin, gold earring, red bandana around neck, open vest over striped shirt, coin pouch",
+   "tags": "holding a rolled treasure map, hand raised beckoning",
+   "face": "sly grin",
+   "memo": "C4・町。ヴァレンツァの糸目の賞金首。小悪党だが子どもに甘く、人買いを嫌う。糸目、撫でつけた黒髪、金の耳飾り、偽の宝の地図"
+  },
+  {
+   "id": "clarisse",
+   "group": "c2",
+   "name": "クラリス",
+   "file": "assets/portraits/clarisse.webp",
+   "identity": "1girl, teenage girl, 17 years old, petite, short, fair skin, golden blonde hair, blonde hair, long hair, single braid, green eyes, round eyes, blush, white plate armor with gold sun emblem, white tabard, huge war hammer",
+   "tags": "holding a huge war hammer with one hand, other hand fidgeting",
+   "face": "nervous, worried eyebrows, blush",
+   "memo": "C4・町。聖都の聖堂騎士見習い。小柄で可愛いのに怪力。堅物、からかうと慌てる、すぐ落ち込む。金の三つ編み、白い鎧と太陽の紋、身の丈ほどの戦鎚"
+  },
+  {
+   "id": "titta",
+   "group": "c2",
+   "name": "ティッタ",
+   "file": "assets/portraits/titta.webp",
+   "identity": "1girl, adult, young woman, 22 years old, slender, pale skin, black hair, dark grey hair, bob cut, messy bangs, cat ears, cat tail, yellow eyes, sharp eyes, round glasses, eye bags, navy blue academy robe, rolled sleeves, ink stains, sitting in a wooden wheelchair with brass gears",
+   "tags": "holding a wrench, leaning forward",
+   "face": "smug smirk",
+   "memo": "C4・町。学院の猫の獣人の研究員。自分で組んだ真鍮の歯車つきの車輪の椅子に乗る自信家の天才。黒いおかっぱ、丸眼鏡、紺の学院の衣"
+  },
+  {
+   "id": "iori",
+   "group": "c2",
+   "name": "イオリ",
+   "type": "bishonen",
+   "file": "assets/portraits/iori.webp",
+   "identity": "1boy, male focus, adult, young man, 19 years old, slender, frail, very pale skin, black hair, blue-black hair, long hair, low tied hair, side bangs, grey eyes, sleepy eyes, eye bags, thin eyebrows, pale lavender kimono, dark haori, white hand towel in sleeve",
+   "tags": "sitting before a game board, holding a game piece",
+   "face": "sleepy, looking down",
+   "memo": "C4・旅。シェルアークの盤指しの若者。病弱で天然、眠りながら指して勝つ。人と目を合わせない。黒い長髪を低く束ね、淡い藤色の着物"
+  },
+  {
+   "id": "dorothea",
+   "group": "c2",
+   "name": "ドロテア",
+   "file": "assets/portraits/dorothea.webp",
+   "identity": "1girl, adult, woman, 34 years old, tall, fair skin, black hair, jet black hair, hair bun, elegant updo, violet eyes, narrow eyes, confident eyes, red lips, gold earrings, burgundy merchant dress, high collar, feathered hat, folding fan",
+   "tags": "hand on hip, holding a wrapped bar of soap",
+   "face": "confident smirk",
+   "memo": "C4・町。ブランデールの石鹸と香水の商会の女主人。包み紙は自分の顔。自信家の策士で、娘にちょっかいを出しては手をはたかれる。黒髪の結い上げ、羽根の帽子、えんじのドレス"
+  },
+  {
    "id": "kind_villager_m",
    "group": "people",
    "name": "町の人（男）",
