@@ -122,7 +122,7 @@
     // ================================================================ 仲間になる人
     gigra: P({
       name: "ギグラ", full: "樽のギグラ", nation: "断界山脈", kin: "ゴブリン", role: "断界山脈の洞穴で密造酒を仕込む、はぐれゴブリンの女。強欲で卑怯で、口を開けば金の話。そのくせ子どもには甘く、褒められると酒樽に隠れる。昔、群れが人の村から連れてきた子を一人逃がして、群れを追われた", sex: "女", age: 28, race: "human", romance: true,
-      who: { kind: "rogue", sex: "女", age: 28, seed: "c2:gigra", look: { skin: "#8aa864", hair: "#2a2a1a", hairStyle: "messy", eyes: "sharp", iris: "#e0b030", mouth: "grin", brows: "raised", outfit: "rags", head: "bandana", gear: "daggers", chest: "coins", cloth: "#6a5030", build: "slim", ears: "pointy", marks: ["dirt", "earring"], bg: "#4a4a3a" } },
+      who: { kind: "rogue", sex: "女", age: 28, seed: "c2:gigra", look: { skin: "#8aa864", hair: "#d06a2a", hairStyle: "ponytail", eyes: "sharp", iris: "#c83a2a", mouth: "grin", brows: "raised", outfit: "rags", head: "bandana", gear: "daggers", chest: "coins", cloth: "#6a5030", build: "slim", ears: "pointy", marks: ["dirt", "earring"], bg: "#4a4a3a" } },
       join: {
         cls: "密造酒の親分", desc: "金の分だけ働く。たぶん", power: 50, dmg: 2, trait: "greedy", bond: 50, home: ["fort"],
         life: { home: "断界山脈の、酒樽を並べた洞穴", kin: "昔、逃がした人の子", food: "焦がした茸と、自分の酒", habit: "銀貨を一枚ずつ噛んで、本物か確かめている", secret: "逃がした子の顔は覚えていない。泣き声だけ、今でも覚えている", keep: "底に名前を刻んだ小さな酒樽" },
@@ -149,7 +149,7 @@
     }),
     tsuyuha: P({
       name: "ツユハ", full: "ツユハ", nation: "シェルアーク", role: "島の都シェルアークの茶屋の縁台で昼寝をしている、子どもの背丈のエルフ。四百年生きていて、自分を「婆」と呼ばせる。おっとりしていて、母のように人の子の世話を焼く。刀を抜くと島でいちばん強い。流れ着いた仲間の、名の無い墓を守っている", sex: "女", age: 412, race: "elf", childLook: true,
-      who: { kind: "ronin", sex: "女", age: 11, seed: "c2:tsuyuha", look: { hair: "#d8dce8", hairStyle: "long", eyes: "sleepy", iris: "#6a8ab0", mouth: "smile", brows: "calm", outfit: "kimono", head: "none", gear: "katana", chest: "none", cloth: "#8a3a3a", build: "slim", ears: "pointy", marks: [], bg: "#6a5a4a" } },
+      who: { kind: "ronin", sex: "女", age: 11, seed: "c2:tsuyuha", look: { hair: "#e0a8b8", hairStyle: "long", eyes: "sleepy", iris: "#c8902a", mouth: "smile", brows: "calm", outfit: "kimono", head: "none", gear: "katana", chest: "none", cloth: "#2a3a6a", build: "slim", ears: "pointy", marks: [], bg: "#6a5a4a" } },
       join: {
         cls: "茶屋の婆さま", desc: "婆は寝ていますよ。用があれば起こしなさい", power: 64, dmg: 3, heal: true, trait: "lazy", bond: 60, home: ["yakumo"],
         life: { home: "島の都の茶屋の、日当たりのいい縁台", kin: "名の無い十三の墓", food: "渋い茶と、塩むすび", habit: "人の子の茶碗が空くと、黙っておかわりをよそう", secret: "墓は十三ある。名前は、一つも彫っていない。全部、覚えているから", keep: "鞘の擦り切れた刀" },
@@ -167,7 +167,7 @@
     }),
     yurien: P({
       name: "ユリエン", full: "ユリエン・ファルセ", nation: "エルメシア", role: "エル・ナフ遺構に入り浸る、学院を追われたエルフの学者。無表情で、恐ろしいことを淡々と提案する毒舌。魔物の腑分けが趣味で、食事中に平気でその話をする。自分で考えた二つ名を名乗り、誰も呼ばないとすねる。追われた元の論文は誰にも読ませない", sex: "男", age: 140, race: "elf",
-      who: { kind: "mage", sex: "男", age: 24, seed: "c2:yurien", look: { hair: "#1e2a40", hairStyle: "parted", eyes: "narrow", iris: "#5ac8a0", mouth: "flat", brows: "calm", outfit: "robe", head: "none", gear: "staff", chest: "keys", cloth: "#2a3a3a", build: "slim", ears: "pointy", marks: ["glasses", "bags"], bg: "#2a3a4a" } },
+      who: { kind: "mage", sex: "男", age: 24, seed: "c2:yurien", look: { hair: "#1e4a2e", hairStyle: "ponytail", eyes: "narrow", iris: "#8a5ac8", mouth: "flat", brows: "calm", outfit: "robe", head: "none", gear: "staff", chest: "keys", cloth: "#a8a8b0", build: "slim", ears: "pointy", marks: ["glasses", "bags"], bg: "#2a3a4a" } },
       join: {
         cls: "追われた学者", desc: "解剖の手が足りないのです。……冗談ですよ。半分は", power: 46, dmg: 1, fire: true, trait: "cold", bond: 50, home: ["nerva"],
         life: { home: "港町の古本屋の二階の、骨と紙の部屋", kin: "学院の同期だった、今の研究所の所長", food: "苦い茶と、乾いた堅焼き", habit: "誰かの手首を見ると、骨の数を小声で数える", secret: "石碑の刻印の写しは七十一枚。最後の一枚の場所は、写していない", keep: "書き込みだらけの解剖図" },
@@ -176,7 +176,7 @@
     }),
     roswitha: P({
       name: "ロスヴィタ", full: "ロスヴィタ・ファルク", nation: "黒鉄の砦", role: "黒鉄の砦の兵站係の女兵。帳簿と兵糧を一人で回す切れ者で、兵には頼れる姉貴分。冷静で仕事ができるのに私事はまるで駄目で、くじは毎回外れる。砦主には毎冬、名前を忘れられ、袖の名札が増えていく", sex: "女", age: 31, race: "human",
-      who: { kind: "soldier", sex: "女", age: 31, seed: "c2:roswitha", look: { hair: "#b89a58", hairStyle: "bun", eyes: "sharp", iris: "#4a6a8a", mouth: "flat", brows: "worried", outfit: "armor", head: "none", gear: "spear", chest: "none", cloth: "#3a3a42", build: "normal", marks: ["bags"], bg: "#4a4a52" } },
+      who: { kind: "soldier", sex: "女", age: 31, seed: "c2:roswitha", look: { hair: "#a07a50", hairStyle: "bob", eyes: "sharp", iris: "#8a8a92", mouth: "flat", brows: "worried", outfit: "armor", head: "none", gear: "spear", chest: "none", cloth: "#3a3a42", build: "normal", marks: ["bags", "freckles"], bg: "#4a4a52" } },
       join: {
         cls: "砦の兵站係", desc: "兵糧は三日分。自分の分は、計算に入れていません", power: 52, dmg: 1, trait: "just", bond: 50, home: ["fort"],
         life: { home: "黒鉄の砦の、帳簿の積まれた倉の二階", kin: "砦の兵たち", food: "兵の粥（温かいうちに）", habit: "数字が合わないと、黙って三回数え直す", secret: "袖の名札は、冬の数だけある。外したことは一度もない", keep: "名札だらけの袖" },
@@ -194,7 +194,7 @@
     }),
     anselmo: P({
       name: "アンセルモ", full: "アンセルモ・ブルーニ", nation: "レオネスト", role: "聖都エルヴィナの地下墓地の墓掘り修道士。墓から掘り出した物を平気で売る罰当たりで、酒臭く口が悪い。「死者の物は生きている者に回す」と決めていて、筋は一度も曲げない。聖歌を歌うと大聖堂の歌い手が泣く。疫病の年に千人を一人で葬った", sex: "男", age: 50, race: "human",
-      who: { kind: "priest", sex: "男", age: 50, seed: "c2:anselmo", look: { hair: "#5a4a3a", hairStyle: "receding", eyes: "smile", iris: "#4a3020", mouth: "grin", brows: "raised", outfit: "vestment", head: "none", gear: "none", chest: "sun", cloth: "#4a3a2a", build: "broad", marks: ["stubble", "wrinkles", "dirt"], bg: "#6a5a48" } },
+      who: { kind: "priest", sex: "男", age: 50, seed: "c2:anselmo", look: { hair: "#9a3a22", hairStyle: "bald", eyes: "smile", iris: "#4a3020", mouth: "grin", brows: "raised", outfit: "vestment", head: "none", gear: "none", chest: "sun", cloth: "#4a3a2a", build: "broad", marks: ["beard", "wrinkles", "dirt"], bg: "#6a5a48" } },
       join: {
         cls: "墓掘り修道士", desc: "死んだ奴の物は、生きてる奴が使え。わしもな", power: 54, dmg: 2, heal: true, trait: "drunk", bond: 52, home: ["w1_holy"],
         life: { home: "聖都の地下墓地の入り口の、墓守小屋", kin: "拾って聖歌隊に預けた、盲目の娘", food: "安い葡萄酒と、墓守小屋の豆", habit: "道で死んだ鳥を見つけると、穴を掘って埋め、何か一つ持っていく", secret: "弔いの祈りの言葉を、一つだけ、もう三十年思い出せない", keep: "錆びた鋤" },
@@ -203,7 +203,7 @@
     }),
     polf: P({
       name: "ポルフ", full: "鐘番のポルフ", nation: "黒鉄の砦", role: "黒鉄の砦の鐘番。鼠の獣人の爺さん。背は子どもくらいで腰も曲がっているが、若い兵に昔の手柄を三倍に盛って話す。盛った話の半分は本当で、本当の半分がすごい。考えなしに真っ先に突っ込む。四十年鐘を鳴らしてきて、一度だけ鳴らし遅れた夜がある", sex: "男", age: 66, race: "beast", beast: "rat",
-      who: { kind: "elder", sex: "男", age: 66, seed: "c2:polf", look: { hair: "#c8c4bc", hairStyle: "messy", eyes: "round", iris: "#2a2a2a", mouth: "grin", brows: "raised", outfit: "tunic", head: "none", gear: "none", chest: "none", cloth: "#5a4a3a", build: "slim", ears: "none", beast: "rat", marks: ["wrinkles", "beard"], bg: "#5a5a62" } },
+      who: { kind: "elder", sex: "男", age: 66, seed: "c2:polf", look: { hair: "#c8c4bc", hairStyle: "bald", eyes: "round", iris: "#3a6a9a", mouth: "grin", brows: "raised", outfit: "tunic", head: "none", gear: "none", chest: "none", cloth: "#2a4a2a", build: "slim", ears: "none", beast: "rat", marks: ["wrinkles", "mustache", "glasses"], bg: "#5a5a62" } },
       join: {
         cls: "砦の鐘番", desc: "わしが若いころはな、山を一つ、殴って崩したもんじゃ", power: 56, dmg: 2, trait: "braggart", bond: 58, home: ["fort"],
         life: { home: "黒鉄の砦の鐘楼の、梯子の上の小部屋", kin: "鳴らし遅れた夜の村にいた息子", food: "干したチーズ", habit: "どこにいても、決まった刻になると、空に向かって鐘を打つ手まねをする", secret: "鳴らし遅れた夜、自分は鐘楼で居眠りをしていた。誰にも話していない", keep: "すり切れた鐘の綱の切れ端" },
@@ -214,11 +214,11 @@
     // ================================================================ 周りの名のある人
     jonas: P({
       name: "ヨナス", full: "ヨナス・ラング", nation: "黒鉄の砦", role: "黒鉄の砦のいちばん若い見張り兵。砦いちばんの堅物で、からかうと面白いほど慌てる。幼いころゴブリンにさらわれ、一晩で戻った。誰が逃がしてくれたのかは覚えていない", sex: "男", age: 17, race: "human",
-      who: { kind: "soldier", sex: "男", age: 17, seed: "c2:jonas", look: { hair: "#7a5230", hairStyle: "short", eyes: "round", iris: "#3a6a4a", mouth: "open", brows: "worried", outfit: "armor", head: "helmet", gear: "spear", chest: "none", cloth: "#3a3a3a", build: "slim", marks: ["freckles"], bg: "#5a5a62" } },
+      who: { kind: "soldier", sex: "男", age: 17, seed: "c2:jonas", look: { hair: "#e8dcb0", hairStyle: "messy", eyes: "round", iris: "#2a4a6a", mouth: "open", brows: "worried", outfit: "armor", head: "helmet", gear: "spear", chest: "none", cloth: "#3a3a3a", build: "slim", marks: ["freckles"], bg: "#5a5a62" } },
     }),
     rudger: P({
       name: "ルドガー", full: "ルドガー・ヴァイセル", nation: "レオネスト", role: "聖都エルヴィナの教会の遺物研究所の所長。物腰は柔らかく、言うことは冷たい。学院にいたころ、ユリエンを追い出した張本人", sex: "男", age: 61, race: "human",
-      who: { kind: "noble", sex: "男", age: 61, seed: "c2:rudger", look: { hair: "#c8ccd4", hairStyle: "slick", eyes: "narrow", iris: "#4a5a6a", mouth: "smile", brows: "raised", outfit: "noble", head: "none", gear: "none", chest: "chain", cloth: "#2a2a3a", build: "slim", marks: ["monocle", "wrinkles"], bg: "#4a4a5a" } },
+      who: { kind: "noble", sex: "男", age: 61, seed: "c2:rudger", look: { hair: "#b8a878", hairStyle: "ponytail", eyes: "narrow", iris: "#5a9a5a", mouth: "smile", brows: "raised", outfit: "noble", head: "none", gear: "none", chest: "chain", cloth: "#e0dcd0", build: "slim", marks: ["glasses", "wrinkles"], bg: "#4a4a5a" } },
     }),
     rionetta: P({
       name: "リオネッタ", full: "リオネッタ", nation: "レオネスト", role: "聖都エルヴィナの大聖堂の盲目の歌い手。おっとりして人を疑わず、施しの箱の中身をよく盗まれる。歌の前だけ、誰も近寄れない顔になる。疫病の年の孤児で、墓掘りの修道士に拾われた", sex: "女", age: 24, race: "human",

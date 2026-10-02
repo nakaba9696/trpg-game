@@ -1056,7 +1056,7 @@
    "group": "c2",
    "name": "ギグラ",
    "file": "assets/portraits/gigra.webp",
-   "identity": "1girl, adult woman, 28 years old, goblin, green skin, pointy ears, long pointy ears, short, slim, black hair, messy hair, short hair, yellow eyes, sharp eyes, sharp teeth, fang, dirt on cheek, hoop earring, patched brown rags, red bandana, belt with many small pouches, coin pouch, small wooden keg on back",
+   "identity": "1girl, adult woman, 28 years old, goblin, green skin, pointy ears, long pointy ears, short, slim, orange hair, medium hair, high ponytail, red eyes, sharp eyes, sharp teeth, fang, dirt on cheek, hoop earring, patched brown rags, red bandana, belt with many small pouches, coin pouch, small wooden keg on back",
    "tags": "biting a silver coin, hand on hip",
    "face": "smug grin",
    "variants": {
@@ -1065,7 +1065,7 @@
     "sorrow": "sad smile, looking down",
     "fun": "grin, wink, holding ladle"
    },
-   "memo": "C8・仲間（恋の相手）。断界山脈の密造酒のはぐれゴブリンの女。強欲で卑怯、褒められると樽に隠れる。緑の肌、尖った耳、赤い手ぬぐい、背中の小さな樽"
+   "memo": "C8・仲間（恋の相手）。断界山脈の密造酒のはぐれゴブリンの女。強欲で卑怯、褒められると樽に隠れる。緑の肌、橙の髪、尖った耳、赤い手ぬぐい、背中の小さな樽"
   },
   {
    "id": "valdun",
@@ -1106,7 +1106,7 @@
    "group": "c2",
    "name": "ツユハ",
    "file": "assets/portraits/tsuyuha.webp",
-   "identity": "1girl, elf, pointy ears, petite, small, silver hair, pale silver hair, very long hair, straight hair, blue eyes, sleepy eyes, half-closed eyes, thin eyebrows, dark red kimono, white obi, oversized old katana at waist",
+   "identity": "1girl, elf, pointy ears, petite, small, pink hair, very long hair, hime cut, amber eyes, sleepy eyes, half-closed eyes, thin eyebrows, indigo kimono with white wave pattern, red obi, oversized old katana at waist",
    "tags": "sitting on a wooden bench, holding a tea cup",
    "face": "sleepy smile",
    "variants": {
@@ -1115,7 +1115,7 @@
     "sorrow": "sad smile, looking at sea",
     "fun": "yawning, one eye open"
    },
-   "memo": "C8・仲間（子どもの姿）。島の都の茶屋の婆さま。四百年生きたエルフ。昼行灯で母のよう、刀は島一番。銀の長髪、赤い着物、大きすぎる刀"
+   "memo": "C8・仲間（子どもの姿）。島の都の茶屋の婆さま。四百年生きたエルフ。昼行灯で母のよう、刀は島一番。桜色の長髪、藍の着物、大きすぎる刀"
   },
   {
    "id": "takimaru",
@@ -1140,7 +1140,7 @@
    "name": "ユリエン",
    "type": "bishonen",
    "file": "assets/portraits/yurien.webp",
-   "identity": "1boy, male focus, young man, elf, pointy ears, slender, pale skin, dark blue hair, blue-black hair, medium hair, parted bangs, green eyes, narrow eyes, thin eyebrows, round glasses, dark circles under eyes, dark green scholar robe, many keys on belt, rolled papers under arm",
+   "identity": "1boy, male focus, young man, elf, pointy ears, slender, pale skin, green hair, long hair, low ponytail, violet eyes, narrow eyes, thin eyebrows, round glasses, dark circles under eyes, pale grey scholar robe, many keys on belt, rolled papers under arm",
    "tags": "holding a scalpel and an anatomy sketch",
    "face": "expressionless",
    "variants": {
@@ -1149,7 +1149,7 @@
     "sorrow": "looking down, expressionless, holding papers",
     "fun": "smug, pointing at self"
    },
-   "memo": "C8・仲間。遺構に入り浸る、学院を追われたエルフの学者。無表情の毒舌、自作の二つ名。眼鏡、隈、深緑の学者の衣、解剖図"
+   "memo": "C8・仲間。遺構に入り浸る、学院を追われたエルフの学者。無表情の毒舌、自作の二つ名。深緑の長い髪、眼鏡、隈、薄灰の学者の衣、解剖図"
   },
   {
    "id": "izra",
@@ -1173,7 +1173,7 @@
    "name": "アンセルモ",
    "type": "ojisan",
    "file": "assets/portraits/anselmo.webp",
-   "identity": "1boy, male focus, adult, middle-aged man, 50 years old, stocky, broad shoulders, brown hair, receding hairline, short hair, brown eyes, smiling eyes, bushy eyebrows, stubble, wrinkles, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel",
+   "identity": "1boy, male focus, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, wrinkles, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel",
    "tags": "holding a wine bottle, shovel on shoulder",
    "face": "grin",
    "variants": {
@@ -1182,7 +1182,7 @@
     "sorrow": "singing, closed eyes, solemn",
     "fun": "sly grin, holding a ring"
    },
-   "memo": "C8・仲間。聖都の地下墓地の墓掘り修道士。墓の物を売る罰当たり、酒臭い、聖歌が上手い。前歯が一本無い、汚れた修道服、錆びた鋤"
+   "memo": "C8・仲間。聖都の地下墓地の墓掘り修道士。墓の物を売る罰当たり、酒臭い、聖歌が上手い。赤毛の剃髪と赤い髭、前歯が一本無い、汚れた修道服、錆びた鋤"
   },
   {
    "id": "polf",
@@ -1190,7 +1190,7 @@
    "name": "ポルフ",
    "type": "elder",
    "file": "assets/portraits/polf.webp",
-   "identity": "1boy, male focus, old man, 66 years old, rat ears, round ears, very short, hunched back, white hair, short hair, messy hair, black eyes, round eyes, bushy white eyebrows, white beard, wrinkles, patched brown tunic, frayed bell rope tied at waist",
+   "identity": "1boy, male focus, old man, 66 years old, rat ears, round ears, very short, hunched back, bald, bald head, blue eyes, round eyes, long white eyebrows, long white mustache, small round spectacles, wrinkles, dark green tunic, red scarf, frayed bell rope tied at waist",
    "tags": "raising a walking stick, pretending to ring a bell",
    "face": "proud grin",
    "variants": {
@@ -1199,7 +1199,7 @@
     "sorrow": "sad, looking up at bell tower",
     "fun": "boasting, puffed up"
    },
-   "memo": "C8・仲間。黒鉄の砦の鐘番。鼠の獣人の爺さん。話を盛るが半分は本当、考えなしに突っ込む。白い髭、曲がった腰、鐘の綱の切れ端"
+   "memo": "C8・仲間。黒鉄の砦の鐘番。鼠の獣人の爺さん。話を盛るが半分は本当、考えなしに突っ込む。禿げ頭、白い長い口髭、丸眼鏡、曲がった腰、鐘の綱の切れ端"
   },
   {
    "id": "rudger",
@@ -1207,10 +1207,10 @@
    "name": "ルドガー",
    "type": "ojisan",
    "file": "assets/portraits/rudger.webp",
-   "identity": "1boy, male focus, old man, 61 years old, slender, silver hair, slicked back hair, short hair, grey eyes, narrow eyes, monocle, wrinkles, neat grey mustache, black high-collared coat, silver chain",
+   "identity": "1boy, male focus, old man, 61 years old, slender, ash blonde hair, long hair, hair tied back, green eyes, narrow eyes, thin round glasses, wrinkles, clean-shaven, white high-collared coat, silver chain",
    "tags": "holding a magnifying glass over a relic",
    "face": "gentle smile, cold eyes",
-   "memo": "C8・ライバル。聖都の教会の遺物研究所の所長。物腰は柔らかく冷たい。ユリエンを学院から出した。銀髪、片眼鏡、黒い高襟の上着"
+   "memo": "C8・ライバル。聖都の教会の遺物研究所の所長。物腰は柔らかく冷たい。ユリエンを学院から出した。灰金の長い髪、細い丸眼鏡、白い高襟の上着"
   },
   {
    "id": "rionetta",
@@ -1228,7 +1228,7 @@
    "name": "ゼルギス",
    "type": "ojisan",
    "file": "assets/portraits/graul.webp",
-   "identity": "1boy, male focus, adult, middle-aged man, 48 years old, tall, broad shoulders, black hair, short hair, red eye, iron half mask covering left side of face, stubble, scar, black hunter armor, dark cloak, longbow",
+   "identity": "1boy, male focus, adult, middle-aged man, 48 years old, tall, broad shoulders, black hair, short hair, red eyes, iron half mask covering left side of face, stubble, scar, black hunter armor, dark cloak, longbow",
    "tags": "bowing politely, two packets of dried meat at belt",
    "face": "expressionless",
    "memo": "C8・敵。黒鎧の居城の猟兵頭。鉄の半面、礼儀正しい。逃げた鷹（イズラ）を連れ戻しに来た。干し肉を二人分持っている"
@@ -1238,7 +1238,7 @@
    "group": "c2",
    "name": "ロスヴィタ",
    "file": "assets/portraits/roswitha.webp",
-   "identity": "1girl, adult woman, 31 years old, soldier, dark blonde hair, hair bun, medium hair, blue eyes, sharp eyes, worried eyebrows, dark circles under eyes, grey padded gambeson, steel pauldron, many small name patches sewn on sleeve, spear on back",
+   "identity": "1girl, adult woman, 31 years old, soldier, light brown hair, short hair, bob cut, grey eyes, freckles, sharp eyes, worried eyebrows, dark circles under eyes, grey padded gambeson, steel pauldron, many small name patches sewn on sleeve, spear on back",
    "tags": "holding a ledger and a quill",
    "face": "expressionless, serious",
    "variants": {
@@ -1247,7 +1247,7 @@
     "sorrow": "teary eyes, looking down, sewing",
     "fun": "deadpan, holding a losing lottery ticket"
    },
-   "memo": "C8・仲間。黒鉄の砦の兵站係。有能で不憫、くじは外れ、砦主に毎冬名前を忘れられる。お団子、灰色の綿入れ、袖に名札がいっぱい、帳簿"
+   "memo": "C8・仲間。黒鉄の砦の兵站係。有能で不憫、くじは外れ、砦主に毎冬名前を忘れられる。薄茶の短い髪、そばかす、灰色の綿入れ、袖に名札がいっぱい、帳簿"
   },
   {
    "id": "jonas",
@@ -1255,10 +1255,10 @@
    "name": "ヨナス",
    "type": "classic",
    "file": "assets/portraits/jonas.webp",
-   "identity": "1boy, male focus, young man, teenage boy, 17 years old, slim, brown hair, short hair, green eyes, round eyes, freckles, steel helmet, grey gambeson, spear",
+   "identity": "1boy, male focus, young man, teenage boy, 17 years old, slim, platinum blonde hair, curly hair, short hair, blue eyes, round eyes, freckles, steel helmet, grey gambeson, spear",
    "tags": "holding a travel pass with both hands, standing at attention",
    "face": "nervous, blush",
-   "memo": "C8・家族。黒鉄の砦の若い見張り兵。堅物。昔ゴブリンにさらわれ一晩で戻った（ギグラに逃がされた子）。そばかす、兜"
+   "memo": "C8・家族。黒鉄の砦の若い見張り兵。堅物。昔ゴブリンにさらわれ一晩で戻った（ギグラに逃がされた子）。白金の巻き毛、兜"
   },
   {
    "id": "kind_villager_m",
