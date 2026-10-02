@@ -1,0 +1,45 @@
+/* F2：図鑑の窓（ui/f2_codex.js） */
+#dlgCodex { width: min(1040px, calc(100vw - 32px)); }
+#openCodex.fresh::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 5px; border-radius: 50%; background: var(--ng); vertical-align: 2px; }
+.f2sum { margin: 8px 0 0; }
+.f2panes { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; margin-top: 8px; }
+.f2list { min-width: 0; }
+.f2detail { position: sticky; top: 80px; max-height: calc(100vh - 140px); overflow-y: auto; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 2px; background: var(--box); min-height: 120px; }
+.f2group h3 { margin: 14px 0 6px; font-family: var(--f-display); font-size: 15px; color: var(--head); font-weight: 400; }
+.f2grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; }
+.f2cell { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px; min-height: 64px;
+  border: 1px solid var(--rule); border-radius: 2px; background: var(--field); color: var(--ink); font-size: 12px; line-height: 1.3; text-align: center; }
+button.f2cell:hover, .f2cell.on { background: var(--item-hover); border-color: var(--accent); }
+.f2cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.f2cell.unknown { color: var(--muted); opacity: .7; cursor: default; }
+.f2cell.fresh::after { content: ""; position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--ng); }
+.f2glyph { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--rule); border-radius: 50%; font-family: var(--f-display); font-size: 15px; color: var(--accent); }
+.f2cell.unknown .f2glyph { color: var(--muted); }
+.f2name { word-break: break-all; }
+.f2tier { font-size: 11px; color: var(--muted); }
+.f2pic { display: block; }
+.f2detail .f2pic { margin: 0 auto 4px; }
+.f2title { margin: 0; font-family: var(--f-display); font-size: 18px; font-weight: 400; }
+.f2detail > .fine { margin: 2px 0 8px; }
+.f2kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 6px 0; font-size: 13px; }
+.f2kv dt { color: var(--muted); }
+.f2kv dd { margin: 0; }
+.f2where h4 { margin: 10px 0 2px; font-size: 13px; color: var(--muted); font-weight: 400; }
+.f2where ul { margin: 0; padding-left: 1.2em; font-size: 13px; }
+.f2flavor { margin: 10px 0 6px; font-family: var(--f-body); font-style: italic; line-height: 1.8; }
+.f2detail .f2first { margin: 2px 0; font-size: 12px; }
+@media (max-width: 760px) {
+  .f2panes { grid-template-columns: 1fr; }
+  .f2detail { position: static; order: -1; max-height: none; }
+  .f2grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
+}
+/* 人物・用語 */
+.f2cell .face { border-radius: 2px; }
+.f2words { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.f2words .f2cell { min-height: 0; padding: 8px 6px; }
+.f2cell.past { opacity: .72; }
+.f2line { margin: 8px 0; font-family: var(--f-body); line-height: 1.8; }
+.f2line.past, #worldBody .f2past { opacity: .62; }
+.f2ago { display: block; font-family: var(--f-ui); font-size: 11px; color: var(--muted); font-style: normal; }
+@media (max-width: 760px) { .f2words { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }
+.f2who { width: 48px; height: 60px; border-radius: 2px; }
