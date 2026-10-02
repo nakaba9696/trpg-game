@@ -1,158 +1,127 @@
-// F4：冒険ごとに顔ぶれが変わる・図鑑に「仲間にする方法」と「会える場所」・次の冒険で「狙う」。DOM には触らない（画面は ui/f4_roster.js）。
-// 名前の頭の zz_f4 は、zz_c2_people.js（G.c2Join・G.c2Meet・顔なじみを誘う）と zz_f2_codex.js（図鑑）より後に読ませて包むため。
-// 仕組みはデータの形（D.C2_PEOPLE の join と、出来事の c2・c2join・next）だけを見る。特定の人には依存しないので、後から足された人にもそのまま効く。
+// F4：仲間になる人の「いつ・どこに居るか」（予定）・図鑑に「会える場所と時期」「仲間にする方法」・知っている人を訪ねる・次の冒険で狙う。DOM には触らない（画面は ui/f4_roster.js）。
+// 名前の頭の zz_f4 は、zz_c2_people.js（G.c2Join・顔なじみを誘う）と zz_f2_codex.js（図鑑）より後に読ませて包むため。
+// 仕組みはデータの形（D.C2_PEOPLE の join・schedule と、出来事の c2・c2join・next）だけを見る。特定の人には依存しないので、後から足された人にもそのまま効く。
 //
-// 冒険の始まり（G.newGame）に、その冒険の顔ぶれを G.rand で決める（seed を固定すれば同じ顔ぶれ）
-//   候補：join がある人のうち、always でない人（always：データの always: true か D.F4_ALWAYS）。always の人は毎回居る
-//   人数：候補の 36〜50%。地域（誘える町の地方）ごとに割り当て、同じ性別・種族・型に偏らないよう重みを下げながら選ぶ。狙った人は重み 3 倍（必ずではない）
-//   居場所：候補（p.places・p.join.places・D.F4_PLACES）があれば一つか二つ。出会いの出来事と「誘う」町がそこに移る。無ければ今の場所のまま
-// セーブ（G.S）に足すもの：S.f4 = { pool 候補だった人, cast { id: { at: [場所] | null } } 居る人, want 狙っていた人, heard { id: 1 } 噂で聞いた人, ask 貼り紙を見た日 }
-//   古いセーブ（S.f4 が無い）は、今までどおり全員が元の場所に居る
+// 居場所はほぼ固定：予定（データの schedule か D.F4_SCHEDULE。書き方は data/f4_roster.js と docs/f4_schedule.md）の時期に、その場所へ行けば会える
+//   その人が主（出来事の c2 の最初）の出会いの出来事（w > 0・その人の元の居場所で起きるもの）は、今の時期の居場所で起きる。居場所の種類（町・野・迷宮）が違う時期は起きない
+//   冒険ごとの揺れは、予定が数日前後する（S.f4.shift）だけ。出来事の中身（どの出会い方・脇の出来事・噂）は、いつもどおり乱数で変わる
+//   図鑑で知っている人（かつての冒険で会った・噂で居場所を聞いた）がいま居る所では、「〇〇を訪ねる」で出会いの出来事を起こせる（知っていれば狙える）
+//   「狙う」印の人は、出会いの出来事の重みが 3 倍（居る所・時期は変わらない）
+// セーブ（G.S）に足すもの：S.f4 = { shift { id: 日 }, sched { id: 予定 } 出来事で書き換えた予定, away { id: 出来事 } 会えなくなった, want 狙っていた人, heard { id: 1 }, ask 貼り紙を見た日 }
+//   古いセーブ（S.f4 が無い）は、揺れなしで予定どおり
 // profile（G.P、冒険をまたぐ）に足すもの：
-//   G.P.f4 = { want { id: 1 } 次の冒険で狙う人（三人まで）, heard { id: { loc, at } } 噂で聞いた場所 }
-//   G.P.codex.people[id].places { 場所: 1 } 会ったことのある場所 / via 仲間になった出来事の id
-// 仲間にする方法（G.f4How）：join と、c2join のある出来事までの next の流れ・判定・戦い・金・条件（cond を試しに呼んで、誰を連れているか・何日目からか）から組み立てる。
-//   データに joinHint（文字列か { full, vague }）があれば、それで上書きする
+//   G.P.f4 = { want { id: 1 } 狙う人（三人まで）, know { id: { "場所|季節": "heard" } } 噂で聞いた居場所 }
+//   G.P.codex.people[id].seen { "場所|季節": 1 } 会った場所と時期 / places { 場所: 1 } / via 仲間になった出来事 / lost 会えなくなった出来事の題
 // レーン F＋C（F4）
 (function (G) {
   const D = G.data;
   const F4 = (G.f4 = G.f4 || {});
   const P = () => D.C2_PEOPLE || {};
   const as = (x) => (x == null ? [] : Array.isArray(x) ? x : [x]);
-  const WANT_W = 3;   // 狙った人の重み
+  const WANT_W = 3;   // 狙った人の出会いの出来事の重み
   const WANT_MAX = 3; // 狙える人数
+  const SHIFT = 6;    // 予定が前後する日数（冒険ごと）
 
-  // ---------------------------------------------------------------- 人の見分け
-  F4.always = (id) => { const p = P()[id]; return !!(p && (p.always || (p.join && p.join.always) || (D.F4_ALWAYS || []).includes(id))); };
+  // ---------------------------------------------------------------- 暦
+  const SEASONS = () => G.SEASONS || ["春", "夏", "秋", "冬"];
+  F4.doy = (day) => ((((day - 1) % 360) + 360) % 360) + 1; // 年の中の日 1〜360
+  F4.seasonOf = (day) => SEASONS()[Math.floor((F4.doy(day) - 1) / 90)];
+  // 今日（画面の上の帯が読む）：{ y 年, season 季節, si 季節の番号, d 季節の中の日, text「1127年 春 9日」, phase 時間帯 }
+  G.f4Today = (S) => {
+    S = S || G.S;
+    if (!S) return null;
+    const text = G.dateOf ? G.dateOf(S.day) : `${S.day}日目`;
+    const m = /^(\d+)年/.exec(text);
+    const si = Math.floor((F4.doy(S.day) - 1) / 90);
+    return { y: m ? Number(m[1]) : 0, season: SEASONS()[si], si, d: ((F4.doy(S.day) - 1) % 90) + 1, text, phase: (G.PHASES || [])[S.phase] || "" };
+  };
+  const edge = (x, end) => {
+    const si = SEASONS().indexOf(x);
+    if (si >= 0) return end ? (si + 1) * 90 : si * 90 + 1;
+    return Math.max(1, Math.min(360, Number(x) || 1));
+  };
+  const inRange = (doy, from, to) => (from <= to ? doy >= from && doy <= to : doy >= from || doy <= to);
+  // 予定の一行が含む季節
+  F4.seasonsOf = (e) => SEASONS().filter((s, i) => inRange(i * 90 + 45, edge(e.from), edge(e.to, true)));
+  // 予定の一行の時期の言い方（「秋」「春から夏」「一年じゅう」）
+  F4.whenText = (e) => {
+    const ss = F4.seasonsOf(e);
+    if (ss.length >= 4) return "一年じゅう";
+    if (ss.length <= 1) return ss[0] || F4.seasonOf(edge(e.from));
+    const a = SEASONS().includes(e.from) ? e.from : F4.seasonOf(edge(e.from)), b = SEASONS().includes(e.to) ? e.to : F4.seasonOf(edge(e.to, true));
+    return `${a}から${b}`;
+  };
+
+  // ---------------------------------------------------------------- 人の見分けと予定
   F4.joinable = (id) => !!(P()[id] && P()[id].join);
-  F4.candidates = () => Object.keys(P()).filter((id) => F4.joinable(id) && !F4.always(id));
-  F4.places = (id) => {
+  F4.schedule = (id, S) => {
+    S = S === undefined ? G.S : S;
+    const own = S && S.f4 && S.f4.sched && S.f4.sched[id];
+    if (own) return own;
     const p = P()[id];
-    if (!p) return [];
-    return as(p.places || (p.join && p.join.places) || (D.F4_PLACES || {})[id]).filter((l) => D.LOCS[l]);
+    if (!p) return null;
+    const s = p.schedule || (p.join && p.join.schedule) || (D.F4_SCHEDULE || {})[id];
+    return s && s.length ? s.filter((e) => D.LOCS[e.loc]) : null;
   };
-  F4.region = (id) => {
-    const p = P()[id] || {};
-    const home = as(p.join && p.join.home).map((l) => D.LOCS[l]).find(Boolean);
-    return (home && home.region) || p.nation || "各地";
-  };
-  const kindOf = (p) => (p.who && p.who.kind) || (p.join && p.join.cls) || "";
-
-  // ---------------------------------------------------------------- 顔ぶれを決める
-  F4.roll = (want) => {
-    want = want || {};
-    const all = F4.candidates();
-    const T = all.length;
-    const out = { pool: all.slice(), cast: {}, want: Object.keys(want).filter((id) => want[id] && F4.joinable(id)), heard: {} };
-    let target = 0;
-    if (T) target = Math.min(T, Math.max(Math.min(T, 2), Math.round(T * (0.36 + G.rand() * 0.14))));
-    // 地域ごとの割り当て（端数は乱数で）
-    const byR = {};
-    all.forEach((id) => (byR[F4.region(id)] = byR[F4.region(id)] || []).push(id));
-    const regions = Object.keys(byR);
-    const quota = {};
-    let given = 0;
-    const rem = regions.map((r) => {
-      const x = (byR[r].length * target) / (T || 1);
-      quota[r] = Math.floor(x);
-      given += quota[r];
-      return [r, x - quota[r] + G.rand() * 0.5];
-    }).sort((a, b) => b[1] - a[1]);
-    for (let i = 0; given < target && i < rem.length * 2; i++) {
-      const r = rem[i % rem.length][0];
-      if (quota[r] < byR[r].length) { quota[r]++; given++; }
-    }
-    // 偏らないように：選んだ人と同じ性別・種族・型が多いほど重みを下げる
-    const picked = [];
-    const share = (f, v) => (picked.length ? picked.filter((x) => f(x) === v).length / picked.length : 0);
-    const sexOf = (id) => P()[id].sex, raceOf = (id) => P()[id].race, kOf = (id) => kindOf(P()[id]);
-    const order = regions.map((r) => [r, G.rand()]).sort((a, b) => a[1] - b[1]).map(([r]) => r);
-    // 一人ずつ地域を回る（ある地域だけが先に埋まって、性別の釣り合いが偏らないように）
-    let left = true;
-    while (left) {
-      left = false;
-      for (const r of order) {
-        const rest = byR[r].filter((id) => !picked.includes(id));
-        if (picked.filter((id) => F4.region(id) === r).length >= quota[r] || !rest.length) continue;
-        left = true;
-        const ws = rest.map((id) => (out.want.includes(id) ? WANT_W : 1) / (1 + 1.6 * share(sexOf, sexOf(id)) + 0.8 * share(raceOf, raceOf(id)) + 0.8 * share(kOf, kOf(id))));
-        let x = G.rand() * ws.reduce((a, b) => a + b, 0);
-        let k = 0;
-        for (; k < rest.length - 1; k++) { x -= ws[k]; if (x <= 0) break; }
-        picked.push(rest[k]);
-      }
-    }
-    // 居場所
-    const place = (id) => {
-      const c = F4.places(id);
-      if (!c.length) return null;
-      const n = c.length >= 4 ? 2 : 1;
-      return c.map((l) => [l, G.rand()]).sort((a, b) => a[1] - b[1]).slice(0, n).map(([l]) => l);
-    };
-    Object.keys(P()).filter((id) => F4.joinable(id) && F4.always(id)).forEach((id) => { out.cast[id] = { at: place(id) }; });
-    picked.forEach((id) => { out.cast[id] = { at: place(id) }; });
-    return out;
-  };
-
-  // 今の冒険に居るか・どこに居るか（古いセーブ・候補でなかった人・後から足された人は居る）
-  F4.present = (id, S) => {
+  // day の日にどこに居るか：{ loc, note, e } / { away: true }（予定の無い時期・会えなくなった）/ null（予定が無い人）
+  F4.whereOn = (id, S, day) => {
     S = S || G.S;
-    if (!S || !S.f4 || !F4.joinable(id) || F4.always(id)) return true;
-    if (!(S.f4.pool || []).includes(id)) return true;
-    return !!(S.f4.cast || {})[id];
+    if (S && S.f4 && S.f4.away && S.f4.away[id]) return { away: true };
+    const sc = F4.schedule(id, S);
+    if (!sc) return null;
+    const shift = (S && S.f4 && S.f4.shift && S.f4.shift[id]) || 0;
+    const doy = F4.doy((day == null ? (S ? S.day : 1) : day) - shift);
+    const e = sc.find((x) => inRange(doy, edge(x.from), edge(x.to, true)));
+    return e ? { loc: e.loc, note: e.note || "", e } : { away: true };
   };
-  F4.at = (id, S) => {
-    S = S || G.S;
-    const c = S && S.f4 && (S.f4.cast || {})[id];
-    return c && c.at && c.at.length ? c.at : null;
-  };
-  // 今の冒険で「誘う」町
+  F4.whereNow = (id, S) => F4.whereOn(id, S);
+  // 今の冒険で「誘う」町：今の居場所が町ならそこ、予定の無い時期は無し、予定が無い人や野に居る時期は誘える町（join.home）
   F4.home = (id, S) => {
     const p = P()[id];
     const base = as(p && p.join && p.join.home);
-    const at = (F4.at(id, S) || []).filter((l) => D.LOCS[l] && D.LOCS[l].type === "town");
-    return at.length ? at : base;
-  };
-  F4.cast = (S) => {
-    S = S || G.S;
-    return Object.keys(P()).filter((id) => F4.joinable(id) && F4.present(id, S));
+    const w = F4.whereNow(id, S);
+    if (w && w.loc && D.LOCS[w.loc].type === "town") return [w.loc];
+    if (w && w.away) return [];
+    return base;
   };
 
   // ---------------------------------------------------------------- 出来事の索引（一度だけ作る。出来事が足されたら作り直す）
   let IX = null;
   const branches = (c) => {
-    // 選択肢から先へ進む枝：[{ to 次の出来事, how "pick"|"ok"|"ng"|"win" }] と、仲間になる枝：[{ ids, how }]
-    const nx = [], jn = [];
+    // 選択肢から先へ進む枝：[{ to, how "pick"|"ok"|"ng"|"win" }]・仲間になる枝：[{ ids, how }]・会えなくなる枝：[{ ids }]
+    const nx = [], jn = [], dead = [];
     const look = (o, how) => {
       if (!o) return;
       if (o.next) nx.push({ to: o.next, how });
       if (o.c2join) jn.push({ ids: as(o.c2join), how });
+      if (o.c2dead) dead.push({ ids: as(o.c2dead) });
+      if (o.f4away) dead.push({ ids: as(o.f4away) });
       if (o.win) look(o.win, "win");
     };
     if (c.next) nx.push({ to: c.next, how: c.fight ? "win" : "pick" });
     look(c.ok, c.fight ? "win" : "ok");
     look(c.ng, "ng");
     look(c.win, "win");
-    return { nx, jn };
+    return { nx, jn, dead };
   };
   F4.index = () => {
     if (IX && IX.n === D.EVENTS.length) return IX;
-    const byId = {}, prev = {}, joins = {}, prim = new Map(), mine = {};
+    const byId = {}, prev = {}, joins = {}, lost = {}, prim = new Map();
     D.EVENTS.forEach((e) => {
       byId[e.id] = e;
       const p0 = as(e.c2)[0];
       prim.set(e, P()[p0] ? p0 : null);
-      if (P()[p0]) (mine[p0] = mine[p0] || []).push(e);
       (e.choices || []).forEach((c, i) => {
-        const { nx, jn } = branches(c);
+        const { nx, jn, dead } = branches(c);
         nx.forEach(({ to, how }) => (prev[to] = prev[to] || []).push({ from: e.id, i, how }));
         jn.forEach(({ ids, how }) => ids.forEach((id) => (joins[id] = joins[id] || []).push({ ev: e.id, i, how })));
+        dead.forEach(({ ids }) => ids.forEach((id) => { const l = (lost[id] = lost[id] || []); if (!l.includes(e.title)) l.push(e.title); }));
       });
     });
-    IX = { n: D.EVENTS.length, byId, prev, joins, prim, mine, routes: {}, base: {} };
+    IX = { n: D.EVENTS.length, byId, prev, joins, lost, prim, routes: {}, base: {}, entry: new Map() };
     return IX;
   };
-  // 加わる出来事までの流れ：[{ e, i（選んだ選択肢）, how（どの枝で進むか） }]（入口は w > 0 の出来事）。いちばん短い流れを、加わり方ごとに
+  // 加わる出来事までの流れ：[{ e, i（選んだ選択肢）, how（どの枝で進むか） }]（入口は w > 0 の出来事）。入口ごとにいちばん短い流れ
   F4.routes = (id) => {
     const ix = F4.index();
     if (ix.routes[id]) return ix.routes[id];
@@ -162,7 +131,6 @@
       const key = j.ev + ":" + j.i;
       if (seen.has(key)) return;
       seen.add(key);
-      // 後ろへ幅優先
       const q = [[{ e: ix.byId[j.ev], i: j.i, how: j.how }]];
       const vis = new Set([j.ev]);
       let found = null;
@@ -178,13 +146,12 @@
       }
       if (found) out.push(found);
     });
-    // 同じ入口からの流れは、短いものを先に（入口ごとに一つ）
     const byEntry = {};
     out.sort((a, b) => a.length - b.length).forEach((r) => { if (!byEntry[r[0].e.id]) byEntry[r[0].e.id] = r; });
     ix.routes[id] = Object.values(byEntry);
     return ix.routes[id];
   };
-  // その人の「元の居場所」（誘える町と、加わる流れの入口の where）。居場所が移ると、ここに重なる出会いの出来事が一緒に移る
+  // その人の「元の居場所」（誘える町と、加わる流れの入口の where）
   F4.basePlaces = (id) => {
     const ix = F4.index();
     if (ix.base[id]) return ix.base[id];
@@ -194,23 +161,58 @@
     ix.base[id] = s;
     return s;
   };
+  // 加わる流れの入口になる出来事 → その流れで仲間になる人（ディルとカイデルの出来事なら両方）
+  const owners = () => {
+    const ix = F4.index();
+    if (ix.owners) return ix.owners;
+    ix.owners = new Map();
+    Object.keys(P()).filter(F4.joinable).forEach((id) => F4.routes(id).forEach((r) => {
+      const e = r[0].e;
+      if (!(e.w > 0)) return;
+      const l = ix.owners.get(e) || [];
+      if (!l.includes(id)) l.push(id);
+      ix.owners.set(e, l);
+    }));
+    return ix.owners;
+  };
+  // 出来事の持ち主（その人の予定に合わせて起きる人）：主が仲間になる人ならその人、でなければ流れで仲間になる最初の人
+  F4.ownerOf = (e) => {
+    const p = F4.index().prim.get(e);
+    return p && F4.joinable(p) ? p : (owners().get(e) || [])[0] || null;
+  };
+  // その人の出会いの出来事か（主がその人で w > 0・話す出来事でない・元の居場所で起きる／加わる流れの入口）
+  F4.isEntry = (e) => {
+    const ix = F4.index();
+    if (ix.entry.has(e)) return ix.entry.get(e);
+    const id = ix.prim.get(e);
+    const r = !!((id && F4.joinable(id) && e.w > 0 && !e.c2talk && as(e.where).some((w) => F4.basePlaces(id).has(w))) || owners().has(e));
+    ix.entry.set(e, r);
+    return r;
+  };
+  F4.entryOf = (e, id) => F4.isEntry(e) && (F4.index().prim.get(e) === id || (owners().get(e) || []).includes(id));
+  const typeOf = (w) => (D.LOCS[w] ? D.LOCS[w].type : ["town", "wild", "dungeon"].includes(w) ? w : w === "capital" || w === "port" ? "town" : "");
+  // 出会いの出来事は、その居場所で起きるか（同じ場所か、同じ種類の場所）
+  const fits = (e, loc) => as(e.where).includes(loc) || as(e.where).some((w) => typeOf(w) && typeOf(w) === D.LOCS[loc].type);
 
-  // ---------------------------------------------------------------- 出来事を顔ぶれに合わせる
-  // 居ない人が主の出来事は起きない。居場所が移った人の出会いの出来事は、移った先で起きる
+  // ---------------------------------------------------------------- 出来事を予定に合わせる
   const adjusted = (S) => {
     const ix = F4.index();
     const out = [];
     const back = new Map();
+    const want = (S.f4 && S.f4.want) || [];
     D.EVENTS.forEach((e) => {
-      const id = ix.prim.get(e);
-      if (!id || !F4.joinable(id)) { out.push(e); return; }
-      if (!F4.present(id, S)) return;
-      const at = F4.at(id, S);
-      if (at && e.w > 0 && !e.c2talk && as(e.where).some((w) => F4.basePlaces(id).has(w))) {
-        const c = Object.assign({}, e, { where: at.slice() });
-        back.set(c, e);
-        out.push(c);
-      } else out.push(e);
+      if (!F4.isEntry(e)) { out.push(e); return; }
+      const id = F4.ownerOf(e);
+      const w = F4.whereNow(id, S);
+      if (w && w.away) return;
+      let c = e;
+      if (w && w.loc) {
+        if (!fits(e, w.loc)) return;
+        if (!(e.where.length === 1 && e.where[0] === w.loc)) c = Object.assign({}, e, { where: [w.loc] });
+      }
+      if (want.some((x) => F4.entryOf(e, x))) c = Object.assign({}, c, { w: c.w * WANT_W });
+      if (c !== e) back.set(c, e);
+      out.push(c);
     });
     return { out, back };
   };
@@ -218,37 +220,44 @@
   const baseRandom = G.randomEvent;
   G.randomEvent = () => {
     const S = G.S;
-    if (!S || !S.f4) return baseRandom();
+    if (!S) return baseRandom();
     const all = D.EVENTS;
     const { out, back } = adjusted(S);
     D.EVENTS = out;
-    let e;
-    try { e = baseRandom(); } finally { D.EVENTS = all; }
-    return (e && back.get(e)) || e;
+    let r;
+    try { r = baseRandom(); } finally { D.EVENTS = all; }
+    return (r && back.get(r)) || r;
   };
-  // 居ない人を仲間に加える選択肢は出さない（ほかに選択肢があるときだけ）
-  const absentJoin = (c, S) => {
-    const { jn } = branches(c);
-    return jn.some(({ ids }) => ids.some((id) => !F4.present(id, S)));
+  // いま、ここで起きうるその人の出会いの出来事
+  F4.entriesHere = (id, S) => {
+    S = S || G.S;
+    if (!S) return [];
+    const ix = F4.index();
+    const tags = G.eventTags();
+    return F4.eventsNow(S).filter((e) => {
+      const o = (S && ix.byId[e.id]) || e;
+      return F4.entryOf(o, id) && e.where.some((w) => tags.includes(w)) && !(e.once && S.flags["ev:" + e.id]) && (!e.cond || e.cond(S));
+    });
   };
+
+  // 会えなくなった人を仲間に加える選択肢は出さない（ほかに選択肢があるときだけ）
   const baseChoices = G.eventChoices;
   G.eventChoices = () => {
     const list = baseChoices();
     const S = G.S;
-    if (!S || !S.f4) return list;
-    const keep = list.filter(({ c }) => !absentJoin(c, S));
+    if (!S || !S.f4 || !S.f4.away) return list;
+    const keep = list.filter(({ c }) => !branches(c).jn.some(({ ids }) => ids.some((id) => S.f4.away[id])));
     return keep.length ? keep : list;
   };
-  // 居ない人は加わらない（念のため。出来事の外から呼ばれたときも）
   const baseJoin = G.c2Join;
   let curEvent = null;
   if (baseJoin) G.c2Join = (id) => {
     const S = G.S;
-    if (S && !F4.present(id, S)) return false;
+    if (S && S.f4 && S.f4.away && S.f4.away[id]) return false;
     const r = baseJoin(id);
     if (r && S) {
       const rec = G.codexPerson && G.codexPerson(id);
-      if (rec) { if (curEvent && !rec.via) rec.via = curEvent; addPlace(rec, S.loc); }
+      if (rec) { if (curEvent && !rec.via) rec.via = curEvent; F4.seenAt(id, S); }
     }
     return r;
   };
@@ -257,89 +266,133 @@
     curEvent = G.S && G.S.event;
     try { return baseChoose(i); } finally { curEvent = null; }
   };
+  // 出来事の結果：予定を書き換える（f4move）・会えなくなる（f4away。c2dead も図鑑に残す）
+  const baseApply = G.apply;
+  G.apply = (o) => {
+    baseApply(o);
+    const S = G.S;
+    if (!o || !S) return;
+    const f = (S.f4 = S.f4 || {});
+    as(o.f4move).forEach((m) => { if (m && P()[m.id] && m.schedule) (f.sched = f.sched || {})[m.id] = m.schedule; });
+    const ev = curEvent && F4.index().byId[curEvent];
+    [...as(o.f4away), ...as(o.c2dead)].forEach((id) => {
+      if (!P()[id]) return;
+      if (as(o.f4away).includes(id)) (f.away = f.away || {})[id] = curEvent || 1;
+      const rec = G.codexPerson && G.codexPerson(id);
+      if (rec && ev && !rec.lost) { rec.lost = ev.title; changed(); }
+    });
+  };
 
-  // 顔なじみを誘う町を、今の冒険の居場所に合わせる
+  // ---------------------------------------------------------------- 町と場所で：顔なじみを誘う（今の居場所に合わせる）・知っている人を訪ねる
+  const knows = (id) => !!((G.codexPerson && G.codexPerson(id)) || Object.keys(prof().know[id] || {}).length);
+  F4.knows = knows;
   const baseActs = G.exploreActions;
   G.exploreActions = () => {
     const groups = baseActs();
     const S = G.S;
-    if (!S || !S.f4 || S.travel || G.loc().type !== "town" || !G.c2State) return groups;
+    if (!S || S.travel || S.mode !== "explore" || !G.c2State) return groups;
+    const L = G.loc();
     const m = G.c2State(S);
-    const here = Object.keys(P()).filter((id) => m.met[id] && F4.joinable(id) && F4.present(id, S) && F4.home(id, S).includes(S.loc) && G.c2CanJoin(id, S));
-    let g = groups.find((x) => x.title === "顔なじみ");
-    const others = g ? g.list.filter((a) => !a.id.startsWith("c2inv:")) : [];
-    const list = [...others, ...here.map((id) => ({ id: "c2inv:" + id, label: `${P()[id].name}を誘う`, sub: P()[id].join.cls, kw: ["誘", P()[id].name] }))];
-    if (g) { if (list.length) g.list = list; else groups.splice(groups.indexOf(g), 1); }
-    else if (list.length) groups.push({ title: "顔なじみ", list });
+    if (L.type === "town") {
+      const here = Object.keys(P()).filter((id) => m.met[id] && F4.joinable(id) && F4.home(id, S).includes(S.loc) && G.c2CanJoin(id, S));
+      const g = groups.find((x) => x.title === "顔なじみ");
+      const others = g ? g.list.filter((a) => !a.id.startsWith("c2inv:")) : [];
+      const list = [...others, ...here.map((id) => ({ id: "c2inv:" + id, label: `${P()[id].name}を誘う`, sub: P()[id].join.cls, kw: ["誘", P()[id].name] }))];
+      if (g) { if (list.length) g.list = list; else groups.splice(groups.indexOf(g), 1); }
+      else if (list.length) groups.push({ title: "顔なじみ", list });
+    }
+    // 訪ねる：図鑑で知っている人が、いまここに居て、出会いの出来事を起こせるとき（今の冒険でまだ会っていない人）
+    if (!(L.type === "dungeon" && S.depth > 0)) {
+      const seek = Object.keys(P()).filter((id) => F4.joinable(id) && knows(id) && !m.met[id] && !(m.gone || {})[id] && F4.entriesHere(id, S).length);
+      if (seek.length) groups.push({ title: "訪ねる（図鑑で知っている人）", list: seek.map((id) => ({
+        id: "f4seek:" + id, label: `${F4.nameKnown(id)}を訪ねる`, sub: (F4.whereNow(id, S) || {}).note || "ここにいるはず", kw: ["訪", "探", F4.nameKnown(id)],
+      })) });
+    }
     return groups;
+  };
+  const baseAct = G.exploreAct;
+  G.exploreAct = (head, arg, a) => {
+    if (head !== "f4seek") return baseAct(head, arg, a);
+    const list = F4.entriesHere(arg);
+    if (!list.length) return;
+    G.log("you", `${F4.nameKnown(arg)}を訪ねる`);
+    G.pass(1);
+    const e = G.pick(list);
+    G.startEvent(F4.index().byId[e.id] || e);
   };
 
   // ---------------------------------------------------------------- 噂（酒場）と尋ね人の貼り紙（ギルド）
-  const placeText = (id, S) => {
-    const at = F4.at(id, S);
-    const locs = at || [...F4.basePlaces(id)].filter((l) => D.LOCS[l]);
-    if (locs.length) return locs.map((l) => D.LOCS[l].name).slice(0, 2).join("か");
-    const w = [...F4.basePlaces(id)][0];
-    return { town: "どこかの町", wild: "どこかの野", dungeon: "どこかの迷宮", forest: "森" }[w] || "どこか";
-  };
-  const whoText = (p) => {
-    const race = { elf: "エルフの", beast: "獣人の" }[p.race] || "";
-    const kid = p.age < 14 ? "子" : p.sex === "男" ? "男" : "女";
-    return race + kid;
-  };
   F4.titleOf = (id) => {
     const q = (D.F2_PEOPLE || {})[id], p = P()[id] || {};
     return (q && q.title) || (p.join && p.join.cls) || p.name || id;
   };
-  F4.fill = (t, id, S) => String(t).replace(/\{place\}/g, placeText(id, S)).replace(/\{who\}/g, whoText(P()[id] || {})).replace(/\{title\}/g, F4.titleOf(id));
+  // 名前：かつての冒険か今の冒険で会った人は名前、知らない人は肩書き
+  F4.nameKnown = (id) => {
+    const met = (G.codexPerson && G.codexPerson(id)) || (G.S && G.c2Met && G.c2Met(id, G.S));
+    const p = P()[id] || {};
+    return met ? p.short || p.name || id : F4.titleOf(id);
+  };
+  const whoText = (p) => ({ elf: "エルフの", beast: "獣人の" }[p.race] || "") + (p.age < 14 ? "子" : p.sex === "男" ? "男" : "女");
+  const placeName = (l) => (D.LOCS[l] ? D.LOCS[l].name : l);
+  F4.placeName = placeName;
+  F4.fill = (t, id, e) => String(t)
+    .replace(/\{name\}/g, F4.nameKnown(id)).replace(/\{title\}/g, F4.titleOf(id)).replace(/\{who\}/g, whoText(P()[id] || {}))
+    .replace(/\{place\}/g, e ? placeName(e.loc) : "どこか").replace(/\{when\}/g, e ? F4.whenText(e) : "いま").replace(/\{note\}/g, (e && e.note) || "");
   const prof = () => {
     if (!G.P) G.P = { trophies: {}, graves: [] };
     const f = G.P.f4 || (G.P.f4 = {});
     f.want = f.want || {};
-    f.heard = f.heard || {};
+    f.know = f.know || {};
     return f;
   };
   F4.profile = prof;
   const changed = () => { if (G.onCodexChange) try { G.onCodexChange(); } catch {} };
-  // 噂を一つ選ぶ。居る・まだ会っていない・まだ聞いていない人（狙った人を先に）。狙った人が居ないときは、ときどき「噂を聞かない」
+  // 噂で聞いた居場所を profile に残す（季節ごと）
+  F4.learn = (id, e, how) => {
+    const k = prof().know[id] || (prof().know[id] = {});
+    F4.seasonsOf(e).forEach((s) => { const key = e.loc + "|" + s; if (!k[key]) k[key] = how || "heard"; });
+    changed();
+  };
+  // 噂を一つ：予定のある人のうち、今の冒険でまだ仲間になっていない人（狙った人を先に・まだ聞いていない時期を先に）
   F4.rumor = (S) => {
     S = S || G.S;
-    if (!S || !S.f4) return null;
+    if (!S) return null;
+    const f = (S.f4 = S.f4 || {});
+    f.heard = f.heard || {};
     const R = D.F4_RUMORS || {};
-    const want = S.f4.want || [];
-    const fresh = (id) => !(S.f4.heard || {})[id] && !(G.c2Met && G.c2Met(id, S)) && !(G.c2Has && G.c2In(id, S));
-    const gone = want.filter((id) => !F4.present(id, S) && fresh(id));
-    if (gone.length && G.rand() < 0.34 && (R.gone || []).length) {
-      const id = G.pick(gone);
-      S.f4.heard[id] = 1;
-      return { id, text: F4.fill(G.pick(R.gone), id, S), gone: true };
-    }
-    const pool = F4.cast(S).filter(fresh);
+    const want = f.want || [];
+    const m = G.c2State ? G.c2State(S) : { joined: {}, gone: {} };
+    const pool = Object.keys(P()).filter((id) => F4.joinable(id) && !m.joined[id] && F4.schedule(id, S));
     if (!pool.length) return null;
     const ws = pool.filter((id) => want.includes(id));
     const id = ws.length && G.rand() < 0.7 ? G.pick(ws) : G.pick(pool);
-    const t = G.pick(want.includes(id) && (R.want || []).length ? R.want : R.seen || ["{place}で、{title}を見たって話だ。"]);
-    S.f4.heard[id] = 1;
-    const at = F4.at(id, S) || [...F4.basePlaces(id)].filter((l) => D.LOCS[l]);
-    prof().heard[id] = { loc: at[0] || "", at: Date.now() };
-    changed();
-    return { id, text: F4.fill(t, id, S) };
+    f.heard[id] = 1;
+    if ((f.away || {})[id] || (m.gone || {})[id]) return { id, text: F4.fill(G.pick(R.gone || ["{name}の噂は聞かない。"]), id, null), gone: true };
+    const sc = F4.schedule(id, S);
+    const k = prof().know[id] || {};
+    const fresh = sc.filter((e) => F4.seasonsOf(e).some((s) => !k[e.loc + "|" + s]));
+    const e = G.pick(fresh.length ? fresh : sc);
+    const year = F4.seasonsOf(e).length >= 4;
+    const t = G.pick(year ? R.always || ["{name}なら、いつも{place}にいる。"] : want.includes(id) && (R.want || []).length ? R.want : R.when || ["{name}なら、{when}は{place}にいる。"]);
+    const text = F4.fill(t, id, e); // 名前は聞く前の知り方で
+    F4.learn(id, e, "heard");
+    return { id, text, e };
   };
   const baseFacActions = G.facActions;
   G.facActions = () => {
     const groups = baseFacActions();
     const S = G.S;
-    if (!S || !S.f4 || S.fac !== "guild") return groups;
+    if (!S || S.fac !== "guild") return groups;
     const g = groups.find((x) => x.title && x.title.startsWith("冒険者ギルド"));
-    const a = { id: "guild:f4ask", label: "尋ね人の貼り紙を見る", sub: "1日1回・誰がこの世のどこにいるか、少しだけ", disabled: S.f4.ask === S.day, kw: ["尋ね人", "貼り紙", "人探し"] };
+    const a = { id: "guild:f4ask", label: "尋ね人の貼り紙を見る", sub: "1日1回・誰がいつどこにいるか、少しだけ", disabled: !!(S.f4 && S.f4.ask === S.day), kw: ["尋ね人", "貼り紙", "人探し"] };
     if (g) { g.list = g.list.filter((x) => x.id !== "guild:none"); g.list.push(a); } else groups.unshift({ title: "冒険者ギルド", list: [a] });
     return groups;
   };
   const baseFacAct = G.facAct;
   G.facAct = (head, arg, a) => {
     const S = G.S;
-    if (S && S.f4 && head === "guild" && arg === "f4ask") {
-      S.f4.ask = S.day;
+    if (S && head === "guild" && arg === "f4ask") {
+      (S.f4 = S.f4 || {}).ask = S.day;
       G.log("you", "尋ね人の貼り紙を見る");
       G.pass(1);
       const r = F4.rumor(S);
@@ -347,50 +400,68 @@
       else G.say(G.pick((D.F4_RUMORS || {}).none || ["目ぼしい貼り紙はなかった。"]));
       return;
     }
-    if (S && S.f4 && head === "tavern" && arg === "rumor" && S.gold >= 2) {
-      const want = (S.f4.want || []).length;
-      if (G.rand() < (want ? 0.45 : 0.3)) {
-        const r = F4.rumor(S);
-        if (r) {
-          S.gold -= 2;
-          G.log("you", "噂を聞く");
-          G.say(`酔った傭兵が声をひそめた。「${r.text}」`);
-          G.memo("噂：" + r.text);
-          G.pass(1);
-          return;
-        }
+    if (S && head === "tavern" && arg === "rumor" && S.gold >= 2 && G.rand() < (((S.f4 || {}).want || []).length ? 0.45 : 0.3)) {
+      const r = F4.rumor(S);
+      if (r) {
+        S.gold -= 2;
+        G.log("you", "噂を聞く");
+        G.say(`酔った傭兵が声をひそめた。「${r.text}」`);
+        G.memo("噂：" + r.text);
+        G.pass(1);
+        return;
       }
     }
     return baseFacAct(head, arg, a);
   };
 
-  // ---------------------------------------------------------------- 新しい冒険
+  // ---------------------------------------------------------------- 新しい冒険：予定の揺れと、狙う人
   const baseNew = G.newGame;
   G.newGame = (opt) => {
     const S = baseNew(opt);
-    S.f4 = F4.roll(prof().want);
+    const shift = {};
+    Object.keys(P()).filter((id) => F4.joinable(id) && F4.schedule(id, null)).forEach((id) => { shift[id] = Math.round((G.rand() * 2 - 1) * SHIFT); });
+    S.f4 = { shift, want: Object.keys(prof().want).filter((id) => prof().want[id] && F4.joinable(id)), heard: {} };
     return S;
   };
 
-  // ---------------------------------------------------------------- 図鑑：会った場所・狙う印
-  const addPlace = (rec, loc) => {
-    if (!rec || !loc || !D.LOCS[loc]) return;
+  // ---------------------------------------------------------------- 図鑑：会った場所と時期・狙う印
+  F4.seenAt = (id, S) => {
+    S = S || G.S;
+    const rec = G.codexPerson && G.codexPerson(id);
+    if (!rec || !S || !D.LOCS[S.loc]) return;
+    const key = S.loc + "|" + F4.seasonOf(S.day);
+    const s = rec.seen || (rec.seen = {});
     const p = rec.places || (rec.places = {});
-    if (!p[loc]) { p[loc] = 1; changed(); }
+    if (!s[key] || !p[S.loc]) { s[key] = 1; p[S.loc] = 1; changed(); }
   };
   const baseStart = G.startEvent;
   G.startEvent = (ev) => {
     const ok = baseStart(ev);
     const S = G.S;
-    if (ok && S && S.event && G.f2 && G.f2.peopleInEvent && G.codexPerson) G.f2.peopleInEvent(S.event).forEach((id) => addPlace(G.codexPerson(id), S.loc));
+    if (ok && S && S.event && G.f2 && G.f2.peopleInEvent) G.f2.peopleInEvent(S.event).forEach((id) => F4.seenAt(id, S));
     return ok;
   };
+  // 会える場所と時期（季節ごと）：{ 春: { loc, how "met"|"heard" } | null, ... }。知らない季節は null
+  F4.knownSeasons = (id) => {
+    const rec = (G.codexPerson && G.codexPerson(id)) || {};
+    const out = {};
+    SEASONS().forEach((s) => (out[s] = null));
+    const put = (key, how) => { const [loc, s] = key.split("|"); if (D.LOCS[loc] && s in out && (!out[s] || how === "met")) out[s] = { loc, how }; };
+    Object.keys(prof().know[id] || {}).forEach((k) => put(k, "heard"));
+    Object.keys(rec.seen || {}).forEach((k) => put(k, "met"));
+    return out;
+  };
+  // 「秋の王都レオネスト」のような言い方の一覧（会った場所と時期）
   F4.metPlaces = (id) => {
     const rec = G.codexPerson && G.codexPerson(id);
-    return Object.keys((rec && rec.places) || {}).filter((l) => D.LOCS[l]).map((l) => D.LOCS[l].name);
+    if (!rec) return [];
+    const seen = Object.keys(rec.seen || {}).map((k) => k.split("|")).filter(([l]) => D.LOCS[l]);
+    const out = SEASONS().flatMap((s) => seen.filter(([, x]) => x === s).map(([l]) => `${s}の${placeName(l)}`));
+    Object.keys(rec.places || {}).forEach((l) => { if (D.LOCS[l] && !seen.some(([x]) => x === l)) out.push(placeName(l)); });
+    return out;
   };
   F4.wanted = (id) => !!prof().want[id];
-  F4.canWant = (id) => F4.joinable(id) && !!((G.codexPerson && G.codexPerson(id)) || prof().heard[id]);
+  F4.canWant = (id) => F4.joinable(id) && knows(id);
   F4.wantCount = () => Object.keys(prof().want).filter((id) => prof().want[id]).length;
   F4.setWant = (id, on) => {
     const w = prof().want;
@@ -398,17 +469,27 @@
       if (!F4.canWant(id) || F4.wantCount() >= WANT_MAX) return false;
       w[id] = 1;
     } else delete w[id];
+    if (G.S && G.S.f4) G.S.f4.want = Object.keys(w).filter((x) => w[x]); // 今の冒険にも効かせる
     changed();
     return true;
   };
   F4.WANT_MAX = WANT_MAX;
 
   // ---------------------------------------------------------------- 仲間にする方法を組み立てる
-  const WHERE_WORD = { town: "どこかの町", wild: "野", dungeon: "迷宮", any: "各地", capital: "都", port: "港町", snow: "雪の土地", realm: "使徒の土地", forest: "森", ruins: "遺跡" };
+  const WHERE_WORD = { town: "どこかの町", wild: "野", dungeon: "迷宮", any: "各地", capital: "都", port: "港町", snow: "雪の土地", realm: "使徒の土地" };
   const whereText = (w) => {
     const names = [];
     as(w).forEach((x) => { const n = D.LOCS[x] ? D.LOCS[x].name : WHERE_WORD[x]; if (n && !names.includes(n)) names.push(n); });
     return names.slice(0, 3).join("・") || "どこか";
+  };
+  // 出会いの出来事が起きる所：予定がある人は、その出来事が起きる時期と場所（「秋から冬の凍てつく街道」）
+  const entryWhere = (id, e) => {
+    const sc = F4.schedule(id, null);
+    if (!sc) return whereText(e.where);
+    const ok = sc.filter((x) => fits(e, x.loc));
+    if (!ok.length) return whereText(e.where);
+    if (ok.length === sc.length && new Set(ok.map((x) => x.loc)).size === 1 && F4.seasonsOf(ok[0]).length >= 4) return placeName(ok[0].loc);
+    return ok.map((x) => `${F4.whenText(x)}の${placeName(x.loc)}`).join("・");
   };
   const nameOf = (id) => { const p = P()[id]; return (p && (p.short || p.name)) || ((D.F2_PEOPLE || {})[id] || {}).name || id; };
   // 条件の関数を試しに呼んで、何が要るかを調べる（誰を連れているか・誰と知り合っているか・好感度・何日目から）。状態は書き換えない
@@ -431,11 +512,10 @@
     };
     try {
       const t = run(true, 999), f = run(false, 999);
-      const out = { ok: t.ok !== false || f.ok !== false, need: [], not: [], met: [...t.rec.met, ...f.rec.met], aff: t.rec.aff.size > 0, day: 0, unknown: t.ok === null && f.ok === null };
+      const out = { need: [], not: [], met: [...t.rec.met, ...f.rec.met], aff: t.rec.aff.size > 0, day: 0 };
       if (t.ok && f.ok === false) out.need = [...t.rec.has];
       if (f.ok && t.ok === false) out.not = [...f.rec.has];
-      const best = t.ok ? true : false;
-      if (t.ok || f.ok) for (const d of [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 30, 50]) { if (run(best, d).ok) { out.day = d === 2 ? 0 : d; break; } }
+      if (t.ok || f.ok) for (const d of [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 30, 50]) { if (run(!!t.ok, d).ok) { out.day = d === 2 ? 0 : d; break; } }
       out.met = [...new Set(out.met)].filter((x) => !selfs.includes(x));
       if (t.ok === false && f.ok === false) out.flag = true; // 旗（出来事の流れ）が要る
       return out;
@@ -452,8 +532,7 @@
     if (pr.flag) w.push("何かの出来事のあとで");
     return w;
   };
-  // 選択肢ひとつの要るもの：判定・戦い・金・条件
-  const stepNeeds = (c, how, route) => {
+  const stepNeeds = (c, how) => {
     const w = [];
     if (c.cost) w.push(`${c.cost}G`);
     if (c.stat) {
@@ -465,26 +544,22 @@
     if (c.cond) w.push(...condWords(probe(c.cond)));
     return w;
   };
-  // 流れ一つを文に：[入口の一行, 途中の一行..., 加わる一行]
+  const quote = (t) => (/^「.*」$/.test(t) ? t : t.includes("「") ? `『${t}』` : `「${t}」`);
   F4.routeLines = (id, r) => {
     const lines = [];
     const e0 = r[0].e;
-    const pr = probe(e0.cond, [id, ...as(e0.c2)]);
-    const cw = condWords(pr);
-    const moves = F4.places(id).length ? "（冒険によって居場所が変わる）" : "";
-    lines.push(`${whereText(e0.where)}で出来事「${e0.title}」${cw.length ? `（${cw.join("・")}）` : ""}${moves}`);
+    const cw = condWords(probe(e0.cond, [id, ...as(e0.c2)]));
+    lines.push(`${entryWhere(id, e0)}で出来事「${e0.title}」${cw.length ? `（${cw.join("・")}）` : ""}`);
     r.forEach((st, k) => {
       const c = (st.e.choices || [])[st.i];
       if (!c) return;
-      const last = k === r.length - 1;
-      const need = stepNeeds(c, st.how, r);
-      const q = (t) => (/^「.*」$/.test(t) ? t : t.includes("「") ? `『${t}』` : `「${t}」`);
-      if (last) lines.push(`${q(c.label)}を選ぶと仲間になる${need.length ? `（${need.join("・")}）` : ""}`);
-      else lines.push(`${q(c.label)}${need.length ? `（${need.join("・")}）` : ""}`);
+      const need = stepNeeds(c, st.how);
+      if (k === r.length - 1) lines.push(`${quote(c.label)}を選ぶと仲間になる${need.length ? `（${need.join("・")}）` : ""}`);
+      else lines.push(`${quote(c.label)}${need.length ? `（${need.join("・")}）` : ""}`);
     });
     return lines;
   };
-  // 図鑑の「仲間にする方法」。level：full（仲間にしたことがある）/ vague（会っただけ）/ heard（噂だけ）/ none
+  // 図鑑の「仲間にする方法」：{ ways [[行...]] 確かな道すじ, after 誘い直し, lost 会えなくなる出来事, vague ぼかした一行, sched [{ when, place, note, seasons }] 予定 }
   G.f4How = (id) => {
     const p = P()[id];
     if (!p || !p.join) return null;
@@ -493,27 +568,23 @@
     const full = typeof hint === "string" ? [hint] : hint && hint.full ? as(hint.full) : [];
     const ways = full.length ? [full] : routes.map((r) => F4.routeLines(id, r));
     if (!ways.length) ways.push(["決まった出来事で加わるらしい。"]);
-    const homes = as(p.join.home).map((l) => D.LOCS[l] && D.LOCS[l].name).filter(Boolean);
-    const after = homes.length ? `一度加われば、離れても${homes.join("か")}で誘い直せる（連れていけるのは三人まで。去った人・死んだ人は戻らない）` : "";
-    // ぼかした一行：会える所と、要るものの手ざわりだけ
+    const after = "一度加われば、離れてもその時期に居る町で誘い直せる（連れていけるのは三人まで。去った人・死んだ人は戻らない）";
+    const lost = (F4.index().lost[id] || []).map((t) => `出来事「${t}」の後は会えなくなることがある`);
+    const sched = (F4.schedule(id, null) || []).map((e) => ({ when: F4.whenText(e), place: placeName(e.loc), note: e.note || "", seasons: F4.seasonsOf(e) }));
     let vague = hint && hint.vague;
     if (!vague) {
       const r = routes[0];
-      const at = r ? whereText(r[0].e.where) : homes.join("か") || "どこか";
       const cs = r ? r.map((st) => (st.e.choices || [])[st.i]).filter(Boolean) : [];
       const pr = r ? [probe(r[0].e.cond, [id, ...as(r[0].e.c2)]), ...cs.map((c) => probe(c.cond, id))].filter(Boolean) : [];
       const must = (c) => c.stat && !branches(c).nx.concat(branches(c).jn).some((b) => b.how === "ng");
-      const feel =
-        pr.some((x) => x.need.length) ? "誰かを連れていくと、話が早いらしい" :
-        r && r.some((st) => st.how === "win" || ((st.e.choices || [])[st.i] || {}).fight) ? "腕を見せると、心を開くらしい" :
-        cs.find(must) ? `${cs.find(must).stat}が物を言うらしい` :
-        cs.some((c) => c.cost) ? "いくらか金が要るらしい" :
-        r && r.length > 1 ? "何か困りごとを抱えているらしい。付き合えば道が開けそうだ" : "声をかければ、話を聞いてくれそうだ";
-      vague = `${at}で会える。${feel}。`;
+      vague =
+        pr.some((x) => x.need.length) ? "誰かを連れていくと、話が早いらしい。" :
+        r && r.some((st) => st.how === "win" || ((st.e.choices || [])[st.i] || {}).fight) ? "腕を見せると、心を開くらしい。" :
+        cs.find(must) ? `${cs.find(must).stat}が物を言うらしい。` :
+        cs.some((c) => c.cost) ? "いくらか金が要るらしい。" :
+        r && r.length > 1 ? "何か困りごとを抱えているらしい。付き合えば道が開けそうだ。" : "声をかければ、話を聞いてくれそうだ。";
     }
-    const h = prof().heard[id];
-    const heard = h ? `${(D.LOCS[h.loc] || {}).name || "どこか"}のあたりで見かけた、という噂を聞いた。` : "";
-    return { ways, after, vague, heard };
+    return { ways, after, lost, vague, sched };
   };
 
   // ---------------------------------------------------------------- 数（手引き・図鑑）
@@ -524,11 +595,11 @@
     return {
       people: pids.filter((id) => c[id]).length, peopleAll: pids.length,
       joinable: ids.length, joinMet: ids.filter((id) => c[id]).length, joined: ids.filter((id) => c[id] && c[id].joined).length,
-      cast: G.S && G.S.f4 ? F4.cast(G.S).length : ids.length, want: F4.wantCount(),
+      want: F4.wantCount(),
     };
   };
 
-  // 図鑑をまとめるとき（main.js が codexMerge を呼ぶ）、会った場所と加わった出来事も残す
+  // 図鑑をまとめるとき（main.js が codexMerge を呼ぶ）、会った場所・時期と加わった出来事も残す
   if (G.codexMerge) {
     const baseMerge = G.codexMerge;
     G.codexMerge = (a, b) => {
@@ -537,7 +608,9 @@
         const o = out.people[id];
         if (!o) return;
         if (e.places) o.places = Object.assign({}, o.places || {}, e.places);
+        if (e.seen) o.seen = Object.assign({}, o.seen || {}, e.seen);
         if (e.via && !o.via) o.via = e.via;
+        if (e.lost && !o.lost) o.lost = e.lost;
       }));
       return out;
     };

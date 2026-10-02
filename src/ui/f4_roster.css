@@ -18,3 +18,20 @@
 .f4fill { display: block; height: 100%; background: var(--accent); }
 .f4heardlist { margin: 2px 0 0; padding-left: 1.2em; font-size: 13px; }
 .f4progress h4 { margin: 8px 0 2px; font-size: 13px; color: var(--muted); font-weight: 400; }
+/* 季節ごとの居場所の表 */
+.f4season { width: 100%; border-collapse: collapse; margin: 4px 0 6px; font-size: 13px; }
+.f4season th { width: 2.2em; padding: 3px 6px; font-weight: 400; text-align: center; vertical-align: top; }
+.f4season td { padding: 3px 6px; border-bottom: 1px dotted var(--rule); }
+.f4season td small { display: block; font-size: 11px; line-height: 1.4; }
+.f4s { border-radius: 2px; color: #fff; }
+.f4s0 { background: #b8707f; } .f4s1 { background: #4f8a4a; } .f4s2 { background: #b07a2e; } .f4s3 { background: #5a7aa8; }
+/* 上の帯の日付 */
+.f4date { display: flex; align-items: center; gap: 6px; white-space: nowrap; font-size: 13px; letter-spacing: .04em; color: #ece2c8; text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, .6); } /* 帯は絵の上にじかに載るので、明暗どちらでも明るい字 */
+.f4date[hidden] { display: none; }
+.f4mark { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; line-height: 1; color: #fff; background: #888; }
+.f4date[data-season="0"] .f4mark { background: #b8707f; }
+.f4date[data-season="1"] .f4mark { background: #4f8a4a; }
+.f4date[data-season="2"] .f4mark { background: #b07a2e; }
+.f4date[data-season="3"] .f4mark { background: #5a7aa8; }
+body.v9pc #v9place span { display: none; } /* 日付は f4date に一本化（v9 の帯には場所の名前だけ） */
+@media (max-width: 760px) { .f4date { font-size: 12px; } }

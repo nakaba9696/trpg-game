@@ -19,7 +19,7 @@
   F2.personCell = (b, id) => {
     if (F4.wanted(id)) { b.classList.add("f4want"); b.append(h("span", "f4star", "狙う")); }
     const rec = G.codexPerson(id);
-    const heard = !rec && F4.profile().heard[id];
+    const heard = !rec && F4.joinable(id) && F4.knows(id);
     if (heard) {
       b.classList.add("f4heard");
       b.append(h("span", "f2tier", "噂"));
@@ -50,21 +50,47 @@
       if (sum) { const c = G.codexCount(); sum.textContent = `出会った人 ${c.people}／${c.peopleAll}`; F2.peopleSum(sum); }
       redraw();
     };
-    box.append(b, h("p", "fine", full ? `狙えるのは${F4.WANT_MAX}人まで。` : "印を付けた人は、次からの冒険で世界に居ることが多くなり、居場所の噂も耳に入りやすくなる。必ず居るとは限らない。"));
+    box.append(b, h("p", "fine", full ? `狙えるのは${F4.WANT_MAX}人まで。` : "印を付けた人は、居る場所と時期に行ったとき出会いやすくなり、噂にも上りやすくなる。"));
     return box;
   };
 
   const section = (title) => { const s = h("div", "f2where f4how"); s.append(h("h4", "", title)); return s; };
 
-  // 詳しい説明：会ったことのある場所・仲間にする方法・狙う
+  // 季節ごとの居場所の表（知らない季節は空欄）
+  const seasonTable = (id, full) => {
+    const how = G.f4How(id);
+    const known = F4.knownSeasons(id);
+    const tb = h("table", "f4season");
+    (G.SEASONS || ["春", "夏", "秋", "冬"]).forEach((s) => {
+      const tr = h("tr");
+      const e = full ? how.sched.find((x) => x.seasons.includes(s)) : null;
+      const k = known[s];
+      const td = h("td");
+      if (e) { td.append(h("span", "", e.place)); if (e.note) td.append(h("small", "fine", e.note)); }
+      else if (k) td.append(h("span", "", F4.placeName(k.loc)), h("small", "fine", k.how === "met" ? "会ったことがある" : "噂で聞いた"));
+      else td.append(h("span", "fine", "—"));
+      tr.append(h("th", "f4s f4s" + "春夏秋冬".indexOf(s), s), td);
+      tb.append(tr);
+    });
+    return tb;
+  };
+
+  // 詳しい説明：会える場所と時期・会ったことのある場所・仲間にする方法・狙う
   F2.personMore = (detail, id) => {
+    const how = G.f4How(id);
+    const rec = G.codexPerson(id);
+    const full = !!(rec && rec.joined);
+    if (how && how.sched.length) {
+      const s = section("会える場所と時期");
+      s.append(seasonTable(id, full));
+      if (!full) s.append(h("p", "fine", "空欄の時期は、まだ知らない。噂やギルドの貼り紙で埋まることがある。"));
+      detail.append(s);
+    }
     const at = F4.metPlaces(id);
     if (at.length) { const s = section("会ったことのある場所"); const ul = h("ul"); at.forEach((t) => ul.append(h("li", "", t))); s.append(ul); detail.append(s); }
-    const how = G.f4How(id);
     if (!how) return;
-    const rec = G.codexPerson(id);
     const s = section("仲間にする方法");
-    if (rec && rec.joined) {
+    if (full) {
       how.ways.forEach((w, k) => {
         if (how.ways.length > 1) s.append(h("p", "fine f4way", `その${"一二三"[k] || k + 1}`));
         const ol = h("ol", "f4steps");
@@ -72,12 +98,13 @@
         s.append(ol);
       });
       if (rec.via) { const e = D.EVENTS.find((x) => x.id === rec.via); if (e) s.append(h("p", "fine", `かつて、出来事「${e.title}」で仲間にした。`)); }
-      if (how.after) s.append(h("p", "fine", how.after));
+      how.lost.forEach((t) => s.append(h("p", "fine f4gone", t)));
+      s.append(h("p", "fine", how.after));
     } else {
       s.append(h("p", "f4vague", how.vague));
       s.append(h("p", "fine", "一度仲間にすれば、確かな道すじがここに残る。"));
     }
-    if (G.S && G.S.f4 && !F4.present(id, G.S) && (G.S.f4.heard || {})[id]) s.append(h("p", "fine f4gone", "この冒険では、遠くへ行ってしまったらしい。"));
+    if (rec && rec.lost) s.append(h("p", "fine f4gone", `出来事「${rec.lost}」の後は、会えなくなった。`));
     detail.append(s);
     const draw = () => { detail.querySelectorAll(".f4wantbox").forEach((x) => x.remove()); const n = wantBox(id, draw); if (n) detail.append(n); };
     draw();
@@ -85,13 +112,12 @@
 
   // 会っていないが噂は聞いた人
   F2.personUnknown = (detail, id) => {
-    const how = G.f4How(id);
-    if (!how || !how.heard) return false;
+    if (!F4.joinable(id) || !F4.knows(id)) return false;
     detail.textContent = "";
     detail.append(h("span", "f2glyph f2who", "？"), h("p", "fine c3role", F4.titleOf(id)), h("h3", "f2title", "噂の人"));
-    const s = section("噂");
-    s.append(h("p", "f4vague", how.heard));
-    s.append(h("p", "fine", "会えば、名前と会える場所が分かる。"));
+    const s = section("噂で聞いた居場所");
+    s.append(seasonTable(id, false));
+    s.append(h("p", "fine", "その時期にそこへ行けば、「訪ねる」で会いに行ける。会えば、名前が分かる。"));
     detail.append(s);
     const draw = () => { detail.querySelectorAll(".f4wantbox").forEach((x) => x.remove()); const n = wantBox(id, draw); if (n) detail.append(n); };
     draw();
@@ -124,19 +150,46 @@
       if (c) { row("アイテム", c.items, c.itemsAll); row("魔物", c.foes, c.foesAll); row("用語", c.lore, c.loreAll); }
       box.append(dl);
       const S = G.S;
-      if (S && S.f4) {
-        const heard = Object.keys(S.f4.heard || {});
-        box.append(h("p", "fine", `この冒険では、仲間になりうる人のうち、一部だけが世界のどこかに居る。誰が居るかは、酒場の噂やギルドの尋ね人の貼り紙で少しずつ分かる。${n.want ? `狙っている人：${Object.keys(F4.profile().want).map((id) => F2.personName(id)).join("・")}` : ""}`));
-        if (heard.length) {
-          const ul = h("ul", "f4heardlist");
-          heard.forEach((id) => {
-            const met = G.c2Met && G.c2Met(id, S);
-            ul.append(h("li", "", `${met ? F2.personName(id) : F4.titleOf(id)}：${!F4.present(id, S) ? "この冒険では噂を聞かない" : F4.fill("{place}のあたり", id, S)}`));
-          });
-          box.append(h("h4", "", "この冒険で聞いた尋ね人の噂"), ul);
-        }
+      box.append(h("p", "fine", `仲間になりうる人は、時期ごとに居る場所がだいたい決まっている。その時期にそこへ行けば会える。居場所は、酒場の噂やギルドの尋ね人の貼り紙で少しずつ分かり、図鑑に残る。${n.want ? `狙っている人：${Object.keys(F4.profile().want).map((id) => F4.nameKnown(id)).join("・")}` : ""}`));
+      const heard = S && S.f4 ? Object.keys(S.f4.heard || {}) : [];
+      if (heard.length) {
+        const ul = h("ul", "f4heardlist");
+        heard.forEach((id) => {
+          const k = F4.knownSeasons(id);
+          const t = Object.entries(k).filter(([, v]) => v).map(([s2, v]) => `${s2}は${F4.placeName(v.loc)}`).join("・") || "居場所は分からない";
+          ul.append(h("li", "", `${F4.nameKnown(id)}：${t}`));
+        });
+        box.append(h("h4", "", "この冒険で聞いた尋ね人の噂"), ul);
       }
       body.prepend(box);
     };
   }
+
+  // ---------------------------------------------------------------- 上の帯に、いまの年・季節・日（PC の配置 v9_pc でも）
+  const top = document.querySelector(".top");
+  const date = h("div", "f4date");
+  date.id = "f4date";
+  date.setAttribute("aria-label", "いまの日付");
+  const mark = h("span", "f4mark");
+  mark.setAttribute("aria-hidden", "true");
+  const dtext = h("span", "num f4dtext");
+  date.append(mark, dtext);
+  date.hidden = true;
+  if (top) { const tools = top.querySelector(".tools"); if (tools) tools.before(date); else top.append(date); }
+  const MARK = ["❀", "☀", "❦", "❄"];
+  F4.paintDate = () => {
+    const play = document.querySelector("#play");
+    const t = G.S && G.f4Today ? G.f4Today(G.S) : null;
+    date.hidden = !t || !play || play.hidden;
+    if (!t) return;
+    date.dataset.season = String(t.si);
+    mark.textContent = MARK[t.si] || "";
+    dtext.textContent = t.phase ? `${t.text}・${t.phase}` : t.text;
+    date.title = `${t.text}（${t.season}）`;
+  };
+  if (G.ui && G.ui.render) {
+    const baseRender = G.ui.render;
+    G.ui.render = (...a) => { const r = baseRender(...a); try { F4.paintDate(); } catch {} return r; };
+  }
+  setTimeout(() => { try { F4.paintDate(); } catch {} }, 0);
 })(globalThis.G = globalThis.G || {});
