@@ -20,6 +20,10 @@ const FACE = {
   // C4（src/data/zc4_people.js）
   bertrand: "だらしなくて気さく", ilse: "自信満々", tula: "口が悪い", mirlene: "おっとり", salphiel: "年寄りのような話し方", musette: "糸は見えない",
   gerhard: "豪快", bartolo: "糸目", clarisse: "真面目", titta: "口が悪い", iori: "眠そう", dorothea: "自分の顔に自信",
+  // C5（src/data/zc5_people.js）
+  gustav: "臆病", trude: "無表情", souhaku: "爺", adele: "先輩", celestin: "芝居がかった", felix: "堅物", vittorio: "横取り", violaine: "決闘",
+  yuzuel: "問答", severin: "澄んだ声", rufina: "面倒見", constance: "帳面", ambroise: "居眠り", tsuyuha: "細い目", filie: "小言", leopold: "道楽者",
+  gauthier: "片腕", magda: "鶴嘴", baudouin: "口の悪い",
 };
 
 export default ({ G, fail }) => {

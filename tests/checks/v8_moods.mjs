@@ -38,7 +38,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       else if (BAD.test(t)) F(`${p.id} の variants.${m} に、構図・性的な言葉がある：${t.match(BAD)[0]}`);
     }
   }
-  if (vids.length < 8 || vids.length > 20) F(`差分のある人が ${vids.length} 人（仲間（キャラメモ 8 人と C4 の 4 人）＋主要な数人、20 人まで）`);
+  if (vids.length < 8 || vids.length > 26) F(`差分のある人が ${vids.length} 人（仲間（キャラメモ 8 人・C4 の 4 人・C5 の 6 人）＋主要な数人、26 人まで）`);
   for (const id of Object.keys(D.C2_PEOPLE)) if (D.C2_PEOPLE[id].join && !vids.includes(id)) F(`仲間になる ${id} に差分（variants）が無い`);
 
   // assets/ に置いた差分の絵は、variants のある人のもの
@@ -50,8 +50,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (m && !vids.includes(m[1])) F(`assets/portraits/${f} は差分の絵だが、一覧の ${m[1]} に variants が無い`);
     }
   }
-  // 埋め込みの上限：差分 1 枚 30KB 前後 × 4 × 人数が、上限（12MB）に余裕を残す
-  if (vids.length * 4 * 40 * 1024 * 1.34 > 4 * 1024 * 1024) F("差分の数が多すぎる（埋め込みの上限 12MB を圧迫する）");
+  // 埋め込みの上限：差分 1 枚 30KB 前後 × 4 × 人数が、上限（12MB）に余裕を残す（C5 で 4MB → 6MB に。基本の絵と魔物で 7MB 前後を見込む）
+  if (vids.length * 4 * 40 * 1024 * 1.34 > 6 * 1024 * 1024) F("差分の数が多すぎる（埋め込みの上限 12MB を圧迫する）");
 
   // ---------------------------------------------------------------- 出来事の mood
   const okMood = (m) => m === undefined || MOODS.includes(m);
