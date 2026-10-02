@@ -317,6 +317,28 @@
     reveal();
   }
 
+  // 好感度（F3。今の冒険の −100〜+100）：数・言葉・0 が真ん中の細い棒。今の冒険で会っていなければ「—」
+  const affinity = (id) => {
+    const a = G.affOf ? G.affOf(id) : null;
+    const box = h("div", "f3aff" + (a == null ? " none" : a < 0 ? " neg" : a > 0 ? " pos" : ""));
+    const top = h("div", "f3affhead");
+    top.append(h("span", "f3afflabel", "好感度"), h("span", "f3affval", a == null ? "—" : `${G.sign(a)}・${G.affWord(a)}`));
+    const bar = h("div", "f3affbar");
+    bar.setAttribute("role", "meter");
+    bar.setAttribute("aria-label", "好感度");
+    bar.setAttribute("aria-valuemin", "-100");
+    bar.setAttribute("aria-valuemax", "100");
+    if (a != null) {
+      bar.setAttribute("aria-valuenow", String(a));
+      const fill = h("span", "f3afffill");
+      fill.style.left = `${50 + Math.min(0, a) / 2}%`;
+      fill.style.width = `${Math.abs(a) / 2}%`;
+      bar.append(fill);
+    }
+    box.append(top, bar);
+    if (a == null) box.append(h("p", "fine f3affnote", "今の冒険では、まだ会っていない。"));
+    return box;
+  };
   function showPerson(id) {
     const q = (D.F2_PEOPLE || {})[id];
     const rec = G.codexPerson(id);
@@ -326,7 +348,8 @@
     detail.append(cv);
     detail.append(h("p", "fine c3role", F2.personRole ? F2.personRole(id) : q.title || ""), h("h3", "f2title", F2.personName(id)));
     const rels = Object.keys(rec.rels || {});
-    detail.append(kv([["人柄", q.face || ""], ["仲間", rec.joined ? "なったことがある" : "まだ"], ["間柄", rels.filter((r) => r !== "仲間").join("・") || "—"]].filter(([, v]) => v)));
+    detail.append(affinity(id));
+    detail.append(kv([["仲間", rec.joined ? "なったことがある" : "まだ"], ["間柄", rels.filter((r) => r !== "仲間").join("・") || "—"]].filter(([, v]) => v)));
     detail.append(where("主に会える場所", G.codexPersonWhere(id)));
     G.codexPersonLines(id).forEach((t) => detail.append(flavor(t, "person", id)));
     if ((q.lines || []).length > G.codexPersonLines(id).length) detail.append(h("p", "fine", "深く関われば、もっと分かる。"));

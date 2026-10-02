@@ -157,7 +157,7 @@ export default ({ fail, loadEngine, seeded }) => {
     start(G, 6);
     for (const id of Object.keys(D.C2_PEOPLE || {})) if (!(D.F2_PEOPLE || {})[id]) fail(`人物 ${id}: 図鑑の説明が無い`);
     for (const [id, q] of Object.entries(D.F2_PEOPLE || {})) {
-      if (!q.title || !q.face || !(q.lines || []).length) fail(`人物 ${id}: 肩書き・人柄・説明のどれかが無い`);
+      if (!q.title || (q.lines || []).length < 2) fail(`人物 ${id}: 肩書きか説明（二行）が無い（人柄は説明に溶かす：F3）`);
       for (const t of [q.title, q.face, ...(q.lines || [])]) if (BANNED.test(t) || /〔/.test(t)) fail(`人物 ${id}: 説明に書かない言葉「${t}」`);
       for (const e of q.events || []) if (!D.EVENTS.some((x) => x.id === e)) fail(`人物 ${id}: 出来事 ${e} が無い`);
       if (q.fac && !D.LOCS[q.fac[0]]) fail(`人物 ${id}: 場所 ${q.fac[0]} が無い`);
