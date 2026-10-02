@@ -2,7 +2,7 @@
 // - 表情の一覧が、docs/art/moods.json・エンジン（G.MOODS・D.MOOD_TABLE）・tools/portraits.mjs で同じ並び・同じ落とし先。落とし先は一覧にあり、自分を指さない
 // - 人ごとの variants の鍵がすべて一覧にある。主要な人（仲間になる人・キャラメモの人・使徒の人の姿）に、喜怒哀楽＋その人らしい表情 3〜5 個
 // - タグは特徴だけ（作家名・画風・構図・性的な語なし）。md が json と合っている
-// - 出来事の表（D.EVENT_MOODS）の id と表情が実在する。文から推す（泣き崩れ→泣き、頬を染め→照れ）。古い表情・古いセーブでも動く
+// - 出来事の表（D.EVENT_MOODS）・会話の表（D.TALK_MOODS）の id と表情が実在する。文から推す（泣き崩れ→泣き、頬を染め→照れ）。古い表情・古いセーブでも動く
 // - 画面：絵の無い表情は落とし先、それも無ければ基本の絵
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
@@ -84,8 +84,21 @@ export default ({ fail, ok, loadEngine }) => {
   }
   const used = new Set(Object.values(table));
   for (const e of D.EVENTS) { if (G.isMood(e.mood)) used.add(e.mood); }
+  // 会話（K1）の話題・掛け合いの表
+  const talk = {};
+  for (const t of Object.values(D.TALK || {})) for (const x of t.topics || []) talk[x.id] = x;
+  for (const b of D.TALK_BANTER || []) talk[b.id] = b;
+  const TM = D.TALK_MOODS || {};
+  for (const [id, m] of Object.entries(TM)) {
+    if (!talk[id]) F(`D.TALK_MOODS の話題・掛け合い ${id} が無い`);
+    else if (!G.isMood(m)) F(`D.TALK_MOODS の ${id} の表情 ${m} が一覧に無い`);
+    else if (talk[id].mood !== m) F(`D.TALK_MOODS の ${id} が話題の表情にならない（${talk[id].mood}）`);
+    if (G.isMood(m)) used.add(m);
+  }
+  for (const [id, x] of Object.entries(talk)) if (x.mood !== undefined && !G.isMood(x.mood)) F(`会話 ${id} の mood が表情の一覧に無い：${x.mood}`);
+  if (D.TALK && Object.keys(TM).length < 15) F(`会話に付けた V11 の表情が少ない：${Object.keys(TM).length}`);
   const v11used = [...used].filter((m) => !BASE.includes(m));
-  if (v11used.length < 6) F(`V11 の表情を付けた出来事が少ない：${v11used.join("・")}`);
+  if (v11used.length < 8) F(`V11 の表情を付けた出来事・会話が少ない：${v11used.join("・")}`);
   if (G.eventMood({ id: "c2_natalia", mood: "joy" }) !== "joy") F("出来事のデータの mood より表を先にしている");
   const g = G.guessMood;
   if (g("娘は泣き崩れた") !== "cry") F("「泣き崩れた」を泣きと推せない");
@@ -122,5 +135,5 @@ export default ({ fail, ok, loadEngine }) => {
   const readme = readFileSync(new URL("../../docs/art/README.md", import.meta.url), "utf8");
   if (!/moods\.md/.test(readme) || !/--mood/.test(readme)) F("docs/art/README.md に表情の種類（moods.md・--mood）の説明が無い");
 
-  ok(`V11：表情 ${keys.length} 種、主要な ${main.length} 人に喜怒哀楽＋その人らしい表情 ${extras} 個、出来事の表 ${Object.keys(table).length}`);
+  ok(`V11：表情 ${keys.length} 種、主要な ${main.length} 人に喜怒哀楽＋その人らしい表情 ${extras} 個、出来事の表 ${Object.keys(table).length}・会話の表 ${Object.keys(TM).length}`);
 };

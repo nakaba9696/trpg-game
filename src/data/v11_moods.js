@@ -62,4 +62,34 @@
     m11_mon_rat: "shy", // 贈り物を置いて岩陰に隠れる
     m11_beast_moult: "exasperated", // 抜け毛にため息
   });
+  // 会話（K1）の話題・掛け合いの表情（話題・掛け合いの id → 表情）。データに mood があればそちらが先。src/engine/v8_moods_v11.js が読み込みのあとで当てる
+  D.TALK_MOODS = Object.assign(D.TALK_MOODS || {}, {
+    dil_e_boss: "surprise", // 正面から倒したのが信じられない
+    dil_e_fled: "smug", // 逃げて、妙に満足そう（「息を切らし」で疲れと推さない）
+    dil_c_tricks: "smug", // ずるい手の決まり
+    dil_m_zerina: "exasperated", // 帳面に三頁
+    dil_m_kaidel: "exasperated", // 壊したものを指折り数える
+    dil_b1: "shy", // 帳面の最後の頁
+    dil_v1: "shy", // 黙って外套を繕う
+    nora_l_port: "surprise", // 空気がしょっぱい
+    nora_e_fled: "pout", // まだ殴れたのに
+    nora_c_nuts: "sparkle", // 焼いた木の実
+    nora_c_thunder: "fear", // 雷とお風呂
+    nora_m_dil: "smug", // 得意そうに嘘の見分け方を話す
+    sheila_l_ruins: "sparkle", // 本と壁を見比べる
+    sheila_e_boss: "sparkle", // 寸法を測る
+    sheila_m_nora: "faint_smile", // 字を教えて、少し誇らしげ
+    sheila_c_apple: "faint_smile", // 焼き林檎
+    sheila_c_sea: "surprise", // 波につま先をつけて、すぐ引っ込める
+    sheila_b1: "faint_smile", // 七人目
+    sheila_v1: "shy", // 余白の横顔
+    zerina_l_leavel: "surprise", // 林檎の値段に固まる
+    zerina_l_dranherz: "sparkle", // 鍛冶屋の刃物に釘付け
+    zerina_c_coin: "smug", // 銅貨の芸
+    zerina_c_rich: "sparkle", // 財布の厚み
+    zerina_m_dil: "exasperated", // 三頁ぶんの借り
+    bt_dz_debt: "smug", // 四頁目
+    bt_sz_hat: "sparkle", // 帽子が似合う
+    bt_nz_bath: "exasperated", // 五日に一回
+  });
 })(globalThis.G = globalThis.G || {});
