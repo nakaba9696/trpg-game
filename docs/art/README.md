@@ -19,7 +19,9 @@
    - 気に入らない人は `node tools/gen_portraits.mjs --only <id> --force --new-seed` で作り直す。
 6. できた `assets/portraits/` と、`--keep` したなら `docs/art/portraits.json`・`portraits.md` を、配り役（Claude）に渡すか、コミットする。`node tools/build.mjs && node tests/run.mjs` で埋め込みと大きさを確かめられる。
 
-**男の人物**（identity・tags に 1boy / male などがある人）は `style_male.json` を style.json の上に重ねて作る（持ち主の絵柄は可愛い女の子向けなので、男は絵師名を外して美形の男性に寄せる）。手元で変えるときは `style_male.local.json`。
+**男の人物**（identity・tags に 1boy / male などがある人）は `style_male.json` を style.json の上に重ねて作る（持ち主の絵柄は可愛い女の子向けなので、男は絵師名を外す）。手元で変えるときは `style_male.local.json`。
+
+**男の型（A5）**：男が全員同じ美形にならないよう、顔立ちを型で分ける。型は `style_male.json` の `types` にあり、[portraits.json](portraits.json) の男の人に `type` で割り振る（無ければ `default_type` の `classic`）。`ojisan`（渋い中年〜初老。劇画寄りの濃い顔・ほうれい線・こけた頬・角ばった顎。いちばん多い）・`classic`（正統派の美形）・`bishonen`（線の細い美形）・`brute`（少しブサイクで愛嬌のある巨漢。この型だけネガティブの `ugly face` を外す）・`elder`（老人）・`boy`（子ども）。プロンプトは共通の前置きの後ろに型の `prefix` が付き（同じタグは一度だけ）、ネガティブは型の `negative_remove` を外して `negative_add` を足す。型の語は特徴だけで、作家名・作品名は書かない（テストが見る）。`node tools/gen_portraits.mjs --dry --type ojisan` でその型の男だけのプロンプトを確かめ、`--type ojisan --force` でその型だけ作り直せる（`--only`・`--variants` と重ねられる）。
 
 **画面の欄に入れた絵柄の文は API では使われない。** WebUI の Styles に保存して `style.json` の `"styles": ["名前"]` に書くか、`prefix`・`suffix`・`negative` に書く。
 自分のパソコンだけで設定を変えたいときは、`docs/art/style.local.json` に変えたい項目だけを書く（`style.json` の上に重なる。git には入らない）。使った seed は `docs/art/seeds.local.json`（git には入らない）に残る。このスクリプトは CI やテストでは動かさない。
