@@ -18,7 +18,7 @@
  },
  "webpQuality": 80,
  "variants": {
-  "_comment": "喜怒哀楽の差分（V8。node tools/gen_portraits.mjs --variants）。基本の絵から img2img で作るときの強さ。0.35〜0.45。上げると表情がよく変わるが顔も変わる",
-  "denoising": 0.4
+  "_comment": "喜怒哀楽の差分（V8。node tools/gen_portraits.mjs --variants）。基本の絵から img2img で作るときの強さ。0.3〜0.45。上げると表情がよく変わるが顔も変わる（V10 で 0.35 に）",
+  "denoising": 0.35
  }
 }
