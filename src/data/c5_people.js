@@ -5,6 +5,7 @@
 // 仕組みは C2 にそのまま乗せる：D.C2_PEOPLE に足すので、出会い（e.c2）・仲間になる（c2join）・誘う・ひとこと・恋・人物図鑑・好感度（F3）が働く。
 //   c4: true は「キャラメモ（シート）の人ではない」印（tests/checks/c2_people.mjs はシートの人だけを確かめる）。c5: true はこの C5 の人。
 //   childLook: true は子どもの姿の人（年経た存在でも）。恋の相手にしない（src/engine/zzz_love_age.js）。
+//   romance: true/false は仲間の恋と結婚の相手になれるか（持ち主：恋の相手は全体で 20 人ほど。C5 の割り当ては 3 人。R1 の仕組みと docs/romance.md が読む）。
 // 出来事は src/data/events_c5.js、図鑑の説明・名前の札・用語説明は src/data/zc5_people.js、好感度の始まりは src/engine/zzzz_c5_people.js。
 // 仲間との会話（話題）は、K1 の仕組みが入ってから別の子が書く。そのためのメモを voice に残す。
 //
@@ -164,7 +165,7 @@
   Object.assign(D.C2_PEOPLE, {
     // ================================================================ 仲間になる人
     gustav: P({
-      name: "グスタフ", full: "グスタフ・ヘルベルク", nation: "ノルディア", role: "闘技の都ザルグロスの看板の剣闘士。熊のような巨漢なのに、虫も雷も怖い臆病者。すぐ謝る。それでも仲間が倒れると、震えながら前に立つ。借金のかたに村の若い衆と売られてきて、残ったのは自分だけ", sex: "男", age: 38, race: "human",
+      romance: true, name: "グスタフ", full: "グスタフ・ヘルベルク", nation: "ノルディア", role: "闘技の都ザルグロスの看板の剣闘士。熊のような巨漢なのに、虫も雷も怖い臆病者。すぐ謝る。それでも仲間が倒れると、震えながら前に立つ。借金のかたに村の若い衆と売られてきて、残ったのは自分だけ", sex: "男", age: 38, race: "human",
       who: { kind: "soldier", sex: "男", age: 38, seed: "c2:gustav", look: { hair: "#b8905a", hairStyle: "messy", eyes: "round", iris: "#5a7a9a", mouth: "open", brows: "worried", outfit: "armor", head: "none", gear: "greatsword", chest: "collar", cloth: "#5a4a3a", build: "broad", marks: ["scar", "stubble", "bandage"], bg: "#7a6a52" } },
       join: {
         cls: "剣闘士", desc: "大きい。臆病。でも逃げない", power: 66, dmg: 3, trait: "coward", bond: 62, home: ["w2_zalgros"],
@@ -173,7 +174,7 @@
       },
     }),
     trude: P({
-      name: "トルーデ", full: "ゲルトルート・ネーベル", nation: "ノルディア", role: "帝都の軍の工房を追われた技官。鼠の獣人。無表情で毒舌、仲間の装備や体の「改良」を淡々と提案する天才。そのくせ人の皿の菓子を欲しがって、もらえるまでじっと見つめる。爆発の責めを負わされたが、気にしていない（ように見える）", sex: "女", age: 26, race: "beast", beast: "rat",
+      romance: false, name: "トルーデ", full: "ゲルトルート・ネーベル", nation: "ノルディア", role: "帝都の軍の工房を追われた技官。鼠の獣人。無表情で毒舌、仲間の装備や体の「改良」を淡々と提案する天才。そのくせ人の皿の菓子を欲しがって、もらえるまでじっと見つめる。爆発の責めを負わされたが、気にしていない（ように見える）", sex: "女", age: 26, race: "beast", beast: "rat",
       who: { kind: "mage", sex: "女", age: 26, seed: "c2:trude", look: { hair: "#8a8a92", hairStyle: "bob", eyes: "narrow", iris: "#c84a4a", mouth: "flat", brows: "calm", outfit: "coat", head: "none", gear: "none", chest: "keys", cloth: "#4a4a3a", build: "slim", ears: "none", beast: "rat", marks: ["glasses", "dirt", "bandage"], bg: "#4a4a52" } },
       join: {
         cls: "工房の技官", desc: "無表情。菓子をくれると懐く", power: 42, dmg: 2, fire: true, trait: "cold", bond: 46, home: ["garmund"],
@@ -182,7 +183,7 @@
       },
     }),
     souhaku: P({
-      name: "ソウハク", full: "ソウハク", nation: "レオネスト", role: "島の都シェルアークの桟橋で、一日じゅう釣りをしている小柄な狐の獣人の老人。自分を「爺」と呼ばせる昼行灯。釣りと酒と茶屋の婆さまに目がない。島の剣士たちが頭を下げていく。抜けば誰も届かない。昔、沈んだ島から小さな娘を抱えて泳いだ", sex: "男", age: 63, race: "beast", beast: "fox",
+      romance: false, name: "ソウハク", full: "ソウハク", nation: "レオネスト", role: "島の都シェルアークの桟橋で、一日じゅう釣りをしている小柄な狐の獣人の老人。自分を「爺」と呼ばせる昼行灯。釣りと酒と茶屋の婆さまに目がない。島の剣士たちが頭を下げていく。抜けば誰も届かない。昔、沈んだ島から小さな娘を抱えて泳いだ", sex: "男", age: 63, race: "beast", beast: "fox",
       who: { kind: "ronin", sex: "男", age: 63, seed: "c2:souhaku", look: { hair: "#e0d8c8", hairStyle: "topknot", eyes: "smile", iris: "#c8902a", mouth: "grin", brows: "raised", outfit: "kimono", head: "none", gear: "katana", chest: "none", cloth: "#5a4a3a", build: "slim", ears: "none", beast: "fox", marks: ["wrinkles", "stubble"], bg: "#5a6a7a" } },
       join: {
         cls: "釣り好きの爺", desc: "爺と呼べ、と言った", power: 68, dmg: 3, trait: "amorous", bond: 56, home: ["yakumo"],
@@ -191,7 +192,7 @@
       },
     }),
     adele: P({
-      name: "アデル", full: "アデル・ラパン", nation: "レオネスト", role: "麦の都グランベールの貧乏農家の娘で、ギルドの冒険者。兎の獣人。先輩風を吹かせて何でも教えたがるが、教える中身はだいたい間違っている。考えなしに突っ込む。槍の腕だけは本物で「兎の一番槍」と呼ばれる。恋の話には耳まで赤くなる。昇格試験の筆記に七回落ちている", sex: "女", age: 24, race: "beast", beast: "rabbit",
+      romance: true, name: "アデル", full: "アデル・ラパン", nation: "レオネスト", role: "麦の都グランベールの貧乏農家の娘で、ギルドの冒険者。兎の獣人。先輩風を吹かせて何でも教えたがるが、教える中身はだいたい間違っている。考えなしに突っ込む。槍の腕だけは本物で「兎の一番槍」と呼ばれる。恋の話には耳まで赤くなる。昇格試験の筆記に七回落ちている", sex: "女", age: 24, race: "beast", beast: "rabbit",
       who: { kind: "adventurer", sex: "女", age: 24, seed: "c2:adele", look: { hair: "#e8dcc0", hairStyle: "ponytail", eyes: "round", iris: "#c84a5a", mouth: "grin", brows: "raised", outfit: "leather", head: "none", gear: "spear", chest: "none", cloth: "#6a5a3a", build: "normal", ears: "none", beast: "rabbit", marks: ["freckles", "bandage"], bg: "#a89058" } },
       join: {
         cls: "一番槍の先輩", desc: "先輩と呼びなさい、と言った", power: 60, dmg: 2, trait: "proud", bond: 52, home: ["w2_granbel"],
@@ -200,7 +201,7 @@
       },
     }),
     celestin: P({
-      name: "セレスティン", full: "セレスティン・ヴェルテ・アルナリエ", nation: "エルメシア", role: "狩り場の町ナグリスの、エルフの若い弓手（九十二歳）。芝居がかった言い回しで弓に長い銘を付け、平気で人を突き放す。頭が切れ、弓は抜きん出ている。結界術士の名家の末っ子で、術の才だけが無い。夜は隠れて詩を書き、子どもに読み聞かせを頼まれると断れない", sex: "男", age: 92, race: "elf",
+      romance: false, name: "セレスティン", full: "セレスティン・ヴェルテ・アルナリエ", nation: "エルメシア", role: "狩り場の町ナグリスの、エルフの若い弓手（九十二歳）。芝居がかった言い回しで弓に長い銘を付け、平気で人を突き放す。頭が切れ、弓は抜きん出ている。結界術士の名家の末っ子で、術の才だけが無い。夜は隠れて詩を書き、子どもに読み聞かせを頼まれると断れない", sex: "男", age: 92, race: "elf",
       who: { kind: "archer", sex: "男", age: 22, seed: "c2:celestin", look: { hair: "#1e2a40", hairStyle: "long", eyes: "sharp", iris: "#6ad0c0", mouth: "smirk", brows: "angry", outfit: "cloak", head: "none", gear: "bow", chest: "chain", cloth: "#2a3a4a", build: "slim", ears: "pointy", marks: ["earring"], bg: "#3a5a4a" } },
       join: {
         cls: "狩り場の弓手", desc: "名乗りが長い", power: 54, dmg: 2, trait: "distrust", bond: 44, home: ["w2_nagris"],
@@ -209,7 +210,7 @@
       },
     }),
     felix: P({
-      name: "フェリクス", full: "フェリクス・ラング", nation: "ノルディア", role: "黒鉄の砦の帳場の書記。帝国の補給の兵あがり。真面目な堅物で、からかうと耳まで赤くなる。押しに弱い。砦の麦一粒、矢一本まで覚えていて、退き際の段取りは誰より上手い。北の防衛線で退く順番を決め、最後に回した隊が帰らなかった", sex: "男", age: 27, race: "human",
+      romance: true, name: "フェリクス", full: "フェリクス・ラング", nation: "ノルディア", role: "黒鉄の砦の帳場の書記。帝国の補給の兵あがり。真面目な堅物で、からかうと耳まで赤くなる。押しに弱い。砦の麦一粒、矢一本まで覚えていて、退き際の段取りは誰より上手い。北の防衛線で退く順番を決め、最後に回した隊が帰らなかった", sex: "男", age: 27, race: "human",
       who: { kind: "soldier", sex: "男", age: 27, seed: "c2:felix", look: { hair: "#6a4a2a", hairStyle: "parted", eyes: "normal", iris: "#4a6a8a", mouth: "flat", brows: "worried", outfit: "leather", head: "none", gear: "sword", chest: "keys", cloth: "#3a4a5a", build: "slim", marks: ["glasses", "bags"], bg: "#4a5262" } },
       join: {
         cls: "砦の書記", desc: "帳面を一冊、抱えている", power: 48, dmg: 1, trait: "just", bond: 56, home: ["fort"],

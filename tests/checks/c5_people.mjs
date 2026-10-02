@@ -54,6 +54,11 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       if (q.sex === p.sex && q.join.trait === p.join.trait && (q.beast || q.race) === (p.beast || p.race)) F(`${id} が ${b} と性別・性格・種族まで同じ`);
     }
   }
+  // 恋と結婚の相手（romance）：仲間全員に true/false。C5 の割り当ては 3 人で、みな 18 歳以上・子どもの姿でない
+  for (const id of joiners) if (P[id] && typeof P[id].romance !== "boolean") F(`${id} に romance（true/false）が無い`);
+  const lovers = joiners.filter((id) => P[id] && P[id].romance === true);
+  if (lovers.length !== 3) F(`恋の相手になれる仲間が 3 人でない：${lovers.join("・")}`);
+  for (const id of lovers) if (P[id].age < 18 || P[id].childLook || P[id].join.noLove) F(`${id} は恋の相手にできない（18 歳未満か子どもの姿）`);
   if (new Set(joiners.map((id) => P[id] && P[id].join && P[id].join.trait)).size !== joiners.length) F("新しい仲間どうしで性格がかぶっている");
   if (new Set(joiners.map((id) => P[id] && (P[id].beast || P[id].race))).size < 4) F("新しい仲間の種族がばらけていない");
   const regions = new Set(ids.flatMap((id) => (C5[id].meet || []).map((l) => REGION[l]).filter(Boolean)));
