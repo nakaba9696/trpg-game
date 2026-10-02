@@ -40,7 +40,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   if (tried < 4) F(`確かめた 18 歳未満・子どもの姿の人が少ない：${tried}`);
   for (const id of adults) {
     const c = G.c2Make(id);
-    if (!G.m10Can(c) && !D.C2_PEOPLE[id].join.noLove) F(`18 歳以上の仲間 ${id} が恋の相手になれない`);
+    if (!G.m10Can(c) && !D.C2_PEOPLE[id].join.noLove && D.C2_PEOPLE[id].romance !== false) F(`18 歳以上の仲間 ${id} が恋の相手になれない`);
   }
   // ふつうの仲間
   const base = { name: "剣士のアル", cls: "剣士", power: 50, dmg: 1, desc: "無口", sex: "男" };

@@ -3,7 +3,7 @@
 // - 出来事・結果の mood の値が 4 種（と "normal"）のどれか
 // - 出来事が始まると表情が決まり（データの mood ＞ 文から推す ＞ 続いた結果の mood）、終わると通常に戻る。古いセーブ（S.mood 無し）でも動く
 // - 差分の絵が無ければ通常の絵、あれば差分。立ち絵の印は表情で変わらない（人は出入りせず、顔だけ入れ替わる）
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import vm from "node:vm";
 import { JSON_PATH, MOODS as MD_MOODS } from "../../tools/portraits.mjs";
 
@@ -38,7 +38,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       else if (BAD.test(t)) F(`${p.id} の variants.${m} に、構図・性的な言葉がある：${t.match(BAD)[0]}`);
     }
   }
-  if (vids.length < 8 || vids.length > 20) F(`差分のある人が ${vids.length} 人（仲間（キャラメモ 8 人と C4 の 4 人）＋主要な数人、20 人まで）`);
+  // 仲間は全員、差分を持つ（C2・C4・C5〜C8）。それ以外は主要な数人まで
+  const mates = Object.keys(D.C2_PEOPLE).filter((id) => D.C2_PEOPLE[id].join).length;
+  if (vids.length < 8 || vids.length > mates + 20) F(`差分のある人が ${vids.length} 人（仲間 ${mates} 人＋主要な数人、${mates + 20} 人まで）`);
   for (const id of Object.keys(D.C2_PEOPLE)) if (D.C2_PEOPLE[id].join && !vids.includes(id)) F(`仲間になる ${id} に差分（variants）が無い`);
 
   // assets/ に置いた差分の絵は、variants のある人のもの
@@ -50,8 +52,12 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (m && !vids.includes(m[1])) F(`assets/portraits/${f} は差分の絵だが、一覧の ${m[1]} に variants が無い`);
     }
   }
-  // 埋め込みの上限：差分 1 枚 30KB 前後 × 4 × 人数が、上限（12MB）に余裕を残す
-  if (vids.length * 4 * 40 * 1024 * 1.34 > 4 * 1024 * 1024) F("差分の数が多すぎる（埋め込みの上限 12MB を圧迫する）");
+  // 埋め込みの上限：置いてある差分の絵の合計が、上限（12MB）に余裕を残す（4MB まで。タグだけの人は数えない。C7 で人数の見積もりから実物の大きさに）
+  if (existsSync(dir)) {
+    const re = new RegExp(`_(${MOODS.join("|")})\\.(webp|png|jpe?g)$`);
+    const bytes = readdirSync(dir).filter((f) => re.test(f)).reduce((a, f) => a + statSync(new URL(f, dir)).size, 0);
+    if (bytes * 1.34 > 4 * 1024 * 1024) F(`差分の絵が大きすぎる（${Math.round(bytes / 1024)}KB。埋め込みの上限 12MB を圧迫する）`);
+  }
 
   // ---------------------------------------------------------------- 出来事の mood
   const okMood = (m) => m === undefined || MOODS.includes(m);
