@@ -127,6 +127,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   // 話題が並ぶ・既に聞いた・続き
   {
     const { G, S } = game(11, { join: ["dil", "zerina", "nora"] });
+    // 手番の終わりの恋の気配（M10 の乱数）が会話の流れに割り込まないように止めておく（乱数の並びは足した人物で動く）
+    S.companions.forEach((c) => { c.m10 = Object.assign(c.m10 || {}, { cool: 99999 }); });
     const dil = comp(S, "dil");
     G.affState(S).dil = 20;
     const talk = acts(G).find((a) => a.id === "m2talk:" + dil.id);

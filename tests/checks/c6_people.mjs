@@ -170,13 +170,13 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   };
   const FLOWS = {
     lucien: ["leavel", "c6_luc_stone", ["石を拾う", "連れていく"]],
-    baudouin: ["w2_granbel", "c6_bau_mill", ["向きが逆", "連れていく"]],
+    barnabe: ["w2_granbel", "c6_bau_mill", ["向きが逆", "連れていく"]],
     selevan: ["nerva", "c6_sel_cart", ["値切りに割って入る", "連れていく"]],
     aubin: ["leavel", "c6_aub_stable", ["起こして", "連れていく"]],
     lazare: ["plains", "c6_laz_cart", ["加勢する", "旅に誘う"]],
     rodolphe: ["forest", "c6_rod_snare", ["正直に言う", "連れていく"]],
     margot: ["plains", "c6_mgt_toll", ["半値で通る", "連れていく"]],
-    violaine: ["karna", "c6_vio_dogs", ["犬を止める", "連れていく"]],
+    solenne: ["karna", "c6_vio_dogs", ["犬を止める", "連れていく"]],
     pipinelle: ["forest", "c6_pip_shrine", ["座る", "連れていく"]],
     lisette: ["forest", "c6_lis_lost", ["一緒に戦う", "連れていく"]],
   };
