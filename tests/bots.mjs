@@ -222,6 +222,7 @@ export function makeBot(G, goal, opt = {}) {
     if (o.sin) s -= 10 * o.sin;
     if (o.dropCompanion) s -= 30;
     if (o.fight) s += hpr() > 0.7 ? -5 : -60;
+    if (o.e3fight) s -= 1000;          // 使徒に挑む（E3）は選ばない
     if (o.days) s -= o.days;
     if (o.companion) s += (S.companions.length < 3 ? 10 : 0);
     return s;
