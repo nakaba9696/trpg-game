@@ -110,6 +110,7 @@
         Object.entries(G.P[k] || {}).forEach(([id, v]) => { const n = (x) => (typeof x === "number" ? x : (x && x.n) || 0); if (n(v) >= n(m[id])) m[id] = v; });
         merged[k] = m;
       });
+      if (G.codexMerge) { merged.codex = G.codexMerge(rp.codex, G.P.codex); merged.loreSeen = G.codexMergeLore(rp.loreSeen, G.P.loreSeen); } // F2：図鑑と知った用語も両方をまとめる
       (rp.graves || []).forEach((g) => { if (!merged.graves.some((x) => x.id === g.id)) merged.graves.push(g); });
       merged.graves.sort((a, b) => b.at - a.at);
       merged.graves = merged.graves.slice(0, 40);
