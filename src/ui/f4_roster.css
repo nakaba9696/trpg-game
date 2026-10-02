@@ -1,0 +1,37 @@
+/* F4：図鑑の「仲間にする方法」・狙う印・手引きの進み具合（ui/f4_roster.js） */
+.f4how .f4steps { margin: 2px 0 6px; padding-left: 1.4em; font-size: 13px; line-height: 1.6; }
+.f4how .f4steps li { margin: 2px 0; }
+.f4how .f4way { margin: 6px 0 0; }
+.f4vague { margin: 4px 0; font-family: var(--f-body); font-size: 14px; line-height: 1.7; }
+.f4gone { color: var(--ng); }
+.f4wantbox { margin: 12px 0 4px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.f4wantbox .btn.on { border-color: var(--accent); color: var(--accent); }
+.f4wantbox .fine { margin: 6px 0 0; font-size: 12px; }
+.f2cell.f4want { border-color: var(--accent); }
+.f4star { position: absolute; top: 3px; left: 3px; padding: 0 3px; border-radius: 2px; background: var(--accent); color: var(--box); font-size: 10px; line-height: 1.5; }
+.f2cell.f4heard { opacity: .9; cursor: pointer; }
+.f4progress { margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+.f4prog { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 6px 0; font-size: 13px; }
+.f4prog dt { color: var(--muted); }
+.f4prog dd { margin: 0; display: flex; align-items: center; gap: 8px; }
+.f4bar { flex: 1; max-width: 220px; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.f4fill { display: block; height: 100%; background: var(--accent); }
+.f4heardlist { margin: 2px 0 0; padding-left: 1.2em; font-size: 13px; }
+.f4progress h4 { margin: 8px 0 2px; font-size: 13px; color: var(--muted); font-weight: 400; }
+/* 季節ごとの居場所の表 */
+.f4season { width: 100%; border-collapse: collapse; margin: 4px 0 6px; font-size: 13px; }
+.f4season th { width: 2.2em; padding: 3px 6px; font-weight: 400; text-align: center; vertical-align: top; }
+.f4season td { padding: 3px 6px; border-bottom: 1px dotted var(--rule); }
+.f4season td small { display: block; font-size: 11px; line-height: 1.4; }
+.f4s { border-radius: 2px; color: #fff; }
+.f4s0 { background: #b8707f; } .f4s1 { background: #4f8a4a; } .f4s2 { background: #b07a2e; } .f4s3 { background: #5a7aa8; }
+/* 上の帯の日付 */
+.f4date { display: flex; align-items: center; gap: 6px; white-space: nowrap; font-size: 13px; letter-spacing: .04em; color: #ece2c8; text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, .6); } /* 帯は絵の上にじかに載るので、明暗どちらでも明るい字 */
+.f4date[hidden] { display: none; }
+.f4mark { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; line-height: 1; color: #fff; background: #888; }
+.f4date[data-season="0"] .f4mark { background: #b8707f; }
+.f4date[data-season="1"] .f4mark { background: #4f8a4a; }
+.f4date[data-season="2"] .f4mark { background: #b07a2e; }
+.f4date[data-season="3"] .f4mark { background: #5a7aa8; }
+body.v9pc #v9place span { display: none; } /* 日付は f4date に一本化（v9 の帯には場所の名前だけ） */
+@media (max-width: 760px) { .f4date { font-size: 12px; } }
