@@ -231,7 +231,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     souhaku: ["yakumo", "c5_sou_pier", ["若い衆のわけ", "連れていく"]],
     adele: ["w2_granbel", "c5_ade_lecture", ["一緒に聞いて", "新米たちを下がらせる", "連れていく"]],
     celestin: ["forest", "c5_cel_tree", ["返事を待つ", "言われたほうへ", "連れていく"]],
-    felix: ["fort", "c5_fel_count", ["一緒に拾う", "殿は", "連れていく"]],
+    felix: ["w2_granbel", "c5_fel_count", ["一緒に拾う", "殿は", "連れていく"]],
   };
   for (const [id, [loc, ev, steps]] of Object.entries(FLOWS)) {
     start(loc);
