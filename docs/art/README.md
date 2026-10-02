@@ -28,11 +28,20 @@
 
 ## 喜怒哀楽の差分（V8）
 
-- 一覧の `face` は基本の表情、`variants` は喜（`joy`）・怒（`anger`）・哀（`sorrow`）・楽（`fun`）の表情のタグ（仲間の 8 人と主要な数人）。ファイルは `assets/portraits/<id>_joy.webp` など。無い差分は通常の絵のまま。
+- 一覧の `face` は基本の表情、`variants` は喜（`joy`）・怒（`anger`）・哀（`sorrow`）・楽（`fun`）と、その人らしい表情（V11。下）のタグ。ファイルは `assets/portraits/<id>_joy.webp` など。無い差分は近い表情か、通常の絵のまま。
 - 作る：基本の絵（`assets/portraits/<id>.webp`）ができてから `node tools/gen_portraits.mjs --variants --dry` で確かめ、`node tools/gen_portraits.mjs --variants` で作る（`--only nora` でその人だけ、`--only nora_joy` で一枚だけ、`--force` で作り直す）。基本の絵を元に img2img（`/sdapi/v1/img2img`）で、seed は基本と同じ（`--keep` した seed か `seeds.local.json`）、見た目（`identity`）とポーズ（`tags`）は一字一句同じで、表情のタグだけ差し替える。基本の絵が無い人は飛ばす。
 - 強さ（denoising）は `style.json` の `variants.denoising`（既定 0.35）。顔が変わりすぎるなら `style.local.json` に `"variants": { "denoising": 0.3 }`、表情が変わらなければ 0.45 に。
 - 名のある人物の `identity` は見た目を固定するタグ（髪の色は2語・長さ・髪型、目の色と形、肌、眉、傷やそばかすなどの印、服の色と形、いつも身につけている物、年齢と体格）。差分で別人にならないよう、色や髪型はここに書き、`tags` にはポーズと手に持つ物だけを書く（V10）。1 枚 30KB 前後なので、15 人 × 4 で 2MB ほど（埋め込みの上限 12MB に入る）。
 - ゲームは出来事の `mood`（無ければ文から推す）で、その場の表情の差分を立ち絵に出す（`src/engine/v8_moods.js`・`src/ui/v8_moods.js`）。
+
+## 喜怒哀楽のほかの表情（V11）
+
+- 種類は [moods.md](moods.md)（元は [moods.json](moods.json)）。喜怒哀楽に加えて、驚き（`surprise`）・照れ（`shy`）・困り（`troubled`）・真剣（`serious`）・得意げ（`smug`）・怯え（`fear`）・疲れ（`tired`）・泣き（`cry`）・慌て（`panic`）・すね（`pout`）・ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・冷たい目（`cold`）・悪い笑み（`wicked`）・酔い（`drunk`）・眠い（`sleepy`）・呆れ（`exasperated`）・うっとり（`smitten`）。
+- 主要な人（仲間になる人・キャラメモの人・使徒の人の姿）は、喜怒哀楽＋その人らしい表情を 3〜5 個持つ（[portraits.json](portraits.json) の `variants`。人ごとの割り当ては moods.md の表）。新しい人を足すときの書き方も moods.md に。
+- 作る：`node tools/gen_portraits.mjs --variants`（まだ無い差分を全部）、`--variants --mood shy,surprise`（その表情だけ）、`--variants --only nora`・`--only nora_shy`。作り方は喜怒哀楽と同じ（img2img・表情のタグだけ差し替え）。
+- 絵の無い表情は近い表情（moods.md の「落とし先」）、それも無ければ基本の絵を出すので、少しずつ作ってよい。作る順は仲間 → 王家・帝国などの中核 → 使徒がよい。
+- 埋め込みの上限（12MB）があるうちは全部を入れると超える（差分は 1 枚 30KB 前後 × 400 枚ほど）。画像を HTML の外に出す仕組み（X1 #186）が入ってから全部を作る。それまでは仲間の分から。
+- ゲームは出来事・結果・会話・掛け合いの `mood`（例：`mood: "shy"`）か、文から推した表情を出す（`src/data/v11_moods.js`・`src/engine/v8_moods_v11.js`・`src/ui/v8_moods_v11.js`）。
 
 ## 魔物の絵（V6）
 

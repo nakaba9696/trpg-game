@@ -1,0 +1,28 @@
+{
+ "about": "立ち絵の表情の種類（V8 の喜怒哀楽＋V11 で足した表情）。tags は Stable Diffusion の表情のタグの既定（特徴だけ。画風・構図・作家名は書かない）。人ごとの差分は docs/art/portraits.json の variants に、この既定を元にその人らしく書き替えたタグを置く。fallback はその表情の絵が無い人に出す近い表情（左から順に探し、どれも無ければ基本の絵）。並びと fallback は src/data/v11_moods.js と同じ（tests/checks/v11_moods.mjs が見る）。md は node tools/portraits.mjs で作る",
+ "base": ["joy", "anger", "sorrow", "fun"],
+ "moods": {
+  "joy": { "name": "喜", "tags": "smile, happy", "fallback": [], "memo": "うれしい・ほっとした" },
+  "anger": { "name": "怒", "tags": "angry, frown, v-shaped eyebrows", "fallback": [], "memo": "怒る・苛立つ" },
+  "sorrow": { "name": "哀", "tags": "sad, looking down, downturned mouth", "fallback": [], "memo": "悲しい・沈む" },
+  "fun": { "name": "楽", "tags": "laughing, open mouth, closed eyes", "fallback": [], "memo": "楽しい・笑い転げる" },
+  "surprise": { "name": "驚き", "tags": "surprised, wide-eyed, open mouth, raised eyebrows", "fallback": ["fear"], "memo": "目を丸くする・息を呑む" },
+  "shy": { "name": "照れ", "tags": "embarrassed, blush, looking away", "fallback": ["joy"], "memo": "頬を染める・褒められて照れる（男も blush でよい。#185）" },
+  "troubled": { "name": "困り", "tags": "troubled, worried eyebrows, awkward smile, sweatdrop", "fallback": ["sorrow"], "memo": "困った顔・苦笑い" },
+  "serious": { "name": "真剣", "tags": "serious, determined, focused eyes, closed mouth", "fallback": [], "memo": "腹を決めた・本気の顔" },
+  "smug": { "name": "得意げ", "tags": "smug, smirk, half-closed eyes, raised eyebrow", "fallback": ["fun", "joy"], "memo": "胸を張る・したり顔" },
+  "fear": { "name": "怯え", "tags": "scared, frightened, wide-eyed, worried eyebrows, pale face, sweat", "fallback": ["surprise", "sorrow"], "memo": "震える・青ざめる" },
+  "tired": { "name": "疲れ", "tags": "tired, exhausted, half-closed eyes, sweat, open mouth", "fallback": ["troubled", "sorrow"], "memo": "へたり込む・息が上がる" },
+  "cry": { "name": "泣き", "tags": "crying, tears, streaming tears, open mouth", "fallback": ["sorrow"], "memo": "泣き崩れる・号泣（哀より強い）" },
+  "panic": { "name": "慌て", "tags": "flustered, panicking, wide-eyed, sweatdrop, wavy mouth", "fallback": ["troubled", "surprise", "fear"], "memo": "あたふたする・しくじりに慌てる" },
+  "pout": { "name": "すね", "tags": "pout, puffed cheeks, looking away", "fallback": ["anger"], "memo": "むくれる・すねる" },
+  "faint_smile": { "name": "ほんの少し笑う", "tags": "slight smile, soft eyes, closed mouth", "fallback": ["joy"], "memo": "無表情な人がわずかに笑う" },
+  "sparkle": { "name": "目を輝かせる", "tags": "excited, sparkling eyes, smile, open mouth", "fallback": ["fun", "joy"], "memo": "好きな物を前に夢中になる" },
+  "cold": { "name": "冷たい目", "tags": "cold eyes, narrowed eyes, expressionless, contempt", "fallback": ["serious", "anger"], "memo": "見下す・切り捨てる・剣を抜いた顔" },
+  "wicked": { "name": "悪い笑み", "tags": "evil smile, sinister grin, narrowed eyes, shaded face", "fallback": ["smug", "fun"], "memo": "企む・本性がのぞく" },
+  "drunk": { "name": "酔い", "tags": "drunk, flushed face, blush, half-closed eyes, wavy mouth", "fallback": ["fun", "shy", "joy"], "memo": "酒が回った顔" },
+  "sleepy": { "name": "眠い", "tags": "sleepy, drowsy, half-closed eyes, yawning", "fallback": ["tired"], "memo": "あくび・うとうと" },
+  "exasperated": { "name": "呆れ", "tags": "exasperated, half-closed eyes, deadpan, sigh", "fallback": ["troubled", "tired"], "memo": "ため息・あきれ顔" },
+  "smitten": { "name": "うっとり", "tags": "smitten, blush, dreamy eyes, gentle smile", "fallback": ["shy", "joy"], "memo": "見とれる・想い人を思う" }
+ }
+}

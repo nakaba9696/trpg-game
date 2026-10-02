@@ -1,6 +1,6 @@
 // V8：立ち絵の喜怒哀楽（src/engine/v8_moods.js・src/ui/v8_moods.js・v5_stand.js・docs/art/portraits.json の face と variants・tools/gen_portraits.mjs --variants）
 // - variants の id が人物（キャラメモの人か、出来事の名のある人）に当たり、喜怒哀楽の 4 つがそろっている。表情のタグに性的・構図の言葉が無い
-// - 出来事・結果の mood の値が 4 種（と "normal"）のどれか
+// - 出来事・結果の mood の値が、表情の一覧（G.MOODS。喜怒哀楽と V11 の表情）か "normal"
 // - 出来事が始まると表情が決まり（データの mood ＞ 文から推す ＞ 続いた結果の mood）、終わると通常に戻る。古いセーブ（S.mood 無し）でも動く
 // - 差分の絵が無ければ通常の絵、あれば差分。立ち絵の印は表情で変わらない（人は出入りせず、顔だけ入れ替わる）
 import { readFileSync, readdirSync, existsSync } from "node:fs";
@@ -12,7 +12,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const D = G.data;
   const F = (m) => fail("V8：" + m);
   const MOODS = G.MOODS;
-  if (!Array.isArray(MOODS) || MOODS.join() !== "joy,anger,sorrow,fun") return F(`G.MOODS が joy・anger・sorrow・fun でない：${MOODS}`);
+  if (!Array.isArray(MOODS) || MOODS.slice(0, 4).join() !== "joy,anger,sorrow,fun") return F(`G.MOODS が joy・anger・sorrow・fun で始まらない：${MOODS}`); // そのあとは V11 で足した表情
   if (MD_MOODS.join() !== MOODS.join()) F("tools/portraits.mjs の MOODS がエンジンの G.MOODS と違う");
   if (!G.guessMood || !G.moodOf || !G.eventMood) return F("G.guessMood・G.moodOf・G.eventMood が無い");
 
@@ -27,18 +27,18 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!p.variants) continue;
     vids.push(p.id);
     if (p.group !== "c2" && p.group !== "named") F(`差分（variants）があるのは名のある人物だけ：${p.id}（${p.group}）`);
-    else if (p.group === "c2" ? !D.C2_PEOPLE[p.id] : !(G.V4_NAMED || {})[p.id] && !D.C2_PEOPLE[p.id]) F(`差分の ${p.id} が人物に当たらない`);
+    else if (p.group === "c2" ? !D.C2_PEOPLE[p.id] : !(G.V4_NAMED || {})[p.id] && !D.C2_PEOPLE[p.id] && !(D.MAJIN || {})[p.id]) F(`差分の ${p.id} が人物に当たらない`);
     if (!p.face) F(`差分のある ${p.id} に基本の表情（face）が無い（差分は face を差し替えて作る）`);
     const keys = Object.keys(p.variants);
     const extra = keys.filter((k) => !MOODS.includes(k));
-    if (extra.length) F(`${p.id} の variants に喜怒哀楽でない鍵：${extra.join("、")}`);
-    for (const m of MOODS) {
+    if (extra.length) F(`${p.id} の variants に、表情の一覧（G.MOODS）に無い鍵：${extra.join("、")}`);
+    for (const m of MOODS.slice(0, 4).concat(keys.filter((k) => !MOODS.slice(0, 4).includes(k)))) {
       const t = p.variants[m];
       if (typeof t !== "string" || !t.trim()) F(`${p.id} の variants.${m} が無い`);
       else if (BAD.test(t)) F(`${p.id} の variants.${m} に、構図・性的な言葉がある：${t.match(BAD)[0]}`);
     }
   }
-  if (vids.length < 8 || vids.length > 20) F(`差分のある人が ${vids.length} 人（仲間（キャラメモ 8 人と C4 の 4 人）＋主要な数人、20 人まで）`);
+  if (vids.length < 8 || vids.length > 80) F(`差分のある人が ${vids.length} 人（仲間＋主要な人。V11 でキャラメモの人と使徒の人の姿まで）`);
   for (const id of Object.keys(D.C2_PEOPLE)) if (D.C2_PEOPLE[id].join && !vids.includes(id)) F(`仲間になる ${id} に差分（variants）が無い`);
 
   // assets/ に置いた差分の絵は、variants のある人のもの
@@ -50,19 +50,18 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (m && !vids.includes(m[1])) F(`assets/portraits/${f} は差分の絵だが、一覧の ${m[1]} に variants が無い`);
     }
   }
-  // 埋め込みの上限：差分 1 枚 30KB 前後 × 4 × 人数が、上限（12MB）に余裕を残す
-  if (vids.length * 4 * 40 * 1024 * 1.34 > 4 * 1024 * 1024) F("差分の数が多すぎる（埋め込みの上限 12MB を圧迫する）");
+  // 埋め込みの上限（12MB）は、置いた絵の実際の大きさでビルドとテストが見る（tools/assets.mjs）。差分の数では止めない（V11）
 
   // ---------------------------------------------------------------- 出来事の mood
   const okMood = (m) => m === undefined || MOODS.includes(m);
   let marked = 0;
   for (const e of D.EVENTS) {
-    if (e.mood !== undefined && e.mood !== "normal" && !MOODS.includes(e.mood)) F(`出来事 ${e.id} の mood が 4 種のどれでもない：${e.mood}`);
+    if (e.mood !== undefined && e.mood !== "normal" && !MOODS.includes(e.mood)) F(`出来事 ${e.id} の mood が表情の一覧に無い：${e.mood}`);
     if (MOODS.includes(e.mood)) marked++;
     (e.choices || []).forEach((c, i) => ["ok", "ng", "win"].forEach((k) => {
       const o = c[k];
-      if (o && !okMood(o.mood)) F(`出来事 ${e.id} の選択肢 ${i} の ${k} の mood が 4 種のどれでもない：${o.mood}`);
-      if (o && o.win && !okMood(o.win.mood)) F(`出来事 ${e.id} の選択肢 ${i} の ${k}.win の mood が 4 種のどれでもない：${o.win.mood}`);
+      if (o && !okMood(o.mood)) F(`出来事 ${e.id} の選択肢 ${i} の ${k} の mood が 表情の一覧に無い：${o.mood}`);
+      if (o && o.win && !okMood(o.win.mood)) F(`出来事 ${e.id} の選択肢 ${i} の ${k}.win の mood が 表情の一覧に無い：${o.win.mood}`);
     }));
   }
   if (marked < 10) F(`mood を付けた出来事が ${marked} しかない（主要な場面から付ける）`);
@@ -92,7 +91,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   if (G.moodOf(S) !== null) F("冒険の始めから表情がある");
   delete S.mood; // 古いセーブ
   if (G.moodOf(S) !== null) F("古いセーブ（S.mood 無し）で表情が通常にならない");
-  if (G.moodOf({ mode: "event", event: "x", mood: "angry" }) !== null) F("4 種でない表情を出している");
+  if (G.moodOf({ mode: "event", event: "x", mood: "angry" }) !== null) F("一覧に無い表情を出している");
   if (G.moodOf({ mode: "event", event: "x", mood: "joy", combat: {} }) !== null) F("戦闘中に表情を出している");
   if (G.moodOf({ mode: "explore", event: null, mood: "joy" }) !== null) F("出来事でないのに表情を出している");
 
@@ -145,7 +144,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   if (G.v8WithMood(nora, { mode: "event", event: "c2_nora_sniff", flags: {} }) !== nora) F("古いセーブ（S.mood 無し）で who を変えている");
   if (st.sig(nora) !== st.sig(st.whoOf({ mode: "event", event: "c2_nora", flags: {} }))) F("同じ人の印が変わる");
   if (!st.big(sad)) F("表情のある人を大きく立たせない");
-  if (G.v8MoodKey("nora", "angry") !== "nora" || G.v8MoodKey(null, "joy") !== null) F("4 種でない表情・鍵の無い人を差分にしている");
+  if (G.v8MoodKey("nora", "angry") !== "nora" || G.v8MoodKey(null, "joy") !== null) F("一覧に無い表情・鍵の無い人を差分にしている");
   // 立ち絵の顔（canvas.standFace）だけ、その場の表情で描く。小さな額などは今のまま
   const saveS = G.S;
   G.S = sadS;
