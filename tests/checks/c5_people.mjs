@@ -21,7 +21,7 @@ const PROFILE = { name: "テスト", sex: "女", age: 24, history: "テスト用
 const REGION = {
   leavel: "王国", w2_granbel: "王国", karna: "自由都市連合", nerva: "自由都市連合", garmund: "帝国", w2_zalgros: "帝国", frost: "帝国",
   zephara: "共和国", w2_nagris: "共和国", w2_amyrein: "共和国", yakumo: "島", w1_oboro: "島", w1_holy: "聖都", ruins: "遺構",
-  fort: "使徒領の境", mountains: "使徒領の境", wasteland: "使徒領の境",
+  fort: "使徒領の境", mountains: "使徒領の境", wasteland: "使徒領の境", forest: "共和国",
 };
 
 export default ({ G, fail, ok, loadEngine, seeded }) => {
@@ -114,6 +114,15 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       for (const k of D.TALENT_KEYS) if (!(p.join.t[k] >= 0 && p.join.t[k] <= 3)) F(`${w}: 才 ${k} が無い`);
       for (const k of Object.keys(p.join.f)) if (!D.FLAVORS[k]) F(`${w}: 暮らしの才 ${k} が無い`);
       for (const l of p.join.home) if (!D.LOCS[l] || D.LOCS[l].type !== "town") F(`${w}: 誘える町 ${l} が町でない`);
+      // 居場所×時期の予定（F4 docs/f4_schedule.md）。場所があり、出会いの出来事の場所の種類と合う時期がある
+      const sch = p.schedule || p.join.schedule;
+      if (!(Array.isArray(sch) && sch.length)) F(`${w}: 予定（schedule）が無い`);
+      else {
+        for (const x of sch) if (!D.LOCS[x.loc] || !x.note || x.from === undefined || x.to === undefined) F(`${w}: 予定の場所 ${x.loc} が無いか、note・from・to が無い`);
+        const first = own.find((e) => e.w > 0 && e.id.startsWith("c5_") && inEv(e)[0] === id);
+        const kind = (x) => (TAGS.has(x) ? x : D.LOCS[x] && D.LOCS[x].type);
+        if (first && !sch.some((x) => first.where.some((wh) => wh === x.loc || kind(wh) === D.LOCS[x.loc].type))) F(`${w}: 出会いの出来事（${first.id}）の場所と、予定の居場所の種類が合う時期が無い`);
+      }
     }
     // 子どもの姿・18 歳未満は恋の相手にしない（仲間にならない人も、印をそろえる）
     if ((p.childLook || p.age < 18) && p.join && !p.join.noLove) F(`${w}: 子どもの姿か 18 歳未満なのに恋の相手になる`);
@@ -217,11 +226,11 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     for (let i = 0; i < 30 && S.mode === "combat"; i++) { S.combat.foes.forEach((f) => { if (f.hp > 0) f.hp = 1; }); lucky(() => g.act("cb:attack")); }
   };
   const FLOWS = {
-    gustav: ["w2_zalgros", "c5_gus_spider", ["蜘蛛をつまんで", "柵を越えて", "連れていく"]],
-    trude: ["garmund", "c5_tru_blast", ["菓子を差し出す", "連れていく"]],
+    bruno: ["nerva", "c5_bru_spider", ["蜘蛛をつまんで", "横に並んで", "連れていく"]],
+    trude: ["garmund", "c5_tru_blast", ["何を作っていた", "連れていく"]],
     souhaku: ["yakumo", "c5_sou_pier", ["若い衆のわけ", "連れていく"]],
     adele: ["w2_granbel", "c5_ade_lecture", ["一緒に聞いて", "新米たちを下がらせる", "連れていく"]],
-    celestin: ["w2_nagris", "c5_cel_roof", ["名乗り返す", "最後まで聞く", "連れていく"]],
+    celestin: ["forest", "c5_cel_tree", ["返事を待つ", "言われたほうへ", "連れていく"]],
     felix: ["fort", "c5_fel_count", ["一緒に拾う", "殿は", "連れていく"]],
   };
   for (const [id, [loc, ev, steps]] of Object.entries(FLOWS)) {

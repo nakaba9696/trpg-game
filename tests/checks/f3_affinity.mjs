@@ -21,9 +21,12 @@ const FACE = {
   bertrand: "だらしなくて気さく", ilse: "自信満々", tula: "口が悪い", mirlene: "おっとり", salphiel: "年寄りのような話し方", musette: "糸は見えない",
   gerhard: "豪快", bartolo: "糸目", clarisse: "真面目", titta: "口が悪い", iori: "眠そう", dorothea: "自分の顔に自信",
   // C5（src/data/zc5_people.js）
-  gustav: "臆病", trude: "無表情", souhaku: "爺", adele: "先輩", celestin: "芝居がかった", felix: "堅物", vittorio: "横取り", violaine: "決闘",
-  yuzuel: "問答", severin: "澄んだ声", rufina: "面倒見", constance: "帳面", ambroise: "居眠り", tsuyuha: "細い目", filie: "小言", leopold: "道楽者",
+  bruno: "臆病", trude: "大口", souhaku: "爺", adele: "先輩", celestin: "ぼんやり", felix: "からかうと", vittorio: "横取り", violaine: "決闘",
+  yuzuel: "問答", severin: "澄んだ声", rufina: "面倒見", constance: "帳面", ambroise: "居眠り", tsuyuha: "お人好し", filie: "世話を焼", leopold: "道楽者",
   gauthier: "片腕", magda: "鶴嘴", baudouin: "口の悪い",
+  // C7（src/data/zc7_people.js）
+  wolfram: "豪快", hartmut: "大仰", gustav: "値段", timo: "惚れて", noeris: "柔らかな話し方", ingrid: "変わらない", lumia: "古風な話し方",
+  sieglinde: "報告の形", annelise: "姉御肌", radmila: "道を空ける", otmar: "値段で呼ぶ", oren: "頑固", dietrich: "片眼鏡", matthias: "礼を言う", liesel: "気が強く",
 };
 
 export default ({ G, fail }) => {

@@ -12,7 +12,7 @@ const browser = await pw.chromium.launch();
 for (const [vn, vp] of Object.entries(VIEWS)) {
   for (const theme of ["light", "dark"]) {
     const page = await browser.newPage({ viewport: vp, deviceScaleFactor: 1, colorScheme: theme, reducedMotion: "reduce" });
-    await page.goto(pathToFileURL(new URL("../dist/morsveld.html", import.meta.url).pathname).href);
+    await page.goto(pathToFileURL(new URL("../dist/site/index.html", import.meta.url).pathname).href);
     await page.waitForFunction(() => window.G && G.main && G.ui && G.ui.render && G.gloss);
     await page.evaluate((theme) => { G.theme && G.theme.set(theme); const D = G.data, stats = {}, caps = {};
       D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 60; });
