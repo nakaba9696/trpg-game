@@ -278,7 +278,7 @@
       if (c.tag && G.c3Plate) G.c3Plate(f.nm, c.tag);
       else f.nm.textContent = c.name || "";
       // 描き直すのは、人か出来事（表情）が変わったとき。人が同じなら、出入りはせずにその場で描き直す
-      const sig = JSON.stringify(c.who) + "|" + (S.mode === "event" ? S.event : S.mode) + "|" + p.h;
+      const sig = JSON.stringify(c.who) + "|" + (S.mode === "event" ? S.event : S.mode) + "|" + p.h + "|" + (c.role === "speaker" && G.moodOf ? G.moodOf(S) || "" : ""); // 話している人は表情（V8）も
       if (sig !== f.sig) { f.sig = sig; if (G.drawPortrait) G.drawPortrait(f.cv, c.who); }
       if (fresh) {
         if (calm()) el.classList.add("on");

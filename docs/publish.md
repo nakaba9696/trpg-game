@@ -13,6 +13,7 @@ node tools/build.mjs && node tests/run.mjs
 |---|---|
 | `dist/site/index.html` | ページ（コード・CSS・画像の一覧（鍵 → 相対パス・バイト数）。画像そのものは入っていない） |
 | `dist/site/portraits/<id>.webp`・`dist/site/monsters/<id>.webp` | 画像（`assets/` の写し） |
+| `dist/site/portraits/<id>.moods.svg` | 表情の差分のスプライト（その人の `assets/portraits/<id>_<表情>.webp` を 1 枚にまとめたもの。下の「差分のまとめ方」） |
 | `dist/site/files.json` | 載せる画像の一覧（公開パス → リポジトリの根からのローカルパス）。Artifact の `files` にそのまま渡す |
 | `dist/site/files-1.json`・`files-2.json`… | 1 回の公開に収まらないときだけ。回ごとの一覧（下の「分けて載せる」） |
 
@@ -48,7 +49,7 @@ claude.ai/code のセッションで、このリポジトリを開いて「`dist
 |---|---|---|
 | ページ（index.html） | 16MB | ビルドが止まる・`tests/checks/a6_site.mjs` |
 | 画像 1 枚 | 15MB | 同上（ふつうは 1 枚 30〜80KB） |
-| 1 つの版の合計 | 256MB・511 ファイル | 同上（511 の 9 割を超えたらテストが知らせる） |
+| 1 つの版の合計 | 256MB・511 ファイル | 同上・`tests/checks/a8_sprites.mjs`（`files.json`＋ページが 511 の 9 割を超えたら NOTE、超えたら失敗） |
 | 1 回の公開 | 255 ファイル・64MB | ビルドが `files-N.json` に分ける |
 
 MB は余裕を見て 1000×1000 バイトで数える。予備の埋め込み（`--embed`）は画像の data URI の合計 12MB まで（`tools/assets.mjs` の `LIMIT`）。
@@ -57,6 +58,11 @@ MB は余裕を見て 1000×1000 バイトで数える。予備の埋め込み�
 
 - `tools/assets.mjs`：`assets/` を読む。`siteAssets`（外のファイル）と `collectAssets`（埋め込み。`shrink` で差分を省く）。どちらも `G.ASSETS["portraits/<id>"]` に Image の `src` にそのまま使える値（相対パスか data URI）を入れ、`G.ASSET_MODE` が `"files"` か `"embed"`。外のファイルの形では `G.ASSET_BYTES` にバイト数。
 - `tools/site.mjs`：大きさの決まりと、何回に分けるか（`planSite`）。
+- 差分のまとめ方（A8）：1 つの版は 511 ファイルまでなので、外のファイルの形では、差分（`<id>_<表情>`）が 2 枚以上ある人の差分を 1 人 1 枚のスプライト `portraits/<id>.moods.svg` にまとめる（基本の絵 `<id>.webp` はよく使うので 1 枚のまま）。
+  中身は SVG で、元の webp を data URI のまま升目（正方形に近い格子・512×640 なら 4 枚で 2×2）に並べたもの。描き直さないので画質は変わらず、Node だけで作れる（`cwebp` などは要らない。CI でも動く）。代わりに差分のバイト数は base64 の分（約 1.34 倍）増える。
+  HTML の一覧では差分の鍵の値が `portraits/<id>.moods.svg#xywh=x,y,w,h`（切り出す場所）になり、`src/ui/v4_assets.js` がスプライトを一度だけ読んで、その升目を切り出して描く。
+  表情の名前は V8 の喜怒哀楽と `docs/art/moods.json`（V11）から取る。画像セッションは今まで通り 1 表情 1 ファイル（`assets/portraits/<id>_<表情>.webp`）で作ればよい。予備の埋め込み（`--embed`）はまとめない（data URI のまま）。
+  数の目安：今は差分 76 枚 → 19 枚で、合計 248 → 191 ファイル。仲間 50 人を足して主要な 60 人に差分 700 枚を作っても、基本の絵 250・魔物 120 とで 431 ファイル（まとめないと 1071）。
 - `src/ui/v4_assets.js`：人物の絵。外のファイルは少し（160 ミリ秒）待ってから canvas の絵を出し、読めたら画像に替える（すぐ読めればちらつかない）。主人公・仲間・話している人とその差分は描く前に先読みし、名のある人の基本の絵は暇なときに少しずつ読む（`G.v4Preload`）。
-- `src/ui/v8_moods.js`：表情の差分は、読み終わってから顔を入れ替える（それまでは前の顔のまま）。
+- `src/ui/v8_moods.js`：表情の差分は、読み終わってから顔を入れ替える（それまでは前の顔のまま）。PC の配置（V9）では、話している人の顔に表情を付ける。
 - `src/ui/v6_monsters.js`：魔物の絵は起動の少しあとにまとめて先読みする。
