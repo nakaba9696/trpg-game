@@ -5,15 +5,17 @@
 // - 古いセーブ（S.aff が無い）で動く。通知は M2 の形
 import { readFileSync } from "node:fs";
 
-// 前の face（人柄の一言）から、紹介文に残っているはずの言葉
+// 前の face（人柄の一言）から、紹介文に残っているはずの言葉（口癖そのものではなく、ぼかした言い方）
+// 口癖・台詞をそのまま書き写さない（持ち主：「独特な喋り方をする少女」のように）
+const QUIRKS = /「うん|〜っす|っす」|おばさん|タスク|今のは見ていなかった|ボクと呼ぶ/;
 const FACE = {
-  dil: "悪知恵", kaidel: "殴る", nora: "勘が鋭", sheila: "「うん、」", rui: "無口", zerina: "何でも売る", elnea: "っす", natalia: "酒癖",
+  dil: "悪知恵", kaidel: "殴る", nora: "勘が鋭", sheila: "独特な喋り方", rui: "無口", zerina: "何でも売る", elnea: "物言い", natalia: "酒癖",
   valeon: "好戦家", raios: "高笑い", serios: "天才肌", farina: "笑", greol: "口下手", neilas: "話すのが苦手", tiria: "愛され", sixth: "寡黙",
-  angelica: "おばさん", captain: "任務に忠実", doctor: "知りたいことしか見て", hermes: "変わり者", yurina: "飄々", ferida: "雷突の乙女", sig: "戦場の鉄塊",
-  raisha: "気だるげ", zork: "首狩りゾルク", bride: "めちゃくちゃ強い", boku: "ボーイッシュ", greiol: "現実主義者", dario: "氷壁の父", erna: "タスク",
+  angelica: "歳のこと", captain: "任務に忠実", doctor: "知りたいことしか見て", hermes: "変わり者", yurina: "飄々", ferida: "雷突の乙女", sig: "戦場の鉄塊",
+  raisha: "気だるげ", zork: "首狩りゾルク", bride: "めちゃくちゃ強い", boku: "ボーイッシュ", greiol: "現実主義者", dario: "氷壁の父", erna: "命令",
   valg: "荒々しい", malvina: "仄かに光る", katia: "努力家", alicia: "女王のような圧", chancellor: "表情を", gaston: "情けない顔", joachim: "もう人を殺したくない",
   mirza: "微笑", zalve: "全部は言わない", borg: "熊のような大男", aurelia: "慈悲深", yoihime: "祭りと賽遊び", konoha: "いかさまの名人", mordu: "穏やか",
-  berna: "嘴の仮面", azlag: "転んだのを無かったことに", chezar: "駒", yura: "いつも眠って", walker: "何でも珍しそうに喜ぶ", captain_east: "帰らなかった連中の続き",
+  berna: "嘴の仮面", azlag: "無かったことに", chezar: "駒", yura: "いつも眠って", walker: "何でも珍しそうに喜ぶ", captain_east: "帰らなかった",
   hans: "宿帳の年齢の欄", greta: "世話焼き", gert: "粉だらけ", albert: "眼鏡", dominik: "怒る", neumann: "じっと見せる",
 };
 
@@ -31,6 +33,8 @@ export default ({ G, fail }) => {
     if (!FACE[id]) F(`${id} の前の人柄の言葉が、確認の表に無い`);
     else if (!(q.lines || []).join("").includes(FACE[id])) F(`${id} の紹介に、前の人柄（${FACE[id]}）が入っていない`);
     if ((q.lines || []).some((l) => /^「/.test(l))) F(`${id} の紹介が人柄の一言を貼っただけに見える`);
+    const qk = (q.lines || []).join("").match(QUIRKS);
+    if (qk) F(`${id} の紹介に口癖をそのまま書いている（${qk[0]}）`);
   }
   for (const id of Object.keys(FACE)) if (!P[id]) F(`表の ${id} が人物図鑑に無い`);
   for (const id of Object.keys(D.C2_PEOPLE)) if (!P[id]) F(`C2 の ${id} が人物図鑑に無い`);
