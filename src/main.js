@@ -63,6 +63,7 @@
 
   G.onTrophy = (t) => { G.ui.toast("トロフィー獲得", `『${t.name}』${t.tier}`); main.saveProfile(); };
   G.onFinish = () => main.saveProfile();
+  G.onProfile = () => main.saveProfile(); // 冒険の途中で G.P が変わったとき（E3：倒した使徒・挑んだ回数）
 
   let armed = 0;
   $("#newGame").onclick = () => {
@@ -102,7 +103,13 @@
     store.uid = uid;
     const [rs, rp] = await Promise.all([store.read("save"), store.read("profile")]);
     if (rp) {
-      const merged = { trophies: { ...(rp.trophies || {}), ...G.P.trophies }, graves: [...G.P.graves] };
+      const merged = { ...rp, ...G.P, trophies: { ...(rp.trophies || {}), ...G.P.trophies }, graves: [...G.P.graves] };
+      // E3：倒した使徒と挑んだ回数は、多いほうを残す
+      ["slain", "e3tries"].forEach((k) => {
+        const m = { ...(rp[k] || {}) };
+        Object.entries(G.P[k] || {}).forEach(([id, v]) => { const n = (x) => (typeof x === "number" ? x : (x && x.n) || 0); if (n(v) >= n(m[id])) m[id] = v; });
+        merged[k] = m;
+      });
       (rp.graves || []).forEach((g) => { if (!merged.graves.some((x) => x.id === g.id)) merged.graves.push(g); });
       merged.graves.sort((a, b) => b.at - a.at);
       merged.graves = merged.graves.slice(0, 40);
