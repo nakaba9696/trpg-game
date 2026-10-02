@@ -142,7 +142,7 @@
       const list = (by[k] || []).filter((x) => !out.includes(x));
       if (!list.length) return false;
       // 身の上は、いちばん浅い段から
-      const pick = k === "past" ? list.reduce((a, b) => ((a.step || 0) <= (b.step || 0) ? a : b)) : k === "event" ? list[list.length - 1] : G.pick(list);
+      const pick = k === "past" ? list.reduce((a, b) => ((a.step || 0) <= (b.step || 0) ? a : b)) : k === "event" ? list[list.length - 1] : pickL(list, "k:" + k);
       out.push(pick);
       return true;
     };
@@ -158,11 +158,25 @@
     if (askDone.length) out.push(askDone[0]);
     const rest = ORDER.filter((k) => k !== "event");
     // 残りの種類を、毎回少し違う順で
-    for (let i = rest.length - 1; i > 0; i--) { const j = Math.floor(G.rand() * (i + 1)); [rest[i], rest[j]] = [rest[j], rest[i]]; }
+    for (let i = rest.length - 1; i > 0; i--) { const j = Math.floor(TK.roll("o" + i) * (i + 1)); [rest[i], rest[j]] = [rest[j], rest[i]]; }
     for (const k of rest) { if (out.length >= 5) break; take(k); }
     for (let n = 0; out.length < 3 && n < 6; n++) if (!rest.some((k) => take(k))) break;
     return out.slice(0, 5);
   };
+
+  // ---------------------------------------------------------------- 並べ方・台詞の選び方の乱数
+  // 話題の並び・声のかけ方・切り上げの一言は、状態（冒険・手番・日・仲間・何番目の話）から決まる乱数で選ぶ。
+  // G.rand の並びを使わないので、会話をしても戦い・出来事の乱数の並びは変わらない（テストでは種で固定される）。
+  // 起きるかどうか（夜の会話・掛け合い）だけは G.rand で決める
+  TK.roll = (salt) => {
+    const S = G.S || {};
+    const k = S.tk && S.tk.cur;
+    let h = 2166136261;
+    for (const ch of [S.id, S.turn, S.day, k && k.cid, k && k.n, salt].join("|")) h = Math.imul(h ^ ch.codePointAt(0), 16777619);
+    h ^= h >>> 15; h = Math.imul(h, 2246822507); h ^= h >>> 13;
+    return (h >>> 0) / 4294967296;
+  };
+  const pickL = (list, salt) => list[Math.floor(TK.roll(salt) * list.length) % list.length];
 
   // ---------------------------------------------------------------- 文の差し込み
   // {n} {c} {m} {kin} などは M2 の G.m2Fill。ここで足すのは {foe} {dead} {place} {you}
@@ -255,7 +269,7 @@
     const a = TK.aff(c);
     const g = p.greet || {};
     const list = a <= COLD_AT ? g.cold : a >= 45 ? g.warm : a >= 10 ? g.mid : g.low;
-    return TK.fill(G.pick(lines(list || g.mid || ["{n}が顔を上げた。"])));
+    return TK.fill(pickL(lines(list || g.mid || ["{n}が顔を上げた。"]), "greet"));
   };
   // 話しかける（「〇〇と話す」）
   TK.open = (c, opt) => {
@@ -272,10 +286,10 @@
     // C2 のその人だけの話（出来事）も、ときどき一覧に混ざる
     const tags = tagsHere();
     const scenes = D.EVENTS.filter((e) => e.c2talk === c.c2 && e.where.some((w) => tags.includes(w)) && !(e.once && S.flags["ev:" + e.id]) && (!e.cond || e.cond(S)));
-    if (scenes.length && TK.aff(c) > COLD_AT && G.rand() < 0.4) st.cur.scene = G.pick(scenes).id;
+    if (scenes.length && TK.aff(c) > COLD_AT && TK.roll("scene") < 0.4) st.cur.scene = pickL(scenes, "scenes").id;
     G.say(st.cur.greet);
     enter("tk_menu", null);
-    if (!st.cur.menu.length && !st.cur.scene) { finish(TK.fill(G.pick(lines(p.empty || ["{n}は、黙って肩をすくめた。"])))); }
+    if (!st.cur.menu.length && !st.cur.scene) { finish(TK.fill(pickL(lines(p.empty || ["{n}は、黙って肩をすくめた。"]), "empty"))); }
     return true;
   };
   const varsFor = (tp, c, S) => {
@@ -331,7 +345,7 @@
     k.n++;
     k.topic = null;
     const mood = moodOf(r, text.join(""));
-    if (k.night || k.n >= PER_TALK) return finish(TK.fill(G.pick(lines(p.bye || ["{n}は伸びをして、話を切り上げた。"]))), mood);
+    if (k.night || k.n >= PER_TALK) return finish(TK.fill(pickL(lines(p.bye || ["{n}は伸びをして、話を切り上げた。"]), "bye")), mood);
     // 一覧に戻る（聞いた話題を抜いて、足りなければ足す）
     const left = (k.menu || []).filter((id) => id !== tp.id && TK.can(TK.topic(id), c, S));
     if (left.length < 2) {
@@ -339,7 +353,7 @@
       while (left.length < 3 && more.length) left.push(more.shift());
     }
     k.menu = left;
-    if (!left.length && !k.scene) return finish(TK.fill(G.pick(lines(p.bye || ["{n}は伸びをして、話を切り上げた。"]))), mood);
+    if (!left.length && !k.scene) return finish(TK.fill(pickL(lines(p.bye || ["{n}は伸びをして、話を切り上げた。"]), "bye")), mood);
     enter("tk_menu", mood);
   };
   // 会話を終える（施設から始まった会話は、施設に戻る）
@@ -364,7 +378,7 @@
     if (!o || !o.tk || !S) return apply0(o);
     G.tkState(S);
     const x = o.tk;
-    if (x.end) return finish(curComp() ? TK.fill(G.pick(lines((TK.data(curComp()) || {}).bye || ["{n}は、うなずいた。"]))) : null);
+    if (x.end) return finish(curComp() ? TK.fill(pickL(lines((TK.data(curComp()) || {}).bye || ["{n}は、うなずいた。"]), "bye")) : null);
     if (x.open) return TK.openTopic(x.open);
     if (x.reply !== undefined) return TK.reply(x.reply);
     if (x.side) return TK.side(x.side);
@@ -470,7 +484,7 @@
     TK.open(c, { night: true });
     const p = TK.data(c);
     G.log("title", "夜");
-    G.say(TK.fill(G.pick(lines((p.nightIntro || {})[where] || (where === "inn" ? "夜更け、部屋の戸が小さく叩かれた。{n}だった。" : "焚き火が小さくなったころ、{n}があなたの隣に腰を下ろした。")))));
+    G.say(TK.fill(pickL(lines((p.nightIntro || {})[where] || (where === "inn" ? "夜更け、部屋の戸が小さく叩かれた。{n}だった。" : "焚き火が小さくなったころ、{n}があなたの隣に腰を下ろした。")), "night")));
     return TK.openTopic(tp.id);
   };
   const afterSleep = (where) => {
