@@ -56,6 +56,7 @@
     // 格の違う相手との恋。key は engine の AP の鍵
     AP: {
       yoi: {
+        romance: true, // 恋の相手（docs/romance.md）。無ければ続き物は進まない
         who: "朧島の煙をまとった女",
         chron: "朧島の煙をまとった女と、ひと晩ぶんの契りを交わす",
         story: [
@@ -64,6 +65,7 @@
         ],
       },
       zalve: {
+        romance: true,
         who: "ブランデールの片眼鏡の両替商",
         chron: "ブランデールの両替商と、二人の名前の入った契約を交わす",
         story: [
