@@ -9,7 +9,9 @@
 
   // ---------------------------------------------------------------- 設定（このブラウザに保存）
   const SKEY = "morsveld-sound";
-  const DEF = { mute: false, sfx: 0.7, amb: 0.4 };
+  // mute は全体の切り替え。sfxOn・ambOn・dice は音ごとのオンオフ（S2。古い設定に無ければ既定値）
+  const DEF = { mute: false, sfx: 0.7, amb: 0.4, sfxOn: true, ambOn: true, dice: true };
+  snd.DEF = DEF;
   const loadSet = () => { try { const j = JSON.parse(globalThis.localStorage.getItem(SKEY)); return { ...DEF, ...(j || {}) }; } catch { return { ...DEF }; } };
   const saveSet = () => { try { globalThis.localStorage.setItem(SKEY, JSON.stringify(snd.settings)); } catch {} };
   snd.settings = loadSet();
@@ -128,12 +130,55 @@
     return hiss(E, t, { ft: "bandpass", ff: o.ff || 1200, ff2: o.ff2 || 5000, q: 1.6, a: 0.05, d: 0.12, g: o.g || 0.35, fglide: 0.15 });
   }
 
+  // ---------------------------------------------------------------- S2：ダイスが木の卓で転がって止まる音
+  // はねる時刻と強さの表（DOM・音なしでも作れる。テストはこれを見る）。short は戦闘の攻撃など続くところ用（1〜2 回はねるだけ）
+  // 返す：{ hits: [{ at, g, f, edge }], end }。at は始まりからの秒、f は木の胴の高さ
+  snd.ROLL_LAG = 0.5; // 結果の音を遅らせる秒（止まったところに重ねる）
+  snd.ROLL_LAG_SHORT = 0.2;
+  snd.rollPlan = (short) => {
+    const hits = [];
+    const base = rr(480, 680);
+    let at = 0, g = rr(0.45, 0.55);
+    let gap = short ? rr(0.07, 0.1) : rr(0.12, 0.16);
+    const n = short ? 1 + (R() < 0.5 ? 1 : 0) : 3 + Math.floor(R() * 3);
+    for (let i = 0; i < n; i++) {
+      hits.push({ at, g, f: base * rr(0.9, 1.15), edge: R() < 0.45 });
+      at += gap; gap *= rr(0.55, 0.75); g *= rr(0.62, 0.8);
+    }
+    // 転がる：角が卓を細かく叩く
+    if (!short) for (let k = 2 + Math.floor(R() * 3), i = 0; i < k; i++) { hits.push({ at, g: g * rr(0.25, 0.4), f: base * rr(1.1, 1.4) }); at += rr(0.018, 0.032); }
+    // コトン：面が座って止まる（低く、少し重い）
+    at += short ? rr(0.02, 0.04) : rr(0.03, 0.05);
+    hits.push({ at, g: Math.max(g, 0.18) * 1.1, f: base * rr(0.7, 0.8), last: true });
+    let end = at + 0.08;
+    // 長さを 0.4〜0.7 秒（短い版は 0.12〜0.3 秒）に収める
+    const [lo, hi] = short ? [0.12, 0.3] : [0.42, 0.68];
+    const k = end < lo ? lo / end : end > hi ? hi / end : 1;
+    if (k !== 1) { hits.forEach((h) => { h.at *= k; }); end *= k; }
+    return { hits, end };
+  };
+  // 一打：角が当たる高い「カッ」＋木の胴の短い響き
+  function knock(E, t, h) {
+    hiss(E, t, { ft: "bandpass", ff: h.f * rr(4.5, 6.5), q: 2.5, a: 0.0008, d: h.last ? 0.02 : 0.03, g: h.g * 0.55 });
+    tone(E, t, { type: "triangle", f: h.f, f2: h.f * 0.94, g: h.g * 0.45, a: 0.001, d: h.last ? 0.09 : 0.06, wet: 0.1 });
+    tone(E, t, { f: h.f * 2.63, g: h.g * 0.18, a: 0.001, d: 0.03 });
+    if (h.edge) hiss(E, t + rr(0.012, 0.024), { ft: "bandpass", ff: h.f * rr(5, 7), q: 3, a: 0.0008, d: 0.02, g: h.g * 0.25 });
+    if (h.last) tone(E, t, { f: h.f * 0.4, f2: h.f * 0.33, g: h.g * 0.35, a: 0.002, d: 0.1 });
+  }
+  function rollSound(E, t, short) {
+    const p = snd.rollPlan(short);
+    p.hits.forEach((h) => knock(E, t + h.at, h));
+    return t + p.end;
+  }
+
   // ---------------------------------------------------------------- 効果音（名前 → 合成）。どれも t から鳴らし、終わる時刻を返す
   const SFX = {
     // 画面
     click: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 2400, q: 3, g: 0.12, d: 0.03 }); return tone(E, t, { f: 210, f2: 150, g: 0.12, d: 0.05 }); },
     page: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 3200, ff2: 1600, q: 0.8, a: 0.04, d: 0.12, g: 0.1 }); return hiss(E, t + 0.09, { ft: "highpass", ff: 2500, a: 0.01, d: 0.1, g: 0.07 }); },
-    // 判定
+    // 判定。roll はダイスを振る音（結果の音より先に鳴らす）、rollShort は短い版
+    roll: (E, t) => rollSound(E, t, false),
+    rollShort: (E, t) => rollSound(E, t, true),
     // M7：振り直し。遠くで誰かが小さく二度、手を打つ
     clap: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 1500, q: 1.2, a: 0.002, d: 0.06, g: 0.12, wet: 0.7 }); return hiss(E, t + 0.32, { ft: "bandpass", ff: 1400, q: 1.2, a: 0.002, d: 0.06, g: 0.1, wet: 0.7 }); },
     ok: (E, t) => { bell(E, t, 220, { g: 0.22, d: 1.0, parts: [[1, 1], [2, 0.35], [3.01, 0.2], [4.2, 0.08]] }); return tone(E, t, { f: 110, g: 0.12, d: 0.5, type: "triangle" }); },
@@ -392,6 +437,8 @@
     const add = (c, e) => { if (c && !cues.includes(c)) { cues.push(c); from.push(e || null); } };
     news.forEach((e) => {
       if (e.k === "you") ctx.magic = MAGIC.test(e.text || "");
+      // S2：判定の前にダイスを振る音。攻撃の判定は短い版。同じ手番の 2 回目以降は add が省く（同じ名前は一度だけ）
+      if (e.k === "dice" && snd.settings.dice !== false && !e.rr) add(/^(攻撃|急所狙い)$/.test(e.reason) ? "rollShort" : "roll", e);
       add(cueOf(e, ctx), e);
     });
     if (!fresh) {
@@ -404,9 +451,9 @@
       if (!cues.length && news.length) add("page");
     }
     prev = { S, foes, gold: S.gold, inv: Object.values(S.inv || {}).reduce((a, n) => a + n, 0), combat: !!S.combat, over: S.over };
-    snd.cueFrom = from.slice(0, 5);
+    snd.cueFrom = from.slice(0, 6);
     snd.cueNews = news;
-    return cues.slice(0, 5);
+    return cues.slice(0, 6);
   };
   snd.forget = () => { prev = null; seen = null; };
   // 冒険から作成画面に戻ったら環境音を止める（main.js は最後に読まれるので、最初に描くときに包む）
@@ -423,7 +470,14 @@
     const cues = snd.cues(S);
     // 戦闘の演出（ui/fx.js）がある記録の音は、その絵が出る瞬間に鳴らす。ほかは少しずつずらす
     const at = G.fx && G.fx.plan ? new Map(G.fx.plan(snd.cueNews).map((p) => [p.src, p.at / 1000])) : null;
-    cues.forEach((c, i) => { const e = snd.cueFrom[i]; snd.play(c, at && e && at.has(e) ? at.get(e) : i * 0.17); });
+    // ダイスを振る音のあとの音は、ダイスが止まるまで遅らせる（戦闘の演出に合わせる音はそのまま）
+    let lag = 0, j = 0;
+    cues.forEach((c, i) => {
+      const e = snd.cueFrom[i];
+      if (c === "roll" || c === "rollShort") { snd.play(c, j * 0.17 + lag); lag += c === "roll" ? snd.ROLL_LAG : snd.ROLL_LAG_SHORT; return; }
+      snd.play(c, at && e && at.has(e) ? at.get(e) : j * 0.17 + lag);
+      j++;
+    });
     if (S) snd.ambient(snd.ambFor(S));
   };
 
@@ -435,8 +489,8 @@
     if (!E) return;
     const st = snd.settings;
     const now = E.ctx.currentTime;
-    E.sfx.gain.setTargetAtTime(st.mute ? 0 : st.sfx, now, 0.05);
-    E.amb.gain.setTargetAtTime(st.mute ? 0 : st.amb * 0.5, now, 0.3);
+    E.sfx.gain.setTargetAtTime(st.mute || st.sfxOn === false ? 0 : st.sfx, now, 0.05);
+    E.amb.gain.setTargetAtTime(st.mute || st.ambOn === false ? 0 : st.amb * 0.5, now, 0.3);
   };
   function wake() {
     if (E) { if (E.ctx.state === "suspended") E.ctx.resume().catch(() => {}); return; }
@@ -452,7 +506,9 @@
   document.addEventListener("click", (ev) => { const b = ev.target.closest && ev.target.closest("button"); if (b && !b.disabled && !b.classList.contains("act")) snd.play("click"); }, true);
 
   snd.play = (name, delay) => {
-    if (!E || snd.settings.mute || !SFX[name] || E.ctx.state !== "running") return;
+    const st = snd.settings;
+    if (!E || st.mute || !SFX[name] || E.ctx.state !== "running") return;
+    if (st.sfxOn === false || ((name === "roll" || name === "rollShort") && st.dice === false)) return;
     try { SFX[name](E, E.ctx.currentTime + 0.01 + (delay || 0)); } catch {}
   };
 
@@ -490,9 +546,10 @@
     dlg.id = "dlgSound";
     dlg.innerHTML = `<div class="dhead"><h2>音</h2><button class="btn" type="button" data-close>閉じる</button></div>
       <div class="dbody sound">
-        <label class="srow"><input type="checkbox" id="sndMute"> 消音する</label>
-        <label class="srow"><span>効果音</span><input type="range" id="sndSfx" min="0" max="100" step="5"><output id="sndSfxV" class="num"></output></label>
-        <label class="srow"><span>環境音</span><input type="range" id="sndAmb" min="0" max="100" step="5"><output id="sndAmbV" class="num"></output></label>
+        <label class="srow smute"><input type="checkbox" id="sndMute"> 消音する（すべての音）</label>
+        <div class="srow"><label class="son"><input type="checkbox" id="sndSfxOn"> 効果音</label><input type="range" id="sndSfx" min="0" max="100" step="5" aria-label="効果音の音量"><output id="sndSfxV" class="num"></output></div>
+        <div class="srow"><label class="son"><input type="checkbox" id="sndAmbOn"> 環境音</label><input type="range" id="sndAmb" min="0" max="100" step="5" aria-label="環境音の音量"><output id="sndAmbV" class="num"></output></div>
+        <label class="srow sdice"><input type="checkbox" id="sndDice"> ダイスの音（判定のときに振る音）</label>
         <div class="start"><button class="btn" type="button" id="sndTest">試しに鳴らす</button></div>
         <p class="fine">設定はこのブラウザに保存されます。音は画面を一度押してから鳴ります。</p>
       </div>`;
@@ -501,17 +558,22 @@
     const sync = () => {
       const st = snd.settings;
       $("sndMute").checked = st.mute;
+      $("sndSfxOn").checked = st.sfxOn !== false; $("sndAmbOn").checked = st.ambOn !== false; $("sndDice").checked = st.dice !== false;
+      $("sndSfx").disabled = !$("sndSfxOn").checked; $("sndAmb").disabled = !$("sndAmbOn").checked;
+      $("sndDice").disabled = !$("sndSfxOn").checked;
       $("sndSfx").value = Math.round(st.sfx * 100); $("sndSfxV").textContent = Math.round(st.sfx * 100);
       $("sndAmb").value = Math.round(st.amb * 100); $("sndAmbV").textContent = Math.round(st.amb * 100);
       label();
     };
     const change = () => {
-      snd.settings = { mute: $("sndMute").checked, sfx: $("sndSfx").value / 100, amb: $("sndAmb").value / 100 };
+      snd.settings = { ...snd.settings, mute: $("sndMute").checked, sfx: $("sndSfx").value / 100, amb: $("sndAmb").value / 100,
+        sfxOn: $("sndSfxOn").checked, ambOn: $("sndAmbOn").checked, dice: $("sndDice").checked };
       saveSet(); sync(); vol();
     };
-    ["sndMute", "sndSfx", "sndAmb"].forEach((id) => $(id).addEventListener("input", change));
+    ["sndMute", "sndSfx", "sndAmb", "sndSfxOn", "sndAmbOn", "sndDice"].forEach((id) => $(id).addEventListener("input", change));
+    $("sndDice").addEventListener("change", () => { if ($("sndDice").checked) { wake(); snd.play("roll"); snd.play("ok", snd.ROLL_LAG); } });
     $("sndSfx").addEventListener("change", () => snd.play("slash"));
-    $("sndTest").onclick = () => { wake(); ["ok", "slash", "coin"].forEach((c, i) => snd.play(c, 0.05 + i * 0.35)); };
+    $("sndTest").onclick = () => { wake(); snd.play("roll", 0.05); ["ok", "slash", "coin"].forEach((c, i) => snd.play(c, 0.05 + snd.ROLL_LAG + i * 0.35)); };
     dlg.querySelector("[data-close]").onclick = () => dlg.close();
     dlg.addEventListener("click", (ev) => { if (ev.target === dlg) dlg.close(); });
     b.onclick = () => { sync(); dlg.showModal(); };
@@ -519,10 +581,11 @@
   buildSettings();
 
   // 検証用：OfflineAudioContext に同じ卓を組んで鳴らす（tools/sound_check.mjs が使う）
-  snd._offline = (ctx, name, isAmb) => {
+  //   name を配列にすると、同じ卓で順に鳴らす（at は始まりの秒の配列）
+  snd._offline = (ctx, name, isAmb, at) => {
     const D = makeDesk(ctx);
     D.sfx.gain.value = 1; D.amb.gain.value = 0.5;
     if (isAmb) { const g = ctx.createGain(); g.connect(D.amb); const m = AMB[name](D, g); if (m.tick) for (let t = 0.2; t < ctx.length / ctx.sampleRate - 1; t += 1.1) m.tick(t); return; }
-    SFX[name](D, 0.01);
+    [].concat(name).forEach((n, i) => SFX[n](D, 0.01 + ((at && at[i]) || 0)));
   };
 })(globalThis.G = globalThis.G || {});
