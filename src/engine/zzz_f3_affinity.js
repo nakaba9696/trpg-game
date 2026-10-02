@@ -107,7 +107,12 @@
   }
 
   // ふつうの仲間の加わり方で、F2 の named の人（同じ名前）が仲間になったとき
-  const namedByName = (name) => Object.keys(D.F2_PEOPLE || {}).find((id) => (D.F2_PEOPLE[id].name || "") === name && !(D.C2_PEOPLE || {})[id]) || null;
+  // 呼び名は C3（D.C3_NAMES）で読み替わるので、今の名前・名乗る前の呼び名・前の呼び名（was）のどれでも引く
+  const namesOf = (id) => {
+    const q = (D.F2_PEOPLE || {})[id] || {}, t = (D.C3_NAMES || {})[id] || {};
+    return [q.name, t.name, t.alias, ...(t.was || [])].filter(Boolean);
+  };
+  const namedByName = (name) => Object.keys(D.F2_PEOPLE || {}).find((id) => !(D.C2_PEOPLE || {})[id] && namesOf(id).includes(name)) || null;
   const add0 = G.addCompanion;
   G.addCompanion = (c) => {
     const S = G.S;
