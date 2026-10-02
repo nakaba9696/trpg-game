@@ -128,7 +128,7 @@
     lucien: P({
       romance: true, name: "ルシアン", full: "ルシアン・ヴェルモア", nation: "レオネスト", role: "王都の下町を受け持つ徴税吏。下町じゅうから石を投げられる嫌われ者。言い訳をしない。取り立てた税の一部をくすね、下町の井戸と薬と冬の薪に回している。その帳面を上役に握られている", sex: "男", age: 47, race: "human",
       schedule: [{ from: "春", to: "冬", loc: "leavel", note: "王都の下町の坂で、投げられた石を拾っている" }],
-      who: { kind: "noble", sex: "男", age: 47, seed: "c2:lucien", look: { hair: "#3a3632", hairStyle: "receding", eyes: "narrow", iris: "#5a6a7a", mouth: "flat", brows: "worried", outfit: "coat", head: "hat", gear: "none", chest: "keys", cloth: "#2e2e36", build: "slim", marks: ["bags", "wrinkles", "scar"], bg: "#5a5048" } },
+      who: { kind: "noble", sex: "男", age: 47, seed: "c2:lucien", look: { hair: "#6a2a22", hairStyle: "receding", eyes: "narrow", iris: "#9aa0a8", mouth: "flat", brows: "worried", outfit: "coat", head: "hat", gear: "none", chest: "keys", cloth: "#2e2e36", build: "slim", marks: ["bags", "wrinkles", "scar"], bg: "#5a5048" } },
       join: {
         cls: "徴税吏", desc: "嫌われ者。帳面は合っている", power: 50, dmg: 2, trait: "cold", bond: 50, home: ["leavel"],
         life: { home: "王都の下町の外れ、窓に板を打ちつけた一間", kin: "家を出ていった妻と娘", food: "下町の屋台の安い葡萄酒と、固くなった焼き菓子", habit: "石を投げられても、拾って道の端に寄せる", secret: "帳面は二冊ある。二冊目の最後の頁に、下町の家の名が並び、いくつかに線が引いてある", keep: "娘が小さいころに描いた、徴税吏の絵（笑っている）" },
@@ -171,7 +171,7 @@
         { from: "春", to: "秋", loc: "plains", note: "焚書の荷車を引いて、王都への街道を行き来している" },
         { from: "冬", to: "冬", loc: "leavel", note: "冬は雪で荷車が出ず、王都の焚書局の屋根裏で本を読んでいる" },
       ],
-      who: { kind: "adventurer", sex: "男", age: 21, seed: "c2:lazare", look: { hair: "#1a1a22", hairStyle: "messy", eyes: "sharp", iris: "#a83a3a", mouth: "smirk", brows: "angry", outfit: "cloak", head: "none", gear: "daggers", chest: "chain", cloth: "#1e1e26", build: "slim", marks: ["bandage"], bg: "#4a2a2a" } },
+      who: { kind: "adventurer", sex: "男", age: 21, seed: "c2:lazare", look: { hair: "#a81e2a", hairStyle: "messy", eyes: "sharp", iris: "#d8a830", mouth: "smirk", brows: "angry", outfit: "cloak", head: "none", gear: "daggers", chest: "chain", cloth: "#3a3a40", build: "slim", marks: ["bandage"], bg: "#4a2a2a" } },
       join: {
         cls: "焚書官見習い", desc: "口が悪い。読書量は王都いち", power: 50, dmg: 2, fire: true, trait: "braggart", bond: 46, home: ["leavel"],
         life: { home: "王都の焚書局の屋根裏（窓は北向き）", kin: "焚書の火で死んだ写本屋の両親", food: "焦げた所を切り落とした黒パン（甘い物は嫌いだと言い張る）", habit: "焚き火の前で、何も持たずに頁をめくる手つきをしている", secret: "師匠を斬る夢を見る。斬る前に、いつも師匠のほうが先に本を閉じる", keep: "焦げた写本の表紙だけ" },
@@ -207,7 +207,7 @@
     violaine: P({
       romance: true, name: "ヴィオレーヌ", full: "ヴィオレーヌ・ド・サンテール", nation: "レオネスト", role: "没落した騎士家の娘。騎士学校を首席で出たが、父の賭けの借金で家は傾き、ブランデールで荷運びと犬の散歩の日雇いをしている。姉御肌で面倒見がよく、真面目で堅物。恋の話には首まで赤くなる。首席の褒美の剣は質に入っている", sex: "女", age: 25, race: "human",
       schedule: [{ from: "春", to: "冬", loc: "karna", note: "自由都市の大通りで、五匹の犬に引きずられている" }],
-      who: { kind: "knight", sex: "女", age: 25, seed: "c2:violaine", look: { hair: "#6a4a8a", hairStyle: "ponytail", eyes: "round", iris: "#4a6aa8", mouth: "frown", brows: "worried", outfit: "tunic", head: "none", gear: "sword", chest: "crest", cloth: "#5a5a7a", build: "normal", marks: ["bandage", "blush"], bg: "#6a6a8a" } },
+      who: { kind: "knight", sex: "女", age: 25, seed: "c2:violaine", look: { hair: "#3a5aa8", hairStyle: "ponytail", eyes: "round", iris: "#c8902a", mouth: "frown", brows: "worried", outfit: "tunic", head: "none", gear: "sword", chest: "crest", cloth: "#5a5a7a", build: "normal", marks: ["bandage", "blush"], bg: "#6a6a8a" } },
       join: {
         cls: "日雇いの騎士", desc: "首席。借金も首席", power: 58, dmg: 2, trait: "just", bond: 52, home: ["karna"],
         life: { home: "ブランデールの下宿の、いちばん安い北向きの部屋", kin: "賭けをやめられない父と、家を守る病弱な母", food: "豆の粥（三日分まとめて煮る）", habit: "質札を出しては数え、数えてはしまう", secret: "首席の褒美の剣の質札は、あと一月で流れる", keep: "質札の束と、騎士学校の首席の徽章" },
@@ -238,11 +238,11 @@
     // ================================================================ 仲間の周りの人
     gramont: P({
       name: "グラモン", full: "オクターヴ・ド・グラモン", nation: "レオネスト", role: "王国の徴税総監。香水の匂いのする、物腰のやわらかな老紳士。国庫を一枚も減らさないためなら、下町の一軒や二軒、帳面から消す。ルシアンの二冊目の帳面を握っている", sex: "男", age: 58, race: "human",
-      who: { kind: "noble", sex: "男", age: 58, seed: "c2:gramont", look: { hair: "#d8d4cc", hairStyle: "slick", eyes: "narrow", iris: "#4a4a5a", mouth: "smile", brows: "calm", outfit: "noble", head: "none", gear: "none", chest: "gem", cloth: "#4a2a4a", build: "normal", marks: ["monocle", "wrinkles"], bg: "#5a3a4a" } },
+      who: { kind: "noble", sex: "男", age: 58, seed: "c2:gramont", look: { hair: "#22201e", hairStyle: "ponytail", eyes: "narrow", iris: "#b8862a", mouth: "smile", brows: "calm", outfit: "noble", head: "none", gear: "none", chest: "gem", cloth: "#4a2a4a", build: "normal", marks: ["glasses", "wrinkles"], bg: "#5a3a4a" } },
     }),
     berangere: P({
       name: "ベランジェール", full: "ベランジェール・ド・ロシュ", nation: "レオネスト", role: "王国の近衛騎士。騎士学校の次席で、首席のヴィオレーヌを宿敵と呼ぶ正統派のお嬢様。真面目でポンコツ。見下すふりをして、ヴィオレーヌの借金取りに裏から金を回している", sex: "女", age: 25, race: "human",
-      who: { kind: "knight", sex: "女", age: 25, seed: "c2:berangere", look: { hair: "#e8c870", hairStyle: "long", eyes: "sharp", iris: "#3a7a8a", mouth: "frown", brows: "raised", outfit: "plate", head: "circlet", gear: "sword", chest: "crest", cloth: "#d8dce8", build: "slim", marks: [], bg: "#8a8aa8" } },
+      who: { kind: "knight", sex: "女", age: 25, seed: "c2:berangere", look: { hair: "#a8d0e8", hairStyle: "long", eyes: "sharp", iris: "#4a8a4a", mouth: "frown", brows: "raised", outfit: "plate", head: "circlet", gear: "sword", chest: "crest", cloth: "#d8dce8", build: "slim", marks: [], bg: "#8a8aa8" } },
     }),
     marion: P({
       name: "マリオン", full: "マリオン・ムーラン", nation: "レオネスト", role: "麦の都グランベールの粉挽きの女房。ボードワンの母。腰の曲がった小さな人で、大男の息子を箒で追い回す。村の水車の帳面は、全部この人が付けている", sex: "女", age: 63, race: "human",
@@ -254,7 +254,7 @@
     }),
     odette: P({
       name: "オデット", full: "オデット・ラクロワ", nation: "レオネスト", role: "港町ヴァレンツァの葬儀屋の未亡人。泣き女の手配から棺の値切りまで一人でやる。はんなりした話し方で、商売の悪巧みを隠さない。身寄りのない死体だけ、裏通りの医者に売る", sex: "女", age: 39, race: "human",
-      who: { kind: "merchant", sex: "女", age: 39, seed: "c2:odette", look: { hair: "#1a1a1e", hairStyle: "bun", eyes: "narrow", iris: "#4a3a5a", mouth: "smirk", brows: "calm", outfit: "noble", head: "veil", gear: "none", chest: "keys", cloth: "#1e1a22", build: "normal", marks: ["earring"], bg: "#3a3a4a" } },
+      who: { kind: "merchant", sex: "女", age: 39, seed: "c2:odette", look: { hair: "#d8d8dc", hairStyle: "bob", eyes: "narrow", iris: "#7a7a80", mouth: "smirk", brows: "calm", outfit: "noble", head: "veil", gear: "none", chest: "keys", cloth: "#1e1a22", build: "normal", marks: ["earring"], bg: "#3a3a4a" } },
     }),
   });
 
