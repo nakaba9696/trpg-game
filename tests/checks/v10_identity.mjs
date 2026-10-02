@@ -46,7 +46,7 @@ export default ({ fail, ok }) => {
   if (!/denoising: 0\.35/.test(gen)) F("tools/gen_portraits.mjs の差分の denoising の既定が 0.35 でない");
   const style = JSON.parse(readFileSync(new URL("../../docs/art/style.json", import.meta.url), "utf8"));
   const d = style.variants && style.variants.denoising;
-  if (!(d >= 0.3 && d <= 0.4)) F(`style.json の variants.denoising が 0.3〜0.4 でない：${d}`);
+  if (!(d >= 0.3 && d <= 0.55)) F(`style.json の variants.denoising が 0.3〜0.55 でない（0.35 では表情が変わらず、art-batch-e で 0.5 に）：${d}`);
 
   ok(`V10：名のある人物 ${named.length} 人に identity（髪の色・髪型・目の色）、差分は identity・tags のまま表情だけ替える`);
 };
