@@ -311,11 +311,12 @@ const ok = (msg) => console.log("OK   " + msg);
   // I1 の品が手に入った回数（G.give を数える）
   const gains = {};
   const learned = {}; // M1：遊んでいるうちに覚えた術
+  const codexAll = {}; // F2：図鑑は冒険をまたいで残る（150 回のあいだ同じ図鑑を使う）
   const give0 = G.give;
   G.give = (id, n) => { if (String(id).startsWith("i1_") && G.S.turn > 0) gains[id] = (gains[id] || 0) + (n || 1); return give0(id, n); };
   for (let g = 0; g < GAMES; g++) {
     G.rand = seeded(1000 + g);
-    G.P = { trophies: {}, graves: [] };
+    G.P = { trophies: {}, graves: [], codex: codexAll };
     const cls = Object.keys(D.CLASSES)[g % 5];
     const stats = {}, caps = {};
     D.STATS.forEach((k) => { stats[k] = D.CLASSES[cls].base[k] + 5; caps[k] = stats[k] + 30; });
@@ -374,6 +375,11 @@ const ok = (msg) => console.log("OK   " + msg);
   G.give = give0;
   const gained = Object.entries(gains).sort((a, b) => b[1] - a[1]).map(([id, n]) => `${D.ITEMS[id].name} ${n}`);
   console.log(`NOTE ランダムプレイで I1 の品が手に入った回数（${Object.keys(gains).length}/15 種）: ${gained.join("・") || "なし"}`);
+  if (G.codexCount) {
+    const cc = G.codexCount();
+    console.log(`NOTE ランダムプレイのあとの図鑑：アイテム ${cc.items}/${cc.itemsAll}・魔物 ${cc.foes}/${cc.foesAll}（倒した ${cc.kills}）`);
+    if (cc.items < 20 || cc.foes < 20 || cc.kills < 10) fail(`図鑑があまり埋まらない（アイテム ${cc.items}・魔物 ${cc.foes}・倒した ${cc.kills}）`);
+  }
   console.log(`NOTE ランダムプレイで覚えた術: ${Object.entries(learned).map(([id, n]) => `${D.SPELLS[id].name} ${n}`).join("・") || "なし"}`);
   if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
 }
