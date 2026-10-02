@@ -170,12 +170,12 @@
   // ---------------------------------------------------------------- 並べ方・台詞の選び方の乱数
   // 話題の並び・声のかけ方・切り上げの一言は、状態（冒険・手番・日・仲間・何番目の話）から決まる乱数で選ぶ。
   // G.rand の並びを使わないので、会話をしても戦い・出来事の乱数の並びは変わらない（テストでは種で固定される）。
-  // 起きるかどうか（夜の会話・掛け合い）だけは G.rand で決める
+  // 起きるかどうか（夜の会話・掛け合い）だけは G.rand で決める。種は冒険の初めに G.rand で引く S.wseed（weather.js。S.id は Date.now を含むのでテストで揺れる。古いセーブは S.id に戻る）
   TK.roll = (salt) => {
     const S = G.S || {};
     const k = S.tk && S.tk.cur;
     let h = 2166136261;
-    for (const ch of [S.id, S.turn, S.day, k && k.cid, k && k.n, salt].join("|")) h = Math.imul(h ^ ch.codePointAt(0), 16777619);
+    for (const ch of [S.wseed || S.id, S.turn, S.day, k && k.cid, k && k.n, salt].join("|")) h = Math.imul(h ^ ch.codePointAt(0), 16777619);
     h ^= h >>> 15; h = Math.imul(h, 2246822507); h ^= h >>> 13;
     return (h >>> 0) / 4294967296;
   };
