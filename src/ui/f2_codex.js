@@ -1,7 +1,7 @@
 // F2：図鑑の窓（アイテム／魔物をタブで切り替え。一覧の格子 → 押すと詳しい説明）。上の道具の列に「図鑑」ボタンを足す。
 // 記録と性能・入手場所・説明はエンジン（engine/zz_f2_codex.js）が引く。ここは描くだけ。
-// 新しく埋まった項目は、格子に印・ボタンに印・画面の隅に「図鑑に追加：〇〇」（ui.toast。通知は縦に重ねるので、ほかの通知と重ならない）。
-// 説明の文は F2.paintText の一か所で描く（I2 の G.i2.paintFlavor があればそれを通す。U8 の用語の強調は、この関数を包んで差し替えればよい）。
+// 新しく埋まった項目は、格子に印・ボタンに印・画面の左下に「図鑑に追加：〇〇」（U8 の「用語集に追加」と同じ箱に縦に並べるので重ならない）。
+// 説明の文は F2.paintText の一か所で描く（アイテムは I2 の G.i2.paintFlavor を通す。U8 の G.gloss.mark で用語を強調。過去の冒険の行は強調しない）。
 // index.html・ui.js・v9_pc は書き換えない（窓とボタンはここで作る）。見た目は ui/f2_codex.css。レーン F（F2）
 (function (G) {
   if (typeof document === "undefined") return;
@@ -11,9 +11,12 @@
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 
   // ---------------------------------------------------------------- 説明の文を描く入口（一か所）
+  // kind：item（I2 の G.i2.paintFlavor を通す）/ foe / person / lore（今の冒険で知った行）/ lorePast（過去の冒険で知った行）
+  // U8 の用語の強調（G.gloss.mark。今の冒険で開いた言葉だけ）を通す。過去の冒険の行は、今の主人公が知らないので通さない
   F2.paintText = (el, text, kind, id) => {
-    if (kind === "item" && G.i2 && typeof G.i2.paintFlavor === "function") { try { G.i2.paintFlavor(el, text, id); return; } catch {} }
-    el.textContent = text;
+    if (kind === "item" && G.i2 && typeof G.i2.paintFlavor === "function") { try { G.i2.paintFlavor(el, text, id); } catch { el.textContent = text; } }
+    else el.textContent = text;
+    if (kind !== "lorePast" && G.S && G.gloss && typeof G.gloss.mark === "function") { try { G.gloss.mark(el); } catch {} }
   };
 
   // ---------------------------------------------------------------- 窓とボタン
@@ -60,9 +63,22 @@
     saveT = setTimeout(() => { if (G.main && G.main.saveProfile) G.main.saveProfile(); }, 400);
     markBtn();
   };
+  // 「図鑑に追加：〇〇」は U8 の「用語集に追加」と同じ箱（左下の #u8note）に並べる。箱が無ければふつうの通知
+  let noteT = 0;
+  const announce = (nm) => {
+    const box = $("#u8note");
+    if (!box) { if (G.ui && G.ui.toast) G.ui.toast("図鑑に追加：", nm); return; }
+    const line = h("div", "u8line f2line-note");
+    line.append(h("span", "u8star", "◆"), h("span", "", "図鑑に追加："), h("b", "", nm));
+    box.append(line);
+    while (box.children.length > 4) box.firstChild.remove();
+    box.hidden = false;
+    clearTimeout(noteT);
+    noteT = setTimeout(() => { box.querySelectorAll(".f2line-note").forEach((x) => x.remove()); if (!box.children.length) box.hidden = true; }, 4200);
+  };
   G.onCodex = (kind, id) => {
     const nm = kind === "item" ? (D.ITEMS[id] || {}).name : kind === "person" ? F2.personName(id) : (D.ENEMIES[id] || {}).name;
-    if (nm && G.ui && G.ui.toast) G.ui.toast("図鑑に追加：", nm);
+    if (nm) announce(nm);
   };
 
   // ---------------------------------------------------------------- 絵
