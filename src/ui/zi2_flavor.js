@@ -3,7 +3,7 @@
 //   ・装備の行（武器・防具・装飾品）：マウスを乗せると札
 //   ・商店・戦闘の道具など、行動のボタンが品を指しているとき：マウスを乗せる・キーで選ぶと札
 //   ・記録の文（宝箱で手に入れた・買った・拾った）：品の名前に点線。マウスを乗せると札
-// ui.js は書き換えず、描いたあとに印（data-i2item）を付けて包む。見た目は src/ui/zi2_flavor.css。レーン I（I2）
+// ui.js は書き換えず、描いたあとに印（data-i2item）を付けて包む。説明の文は G.i2.paintFlavor の一か所で描く（U8 の用語の強調が包めるように）。見た目は src/ui/zi2_flavor.css。レーン I（I2）
 (function (G) {
   if (typeof document === "undefined" || typeof window === "undefined") return;
   const ui = G.ui;
@@ -12,6 +12,12 @@
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+
+  // ---------------------------------------------------------------- 説明の文を描く入口（一か所だけ）
+  // 説明の文は、ここで文字列のまま描く。用語の強調（U8）などは G.i2.paintFlavor を包んで差し替える：
+  //   const prev = G.i2.paintFlavor; G.i2.paintFlavor = (el, text, id) => { ...el に描く... };
+  const i2 = (G.i2 = G.i2 || {});
+  i2.paintFlavor = i2.paintFlavor || ((el, text) => { el.textContent = text; });
 
   // ---------------------------------------------------------------- 札
   const card = h("div");
@@ -27,7 +33,7 @@
     box.textContent = "";
     box.append(h("b", "i2name", it.name));
     if (eff) box.append(h("span", "i2eff", eff));
-    if (fl) box.append(h("p", "i2fl", fl));
+    if (fl) { const p = h("p", "i2fl"); G.i2.paintFlavor(p, fl, id); box.append(p); }
     return !!(eff || fl);
   };
   let shownFor = null;
