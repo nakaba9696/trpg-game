@@ -50,7 +50,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (m && !vids.includes(m[1])) F(`assets/portraits/${f} は差分の絵だが、一覧の ${m[1]} に variants が無い`);
     }
   }
-  // 埋め込みの上限（12MB）は、置いた絵の実際の大きさでビルドとテストが見る（tools/assets.mjs）。差分の数では止めない（V11）
+  // 大きさ：既定は画像を外のファイルにする形（tools/build.mjs）なので、差分の数は埋め込みの上限に縛られない。
+  // 予備の埋め込み（--embed）は上限を超えると差分を省く（tools/assets.mjs の shrink）。外のファイルの大きさは a6_site.mjs が見る
 
   // ---------------------------------------------------------------- 出来事の mood
   const okMood = (m) => m === undefined || MOODS.includes(m);
