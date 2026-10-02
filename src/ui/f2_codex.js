@@ -1,0 +1,280 @@
+// F2：図鑑の窓（アイテム／魔物をタブで切り替え。一覧の格子 → 押すと詳しい説明）。上の道具の列に「図鑑」ボタンを足す。
+// 記録と性能・入手場所・説明はエンジン（engine/f2_codex.js）が引く。ここは描くだけ。
+// 新しく埋まった項目は、格子に印・ボタンに印・画面の隅に「図鑑に追加：〇〇」（ui.toast。通知は縦に重ねるので、ほかの通知と重ならない）。
+// 説明の文は F2.paintText の一か所で描く（I2 の G.i2.paintFlavor があればそれを通す。U8 の用語の強調は、この関数を包んで差し替えればよい）。
+// index.html・ui.js・v9_pc は書き換えない（窓とボタンはここで作る）。見た目は ui/f2_codex.css。レーン F（F2）
+(function (G) {
+  if (typeof document === "undefined") return;
+  const D = G.data;
+  const F2 = (G.f2 = G.f2 || {});
+  const $ = (s) => document.querySelector(s);
+  const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+  // ---------------------------------------------------------------- 説明の文を描く入口（一か所）
+  F2.paintText = (el, text, kind, id) => {
+    if (kind === "item" && G.i2 && typeof G.i2.paintFlavor === "function") { try { G.i2.paintFlavor(el, text, id); return; } catch {} }
+    el.textContent = text;
+  };
+
+  // ---------------------------------------------------------------- 窓とボタン
+  const dlg = h("dialog");
+  dlg.id = "dlgCodex";
+  dlg.setAttribute("aria-labelledby", "codexTitle");
+  const head = h("div", "dhead");
+  const title = h("h2", "", "図鑑");
+  title.id = "codexTitle";
+  const close = h("button", "btn", "閉じる");
+  close.type = "button";
+  close.onclick = () => dlg.close();
+  head.append(title, close);
+  const body = h("div", "dbody f2");
+  const tabs = h("div", "tabs");
+  tabs.setAttribute("role", "tablist");
+  const tab = (key, label) => { const b = h("button", "btn", label); b.type = "button"; b.setAttribute("role", "tab"); b.dataset.tab = key; b.onclick = () => show(key); return b; };
+  const tabI = tab("item", "アイテム図鑑"), tabF = tab("foe", "魔物図鑑");
+  tabs.append(tabI, tabF);
+  const sum = h("p", "fine f2sum");
+  const panes = h("div", "f2panes");
+  const list = h("div", "f2list");
+  const detail = h("div", "f2detail");
+  detail.setAttribute("aria-live", "polite");
+  panes.append(list, detail);
+  body.append(tabs, sum, panes);
+  dlg.append(head, body);
+  dlg.addEventListener("click", (ev) => { if (ev.target === dlg) dlg.close(); });
+  document.body.append(dlg);
+
+  const btn = h("button", "btn", "図鑑");
+  btn.id = "openCodex";
+  btn.type = "button";
+  btn.onclick = () => F2.open();
+  const tro = $("#openTrophy");
+  if (tro) tro.after(btn); else { const t = $(".top .tools"); if (t) t.append(btn); }
+
+  const markBtn = () => { const c = G.codex(); btn.classList.toggle("fresh", !!Object.keys(c.fresh || {}).length); };
+
+  // ---------------------------------------------------------------- 保存と通知
+  let saveT = 0;
+  G.onCodexChange = () => {
+    clearTimeout(saveT);
+    saveT = setTimeout(() => { if (G.main && G.main.saveProfile) G.main.saveProfile(); }, 400);
+    markBtn();
+  };
+  G.onCodex = (kind, id) => {
+    const nm = kind === "item" ? (D.ITEMS[id] || {}).name : (D.ENEMIES[id] || {}).name;
+    if (nm && G.ui && G.ui.toast) G.ui.toast("図鑑に追加：", nm);
+  };
+
+  // ---------------------------------------------------------------- 絵
+  const GLYPH = { weapon: "剣", armor: "鎧", ring: "環", use: "薬", loot: "材", relic: "遺", other: "品" };
+  // 魔物を小さな canvas に描く。会っていなければ影だけ
+  const paintFoe = (cv, id, shadow) => {
+    const e = D.ENEMIES[id];
+    const w = cv.width, hh = cv.height;
+    const ctx = cv.getContext("2d");
+    ctx.clearRect(0, 0, w, hh);
+    if (!e || !G.paintMonster) return;
+    try {
+      ctx.save();
+      G.paintMonster(ctx, w / 2, hh * 0.95, hh * 0.86, { id, shape: e.shape, eye: e.eye, boss: !!e.boss });
+      ctx.restore();
+      if (shadow) {
+        ctx.save();
+        ctx.globalCompositeOperation = "source-in";
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim() || "#222";
+        ctx.globalAlpha = 0.55;
+        ctx.fillRect(0, 0, w, hh);
+        ctx.restore();
+      }
+    } catch {}
+  };
+  const foeCanvas = (id, size, shadow) => {
+    const cv = h("canvas", "f2pic");
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(size * dpr); cv.height = Math.round(size * dpr);
+    cv.style.width = cv.style.height = size + "px";
+    cv.setAttribute("aria-hidden", "true");
+    paintFoe(cv, id, shadow);
+    // V6 の画像は読み込みに少しかかる。読めたころにもう一度描く
+    setTimeout(() => paintFoe(cv, id, shadow), 600);
+    setTimeout(() => paintFoe(cv, id, shadow), 1800);
+    return cv;
+  };
+
+  // ---------------------------------------------------------------- 一覧
+  let cur = "item";
+  const cells = () => [...list.querySelectorAll(".f2cell")];
+  const cell = (label, known, fresh, onPick) => {
+    const b = h(known ? "button" : "div", "f2cell" + (known ? "" : " unknown") + (fresh ? " fresh" : ""));
+    if (known) { b.type = "button"; b.onclick = () => { cells().forEach((x) => x.classList.remove("on")); b.classList.add("on"); onPick(b); }; }
+    else { b.tabIndex = 0; b.setAttribute("aria-label", "まだ見ていない"); b.onclick = () => showUnknown(); }
+    if (label) b.append(h("span", "f2name", label));
+    return b;
+  };
+  const group = (name, n, all) => {
+    const g = h("section", "f2group");
+    g.append(h("h3", "", `${name}　${n}／${all}`));
+    const grid = h("div", "f2grid");
+    g.append(grid);
+    list.append(g);
+    return grid;
+  };
+
+  function drawItems() {
+    const c = G.codex();
+    const ids = F2.itemIds();
+    const n = ids.filter((id) => c.items[id]).length;
+    sum.textContent = `見つけた物 ${n}／${ids.length}`;
+    F2.ITEM_KINDS.forEach(([k, name]) => {
+      const mine = ids.filter((id) => F2.kindOf(D.ITEMS[id]) === k);
+      if (!mine.length) return;
+      const grid = group(name, mine.filter((id) => c.items[id]).length, mine.length);
+      mine.forEach((id) => {
+        const it = D.ITEMS[id];
+        const known = !!c.items[id];
+        const b = cell(known ? it.name : "？？？", known, G.codexIsFresh("item", id), () => showItem(id));
+        b.prepend(h("span", "f2glyph", known ? GLYPH[k] : "？"));
+        b.dataset.id = id;
+        grid.append(b);
+      });
+    });
+  }
+  function drawFoes() {
+    const c = G.codex();
+    const ids = F2.foeIds();
+    const cnt = G.codexCount();
+    sum.textContent = `出会った魔物 ${cnt.foes}／${cnt.foesAll}　倒した種類 ${cnt.kills}`;
+    F2.regions().forEach((r) => {
+      const mine = ids.filter((id) => G.codexFoeRegion(id) === r).sort((a, b) => (D.ENEMIES[a].tier || 0) - (D.ENEMIES[b].tier || 0) || !!D.ENEMIES[a].boss - !!D.ENEMIES[b].boss);
+      if (!mine.length) return;
+      const grid = group(r, mine.filter((id) => c.foes[id]).length, mine.length);
+      mine.forEach((id) => {
+        const e = D.ENEMIES[id];
+        const rec = c.foes[id];
+        const b = cell(rec ? e.name : "？？？", !!rec, G.codexIsFresh("foe", id), () => showFoe(id));
+        b.prepend(foeCanvas(id, 56, !rec));
+        if (rec) b.append(h("span", "f2tier", `格${e.tier}${rec.kills ? `・${rec.kills}体` : ""}`));
+        b.dataset.id = id;
+        grid.append(b);
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------- 詳しい説明
+  const kv = (rows) => {
+    const dl = h("dl", "kv f2kv");
+    rows.forEach(([k, v]) => dl.append(h("dt", "", k), h("dd", "", v)));
+    return dl;
+  };
+  const where = (title, lines) => {
+    const s = h("div", "f2where");
+    s.append(h("h4", "", title));
+    const ul = h("ul");
+    (lines.length ? lines : ["分からない"]).forEach((t) => ul.append(h("li", "", t)));
+    s.append(ul);
+    return s;
+  };
+  const flavor = (text, kind, id) => { const p = h("p", "f2flavor"); F2.paintText(p, text, kind, id); return p; };
+  const seen = (kind, id) => { if (G.codexSeen(kind, id)) { const b = list.querySelector(`.f2cell[data-id="${id}"]`); if (b) b.classList.remove("fresh"); } };
+  const narrow = () => window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
+  const reveal = () => { if (narrow()) detail.scrollIntoView({ block: "start", behavior: "smooth" }); };
+
+  function showUnknown() {
+    detail.textContent = "";
+    detail.append(h("p", "fine", cur === "item" ? "まだ見つけていない。" : "まだ出会っていない。"));
+    reveal();
+  }
+  function showItem(id) {
+    const it = D.ITEMS[id];
+    const rec = G.codex().items[id];
+    if (!it || !rec) return showUnknown();
+    detail.textContent = "";
+    const kind = F2.ITEM_KINDS.find(([k]) => k === F2.kindOf(it));
+    detail.append(h("h3", "f2title", it.name), h("p", "fine", kind ? kind[1] : ""));
+    detail.append(kv(G.codexItemStats(id)));
+    detail.append(where("主な入手場所", G.codexItemWhere(id)));
+    const t = G.codexItemText(id);
+    if (t) detail.append(flavor(t, "item", id));
+    detail.append(h("p", "fine f2first", `初めて手に入れた：${[rec.by, rec.date].filter(Boolean).join("・") || "—"}`));
+    seen("item", id);
+    reveal();
+  }
+  function showFoe(id) {
+    const e = D.ENEMIES[id];
+    const rec = G.codexFoe(id);
+    if (!e || !rec) return showUnknown();
+    detail.textContent = "";
+    const apostle = F2.isApostle(e) && !rec.kills;
+    detail.append(foeCanvas(id, 160, false));
+    detail.append(h("h3", "f2title", e.name));
+    if (apostle) {
+      detail.append(h("p", "fine", "使徒。格が違う。"));
+      detail.append(flavor(G.codexFoeText(id), "foe", id));
+      detail.append(h("p", "fine f2first", `初めて出会った：${[rec.by, rec.date].filter(Boolean).join("・") || "—"}`));
+    } else {
+      detail.append(h("p", "fine", `${G.codexFoeRegion(id)}・格${e.tier}${e.boss ? "・主" : ""}`));
+      detail.append(kv(G.codexFoeStats(id)));
+      if (!rec.kills) detail.append(h("p", "fine", "倒せば、もっと分かる。"));
+      detail.append(where("主な出現場所", G.codexFoeWhere(id)));
+      detail.append(flavor(G.codexFoeText(id), "foe", id));
+      const first = [`初めて出会った：${[rec.by, rec.date].filter(Boolean).join("・") || "—"}`];
+      if (rec.kills) first.push(`倒した数：${rec.kills}体（初めて倒した：${[rec.kby, rec.kdate].filter(Boolean).join("・") || "—"}）`);
+      first.forEach((t) => detail.append(h("p", "fine f2first", t)));
+    }
+    seen("foe", id);
+    reveal();
+  }
+
+  // ---------------------------------------------------------------- 切り替えと開く
+  function show(key) {
+    cur = key;
+    tabI.setAttribute("aria-selected", key === "item");
+    tabF.setAttribute("aria-selected", key === "foe");
+    list.textContent = "";
+    detail.textContent = "";
+    detail.append(h("p", "fine", "一覧から選ぶと、詳しい説明が出る。"));
+    if (key === "item") drawItems(); else drawFoes();
+  }
+  F2.open = (key) => {
+    if (G.S && G.codexSeed) G.codexSeed(G.S);
+    show(key || cur);
+    if (!dlg.open) dlg.showModal();
+    const first = list.querySelector(".f2cell.fresh") || list.querySelector("button.f2cell") || list.querySelector(".f2cell");
+    if (first) first.focus();
+  };
+  dlg.addEventListener("close", markBtn);
+
+  // 格子の中を矢印キーで辿る（上下は見た目の列に合わせる）
+  list.addEventListener("keydown", (ev) => {
+    const all = cells();
+    const i = all.indexOf(document.activeElement);
+    if (i < 0) return;
+    let j = -1;
+    if (ev.key === "ArrowRight") j = i + 1;
+    else if (ev.key === "ArrowLeft") j = i - 1;
+    else if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+      const r = all[i].getBoundingClientRect();
+      const down = ev.key === "ArrowDown";
+      let best = -1, bd = Infinity;
+      all.forEach((el, k) => {
+        const q = el.getBoundingClientRect();
+        if (down ? q.top <= r.top + 4 : q.top >= r.top - 4) return;
+        const d = Math.abs(q.top - r.top) * 4 + Math.abs(q.left - r.left);
+        if (d < bd) { bd = d; best = k; }
+      });
+      j = best;
+    } else if (ev.key === "Enter" && !all[i].matches("button")) { all[i].click(); ev.preventDefault(); return; }
+    else return;
+    if (j >= 0 && j < all.length) { all[j].focus(); all[j].scrollIntoView({ block: "nearest" }); ev.preventDefault(); }
+  });
+  // タブも左右キーで
+  tabs.addEventListener("keydown", (ev) => {
+    if (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft") return;
+    const k = cur === "item" ? "foe" : "item";
+    show(k);
+    (k === "item" ? tabI : tabF).focus();
+    ev.preventDefault();
+  });
+
+  setTimeout(markBtn, 0);
+})(globalThis.G = globalThis.G || {});
