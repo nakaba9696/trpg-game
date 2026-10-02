@@ -44,6 +44,5 @@
 ## 異形と、人の姿の使徒（V7）
 
 - 魔物は基本 [style_monsters.json](style_monsters.json)（人物と同じモデル）。ゴブリン・スライム・獣・亜人・まぬけな魔物はこれでよい。
-- **人の形を持たない格上の存在**（使徒の異形の姿・天災の格の化物・不気味な異形）だけ、[monsters.json](monsters.json) の行に `"style": "eldritch"` を付ける。`--monsters` で作るとき、その行は [style_eldritch.json](style_eldritch.json)（`dreamshaperXL_lightningDPMSDE.safetensors`・暗い油彩の挿絵）に替わる。数は絞る（魔物全体の 2 割まで。テストが見る）。ふつうの魔物を先に、異形を後にまとめて送るので、モデルの入れ替えは一度で済む。
-  - Lightning 系のモデルなので、既定は steps 7・cfg 2・sampler `DPM++ SDE`・scheduler `Karras`。**モデルの説明に合わせて調整する**（手元だけなら `docs/art/style_eldritch.local.json`）。`sd_model_checkpoint` はファイル名だけでも動く。WebUI に出るハッシュ（`[xxxxxxxxxx]`）は後で足してよい。
+- **異形の設定（style_eldritch.json・dreamshaperXL_lightningDPMSDE）は使わない**（持ち主の決定：絵柄が浮く）。人の形を持たない格上の存在も、一般の魔物と同じ style_monsters.json で作り、異様さは魔物の一覧のタグ（形・色・質感）で出す。monsters.json に `"style": "eldritch"` を書かない（`tests/checks/a7_no_eldritch.mjs` が見る）。
 - **人の姿の使徒**（[portraits.json](portraits.json) のカルマトス・ドレイゼ・ユヴァリエ・ベリエラ・セグリトス・ヴァルグレア・ディエラン・ベルファス）は、モデルを替えずに**特徴のタグで異質さ**を出す（人ではない目・輪郭の歪み・まとう気配・ずれた意匠・表情）。一人ずつ伝承に合わせて選んでいる。`no halo` と衝突する `halo` は使わない。
