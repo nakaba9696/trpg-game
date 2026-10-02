@@ -83,9 +83,8 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       if (pt.group !== "c2" || !pt.identity || !pt.tags || !pt.memo) F(`${w}: 立ち絵の group・identity・tags・memo のどれかが無い`);
       if (isMale(pt) !== (p.sex === "男")) F(`${w}: 立ち絵の性別がデータと違う`);
       if (isMale(pt) && pt.type !== c.type) F(`${w}: 立ち絵の型（${pt.type}）がデータ（${c.type}）と違う`);
-      // 差分のタグは書いておく。V8 の差分の予算（20 人・4MB）がいっぱいなので、決まるまでは variants_wait に置く（生成の道具は読まない）
-      const vv = pt.variants || pt.variants_wait;
-      if (p.join && !(vv && vv.joy && vv.anger && vv.sorrow && vv.fun)) F(`${w}: 仲間なのに表情の差分のタグが無い`);
+      const vv = pt.variants;
+      if (p.join && !(vv && vv.joy && vv.anger && vv.sorrow && vv.fun)) F(`${w}: 仲間なのに表情の差分が無い`);
     }
     const own = evs.filter((e) => !e.c2talk && inEv(e).includes(id));
     if (own.length < 2 || own.length > 4) F(`${w}: 出てくる出来事が 2〜4 個でない：${own.length}`);
@@ -188,7 +187,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     tsuyuha: ["yakumo", "c8_tsu_nap", ["茶碗", "連れていく"]],
     takimaru: ["yakumo", "c8_taki_brawl", ["若者の側", "連れていく"]],
     yurien: ["ruins", "c8_yur_dissect", ["肝を持つ", "連れていく"]],
-    ingrid: ["fort", "c8_ing_lots", ["荷運び", "連れていく"]],
+    roswitha: ["fort", "c8_ing_lots", ["荷運び", "連れていく"]],
     izra: ["mountains", "c8_izra_duel", ["受けて立つ", "連れていく"]],
     anselmo: ["w1_holy", "c8_ans_dig", ["一つ買う", "連れていく"]],
     polf: ["fort", "c8_polf_bell", ["続きをせがむ", "連れていく"]],

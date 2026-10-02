@@ -1,12 +1,12 @@
 // V6：持ち主が作った魔物の絵（docs/art/monsters.json・style_monsters.json・tools/gen_portraits.mjs --monsters・src/ui/v6_monsters.js）
 // - 一覧の id がすべて敵に当たり、敵はすべて一覧か「人物の側」に載っている。md が json と合っている。タグに画風・性的な言葉が無い
 // - 画像が無くても今の canvas の絵で描ける。画像があれば（読み込んだら）画像を描く。出来事の胸から上の絵は今の絵のまま
-// - 埋め込みの上限（12MB）は人物と魔物を合わせて数える
+// - 埋め込み（予備の --embed）の上限（12MB）は人物と魔物を合わせて数える
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import vm from "node:vm";
 import path from "node:path";
-import { collectAssets } from "../../tools/assets.mjs";
+import { collectAssets, scanAssets } from "../../tools/assets.mjs";
 import { JSON_PATH, MD_PATH, renderMonstersMd } from "../../tools/monsters.mjs";
 
 export default ({ G, fail, ok }) => {
@@ -125,7 +125,7 @@ export default ({ G, fail, ok }) => {
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
-  const real = collectAssets(new URL("../../assets", import.meta.url).pathname);
+  const real = scanAssets(new URL("../../assets", import.meta.url).pathname);
   const mons = real.files.filter((f) => f.key.startsWith("monsters/"));
   for (const f of mons) if (!seen.has(f.key.slice(9))) fail(`assets/${f.file} が魔物の一覧に無い`);
   ok(`V6 魔物の絵：一覧 ${list.length} 体（人物の側 ${Object.keys(people).length}）、assets/monsters に ${mons.length} 枚`);

@@ -20,9 +20,12 @@ const FACE = {
   // C4（src/data/zc4_people.js）
   bertrand: "だらしなくて気さく", ilse: "自信満々", tula: "口が悪い", mirlene: "おっとり", salphiel: "年寄りのような話し方", musette: "糸は見えない",
   gerhard: "豪快", bartolo: "糸目", clarisse: "真面目", titta: "口が悪い", iori: "眠そう", dorothea: "自分の顔に自信",
+  // C7（src/data/zc7_people.js）
+  wolfram: "豪快", hartmut: "大仰", gustav: "値段", timo: "惚れて", noeris: "柔らかな話し方", ingrid: "変わらない", lumia: "古風な話し方",
+  sieglinde: "報告の形", annelise: "姉御肌", radmila: "道を空ける", otmar: "値段で呼ぶ", oren: "頑固", dietrich: "片眼鏡", matthias: "礼を言う", liesel: "気が強く",
   // C8（src/data/zc8_people.js）
-  gigra: "がらっぱち", valdun: "言葉は少ない", gensai: "糸目", tsuyuha: "古風な話し方", takimaru: "威勢がよく", yurien: "無表情", ingrid: "数字で話す",
-  izra: "珍しがる", anselmo: "罰当たり", polf: "盛って", timo: "堅物", rudger: "物腰が柔らか", rionetta: "おっとり", graul: "礼儀正しく",
+  gigra: "がらっぱち", valdun: "言葉は少ない", gensai: "糸目", tsuyuha: "古風な話し方", takimaru: "威勢がよく", yurien: "無表情", roswitha: "数字で話す",
+  izra: "珍しがる", anselmo: "罰当たり", polf: "盛って", jonas: "堅物", rudger: "物腰が柔らか", rionetta: "おっとり", graul: "礼儀正しく",
 };
 
 export default ({ G, fail }) => {
