@@ -215,6 +215,7 @@
     const ids = F2.peopleIds();
     const cnt = G.codexCount();
     sum.textContent = `出会った人 ${cnt.people}／${cnt.peopleAll}`;
+    if (F2.peopleSum) F2.peopleSum(sum); // F4：仲間にした人の数
     F2.PEOPLE_GROUPS.forEach((gname) => {
       const mine = ids.filter((id) => F2.personGroup(id) === gname);
       if (!mine.length) return;
@@ -225,6 +226,7 @@
         // 肖像は背景まで塗られているので、会っていない人は影ではなく「？」の札にする
         b.prepend(rec ? personCanvas(id, 48, 60, false) : h("span", "f2glyph f2who", "？"));
         if (rec && rec.joined) b.append(h("span", "f2tier", "仲間"));
+        if (F2.personCell) F2.personCell(b, id); // F4：狙う印
         b.dataset.id = id;
         grid.append(b);
       });
@@ -342,7 +344,7 @@
   function showPerson(id) {
     const q = (D.F2_PEOPLE || {})[id];
     const rec = G.codexPerson(id);
-    if (!q || !rec) return showUnknown();
+    if (!q || !rec) { if (q && F2.personUnknown && F2.personUnknown(detail, id)) return reveal(); return showUnknown(); } // F4：噂だけ聞いた人
     detail.textContent = "";
     const cv = personCanvas(id, 150, 188, false);
     detail.append(cv);
@@ -351,6 +353,7 @@
     detail.append(affinity(id));
     detail.append(kv([["仲間", rec.joined ? "なったことがある" : "まだ"], ["間柄", rels.filter((r) => r !== "仲間").join("・") || "—"]].filter(([, v]) => v)));
     detail.append(where("主に会える場所", G.codexPersonWhere(id)));
+    if (F2.personMore) F2.personMore(detail, id); // F4：会ったことのある場所・仲間にする方法・狙う
     G.codexPersonLines(id).forEach((t) => detail.append(flavor(t, "person", id)));
     if ((q.lines || []).length > G.codexPersonLines(id).length) detail.append(h("p", "fine", "深く関われば、もっと分かる。"));
     detail.append(h("p", "fine f2first", `初めて会った：${[rec.by, rec.date].filter(Boolean).join("・") || "—"}`));

@@ -62,7 +62,8 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   for (let i = 0; i < 40 && S.combat; i++) { S.combat.foes[0].hp = 1; G.act("cb:attack"); }
   if (!S.m2.gone.some((g) => g.id === k.id && g.how === "slain")) fail("M2: 討った仲間が記録に残らない");
   // 死別：深手 → 手番の終わりに看取り → 年表
-  S.mode = "explore"; S.event = null; S.combat = null;
+  // 直前の戦いの乱数で、別の深手が先に入っていることがある（乱数の並びは足した仲間の予定で動く）。この手順の深手だけを見る
+  S.mode = "explore"; S.event = null; S.combat = null; S.m2.doom = null;
   G.m2Doom(b, "テストの深手");
   G.endTurn();
   if (S.event !== "m2_farewell" || S.m2.focus !== b.id) fail(`M2: 深手の仲間を看取る出来事が始まらない（${S.event}）`);

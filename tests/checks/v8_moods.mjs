@@ -38,9 +38,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       else if (BAD.test(t)) F(`${p.id} の variants.${m} に、構図・性的な言葉がある：${t.match(BAD)[0]}`);
     }
   }
-  // 仲間は全員に差分（下の行）。それ以外は主要な数人まで（C6：仲間が増えるので、上限は仲間の数＋10 人）
-  const joins = Object.keys(D.C2_PEOPLE).filter((id) => D.C2_PEOPLE[id].join).length;
-  if (vids.length < 8 || vids.length > joins + 10) F(`差分のある人が ${vids.length} 人（仲間 ${joins} 人＋主要な数人、${joins + 10} 人まで）`);
+  // 仲間は全員、差分を持つ（C2・C4・C5〜C8）。それ以外は主要な数人まで
+  const mates = Object.keys(D.C2_PEOPLE).filter((id) => D.C2_PEOPLE[id].join).length;
+  if (vids.length < 8 || vids.length > mates + 20) F(`差分のある人が ${vids.length} 人（仲間 ${mates} 人＋主要な数人、${mates + 20} 人まで）`);
   for (const id of Object.keys(D.C2_PEOPLE)) if (D.C2_PEOPLE[id].join && !vids.includes(id)) F(`仲間になる ${id} に差分（variants）が無い`);
 
   // assets/ に置いた差分の絵は、variants のある人のもの
@@ -52,8 +52,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (m && !vids.includes(m[1])) F(`assets/portraits/${f} は差分の絵だが、一覧の ${m[1]} に variants が無い`);
     }
   }
-  // 埋め込みの上限：差分 1 枚 30KB 前後 × 4 × 人数が、上限（12MB）に余裕を残す
-  if (vids.length * 4 * 30 * 1024 * 1.34 > 5 * 1024 * 1024) F("差分の数が多すぎる（埋め込みの上限 12MB を圧迫する）");
+  // 大きさ：既定は画像を外のファイルにする形（tools/build.mjs）なので、差分の数は埋め込みの上限に縛られない。
+  // 予備の埋め込み（--embed）は上限を超えると差分を省く（tools/assets.mjs の shrink）。外のファイルの大きさは a6_site.mjs が見る
 
   // ---------------------------------------------------------------- 出来事の mood
   const okMood = (m) => m === undefined || MOODS.includes(m);

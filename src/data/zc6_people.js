@@ -28,7 +28,7 @@
   Object.assign((D.C3_NAMES = D.C3_NAMES || {}), {
     lucien: { name: "ルシアン", full: "ルシアン・ヴェルモア", role: "下町の徴税吏" },
     baudouin: { name: "ボードワン", full: "ボードワン・ムーラン", role: "麦の大槌" },
-    selevan: { name: "セレヴァン", full: "セレヴァン・イル・ノエリス", role: "裏通りの医者" },
+    selevan: { name: "セレヴァン", full: "セレヴァン・イル・オルミナ", role: "裏通りの医者" },
     aubin: { name: "オーバン", role: "厩舎の老馬丁" },
     lazare: { name: "ラザール", role: "焚書官の見習い" },
     rodolphe: { name: "ロドルフ", full: "ロドルフ・ルナール", role: "猟場の番人" },

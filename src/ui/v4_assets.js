@@ -1,4 +1,7 @@
-// V4：持ち主が作った人物の絵（assets/portraits/<id>.webp。ビルドで G.ASSETS["portraits/<id>"] に埋め込まれる。tools/assets.mjs）を描く。
+// V4：持ち主が作った人物の絵（assets/portraits/<id>.webp。tools/assets.mjs）を描く。G.ASSETS["portraits/<id>"] は、
+// 外のファイルの形（既定。G.ASSET_MODE "files"）なら HTML の隣の portraits/<id>.webp への相対パス、埋め込み（--embed）なら data URI。どちらも Image の src にそのまま使う。
+// 外のファイルは読み終わるまで少し待ってから canvas の絵を出し（すぐ読めればちらつかない）、読めたら画像に差し替える。主人公・仲間・話している人と差分は先読みし、
+// 名のある人の基本の絵は暇なときに少しずつ読んでおく（v4Preload）。
 // art_people.js の入口 G.drawPortrait を包むだけ。画像があればそれを描き、無ければ（または読めなければ）今の canvas の絵に戻す。
 // どの人にどの画像を使うか（G.v4PortraitKey(who)）：
 //   名のある人＝どの冒険でも同じ一人＝一枚。キャラメモの人（who.seed "c2:<id>"）→ portraits/<id>、
@@ -104,9 +107,11 @@
   };
   G.v4Canon = canon;
 
-  // ---------------------------------------------------------------- 描く
+  // ---------------------------------------------------------------- 読む
+  const files = () => G.ASSET_MODE === "files";
+  const GRACE = 160; // 外のファイルの読み込みを待つ長さ（ミリ秒）。これを過ぎたら canvas の絵を出しておく
   const imgs = {}; // 鍵 → Image（一度だけ作る）
-  const shown = typeof WeakMap === "function" ? new WeakMap() : null; // canvas → 今描くはずの鍵
+  const shown = typeof WeakMap === "function" ? new WeakMap() : null; // canvas → 今描くはずのもの（{ key, done }）
   const image = (key) => {
     if (imgs[key]) return imgs[key];
     const img = new Image();
@@ -115,6 +120,20 @@
     img.src = A()["portraits/" + key];
     return (imgs[key] = img);
   };
+  const ready = (img) => !!(img && !img.v4bad && img.complete && (img.naturalWidth || img.width));
+  G.v4Image = (key) => (key && has(key) && typeof Image === "function" ? image(key) : null);
+  G.v4Ready = (key) => ready(G.v4Image(key));
+  // その人の絵と、喜怒哀楽の差分（V8）を読み始める
+  const MOODS = ["joy", "anger", "sorrow", "fun"];
+  G.v4Preload = (who) => {
+    if (!who || typeof Image !== "function") return;
+    const base = G.v4PortraitKey(who.mood ? Object.assign({}, who, { mood: undefined }) : who);
+    if (!base) return;
+    image(base);
+    MOODS.forEach((m) => { if (has(base + "_" + m)) image(base + "_" + m); });
+  };
+
+  // ---------------------------------------------------------------- 描く
   const fit = (cv) => {
     const rect = cv.getBoundingClientRect ? cv.getBoundingClientRect() : { width: 0, height: 0 };
     const dpr = Math.min(2, (typeof devicePixelRatio === "number" && devicePixelRatio) || 1);
@@ -140,12 +159,47 @@
   if (draw0) G.drawPortrait = (cv, who) => {
     if (!cv || !who) return;
     const key = typeof Image === "function" ? G.v4PortraitKey(who) : null;
-    if (shown) shown.set(cv, key);
+    const tok = { key, done: false };
+    if (shown) shown.set(cv, tok);
     const img = key && image(key);
     if (!img || img.v4bad) return draw0(cv, who);
-    if (img.complete && (img.naturalWidth || img.width) && paint(cv, img)) return;
+    if (ready(img) && paint(cv, img)) return;
+    const mine = () => !shown || shown.get(cv) === tok;
     // 読み込みが終わるまでは今の絵。終わったとき、まだ同じ人を描くことになっていれば差し替える
-    draw0(cv, who);
-    img.addEventListener("load", () => { if (!shown || shown.get(cv) === key) paint(cv, img); }, { once: true });
+    // 外のファイルは少し待ってから今の絵を出す（そのあいだは前の人の絵を残さないよう消しておく）
+    if (files() && typeof setTimeout === "function" && cv.getContext) {
+      const ctx = cv.getContext("2d");
+      if (ctx && ctx.clearRect) { ctx.setTransform && ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); }
+      setTimeout(() => { if (mine() && !tok.done) draw0(cv, who); }, GRACE);
+    } else draw0(cv, who);
+    img.addEventListener("load", () => { if (mine() && paint(cv, img)) tok.done = true; }, { once: true });
+    img.addEventListener("error", () => { if (mine() && !tok.done) { tok.done = true; draw0(cv, who); } }, { once: true });
+  };
+
+  // ---------------------------------------------------------------- 先読み（外のファイルの形・画面があるときだけ）
+  if (typeof document === "undefined" || typeof window === "undefined" || typeof Image !== "function") return;
+  const ui = G.ui;
+  if (!ui || !ui.render) return;
+  // 名のある人・型の基本の絵（差分と主人公の型は除く）を、暇なときに 2 枚ずつ読む
+  let idleList = null, idleOn = false;
+  const idle = (f) => (window.requestIdleCallback ? window.requestIdleCallback(f, { timeout: 2000 }) : setTimeout(f, 400));
+  function trickle() {
+    if (!idleList) idleList = Object.keys(A()).filter((k) => k.startsWith("portraits/") && !/^portraits\/hero_/.test(k) && !new RegExp(`_(${MOODS.join("|")})$`).test(k)).map((k) => k.slice(10));
+    let n = 0;
+    while (idleList.length && n < 2) { const k = idleList.shift(); if (!imgs[k]) { image(k); n++; } }
+    if (idleList.length) setTimeout(() => idle(trickle), 250);
+  }
+  const base = ui.render;
+  ui.render = (...a) => {
+    const S = G.S;
+    if (files() && S) {
+      try {
+        if (G.heroWho && S.profile) G.v4Preload(G.heroWho(S.profile, S.cls));
+        (S.companions || []).forEach((c) => G.companionWho && G.v4Preload(G.companionWho(c)));
+        if (G.stand && G.stand.whoOf) G.v4Preload(G.stand.whoOf(S));
+        if (!idleOn) { idleOn = true; setTimeout(() => idle(trickle), 3000); }
+      } catch (e) { /* 先読みに失敗しても画面は止めない */ }
+    }
+    return base(...a);
   };
 })(globalThis.G = globalThis.G || {});

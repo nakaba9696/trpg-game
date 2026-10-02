@@ -24,6 +24,9 @@ const FACE = {
   lucien: "避けもしない", baudouin: "声が大きく", selevan: "独特な話し方", aubin: "居眠り", lazare: "芝居がかった", rodolphe: "ぶっきらぼう",
   margot: "欲深", violaine: "堅物", pipinelle: "年寄りのような話し方", lisette: "間延びした話し方", gramont: "物腰のやわらかな", berangere: "お嬢様",
   marion: "箒で追い回す", sylvestre: "飄々", odette: "独特な話し方",
+  // C7（src/data/zc7_people.js）
+  wolfram: "豪快", hartmut: "大仰", gustav: "値段", timo: "惚れて", noeris: "柔らかな話し方", ingrid: "変わらない", lumia: "古風な話し方",
+  sieglinde: "報告の形", annelise: "姉御肌", radmila: "道を空ける", otmar: "値段で呼ぶ", oren: "頑固", dietrich: "片眼鏡", matthias: "礼を言う", liesel: "気が強く",
 };
 
 export default ({ G, fail }) => {
