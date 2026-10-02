@@ -1,5 +1,5 @@
 {
- "about": "Morsveld の人物の絵の一覧。tags は Stable Diffusion のポジティブプロンプトに入れる、その人の特徴だけ（画風・品質・構図は持ち主の側で足す）。face は基本の表情（プロンプトでは tags の後ろに付く）。variants は喜怒哀楽の差分（joy・anger・sorrow・fun）の表情のタグで、基本の絵から img2img で作るときに face と差し替える（V8）。tools/portraits.mjs で docs/art/portraits.md を作る",
+ "about": "このゲームの人物の絵の一覧。tags は Stable Diffusion のポジティブプロンプトに入れる、その人の特徴だけ（画風・品質・構図は持ち主の側で足す）。face は基本の表情（プロンプトでは tags の後ろに付く）。variants は喜怒哀楽の差分（joy・anger・sorrow・fun）の表情のタグで、基本の絵から img2img で作るときに face と差し替える（V8）。tools/portraits.mjs で docs/art/portraits.md を作る",
  "size": {
   "width": 512,
   "height": 640,
