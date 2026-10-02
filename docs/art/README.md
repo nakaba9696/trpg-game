@@ -23,6 +23,8 @@
 
 **男の型（A5）**：男が全員同じ美形にならないよう、顔立ちを型で分ける。型は `style_male.json` の `types` にあり、[portraits.json](portraits.json) の男の人に `type` で割り振る（無ければ `default_type` の `classic`）。`ojisan`（渋い中年〜初老。劇画寄りの濃い顔・ほうれい線・こけた頬・角ばった顎。いちばん多い）・`classic`（正統派の美形）・`bishonen`（線の細い美形）・`brute`（少しブサイクで愛嬌のある巨漢。この型だけネガティブの `ugly face` を外す）・`elder`（老人）・`boy`（子ども）。プロンプトは共通の前置きの後ろに型の `prefix` が付き（同じタグは一度だけ）、ネガティブは型の `negative_remove` を外して `negative_add` を足す。型の語は特徴だけで、作家名・作品名は書かない（テストが見る）。`node tools/gen_portraits.mjs --dry --type ojisan` でその型の男だけのプロンプトを確かめ、`--type ojisan --force` でその型だけ作り直せる（`--only`・`--variants` と重ねられる）。
 
+**主要人物を似せない（A7）**：持ち主の決まりは「モブや兄弟ならいいけど、主要人物であんまり似たような顔にしないで」。人物を足すとき、主要人物（[portraits.json](portraits.json) の `people`・`hero` 以外）は**髪の色・髪型・目の色・印（眼鏡・眼帯・帽子・傷など）をほかの人と被らせない**。設定に書かれた見た目は残し、書かれていない所で差をつける。`node tools/portraits_similar.mjs` で似すぎの組・近い組・偏り（性別・年齢帯・髪の色・長さ・体格がそろった人の群れ）を確かめる（`node tools/portraits_similar.mjs <id>` でその人に近い順）。似すぎ（点が高い組か、同じ性別・同じ色と長さの髪で年の近い「髪の双子」。獣の耳・顔を覆う物・眼帯・翼・眼鏡・帽子が片方にだけあれば双子にしない）か、3 人以上の偏りがあると `tests/checks/a7_similar.mjs` が失敗する。血縁は行に `"kin": "<家>"` を付ければ比べない（今は `leonest`・`nordia`）。髪や目の色に新しい語を使ったら、道具の `HAIR`・`EYE` に足す（読めない色もテストが失敗にする）。
+
 **画面の欄に入れた絵柄の文は API では使われない。** WebUI の Styles に保存して `style.json` の `"styles": ["名前"]` に書くか、`prefix`・`suffix`・`negative` に書く。
 自分のパソコンだけで設定を変えたいときは、`docs/art/style.local.json` に変えたい項目だけを書く（`style.json` の上に重なる。git には入らない）。使った seed は `docs/art/seeds.local.json`（git には入らない）に残る。このスクリプトは CI やテストでは動かさない。
 
@@ -44,6 +46,5 @@
 ## 異形と、人の姿の使徒（V7）
 
 - 魔物は基本 [style_monsters.json](style_monsters.json)（人物と同じモデル）。ゴブリン・スライム・獣・亜人・まぬけな魔物はこれでよい。
-- **人の形を持たない格上の存在**（使徒の異形の姿・天災の格の化物・不気味な異形）だけ、[monsters.json](monsters.json) の行に `"style": "eldritch"` を付ける。`--monsters` で作るとき、その行は [style_eldritch.json](style_eldritch.json)（`dreamshaperXL_lightningDPMSDE.safetensors`・暗い油彩の挿絵）に替わる。数は絞る（魔物全体の 2 割まで。テストが見る）。ふつうの魔物を先に、異形を後にまとめて送るので、モデルの入れ替えは一度で済む。
-  - Lightning 系のモデルなので、既定は steps 7・cfg 2・sampler `DPM++ SDE`・scheduler `Karras`。**モデルの説明に合わせて調整する**（手元だけなら `docs/art/style_eldritch.local.json`）。`sd_model_checkpoint` はファイル名だけでも動く。WebUI に出るハッシュ（`[xxxxxxxxxx]`）は後で足してよい。
+- **異形の設定（style_eldritch.json・dreamshaperXL_lightningDPMSDE）は使わない**（持ち主の決定：絵柄が浮く）。人の形を持たない格上の存在も、一般の魔物と同じ style_monsters.json で作り、異様さは魔物の一覧のタグ（形・色・質感）で出す。monsters.json に `"style": "eldritch"` を書かない（`tests/checks/a7_no_eldritch.mjs` が見る）。
 - **人の姿の使徒**（[portraits.json](portraits.json) のカルマトス・ドレイゼ・ユヴァリエ・ベリエラ・セグリトス・ヴァルグレア・ディエラン・ベルファス）は、モデルを替えずに**特徴のタグで異質さ**を出す（人ではない目・輪郭の歪み・まとう気配・ずれた意匠・表情）。一人ずつ伝承に合わせて選んでいる。`no halo` と衝突する `halo` は使わない。

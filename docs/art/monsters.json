@@ -207,7 +207,6 @@
    "name": "屍竜ネクロザ",
    "boss": true,
    "tags": "skeletal dragon, undead dragon, bone dragon, huge, ribcage, sword stuck in ribs, glowing green eyes, tattered bone wings, ghostly green fire, long neck, skull",
-   "style": "eldritch",
    "memo": "ボス。墓場を守る屍竜。腹に剣が刺さっている"
   },
   {
@@ -290,7 +289,6 @@
    "file": "assets/monsters/e1_melted.webp",
    "name": "溶けかけた見習いたち",
    "tags": "blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles, runes",
-   "style": "eldritch",
    "memo": "溶け合った見習いたち。おぞましい"
   },
   {
@@ -380,7 +378,6 @@
    "name": "灼け口の使徒テルグリス",
    "boss": true,
    "tags": "giant, enormously fat, obese, three mouths, mouth on belly, long tongue, drooling, pink skin, spots, small horns, three eyes, beard, bib, loincloth, holding club, barrier",
-   "style": "eldritch",
    "memo": "使徒（ボス）。丘のように太った暴食の使徒。おぞましく、少しまぬけ"
   },
   {
@@ -412,7 +409,6 @@
    "name": "苔衣の使徒セグリトス",
    "boss": true,
    "tags": "plant monster, tall, gardener, covered in mud and moss, wilted flowers growing from head, wide-brimmed hat, one glowing eye, long claws, holding pitchfork, pollen, spores, rotting",
-   "style": "eldritch",
    "memo": "使徒（ボス）の魔物の姿。泥と苔の庭師。甘い腐臭"
   },
   {
