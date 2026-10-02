@@ -178,6 +178,7 @@
     wolfram: P({
       name: "ヴォルフラム", full: "ヴォルフラム・ケルナー", nation: "ノルディア", romance: false, role: "先帝の代の帝国の将軍。帝国の兵なら誰でも名を知る「鉄拳」。今は黒鉄の砦の客分で、炊き出しの鍋をかき回している。銭勘定ができず、砦の中で道に迷い、字もあやしい。それでいて、いざとなると誰より早く正しく決める。ある命令に背いて将軍を降りたと噂される", sex: "男", age: 58, race: "human",
       who: { kind: "soldier", sex: "男", age: 58, seed: "c2:wolfram", look: { hair: "#c8c4bc", hairStyle: "short", eyes: "round", iris: "#4a6a8a", mouth: "grin", brows: "angry", outfit: "armor", head: "none", gear: "none", chest: "crest", cloth: "#4a3a2a", build: "broad", marks: ["beard", "scar", "wrinkles"], bg: "#5a5a62" } },
+      schedule: [{ from: "春", to: "冬", loc: "fort", note: "黒鉄の砦の炊き出し小屋で、鍋をかき回している" }],
       join: {
         cls: "退役将軍", desc: "伝説の拳。道に迷う", power: 68, dmg: 3, trait: "just", bond: 56, home: ["fort"],
         life: { home: "黒鉄の砦の炊き出し小屋の奥", kin: "山へ逃がした、名も知らぬ村の人たち", food: "炊き出しの麦粥（自分で煮る）", habit: "会った兵の名を、指を折って三回唱えて覚える", secret: "将軍を降りた理由を聞かれると、いつも違う話をする。どれも途中で道に迷う", keep: "先帝から下された、名の削られた勲章" },
@@ -187,6 +188,7 @@
     hartmut: P({
       name: "ハルトムート", full: "ハルトムート・ベック", nation: "ノルディア", romance: false, role: "帝都の外れの坑道の坑夫頭。熊のような大男で、腕っぷしは坑夫いちばん。夜な夜な大仰な詩を書くが、誰にも褒められない。酒場の娘に毎週詩を送っているが、返事は来ない。坑道の崩れで仲間を一人救えなかったことを、ずっと抱えている", sex: "男", age: 47, race: "human",
       who: { kind: "villager", sex: "男", age: 47, seed: "c2:hartmut", look: { hair: "#3a2a22", hairStyle: "messy", eyes: "normal", iris: "#5a4a3a", mouth: "frown", brows: "worried", outfit: "leather", head: "none", gear: "none", chest: "none", cloth: "#4a4038", build: "broad", marks: ["beard", "dirt", "scar"], bg: "#4a4448" } },
+      schedule: [{ from: "春", to: "冬", loc: "garmund", note: "帝都の外れの坑道に潜り、夜は坑夫酒場で詩を書いている" }],
       join: {
         cls: "坑夫頭", desc: "大男。詩は下手", power: 64, dmg: 3, trait: "soft", bond: 52, home: ["garmund"],
         life: { home: "帝都の外れの坑夫長屋のいちばん奥", kin: "崩れの日に担ぎ出した十二人と、届かなかった一人", food: "坑夫酒場の黒ビールと茹で芋", habit: "考えごとをすると、つるはしの柄に爪で詩の頭を刻む", secret: "詩の頭に必ず書く番号は、あの日、手の届かなかった坑夫の札の番号", keep: "崩れた坑道から拾った、番号の欠けた坑夫の札" },
@@ -196,6 +198,7 @@
     gustav: P({
       name: "グスタフ", full: "グスタフ・ローデ", nation: "ノルディア", romance: false, role: "闘技の都ザルグロスの剣闘士。鼠の獣人。砂を投げ、相手の靴紐を結び、賭け屋に袖の下を配る「卑怯者」だが、闘技場いちばんの人気者。負かした相手を一度も殺していない。売られた子どもの剣闘士を買い戻すために勝ち続けている", sex: "男", age: 41, race: "beast", beast: "rat",
       who: { kind: "rogue", sex: "男", age: 41, seed: "c2:gustav", look: { hair: "#6a6a70", hairStyle: "slick", eyes: "narrow", iris: "#2a2a2a", mouth: "grin", brows: "raised", outfit: "vest", head: "none", gear: "sword", chest: "coins", cloth: "#6a2a22", build: "slim", ears: "none", beast: "rat", marks: ["stubble", "scar", "earring"], bg: "#6a5a4a" } },
+      schedule: [{ from: "春", to: "冬", loc: "w2_zalgros", note: "闘技場の裏の兵舎で、子どもたちに木剣を教えている" }],
       join: {
         cls: "剣闘士", desc: "卑怯で、強い", power: 62, dmg: 3, trait: "greedy", bond: 44, home: ["w2_zalgros"],
         life: { home: "闘技場の裏の、子どもの剣闘士たちと同じ兵舎", kin: "買い戻した子どもたち（今は七人）", food: "闘技場の前の屋台の、揚げた川魚", habit: "どこへ行っても、まず出口と砂の落ちている場所を数える", secret: "自分を買い戻した証文を、肌身離さず持っている。値段の欄が二度書き直してある", keep: "折れた木剣（最初の試合のもの）" },
@@ -205,6 +208,7 @@
     timo: P({
       name: "ティモ", full: "ティモ・ハーシェル", nation: "エルメシア", romance: true, role: "狩り場の町ナグリスの見習い狩人。狐の獣人の若者。自分の罠に自分でかかり、会う娘ごとに惚れる町いちばんの阿呆。弓を引く一瞬だけ、町でいちばん外さない狩人の目になる。立ち入るなと書かれた土地に入って帰らなかった兄の弓を使っている", sex: "男", age: 20, race: "beast", beast: "fox",
       who: { kind: "archer", sex: "男", age: 20, seed: "c2:timo", look: { hair: "#d8782a", hairStyle: "spiky", eyes: "round", iris: "#c8902a", mouth: "grin", brows: "raised", outfit: "leather", head: "none", gear: "none", chest: "none", cloth: "#4a5a2a", build: "slim", ears: "none", beast: "fox", marks: ["bandage"], bg: "#4a6a3a" } },
+      schedule: [{ from: "春", to: "冬", loc: "w2_nagris", note: "ナグリスのいちばん高い枝の上で、たいていぶら下がっている" }],
       join: {
         cls: "見習い狩人", desc: "阿呆。矢は外さない", power: 52, dmg: 2, trait: "amorous", bond: 60, home: ["w2_nagris"],
         life: { home: "ナグリスの大木の、いちばん高い枝の上の小屋", kin: "帰らなかった兄", food: "焼いた木の実（焦がす）", habit: "きれいな人を見るたびに、耳が勝手にそっちを向く", secret: "兄の弓の弦は、兄が最後に張ったまま。一度も張り替えていない", keep: "兄の弓" },
@@ -214,6 +218,7 @@
     noeris: P({
       name: "ノエリス", full: "ノエリス・ラウ", nation: "エルメシア", romance: true, role: "湯の町アミュレインの賭場の胴元。エルフの男。いつも目を細めて微笑み、柔らかな話し方で「今、あなたを騙しています」と言いながら骰子を振る。負けた客から取るのは宿代を除いた分だけ。学院ではずっと二番だった術士で、帰らなかった一番の先輩の帳面の続きを書いている", sex: "男", age: 134, race: "elf",
       who: { kind: "noble", sex: "男", age: 27, seed: "c2:noeris", look: { hair: "#e8e4d8", hairStyle: "long", eyes: "narrow", iris: "#7aa8c8", mouth: "smile", brows: "calm", outfit: "robe", head: "none", gear: "none", chest: "gem", cloth: "#4a3a5a", build: "slim", ears: "pointy", marks: ["earring"], bg: "#6a7a8a" } },
+      schedule: [{ from: "春", to: "冬", loc: "w2_amyrein", note: "湯の町の裏通りの賭場で、骰子を振っている" }],
       join: {
         cls: "賭場の胴元", desc: "騙すと言って騙す", power: 42, dmg: 1, fire: true, trait: "distrust", bond: 50, home: ["w2_amyrein"],
         life: { home: "湯の町の賭場の奥の、湯気のこもる小部屋", kin: "遺構から帰らなかった学院の先輩", food: "湯で蒸した卵（塩を三粒）", habit: "人と話しながら、指の上で骰子を一つ転がしつづけている", secret: "先輩の帳面の続きは、もう先輩の書いた分より厚い。最後の頁は、まだ白い", keep: "角の欠けた象牙の骰子" },
@@ -223,6 +228,7 @@
     ingrid: P({
       name: "イングリット", full: "イングリット・ザーレ", nation: "ノルディア", romance: true, role: "帝都ノルディアの検死官。死体を開いて死因を調べる医者。表情を変えずに恐ろしいことを提案する毒舌の天才。気に入った相手の袖をつかんで離さず、甘い物を当然のようにねだる。疫病の年に原因を突き止めた報告書は、宮廷で握り潰された", sex: "女", age: 33, race: "human",
       who: { kind: "mage", sex: "女", age: 33, seed: "c2:ingrid", look: { hair: "#1a1a22", hairStyle: "bob", eyes: "sleepy", iris: "#8a2a3a", mouth: "flat", brows: "calm", outfit: "coat", head: "none", gear: "none", chest: "keys", cloth: "#e0dcd4", build: "slim", marks: ["bags", "glasses"], bg: "#4a4a58" } },
+      schedule: [{ from: "春", to: "冬", loc: "garmund", note: "帝都の兵舎の裏の検死小屋にいる" }],
       join: {
         cls: "検死官", desc: "無表情。袖を離さない", power: 40, dmg: 1, heal: true, trait: "cold", bond: 46, home: ["garmund"],
         life: { home: "帝都の検死小屋の二階（下の階の匂いには慣れた）", kin: "疫病の年に開いた、名前の無い人たち", food: "帝都の菓子屋の蜂蜜菓子（三つ）", habit: "隣に座った人の袖を、無言でつまむ", secret: "握り潰された報告書の写しを、一部だけ外套の裏に縫いこんでいる", keep: "刃こぼれの無い小さな刃物の包み" },
@@ -232,6 +238,7 @@
     lumia: P({
       name: "ルミア", full: "ルミア・アル・ネーヴェ", nation: "エルメシア", romance: false, role: "首都エルメシアの湖のほとりで、一日じゅう昼寝をしている小さな娘の姿のエルフ。七百年を生きているという。古風な年寄りの言葉で話し、評議会の白髪の議員を「坊や」と呼んで叱りつける。人の子を母のように気にかける。本気の術は湖を凍らせる", sex: "女", age: 700, race: "elf", childLook: true,
       who: { kind: "mage", sex: "女", age: 11, seed: "c2:lumia", look: { hair: "#c8d8f0", hairStyle: "long", eyes: "sleepy", iris: "#5ab8c8", mouth: "smirk", brows: "raised", outfit: "robe", head: "circlet", gear: "staff", chest: "gem", cloth: "#d8e4f0", build: "slim", ears: "pointy", marks: [], bg: "#6a8aaa" } },
+      schedule: [{ from: "春", to: "冬", loc: "zephara", note: "首都エルメシアの湖のほとりの木の根もとで、昼寝をしている" }],
       join: {
         cls: "湖の大婆さま", desc: "昼行灯。本気は湖を凍らす", power: 60, dmg: 2, fire: true, heal: true, trait: "lazy", bond: 55, home: ["zephara"],
         life: { home: "首都エルメシアの湖のほとり、名を刻んだ木の根もと", kin: "七百年のあいだに見送った人たち（木の幹に刻んである）", food: "湖の魚の干物（固いのが好き）", habit: "日なたを見つけると、どこでも丸くなって寝る", secret: "木の幹には、もう名を刻む場所が無い。次の名をどこに刻むか、決めていない", keep: "名を刻むための、柄のすり減った小刀" },
@@ -241,6 +248,10 @@
     sieglinde: P({
       name: "ジークリンデ", full: "ジークリンデ・アイスラー", nation: "ノルディア", romance: true, role: "凍てつく街道の見張り塔の中隊長。冷静で有能、誰よりも働く。なのに手柄は上官に取られ、給金は遅れ、馬は逃げ、毎回貧乏くじを引く。料理をすると鍋が爆ぜる。部下の多くを上官の策で失い、その命令書に自分で署名したことを背負っている", sex: "女", age: 31, race: "human",
       who: { kind: "soldier", sex: "女", age: 31, seed: "c2:sieglinde", look: { hair: "#c8b890", hairStyle: "ponytail", eyes: "sharp", iris: "#5a7a9a", mouth: "flat", brows: "worried", outfit: "armor", head: "none", gear: "spear", chest: "crest", cloth: "#3a4a5a", build: "normal", marks: ["scar"], bg: "#6a7480" } },
+      schedule: [
+        { from: "秋", to: "春", loc: "frost", note: "雪の季節は、凍てつく街道の見張り塔に詰めている" },
+        { from: "夏", to: "夏", loc: "garmund", note: "夏は帝都の兵舎で、帳簿の整理をさせられている" },
+      ],
       join: {
         cls: "中隊長", desc: "有能。運が無い", power: 58, dmg: 2, trait: "loyal", bond: 52, home: ["garmund"],
         life: { home: "帝都の兵舎の、隙間風の入る士官部屋", kin: "塔に残った部下九人", food: "兵舎の黒パンと塩漬け肉（自分では作らない）", habit: "寝る前に、部下の名を四十人分、帳面に書いてから消す", secret: "三十一人を捨て石にした命令書の写しを、捨てられずに持っている。署名は自分の字", keep: "折れた槍の穂先" },
@@ -250,6 +261,7 @@
     annelise: P({
       name: "アンネリーゼ", full: "アンネリーゼ・クロップ", nation: "ノルディア", romance: false, role: "鍛冶の都ドランヘルツの鍛冶ギルドの首席。兎の獣人。後輩に頼られる姉御肌の腕利きで、困ったら槌を持って殴り込む。なのに足し算を間違え、詐欺に遭い、いつも文無し。色恋の話をされると槌を足に落とす。父が最後に打った剣を質屋から請け出すために貯めている", sex: "女", age: 25, race: "beast", beast: "rabbit",
       who: { kind: "villager", sex: "女", age: 25, seed: "c2:annelise", look: { hair: "#e8e0d8", hairStyle: "ponytail", eyes: "round", iris: "#c84a4a", mouth: "grin", brows: "angry", outfit: "apron", head: "headband", gear: "mace", chest: "none", cloth: "#5a3a2a", build: "normal", ears: "none", beast: "rabbit", marks: ["dirt", "bandage"], bg: "#7a5a48" } },
+      schedule: [{ from: "春", to: "冬", loc: "w2_dranherz", note: "鍛冶ギルドの炉の前で、槌を振っている" }],
       join: {
         cls: "鍛冶ギルドの首席", desc: "姉御。いつも文無し", power: 56, dmg: 2, trait: "braggart", bond: 54, home: ["w2_dranherz"],
         life: { home: "ドランヘルツの、煙突の傾いた借家", kin: "鍛冶屋を潰した父（今は山の村で炭を焼いている）", food: "腹持ちのいい黒パンと、炙った腸詰め", habit: "人の持っている刃物を、勝手に研いで返す", secret: "質屋の剣を請け出す金は、いつも計算を間違えて少しずつ足りない", keep: "父の銘の入った槌" },
@@ -259,6 +271,10 @@
     radmila: P({
       name: "ラドミラ", full: "ラドミラ", nation: "ノルディア", romance: false, role: "影の谷のあたりを一人で歩く女の剣士。黙って立つだけで人が道を空ける、怖いほど美しい人。強い相手を見ると目の色が変わる。なのに子どもの擦り傷にはいちいち膝をついて薬を塗り、宿の帳場の字の誤りを黙って直す。どこで剣を覚えたのかは話さない", sex: "女", age: 35, race: "human",
       who: { kind: "adventurer", sex: "女", age: 35, seed: "c2:radmila", look: { hair: "#1a1a2a", hairStyle: "long", eyes: "sharp", iris: "#c8302a", mouth: "flat", brows: "calm", outfit: "cloak", head: "none", gear: "sword", chest: "chain", cloth: "#1a1a22", build: "slim", marks: [], bg: "#3a3a48" } },
+      schedule: [
+        { from: "春", to: "秋", loc: "w2_shadow", note: "影の谷のあたりを、一人で歩いている" },
+        { from: "冬", to: "冬", loc: "garmund", note: "冬は帝都の門のあたりで、強そうな人を見ている" },
+      ],
       join: {
         cls: "谷の剣士", desc: "怖い美人。手当ては優しい", power: 68, dmg: 3, trait: "proud", bond: 40, home: ["garmund"],
         life: { home: "決まった家は無い。影の谷の、焼き付いた影の無い壁の陰", kin: "黒い城の台所で、一緒に働いていた子どもたち", food: "塩を振っただけの焼いた肉", habit: "子どもを見ると、まず膝と肘を見る", secret: "腰の剣は、山の向こうの黒い城から持ち出したもの。持ち主は、まだ取り返しに来ない", keep: "鞘も柄も黒い、刃こぼれしない剣" },
