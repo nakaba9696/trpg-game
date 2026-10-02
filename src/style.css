@@ -15,7 +15,6 @@
   --die-bg: #fffaf0; --die-ink: #2b2116;
   --pic-filter: sepia(.18) saturate(.88); --echo-filter: blur(26px) brightness(.85) saturate(.7) sepia(.35);
   --shade-edge: rgba(60, 44, 24, .4); --shade-top: rgba(30, 20, 10, .35); --shade-low: rgba(220, 205, 172, .35); --shade-end: rgba(217, 204, 174, .55);
-  --f-logo: "Cinzel", "Trajan Pro", "Times New Roman", serif;
   --f-display: "Zen Antique", "Zen Old Mincho", "Yu Mincho", serif;
   --f-body: "Zen Old Mincho", "Yu Mincho", "Hiragino Mincho ProN", serif;
   --f-ui: "BIZ UDPGothic", "Yu Gothic UI", "Hiragino Sans", sans-serif;
@@ -70,16 +69,9 @@ button { cursor: pointer; }
 /* ヘッダー */
 .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding-block: 16px 10px; border-bottom: 2px solid var(--ink); }
 .top h1 { font-family: var(--f-display); font-weight: 400; font-size: 30px; margin: 0; letter-spacing: .08em; }
-/* 題のロゴ。Nocht（夜）を血の色、ara を墨の色で */
-.logo, .logoBig { font-family: var(--f-logo); font-weight: 700; text-transform: uppercase; line-height: 1; white-space: nowrap; }
-.logo .noct, .logoBig .noct { color: var(--blood); }
-.top h1.logo { font-size: 26px; letter-spacing: .16em; }
-body:has(#setup[data-step="title"]:not([hidden])) .top h1.logo { visibility: hidden; }
-.titleHero { text-align: center; padding-block: 28px 8px; }
+/* タイトル画面。題は置かず、背景の絵を見せる余白のあとにメニュー */
+.titleHero { min-height: clamp(120px, 30vh, 300px); }
 #setup[data-step="title"] { margin-inline: auto; } /* PC でタイトルを真ん中に */
-.logoBig { display: flex; align-items: center; justify-content: center; font-size: clamp(34px, 10.5vw, 82px); letter-spacing: .2em; padding-left: .2em; text-shadow: 0 2px 0 rgba(0, 0, 0, .08); }
-.titleHero .reading { font-family: var(--f-body); font-size: 12px; letter-spacing: .6em; padding-left: .6em; color: var(--muted); margin-top: 14px; }
-.titleHero .reading::before, .titleHero .reading::after { content: ""; display: inline-block; width: clamp(28px, 10vw, 72px); height: 1px; background: var(--blood); vertical-align: middle; margin-inline: 14px; opacity: .7; }
 .top .tools { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
 .btn { border: 1px solid var(--rule); background: var(--sheet); border-radius: 3px; padding: 5px 10px; font-size: 13px; }
 .btn:hover { border-color: var(--ink); }
@@ -327,8 +319,7 @@ dialog::backdrop { background: var(--scrim); }
   #mbar { margin-inline: -12px; padding-inline: 12px; }
   .top { padding-block: 10px 8px; gap: 4px 10px; align-items: center; }
   .top h1 { font-size: 22px; }
-  .top h1.logo { font-size: 19px; letter-spacing: .12em; }
-  .titleHero { padding-block: 16px 0; }
+  .titleHero { min-height: clamp(80px, 22vh, 200px); }
   .top .wide { display: none; }
   .top .tools { gap: 4px; }
   .top .tools .btn { padding: 6px 8px; font-size: 12px; min-height: 36px; }
@@ -641,12 +632,8 @@ body:has(.scene.quake) .bgLayer.on { animation: fxQuake .56s cubic-bezier(.36,.0
 
 /* 見出しの帯：背景の上に字だけ */
 .top { border-bottom: 1px solid var(--win-edge); text-shadow: 0 1px 3px #000; }
-/* 絵の上にじかに載る字（題・場面の名前・タイトルの注記）は、明暗どちらでも明るい字 */
-.top h1.logo, .logoBig { color: #ece1c6; }
+/* 絵の上にじかに載る字（場面の名前・タイトルの注記）は、明暗どちらでも明るい字 */
 #setup[data-step="title"] .fine { color: #d8ccb0; text-shadow: 0 1px 3px #000; }
-.logo .noct, .logoBig .noct { color: var(--blood); text-shadow: 0 0 18px rgba(184, 57, 44, .4), 0 2px 4px #000; }
-.logoBig { text-shadow: 0 0 24px rgba(234, 214, 166, .2), 0 3px 6px #000; }
-.titleHero .reading { color: #ead6a6; text-shadow: 0 1px 4px #000; }
 
 /* 縁飾りのある窓（文章・ステータス・人物づくり・ダイアログ）：細い二重の枠と、四隅の飾り */
 .tome, .sheet, #setup:not([data-step="title"]), dialog { position: relative; background: var(--win); color: var(--ink); border: 1px solid var(--win-edge); border-radius: 2px;

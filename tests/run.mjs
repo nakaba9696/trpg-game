@@ -468,7 +468,7 @@ const ok = (msg) => console.log("OK   " + msg);
   if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
 }
 
-// ---------------------------------------------------------------- 保存の鍵の移し替え（古い名前 → Nochtara）
+// ---------------------------------------------------------------- 保存の鍵の移し替え（古い名前 → Morsveld）
 {
   const G = loadEngine();
   const before = failures;
@@ -477,7 +477,7 @@ const ok = (msg) => console.log("OK   " + msg);
     return { m, getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
   };
   const K = G.SAVE_KEYS;
-  if (!K || !/^nochtara-/.test(K.save) || !/^nochtara-/.test(K.profile)) fail("保存の鍵: 新しい鍵が Nochtara になっていない");
+  if (!K || !/^morsveld-/.test(K.save) || !/^morsveld-/.test(K.profile)) fail("保存の鍵: 新しい鍵が Morsveld になっていない");
   const save = JSON.stringify({ v: 1, chron: [{ day: 1, text: "旅立ち" }] });
   const prof = JSON.stringify({ trophies: { first: 1 }, graves: [{ id: "g1", name: "名無し" }] });
   // 古い鍵だけ → 新しい鍵へ移り、古い鍵は消える（冒険・年表・トロフィー・墓碑）
@@ -496,16 +496,6 @@ const ok = (msg) => console.log("OK   " + msg);
   if (G.migrateSaveKeys(a).length) fail("保存の鍵: 二度目にも移し替える");
   G.migrateSaveKeys(null);
   G.migrateSaveKeys({ getItem() { throw new Error("blocked"); } });
-  // 一つ前の名前（morsveld-*）からも移る（冒険・図鑑を含む profile・明暗・音）
-  const MID = { save: "mors" + "veld-save", profile: "mors" + "veld-profile", theme: "mors" + "veld-theme", sound: "mors" + "veld-sound" };
-  const prof2 = JSON.stringify({ trophies: { first: 1 }, codex: { goblin: 3 }, graves: [] });
-  const c = mem({ [MID.save]: save, [MID.profile]: prof2, [MID.theme]: "dark", [MID.sound]: "{}", [OLD.save]: "もっと古い" });
-  const moved2 = G.migrateSaveKeys(c);
-  if (c.getItem(K.save) !== save) fail("保存の鍵: morsveld の冒険が移らない（kotodama3 より新しい方を選ぶ）");
-  if (c.getItem(K.profile) !== prof2) fail("保存の鍵: morsveld の図鑑・トロフィーが移らない");
-  if (!G.PREF_KEYS || c.getItem(G.PREF_KEYS.theme) !== "dark" || c.getItem(G.PREF_KEYS.sound) !== "{}") fail("保存の鍵: 明暗・音の設定が移らない");
-  if (Object.values(MID).some((k) => c.m.has(k))) fail("保存の鍵: morsveld の鍵が残る");
-  if (moved2.length !== 4) fail("保存の鍵: morsveld から移したものの数が違う");
   if (failures === before) ok("保存の鍵の移し替え（古い鍵 → " + K.save + "・" + K.profile + "）");
 }
 

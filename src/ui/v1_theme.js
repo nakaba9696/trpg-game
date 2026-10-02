@@ -4,10 +4,9 @@
 // 覚える場所は localStorage（使えないときは覚えないだけで動く）。レーン U（画面）が管理
 (function (G) {
   const theme = (G.theme = {});
-  theme.KEY = (G.PREF_KEYS && G.PREF_KEYS.theme) || "nochtara-theme";
+  theme.KEY = "morsveld-theme";
   // 覚えた値を読む。"light" / "dark" 以外（無い・壊れている・読めない）は null（端末の設定に従う）
   theme.load = (storage) => {
-    if (G.migrateSaveKeys) G.migrateSaveKeys(storage); // 古い名前の鍵（morsveld-theme）から移す
     try { const v = storage && storage.getItem(theme.KEY); return v === "light" || v === "dark" ? v : null; } catch { return null; }
   };
   theme.save = (storage, v) => {

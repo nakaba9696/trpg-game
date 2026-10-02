@@ -69,13 +69,7 @@
 
   // ---------------------------------------------------------------- 1. タイトル
   function title(root) {
-    const hero = h("div", "titleHero");
-    const logo = h("div", "logoBig");
-    logo.setAttribute("role", "img");
-    logo.setAttribute("aria-label", "Nochtara");
-    logo.append(h("span", "noct", "Nocht"), h("span", "ara", "ara"));
-    hero.append(logo, h("div", "reading", "ノクターラ")); // 副題は置かない（持ち主の決定 #56）
-    root.append(hero);
+    root.append(h("div", "titleHero")); // 題も副題も置かない（持ち主の決定 #56・N1）。背景の絵を見せる余白だけ
 
     const menu = h("div", "titleMenu");
     const live = G.S && !G.S.over && G.S.profile;
