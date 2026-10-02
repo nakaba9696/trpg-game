@@ -3,7 +3,7 @@
 // 一人の元キャラを写さない。作品名・キャラ名は書かない（tests/checks/c4_people.mjs のハッシュの確かめが、リポジトリ全体に効く）。
 // 仕組みは C2・C4 にそのまま乗せる：D.C2_PEOPLE に足すので、出会い（e.c2）・仲間になる（c2join）・誘う・ひとこと・恋・人物図鑑・好感度（F3）が働く。
 //   c4: true はキャラメモ（シート）の人ではない印（tests/checks/c2_people.mjs はシートの人だけを確かめる）。c7: true はこの組の印。
-//   romance: true/false は恋と結婚の相手になるか（仲間は全員に付ける。false の人は恋の出来事に乗らない。src/engine/zzzz_c7_people.js）。
+//   romance: true/false は恋と結婚の相手になるか（仲間は全員に付ける。true の人だけが恋の相手。R1 の src/engine/zzzz_romance.js・docs/romance.md）。
 //   childLook: true は子どもの姿の人（年経た存在でも）。恋の相手にしない（src/engine/zzz_love_age.js）。
 // 出来事は src/data/events_c7.js、図鑑の説明・名前の札・用語説明は src/data/zc7_people.js、好感度の始まりは src/engine/zzzz_c7_people.js。
 //
