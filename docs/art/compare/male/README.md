@@ -5,6 +5,7 @@
 | 案 | 足したもの | 印象 |
 |---|---|---|
 | 0 | なし（基準） | — |
+| O | `(orine:1.3)`（織音。`orine`・`oto (orine)` を 1.0・1.3・1.5 で試し、女の子の絵でも変化なし。モデルが知らない様子） | 0 とほぼ同じ |
 | A | `(yoshida akihiko:1.1)` | 0 とほぼ同じ。ハンスの眉が少し濃くなる程度 |
 | B | `(inoue takehiko:1.1)` | 0 とほぼ同じ |
 | C | `(miura kentarou:1.1)` | 0 とほぼ同じ（ボルグのシャツの色が変わった程度） |
@@ -12,5 +13,9 @@
 | E | `(kida yasuaki:1.2)` | 0 とほぼ同じ（モデルが知らない様子） |
 | F | prefix `anime coloring, cel shading, thick lineart, flat color`／negative `3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry` | 大きく変わる。てかりとエアブラシの塗りが消え、線が太いアニメ塗りに。AI っぽさがいちばん減る |
 | G | A ＋ F | F より線が太く、劇画寄り。おっさん（ハンス・カイデル）は眉・皺・無精ひげが濃くなり、いちばん渋い |
+
+| OF | O ＋ F | F とほぼ同じ（織音のぶんの変化は見えない）。F と同じく AI っぽさは大きく減る |
+
+絵師タグ（O・A〜E）はどれもこのモデルではほとんど効かない。違う絵師に替えても同じ見込みなので差し替えはしていない。絵柄を大きく変えるのは F の語。
 
 ファイル：`<案>_<id>.webp`（512×640）。
