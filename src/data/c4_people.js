@@ -2,7 +2,8 @@
 // どの人も一人の元キャラを写さず、taste.md の型を二つ以上混ぜて、この世界の住人として作った（作品名・キャラ名は書かない）。
 // 仕組みは C2 にそのまま乗せる：D.C2_PEOPLE に足すので、出会い（e.c2）・仲間になる（c2join）・誘う・ひとこと・恋・人物図鑑・好感度（F3）が働く。
 //   c4: true の人は、キャラメモ（シート）の人ではない印（tests/checks/c2_people.mjs はシートの人だけを確かめる）。
-// 出来事は src/data/events_c4.js、図鑑の説明・名前の札・用語説明は src/data/zc4_people.js、好感度の始まりは src/engine/zzz_c4_people.js。
+//   childLook: true は子どもの姿の人（年経た存在でも）。18 歳未満と同じく恋の相手にしない（src/engine/zzz_love_age.js）。
+// 出来事は src/data/events_c4.js、図鑑の説明・名前の札・用語説明は src/data/zc4_people.js、好感度の始まりは src/engine/zzzz_c4_people.js（F3 の初対面の値）。
 //
 // D.C4_PEOPLE[id]：作った人物の控え（GM・確認用。プレイヤーには見せない）
 //   side 立場（仲間・使徒・眷属・町・旅）/ type 立ち絵の男の型（A5）/ mix 混ぜた型（taste.md の言葉で）/ gap 好きなポイントになるギャップ
@@ -130,11 +131,11 @@
     // ================================================================ 使徒の側
     // 使徒の名は〔進〕。名乗るまで呼び名（name は呼び名。名乗ったあとの名前は zc4_people.js の D.C3_NAMES）
     salphiel: P({
-      name: "薄布の娘", full: "サルフィエル（刻印の環の三十三・薄布の巫女）", nation: "エルメシア", role: "使徒（国難の格・友好）。湯の町の湖のほとりに現れる、薄布で顔を隠した幼い娘の姿。年寄りの口ぶりで、人を「子ら」と呼んで母のように世話を焼く。水鏡と灰で先を見て、詩のような言葉で告げる。読み違えると破滅する。人に親身だが、手を出す者には容赦しない", sex: "女", age: 10, race: "human",
+      name: "薄布の娘", full: "サルフィエル（刻印の環の三十三・薄布の巫女）", nation: "エルメシア", role: "使徒（国難の格・友好）。湯の町の湖のほとりに現れる、薄布で顔を隠した幼い娘の姿。年寄りの口ぶりで、人を「子ら」と呼んで母のように世話を焼く。水鏡と灰で先を見て、詩のような言葉で告げる。読み違えると破滅する。人に親身だが、手を出す者には容赦しない", sex: "女", age: 10, race: "human", childLook: true,
       who: { kind: "majin", sex: "女", age: 10, seed: "c2:salphiel", look: { hair: "#f0e8d0", hairStyle: "long", eyes: "narrow", iris: "#d8b040", mouth: "smile", brows: "calm", outfit: "robe", head: "veil", gear: "none", chest: "gem", cloth: "#f0ead8", build: "slim", marks: [], bg: "#8a9ab0" } },
     }),
     musette: P({
-      name: "人形遣いの爺さん", full: "ミュゼット（日傘の若君の眷属）", nation: "使徒領", role: "眷属。人形師。大きな老紳士の操り人形の中に入り、人形の口で話す。中身はまつげの長い無表情な小娘。人を材料にした人形の改良を、淡々と提案する毒舌の天才。若君の後始末ばかりさせられている苦労人。〔進〕ベルトランの弟子だった娘。何も覚えていない", sex: "女", age: 13, race: "human",
+      name: "人形遣いの爺さん", full: "ミュゼット（日傘の若君の眷属）", nation: "使徒領", role: "眷属。人形師。大きな老紳士の操り人形の中に入り、人形の口で話す。中身はまつげの長い無表情な小娘。人を材料にした人形の改良を、淡々と提案する毒舌の天才。若君の後始末ばかりさせられている苦労人。〔進〕ベルトランの弟子だった娘。何も覚えていない", sex: "女", age: 13, race: "human", childLook: true,
       who: { kind: "majin", sex: "女", age: 13, seed: "c2:musette", look: { hair: "#c8c0d8", hairStyle: "bob", eyes: "narrow", iris: "#9a6ad8", mouth: "flat", brows: "calm", outfit: "coat", head: "none", gear: "none", chest: "gem", cloth: "#2a1a2a", build: "slim", marks: [], bg: "#2a1a30" } },
     }),
 

@@ -1,4 +1,4 @@
-// C4：持ち主の好きな型（docs/lore/taste.md）から作った人物（src/data/c4_people.js・events_c4.js・zc4_people.js・engine/zzz_c4_people.js）
+// C4：持ち主の好きな型（docs/lore/taste.md）から作った人物（src/data/c4_people.js・events_c4.js・zc4_people.js・engine/zzzz_c4_people.js）
 // - 12 人前後。仲間 3〜4・使徒の側 2・ほかは町と旅。男女・種族が混ざる。どの人にも、混ぜた型（mix）・ギャップ・過去・好感度の始まり（−100〜+100）
 // - どの人にも、名前と役職の札（D.C3_NAMES）・人物図鑑の説明（D.F2_PEOPLE）・立ち絵のタグ（docs/art/portraits.json の identity。男は type。仲間は差分）
 // - 出来事は 2〜4 個（ふつうに起きる出会いがある）。存在しない場所・人・続き・アイテムを指していない。仲間はその人だけの話が二つ以上
@@ -90,7 +90,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     if (!t || !t.name || !t.role) F(`${w}: 名前と役職の札（D.C3_NAMES）が無い`);
     else if (t.alias && !(t.reveal && flagsSet.has(t.reveal))) F(`${w}: 呼び名のある人なのに、名乗る出来事（${t.reveal}）が無い`);
     const q = (D.F2_PEOPLE || {})[id];
-    if (!q || !q.title || !q.face || !q.lines || q.lines.length !== 2) F(`${w}: 人物図鑑の説明（title・face・二行）が無い`);
+    if (!q || !q.title || q.face !== undefined || !q.lines || q.lines.length !== 2) F(`${w}: 人物図鑑の説明（title・二行。人柄は文に溶かす）が無い`);
     const pt = portraits.find((x) => x.id === id);
     if (!pt) F(`${w}: 立ち絵の一覧（portraits.json）に無い`);
     else {
@@ -141,7 +141,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     if (v) texts.push(...Object.values(v).flat());
     texts.push(...(D.C2_INVITE[id] || []));
     const q = (D.F2_PEOPLE || {})[id];
-    if (q) texts.push(q.title, q.face, ...q.lines);
+    if (q) texts.push(q.title, ...q.lines);
     if (P[id] && P[id].join) texts.push(P[id].join.desc, ...Object.values(P[id].join.life));
   }
   const mus = D.ENEMIES.c4_musette;
@@ -228,12 +228,21 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     if (c.trait !== P[id].join.trait || c.sex !== P[id].sex || c.who.seed !== "c2:" + id) F(`${id} の仲間の欄が表のままでない`);
     if (!(typeof (g.S.aff || {})[id] === "number" && g.S.aff[id] >= C4[id].aff0)) F(`${id} の好感度が始まりから入っていない：${JSON.stringify(g.S.aff)}`);
   }
-  // 好感度の始まり・F3 が無いときの控え・忘れる
+  // 好感度の始まり（F3 の初対面の値）・F3 の増減と二重にならない・忘れる
   start("fort");
+  if (!g.affAdd || !g.affMeet) F("F3 の好感度（G.affAdd・G.affMeet）が無い");
   g.c2Meet("gerhard");
   if (g.S.aff.gerhard !== C4.gerhard.aff0) F(`会ったときの好感度が始まりの数でない：${g.S.aff.gerhard}`);
+  g.c2Meet("gerhard");
+  g.affMeet("gerhard");
+  if (g.S.aff.gerhard !== C4.gerhard.aff0) F(`二度目に会うと好感度が始まりに戻るか動く：${g.S.aff.gerhard}`);
   g.apply({ aff: { gerhard: 10 } });
-  if (g.S.aff.gerhard !== C4.gerhard.aff0 + 10) F(`結果の aff で好感度が動かない：${g.S.aff.gerhard}`);
+  if (g.S.aff.gerhard !== C4.gerhard.aff0 + 10) F(`結果の aff が一度だけ足されない（二重か、足されない）：${g.S.aff.gerhard}`);
+  start("fort");
+  g.affAdd("bartolo", -5, true); // 初めての増減（会う前）も、始まりの数から
+  if (g.S.aff.bartolo !== C4.bartolo.aff0 - 5) F(`会う前の増減が始まりの数から数えられない：${g.S.aff.bartolo}`);
+  if (begin("c4_ger_chest")) choose("賭けに乗る");
+  if (g.S.aff.gerhard !== C4.gerhard.aff0 + 20) F(`出来事で会って aff を受けた好感度が 始まり＋20 でない：${g.S.aff.gerhard}`);
   g.apply({ c4forget: "gerhard" });
   if (g.S.aff.gerhard !== 0) F("c4forget で好感度が 0 に戻らない");
   // 黒鉄の砦の砦主：宝箱 → 囮の村 → 夜の取引 → 知らない顔
