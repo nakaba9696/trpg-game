@@ -88,3 +88,14 @@ T7＝K（kazuma kaneko）、T9＝O（織音）、T10＝A2（yoshida akihiko 1.3�
 | BRF | B0 ＋ rean 1.2 ＋ F | いちばん男らしい美形。serios は顔立ちが男性的に、sixth は髪が短くなり紺色のつんつん頭で騎士らしい。dil は紺の髪に変わる（黒髪の指定が負ける） |
 
 まとめ：BOF で細い美形はちゃんと出る。serios・sixth が女性寄りに見えるのは長い髪と bishonen 型の語（delicate features・narrow shoulders）のためで、織音を下げても直らない。直すなら bishonen 型に `masculine` などを足すか、この型だけ rean（BRF）にする。BRF は髪の色を変えてしまうことがある（dil・sixth が紺）。
+
+## sho (sho_lwlw)（見本 6 人：raios・hans・kind_villager_m・serios・dil・sixth）
+
+| 案 | 足したもの | 印象 |
+|---|---|---|
+| BS | B0 ＋ `sho \(sho lwlw\)` | 効き方は小さい。塗りが少し淡く、顔がやや柔らかい。serios はより女の子寄り（目が大きく丸い） |
+| BS12 | B0 ＋ `(sho \(sho lwlw\):1.2)` | BS より少し強い。ライオスは髪がつややかで少女漫画寄り、sixth は少年ぽく。おっさんの渋さは変わらず、AI っぽさは残る |
+| BSF | B0 ＋ sho 1.2 ＋ F | 線の細いアニメ塗りで AI っぽさは減る。BOF より線が細く淡い。一般人は細身で面長、おっさんの渋さは BOF より弱い。serios は女の子寄り |
+| BOSF | B0 ＋ 織音 1.2 ＋ sho 1.2 ＋ F | BOF と BSF の間。一般人は渋さを保ち（無精ひげ・頬骨）、ライオスは目元がきりっとした美形。sixth は髪が短めになり騎士らしい。serios は女の子寄りのまま |
+
+露出はどの案にも無い。まとめ：sho は柔らかく繊細な絵柄に寄せるが、男が女の子寄りになりやすい（serios）。おっさんを渋くするなら BOF の方が強い。BOSF は「渋さを少し抑えて、全体を繊細に」したいときの候補。
