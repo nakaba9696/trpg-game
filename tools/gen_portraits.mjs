@@ -22,6 +22,9 @@
 //   プロンプトは基本の絵と同じ見た目（identity）・ポーズ（tags）のまま、表情（face）を差分の表情のタグに差し替えるだけ（V10）、
 //   denoising_strength は設定の variants.denoising（既定 0.35。0.3〜0.45 で）。
 //   基本の絵が無い人は飛ばす。--only・--force・--dry も使える（--only dil,nora か、--only dil_joy で一枚だけ）
+// 男の型（A5）：男の人物は style_male.json を重ね、一覧の type（無ければ default_type）の型で顔立ちを替える。
+//   プロンプト ＝ 共通の prefix ＋ 型の prefix ＋ 特徴のタグ ＋ suffix（同じタグは一度だけ）。ネガティブ ＝ 共通の negative − 型の negative_remove ＋ negative_add
+//   --type <型>[,<型>…]  その型の男だけ（例：--type ojisan --force で渋いおっさんを作り直す。--only と重ねられる。--variants でも使える）
 // 外部のライブラリは使わない（Node 18 以上の fetch）。
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -49,6 +52,7 @@ const opt = (n) => { const i = argv.indexOf(n); return i >= 0 ? argv[i + 1] : un
 const ids = (v) => (v ? v.split(",").map((s) => s.trim()).filter(Boolean) : null);
 const force = flag("--force"), dry = flag("--dry"), newSeed = flag("--new-seed");
 const only = ids(opt("--only")) && new Set(ids(opt("--only")));
+const onlyType = ids(opt("--type")) && new Set(ids(opt("--type")));
 const stylePath = opt("--style") || path.join(art, `${KIND.style}.local.json`);
 
 const readJson = (f) => JSON.parse(readFileSync(f, "utf8"));
@@ -92,14 +96,27 @@ function loadStyle(name, localPath) {
 const style = loadStyle(KIND.style, stylePath);
 // 異形（魔物の一覧の style: "eldritch"）は別の設定。使うときだけ読む。url は魔物の設定のもの
 const STYLES = { monsters: style };
-// 男の人物（人物の一覧で identity・tags に 1boy / male / old man / boy がある人）は style_male.json を重ねる（持ち主の絵柄は可愛い女の子向けのため）
-const MALE_RE = /(^|,\s*)(\d*boys?|male|male focus|old man|man|young man)(\s*,|$)/i;
-const isMale = (p) => !MON && MALE_RE.test([p.identity, p.tags].flat().filter(Boolean).join(", "));
+// 男の人物（人物の一覧で identity・tags に 1boy / male / old man / boy がある人）は style_male.json を重ねる（持ち主の絵柄は可愛い女の子向けのため）。
+// 顔立ちは男の型（style_male.json の types。一覧の type、無ければ default_type）で替える
+const isMale = (p) => !MON && P.isMale(p);
+const splitTags = (s) => String(s || "").split(",").map((t) => t.trim()).filter(Boolean);
+const uniqTags = (s) => { const seen = new Set(); return splitTags(s).filter((t) => { const k = t.toLowerCase(); return !seen.has(k) && seen.add(k); }).join(", "); };
+const maleBase = () => (STYLES.male ||= Object.assign({}, style, loadStyle("style_male", path.join(art, "style_male.local.json"))));
+const typeOf = (p) => (isMale(p) ? p.type || maleBase().default_type || "classic" : null);
+const warnedType = new Set();
+function maleStyleOf(p) {
+  const m = maleBase(), t = typeOf(p), key = "male:" + t;
+  if (STYLES[key]) return STYLES[key];
+  const ty = (m.types || {})[t];
+  if (!ty && !warnedType.has(t)) { warnedType.add(t); console.warn(`style_male.json の types に ${t} が無い（型の語を足さずに作る）`); }
+  if (!ty) return (STYLES[key] = m);
+  const drop = new Set((ty.negative_remove || []).map((x) => x.trim().toLowerCase()));
+  const negative = joinNeg(splitTags(m.negative).filter((x) => !drop.has(x.toLowerCase())).join(", "), ty.negative_add);
+  return (STYLES[key] = Object.assign({}, m, { prefix: P.joinTags(m.prefix, ty.prefix), negative }));
+}
+const joinNeg = (...a) => uniqTags(P.joinTags(...a));
 const baseOf = (p) => {
-  if (isMale(p)) {
-    if (!STYLES.male) STYLES.male = Object.assign({}, style, loadStyle("style_male", path.join(art, "style_male.local.json")));
-    return STYLES.male;
-  }
+  if (isMale(p)) return maleStyleOf(p);
   if (!MON || p.style !== "eldritch") return style;
   if (!STYLES.eldritch) STYLES.eldritch = loadStyle("style_eldritch", path.join(art, "style_eldritch.local.json"));
   return STYLES.eldritch;
@@ -108,13 +125,15 @@ const baseOf = (p) => {
 const join = P.joinTags;
 // 人の姿の敵（魔物の一覧の human: true）は、設定の human の項目で後置き・ネガティブを替える
 const styleOf = (p) => { const b = baseOf(p); return p.human && b.human ? Object.assign({}, b, b.human) : b; };
-const promptOf = (p, face) => join(baseOf(p).prefix, P.featureOf(p, face), styleOf(p).suffix);
+const promptOf = (p, face) => uniqTags(join(baseOf(p).prefix, P.featureOf(p, face), styleOf(p).suffix));
 const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : baseOf(p).seed ?? -1);
 
 const exists = (id) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(outDir, `${id}.${e}`)));
 const isEld = (p) => MON && p.style === "eldritch";
 const VARIANTS = flag("--variants") && !MON;
-const todo = list.filter((p) => !p.same_as && (!only || only.has(p.id)) && (force || !exists(p.id)));
+const ofType = (p) => !onlyType || onlyType.has(typeOf(p));
+if (onlyType) { if (MON) { console.error("--type は人物の男の型（--monsters では使えない）"); process.exit(1); } const known = Object.keys(maleBase().types || {}).filter((k) => !k.startsWith("_")); for (const t of onlyType) if (!known.includes(t)) console.warn(`style_male.json の types に ${t} が無い（${known.join("・")}）`); }
+const todo = list.filter((p) => !p.same_as && (!only || only.has(p.id)) && ofType(p) && (force || !exists(p.id)));
 todo.sort((a, b) => isEld(a) - isEld(b)); // 異形を後にまとめる（並びは安定）
 const lastEld = todo.filter(isEld).pop();
 if (only && !VARIANTS) for (const id of only) if (!list.some((p) => p.id === id)) console.warn(`一覧に ${id} がいない`);
@@ -215,7 +234,7 @@ if (dry) {
 }
 let made = 0;
 for (const p of todo) {
-  if (dry) { const b = bodyOf(p); console.log(`\n[${p.id}] ${p.name}${isEld(p) ? "（異形）" : ""}  seed ${b.seed}${Number.isInteger(p.seed) && !newSeed ? "（一覧）" : ""}\n  + ${b.prompt}\n  - ${b.negative_prompt || ""}${b.styles && b.styles.length ? `\n  styles: ${b.styles.join(", ")}（WebUI の Styles の文が、さらに足される）` : ""}`); continue; }
+  if (dry) { const b = bodyOf(p); console.log(`\n[${p.id}] ${p.name}${isEld(p) ? "（異形）" : ""}${isMale(p) ? `（男・型 ${typeOf(p)}）` : ""}  seed ${b.seed}${Number.isInteger(p.seed) && !newSeed ? "（一覧）" : ""}\n  + ${b.prompt}\n  - ${b.negative_prompt || ""}${b.styles && b.styles.length ? `\n  styles: ${b.styles.join(", ")}（WebUI の Styles の文が、さらに足される）` : ""}`); continue; }
   process.stdout.write(`${p.id}（${p.name}${isEld(p) ? "・異形" : ""}）… `);
   quality = qualityOf(p);
   try {
@@ -244,7 +263,7 @@ async function runVariants() {
   const v = Object.assign({ denoising: 0.35 }, style.variants || {});
   const baseFile = (id) => ["webp", "png", "jpg", "jpeg"].map((e) => path.join(outDir, `${id}.${e}`)).find((f) => existsSync(f));
   const jobs = [];
-  for (const p of list.filter((x) => x.variants)) {
+  for (const p of list.filter((x) => x.variants && ofType(x))) {
     const base = baseFile(p.id);
     for (const m of MOODS) {
       const id = `${p.id}_${m}`;

@@ -23,8 +23,11 @@ const MOOD_NAME = { joy: "喜", anger: "怒", sorrow: "哀", fun: "楽" };
 // 喜怒哀楽の差分も同じ identity と tags を一字一句そのまま使い、表情（face）だけ差し替える（tools/gen_portraits.mjs も使う）
 export const joinTags = (...a) => a.map((s) => String(s || "").trim().replace(/^,|,$/g, "").trim()).filter(Boolean).join(", ");
 export const featureOf = (p, face) => joinTags(p.identity, p.tags, face === undefined ? p.face : face);
+// 男の人物（identity・tags に 1boy / male / old man / boy がある人）。tools/gen_portraits.mjs が style_male.json を重ね、type（男の型）で顔立ちを替える
+const MALE_RE = /(^|,\s*)(\d*boys?|male|male focus|old man|man|young man)(\s*,|$)/i;
+export const isMale = (p) => MALE_RE.test([p.identity, p.tags].flat().filter(Boolean).join(", "));
 const tagsCell = (p) => {
-  let t = (p.identity ? `見た目（固定）：${cell(p.identity)}<br>` : "") + cell(p.tags);
+  let t = (p.type ? `型：\`${p.type}\`<br>` : "") + (p.identity ? `見た目（固定）：${cell(p.identity)}<br>` : "") + cell(p.tags);
   if (p.face) t += `<br>表情：${cell(p.face)}`;
   if (p.variants) t += MOODS.filter((m) => p.variants[m]).map((m) => `<br>${MOOD_NAME[m]}（\`_${m}\`）：${cell(p.variants[m])}`).join("");
   return t;
@@ -38,6 +41,7 @@ export function renderPortraitsMd(data) {
   L.push("## 作り方", "");
   L.push(`- 大きさ：**${size.width}×${size.height}**（${size.framing}）。形式：**${size.format}**、1枚 **${size.maxKB}KB 以下**。`);
   L.push("- 名のある人物は**見た目（固定）**（`identity`：髪の色・長さ・髪型、目の色と形、肌、眉、印、服の色と形、いつも身につけている物、年齢と体格）を持つ。プロンプトはその後ろに、ポーズ・手に持つ物のタグ、表情の順に付く。差分も見た目とポーズは同じで、表情だけ替える。");
+  L.push("- 男の人は**型**（`type`：`ojisan`・`classic`・`bishonen`・`brute`・`elder`・`boy`）で顔立ちを替える。型の語は `style_male.json` の `types` にあり、生成のときに前に足される（[README.md](README.md)）。");
   L.push("- タグはその人の**特徴だけ**。画風・品質（masterpiece・anime style など）・構図・ネガティブは持ち主の側で足す。");
   L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は今の canvas の絵のまま。");
   L.push("- 作るのは `node tools/gen_portraits.mjs`（AUTOMATIC1111 / Forge の API。手順は [README.md](README.md)）。名のある人物は、気に入った絵の seed を `--keep <id>` で一覧に残す（名前の下に出る）。作り直すときはその seed を使う。");
