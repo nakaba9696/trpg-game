@@ -7,6 +7,7 @@
 //   sex / age / race（R1 の種族の鍵：human・elf・beast）/ beast 獣人の元の獣（D.BEASTS の鍵）/ who 人物の絵（art_people.js。seed を固定して、出来事と仲間で同じ顔）
 //   仲間になる者だけ join：{ cls 肩書き, desc 加わったときの一言, power, dmg, heal, fire, trait 性格（D.M2_TRAITS の鍵）, bond 好感度の始まり,
 //     home 誘える町（場所の id）, life 暮らし（M2）, t 技能の才（M8）, f 暮らしの才（M8）, noLove 恋の相手にしない }
+//   romance: true … 恋（M10・M11）の相手になれる人だけに付ける（無ければ恋の相手にしない。一覧は docs/romance.md・仕組みは src/engine/zzzz_romance.js）
 // D.C2_VOICE[id]：仲間のひとこと（M2 の talk / betray / die を差し替える）と、恋のひとこと（M10 の spark / confess / propose / part / cold）
 // レーン C（キャラクター）＋ V（出来事）＋ A（絵）の C2 #119 が管理
 (function (G) {
@@ -16,7 +17,7 @@
   D.C2_PEOPLE = {
     // ---------------------------------------------------------------- 仲間になる者
     dil: P({
-      name: "ディル", full: "ディル", nation: "レオネスト", role: "港町の、天涯孤独で本好きの青年。腕っぷしは弱いが頭が回り、卑怯な手も平気で使う", sex: "男", age: 24, race: "human",
+      name: "ディル", romance: true, full: "ディル", nation: "レオネスト", role: "港町の、天涯孤独で本好きの青年。腕っぷしは弱いが頭が回り、卑怯な手も平気で使う", sex: "男", age: 24, race: "human",
       who: { kind: "adventurer", sex: "男", age: 24, seed: "c2:dil", look: { hair: "#4a3020", hairStyle: "messy", eyes: "narrow", mouth: "smirk", brows: "raised", outfit: "vest", head: "none", gear: "daggers", chest: "none", cloth: "#4a4a3a", build: "slim", marks: [], bg: "#4a5a6a" } },
       join: {
         cls: "港町の若者", desc: "本と悪知恵", power: 38, dmg: 0, trait: "lazy", bond: 58, home: ["nerva"],
@@ -25,7 +26,7 @@
       },
     }),
     kaidel: P({
-      name: "カイデル", full: "カイデル", nation: "レオネスト", role: "傷だらけで流れてきた凄腕の傭兵。古武道の使い手。お気楽で後先を考えず、迷ったら殴る。親を殺した敵を追っている", sex: "男", age: 30, race: "human",
+      name: "カイデル", romance: true, full: "カイデル", nation: "レオネスト", role: "傷だらけで流れてきた凄腕の傭兵。古武道の使い手。お気楽で後先を考えず、迷ったら殴る。親を殺した敵を追っている", sex: "男", age: 30, race: "human",
       who: { kind: "adventurer", sex: "男", age: 30, seed: "c2:kaidel", look: { hair: "#2e2420", hairStyle: "spiky", eyes: "smile", mouth: "grin", brows: "raised", outfit: "leather", head: "headband", gear: "none", cloth: "#6a2a22", build: "broad", marks: ["scar", "bandage", "stubble"], bg: "#6a4a3a" } },
       join: {
         cls: "傭兵", desc: "拳ひとつ。後先は考えない", power: 62, dmg: 2, trait: "soft", bond: 56, home: ["nerva", "karna"],
@@ -34,7 +35,7 @@
       },
     }),
     nora: P({
-      name: "ノラミ", short: "ノラ", full: "ノラミ", nation: "レオネスト", role: "森に住む獣人の娘。化け物に村を潰され、犯人を探している。とにかく明るい愛すべきあほで、勘が鋭い。ときどき沈む。弓が下手で狩りの落ちこぼれだったが、肉弾戦は抜群", sex: "女", age: 18, race: "beast", beast: "dog",
+      name: "ノラミ", romance: true, short: "ノラ", full: "ノラミ", nation: "レオネスト", role: "森に住む獣人の娘。化け物に村を潰され、犯人を探している。とにかく明るい愛すべきあほで、勘が鋭い。ときどき沈む。弓が下手で狩りの落ちこぼれだったが、肉弾戦は抜群", sex: "女", age: 18, race: "beast", beast: "dog",
       who: { kind: "archer", sex: "女", age: 18, seed: "c2:nora", look: { hair: "#9a6a3a", hairStyle: "wild", eyes: "round", mouth: "grin", brows: "raised", outfit: "leather", head: "none", gear: "none", cloth: "#5a4a2a", build: "normal", ears: "none", beast: "dog", marks: ["dirt"], bg: "#4a6a3a" } },
       join: {
         cls: "森の獣人", desc: "ノラと呼んで、と言った", power: 56, dmg: 2, trait: "loyal", bond: 54, home: ["karna"],

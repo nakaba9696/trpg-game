@@ -92,7 +92,7 @@
   Object.assign(D.C2_PEOPLE, {
     // ================================================================ 仲間になる人
     bertrand: P({
-      name: "ベルトラン", full: "ベルトラン・オードラン", nation: "レオネスト", role: "ブランデールの酒場の二階に住む、絵描きのおじさん。だらしなく、冗談に付き合ってくれる友達の距離。剣を抜くと桁が違う。二十年前の王国十指だったという噂がある（本人はとぼける）。弟子の娘を、糸を操る者に連れ去られ、その仇を探している", sex: "男", age: 52, race: "human",
+      name: "ベルトラン", romance: true, full: "ベルトラン・オードラン", nation: "レオネスト", role: "ブランデールの酒場の二階に住む、絵描きのおじさん。だらしなく、冗談に付き合ってくれる友達の距離。剣を抜くと桁が違う。二十年前の王国十指だったという噂がある（本人はとぼける）。弟子の娘を、糸を操る者に連れ去られ、その仇を探している", sex: "男", age: 52, race: "human",
       who: { kind: "adventurer", sex: "男", age: 52, seed: "c2:bertrand", look: { hair: "#5a5048", hairStyle: "ponytail", eyes: "sleepy", iris: "#7a8088", mouth: "smirk", brows: "raised", outfit: "coat", head: "none", gear: "sword", chest: "none", cloth: "#4a4038", build: "slim", marks: ["stubble", "wrinkles"], bg: "#6a5a48" } },
       join: {
         cls: "絵描き", desc: "だらしない。剣を抜くまでは", power: 70, dmg: 3, trait: "lazy", bond: 58, home: ["karna"],
@@ -101,7 +101,7 @@
       },
     }),
     ilse: P({
-      name: "イルゼ", full: "イルゼ・フォン・ハーゲン", nation: "ノルディア", role: "帝国の古い家に仕えた密偵あがり。今は港町で情報屋をしながら「軍師」を名乗る。自信満々に大きな策を立て、半分はしくじる。しくじっても当たっても得意げ。自分の顔にも自信がある。仕えた家は漏れた策のせいで一夜で潰れ、漏らした者を探している", sex: "女", age: 29, race: "human",
+      name: "イルゼ", romance: true, full: "イルゼ・フォン・ハーゲン", nation: "ノルディア", role: "帝国の古い家に仕えた密偵あがり。今は港町で情報屋をしながら「軍師」を名乗る。自信満々に大きな策を立て、半分はしくじる。しくじっても当たっても得意げ。自分の顔にも自信がある。仕えた家は漏れた策のせいで一夜で潰れ、漏らした者を探している", sex: "女", age: 29, race: "human",
       who: { kind: "noble", sex: "女", age: 29, seed: "c2:ilse", look: { hair: "#7a1a2a", hairStyle: "long", eyes: "sharp", iris: "#c8a040", mouth: "smirk", brows: "raised", outfit: "coat", head: "none", gear: "daggers", chest: "chain", cloth: "#2a4a3a", build: "slim", marks: ["earring", "monocle"], bg: "#3a4a5a" } },
       join: {
         cls: "自称・軍師", desc: "策は百。当たるのは半分", power: 46, dmg: 1, trait: "braggart", bond: 54, home: ["nerva"],
@@ -119,7 +119,7 @@
       },
     }),
     mirlene: P({
-      name: "ミルレーネ", full: "ミルレーネ・エル・シルヴァリス", nation: "エルメシア", role: "共和国の古い名家のエルフの令嬢。術の才は抜きん出ているが、気が弱く、すぐ人を信じて騙される。おっとり、のんびり。それなのに一度決めたら、誰が止めても引かない。百五十年前に東へ出た艦隊に乗っていった許嫁を、今も待っている", sex: "女", age: 190, race: "elf",
+      name: "ミルレーネ", romance: true, full: "ミルレーネ・エル・シルヴァリス", nation: "エルメシア", role: "共和国の古い名家のエルフの令嬢。術の才は抜きん出ているが、気が弱く、すぐ人を信じて騙される。おっとり、のんびり。それなのに一度決めたら、誰が止めても引かない。百五十年前に東へ出た艦隊に乗っていった許嫁を、今も待っている", sex: "女", age: 190, race: "elf",
       who: { kind: "mage", sex: "女", age: 26, seed: "c2:mirlene", look: { hair: "#e8e0c8", hairStyle: "long", eyes: "sleepy", iris: "#5a9ad8", mouth: "smile", brows: "worried", outfit: "robe", head: "circlet", gear: "staff", chest: "gem", cloth: "#e0e6f0", build: "slim", ears: "pointy", marks: ["blush"], bg: "#6a7a9a" } },
       join: {
         cls: "名家の術士", desc: "おっとり。人を疑わない", power: 44, dmg: 1, fire: true, heal: true, trait: "loyal", bond: 60, home: ["zephara"],

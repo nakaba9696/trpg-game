@@ -130,7 +130,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     if (G.m2Trait(c).talk[0] !== D.C2_VOICE[id].talk[0] || G.m2Trait(c).die !== D.C2_VOICE[id].die) F(`${p.name}のひとことがその人のものでない`);
     if (!p.join.noLove && G.c2Line(c, "confess") !== D.C2_VOICE[id].confess) F(`${p.name}の恋のひとことがその人のものでない`);
     if (p.join.noLove && G.m10Can(c)) F(`${p.name}が恋の相手になる`);
-    if (!p.join.noLove && !G.m10Can(c)) F(`${p.name}が恋の相手にならない`);
+    if (!p.join.noLove && p.romance && !G.m10Can(c)) F(`${p.name}が恋の相手にならない`);
     if (G.m2Short(c) !== (p.short || p.name)) F(`${p.name}の短い呼び名が ${G.m2Short(c)}`);
     // その人だけの話
     c.talkDay = 0;
