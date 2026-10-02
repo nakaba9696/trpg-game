@@ -410,7 +410,7 @@
    "name": "ダリオ",
    "type": "ojisan",
    "file": "assets/portraits/dario.webp",
-   "identity": "1boy, male focus, old man, 59 years old, huge, very muscular, pale skin, white hair, silver white hair, short hair, white beard, full beard, grey eyes, thick white eyebrows, wrinkles, steel mask covering half of face, artificial eye, white plate armor",
+   "identity": "1boy, male focus, old man, 59 years old, huge, very muscular, pale skin, white hair, silver-white hair, short hair, white beard, full beard, grey eyes, thick white eyebrows, wrinkles, steel mask covering half of face, artificial eye, white plate armor",
    "tags": "hands resting on sword pommel, greatsword planted in ground",
    "face": "frown",
    "memo": "帝国四騎士《氷壁の父》。巨漢の老騎士。不動・実直"
@@ -821,6 +821,224 @@
    "tags": "hand on hip, holding a wrapped bar of soap",
    "face": "confident smirk",
    "memo": "C4・町。ブランデールの石鹸と香水の商会の女主人。包み紙は自分の顔。自信家の策士で、娘にちょっかいを出しては手をはたかれる。黒髪の結い上げ、羽根の帽子、えんじのドレス"
+  },
+  {
+   "id": "lucien",
+   "group": "c2",
+   "name": "ルシアン",
+   "type": "ojisan",
+   "file": "assets/portraits/lucien.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 47 years old, tall, thin, gaunt, pale skin, dark brown hair, receding hairline, short hair, hollow cheeks, narrow eyes, slate grey eyes, tired eyes, eye bags, thin eyebrows, nasolabial folds, small scar on forehead, long black tax collector coat, high collar, black wide-brimmed hat, two ledgers under arm, ring of keys at belt",
+   "tags": "holding a small stone, looking down",
+   "face": "tired, expressionless",
+   "variants": {
+    "joy": "faint smile, soft eyes",
+    "anger": "cold stare, frown, clenched jaw",
+    "sorrow": "sad, looking down, eyes closed",
+    "fun": "wry smile, raised eyebrow"
+   },
+   "memo": "C6・仲間。王都の下町の嫌われ者の徴税吏。税をくすねて下町に回す、報われない人。黒い外套と帽子、帳面二冊、疲れた目"
+  },
+  {
+   "id": "baudouin",
+   "group": "c2",
+   "name": "ボードワン",
+   "type": "brute",
+   "file": "assets/portraits/baudouin.webp",
+   "identity": "1boy, male focus, adult, man, 34 years old, huge man, burly, muscular, big hands, tan skin, freckles, dark blonde hair, short hair, round eyes, green eyes, thick eyebrows, flour dust on face, white kerchief on head, rolled-up sleeves, flour-stained cream shirt, brown miller apron, wooden name tag on cord around neck",
+   "tags": "carrying a large sack of flour on shoulder",
+   "face": "big grin, open mouth",
+   "variants": {
+    "joy": "laughing, closed eyes, big grin",
+    "anger": "angry, shouting, furrowed brows",
+    "sorrow": "teary eyes, frown, sniffling",
+    "fun": "confused, head tilt, open mouth"
+   },
+   "memo": "C6・仲間。麦の都の粉挽きの大男。王都の大会の優勝者。字が読めずすぐ騙されるが、仲間の前に立つ。小麦色の短髪、そばかす、前掛け"
+  },
+  {
+   "id": "selevan",
+   "group": "c2",
+   "name": "セレヴァン",
+   "type": "ojisan",
+   "file": "assets/portraits/selevan.webp",
+   "identity": "1boy, male focus, adult, elf, pointy ears, middle-aged man, looks 45 years old, tall, slender, pale skin, silver grey hair, long hair, straight hair, low tied hair, narrow eyes, squinting eyes, pale green eyes, thin eyebrows, eye bags, round spectacles, dark green physician robe, white apron, leather roll of silver scalpels at belt",
+   "tags": "holding a small silver scalpel, gentle smile",
+   "face": "gentle smile, closed eyes",
+   "variants": {
+    "joy": "delighted smile, eyes slightly open",
+    "anger": "cold smile, sharp eyes",
+    "sorrow": "sad smile, looking away",
+    "fun": "sly smile, finger on lips"
+   },
+   "memo": "C6・仲間。ヴァレンツァの裏通りのエルフの検屍医。はんなりした口調で物騒なことを言う。死体を買い、生きた患者からは代を取らない。糸目、銀灰の長髪、丸眼鏡"
+  },
+  {
+   "id": "aubin",
+   "group": "c2",
+   "name": "オーバン",
+   "type": "elder",
+   "file": "assets/portraits/aubin.webp",
+   "identity": "1boy, male focus, old man, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, deep wrinkles, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings",
+   "tags": "leaning on a hay bale, hand on sword hilt",
+   "face": "sleepy, half-closed eyes, gentle smile",
+   "variants": {
+    "joy": "laughing, closed eyes",
+    "anger": "serious, sharp eyes, intense stare",
+    "sorrow": "sad, looking down, tired",
+    "fun": "sly grin, one eye open"
+   },
+   "memo": "C6・仲間。王城の厩舎の老馬丁。ぼけたふりの昼行灯で、先々代の王の影の盾だった。禿げ頭、白い髭、寝ぼけ眼、鞘の金具だけ新しい剣"
+  },
+  {
+   "id": "lazare",
+   "group": "c2",
+   "name": "ラザール",
+   "type": "bishonen",
+   "file": "assets/portraits/lazare.webp",
+   "identity": "1boy, male focus, adult, young man, 21 years old, slender, pale skin, black hair, messy hair, medium hair, sharp eyes, red eyes, angry eyebrows, bandage on hand, long black hooded cloak, high collar, silver chain, burnt book cover tucked in belt, soot on fingers",
+   "tags": "holding an open book, dramatic pose, hand over face",
+   "face": "smirk, looking down on viewer",
+   "variants": {
+    "joy": "embarrassed smile, blush, looking away",
+    "anger": "shouting, angry, clenched teeth",
+    "sorrow": "sad, frown, looking down",
+    "fun": "arrogant laugh, hand on face"
+   },
+   "memo": "C6・仲間。王都の焚書官見習い。芝居がかった物言いで粗暴、焼く前の本を全部読む。黒いぼさぼさ髪、赤い目、黒い外套、焦げた本の表紙"
+  },
+  {
+   "id": "rodolphe",
+   "group": "c2",
+   "name": "ロドルフ",
+   "type": "ojisan",
+   "file": "assets/portraits/rodolphe.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 50 years old, lean, muscular, tan skin, fox ears, fox tail, orange hair, short hair, grey streaks, narrow eyes, amber eyes, thick eyebrows, stubble, scar across nose, olive green leather hunting coat, fur collar, coil of rope on shoulder, iron snare hook at belt",
+   "tags": "holding a short hunting spear, crouching",
+   "face": "frown, wary stare",
+   "variants": {
+    "joy": "slight smile, looking away",
+    "anger": "angry, bared teeth",
+    "sorrow": "sad, looking down, ears down",
+    "fun": "smirk, one ear twitch"
+   },
+   "memo": "C6・仲間。王家の猟場の番人の狐の獣人。追う側なのに逃げ道を教える。赤茶の短髪に白髪まじり、狐の耳、縄と罠の鉤"
+  },
+  {
+   "id": "margot",
+   "group": "c2",
+   "name": "マルゴ",
+   "file": "assets/portraits/margot.webp",
+   "identity": "1girl, mature female, adult, 41 years old, tall, tan skin, dark red hair, long hair, high ponytail, red kerchief headband, sharp eyes, brown eyes, raised eyebrows, scar on cheek, gold hoop earrings, leather vest over loose white shirt, rolled-up sleeves, belt with small poison vials and daggers, coin pouch",
+   "tags": "sitting on a barrel, flipping a gold coin",
+   "face": "confident grin",
+   "variants": {
+    "joy": "laughing, open mouth",
+    "anger": "angry, glaring, frown",
+    "sorrow": "sad smile, looking down",
+    "fun": "smirk, wink"
+   },
+   "memo": "C6・仲間。街道の密輸屋の女親分。欲深で卑怯だが子どもと年寄りの荷には手を出さない。赤い髪を布でまとめ、金の耳飾り、毒の小瓶"
+  },
+  {
+   "id": "violaine",
+   "group": "c2",
+   "name": "ヴィオレーヌ",
+   "file": "assets/portraits/violaine.webp",
+   "identity": "1girl, adult, young woman, 25 years old, athletic, fair skin, purple hair, long hair, ponytail, round eyes, blue eyes, worried eyebrows, bandage on cheek, faded grey-blue tunic with old knight crest, patched cloak, empty sword scabbard, bundle of pawn tickets",
+   "tags": "holding five dog leashes, standing straight",
+   "face": "serious, frown",
+   "variants": {
+    "joy": "embarrassed smile, blush",
+    "anger": "angry, shouting, blush",
+    "sorrow": "teary eyes, frown",
+    "fun": "flustered, blush, wide eyes"
+   },
+   "memo": "C6・仲間。没落した騎士家の娘。騎士学校の首席なのに日雇い。姉御肌で堅物、恋の話に真っ赤になる。紫がかった髪の一つ結び、質札の束"
+  },
+  {
+   "id": "pipinelle",
+   "group": "c2",
+   "name": "ピピネル",
+   "file": "assets/portraits/pipinelle.webp",
+   "identity": "1girl, elf, pointy ears, child, small, petite, pale skin, green hair, very long hair, sleepy eyes, golden eyes, raised eyebrows, white hooded robe with leaf embroidery, wooden circlet with leaves, gnarled wooden staff, honey pot",
+   "tags": "sitting cross-legged, arms crossed",
+   "face": "smug, half-closed eyes",
+   "variants": {
+    "joy": "smile, closed eyes",
+    "anger": "pout, angry eyebrows",
+    "sorrow": "sad, looking down",
+    "fun": "smug grin, hand on hip"
+   },
+   "memo": "C6・仲間。迷いの森の祠の、子どもの姿の古い婆さま。年寄りの口ぶりで、人の子の腹具合にうるさい。苔色の長髪、尖った耳、蜂蜜の壺。恋の相手にしない"
+  },
+  {
+   "id": "lisette",
+   "group": "c2",
+   "name": "リゼット",
+   "file": "assets/portraits/lisette.webp",
+   "identity": "1girl, adult, woman, 32 years old, slender, fair skin, rabbit ears, long white rabbit ears, white hair, bob cut, sleepy eyes, red eyes, calm eyebrows, scar on side, brown leather hunting jacket, short cape, leather boots, long spear with old shaft",
+   "tags": "holding a spear, nibbling a carrot",
+   "face": "sleepy, gentle smile",
+   "variants": {
+    "joy": "happy smile, closed eyes",
+    "anger": "wide eyes, excited grin, battle lust",
+    "sorrow": "sad smile, ears drooping",
+    "fun": "giggling, head tilt"
+   },
+   "memo": "C6・仲間。迷いの森で迷う兎の獣人の狩人。のんびりした天然なのに、強い相手の前で笑い出す戦闘狂。白いおかっぱ、長い兎の耳、槍"
+  },
+  {
+   "id": "gramont",
+   "group": "c2",
+   "name": "グラモン",
+   "type": "ojisan",
+   "file": "assets/portraits/gramont.webp",
+   "identity": "1boy, male focus, adult, old man, 58 years old, medium build, pale skin, silver-white hair, slicked back hair, narrow eyes, dark grey eyes, thin eyebrows, wrinkles, monocle, plum purple noble coat, lace cravat, gemstone brooch, ledger in hand",
+   "tags": "reading a ledger, standing",
+   "face": "polite smile, narrow eyes",
+   "memo": "C6・町（敵）。王国の徴税総監。香水の匂いの老紳士。国庫のためなら下町を消す、筋の通った悪。ルシアンの帳面を握る"
+  },
+  {
+   "id": "berangere",
+   "group": "c2",
+   "name": "ベランジェール",
+   "file": "assets/portraits/berangere.webp",
+   "identity": "1girl, adult, young woman, 25 years old, slender, fair skin, golden blonde hair, very long hair, straight hair, sharp eyes, cyan eyes, raised eyebrows, silver plate armor, royal guard crest, white cape, silver circlet, sword",
+   "tags": "hand on hip, chin raised",
+   "face": "haughty, frown",
+   "memo": "C6・町（ライバル）。近衛騎士。騎士学校の次席で、首席のヴィオレーヌを宿敵と呼ぶ正統派のお嬢様。裏で借金を肩代わり"
+  },
+  {
+   "id": "marion",
+   "group": "c2",
+   "name": "マリオン",
+   "file": "assets/portraits/marion.webp",
+   "identity": "1girl, mature female, old woman, 63 years old, short, small, hunched back, tan skin, grey hair, hair bun, smiling eyes, green eyes, wrinkles, flour-dusted brown dress, white apron, kerchief on head, broom",
+   "tags": "holding a broom, hand on lower back",
+   "face": "smile",
+   "memo": "C6・町（家族）。ボードワンの母。腰の曲がった小さな粉挽きの女房。息子を箒で追い回す。水車の帳面は全部この人"
+  },
+  {
+   "id": "sylvestre",
+   "group": "c2",
+   "name": "シルヴェストル",
+   "type": "elder",
+   "file": "assets/portraits/sylvestre.webp",
+   "identity": "1boy, male focus, old man, 74 years old, thin, pale skin, white hair, long hair, long white beard, sleepy eyes, brown eyes, raised eyebrows, deep wrinkles, round spectacles, crimson long robe, silver chain of office, soot on sleeves, wooden staff",
+   "tags": "turning pages of a book beside a bonfire",
+   "face": "mischievous smile",
+   "memo": "C6・町（師匠）。王都の焚書官長。焼く前に必ず読む飄々とした老人。ラザールの師で、その両親の写本屋を焼いた本人"
+  },
+  {
+   "id": "odette",
+   "group": "c2",
+   "name": "オデット",
+   "file": "assets/portraits/odette.webp",
+   "identity": "1girl, mature female, adult, 39 years old, medium build, pale skin, black hair, hair bun, narrow eyes, squinting eyes, violet eyes, calm eyebrows, black mourning dress, black lace veil, earrings, folding fan, ring of keys",
+   "tags": "hiding mouth with folding fan",
+   "face": "sly smile, narrow eyes",
+   "memo": "C6・町（依頼人）。ヴァレンツァの葬儀屋の未亡人。はんなりした悪巧みを隠さない商売人。身寄りのない死体だけ医者に売る"
   },
   {
    "id": "kind_villager_m",
