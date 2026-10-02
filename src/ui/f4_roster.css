@@ -1,0 +1,20 @@
+/* F4：図鑑の「仲間にする方法」・狙う印・手引きの進み具合（ui/f4_roster.js） */
+.f4how .f4steps { margin: 2px 0 6px; padding-left: 1.4em; font-size: 13px; line-height: 1.6; }
+.f4how .f4steps li { margin: 2px 0; }
+.f4how .f4way { margin: 6px 0 0; }
+.f4vague { margin: 4px 0; font-family: var(--f-body); font-size: 14px; line-height: 1.7; }
+.f4gone { color: var(--ng); }
+.f4wantbox { margin: 12px 0 4px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.f4wantbox .btn.on { border-color: var(--accent); color: var(--accent); }
+.f4wantbox .fine { margin: 6px 0 0; font-size: 12px; }
+.f2cell.f4want { border-color: var(--accent); }
+.f4star { position: absolute; top: 3px; left: 3px; padding: 0 3px; border-radius: 2px; background: var(--accent); color: var(--box); font-size: 10px; line-height: 1.5; }
+.f2cell.f4heard { opacity: .9; cursor: pointer; }
+.f4progress { margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+.f4prog { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 6px 0; font-size: 13px; }
+.f4prog dt { color: var(--muted); }
+.f4prog dd { margin: 0; display: flex; align-items: center; gap: 8px; }
+.f4bar { flex: 1; max-width: 220px; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.f4fill { display: block; height: 100%; background: var(--accent); }
+.f4heardlist { margin: 2px 0 0; padding-left: 1.2em; font-size: 13px; }
+.f4progress h4 { margin: 8px 0 2px; font-size: 13px; color: var(--muted); font-weight: 400; }
