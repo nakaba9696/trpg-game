@@ -1,5 +1,6 @@
 // V4：持ち主が作った人物の絵（assets/portraits/<id>.webp。tools/assets.mjs）を描く。G.ASSETS["portraits/<id>"] は、
 // 外のファイルの形（既定。G.ASSET_MODE "files"）なら HTML の隣の portraits/<id>.webp への相対パス、埋め込み（--embed）なら data URI。どちらも Image の src にそのまま使う。
+// 外のファイルの形の表情の差分（<id>_<表情>）は、1 人 1 枚のスプライト（portraits/<id>.moods.svg）の「#xywh=x,y,w,h」の升目を切り出して描く（G.v4Where）。
 // 外のファイルは読み終わるまで少し待ってから canvas の絵を出し（すぐ読めればちらつかない）、読めたら画像に差し替える。主人公・仲間・話している人と差分は先読みし、
 // 名のある人の基本の絵は暇なときに少しずつ読んでおく（v4Preload）。
 // art_people.js の入口 G.drawPortrait を包むだけ。画像があればそれを描き、無ければ（または読めなければ）今の canvas の絵に戻す。
@@ -110,27 +111,37 @@
   // ---------------------------------------------------------------- 読む
   const files = () => G.ASSET_MODE === "files";
   const GRACE = 160; // 外のファイルの読み込みを待つ長さ（ミリ秒）。これを過ぎたら canvas の絵を出しておく
-  const imgs = {}; // 鍵 → Image（一度だけ作る）
+  const imgs = {}; // ファイル（src）→ Image（一度だけ作る。スプライトは一人の差分みなで一つ）
   const shown = typeof WeakMap === "function" ? new WeakMap() : null; // canvas → 今描くはずのもの（{ key, done }）
+  // 鍵の値 → { src, rect }。外のファイルの形の差分は 1 人 1 枚のスプライト（portraits/<id>.moods.svg）にまとめてあり、
+  // 値は「公開パス#xywh=x,y,w,h」（tools/assets.mjs）。rect はそこから切り出す場所（まとめていなければ null＝絵の全体）
+  const SPRITE = /#xywh=(\d+),(\d+),(\d+),(\d+)$/;
+  const where = (key) => {
+    const v = String(A()["portraits/" + key] || "");
+    const m = SPRITE.exec(v);
+    return m ? { src: v.slice(0, m.index), rect: m.slice(1, 5).map(Number) } : { src: v, rect: null };
+  };
+  G.v4Where = (key) => (key && has(key) ? where(key) : null);
   const image = (key) => {
-    if (imgs[key]) return imgs[key];
+    const src = where(key).src;
+    if (imgs[src]) return imgs[src];
     const img = new Image();
     img.v4bad = false;
     img.addEventListener("error", () => { img.v4bad = true; });
-    img.src = A()["portraits/" + key];
-    return (imgs[key] = img);
+    img.src = src;
+    return (imgs[src] = img);
   };
   const ready = (img) => !!(img && !img.v4bad && img.complete && (img.naturalWidth || img.width));
   G.v4Image = (key) => (key && has(key) && typeof Image === "function" ? image(key) : null);
   G.v4Ready = (key) => ready(G.v4Image(key));
-  // その人の絵と、喜怒哀楽の差分（V8）を読み始める
-  const MOODS = ["joy", "anger", "sorrow", "fun"];
+  // その人の絵と、表情の差分（V8・V11。G.MOODS）を読み始める（スプライトにまとめた差分は一つのファイルなので一度だけ読む）
+  const moods = () => G.MOODS || ["joy", "anger", "sorrow", "fun"];
   G.v4Preload = (who) => {
     if (!who || typeof Image !== "function") return;
     const base = G.v4PortraitKey(who.mood ? Object.assign({}, who, { mood: undefined }) : who);
     if (!base) return;
     image(base);
-    MOODS.forEach((m) => { if (has(base + "_" + m)) image(base + "_" + m); });
+    moods().forEach((m) => { if (has(base + "_" + m)) image(base + "_" + m); });
   };
 
   // ---------------------------------------------------------------- 描く
@@ -143,16 +154,17 @@
       if (cv.height !== h) cv.height = h;
     }
   };
-  // 枠いっぱいに切り取って描く（横は真ん中、縦は顔が切れないように上寄せ）
-  const paint = (cv, img) => {
+  // 枠いっぱいに切り取って描く（横は真ん中、縦は顔が切れないように上寄せ）。rect があればスプライトのその升目だけを絵の全体とみなす
+  const paint = (cv, img, rect) => {
     fit(cv);
-    const w = cv.width, h = cv.height, iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+    const w = cv.width, h = cv.height;
+    const [ox, oy, iw, ih] = rect || [0, 0, img.naturalWidth || img.width, img.naturalHeight || img.height];
     if (!w || !h || !iw || !ih) return false;
     const k = Math.max(w / iw, h / ih), sw = w / k, sh = h / k;
     const ctx = cv.getContext("2d");
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, w, h);
-    ctx.drawImage(img, (iw - sw) / 2, (ih - sh) * 0.2, sw, sh, 0, 0, w, h);
+    ctx.drawImage(img, ox + (iw - sw) / 2, oy + (ih - sh) * 0.2, sw, sh, 0, 0, w, h);
     return true;
   };
   const draw0 = G.drawPortrait;
@@ -163,7 +175,8 @@
     if (shown) shown.set(cv, tok);
     const img = key && image(key);
     if (!img || img.v4bad) return draw0(cv, who);
-    if (ready(img) && paint(cv, img)) return;
+    const rect = where(key).rect;
+    if (ready(img) && paint(cv, img, rect)) return;
     const mine = () => !shown || shown.get(cv) === tok;
     // 読み込みが終わるまでは今の絵。終わったとき、まだ同じ人を描くことになっていれば差し替える
     // 外のファイルは少し待ってから今の絵を出す（そのあいだは前の人の絵を残さないよう消しておく）
@@ -172,7 +185,7 @@
       if (ctx && ctx.clearRect) { ctx.setTransform && ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); }
       setTimeout(() => { if (mine() && !tok.done) draw0(cv, who); }, GRACE);
     } else draw0(cv, who);
-    img.addEventListener("load", () => { if (mine() && paint(cv, img)) tok.done = true; }, { once: true });
+    img.addEventListener("load", () => { if (mine() && paint(cv, img, rect)) tok.done = true; }, { once: true });
     img.addEventListener("error", () => { if (mine() && !tok.done) { tok.done = true; draw0(cv, who); } }, { once: true });
   };
 
@@ -184,9 +197,9 @@
   let idleList = null, idleOn = false;
   const idle = (f) => (window.requestIdleCallback ? window.requestIdleCallback(f, { timeout: 2000 }) : setTimeout(f, 400));
   function trickle() {
-    if (!idleList) idleList = Object.keys(A()).filter((k) => k.startsWith("portraits/") && !/^portraits\/hero_/.test(k) && !new RegExp(`_(${MOODS.join("|")})$`).test(k)).map((k) => k.slice(10));
+    if (!idleList) idleList = Object.keys(A()).filter((k) => k.startsWith("portraits/") && !/^portraits\/hero_/.test(k) && !new RegExp(`_(${moods().join("|")})$`).test(k)).map((k) => k.slice(10));
     let n = 0;
-    while (idleList.length && n < 2) { const k = idleList.shift(); if (!imgs[k]) { image(k); n++; } }
+    while (idleList.length && n < 2) { const k = idleList.shift(); if (!imgs[where(k).src]) { image(k); n++; } }
     if (idleList.length) setTimeout(() => idle(trickle), 250);
   }
   const base = ui.render;

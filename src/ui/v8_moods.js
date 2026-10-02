@@ -3,7 +3,7 @@
 // 表情は src/engine/v8_moods.js が場面ごとに決める（G.moodOf(S)）。
 // V5 の立ち絵（v5_stand.js）の中身は変えず、外から包むだけ（画面の配置は V9 が作り直すため）：
 //   ・G.v4PortraitKey を包み、who.mood があれば差分の鍵を返す
-//   ・G.drawPortrait を包み、立ち絵の顔（canvas.standFace）を描くときだけ、その場の表情を who に付ける
+//   ・G.drawPortrait を包み、立ち絵の顔（canvas.standFace。PC の配置では話している人の canvas.v9face）を描くときだけ、その場の表情を who に付ける
 //   ・G.ui.render を包み、同じ人のまま表情が変わったら、顔だけを軽いフェードで入れ替える（V5 は同じ人なら描き直さないため）
 // 立ち絵の印（G.stand.sig）は表情を付けない who で取られるので、表情が変わっても人は出入りしない。レーン A（絵）の V8
 (function (G) {
@@ -26,7 +26,8 @@
   };
   G.v8 = { MOOD_FADE };
 
-  const isStand = (cv) => !!(cv && cv.classList && cv.classList.contains("standFace"));
+  // 表情を付ける顔：V5 の立ち絵（canvas.standFace）と、PC の配置（V9）で話している人の顔（.v9fig.speaker の canvas.v9face）
+  const isStand = (cv) => !!(cv && cv.classList && (cv.classList.contains("standFace") || (cv.classList.contains("v9face") && cv.parentNode && cv.parentNode.classList && cv.parentNode.classList.contains("speaker"))));
   const draw0 = G.drawPortrait;
   if (draw0) G.drawPortrait = (cv, who, ...rest) => {
     if (!isStand(cv) || !who) return draw0(cv, who, ...rest);
