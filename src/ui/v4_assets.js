@@ -111,7 +111,7 @@
   // ---------------------------------------------------------------- 読む
   const files = () => G.ASSET_MODE === "files";
   const GRACE = 160; // 外のファイルの読み込みを待つ長さ（ミリ秒）。これを過ぎたら canvas の絵を出しておく
-  const imgs = {}; // ファイル（src）→ Image（一度だけ作る。スプライトは一人の差分みなで一つ）
+  const imgs = {}; // 鍵 → Image（一度だけ作る）。スプライトにまとめた差分は、ファイル（src）ごとに一つ（一人の差分みなで一つ）
   const shown = typeof WeakMap === "function" ? new WeakMap() : null; // canvas → 今描くはずのもの（{ key, done }）
   // 鍵の値 → { src, rect }。外のファイルの形の差分は 1 人 1 枚のスプライト（portraits/<id>.moods.svg）にまとめてあり、
   // 値は「公開パス#xywh=x,y,w,h」（tools/assets.mjs）。rect はそこから切り出す場所（まとめていなければ null＝絵の全体）
@@ -122,14 +122,15 @@
     return m ? { src: v.slice(0, m.index), rect: m.slice(1, 5).map(Number) } : { src: v, rect: null };
   };
   G.v4Where = (key) => (key && has(key) ? where(key) : null);
+  const slot = (key) => { const w = where(key); return w.rect ? "sprite:" + w.src : key; };
   const image = (key) => {
-    const src = where(key).src;
-    if (imgs[src]) return imgs[src];
+    const id = slot(key);
+    if (imgs[id]) return imgs[id];
     const img = new Image();
     img.v4bad = false;
     img.addEventListener("error", () => { img.v4bad = true; });
-    img.src = src;
-    return (imgs[src] = img);
+    img.src = where(key).src;
+    return (imgs[id] = img);
   };
   const ready = (img) => !!(img && !img.v4bad && img.complete && (img.naturalWidth || img.width));
   G.v4Image = (key) => (key && has(key) && typeof Image === "function" ? image(key) : null);
@@ -199,7 +200,7 @@
   function trickle() {
     if (!idleList) idleList = Object.keys(A()).filter((k) => k.startsWith("portraits/") && !/^portraits\/hero_/.test(k) && !new RegExp(`_(${moods().join("|")})$`).test(k)).map((k) => k.slice(10));
     let n = 0;
-    while (idleList.length && n < 2) { const k = idleList.shift(); if (!imgs[where(k).src]) { image(k); n++; } }
+    while (idleList.length && n < 2) { const k = idleList.shift(); if (!imgs[slot(k)]) { image(k); n++; } }
     if (idleList.length) setTimeout(() => idle(trickle), 250);
   }
   const base = ui.render;

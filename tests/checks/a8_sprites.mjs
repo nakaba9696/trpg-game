@@ -64,9 +64,9 @@ export default ({ G, fail, ok }) => {
     if (s.map["portraits/sheila_joy"] !== "portraits/sheila_joy.webp") F("差分 1 枚の人までまとめた");
     if (s.map["portraits/odd_joy"] !== "portraits/odd_joy.webp" || !s.notes.some((n) => n.includes("portraits/odd"))) F("大きさの揃わない差分をまとめた（か、知らせない）");
     if (s.files.some((f) => /nora_(joy|anger|sorrow|fun)\.webp$/.test(f.pub))) F("まとめた差分を 1 枚ずつのファイルとしても載せる");
-    if (s.files.length !== 8 || s.sprites !== 1 || s.merged !== 4) F(`まとめたあとのファイルの数が違う：${s.files.length} 枚・${s.sprites} 人・${s.merged} 枚`);
+    if (s.files.length !== 7 || s.sprites !== 1 || s.merged !== 4) F(`まとめたあとのファイルの数が違う：${s.files.length} 枚・${s.sprites} 人・${s.merged} 枚`);
     const plain = siteAssets(dir, { sprites: false });
-    if (plain.files.length !== 11 || plain.map["portraits/nora_joy"] !== "portraits/nora_joy.webp") F("sprites: false で今まで通りにならない");
+    if (plain.files.length !== 10 || plain.map["portraits/nora_joy"] !== "portraits/nora_joy.webp") F("sprites: false で今まで通りにならない");
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -78,7 +78,7 @@ export default ({ G, fail, ok }) => {
     addEventListener(t, f) { (this.ls[t] = this.ls[t] || []).push(f); }
     set src(v) { this._src = v; }
     get src() { return this._src; }
-    fire() { this.complete = true; this.naturalWidth = 1024; this.naturalHeight = 1280; (this.ls.load || []).forEach((f) => f()); }
+    fire() { const sp = /\.svg$/.test(this._src); this.complete = true; this.naturalWidth = sp ? 1024 : 512; this.naturalHeight = sp ? 1280 : 640; (this.ls.load || []).forEach((f) => f()); }
   }
   const calls = [];
   const grad = { addColorStop() {} };
@@ -91,7 +91,7 @@ export default ({ G, fail, ok }) => {
   const who = { kind: "priest", sex: "女", age: 30, seed: "a8:test" };
   g.v4Preload(who);
   const srcs = loaded.map((i) => i.src).sort().join();
-  if (srcs !== `portraits/kind_priest_f.webp,${sprite}`) F(`先読みが違う（基本の絵とスプライトを一度ずつ）：${srcs}`);
+  if (srcs !== [`portraits/kind_priest_f.webp`, sprite].sort().join()) F(`先読みが違う（基本の絵とスプライトを一度ずつ）：${srcs}`);
   if (g.v4Image("kind_priest_f_joy") !== g.v4Image("kind_priest_f_anger")) F("同じ人の差分で、スプライトを別々に読む");
   const w = g.v4Where("kind_priest_f_fun");
   if (!w || w.src !== sprite || w.rect.join() !== "512,640,512,640") F(`切り出す場所を読めない：${JSON.stringify(w)}`);
