@@ -1,7 +1,7 @@
 // 持ち主のパソコンで、手元の Stable Diffusion（AUTOMATIC1111 / Forge / reForge の API）に人物の絵を作らせる（CI・テストでは動かさない）。手順は docs/art/README.md。
 // docs/art/portraits.json を読み、まだ assets/portraits/<id>.(webp|png|jpg) が無い人だけ、/sdapi/v1/txt2img に送って保存する。
 // 設定：docs/art/style.json（持ち主の設定。リポジトリに入っている）を読み、docs/art/style.local.json があればその項目で上書きする（local は git に入れない）。
-// プロンプト ＝ 画風の前置き（prefix）＋ 一覧の特徴のタグ ＋ 後置き（suffix）＋ WebUI の Styles（styles に名前）。
+// プロンプト ＝ 画風の前置き（prefix）＋ 一覧の特徴のタグ（見た目の identity ＋ tags ＋ 表情。tools/portraits.mjs の featureOf）＋ 後置き（suffix）＋ WebUI の Styles（styles に名前）。
 // seed：一覧にその人の seed が書いてあればそれを使う（名のある人の見た目を保つ）。無ければ設定の seed（-1 なら毎回変わる）。
 //   使った seed は docs/art/seeds.local.json（git に入れない）に残る。気に入ったら --keep <id> で一覧に書き戻す。
 // 保存：大きな png（1024×1280 で 1〜2MB）は埋め込めないので、必ず一覧の大きさ（512×640）に縮めて保存する。
@@ -19,7 +19,8 @@
 //   モデルの入れ替えを減らすため、ふつうの魔物を先に、異形を後にまとめて送る
 // --variants  喜怒哀楽の差分（V8）：一覧に variants がある人の、基本の絵（assets/portraits/<id>.webp）を元に /sdapi/v1/img2img で作り、
 //   assets/portraits/<id>_<joy|anger|sorrow|fun>.webp に置く。同じ人に見えるよう、seed は基本と同じ（一覧の seed か seeds.local.json）、
-//   プロンプトは基本の表情（face）を差分の表情のタグに差し替えるだけ、denoising_strength は設定の variants.denoising（既定 0.4。0.35〜0.45 で）。
+//   プロンプトは基本の絵と同じ見た目（identity）・ポーズ（tags）のまま、表情（face）を差分の表情のタグに差し替えるだけ（V10）、
+//   denoising_strength は設定の variants.denoising（既定 0.35。0.3〜0.45 で）。
 //   基本の絵が無い人は飛ばす。--only・--force・--dry も使える（--only dil,nora か、--only dil_joy で一枚だけ）
 // 外部のライブラリは使わない（Node 18 以上の fetch）。
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
@@ -91,16 +92,23 @@ function loadStyle(name, localPath) {
 const style = loadStyle(KIND.style, stylePath);
 // 異形（魔物の一覧の style: "eldritch"）は別の設定。使うときだけ読む。url は魔物の設定のもの
 const STYLES = { monsters: style };
+// 男の人物（人物の一覧で identity・tags に 1boy / male / old man / boy がある人）は style_male.json を重ねる（持ち主の絵柄は可愛い女の子向けのため）
+const MALE_RE = /(^|,\s*)(\d*boys?|male|male focus|old man|man|young man)(\s*,|$)/i;
+const isMale = (p) => !MON && MALE_RE.test([p.identity, p.tags].flat().filter(Boolean).join(", "));
 const baseOf = (p) => {
+  if (isMale(p)) {
+    if (!STYLES.male) STYLES.male = Object.assign({}, style, loadStyle("style_male", path.join(art, "style_male.local.json")));
+    return STYLES.male;
+  }
   if (!MON || p.style !== "eldritch") return style;
   if (!STYLES.eldritch) STYLES.eldritch = loadStyle("style_eldritch", path.join(art, "style_eldritch.local.json"));
   return STYLES.eldritch;
 };
 
-const join = (...a) => a.map((s) => String(s || "").trim().replace(/^,|,$/g, "").trim()).filter(Boolean).join(", ");
+const join = P.joinTags;
 // 人の姿の敵（魔物の一覧の human: true）は、設定の human の項目で後置き・ネガティブを替える
 const styleOf = (p) => { const b = baseOf(p); return p.human && b.human ? Object.assign({}, b, b.human) : b; };
-const promptOf = (p, face) => join(baseOf(p).prefix, p.tags, face === undefined ? p.face : face, styleOf(p).suffix);
+const promptOf = (p, face) => join(baseOf(p).prefix, P.featureOf(p, face), styleOf(p).suffix);
 const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : baseOf(p).seed ?? -1);
 
 const exists = (id) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(outDir, `${id}.${e}`)));
@@ -233,7 +241,7 @@ if (!dry) console.log(`\n${made} 枚 作った。気に入った絵は${M_} --ke
 // ---------------------------------------------------------------- --variants：喜怒哀楽の差分（V8）
 async function runVariants() {
   const MOODS = P.MOODS;
-  const v = Object.assign({ denoising: 0.4 }, style.variants || {});
+  const v = Object.assign({ denoising: 0.35 }, style.variants || {});
   const baseFile = (id) => ["webp", "png", "jpg", "jpeg"].map((e) => path.join(outDir, `${id}.${e}`)).find((f) => existsSync(f));
   const jobs = [];
   for (const p of list.filter((x) => x.variants)) {
@@ -280,5 +288,5 @@ async function runVariants() {
       if (/ECONNREFUSED|fetch failed/.test(e.message + (e.cause ? e.cause.message : ""))) { console.error("Stable Diffusion に繋がらない。WebUI を --api で起動しているか（style.json の url）"); process.exit(1); }
     }
   }
-  if (!dry) console.log(`\n差分を ${made} 枚 作った。顔が変わりすぎたら style.local.json の variants.denoising を下げて（0.35 など）--force で作り直す。終わったら node tools/build.mjs`);
+  if (!dry) console.log(`\n差分を ${made} 枚 作った。顔が変わりすぎたら style.local.json の variants.denoising を下げて（0.3 など）--force で作り直す。終わったら node tools/build.mjs`);
 }

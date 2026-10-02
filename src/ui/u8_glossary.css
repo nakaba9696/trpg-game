@@ -1,0 +1,41 @@
+/* U8：用語集に載る言葉の強調（ui/u8_glossary.js）。明朝のまま、深い金茶色に細い下線。暗い版は明るい金（--accent が替わる） */
+.u8term { color: var(--accent); text-decoration: underline solid color-mix(in srgb, var(--accent) 55%, transparent); text-decoration-thickness: 1px; text-underline-offset: 4px;
+  cursor: pointer; border-radius: 2px; transition: color .15s, background-color .15s; }
+.u8term:hover, .u8term:focus-visible { color: var(--head); background: var(--accent-soft); text-decoration-color: var(--accent); }
+.u8term:focus-visible { outline: 1px solid var(--accent); outline-offset: 1px; }
+.u8term.u8passive { cursor: inherit; }
+.act .u8term { font-size: inherit; line-height: inherit; }
+.act:disabled .u8term { color: inherit; text-decoration-color: currentColor; }
+.l-title .u8term, .l-trophy .u8term { color: inherit; }
+
+/* いま用語集に加わった語：✦ と、ほのかな光 */
+.u8term.u8new { color: var(--gold); font-weight: 700; text-shadow: 0 0 10px color-mix(in srgb, var(--gold) 45%, transparent); animation: u8glow 2.4s ease-out 2; }
+.u8term.u8new::before { content: "✦"; display: inline-block; font-size: .72em; margin-right: .15em; vertical-align: .25em; color: var(--gold); text-decoration: none; }
+@keyframes u8glow { 0% { text-shadow: 0 0 0 transparent; } 30% { text-shadow: 0 0 14px color-mix(in srgb, var(--gold) 70%, transparent); } 100% { text-shadow: 0 0 10px color-mix(in srgb, var(--gold) 45%, transparent); } }
+
+/* 短い説明 */
+#u8tip { position: fixed; z-index: 41; max-width: 300px; padding: 7px 11px; display: grid; gap: 2px; pointer-events: none; font-size: 13px; line-height: 1.6;
+  background: var(--win-solid, var(--sheet)); color: var(--ink); border: 1px solid var(--win-edge, var(--rule)); border-radius: 2px; box-shadow: 0 6px 20px rgba(0, 0, 0, .4); }
+#u8tip b { font-family: var(--f-display); font-weight: 400; font-size: 14px; color: var(--head); letter-spacing: .06em; }
+#u8tip.u8tap { pointer-events: auto; }
+#u8tip .u8go { justify-self: end; margin-top: 4px; padding: 4px 8px; font: inherit; font-size: 12.5px; color: var(--accent); background: none; border: 1px solid var(--rule); border-radius: 2px; cursor: pointer; }
+
+/* 「用語集に追加：〇〇」（左下。トロフィーの知らせは上の真ん中） */
+#u8note { position: fixed; left: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 31; display: grid; gap: 4px; pointer-events: none; max-width: calc(100vw - 32px); }
+#u8note .u8line { padding: 6px 12px; font-size: 13px; background: var(--win-solid, var(--sheet)); color: var(--ink); border: 1px solid var(--win-edge, var(--rule)); border-left: 3px solid var(--gold);
+  border-radius: 2px; box-shadow: 0 4px 14px rgba(0, 0, 0, .3); animation: u8in .35s ease-out; }
+#u8note b { font-family: var(--f-body); color: var(--head); }
+#u8note .u8star { color: var(--gold); margin-right: 6px; }
+@keyframes u8in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* 手引き：飛んできた項目と、新しく載った項目 */
+.world dt.u8newdt::before { content: "✦ "; color: var(--gold); }
+.world .u8flash { animation: u8flash 1.6s ease-out; }
+@keyframes u8flash { 0%, 40% { background: var(--accent-soft); box-shadow: 0 0 0 4px var(--accent-soft); } 100% { background: transparent; box-shadow: none; } }
+
+/* 記録の窓（V9）の写しでは、強調だけ残す */
+.v9logAll .u8term.u8new { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .u8term.u8new, #u8note .u8line, .world .u8flash { animation: none; }
+}
