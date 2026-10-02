@@ -290,6 +290,9 @@ dialog::backdrop { background: var(--scrim); }
 .grave:hover { border-color: var(--ink); }
 .grave b { font-family: var(--f-body); font-size: 15.5px; }
 .grave span { font-size: 12.5px; color: var(--muted); }
+.grave.has-face { grid-template-columns: auto minmax(0, 1fr); column-gap: 10px; }
+.grave .gface { width: 48px; height: 60px; grid-column: 1; grid-row: 1 / span 3; align-self: start; }
+.grave.has-face > :not(.gface) { grid-column: 2; }
 .world h3 { font-family: var(--f-display); font-weight: 400; font-size: 17px; margin: 6px 0 2px; }
 .world p { margin: 0; font-family: var(--f-body); font-size: 15px; max-width: 44em; }
 .world dl { margin: 0; display: grid; grid-template-columns: 8.5em minmax(0, 1fr); gap: 4px 12px; font-size: 14px; }

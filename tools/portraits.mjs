@@ -16,9 +16,13 @@ const GROUPS = [
   ["people", "型：名もない人", "名もない仲間・出来事の町の人など。人物の種類 × 性別。13 歳未満は子ども、60 歳以上は老人の型を使う。"],
 ];
 const cell = (s) => String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
-// 喜怒哀楽の差分（V8。src/engine/v8_moods.js の G.MOODS と同じ並び）
-export const MOODS = ["joy", "anger", "sorrow", "fun"];
-const MOOD_NAME = { joy: "喜", anger: "怒", sorrow: "哀", fun: "楽" };
+// 表情の種類（docs/art/moods.json）。喜怒哀楽（V8）が先、そのあとにその人らしい表情（V11）。src/data/v11_moods.js と同じ並び
+export const MOODS_PATH = path.join(here, "..", "docs", "art", "moods.json");
+export const MOODS_MD_PATH = path.join(here, "..", "docs", "art", "moods.md");
+export const MOOD_DATA = JSON.parse(readFileSync(MOODS_PATH, "utf8"));
+export const MOODS = Object.keys(MOOD_DATA.moods);
+export const BASE_MOODS = MOOD_DATA.base;
+const MOOD_NAME = Object.fromEntries(MOODS.map((m) => [m, MOOD_DATA.moods[m].name]));
 // 人物の特徴のタグ（V10）：見た目を固定する identity（名のある人物）＋ tags（役・ポーズ・手に持つ物）＋ 表情。
 // 喜怒哀楽の差分も同じ identity と tags を一字一句そのまま使い、表情（face）だけ差し替える（tools/gen_portraits.mjs も使う）
 export const joinTags = (...a) => a.map((s) => String(s || "").trim().replace(/^,|,$/g, "").trim()).filter(Boolean).join(", ");
@@ -29,7 +33,7 @@ export const isMale = (p) => MALE_RE.test([p.identity, p.tags].flat().filter(Boo
 const tagsCell = (p) => {
   let t = (p.type ? `型：\`${p.type}\`<br>` : "") + (p.identity ? `見た目（固定）：${cell(p.identity)}<br>` : "") + cell(p.tags);
   if (p.face) t += `<br>表情：${cell(p.face)}`;
-  if (p.variants) t += MOODS.filter((m) => p.variants[m]).map((m) => `<br>${MOOD_NAME[m]}（\`_${m}\`）：${cell(p.variants[m])}`).join("");
+  if (p.variants) t += Object.keys(p.variants).map((m) => `<br>${MOOD_NAME[m] || m}（\`_${m}\`）：${cell(p.variants[m])}`).join("");
   return t;
 };
 
@@ -45,7 +49,7 @@ export function renderPortraitsMd(data) {
   L.push("- タグはその人の**特徴だけ**。画風・品質（masterpiece・anime style など）・構図・ネガティブは持ち主の側で足す。");
   L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は今の canvas の絵のまま。");
   L.push("- 作るのは `node tools/gen_portraits.mjs`（AUTOMATIC1111 / Forge の API。手順は [README.md](README.md)）。名のある人物は、気に入った絵の seed を `--keep <id>` で一覧に残す（名前の下に出る）。作り直すときはその seed を使う。");
-  L.push("- **表情**は基本の絵の顔（プロンプトでは特徴のタグの後ろに付く）。**喜・怒・哀・楽**がある人は、基本の絵から差分を作る（`node tools/gen_portraits.mjs --variants`。img2img で表情のタグだけ差し替える）。ファイルは `<id>_joy.webp`・`_anger`・`_sorrow`・`_fun`。無ければ基本の絵のまま。");
+  L.push("- **表情**は基本の絵の顔（プロンプトでは特徴のタグの後ろに付く）。差分（**喜・怒・哀・楽**と、その人らしい表情。種類は [moods.md](moods.md)）がある人は、基本の絵から差分を作る（`node tools/gen_portraits.mjs --variants`。`--mood shy,surprise` でその表情だけ。img2img で表情のタグだけ差し替える）。ファイルは `<id>_joy.webp`・`_shy` など。無い表情は近い表情か、基本の絵のまま。");
   L.push("- png・jpg でもよい（同じ名前なら webp を使う）。埋め込みの合計が 12MB を超えるとビルドとテストが止まる（`tools/assets.mjs`）。");
   L.push("");
   const types = [];
@@ -69,8 +73,39 @@ export function renderPortraitsMd(data) {
   return L.join("\n");
 }
 
+// 表情の一覧（docs/art/moods.md）。種類・既定のタグ・落とし先と、人ごとの割り当て
+export function renderMoodsMd(moods, data) {
+  const L = [];
+  const people = data.portraits.filter((p) => p.variants);
+  L.push("# 表情の種類（立ち絵の差分）", "");
+  L.push("このファイルは `node tools/portraits.mjs` で `docs/art/moods.json`（種類）と `docs/art/portraits.json`（人ごとの割り当て）から作る。直すときは json を直してから作り直す。", "");
+  L.push("## 決まり", "");
+  L.push("- 差分のある人は、**喜怒哀楽の 4 つ**（`joy`・`anger`・`sorrow`・`fun`）を必ず持ち、さらに**その人らしい表情を 3〜5 個**持つ（仲間になる人・スプレッドシートの人物・使徒の人の姿）。");
+  L.push("- 人ごとのタグは `portraits.json` の `variants` に書く。下の表の「既定のタグ」を元に、その人の性格に合わせて書き替える（獣人は耳・尻尾、仮面の人は目だけ、など）。タグは**表情の特徴だけ**：画風・品質・構図・作家名・作品名・性的な語は書かない（テストが見る）。男の照れも `blush` でよい（#185）。");
+  L.push("- 見た目（`identity`）とポーズ（`tags`）は基本の絵と一字一句同じで、表情（`face`）だけ差し替えて img2img で作る（V10）。");
+  L.push("- 絵が無い表情は、下の「落とし先」を左から探し、どれも無ければ基本の絵を出す。だから、その人に合わない表情は持たせなくてよい。");
+  L.push("- 新しい人を足すとき（C5〜C8 など）：`portraits.json` の人に `face` と `variants`（喜怒哀楽＋3〜5 個）を書き、`node tools/portraits.mjs` で md を作り直す。新しい表情の種類が要るときは `moods.json` と `src/data/v11_moods.js` の両方に足す（並び・落とし先をそろえる）。");
+  L.push("- ゲームでは、出来事・結果・会話（K1）・掛け合いのデータに `mood: \"shy\"` のように書く。書いていない出来事は文から推す（「頬を染め」→照れ、「号泣」→泣き など。`src/data/v11_moods.js` の `MOOD_GUESS`）。既存の出来事に後から付けるときは、そのファイルを書き換えずに `D.EVENT_MOODS[出来事の id] = \"surprise\"` と書ける。");
+  L.push("- 作る：`node tools/gen_portraits.mjs --variants`（全部）、`--variants --mood shy,surprise`（その表情だけ）、`--variants --only nora`（その人だけ）、`--only nora_shy`（一枚だけ）。", "");
+  L.push("## 種類", "");
+  L.push("| 鍵 | 名前 | 既定のタグ | 落とし先 | 使う場面 | 持つ人 |", "|---|---|---|---|---|---|");
+  for (const [m, t] of Object.entries(moods.moods)) {
+    const n = people.filter((p) => p.variants[m]).length;
+    L.push(`| \`${m}\` | ${cell(t.name)} | ${cell(t.tags)} | ${t.fallback.length ? t.fallback.map((f) => `${moods.moods[f].name}`).join(" → ") + " → 基本" : "基本"} | ${cell(t.memo || "")} | ${n} |`);
+  }
+  L.push("", `## 人ごとの割り当て（${people.length} 人）`, "");
+  L.push("| 人 | 喜怒哀楽のほかの表情 |", "|---|---|");
+  for (const p of people) {
+    const extra = Object.keys(p.variants).filter((m) => !moods.base.includes(m));
+    L.push(`| ${cell(p.name)}（\`${p.id}\`） | ${extra.map((m) => `${moods.moods[m] ? moods.moods[m].name : m}（\`${m}\`）`).join("・") || "—"} |`);
+  }
+  L.push("");
+  return L.join("\n");
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const data = JSON.parse(readFileSync(JSON_PATH, "utf8"));
   writeFileSync(MD_PATH, renderPortraitsMd(data));
-  console.log(`docs/art/portraits.md（${data.portraits.length} 人）`);
+  writeFileSync(MOODS_MD_PATH, renderMoodsMd(MOOD_DATA, data));
+  console.log(`docs/art/portraits.md（${data.portraits.length} 人）・moods.md（${MOODS.length} 種）`);
 }
