@@ -18,7 +18,8 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const D = G.data;
   let n = 0;
   const F = (m) => { n++; fail("C2: " + m); };
-  const P = D.C2_PEOPLE;
+  // シート（キャラメモ）の人だけ。C4 で足した人（c4: true）は tests/checks/c4_people.mjs が確かめる
+  const P = Object.fromEntries(Object.entries(D.C2_PEOPLE).filter(([, p]) => !p.c4));
 
   // ---------------------------------------------------------------- 表と出来事
   const names = Object.values(P).map((p) => p.name);
