@@ -24,6 +24,8 @@
   // 呼び名（名前が無ければ人の種類の名前）
   stand.nameOf = (who) => {
     if (!who) return "";
+    const tag = G.whoTag && G.whoTag(who);
+    if (tag) return tag.label;
     const kind = G.PEOPLE && G.PEOPLE[who.kind];
     return who.name || (kind ? kind.name : "");
   };
@@ -79,7 +81,9 @@
     cv.width = 512; cv.height = 640;
     const name = document.createElement("span");
     name.className = "standName";
-    name.textContent = stand.nameOf(who);
+    const tag = G.whoTag && G.whoTag(who); // C3：名前＋役職の札
+    if (tag && G.c3Plate) G.c3Plate(name, tag);
+    else name.textContent = stand.nameOf(who);
     el.append(cv, name);
     return el;
   }
