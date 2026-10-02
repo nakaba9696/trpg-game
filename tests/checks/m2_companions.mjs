@@ -63,6 +63,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   if (!S.m2.gone.some((g) => g.id === k.id && g.how === "slain")) fail("M2: 討った仲間が記録に残らない");
   // 死別：深手 → 手番の終わりに看取り → 年表
   S.mode = "explore"; S.event = null; S.combat = null;
+  S.m2.doom = null; // 前の戦いの乱数で b がもう深手を負っていても、ここからの看取りを確かめる（深手は最初のものが残るため）
   G.m2Doom(b, "テストの深手");
   G.endTurn();
   if (S.event !== "m2_farewell" || S.m2.focus !== b.id) fail(`M2: 深手の仲間を看取る出来事が始まらない（${S.event}）`);
