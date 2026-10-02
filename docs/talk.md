@@ -9,8 +9,9 @@
 - 中身：`src/data/talk_dil.js`・`talk_sheila.js`・`talk_nora.js`・`talk_zerina.js`（D.TALK[id]）、掛け合い `src/data/talk_banter_c2.js`（D.TALK_BANTER）
   - K2 で 8 人を足した：`talk_kaidel.js`・`talk_rui.js`・`talk_elnea.js`・`talk_natalia.js`・`talk_bertrand.js`・`talk_ilse.js`・`talk_tula.js`・`talk_mirlene.js`、掛け合い `talk_banter_k2.js`
   - K3 で C7 の 10 人を足した：`talk_wolfram.js`・`talk_hartmut.js`・`talk_gustav.js`・`talk_timo.js`・`talk_noeris.js`・`talk_ingrid.js`・`talk_lumia.js`・`talk_sieglinde.js`・`talk_annelise.js`・`talk_radmila.js`、掛け合い `talk_banter_k3.js`（周りの名のある人＝ディートリヒ・オトマール・リーゼル・マティアス・オーレンとの因縁も）
+  - K5 で C5 の 6 人を足した：`talk_bruno.js`・`talk_trude.js`・`talk_souhaku.js`・`talk_adele.js`・`talk_celestin.js`・`talk_felix.js`、掛け合い `talk_banter_k5.js`（6 人どうしと、C2・C4・C7・C8 の仲間との組。周りの名のある人＝シオネ・ヴィットリオ・コンスタンス・ヴィオレーヌ・レオポルト・灯台守の婆さまとの因縁も）
 - 画面：出来事の画面をそのまま使う（話題の一覧・話・返し方が「どうする？」の欄に並ぶ）。シートの仲間の札の「話す」は `src/ui/talk.js`
-- 確認：`tests/checks/talk.mjs`（人を足すと、その人の表も自動で確かめる。量の下限を確かめる人は `PEOPLE` に足す）。K2 の 8 人の量・恋と信頼の分け方・全部聞き切る遊びは `tests/checks/talk_k2.mjs`（C7 の 10 人は `talk_k3.mjs`）
+- 確認：`tests/checks/talk.mjs`（人を足すと、その人の表も自動で確かめる。量の下限を確かめる人は `PEOPLE` に足す）。K2 の 8 人の量・恋と信頼の分け方・全部聞き切る遊びは `tests/checks/talk_k2.mjs`（C7 の 10 人は `talk_k3.mjs`、C5 の 6 人は `talk_k5.mjs`）
 
 ## 遊び方の流れ
 1. **話す**：行動の「仲間」の欄か、シートの仲間の札の「話す」。一日一度、一手番を使う。好感度が尽きた仲間（F3 で −70 以下）は今まで通り M2 の別れ話になる。
