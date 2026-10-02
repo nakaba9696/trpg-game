@@ -103,6 +103,7 @@
 | 敵の id | 人物の id |
 |---|---|
 | `c4_musette` | `musette` |
+| `c8_graul` | `graul` |
 | `c2_nora` | `nora` |
 | `c2_angelica` | `angelica` |
 | `c2_zork` | `zork` |

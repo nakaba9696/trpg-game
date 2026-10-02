@@ -1,5 +1,6 @@
 // src/ を HTML にまとめる。形は二つ（どちらもコードと CSS は 1 枚の HTML に入れる）：
 //   node tools/build.mjs          … 既定。dist/site/index.html ＋ 画像の別ファイル（dist/site/portraits/<id>.webp・monsters/<id>.webp）。
+//                                   表情の差分は 1 人 1 枚（dist/site/portraits/<id>.moods.svg）にまとめる（1 つの版は 511 ファイルまでのため）
 //                                   HTML には画像の一覧（鍵 → 相対パス・バイト数）だけを入れ、無い画像は読みに行かない。
 //                                   Artifact に載せるファイルの一覧（公開パス → ローカルパス）を dist/site/files.json に書く（載せ方は docs/publish.md）
 //   node tools/build.mjs --embed  … 予備。今まで通り画像を埋め込んだ 1 枚の dist/morsveld.html（上限を超えるなら差分を省く）
@@ -47,7 +48,8 @@ if (embed) {
   const list = assets.files.map((f) => {
     const dest = path.join(site, ...f.pub.split("/"));
     mkdirSync(path.dirname(dest), { recursive: true });
-    copyFileSync(f.abs, dest);
+    if (f.data) writeFileSync(dest, f.data); // 差分をまとめたスプライト（tools/assets.mjs の siteAssets）
+    else copyFileSync(f.abs, dest);
     return { pub: f.pub, local: rel(dest), bytes: f.bytes };
   });
   const plan = planSite({ pageBytes: htmlBytes, files: list });
@@ -55,6 +57,7 @@ if (embed) {
   // 載せるファイルの一覧（公開パス → リポジトリの根からのローカルパス）。1 回で載らないときは回ごとの一覧も書く
   writeFileSync(path.join(site, "files.json"), JSON.stringify(Object.fromEntries(list.map((f) => [f.pub, f.local])), null, 1) + "\n");
   if (plan.batches.length > 1) plan.batches.forEach((b, i) => writeFileSync(path.join(site, `files-${i + 1}.json`), JSON.stringify(b.files, null, 1) + "\n"));
-  console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル）＋ 画像 ${list.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル）`);
+  console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル）＋ 画像 ${list.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル／1 つの版の上限 ${SITE_LIMITS.versionFiles}）`);
+  if (assets.sprites) console.log(`  表情の差分 ${assets.merged} 枚を ${assets.sprites} 人分のスプライト（portraits/<id>.moods.svg）にまとめた`);
   if (plan.batches.length > 1) console.log(`  1 回の公開（${SITE_LIMITS.batchFiles} ファイル・${SITE_LIMITS.batchBytes / MB}MB まで）に収まらないので ${plan.batches.length} 回に分けて載せる：dist/site/files-1.json 〜 files-${plan.batches.length}.json（docs/publish.md）`);
 }

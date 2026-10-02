@@ -574,7 +574,9 @@
       ep.textContent = "";
       const name = run.profile ? run.profile.name : run.name;
       const cls = run.clsName || run.cls;
-      if (run.profile && run.cls) ep.append(face("eface", heroWho(run), 64, 80));
+      // 今の冒険は G.S から、墓碑は残した人物設定（hero。#35）から描く。hero の無い古い墓碑は絵なし
+      const who = run.profile && run.cls ? heroWho(run) : G.graveWho ? G.graveWho(run) : null;
+      if (who) ep.append(face("eface", who, 64, 80));
       const race = G.r1GraveLine ? G.r1GraveLine(run) : "";
       ep.append(h("b", "", end === "dead" ? `${race ? race + "の" : ""}${cls} ${name}、ここに眠る` : `${race ? race + "の" : ""}${cls} ${name}、物語を終える`));
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
@@ -616,12 +618,15 @@
     P.graves.forEach((g) => {
       const b = h("button", "grave");
       b.type = "button";
+      const who = G.graveWho ? G.graveWho(g) : null;
+      if (who) { b.classList.add("has-face"); b.append(face("gface", who, 48, 60)); }
       b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : g.epitaph || "物語を終えた"}　${g.turns} 手番`));
       b.onclick = () => { $("#dlgTrophy").close(); ui.openChronicle(g, false); };
       gl.append(b);
     });
     setTab(tab || "T");
     $("#dlgTrophy").showModal();
+    drawFaces();
   };
   function setTab(t) {
     $("#tabT").setAttribute("aria-selected", t === "T");
