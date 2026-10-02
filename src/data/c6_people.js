@@ -2,7 +2,7 @@
 // 持ち主の「好きな人物の型」（docs/lore/taste.md）を二つ以上混ぜて、この世界の住人として作った（一人の元キャラを写さない。作品名・キャラ名は書かない）。
 // 仕組みは C2・C4 にそのまま乗せる：D.C2_PEOPLE に足すので、出会い（e.c2）・仲間になる（c2join）・誘う・ひとこと・恋・人物図鑑・好感度（F3）が働く。
 //   c6: true の人は、キャラメモ（シート）の人ではない印。
-//   join.romance：恋と結婚ができる人か（持ち主の方針で、恋の相手は全体で 20 人ほどに絞る）。romance: false の人は noLove も立てる（今の M10 が見る印）。
+//   romance: true：恋と結婚ができる人（R1 #182 の src/engine/zzzz_romance.js が見る印。一覧は docs/romance.md）。仲間には true / false を明記する。
 //   childLook: true は子どもの姿の人（年経た存在でも）。恋の相手にしない（src/engine/zzz_love_age.js）。
 // 出来事は src/data/events_c6.js、図鑑の説明・名前の札・用語説明は src/data/zc6_people.js、好感度の始まりは src/engine/zzzz_c6_people.js。
 //
@@ -122,99 +122,97 @@
 
   // ---------------------------------------------------------------- C2 の人物の表に足す（書き方は src/data/c2_people.js の頭の説明）
   const P = (o) => Object.assign({ c6: true }, o);
-  // 恋の相手か（romance）。false の人は今の M10 が見る noLove も立てる
-  const J = (romance, o) => Object.assign({ romance, noLove: !romance }, o);
   Object.assign(D.C2_PEOPLE, {
     // ================================================================ 仲間になる人
     lucien: P({
-      name: "ルシアン", full: "ルシアン・ヴェルモア", nation: "レオネスト", role: "王都の下町を受け持つ徴税吏。下町じゅうから石を投げられる嫌われ者。言い訳をしない。取り立てた税の一部をくすね、下町の井戸と薬と冬の薪に回している。その帳面を上役に握られている", sex: "男", age: 47, race: "human",
+      romance: true, name: "ルシアン", full: "ルシアン・ヴェルモア", nation: "レオネスト", role: "王都の下町を受け持つ徴税吏。下町じゅうから石を投げられる嫌われ者。言い訳をしない。取り立てた税の一部をくすね、下町の井戸と薬と冬の薪に回している。その帳面を上役に握られている", sex: "男", age: 47, race: "human",
       who: { kind: "noble", sex: "男", age: 47, seed: "c2:lucien", look: { hair: "#3a3632", hairStyle: "receding", eyes: "narrow", iris: "#5a6a7a", mouth: "flat", brows: "worried", outfit: "coat", head: "hat", gear: "none", chest: "keys", cloth: "#2e2e36", build: "slim", marks: ["bags", "wrinkles", "scar"], bg: "#5a5048" } },
-      join: J(true, {
+      join: {
         cls: "徴税吏", desc: "嫌われ者。帳面は合っている", power: 50, dmg: 2, trait: "cold", bond: 50, home: ["leavel"],
         life: { home: "王都の下町の外れ、窓に板を打ちつけた一間", kin: "家を出ていった妻と娘", food: "下町の屋台の安い葡萄酒と、固くなった焼き菓子", habit: "石を投げられても、拾って道の端に寄せる", secret: "帳面は二冊ある。二冊目の最後の頁に、下町の家の名が並び、いくつかに線が引いてある", keep: "娘が小さいころに描いた、徴税吏の絵（笑っている）" },
         t: { sword: 1, spear: 0, bow: 0, magic: 0, pray: 1, stealth: 2, talk: 2, lore: 2, wild: 0 }, f: { letters: 2, calm: 1 },
-      }),
+      },
     }),
     baudouin: P({
-      name: "ボードワン", full: "ボードワン・ムーラン", nation: "レオネスト", role: "麦の都グランベールの粉挽きの倅。王都の力比べの大会で優勝した「麦の大槌」。大声で、字が読めず、勘定ができず、すぐ騙される。仲間が倒れると、一歩も引かずにその前に立つ", sex: "男", age: 34, race: "human",
+      romance: true, name: "ボードワン", full: "ボードワン・ムーラン", nation: "レオネスト", role: "麦の都グランベールの粉挽きの倅。王都の力比べの大会で優勝した「麦の大槌」。大声で、字が読めず、勘定ができず、すぐ騙される。仲間が倒れると、一歩も引かずにその前に立つ", sex: "男", age: 34, race: "human",
       who: { kind: "villager", sex: "男", age: 34, seed: "c2:baudouin", look: { hair: "#c8a060", hairStyle: "short", eyes: "round", iris: "#6a8a4a", mouth: "grin", brows: "raised", outfit: "apron", head: "kerchief", gear: "none", chest: "none", cloth: "#d8cbb0", build: "broad", marks: ["freckles", "dirt"], bg: "#b8a060" } },
-      join: J(true, {
+      join: {
         cls: "粉挽き", desc: "力は王都いち。勘定は村いちばん下", power: 64, dmg: 3, trait: "loyal", bond: 56, home: ["w2_granbel"],
         life: { home: "麦の都グランベールの川べりの水車小屋", kin: "腰の曲がった母ちゃん", food: "焼きたての白パン（一度に四つ）", habit: "人の荷を、頼まれる前に全部担いでしまう", secret: "毎年同じ日に、迷いの森の同じ木の根もとに、野の花を置いてくる", keep: "優勝のときにもらった、名前入りの木の札（自分では読めない）" },
         t: { sword: 1, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 0, talk: 1, lore: 0, wild: 2 }, f: { cook: 1, kids: 2 },
-      }),
+      },
     }),
     selevan: P({
-      name: "セレヴァン", full: "セレヴァン・イル・ノエリス", nation: "エルメシア", role: "港町ヴァレンツァの裏通りの医者。共和国から流れてきたエルフ。物静かで品がよく、やわらかな口ぶりで恐ろしいことを淡々と言う。身寄りのない死体を買って腑分けする。生きている患者からは代を取らない", sex: "男", age: 312, race: "elf",
+      romance: false, name: "セレヴァン", full: "セレヴァン・イル・ノエリス", nation: "エルメシア", role: "港町ヴァレンツァの裏通りの医者。共和国から流れてきたエルフ。物静かで品がよく、やわらかな口ぶりで恐ろしいことを淡々と言う。身寄りのない死体を買って腑分けする。生きている患者からは代を取らない", sex: "男", age: 312, race: "elf",
       who: { kind: "mage", sex: "男", age: 45, seed: "c2:selevan", look: { hair: "#c8ccc0", hairStyle: "long", eyes: "narrow", iris: "#7aa08a", mouth: "smile", brows: "calm", outfit: "robe", head: "none", gear: "none", chest: "keys", cloth: "#3a4a44", build: "slim", ears: "pointy", marks: ["bags", "glasses"], bg: "#3a4a50" } },
-      join: J(false, {
+      join: {
         cls: "検屍医", desc: "物騒なことほど、にこやかに", power: 42, dmg: 1, heal: true, trait: "proud", bond: 50, home: ["nerva"],
         life: { home: "ヴァレンツァの裏通り、氷室を兼ねた地下の診療所", kin: "共和国の学院に残してきた、たった一人の弟子", food: "濃く淹れた苦い茶と、塩をした干し魚", habit: "話しながら、相手の手首の脈を勝手に数えている", secret: "三百年、同じ一つの病の治し方を探している。病の名は、帳面にも書いていない", keep: "刃こぼれ一つない、古い銀の小刀の一揃い" },
         t: { sword: 0, spear: 0, bow: 0, magic: 2, pray: 0, stealth: 1, talk: 1, lore: 3, wild: 1 }, f: { herbs: 2, nose: 1 },
-      }),
+      },
     }),
     aubin: P({
-      name: "オーバン", full: "オーバン", nation: "レオネスト", role: "王城の厩舎の隅で居眠りしている老馬丁。ぼけたふりをして、年寄りだからと何でも人にやらせる。いざとなると、目が変わる。昔、先々代の王のそばにいたという噂がある（本人はとぼける）", sex: "男", age: 71, race: "human",
+      romance: false, name: "オーバン", full: "オーバン", nation: "レオネスト", role: "王城の厩舎の隅で居眠りしている老馬丁。ぼけたふりをして、年寄りだからと何でも人にやらせる。いざとなると、目が変わる。昔、先々代の王のそばにいたという噂がある（本人はとぼける）", sex: "男", age: 71, race: "human",
       who: { kind: "elder", sex: "男", age: 71, seed: "c2:aubin", look: { hair: "#e0ddd4", hairStyle: "bald", eyes: "sleepy", iris: "#7a6a5a", mouth: "smile", brows: "calm", outfit: "tunic", head: "cap", gear: "sword", chest: "none", cloth: "#6a5a3a", build: "slim", marks: ["beard", "wrinkles"], bg: "#7a6a4a" } },
-      join: J(false, {
+      join: {
         cls: "老馬丁", desc: "居眠りしている。抜くまでは", power: 66, dmg: 3, trait: "drunk", bond: 54, home: ["leavel"],
         life: { home: "王城の厩舎の、飼い葉桶の隣の寝藁", kin: "名前を呼んではいけない、昔の主", food: "甘い干し杏と、薄めない葡萄酒", habit: "馬の耳もとで、何か長い話をしている", secret: "夜の鐘が鳴ると、必ず目を覚まして、剣の柄に手をやる", keep: "鞘の金具だけが新しい、古い短めの剣" },
         t: { sword: 3, spear: 1, bow: 0, magic: 0, pray: 1, stealth: 2, talk: 1, lore: 1, wild: 1 }, f: { beasts: 2, sleep: 2 },
-      }),
+      },
     }),
     lazare: P({
-      name: "ラザール", full: "ラザール", nation: "レオネスト", role: "王都の焚書官の見習い。芝居がかった言い回しで人を見下し、すぐ手が出る。自分に二つ名をつける。焼く前の本を一晩で全部読み、頭の中に書き写している。焚書の火で両親の写本屋を焼かれ、焼いた側の焚書官長に拾われた", sex: "男", age: 21, race: "human",
+      romance: false, name: "ラザール", full: "ラザール", nation: "レオネスト", role: "王都の焚書官の見習い。芝居がかった言い回しで人を見下し、すぐ手が出る。自分に二つ名をつける。焼く前の本を一晩で全部読み、頭の中に書き写している。焚書の火で両親の写本屋を焼かれ、焼いた側の焚書官長に拾われた", sex: "男", age: 21, race: "human",
       who: { kind: "adventurer", sex: "男", age: 21, seed: "c2:lazare", look: { hair: "#1a1a22", hairStyle: "messy", eyes: "sharp", iris: "#a83a3a", mouth: "smirk", brows: "angry", outfit: "cloak", head: "none", gear: "daggers", chest: "chain", cloth: "#1e1e26", build: "slim", marks: ["bandage"], bg: "#4a2a2a" } },
-      join: J(false, {
+      join: {
         cls: "焚書官見習い", desc: "口が悪い。読書量は王都いち", power: 50, dmg: 2, fire: true, trait: "braggart", bond: 46, home: ["leavel"],
         life: { home: "王都の焚書局の屋根裏（窓は北向き）", kin: "焚書の火で死んだ写本屋の両親", food: "焦げた所を切り落とした黒パン（甘い物は嫌いだと言い張る）", habit: "焚き火の前で、何も持たずに頁をめくる手つきをしている", secret: "師匠を斬る夢を見る。斬る前に、いつも師匠のほうが先に本を閉じる", keep: "焦げた写本の表紙だけ" },
         t: { sword: 2, spear: 0, bow: 0, magic: 2, pray: 0, stealth: 1, talk: 0, lore: 3, wild: 0 }, f: { letters: 1, mimic: 1 },
-      }),
+      },
     }),
     rodolphe: P({
-      name: "ロドルフ", full: "ロドルフ・ルナール", nation: "レオネスト", role: "王家の猟場の番人。狐の獣人の狩猟官。密猟者を吊るす。ぶっきらぼうで、最初はこちらを追ってくる。逃げる相手に、罠の張り方を教えてしまう。若いころ吊るした子の弟に、名を書かずに金を送っている", sex: "男", age: 50, race: "beast", beast: "fox",
+      romance: false, name: "ロドルフ", full: "ロドルフ・ルナール", nation: "レオネスト", role: "王家の猟場の番人。狐の獣人の狩猟官。密猟者を吊るす。ぶっきらぼうで、最初はこちらを追ってくる。逃げる相手に、罠の張り方を教えてしまう。若いころ吊るした子の弟に、名を書かずに金を送っている", sex: "男", age: 50, race: "beast", beast: "fox",
       who: { kind: "archer", sex: "男", age: 50, seed: "c2:rodolphe", look: { hair: "#b8662a", hairStyle: "short", eyes: "narrow", iris: "#d8a030", mouth: "frown", brows: "angry", outfit: "leather", head: "none", gear: "spear", chest: "none", cloth: "#4a5a32", build: "normal", ears: "none", beast: "fox", marks: ["stubble", "scar"], bg: "#3a4a2a" } },
-      join: J(false, {
+      join: {
         cls: "狩猟官", desc: "追う側だった。今もたぶん", power: 58, dmg: 2, trait: "distrust", bond: 44, home: ["leavel"],
         life: { home: "白銀の丘陵の外れ、王家の猟場の番小屋", kin: "名前を書かずに金を送っている、知らない若者", food: "自分で燻した猪の燻製（濃いめ）", habit: "道を歩くとき、自分の足跡を、わざと一つおきに消している", secret: "番小屋の梁に、細い縄が一本だけ、使わずに掛けてある", keep: "使い込んだ罠の鉤と、古い王家の狩猟許し状" },
         t: { sword: 0, spear: 2, bow: 3, magic: 0, pray: 0, stealth: 2, talk: 0, lore: 1, wild: 3 }, f: { beasts: 1, nose: 2 },
-      }),
+      },
     }),
     margot: P({
-      name: "マルゴ", full: "マルゴ・ベルトー", nation: "レオネスト", role: "白銀の丘陵の街道を縄張りにする密輸屋の女親分。欲深で、毒も罠も爆薬も平気で使う卑怯者。子どもと年寄りの荷からは一枚も取らず、拷問が大嫌い。王国軍の工兵だった父は、砦の爆破の責めを負わされて吊るされた", sex: "女", age: 41, race: "human",
+      romance: true, name: "マルゴ", full: "マルゴ・ベルトー", nation: "レオネスト", role: "白銀の丘陵の街道を縄張りにする密輸屋の女親分。欲深で、毒も罠も爆薬も平気で使う卑怯者。子どもと年寄りの荷からは一枚も取らず、拷問が大嫌い。王国軍の工兵だった父は、砦の爆破の責めを負わされて吊るされた", sex: "女", age: 41, race: "human",
       who: { kind: "rogue", sex: "女", age: 41, seed: "c2:margot", look: { hair: "#8a2a1a", hairStyle: "ponytail", eyes: "sharp", iris: "#6a4a2a", mouth: "grin", brows: "raised", outfit: "vest", head: "kerchief", gear: "daggers", chest: "coins", cloth: "#5a3a22", build: "normal", marks: ["scar", "earring"], bg: "#7a6a4a" } },
-      join: J(true, {
+      join: {
         cls: "密輸屋", desc: "欲深。子どもの荷には手を出さない", power: 54, dmg: 2, trait: "greedy", bond: 48, home: ["karna"],
         life: { home: "ブランデールの裏路地の、酒樽の倉の二階", kin: "街道で拾ってきた子分たち（十一人）", food: "辛い腸詰めと、黒い麦酒", habit: "金貨を一枚ずつ指で弾いて、音で混ぜ物を見分ける", secret: "父が吊るされた砦の爆破は、誰が火を点けたのか、知っている", keep: "父の工兵の火打ち金" },
         t: { sword: 1, spear: 0, bow: 1, magic: 0, pray: 0, stealth: 3, talk: 2, lore: 1, wild: 1 }, f: { dice: 1, nose: 1, luck: 1 },
-      }),
+      },
     }),
     violaine: P({
-      name: "ヴィオレーヌ", full: "ヴィオレーヌ・ド・サンテール", nation: "レオネスト", role: "没落した騎士家の娘。騎士学校を首席で出たが、父の賭けの借金で家は傾き、ブランデールで荷運びと犬の散歩の日雇いをしている。姉御肌で面倒見がよく、真面目で堅物。恋の話には首まで赤くなる。首席の褒美の剣は質に入っている", sex: "女", age: 25, race: "human",
+      romance: true, name: "ヴィオレーヌ", full: "ヴィオレーヌ・ド・サンテール", nation: "レオネスト", role: "没落した騎士家の娘。騎士学校を首席で出たが、父の賭けの借金で家は傾き、ブランデールで荷運びと犬の散歩の日雇いをしている。姉御肌で面倒見がよく、真面目で堅物。恋の話には首まで赤くなる。首席の褒美の剣は質に入っている", sex: "女", age: 25, race: "human",
       who: { kind: "knight", sex: "女", age: 25, seed: "c2:violaine", look: { hair: "#6a4a8a", hairStyle: "ponytail", eyes: "round", iris: "#4a6aa8", mouth: "frown", brows: "worried", outfit: "tunic", head: "none", gear: "sword", chest: "crest", cloth: "#5a5a7a", build: "normal", marks: ["bandage", "blush"], bg: "#6a6a8a" } },
-      join: J(true, {
+      join: {
         cls: "日雇いの騎士", desc: "首席。借金も首席", power: 58, dmg: 2, trait: "just", bond: 52, home: ["karna"],
         life: { home: "ブランデールの下宿の、いちばん安い北向きの部屋", kin: "賭けをやめられない父と、家を守る病弱な母", food: "豆の粥（三日分まとめて煮る）", habit: "質札を出しては数え、数えてはしまう", secret: "首席の褒美の剣の質札は、あと一月で流れる", keep: "質札の束と、騎士学校の首席の徽章" },
         t: { sword: 3, spear: 1, bow: 0, magic: 0, pray: 1, stealth: 0, talk: 1, lore: 1, wild: 0 }, f: { kids: 1, beasts: 1 },
-      }),
+      },
     }),
     pipinelle: P({
-      name: "ピピネル", full: "ピピネル", nation: "レオネスト", role: "迷いの森の朽ちた祠に住む、どう見ても小さな女の子。年寄りの口ぶりで、自分を婆さまと呼ばせる。昼まで寝ていて、人の子の怪我と腹具合には誰よりうるさい。怒ると森の木がざわつく。いつからそこにいるのか、誰も知らない", sex: "女", age: 800, race: "elf", childLook: true,
+      romance: false, name: "ピピネル", full: "ピピネル", nation: "レオネスト", role: "迷いの森の朽ちた祠に住む、どう見ても小さな女の子。年寄りの口ぶりで、自分を婆さまと呼ばせる。昼まで寝ていて、人の子の怪我と腹具合には誰よりうるさい。怒ると森の木がざわつく。いつからそこにいるのか、誰も知らない", sex: "女", age: 800, race: "elf", childLook: true,
       who: { kind: "child", sex: "女", age: 9, seed: "c2:pipinelle", look: { hair: "#7aa86a", hairStyle: "long", eyes: "sleepy", iris: "#d8b84a", mouth: "smirk", brows: "raised", outfit: "robe", head: "circlet", gear: "staff", chest: "none", cloth: "#e8e0c8", build: "slim", ears: "pointy", marks: [], bg: "#4a6a3a" } },
-      join: J(false, {
+      join: {
         cls: "祠の婆さま", desc: "小さい。婆と呼べ", power: 48, dmg: 1, heal: true, trait: "lazy", bond: 60, home: ["karna"],
         life: { home: "迷いの森の奥の、苔むした祠", kin: "祠に名を刻んでいった人の子ら", food: "森の蜂蜜（壺ごと）", habit: "人の子の額に手を当てて、熱が無いか確かめる", secret: "祠の名の中に、いちばん新しい、まだ削れていない名が一つある", keep: "名が刻まれた、古い木の札の束" },
         t: { sword: 0, spear: 0, bow: 1, magic: 3, pray: 2, stealth: 1, talk: 1, lore: 2, wild: 2 }, f: { herbs: 1, kids: 1, weather: 1 },
-      }),
+      },
     }),
     lisette: P({
-      name: "リゼット", full: "リゼット", nation: "レオネスト", role: "迷いの森で毎日迷っている、兎の獣人の狩人。のんびりして人がよく、すぐ騙される。強い獣の匂いを嗅ぐと目の色が変わり、笑いながら突っ込む。槍の腕は森で一番。森の奥の何かに、一度だけ勝ちかけたことがあるという", sex: "女", age: 32, race: "beast", beast: "rabbit",
+      romance: false, name: "リゼット", full: "リゼット", nation: "レオネスト", role: "迷いの森で毎日迷っている、兎の獣人の狩人。のんびりして人がよく、すぐ騙される。強い獣の匂いを嗅ぐと目の色が変わり、笑いながら突っ込む。槍の腕は森で一番。森の奥の何かに、一度だけ勝ちかけたことがあるという", sex: "女", age: 32, race: "beast", beast: "rabbit",
       who: { kind: "archer", sex: "女", age: 32, seed: "c2:lisette", look: { hair: "#e8e4dc", hairStyle: "bob", eyes: "sleepy", iris: "#c83a4a", mouth: "smile", brows: "calm", outfit: "leather", head: "none", gear: "spear", chest: "none", cloth: "#7a5a3a", build: "slim", ears: "none", beast: "rabbit", marks: ["scar"], bg: "#5a6a3a" } },
-      join: J(false, {
+      join: {
         cls: "森の狩人", desc: "のんびり。強い相手の前でだけ速い", power: 62, dmg: 3, trait: "soft", bond: 50, home: ["karna"],
         life: { home: "迷いの森の、どこか（本人にも分からない）", kin: "森の入口の茶屋の婆さん（迷うたびに保護してくれる）", food: "人参の甘煮", habit: "分かれ道に来ると、耳の向いたほうへ行く（たいてい外れる）", secret: "勝ちかけた日の傷は、雨の前にだけ疼く。疼くと、少し笑う", keep: "穂先を何度も替えた、柄だけ古い槍" },
         t: { sword: 0, spear: 3, bow: 1, magic: 0, pray: 0, stealth: 1, talk: 0, lore: 0, wild: 3 }, f: { sleep: 1, luck: 1 },
-      }),
+      },
     }),
 
     // ================================================================ 仲間の周りの人

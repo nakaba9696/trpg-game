@@ -1,6 +1,6 @@
 // C6：レオネスト王国と自由都市連合の人物（src/data/c6_people.js・events_c6.js・zc6_people.js・engine/zzzz_c6_people.js）
 // - 仲間になる人 10 人と、その周りの名のある人 4〜6 人。仲間は性別・年齢・種族・男の型が散っている。名前が他の人と被らない
-// - 仲間の全員に romance（恋と結婚ができるか）。true はちょうど 4 人で、みな 18 歳以上・子どもの姿でない。false の人は恋の相手にならない
+// - 仲間の全員に romance（恋と結婚ができるか。R1 #182 の印）。true はちょうど 4 人で、みな 18 歳以上・子どもの姿でない。false の人は恋の相手にならない
 // - どの人にも、混ぜた型（mix）・ギャップ・過去・好感度の始まり・名前と役職の札・人物図鑑の説明・立ち絵のタグ（男は type。仲間は差分）
 // - 仲間には、会話を書く子のための控え（口調・一人称・好きなもの・嫌いなもの・話題・他の仲間との相性）
 // - 出来事は 2〜4 個（ふつうに起きる出会いがある）。存在しない場所・人・続き・アイテムを指していない。仲間はその人だけの話が二つ以上
@@ -42,15 +42,15 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   for (const [id, p] of Object.entries(P)) { const k = p.name; if (names.has(k)) F(`名前「${k}」が ${names.get(k)} と ${id} で被っている`); names.set(k, id); }
 
   // ---------------------------------------------------------------- 恋と結婚（romance）
-  const roman = comp.filter((id) => P[id] && P[id].join && P[id].join.romance === true);
+  const roman = comp.filter((id) => P[id] && P[id].romance === true);
   if (roman.length !== 4) F(`恋と結婚ができる人が 4 人でない：${roman.join("・")}`);
   for (const id of comp) {
-    const j = P[id] && P[id].join;
-    if (!j || typeof j.romance !== "boolean") { F(`${id}: 仲間なのに romance（true/false）が無い`); continue; }
-    if (j.romance && (P[id].childLook || P[id].age < 18)) F(`${id}: 18 歳未満か子どもの姿なのに恋の相手`);
-    if (!j.romance !== !!j.noLove) F(`${id}: romance と noLove が食い違う`);
-    const c = { c2: id, age: P[id].age, who: P[id].who };
-    if (G.m10Can && G.m10Can(c) !== j.romance) F(`${id}: 恋の相手かどうか（G.m10Can）が romance と違う`);
+    const p = P[id];
+    if (!p || typeof p.romance !== "boolean") { F(`${id}: 仲間なのに romance（true/false）が無い`); continue; }
+    if (p.romance && (p.childLook || p.age < 18)) F(`${id}: 18 歳未満か子どもの姿なのに恋の相手`);
+    if (p.join && p.join.noLove) F(`${id}: 恋の相手は R1 の romance で絞る（noLove は使わない）`);
+    const c = { c2: id, age: p.age, who: p.who };
+    if (G.m10Can && G.m10Can(c) !== p.romance) F(`${id}: 恋の相手かどうか（G.m10Can）が romance と違う`);
   }
 
   // ---------------------------------------------------------------- 一人ずつ
@@ -96,7 +96,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       if (!own.some((e) => outs(e).some((o) => [].concat(o.c2join || []).includes(id)))) F(`${w}: 仲間に加わる出来事が無い`);
       const v = D.C2_VOICE[id];
       if (!v || v.talk.length < 3 || !v.betray || !v.die) F(`${w}: ひとことが足りない`);
-      if (p.join.romance) for (const k of ["spark", "confess", "propose", "part", "cold"]) if (!v || !v[k]) F(`${w}: 恋のひとこと ${k} が無い`);
+      if (p.romance) for (const k of ["spark", "confess", "propose", "part", "cold"]) if (!v || !v[k]) F(`${w}: 恋のひとこと ${k} が無い`);
       if (!(D.C2_INVITE[id] || []).length) F(`${w}: 誘ったときの一言が無い`);
       if (!D.M2_TRAITS[p.join.trait]) F(`${w}: 性格 ${p.join.trait} が M2 に無い`);
       for (const k of Object.keys(D.M2_LIFE)) if (!p.join.life[k]) F(`${w}: 暮らし ${k} が無い`);
