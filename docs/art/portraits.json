@@ -1545,6 +1545,292 @@
    "memo": "C7・町。帝都の外れの坑夫酒場の娘。気が強い。坑夫頭の詩を捨てずに樽の上に積んでいる。赤い三つ編み、そばかす、頭巾、前掛け"
   },
   {
+   "id": "gigra",
+   "group": "c2",
+   "name": "ギグラ",
+   "file": "assets/portraits/gigra.webp",
+   "identity": "1girl, adult woman, 28 years old, goblin, green skin, pointy ears, long pointy ears, short, slim, orange hair, medium hair, high ponytail, red eyes, sharp eyes, sharp teeth, fang, dirt on cheek, hoop earring, patched brown rags, red bandana, belt with many small pouches, coin pouch, small wooden keg on back",
+   "tags": "biting a silver coin, hand on hip",
+   "face": "smug grin",
+   "variants": {
+    "joy": "embarrassed, blush, looking away, hiding behind keg",
+    "anger": "angry, shouting, fangs",
+    "sorrow": "sad smile, looking down",
+    "fun": "grin, wink, holding ladle",
+    "shy": "embarrassed, heavy blush, looking away, hiding face behind keg",
+    "smug": "smug, smirk, half-closed eyes, raised eyebrow, fang",
+    "panic": "flustered, panicking, wide-eyed, sweatdrop, wavy mouth",
+    "wicked": "evil smile, sinister grin, narrowed eyes, fang",
+    "drunk": "drunk, flushed face, blush, half-closed eyes, wavy mouth"
+   },
+   "memo": "C8・仲間（恋の相手）。断界山脈の密造酒のはぐれゴブリンの女。強欲で卑怯、褒められると樽に隠れる。緑の肌、橙の髪、尖った耳、赤い手ぬぐい、背中の小さな樽"
+  },
+  {
+   "id": "valdun",
+   "group": "c2",
+   "name": "ヴァルドゥン",
+   "type": "brute",
+   "file": "assets/portraits/valdun.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 47 years old, very tall, huge man, muscular, broad shoulders, tan skin, dark brown hair, long hair, wild hair, amber eyes, sharp eyes, thick eyebrows, two curved horns on forehead, scales on cheeks and forearms, full beard, scar on cheek, fur mantle, battered bronze armor, greatsword on back",
+   "tags": "holding a small notebook with pressed flowers",
+   "face": "serious, frown",
+   "variants": {
+    "joy": "gentle smile, closed eyes",
+    "anger": "angry, roaring, clenched teeth",
+    "sorrow": "sad, looking down, holding a flower",
+    "fun": "laughing, mouth open",
+    "serious": "serious, determined, focused eyes, closed mouth",
+    "faint_smile": "slight smile, soft eyes, closed mouth",
+    "troubled": "troubled, worried eyebrows, awkward smile, scratching between horns"
+   },
+   "memo": "C8・仲間。断界山脈の山の民の長。竜の血で角と鱗の大男。熱血で民思い、押し花と詩の帳面"
+  },
+  {
+   "id": "gensai",
+   "group": "c2",
+   "name": "ゲンサイ",
+   "type": "ojisan",
+   "file": "assets/portraits/gensai.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 54 years old, slender, tall, dark grey hair, grey hair, medium hair, topknot, squinting eyes, closed eyes, black eyes, thin eyebrows, stubble, nasolabial folds, wrinkles, dark navy kimono, haori, hair ornament in sleeve",
+   "tags": "twirling a playing card between fingers, standing on a pier",
+   "face": "smile, closed eyes",
+   "variants": {
+    "joy": "laughing, closed eyes",
+    "anger": "slightly opened eyes, cold smile",
+    "sorrow": "sad smile, looking at sea",
+    "fun": "sly grin, finger to lips",
+    "wicked": "evil smile, sinister grin, squinting eyes, shaded face",
+    "cold": "slightly opened eyes, cold eyes, expressionless, contempt",
+    "faint_smile": "slight smile, closed eyes, closed mouth",
+    "serious": "serious, eyes slightly open, closed mouth"
+   },
+   "memo": "C8・仲間。シェルアーク・朧島の顔役。糸目ではんなり、卑劣な手も使う。霧の夜に妻を見失った。賭け札、髷、紺の着物"
+  },
+  {
+   "id": "tsuyuha",
+   "group": "c2",
+   "name": "ツユハ",
+   "file": "assets/portraits/tsuyuha.webp",
+   "identity": "1girl, elf, pointy ears, petite, small, pink hair, very long hair, hime cut, amber eyes, sleepy eyes, half-closed eyes, thin eyebrows, indigo kimono with white wave pattern, red obi, oversized old katana at waist",
+   "tags": "sitting on a wooden bench, holding a tea cup",
+   "face": "sleepy smile",
+   "variants": {
+    "joy": "gentle smile, closed eyes",
+    "anger": "stern, cold eyes, hand on katana",
+    "sorrow": "sad smile, looking at sea",
+    "fun": "yawning, one eye open",
+    "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
+    "serious": "serious, cold focused eyes, closed mouth",
+    "faint_smile": "slight smile, soft eyes, closed mouth",
+    "exasperated": "exasperated, half-closed eyes, deadpan, sigh"
+   },
+   "memo": "C8・仲間（子どもの姿）。島の都の茶屋の婆さま。四百年生きたエルフ。昼行灯で母のよう、刀は島一番。桜色の長髪、藍の着物、大きすぎる刀"
+  },
+  {
+   "id": "takimaru",
+   "group": "c2",
+   "name": "タキマル",
+   "type": "classic",
+   "file": "assets/portraits/takimaru.webp",
+   "identity": "1boy, male focus, young man, 20 years old, wolf boy, wolf ears, wolf tail, athletic, grey hair, ash grey hair, short hair, spiky hair, amber eyes, round eyes, thick eyebrows, scar on nose, bandage on cheek, white headband, navy blue short kimono, rolled-up sleeves, braided bracelet of seven cords, katana at waist",
+   "tags": "pointing the wrong way, fist on chest",
+   "face": "big grin, teeth",
+   "variants": {
+    "joy": "laughing, closed eyes, thumbs up",
+    "anger": "angry, fangs, shouting",
+    "sorrow": "teary eyes, biting lip",
+    "fun": "grin, scratching head",
+    "sparkle": "excited, sparkling eyes, big smile, open mouth, ears perked up",
+    "panic": "flustered, panicking, wide-eyed, sweatdrop, ears flattened",
+    "cry": "crying, tears, streaming tears, open mouth, ears drooping",
+    "serious": "serious, determined, focused eyes, closed mouth, ears forward",
+    "shy": "embarrassed, blush, looking away, scratching cheek"
+   },
+   "memo": "C8・仲間（恋の相手）。島の都の若い衆の頭。狼の獣人。愛すべき馬鹿で道を間違えるが、決める所は決める。鉢巻き、紺の着物、七本紐の腕輪"
+  },
+  {
+   "id": "yurien",
+   "group": "c2",
+   "name": "ユリエン",
+   "type": "bishonen",
+   "file": "assets/portraits/yurien.webp",
+   "identity": "1boy, male focus, young man, elf, pointy ears, slender, pale skin, green hair, long hair, low ponytail, violet eyes, narrow eyes, thin eyebrows, round glasses, dark circles under eyes, pale grey scholar robe, many keys on belt, rolled papers under arm",
+   "tags": "holding a scalpel and an anatomy sketch",
+   "face": "expressionless",
+   "variants": {
+    "joy": "faint smile, adjusting glasses",
+    "anger": "cold glare, frown",
+    "sorrow": "looking down, expressionless, holding papers",
+    "fun": "smug, pointing at self",
+    "faint_smile": "slight smile, soft eyes, closed mouth, adjusting glasses",
+    "cold": "cold eyes, narrowed eyes, expressionless, glasses glare",
+    "smug": "smug, smirk, half-closed eyes, raised eyebrow",
+    "pout": "pout, looking away, expressionless"
+   },
+   "memo": "C8・仲間。遺構に入り浸る、学院を追われたエルフの学者。無表情の毒舌、自作の二つ名。深緑の長い髪、眼鏡、隈、薄灰の学者の衣、解剖図"
+  },
+  {
+   "id": "izra",
+   "group": "c2",
+   "name": "イズラ",
+   "file": "assets/portraits/izra.webp",
+   "identity": "1girl, adult woman, 27 years old, bird girl, hawk wings on back, brown wings, one wing with black feathers, tall, slender, dark brown hair, long hair, golden eyes, sharp eyes, scar on cheek, old leather collar on neck, dark red leather armor, spear",
+   "tags": "perched on a rock, wings half spread",
+   "face": "confident smirk",
+   "variants": {
+    "joy": "wide eyes, sparkling eyes, holding a round pastry",
+    "anger": "fierce, battle smile, wings spread",
+    "sorrow": "looking down, touching collar",
+    "fun": "smirk, beckoning with finger",
+    "sparkle": "excited, sparkling eyes, smile, open mouth",
+    "serious": "serious, battle-ready, focused eyes, closed mouth",
+    "surprise": "surprised, wide-eyed, open mouth, feathers ruffled",
+    "shy": "embarrassed, blush, looking away, wings folded tight"
+   },
+   "memo": "C8・仲間（恋の相手）。使徒領から来た鷹の獣人。黒鎧の居城の元門番。戦闘狂で親身、人の暮らしを珍しがる。片方だけ黒い翼、首の革の輪、槍"
+  },
+  {
+   "id": "anselmo",
+   "group": "c2",
+   "name": "アンセルモ",
+   "type": "ojisan",
+   "file": "assets/portraits/anselmo.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, wrinkles, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel",
+   "tags": "holding a wine bottle, shovel on shoulder",
+   "face": "grin",
+   "variants": {
+    "joy": "laughing, mouth open",
+    "anger": "angry, shouting",
+    "sorrow": "singing, closed eyes, solemn",
+    "fun": "sly grin, holding a ring",
+    "drunk": "drunk, flushed face, half-closed eyes, wavy mouth",
+    "serious": "serious, solemn, closed eyes, closed mouth",
+    "wicked": "sly grin, narrowed eyes",
+    "faint_smile": "slight smile, soft eyes, closed mouth"
+   },
+   "memo": "C8・仲間。聖都の地下墓地の墓掘り修道士。墓の物を売る罰当たり、酒臭い、聖歌が上手い。赤毛の剃髪と赤い髭、前歯が一本無い、汚れた修道服、錆びた鋤"
+  },
+  {
+   "id": "polf",
+   "group": "c2",
+   "name": "ポルフ",
+   "type": "elder",
+   "file": "assets/portraits/polf.webp",
+   "identity": "1boy, male focus, old man, 66 years old, rat ears, round ears, very short, hunched back, bald, bald head, blue eyes, round eyes, long white eyebrows, long white mustache, small round spectacles, wrinkles, dark green tunic, red scarf, frayed bell rope tied at waist",
+   "tags": "raising a walking stick, pretending to ring a bell",
+   "face": "proud grin",
+   "variants": {
+    "joy": "laughing, closed eyes",
+    "anger": "angry, red face, shouting",
+    "sorrow": "sad, looking up at bell tower",
+    "fun": "boasting, puffed up",
+    "smug": "smug, puffed up, half-closed eyes, raised eyebrow",
+    "surprise": "surprised, wide-eyed, open mouth, ears up",
+    "serious": "serious, quiet, focused eyes, closed mouth",
+    "sleepy": "sleepy, drowsy, half-closed eyes, yawning"
+   },
+   "memo": "C8・仲間。黒鉄の砦の鐘番。鼠の獣人の爺さん。話を盛るが半分は本当、考えなしに突っ込む。禿げ頭、白い長い口髭、丸眼鏡、曲がった腰、鐘の綱の切れ端"
+  },
+  {
+   "id": "rudger",
+   "group": "c2",
+   "name": "ルドガー",
+   "type": "ojisan",
+   "file": "assets/portraits/rudger.webp",
+   "identity": "1boy, male focus, old man, 61 years old, slender, ash blonde hair, long hair, hair tied back, green eyes, narrow eyes, thin round glasses, wrinkles, clean-shaven, white high-collared coat, silver chain",
+   "tags": "holding a magnifying glass over a relic",
+   "face": "gentle smile, cold eyes",
+   "variants": {
+    "joy": "gentle smile, closed eyes",
+    "anger": "cold anger, frown, narrowed eyes",
+    "sorrow": "sad smile, looking down",
+    "fun": "quiet chuckle, closed eyes",
+    "cold": "cold eyes, narrowed eyes, expressionless, contempt",
+    "faint_smile": "slight smile, soft eyes, closed mouth",
+    "serious": "serious, focused eyes behind glasses, closed mouth"
+   },
+   "memo": "C8・ライバル。聖都の教会の遺物研究所の所長。物腰は柔らかく冷たい。ユリエンを学院から出した。灰金の長い髪、細い丸眼鏡、白い高襟の上着"
+  },
+  {
+   "id": "rionetta",
+   "group": "c2",
+   "name": "リオネッタ",
+   "file": "assets/portraits/rionetta.webp",
+   "identity": "1girl, young woman, 24 years old, blind, blonde hair, long hair, pale grey eyes, unfocused eyes, gentle eyebrows, white veil, white choir robe, sun pendant",
+   "tags": "holding an offering box on lap, sitting on stone steps",
+   "face": "soft smile, eyes open looking at nothing",
+   "variants": {
+    "joy": "smile, happy, eyes open looking at nothing",
+    "anger": "frown, pursed lips",
+    "sorrow": "sad, looking down, downturned mouth",
+    "fun": "laughing softly, closed eyes",
+    "serious": "serious, singing, closed eyes, solemn",
+    "troubled": "troubled, worried eyebrows, awkward smile",
+    "faint_smile": "slight smile, soft eyes, closed mouth"
+   },
+   "memo": "C8・依頼人。聖都の大聖堂の盲目の歌い手。おっとり、騙されやすい。墓掘りの修道士に拾われた。金髪、白い頭巾、施しの箱"
+  },
+  {
+   "id": "graul",
+   "group": "c2",
+   "name": "ゼルギス",
+   "type": "ojisan",
+   "file": "assets/portraits/graul.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 48 years old, tall, broad shoulders, black hair, short hair, red eyes, iron half mask covering left side of face, stubble, scar, black hunter armor, dark cloak, longbow",
+   "tags": "bowing politely, two packets of dried meat at belt",
+   "face": "expressionless",
+   "variants": {
+    "joy": "faint smile under mask",
+    "anger": "cold glare, frown",
+    "sorrow": "looking down, quiet, expressionless",
+    "fun": "short laugh, closed eyes",
+    "cold": "cold eyes, narrowed eyes, expressionless",
+    "serious": "serious, drawing bow, focused eyes",
+    "faint_smile": "slight smile, soft eyes, closed mouth"
+   },
+   "memo": "C8・敵。黒鎧の居城の猟兵頭。鉄の半面、礼儀正しい。逃げた鷹（イズラ）を連れ戻しに来た。干し肉を二人分持っている"
+  },
+  {
+   "id": "roswitha",
+   "group": "c2",
+   "name": "ロスヴィタ",
+   "file": "assets/portraits/roswitha.webp",
+   "identity": "1girl, adult woman, 31 years old, soldier, light brown hair, short hair, bob cut, grey eyes, freckles, sharp eyes, worried eyebrows, dark circles under eyes, grey padded gambeson, steel pauldron, many small name patches sewn on sleeve, spear on back",
+   "tags": "holding a ledger and a quill",
+   "face": "expressionless, serious",
+   "variants": {
+    "joy": "small smile, slight blush",
+    "anger": "annoyed, frown",
+    "sorrow": "teary eyes, looking down, sewing",
+    "fun": "deadpan, holding a losing lottery ticket",
+    "serious": "serious, focused eyes, closed mouth",
+    "troubled": "troubled, worried eyebrows, awkward smile, sweatdrop",
+    "faint_smile": "slight smile, soft eyes, closed mouth",
+    "tired": "tired, exhausted, half-closed eyes, sweat"
+   },
+   "memo": "C8・仲間。黒鉄の砦の兵站係。有能で不憫、くじは外れ、砦主に毎冬名前を忘れられる。薄茶の短い髪、そばかす、灰色の綿入れ、袖に名札がいっぱい、帳簿"
+  },
+  {
+   "id": "jonas",
+   "group": "c2",
+   "name": "ヨナス",
+   "type": "classic",
+   "file": "assets/portraits/jonas.webp",
+   "identity": "1boy, male focus, young man, teenage boy, 17 years old, slim, platinum blonde hair, curly hair, short hair, blue eyes, round eyes, freckles, steel helmet, grey gambeson, spear",
+   "tags": "holding a travel pass with both hands, standing at attention",
+   "face": "nervous, blush",
+   "variants": {
+    "joy": "smile, happy, relieved",
+    "anger": "angry, frown, v-shaped eyebrows",
+    "sorrow": "sad, looking down, downturned mouth",
+    "fun": "laughing, open mouth, closed eyes",
+    "panic": "flustered, panicking, wide-eyed, sweatdrop, wavy mouth",
+    "shy": "embarrassed, blush, looking away",
+    "serious": "serious, standing at attention, focused eyes, closed mouth"
+   },
+   "memo": "C8・家族。黒鉄の砦の若い見張り兵。堅物。昔ゴブリンにさらわれ一晩で戻った（ギグラに逃がされた子）。白金の巻き毛、兜"
+  },
+  {
    "id": "kind_villager_m",
    "group": "people",
    "name": "町の人（男）",
