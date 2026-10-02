@@ -281,22 +281,24 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const { G, S } = game(17, { join: ["dil", "nora"], loc: "forest" });
     const dil = comp(S, "dil"), nora = comp(S, "nora");
     G.affState(S).dil = 5; G.affState(S).nora = 5;
-    G.rand = () => 0;
+    // 夜の会話が起きるかどうかは会話の乱数（G.tk.roll。K4 から G.rand を使わない）。ここでは必ず起きるようにする
+    const roll0 = G.tk.roll;
+    G.rand = () => 0; G.tk.roll = () => 0;
     G.tk.night("camp");
     if (S.tk.cur) F("好感度が低いのに、夜に話しかけてくる");
     G.affState(S).nora = 40;
     if (!G.tk.night("camp")) F("好感度 40 のノラが、野営の夜に話しかけてこない");
     if (S.event !== "tk_topic" || G.tk.topic(S.tk.cur.topic).who !== "nora") F(`夜の会話がノラの話題にならない（${S.event}）`);
-    G.rand = () => 0.99; // 恋の気配（M10）などの、手番の終わりの出来事を起こさない
+    G.rand = () => 0.99; G.tk.roll = roll0; // 恋の気配（M10）などの、手番の終わりの出来事を起こさない
     G.act("ev:0");
     if (S.mode !== "explore" || S.tk.cur) F("夜の会話が一つの話題で終わらない");
     if (G.tk.night("camp")) F("同じ夜に二度、話しかけてくる");
     // 宿：施設に戻る
     S.loc = "karna"; S.day++; S.mode = "fac"; S.fac = "inn"; S.gold = 100;
     G.affState(S).nora = 40;
-    G.rand = () => 0;
+    G.rand = () => 0; G.tk.roll = () => 0;
     G.act("inn:rest");
-    G.rand = () => 0.99;
+    G.rand = () => 0.99; G.tk.roll = roll0;
     if (S.event !== "tk_topic") F(`宿に泊まった夜に話しかけてこない（${S.mode} ${S.event}）`);
     else {
       G.act("ev:0");
