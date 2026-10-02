@@ -1,4 +1,4 @@
-# 男の絵柄：絵師タグの比較（hans・kaidel・borg・raios・serios）
+# 男の絵柄：絵師タグの比較（イケメン raios・おっさん hans・一般人 kind_villager_m）
 
 モデル waiIllustriousSDXL_v140。seed は本番（art-batch-d）を作ったときのもの（seeds.local.json）。style_male.json の共通 prefix の先頭に足し、型の prefix はそのまま。切り替えは style_male.local.json（終わったら消した）。
 
