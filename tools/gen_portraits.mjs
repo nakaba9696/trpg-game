@@ -125,7 +125,9 @@ const baseOf = (p) => {
 const join = P.joinTags;
 // 人の姿の敵（魔物の一覧の human: true）は、設定の human の項目で後置き・ネガティブを替える
 const styleOf = (p) => { const b = baseOf(p); return p.human && b.human ? Object.assign({}, b, b.human) : b; };
-const promptOf = (p, face) => uniqTags(join(baseOf(p).prefix, P.featureOf(p, face), styleOf(p).suffix));
+// 男は style_male.json の drop_tags（頬の赤らみなど）を、人物のタグ・差分の表情からも外す（ネガティブにも入っている）
+const dropOf = (p) => new Set(isMale(p) ? (maleBase().drop_tags || []).map((x) => x.trim().toLowerCase()) : []);
+const promptOf = (p, face) => { const d = dropOf(p); return uniqTags(splitTags(join(baseOf(p).prefix, P.featureOf(p, face), styleOf(p).suffix)).filter((t) => !d.has(t.toLowerCase())).join(", ")); };
 const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : baseOf(p).seed ?? -1);
 
 const exists = (id) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(outDir, `${id}.${e}`)));
