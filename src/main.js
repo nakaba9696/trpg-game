@@ -103,7 +103,7 @@
     const [rs, rp] = await Promise.all([store.read("save"), store.read("profile")]);
     if (rp) {
       const merged = { trophies: { ...(rp.trophies || {}), ...G.P.trophies }, graves: [...G.P.graves] };
-      if (G.codexMerge) merged.codex = G.codexMerge(rp.codex, G.P.codex); // F2：図鑑も両方をまとめる
+      if (G.codexMerge) { merged.codex = G.codexMerge(rp.codex, G.P.codex); merged.loreSeen = G.codexMergeLore(rp.loreSeen, G.P.loreSeen); } // F2：図鑑と知った用語も両方をまとめる
       (rp.graves || []).forEach((g) => { if (!merged.graves.some((x) => x.id === g.id)) merged.graves.push(g); });
       merged.graves.sort((a, b) => b.at - a.at);
       merged.graves = merged.graves.slice(0, 40);

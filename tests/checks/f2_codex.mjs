@@ -1,7 +1,9 @@
-// F2：アイテム図鑑と魔物図鑑（engine/f2_codex.js・data/f2_bestiary.js）
+// F2：アイテム図鑑と魔物図鑑（engine/zz_f2_codex.js・data/f2_bestiary.js）
 // - 手に入れると図鑑に載る／新しい冒険でも残る（死んでも）／古い profile に codex が無くても動く
 // - 魔物は出会ったときと倒したときを分けて記録、倒した数も／会っただけなら性能の一部が「？」
 // - 入手場所・出現場所がデータから引ける／全敵にフレーバー（2〜3 文、禁じた言葉なし）／使徒の性能は倒すまで伏せる
+// - 人物：会うと載る・仲間になったこと・深く関わると説明が一行増える・新しい冒険でも残る・会える場所が引ける
+// - 用語：開いた行は profile に残る。手引きに足すのは描くあいだだけ、今の冒険の行（強調に使う G.loreOf）には混ざらない
 // - 古いセーブ（S.f2codex が無い）から一度だけ埋め直す／二つの図鑑をまとめられる
 const BANNED = /見世物|観客|客席|舞台|台本|言霊|魔王|神々が/;
 
@@ -81,10 +83,10 @@ export default ({ fail, loadEngine, seeded }) => {
     const apostles = Object.keys(D.ENEMIES).filter((id) => D.ENEMIES[id].majin);
     if (!apostles.length) fail("使徒がいない");
     for (const id of apostles) {
-      if (!(D.F2_APOSTLE || {})[id]) fail(`使徒 ${id} に伝承の一行が無い`);
       G.codexMeet(id, true);
       if (G.codexFoeStats(id).length) fail(`使徒 ${id} の性能が、倒す前に見える`);
-      if (G.codexFoeText(id) !== D.F2_APOSTLE[id]) fail(`使徒 ${id} の説明が伝承の一行になっていない`);
+      const line = G.codexFoeText(id);
+      if (!line || line === (D.F2_BESTIARY || {})[id]) fail(`使徒 ${id} の説明が、倒す前から伝承の一行になっていない`);
       G.codexKill(id, true);
       if (!G.codexFoeStats(id).length) fail(`使徒 ${id} を倒しても性能が見えない`);
     }
@@ -116,15 +118,83 @@ export default ({ fail, loadEngine, seeded }) => {
   {
     const G = loadEngine();
     const D = G.data;
-    for (const id of Object.keys(D.ENEMIES)) {
-      const t = (D.F2_BESTIARY || {})[id];
-      if (!t) { fail(`敵 ${id}: 図鑑の説明が無い`); continue; }
+    // あとから足される敵（E3 など）は desc で代える。説明が一つも無い敵は不可
+    for (const id of Object.keys(D.ENEMIES)) if (!(D.F2_BESTIARY || {})[id] && !D.ENEMIES[id].desc) fail(`敵 ${id}: 図鑑の説明が無い`);
+    const mine = ["goblin", "wolf", "kain", "graw", "e1_crowngob", "w1_vespa", "c2_zork", "e2_mordu", "m5_oldbeast", "w2_ironwarden"];
+    for (const id of mine) if (!(D.F2_BESTIARY || {})[id]) fail(`敵 ${id}: 図鑑の説明が無い`);
+    for (const id of Object.keys(D.F2_BESTIARY || {})) {
+      const t = D.F2_BESTIARY[id];
       const n = (t.match(/。/g) || []).length;
       if (n < 2 || n > 4) fail(`敵 ${id}: 説明は 2〜3 文（${n} 文）`);
       if (BANNED.test(t)) fail(`敵 ${id}: 説明に「${t.match(BANNED)[0]}」`);
     }
     for (const [id, t] of Object.entries(D.F2_APOSTLE || {})) if (BANNED.test(t)) fail(`使徒 ${id}: 伝承に「${t.match(BANNED)[0]}」`);
     for (const id of Object.keys(D.F2_BESTIARY || {})) if (!D.ENEMIES[id]) fail(`図鑑の説明 ${id}: その敵がいない`);
+  }
+
+  // ---- 人物：会うと載る・仲間・深く関わる・新しい冒険でも残る
+  {
+    const G = loadEngine();
+    const D = G.data;
+    G.P = { trophies: {}, graves: [] };
+    const got = [];
+    G.onCodex = (k, id) => got.push(k + ":" + id);
+    start(G, 6);
+    for (const id of Object.keys(D.C2_PEOPLE || {})) if (!(D.F2_PEOPLE || {})[id]) fail(`人物 ${id}: 図鑑の説明が無い`);
+    for (const [id, q] of Object.entries(D.F2_PEOPLE || {})) {
+      if (!q.title || !q.face || !(q.lines || []).length) fail(`人物 ${id}: 肩書き・人柄・説明のどれかが無い`);
+      for (const t of [q.title, q.face, ...(q.lines || [])]) if (BANNED.test(t) || /〔/.test(t)) fail(`人物 ${id}: 説明に書かない言葉「${t}」`);
+      for (const e of q.events || []) if (!D.EVENTS.some((x) => x.id === e)) fail(`人物 ${id}: 出来事 ${e} が無い`);
+      if (q.fac && !D.LOCS[q.fac[0]]) fail(`人物 ${id}: 場所 ${q.fac[0]} が無い`);
+      if (!G.codexPersonWhere(id).length) fail(`人物 ${id}: 会える場所が引けない`);
+    }
+    if (G.codexPerson("dil")) fail("会う前から載っている");
+    G.c2Meet("dil");
+    if (!G.codexPerson("dil") || !got.includes("person:dil")) fail("キャラメモの人に会っても図鑑に載らない");
+    if (G.codexPersonLines("dil").length !== 1) fail("会っただけで二行目が見える");
+    G.c2Join("dil");
+    if (!G.codexPerson("dil").joined) fail("仲間になったことが残らない");
+    if (G.codexPersonLines("dil").length !== 2) fail("仲間になっても二行目が見えない");
+    // 名のある人：出来事で会う
+    G.S.mode = "explore";
+    G.startEvent("r1_elf_ledger");
+    if (!G.codexPerson("hans")) fail("出来事で会った宿の主人が図鑑に載らない");
+    if ((G.codexPerson("hans").ev || 0) < 1) fail("会った出来事の数が増えない");
+    // 新しい冒険でも残る
+    G.die("テスト");
+    const G2 = loadEngine();
+    G2.P = JSON.parse(JSON.stringify(G.P));
+    start(G2, 7);
+    if (!G2.codexPerson("dil") || !G2.codexPerson("dil").joined || !G2.codexPerson("hans")) fail("新しい冒険で人物図鑑が消えた");
+  }
+
+  // ---- 用語：profile に残る。強調（今の冒険の行）には混ざらない
+  {
+    const G = loadEngine();
+    const D = G.data;
+    G.P = { trophies: {}, graves: [] };
+    start(G, 8);
+    const id = Object.keys(D.LORE).find((x) => D.LORE[x].lines.length >= 1 && !(G.loreOf(G.S)[x] || []).length);
+    const key = D.LORE[id].lines[0][0];
+    G.openLore(`${id}:${key}`, true);
+    if (!((G.P.loreSeen || {})[id] || []).includes(key)) fail("開いた用語が profile に残らない");
+    if (G.codexLore()[id][key] !== "now") fail("今の冒険で開いた行が now にならない");
+    G.die("テスト");
+    const G2 = loadEngine();
+    G2.P = JSON.parse(JSON.stringify(G.P));
+    start(G2, 9);
+    if (((G2.loreOf(G2.S)[id]) || []).includes(key)) fail("過去の冒険の用語が、今の冒険の行（強調に使う）に混ざった");
+    if ((G2.codexLore()[id] || {})[key] !== "past") fail("過去の冒険で知った行が図鑑で読めない");
+    const rows = (secs) => secs.flatMap(([, r]) => r.map((x) => x[1]));
+    const text = D.LORE[id].lines[0][1];
+    if (rows(G2.loreSections(G2.S)).includes(text)) fail("手引きを描いていないときにも過去の行が混ざる");
+    G2.f2.withPast = true;
+    const withPast = rows(G2.loreSections(G2.S));
+    G2.f2.withPast = false;
+    if (!withPast.includes(text) || !G2.f2.pastTexts.has(text)) fail("手引きに過去の冒険の行が出ない");
+    if (G2.data.WORLD.sections.flatMap(([, r]) => r).some((x) => x && x[1] === text)) fail("手引きの表（GM・強調が読む）に過去の行が混ざった");
+    const m = G2.codexMergeLore({ a: ["x"] }, { a: ["y"], b: ["z"] });
+    if (m.a.length !== 2 || !m.b) fail("用語の記録をまとめられない");
   }
 
   // ---- 古いセーブから一度だけ埋め直す

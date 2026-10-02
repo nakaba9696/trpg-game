@@ -1,10 +1,14 @@
-// F2：アイテム図鑑と魔物図鑑。冒険をまたいで残る（profile＝G.P に保存。死んでも・引退しても残る）。
+// F2（名前の頭の zz は、lore.js・zz_c2_people.js より後に読ませて包むため）：アイテム図鑑と魔物図鑑。冒険をまたいで残る（profile＝G.P に保存。死んでも・引退しても残る）。
 //   G.P.codex = { items: { id: { by, date, at } }, foes: { id: { by, date, at, kills, kby, kdate } } }
 //   アイテム：手に入れた（拾う・買う・報酬・宝箱・出来事・ドロップ。すべて G.give を通る）とき。持ち始めの品も新しい冒険で載る
 //   魔物：初めて戦った（G.startCombat）ときと、倒した（G.combatAct のあいだに HP が 0 になった）ときを分けて記録。倒した数も
 // 古い profile（codex が無い）でも動く。今の冒険のセーブ（S.f2codex が無い）は、持ち物・装備・記録の「〜を倒した！」「〜が立ちはだかった！」・
 // 狩りの依頼から一度だけ図鑑を埋め直す。主な入手場所・出現場所・性能はデータから引く（DOM なし。画面は ui/f2_codex.js）。
-// core.js・combat.js は書き換えず、包む。レーン F（F2）
+// 人物：名のある人物（D.F2_PEOPLE。キャラメモの人＝C2 と、出来事・施設で会う人）に初めて会ったとき。仲間になったか・間柄（恋仲・連れ合い・裏切り など）も残す
+//   G.P.codex.people = { id: { by, date, at, ev 会った出来事の数, joined, rels { 間柄: 1 } } }
+// 用語：開いた用語の行は lore.js が G.P.loreSeen に残している。ここでは今の冒険の分（S.lore）を一度だけ写し、手引きと図鑑で過去の冒険の行も読めるようにする。
+//   本文の強調（U8）に使うのは今の冒険の行（G.loreOf(S)）だけ。過去の行は G.loreSections に、手引きを描くあいだ（F2.withPast）だけ足す。
+// core.js・combat.js・lore.js・zz_c2_people.js は書き換えず、包む。レーン F（F2）
 (function (G) {
   const D = G.data;
   const F2 = (G.f2 = G.f2 || {});
@@ -24,6 +28,7 @@
     const c = G.P.codex || (G.P.codex = {});
     if (!c.items) c.items = {};
     if (!c.foes) c.foes = {};
+    if (!c.people) c.people = {};
     return c;
   };
   const stamp = () => {
@@ -74,7 +79,7 @@
 
   // 冒険をまたいだ図鑑を一つにまとめる（claude.ai のデータとこのブラウザの両方に残っていたとき。main.js が呼ぶ）
   G.codexMerge = (a, b) => {
-    const out = { items: {}, foes: {}, fresh: Object.assign({}, (a && a.fresh) || {}, (b && b.fresh) || {}) };
+    const out = { items: {}, foes: {}, people: {}, fresh: Object.assign({}, (a && a.fresh) || {}, (b && b.fresh) || {}) };
     [a, b].forEach((c) => {
       if (!c) return;
       Object.entries(c.items || {}).forEach(([id, e]) => { const o = out.items[id]; if (!o || (e.at || 0) < (o.at || 0)) out.items[id] = { ...e }; });
@@ -84,9 +89,145 @@
         const early = (e.at || 0) < (o.at || 0) ? e : o;
         out.foes[id] = { ...o, by: early.by, date: early.date, at: early.at, kills: Math.max(o.kills || 0, e.kills || 0), kby: o.kby || e.kby, kdate: o.kdate || e.kdate };
       });
+      Object.entries(c.people || {}).forEach(([id, e]) => {
+        const o = out.people[id];
+        if (!o) { out.people[id] = { ...e, rels: { ...(e.rels || {}) } }; return; }
+        const early = (e.at || 0) < (o.at || 0) ? e : o;
+        out.people[id] = { ...o, by: early.by, date: early.date, at: early.at, ev: Math.max(o.ev || 0, e.ev || 0), joined: !!(o.joined || e.joined), rels: { ...(o.rels || {}), ...(e.rels || {}) } };
+      });
     });
     return out;
   };
+
+  // 用語の行（profile の loreSeen）を一つにまとめる
+  G.codexMergeLore = (a, b) => {
+    const out = {};
+    [a, b].forEach((x) => Object.entries(x || {}).forEach(([id, keys]) => { const o = (out[id] = out[id] || []); (keys || []).forEach((k) => { if (!o.includes(k)) o.push(k); }); }));
+    return out;
+  };
+
+  // ---------------------------------------------------------------- 人物
+  F2.peopleIds = () => Object.keys(D.F2_PEOPLE || {});
+  F2.personName = (id) => { const p = (D.C2_PEOPLE || {})[id]; const q = (D.F2_PEOPLE || {})[id] || {}; return q.name || (p && p.name) || id; };
+  G.codexPerson = (id) => G.codex().people[id] || null;
+  G.codexMeetPerson = (id, quiet) => {
+    if (!(D.F2_PEOPLE || {})[id]) return false;
+    const c = G.codex();
+    if (c.people[id]) return false;
+    c.people[id] = Object.assign(stamp(), { ev: 0, joined: false, rels: {} });
+    if (!quiet) notify("person", id);
+    changed();
+    return true;
+  };
+  const personRel = (id, rel) => {
+    G.codexMeetPerson(id, true);
+    const r = G.codex().people[id];
+    if (!r || (r.rels || {})[rel]) return;
+    (r.rels = r.rels || {})[rel] = 1;
+    if (rel === "仲間") r.joined = true;
+    changed();
+  };
+  // 出来事に出てくる名のある人（C2 は e.c2、ほかは F2_PEOPLE の events・eventRe）
+  const peopleInEvent = (eid) => {
+    const e = as(D.EVENTS).find((x) => x.id === eid);
+    const out = new Set(e ? as(e.c2).filter((id) => (D.F2_PEOPLE || {})[id]) : []);
+    Object.entries(D.F2_PEOPLE || {}).forEach(([id, q]) => {
+      if ((q.events || []).includes(eid) || (q.eventRe && new RegExp(q.eventRe).test(eid))) out.add(id);
+    });
+    return [...out];
+  };
+  F2.peopleInEvent = peopleInEvent;
+  // 今の冒険の間柄を写す（仲間・恋・別れ方）
+  const REL = { spark: "気になる仲", love: "恋仲", vow: "誓った仲", wed: "連れ合い" };
+  const GONE = { betray: "裏切られた", leave: "去っていった", death: "死に別れた", dead: "死に別れた", slain: "刃を交えた" };
+  F2.syncPeople = (S) => {
+    if (!S) return;
+    (S.companions || []).forEach((c) => {
+      if (!c.c2 || !(D.F2_PEOPLE || {})[c.c2]) return;
+      personRel(c.c2, "仲間");
+      const st = c.m10 && c.m10.st;
+      if (REL[st]) personRel(c.c2, REL[st]);
+    });
+    const m = S.c2 || {};
+    Object.keys(m.joined || {}).forEach((id) => personRel(id, "仲間"));
+    Object.entries(m.gone || {}).forEach(([id, how]) => { if (GONE[how] && (m.joined || {})[id]) personRel(id, GONE[how]); });
+  };
+  // 主に会える場所：仲間の誘える町 → 出来事の where（場所の名前）
+  G.codexPersonWhere = (id, max) => {
+    const out = [];
+    const add = (t) => { if (t && !out.includes(t)) out.push(t); };
+    const p = (D.C2_PEOPLE || {})[id], q = (D.F2_PEOPLE || {})[id] || {};
+    if (p && p.join) as(p.join.home).forEach((l) => add(D.LOCS[l] && `${D.LOCS[l].name}（誘える）`));
+    if (q.fac) { const L = D.LOCS[q.fac[0]]; add(L && `${L.name}の${{ castle: "王城", shop: "商店", tavern: "酒場", inn: "宿屋" }[q.fac[1]] || "施設"}`); }
+    as(D.EVENTS).forEach((e) => {
+      if (!peopleInEvent(e.id).includes(id)) return;
+      const locs = as(e.where).map((w) => D.LOCS[w]).filter(Boolean);
+      if (locs.length) locs.forEach((L) => add(L.name));
+      else as(e.where).forEach((w) => add(WHERE_WORD[w] ? (w === "any" ? "各地" : `${WHERE_WORD[w]}のどこか`) : ""));
+    });
+    return out.slice(0, max || 3);
+  };
+  // 説明：会えば一行目、深く関わる（仲間になった・二つ以上の出来事で会った）と二行目も
+  G.codexPersonLines = (id) => {
+    const q = (D.F2_PEOPLE || {})[id];
+    const r = G.codexPerson(id);
+    if (!q || !r) return [];
+    const deep = r.joined || (r.ev || 0) >= 2;
+    return (q.lines || []).slice(0, deep ? 2 : 1);
+  };
+  F2.personGroup = (id) => {
+    const p = (D.C2_PEOPLE || {})[id];
+    if (!p) return "町と旅で会う人";
+    if (p.join) return "仲間になる人";
+    return p.nation ? `${p.nation}の人` : "各地の人";
+  };
+  F2.PEOPLE_GROUPS = ["仲間になる人", "レオネストの人", "ノルディアの人", "エルメシアの人", "各地の人", "町と旅で会う人"];
+
+  // ---------------------------------------------------------------- 用語（冒険をまたいで読む）
+  // 知っている行：{ id: { key: "now" | "past" } }。今の冒険で開いた行は now、過去の冒険だけの行は past
+  G.codexLore = (S) => {
+    S = S === undefined ? G.S : S;
+    const now = S && G.loreOf ? G.loreOf(S) : {};
+    const seen = (G.P && G.P.loreSeen) || {};
+    const out = {};
+    Object.entries(D.LORE || {}).forEach(([id, e]) => {
+      const m = {};
+      e.lines.forEach(([k]) => { if ((now[id] || []).includes(k)) m[k] = "now"; else if ((seen[id] || []).includes(k)) m[k] = "past"; });
+      if (Object.keys(m).length) out[id] = m;
+    });
+    return out;
+  };
+  F2.withPast = false; // 手引きを描くあいだだけ true（画面が立てる）
+  F2.pastTexts = new Set();
+  if (G.loreSections) {
+    const baseSections = G.loreSections;
+    G.loreSections = (S) => {
+      const secs = baseSections(S);
+      if (!F2.withPast) return secs;
+      F2.pastTexts = new Set();
+      const known = G.codexLore(S);
+      Object.entries(D.LORE || {}).forEach(([id, e]) => {
+        const m = known[id] || {};
+        const rows = e.lines.filter(([k]) => m[k] === "past");
+        if (!rows.length) return;
+        const hasNow = e.lines.some(([k]) => m[k] === "now");
+        let sec = secs.find(([x]) => x === e.sec);
+        if (!sec) { sec = [e.sec, []]; secs.push(sec); }
+        rows.forEach((l, i) => { F2.pastTexts.add(l[1]); sec[1].push([i || hasNow ? "" : e.title, l[1]]); });
+      });
+      const order = D.LORE_SECS || [];
+      secs.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
+      return secs;
+    };
+  }
+  if (G.openLore) {
+    const baseOpenLore = G.openLore;
+    G.openLore = (trig, quiet) => {
+      const r = baseOpenLore(trig, quiet);
+      if (r) changed();
+      return r;
+    };
+  }
 
   // ---------------------------------------------------------------- 今の冒険から埋め直す（一度だけ）
   const foeByName = (name) => {
@@ -105,6 +246,11 @@
     });
     (S.quests || []).forEach((q) => { if (q.type === "hunt" && q.progress > 0 && D.ENEMIES[q.target]) G.codexMeet(q.target, true); });
     if (S.combat) (S.combat.foes || []).forEach((f) => G.codexMeet(f.id, true));
+    Object.keys((S.c2 && S.c2.met) || {}).forEach((id) => G.codexMeetPerson(id, true));
+    Object.keys(S.flags || {}).forEach((f) => { if (f.startsWith("ev:")) peopleInEvent(f.slice(3)).forEach((id) => G.codexMeetPerson(id, true)); });
+    if (S.counters && S.counters.d6_walker) G.codexMeetPerson("walker", true);
+    F2.syncPeople(S);
+    if (G.P && S.lore) G.P.loreSeen = G.codexMergeLore(G.P.loreSeen, S.lore);
     changed();
     return true;
   };
@@ -145,6 +291,34 @@
   G.endTurn = () => {
     if (G.S && !G.S.f2codex) G.codexSeed(G.S);
     baseEndTurn();
+    if (G.S) F2.syncPeople(G.S);
+  };
+  const baseFinish = G.finishRun;
+  G.finishRun = () => { if (G.S) F2.syncPeople(G.S); baseFinish(); };
+
+  const baseStartEvent = G.startEvent;
+  G.startEvent = (ev) => {
+    const ok = baseStartEvent(ev);
+    if (ok && G.S && G.S.event) peopleInEvent(G.S.event).forEach((id) => {
+      G.codexMeetPerson(id);
+      const r = G.codexPerson(id);
+      if (r) { r.ev = (r.ev || 0) + 1; changed(); }
+    });
+    return ok;
+  };
+  if (G.c2Meet) {
+    const baseC2Meet = G.c2Meet;
+    G.c2Meet = (id) => { const r = baseC2Meet(id); if (G.S) G.codexMeetPerson(id); return r; };
+  }
+  if (G.c2Join) {
+    const baseC2Join = G.c2Join;
+    G.c2Join = (id) => { const r = baseC2Join(id); if (r) personRel(id, "仲間"); return r; };
+  }
+  const baseExploreAct = G.exploreAct;
+  G.exploreAct = (head, arg, a) => {
+    baseExploreAct(head, arg, a);
+    if (head !== "fac" || !G.S) return;
+    Object.entries(D.F2_PEOPLE || {}).forEach(([id, q]) => { if (q.fac && q.fac[0] === G.S.loc && q.fac[1] === arg) G.codexMeetPerson(id); });
   };
 
   // ---------------------------------------------------------------- データから引く：入手場所・出現場所
@@ -339,6 +513,8 @@
       items: items.filter((id) => c.items[id]).length, itemsAll: items.length,
       foes: foes.filter((id) => c.foes[id]).length, foesAll: foes.length,
       kills: foes.filter((id) => c.foes[id] && c.foes[id].kills).length,
+      people: F2.peopleIds().filter((id) => c.people[id]).length, peopleAll: F2.peopleIds().length,
+      lore: Object.keys(G.codexLore()).length, loreAll: Object.keys(D.LORE || {}).length,
     };
   };
 })(globalThis.G = globalThis.G || {});

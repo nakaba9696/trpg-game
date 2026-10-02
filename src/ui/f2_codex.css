@@ -33,3 +33,13 @@ button.f2cell:hover, .f2cell.on { background: var(--item-hover); border-color: v
   .f2detail { position: static; order: -1; max-height: none; }
   .f2grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
 }
+/* 人物・用語 */
+.f2cell .face { border-radius: 2px; }
+.f2words { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.f2words .f2cell { min-height: 0; padding: 8px 6px; }
+.f2cell.past { opacity: .72; }
+.f2line { margin: 8px 0; font-family: var(--f-body); line-height: 1.8; }
+.f2line.past, #worldBody .f2past { opacity: .62; }
+.f2ago { display: block; font-family: var(--f-ui); font-size: 11px; color: var(--muted); font-style: normal; }
+@media (max-width: 760px) { .f2words { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }
+.f2who { width: 48px; height: 60px; border-radius: 2px; }
