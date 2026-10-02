@@ -16,30 +16,30 @@
 
 | 鍵 | 名前 | 既定のタグ | 落とし先 | 使う場面 | 持つ人 |
 |---|---|---|---|---|---|
-| `joy` | 喜 | smile, happy | 基本 | うれしい・ほっとした | 54 |
-| `anger` | 怒 | angry, frown, v-shaped eyebrows | 基本 | 怒る・苛立つ | 54 |
-| `sorrow` | 哀 | sad, looking down, downturned mouth | 基本 | 悲しい・沈む | 54 |
-| `fun` | 楽 | laughing, open mouth, closed eyes | 基本 | 楽しい・笑い転げる | 54 |
-| `surprise` | 驚き | surprised, wide-eyed, open mouth, raised eyebrows | 怯え → 基本 | 目を丸くする・息を呑む | 31 |
-| `shy` | 照れ | embarrassed, blush, looking away | 喜 → 基本 | 頬を染める・褒められて照れる（男も blush でよい。#185） | 10 |
-| `troubled` | 困り | troubled, worried eyebrows, awkward smile, sweatdrop | 哀 → 基本 | 困った顔・苦笑い | 11 |
-| `serious` | 真剣 | serious, determined, focused eyes, closed mouth | 基本 | 腹を決めた・本気の顔 | 23 |
-| `smug` | 得意げ | smug, smirk, half-closed eyes, raised eyebrow | 楽 → 喜 → 基本 | 胸を張る・したり顔 | 14 |
+| `joy` | 喜 | smile, happy | 基本 | うれしい・ほっとした | 69 |
+| `anger` | 怒 | angry, frown, v-shaped eyebrows | 基本 | 怒る・苛立つ | 69 |
+| `sorrow` | 哀 | sad, looking down, downturned mouth | 基本 | 悲しい・沈む | 69 |
+| `fun` | 楽 | laughing, open mouth, closed eyes | 基本 | 楽しい・笑い転げる | 69 |
+| `surprise` | 驚き | surprised, wide-eyed, open mouth, raised eyebrows | 怯え → 基本 | 目を丸くする・息を呑む | 33 |
+| `shy` | 照れ | embarrassed, blush, looking away | 喜 → 基本 | 頬を染める・褒められて照れる（男も blush でよい。#185） | 16 |
+| `troubled` | 困り | troubled, worried eyebrows, awkward smile, sweatdrop | 哀 → 基本 | 困った顔・苦笑い | 14 |
+| `serious` | 真剣 | serious, determined, focused eyes, closed mouth | 基本 | 腹を決めた・本気の顔 | 31 |
+| `smug` | 得意げ | smug, smirk, half-closed eyes, raised eyebrow | 楽 → 喜 → 基本 | 胸を張る・したり顔 | 20 |
 | `fear` | 怯え | scared, frightened, wide-eyed, worried eyebrows, pale face, sweat | 驚き → 哀 → 基本 | 震える・青ざめる | 4 |
-| `tired` | 疲れ | tired, exhausted, half-closed eyes, sweat, open mouth | 困り → 哀 → 基本 | へたり込む・息が上がる | 3 |
-| `cry` | 泣き | crying, tears, streaming tears, open mouth | 哀 → 基本 | 泣き崩れる・号泣（哀より強い） | 5 |
-| `panic` | 慌て | flustered, panicking, wide-eyed, sweatdrop, wavy mouth | 困り → 驚き → 怯え → 基本 | あたふたする・しくじりに慌てる | 11 |
-| `pout` | すね | pout, puffed cheeks, looking away | 怒 → 基本 | むくれる・すねる | 3 |
-| `faint_smile` | ほんの少し笑う | slight smile, soft eyes, closed mouth | 喜 → 基本 | 無表情な人がわずかに笑う | 19 |
-| `sparkle` | 目を輝かせる | excited, sparkling eyes, smile, open mouth | 楽 → 喜 → 基本 | 好きな物を前に夢中になる | 13 |
-| `cold` | 冷たい目 | cold eyes, narrowed eyes, expressionless, contempt | 真剣 → 怒 → 基本 | 見下す・切り捨てる・剣を抜いた顔 | 15 |
-| `wicked` | 悪い笑み | evil smile, sinister grin, narrowed eyes, shaded face | 得意げ → 楽 → 基本 | 企む・本性がのぞく | 6 |
+| `tired` | 疲れ | tired, exhausted, half-closed eyes, sweat, open mouth | 困り → 哀 → 基本 | へたり込む・息が上がる | 6 |
+| `cry` | 泣き | crying, tears, streaming tears, open mouth | 哀 → 基本 | 泣き崩れる・号泣（哀より強い） | 7 |
+| `panic` | 慌て | flustered, panicking, wide-eyed, sweatdrop, wavy mouth | 困り → 驚き → 怯え → 基本 | あたふたする・しくじりに慌てる | 15 |
+| `pout` | すね | pout, puffed cheeks, looking away | 怒 → 基本 | むくれる・すねる | 6 |
+| `faint_smile` | ほんの少し笑う | slight smile, soft eyes, closed mouth | 喜 → 基本 | 無表情な人がわずかに笑う | 23 |
+| `sparkle` | 目を輝かせる | excited, sparkling eyes, smile, open mouth | 楽 → 喜 → 基本 | 好きな物を前に夢中になる | 15 |
+| `cold` | 冷たい目 | cold eyes, narrowed eyes, expressionless, contempt | 真剣 → 怒 → 基本 | 見下す・切り捨てる・剣を抜いた顔 | 19 |
+| `wicked` | 悪い笑み | evil smile, sinister grin, narrowed eyes, shaded face | 得意げ → 楽 → 基本 | 企む・本性がのぞく | 9 |
 | `drunk` | 酔い | drunk, flushed face, blush, half-closed eyes, wavy mouth | 楽 → 照れ → 喜 → 基本 | 酒が回った顔 | 1 |
-| `sleepy` | 眠い | sleepy, drowsy, half-closed eyes, yawning | 疲れ → 基本 | あくび・うとうと | 5 |
-| `exasperated` | 呆れ | exasperated, half-closed eyes, deadpan, sigh | 困り → 疲れ → 基本 | ため息・あきれ顔 | 4 |
-| `smitten` | うっとり | smitten, blush, dreamy eyes, gentle smile | 照れ → 喜 → 基本 | 見とれる・想い人を思う | 4 |
+| `sleepy` | 眠い | sleepy, drowsy, half-closed eyes, yawning | 疲れ → 基本 | あくび・うとうと | 6 |
+| `exasperated` | 呆れ | exasperated, half-closed eyes, deadpan, sigh | 困り → 疲れ → 基本 | ため息・あきれ顔 | 6 |
+| `smitten` | うっとり | smitten, blush, dreamy eyes, gentle smile | 照れ → 喜 → 基本 | 見とれる・想い人を思う | 6 |
 
-## 人ごとの割り当て（54 人）
+## 人ごとの割り当て（69 人）
 
 | 人 | 喜怒哀楽のほかの表情 |
 |---|---|
@@ -97,3 +97,18 @@
 | ティッタ（`titta`） | 得意げ（`smug`）・呆れ（`exasperated`）・驚き（`surprise`） |
 | イオリ（`iori`） | 眠い（`sleepy`）・照れ（`shy`）・真剣（`serious`）・ほんの少し笑う（`faint_smile`） |
 | ドロテア（`dorothea`） | 得意げ（`smug`）・うっとり（`smitten`）・驚き（`surprise`） |
+| ヴォルフラム（`wolfram`） | 困り（`troubled`）・真剣（`serious`）・ほんの少し笑う（`faint_smile`）・疲れ（`tired`） |
+| ハルトムート（`hartmut`） | 照れ（`shy`）・泣き（`cry`）・うっとり（`smitten`）・慌て（`panic`） |
+| グスタフ（`gustav`） | 悪い笑み（`wicked`）・得意げ（`smug`）・慌て（`panic`）・真剣（`serious`） |
+| ティモ（`timo`） | うっとり（`smitten`）・照れ（`shy`）・真剣（`serious`）・泣き（`cry`） |
+| ノエリス（`noeris`） | 悪い笑み（`wicked`）・冷たい目（`cold`）・得意げ（`smug`）・驚き（`surprise`） |
+| イングリット（`ingrid`） | ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・呆れ（`exasperated`）・すね（`pout`） |
+| ルミア（`lumia`） | 眠い（`sleepy`）・得意げ（`smug`）・ほんの少し笑う（`faint_smile`）・すね（`pout`） |
+| ジークリンデ（`sieglinde`） | 困り（`troubled`）・照れ（`shy`）・真剣（`serious`）・疲れ（`tired`） |
+| アンネリーゼ（`annelise`） | 照れ（`shy`）・慌て（`panic`）・得意げ（`smug`）・驚き（`surprise`） |
+| ラドミラ（`radmila`） | 冷たい目（`cold`）・悪い笑み（`wicked`）・ほんの少し笑う（`faint_smile`）・真剣（`serious`） |
+| オトマール（`otmar`） | 冷たい目（`cold`）・真剣（`serious`）・疲れ（`tired`） |
+| オーレン（`oren`） | 目を輝かせる（`sparkle`）・すね（`pout`）・真剣（`serious`） |
+| ディートリヒ（`dietrich`） | 得意げ（`smug`）・冷たい目（`cold`）・慌て（`panic`） |
+| マティアス（`matthias`） | 困り（`troubled`）・真剣（`serious`）・照れ（`shy`） |
+| リーゼル（`liesel`） | 呆れ（`exasperated`）・照れ（`shy`）・得意げ（`smug`） |

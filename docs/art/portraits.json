@@ -1231,6 +1231,310 @@
    "memo": "C4・町。ブランデールの石鹸と香水の商会の女主人。包み紙は自分の顔。自信家の策士で、娘にちょっかいを出しては手をはたかれる。黒髪の結い上げ、羽根の帽子、えんじのドレス"
   },
   {
+   "id": "wolfram",
+   "group": "c2",
+   "name": "ヴォルフラム",
+   "type": "ojisan",
+   "file": "assets/portraits/wolfram.webp",
+   "identity": "1boy, male focus, adult, old man, 58 years old, very tall, muscular, broad shoulders, weathered skin, white hair, grey hair, short hair, crew cut, blue eyes, round eyes, thick white eyebrows, full white beard, scar across cheek, deep wrinkles, old dented steel cuirass over brown padded tunic, fur-lined cloak, bare knuckles, wrapped hands",
+   "tags": "holding a large wooden ladle, standing by a big cooking pot",
+   "face": "big grin, confused",
+   "variants": {
+    "joy": "laughing, open mouth, closed eyes",
+    "anger": "angry, shouting, furrowed brow",
+    "sorrow": "serious, sad eyes, looking down",
+    "fun": "grin, scratching head, confused",
+    "troubled": "troubled, confused, sweatdrop, scratching head",
+    "serious": "serious, sharp eyes, determined, closed mouth",
+    "faint_smile": "gentle smile, soft eyes",
+    "tired": "tired, sweat, half-closed eyes"
+   },
+   "memo": "C7・仲間。先帝の代の伝説の将軍。黒鉄の砦の炊き出し小屋の客分。銭勘定と道がだめ、いざという時は誰より正しい。白い短髪と白い髭、古い鎧、木の杓子"
+  },
+  {
+   "id": "hartmut",
+   "group": "c2",
+   "name": "ハルトムート",
+   "type": "brute",
+   "file": "assets/portraits/hartmut.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 47 years old, huge man, burly, very muscular, big belly, tan skin, dark brown hair, black-brown hair, short hair, messy hair, brown eyes, small eyes, thick eyebrows, full beard, coal dust on face, scar on forehead, worn leather miner apron over grey shirt, rolled-up sleeves, leather gloves, pickaxe on shoulder",
+   "tags": "holding a crumpled sheet of paper, reading aloud",
+   "face": "embarrassed, frown, blush",
+   "variants": {
+    "joy": "shy smile, looking away",
+    "anger": "angry, shouting, teeth",
+    "sorrow": "crying, teary eyes, looking down",
+    "fun": "proud, reciting, hand raised",
+    "shy": "blush, embarrassed, looking away, frown",
+    "cry": "crying, streaming tears, open mouth",
+    "smitten": "dreamy eyes, blush, smile",
+    "panic": "flustered, sweatdrop, wide-eyed"
+   },
+   "memo": "C7・仲間。帝都の外れの坑夫頭。巨漢で、大仰で下手な詩を書く。不憫。黒い髭と煤けた顔、坑夫の革の前掛け、つるはし、詩の紙"
+  },
+  {
+   "id": "gustav",
+   "group": "c2",
+   "name": "グスタフ",
+   "type": "ojisan",
+   "file": "assets/portraits/gustav.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 41 years old, short, wiry, rat ears, rat tail, grey hair, ash grey hair, short hair, slicked back hair, black eyes, narrow eyes, thin eyebrows, stubble, scar on chin, gold earring, red open vest over bare arms, leather bracers, gladiator belt, short sword at hip, coin pouch",
+   "tags": "tossing a handful of sand, smirking over shoulder",
+   "face": "sly grin",
+   "variants": {
+    "joy": "laughing, open mouth, thumbs up",
+    "anger": "angry, bared teeth, glaring",
+    "sorrow": "sad, serious, looking at an old paper",
+    "fun": "wink, tongue out, mischievous",
+    "wicked": "evil grin, narrowed eyes, sinister smile",
+    "smug": "smug, smirk, half-closed eyes",
+    "panic": "flustered, sweatdrop, wide-eyed, open mouth",
+    "serious": "serious, sharp eyes, closed mouth"
+   },
+   "memo": "C7・仲間。闘技の都ザルグロスの鼠の獣人の剣闘士。卑怯で人気者、相手を殺さない。子どもの剣闘士を買い戻している。撫でつけた灰色の髪、鼠の耳と尻尾、赤い胴着、砂"
+  },
+  {
+   "id": "timo",
+   "group": "c2",
+   "name": "ティモ",
+   "type": "classic",
+   "file": "assets/portraits/timo.webp",
+   "identity": "1boy, male focus, young man, 20 years old, slender, athletic, fox ears, fox tail, orange hair, ginger hair, short hair, spiky hair, amber eyes, round eyes, fang, bandage on cheek, green hunting jacket, leather quiver, fingerless gloves, old wooden longbow",
+   "tags": "hanging upside down from a tree branch, waving",
+   "face": "cheerful grin",
+   "variants": {
+    "joy": "big grin, sparkling eyes, blush",
+    "anger": "serious, focused, narrowed eyes, drawing bow",
+    "sorrow": "sad smile, looking at bow",
+    "fun": "flustered, heart-struck, ears perked",
+    "smitten": "smitten, blush, dreamy eyes, open mouth",
+    "shy": "blush, embarrassed, ears down, looking away",
+    "serious": "serious, focused, narrowed eyes",
+    "cry": "crying, tears, ears down"
+   },
+   "memo": "C7・仲間・恋。狩り場の町ナグリスの狐の獣人の見習い狩人。惚れっぽい阿呆だが矢は外さない。兄の弓。橙のはね髪、狐の耳と尻尾、緑の狩り装束"
+  },
+  {
+   "id": "noeris",
+   "group": "c2",
+   "name": "ノエリス",
+   "type": "bishonen",
+   "file": "assets/portraits/noeris.webp",
+   "identity": "1boy, male focus, adult, young man, 27 years old, slender, tall, pointy ears, elf, pale skin, silver-white hair, platinum silver hair, long hair, low ponytail, light blue eyes, narrowed eyes, thin eyebrows, mole under eye, dangling earring, dark purple loose robe, embroidered sash, rings on fingers",
+   "tags": "rolling a die between fingers, sitting behind a gambling table",
+   "face": "gentle closed-eye smile",
+   "variants": {
+    "joy": "soft smile, eyes slightly open",
+    "anger": "cold smile, opened eyes, sharp",
+    "sorrow": "melancholic, looking at an old notebook",
+    "fun": "sly smile, finger on lips",
+    "wicked": "sly smile, opened eyes, sinister",
+    "cold": "cold eyes, opened eyes, expressionless",
+    "smug": "smug, closed eyes, smile",
+    "surprise": "surprised, eyes open, wide-eyed"
+   },
+   "memo": "C7・仲間・恋。湯の町アミュレインの賭場の胴元のエルフ。糸目、柔らかな話し方で騙すと言って騙す。学院の二番。銀白の長髪を低く束ね、紫の衣、骰子"
+  },
+  {
+   "id": "ingrid",
+   "group": "c2",
+   "name": "イングリット",
+   "file": "assets/portraits/ingrid.webp",
+   "identity": "1girl, adult, woman, 33 years old, slender, pale skin, black hair, jet black hair, short hair, bob cut, red eyes, half-closed eyes, eye bags, thin eyebrows, round glasses, white doctor coat over dark dress, rolled sleeves, leather gloves, small bag of scalpels",
+   "tags": "pinching someone's sleeve, holding a honey cake",
+   "face": "expressionless",
+   "variants": {
+    "joy": "tiny smile, faint blush",
+    "anger": "expressionless, cold stare, frown",
+    "sorrow": "looking down, expressionless, sad eyes",
+    "fun": "deadpan, holding three sweets",
+    "faint_smile": "very slight smile, closed mouth",
+    "sparkle": "sparkling eyes, expressionless, slight blush",
+    "exasperated": "deadpan, half-closed eyes, exasperated",
+    "pout": "pout, expressionless, puffed cheeks"
+   },
+   "memo": "C7・仲間・恋。帝都の検死官。無表情の毒舌で恐ろしいことを言う。袖をつまんで離さず、甘い物をねだる。黒いおかっぱ、丸眼鏡、白衣"
+  },
+  {
+   "id": "lumia",
+   "group": "c2",
+   "name": "ルミア",
+   "file": "assets/portraits/lumia.webp",
+   "identity": "1girl, child, 11 years old, small, petite, pointy ears, elf, pale skin, light blue hair, silver blue hair, very long hair, cyan eyes, sleepy eyes, thin eyebrows, silver circlet, oversized pale blue robe, long sleeves, blanket over shoulders, small wooden staff",
+   "tags": "yawning, sitting under a tree",
+   "face": "sleepy, smug",
+   "variants": {
+    "joy": "gentle motherly smile, closed eyes",
+    "anger": "stern, scolding, pointing finger",
+    "sorrow": "sad smile, looking at a carved tree trunk",
+    "fun": "smug, arms crossed, chin up",
+    "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
+    "smug": "smug, chin up, half-closed eyes",
+    "faint_smile": "gentle smile, soft eyes",
+    "pout": "pout, puffed cheeks"
+   },
+   "memo": "C7・仲間（恋の相手にしない）。首都エルメシアの湖のほとりで昼寝をする、子どもの姿の七百年のエルフ。古風な年寄り言葉で議員を坊や扱い。水色がかった白の長髪、額飾り、毛布"
+  },
+  {
+   "id": "sieglinde",
+   "group": "c2",
+   "name": "ジークリンデ",
+   "file": "assets/portraits/sieglinde.webp",
+   "identity": "1girl, adult, woman, 31 years old, tall, athletic, fair skin, blonde hair, ash blonde hair, long hair, high ponytail, blue eyes, sharp eyes, straight eyebrows, scar on chin, dark blue military coat over steel cuirass, officer insignia, fur collar, spear",
+   "tags": "saluting, snow falling",
+   "face": "serious, calm",
+   "variants": {
+    "joy": "small shy smile, faint blush",
+    "anger": "angry, clenched teeth",
+    "sorrow": "gloomy, tired, downcast eyes",
+    "fun": "flustered, soot on face, holding a burnt pot",
+    "troubled": "troubled, sweatdrop, worried eyebrows",
+    "shy": "blush, embarrassed, looking away",
+    "serious": "serious, determined, closed mouth",
+    "tired": "tired, exhausted, half-closed eyes, sweat"
+   },
+   "memo": "C7・仲間・恋。凍てつく街道の見張り塔の中隊長。有能で不運、報告の形で話す。灰金の長い馬の尾、紺の軍外套と鎧、槍"
+  },
+  {
+   "id": "annelise",
+   "group": "c2",
+   "name": "アンネリーゼ",
+   "file": "assets/portraits/annelise.webp",
+   "identity": "1girl, adult, young woman, 25 years old, athletic, rabbit ears, white hair, cream white hair, medium hair, ponytail, red eyes, round eyes, thick eyebrows, soot on cheek, bandaged fingers, headband, brown leather smith apron over sleeveless shirt, work gloves, smith hammer",
+   "tags": "hammer resting on shoulder, hand on hip",
+   "face": "confident grin",
+   "variants": {
+    "joy": "proud grin, thumbs up",
+    "anger": "angry, shouting, ears raised",
+    "sorrow": "teary eyes, looking at an old sword",
+    "fun": "flustered, blush, dropping hammer, ears down",
+    "shy": "blush, embarrassed, ears down, looking away",
+    "panic": "flustered, wide-eyed, sweatdrop, ears up",
+    "smug": "smug, proud grin",
+    "surprise": "surprised, wide-eyed, ears up"
+   },
+   "memo": "C7・仲間。ドランヘルツの鍛冶ギルドの首席。兎の獣人の姉御。勘定が苦手で文無し、色恋の話で槌を落とす。白い髪の馬の尾、兎の耳、鍛冶の前掛け、槌"
+  },
+  {
+   "id": "radmila",
+   "group": "c2",
+   "name": "ラドミラ",
+   "file": "assets/portraits/radmila.webp",
+   "identity": "1girl, adult, woman, 35 years old, tall, slender, pale skin, black hair, blue-black hair, very long hair, straight hair, red eyes, sharp eyes, long eyelashes, thin eyebrows, black hooded cloak, black fitted coat, silver chain, black sword with black hilt",
+   "tags": "kneeling, applying salve to a scraped knee",
+   "face": "calm, cold",
+   "variants": {
+    "joy": "faint smile, gentle eyes",
+    "anger": "battle smile, glowing eyes, drawn sword",
+    "sorrow": "looking away, sad",
+    "fun": "amused smile, eyes half-closed",
+    "cold": "cold eyes, expressionless, narrowed eyes",
+    "wicked": "battle smile, glowing eyes, sinister grin",
+    "faint_smile": "faint smile, soft eyes",
+    "serious": "serious, sharp eyes, closed mouth"
+   },
+   "memo": "C7・仲間。影の谷の黒い剣の女。怖いほどの美人で戦いを好むが、子どもの擦り傷に薬を塗る世話焼き。黒の長髪、赤い目、黒い外套、光を映さない黒い剣"
+  },
+  {
+   "id": "otmar",
+   "group": "c2",
+   "name": "オトマール",
+   "type": "ojisan",
+   "file": "assets/portraits/otmar.webp",
+   "identity": "1boy, male focus, adult, old man, 63 years old, stocky, broad shoulders, weathered skin, grey hair, steel grey hair, short hair, receding hairline, grey eyes, narrow eyes, heavy eyebrows, scar on lip, deep wrinkles, black fur-trimmed coat, gold chain, ledger book",
+   "tags": "holding a snow shovel",
+   "face": "cold stare",
+   "variants": {
+    "joy": "slight smile, closed mouth",
+    "anger": "glaring, frown, cold eyes",
+    "sorrow": "looking down, frown",
+    "fun": "smirk, amused",
+    "cold": "cold eyes, narrowed eyes, expressionless",
+    "serious": "serious, stern, closed mouth",
+    "tired": "tired, sweat, half-closed eyes"
+   },
+   "memo": "C7・町。闘技の都ザルグロスの大闘技場の主。剣闘士を値段で呼ぶ。毎朝雪かきをする。後退した灰色の髪、黒い毛皮の外套、帳面、雪かき"
+  },
+  {
+   "id": "oren",
+   "group": "c2",
+   "name": "オーレン",
+   "type": "elder",
+   "file": "assets/portraits/oren.webp",
+   "identity": "1boy, male focus, old man, 84 years old, thin, frail, wrinkled skin, bald, white beard, long white beard, grey eyes, droopy eyes, bushy white eyebrows, dark blue council robe, silver council badge, wooden cane",
+   "tags": "sitting formally on his knees by a lake",
+   "face": "gentle smile",
+   "variants": {
+    "joy": "smile, closed eyes",
+    "anger": "angry, frown, shouting",
+    "sorrow": "sad, looking down",
+    "fun": "laughing, open mouth",
+    "sparkle": "sparkling eyes, childlike smile, blush",
+    "pout": "pout, frown, stubborn",
+    "serious": "serious, stern, closed mouth"
+   },
+   "memo": "C7・町。共和国の評議会の最古参の老議員。頑固だが、湖の小さなお方の前では子どものよう。禿頭、白く長い髭、紺の議員の衣、杖"
+  },
+  {
+   "id": "dietrich",
+   "group": "c2",
+   "name": "ディートリヒ",
+   "type": "ojisan",
+   "file": "assets/portraits/dietrich.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 49 years old, tall, lean, pale skin, black hair, jet black hair, short hair, slicked back hair, grey eyes, narrow eyes, thin eyebrows, monocle, wrinkles, hollow cheeks, black imperial staff officer coat, high collar, silver epaulettes, white gloves",
+   "tags": "writing in a ledger, standing in snow",
+   "face": "cold smirk",
+   "variants": {
+    "joy": "smug smile, closed eyes",
+    "anger": "angry, glaring, frown",
+    "sorrow": "frown, looking away",
+    "fun": "smirk, amused",
+    "smug": "smug, smirk, raised eyebrow",
+    "cold": "cold eyes, expressionless",
+    "panic": "flustered, sweatdrop, wide-eyed"
+   },
+   "memo": "C7・町。帝国軍の参謀。手柄は自分に、責めは部下に。ただし負けない。撫でつけた黒髪、片眼鏡、黒い参謀の外套"
+  },
+  {
+   "id": "matthias",
+   "group": "c2",
+   "name": "マティアス",
+   "type": "classic",
+   "file": "assets/portraits/matthias.webp",
+   "identity": "1boy, male focus, adult, young man, 26 years old, tall, athletic, fair skin, blonde hair, golden blonde hair, short hair, neat hair, green eyes, gentle eyes, soft eyebrows, soot on cheek, clean white shirt under leather smith apron, rolled-up sleeves",
+   "tags": "bowing politely, holding tongs",
+   "face": "polite smile, blush",
+   "variants": {
+    "joy": "smile, happy, blush",
+    "anger": "frown, clenched teeth",
+    "sorrow": "sad smile, looking down",
+    "fun": "laughing, open mouth",
+    "troubled": "troubled smile, sweatdrop, worried eyebrows",
+    "serious": "serious, determined, closed mouth",
+    "shy": "blush, embarrassed, looking away"
+   },
+   "memo": "C7・町。ドランヘルツの鍛冶ギルドの次席。真面目な好青年で、首席に一度も勝てず、負けるたびに礼を言う。金の短髪、緑の目、白いシャツに鍛冶の前掛け"
+  },
+  {
+   "id": "liesel",
+   "group": "c2",
+   "name": "リーゼル",
+   "file": "assets/portraits/liesel.webp",
+   "identity": "1girl, adult, young woman, 22 years old, sturdy, freckles, red hair, dark red hair, long hair, braid, green eyes, half-closed eyes, raised eyebrows, kerchief on head, brown dress with white apron, rolled sleeves",
+   "tags": "carrying a tray of beer mugs",
+   "face": "smirk",
+   "variants": {
+    "joy": "grin, happy",
+    "anger": "angry, frown, open mouth",
+    "sorrow": "sad, looking down",
+    "fun": "laughing, open mouth",
+    "exasperated": "exasperated, half-closed eyes, sigh",
+    "shy": "blush, embarrassed, looking away, frown",
+    "smug": "smug, smirk"
+   },
+   "memo": "C7・町。帝都の外れの坑夫酒場の娘。気が強い。坑夫頭の詩を捨てずに樽の上に積んでいる。赤い三つ編み、そばかす、頭巾、前掛け"
+  },
+  {
    "id": "kind_villager_m",
    "group": "people",
    "name": "町の人（男）",

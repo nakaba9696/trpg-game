@@ -38,7 +38,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       else if (BAD.test(t)) F(`${p.id} の variants.${m} に、構図・性的な言葉がある：${t.match(BAD)[0]}`);
     }
   }
-  if (vids.length < 8 || vids.length > 80) F(`差分のある人が ${vids.length} 人（仲間＋主要な人。V11 でキャラメモの人と使徒の人の姿まで）`);
+  // 仲間は全員、差分を持つ（C2・C4・C5〜C8）。V11 でキャラメモの人と使徒の人の姿も持つ
+  const mates = Object.keys(D.C2_PEOPLE).filter((id) => D.C2_PEOPLE[id].join).length;
+  if (vids.length < 8 || vids.length > Object.keys(D.C2_PEOPLE).length + 20) F(`差分のある人が ${vids.length} 人（仲間 ${mates} 人＋キャラメモの人・使徒の人の姿）`);
   for (const id of Object.keys(D.C2_PEOPLE)) if (D.C2_PEOPLE[id].join && !vids.includes(id)) F(`仲間になる ${id} に差分（variants）が無い`);
 
   // assets/ に置いた差分の絵は、variants のある人のもの
