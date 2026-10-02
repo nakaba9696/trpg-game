@@ -10,7 +10,7 @@
 // - 古いセーブ（S.tk が無い）・会話の途中の保存と読み込みで動く。ランダムに遊んでも会話が止まらない
 const BANNED = /見世物|観客|客席|舞台|台本|言霊|神々|魔王|魔人|正体|もういない|胸|童貞|貧乳|巨乳|ナイスバディ|ロリコン|体つき/;
 const TAGS = new Set(["any", "town", "wild", "dungeon", "capital", "port", "snow", "realm", "camp", "inn", "road"]);
-const KINDS = ["past", "place", "event", "mate", "chat", "ask", "love", "cold", "night"];
+const KINDS = ["past", "place", "event", "mate", "chat", "ask", "love", "bond", "cold", "night"];
 const FRESH = ["win", "boss", "near", "fled", "death", "left", "crime", "apostle", "quest", "arrive", "title"];
 const TONES = ["earnest", "tease", "joke", "praise", "sweet", "scold", "cold", "quiet"];
 const PEOPLE = ["dil", "sheila", "nora", "zerina"]; // このセッションで書いた四人（残りは後の子が足す）
@@ -321,6 +321,25 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     G.affState(S).rui = 80;
     if (G.tk.can({ id: "x", kind: "love", love: true, min: 0, title: "x", replies: [] }, rui, S)) F("子どもの姿のルイに、恋の話題が出る");
     for (const who of PEOPLE) for (const t of T[who].topics) if (t.kind === "love" && !t.love) F(`${t.id}: 恋の話題に love: true が無い`);
+    // 恋の相手でない人（romance の印が無い）・18 歳未満の主人公には、恋の代わりに信頼の話題
+    const { G: G2, S: S2 } = game(20, { join: ["sheila", "dil"] });
+    const sh = comp(S2, "sheila"), dl = comp(S2, "dil");
+    G2.affState(S2).sheila = 80; G2.affState(S2).dil = 80;
+    const kinds = (c) => G2.tkTopics(c, S2).map((t) => t.kind);
+    const romance = (id) => (D0.C2_PEOPLE[id] || {}).romance === true;
+    if (!romance("sheila")) {
+      if (kinds(sh).includes("love")) F("恋の相手でないシェイラに、恋の話題が出る");
+      if (!kinds(sh).includes("bond")) F("恋の相手でないシェイラに、信頼の話題が出ない");
+    }
+    if (romance("dil")) {
+      if (kinds(dl).includes("bond")) F("恋の相手になれるディルに、信頼の話題が出る（恋の話題のはず）");
+      S2.profile.age = 16;
+      if (kinds(dl).includes("love") || !kinds(dl).includes("bond")) F("16 歳の主人公に、ディルが恋の話題を出すか、信頼の話題を出さない");
+    }
+    for (const who of PEOPLE) if (!T[who].topics.some((t) => t.kind === "bond")) F(`${who}: 信頼の話題（恋の代わり）が無い`);
+    // 夜の会話も印に合う：恋の相手でない人の夜に、恋の話題は出ない
+    S2.profile.age = 20;
+    if (G2.tkTopics(sh, S2, { night: true, where: "camp" }).some((t) => t.love)) F("恋の相手でないシェイラの夜の会話に、恋の話題が出る");
   }
 
   // 古いセーブと、会話の途中の保存

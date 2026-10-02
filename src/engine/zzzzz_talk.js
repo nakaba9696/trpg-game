@@ -20,7 +20,7 @@
   const FRESH = 6; // 最近の出来事として話題にする日数
   const NIGHT_AFF = 30; // 夜に話しかけてくる好感度（信頼している）
   const COLD_AT = -20; // これ以下は冷たい会話になる
-  TK.KIND = { past: "身の上", place: "この土地", event: "さっきのこと", mate: "仲間のこと", chat: "世間話", ask: "相談", love: "ふたりのこと", cold: "", night: "夜" };
+  TK.KIND = { past: "身の上", place: "この土地", event: "さっきのこと", mate: "仲間のこと", chat: "世間話", ask: "相談", love: "ふたりのこと", bond: "信頼", cold: "", night: "夜" };
   // 返し方の既定の好み（その人の tones で上書き）
   TK.TONES = { earnest: 3, tease: 1, joke: 1, praise: 2, sweet: 2, scold: -2, cold: -5, quiet: 1 };
   TK.TONE_NAMES = { earnest: "真面目に聞く", tease: "からかう", joke: "冗談で返す", praise: "褒める", sweet: "優しくする", scold: "たしなめる", cold: "突き放す", quiet: "黙っている" };
@@ -111,11 +111,14 @@
       if (!m) return false;
       if (tp.mateMin !== undefined && TK.aff(m) < tp.mateMin) return false;
     }
-    if (tp.love && !(G.m10Can && G.m10Can(c) && !(G.loveHeroMinor && G.loveHeroMinor(S)) && !(G.loveMinor && G.loveMinor(c)))) return false;
+    if (tp.kind === "bond" && TK.loveOk(c, S)) return false; // 恋の相手になれる人には、恋の話題のほうを出す
+    if (tp.love && !TK.loveOk(c, S)) return false;
     if (tp.need && !TK.needMet(tp.need, S)) return false;
     if (tp.when && !tp.when(S, c)) return false;
     return true;
   };
+  // 恋の話題を出せる相手か（romance の印・18 歳未満・子どもの姿は G.m10Can と zzz_love_age.js が見る）
+  TK.loveOk = (c, S) => !!(G.m10Can && G.m10Can(c) && !(G.loveHeroMinor && G.loveHeroMinor(S)) && !(G.loveMinor && G.loveMinor(c)));
   TK.needMet = (n, S) => {
     S = S || G.S;
     if (n.item && !(S.inv && S.inv[n.item] > 0)) return false;
@@ -131,7 +134,7 @@
   };
 
   // 並べる話題を選ぶ（3〜5。出来事への反応と、頼まれごとの続きを先に）
-  const ORDER = ["event", "ask", "past", "place", "mate", "love", "chat"];
+  const ORDER = ["event", "ask", "past", "place", "mate", "love", "bond", "chat"];
   TK.pickMenu = (c, S) => {
     const all = G.tkTopics(c, S);
     if (!all.length) return [];
@@ -473,7 +476,7 @@
     const cands = comps(S).filter((c) => G.tkHas(c) && TK.aff(c) >= NIGHT_AFF && c.bond > 15);
     if (!cands.length) return false;
     // 話す人と、話す話題が決まってから乱数を使う
-    const ready = cands.map((c) => [c, G.tkTopics(c, S, { night: true, where }).filter((tp) => tp.kind === "night" || tp.kind === "past" || tp.kind === "love")]).filter(([, l]) => l.length);
+    const ready = cands.map((c) => [c, G.tkTopics(c, S, { night: true, where }).filter((tp) => tp.kind === "night" || tp.kind === "past" || tp.kind === "love" || tp.kind === "bond")]).filter(([, l]) => l.length);
     if (!ready.length || G.rand() >= 0.45) return false;
     const best = Math.max(...ready.map(([c]) => TK.aff(c)));
     const [c, list] = G.pick(ready.filter(([x]) => TK.aff(x) >= best - 15));
