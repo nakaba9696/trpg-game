@@ -9,8 +9,9 @@
 - 中身：`src/data/talk_dil.js`・`talk_sheila.js`・`talk_nora.js`・`talk_zerina.js`（D.TALK[id]）、掛け合い `src/data/talk_banter_c2.js`（D.TALK_BANTER）
   - K2 で 8 人を足した：`talk_kaidel.js`・`talk_rui.js`・`talk_elnea.js`・`talk_natalia.js`・`talk_bertrand.js`・`talk_ilse.js`・`talk_tula.js`・`talk_mirlene.js`、掛け合い `talk_banter_k2.js`
   - K3 で C7 の 10 人を足した：`talk_wolfram.js`・`talk_hartmut.js`・`talk_gustav.js`・`talk_timo.js`・`talk_noeris.js`・`talk_ingrid.js`・`talk_lumia.js`・`talk_sieglinde.js`・`talk_annelise.js`・`talk_radmila.js`、掛け合い `talk_banter_k3.js`（周りの名のある人＝ディートリヒ・オトマール・リーゼル・マティアス・オーレンとの因縁も）
+  - K4 で C8 の 10 人を足した：`talk_gigra.js`・`talk_valdun.js`・`talk_gensai.js`・`talk_tsuyuha.js`・`talk_takimaru.js`・`talk_yurien.js`・`talk_roswitha.js`・`talk_izra.js`・`talk_anselmo.js`・`talk_polf.js`、掛け合い `talk_banter_k4.js`（人でない種族どうし・人とのすれ違いと和解。周りの名のある人＝ヨナス・ルドガー・リオネッタ・ゼルギスとの因縁も。恋はギグラ・タキマル・イズラだけで、好感度 60・75 の難しい道。ツユハは子どもの姿なので家族の情）
 - 画面：出来事の画面をそのまま使う（話題の一覧・話・返し方が「どうする？」の欄に並ぶ）。シートの仲間の札の「話す」は `src/ui/talk.js`
-- 確認：`tests/checks/talk.mjs`（人を足すと、その人の表も自動で確かめる。量の下限を確かめる人は `PEOPLE` に足す）。K2 の 8 人の量・恋と信頼の分け方・全部聞き切る遊びは `tests/checks/talk_k2.mjs`（C7 の 10 人は `talk_k3.mjs`）
+- 確認：`tests/checks/talk.mjs`（人を足すと、その人の表も自動で確かめる。量の下限を確かめる人は `PEOPLE` に足す）。K2 の 8 人の量・恋と信頼の分け方・全部聞き切る遊びは `tests/checks/talk_k2.mjs`（C7 の 10 人は `talk_k3.mjs`、C8 の 10 人は `talk_k4.mjs`。K4 では表情がその人の絵にあるかも見る）
 
 ## 遊び方の流れ
 1. **話す**：行動の「仲間」の欄か、シートの仲間の札の「話す」。一日一度、一手番を使う。好感度が尽きた仲間（F3 で −70 以下）は今まで通り M2 の別れ話になる。
