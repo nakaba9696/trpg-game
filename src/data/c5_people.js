@@ -242,7 +242,7 @@
     // 使徒の名は〔進〕。名乗るまで呼び名（name は呼び名。名乗ったあとの名前は zc5_people.js の D.C3_NAMES）
     yuzuel: P({
       name: "山の館の伯爵さま", full: "ユズエル（刻印の環の十三・伯爵さま）", nation: "使徒領", role: "使徒（討伐の格・友好）。断界山脈の古い館に住む、上品な老紳士の姿。通りがかりの旅人を客間に招き、問答を吹っかける。負けると心から喜ぶ。敵意を向けた者には、礼儀正しく容赦しない", sex: "男", age: 60, race: "human",
-      who: { kind: "majin", sex: "男", age: 60, seed: "c2:yuzuel", look: { hair: "#c8ccd4", hairStyle: "slick", eyes: "narrow", iris: "#c83a3a", mouth: "smile", brows: "raised", outfit: "noble", head: "none", gear: "none", chest: "gem", cloth: "#2a1a2a", build: "slim", marks: ["monocle", "mustache", "wrinkles"], bg: "#3a2a3a" } },
+      who: { kind: "majin", sex: "男", age: 60, seed: "c2:yuzuel", look: { hair: "#6a1a2a", hairStyle: "ponytail", eyes: "narrow", iris: "#c83a3a", mouth: "smile", brows: "raised", outfit: "noble", head: "none", gear: "none", chest: "gem", cloth: "#2a1a2a", build: "slim", marks: ["monocle", "wrinkles"], bg: "#3a2a3a" } },
     }),
     severin: P({
       name: "聖歌隊の若者", full: "セヴラン（蝶の奥方の眷属）", nation: "レオネスト", role: "眷属。聖都の聖歌隊でいちばん澄んだ声で歌う、少年のような若者。歌のあと、聞いた者の何人かが自分を傷つける。誰より熱心に祈る。大聖堂の聖女に拾われた孤児で、褒められたくて何でもする。名を呼ばれたことは一度もない", sex: "男", age: 19, race: "human",

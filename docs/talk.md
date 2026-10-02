@@ -8,8 +8,9 @@
 - 仕組み：`src/engine/zzzzz_talk.js`（G.tk）
 - 中身：`src/data/talk_dil.js`・`talk_sheila.js`・`talk_nora.js`・`talk_zerina.js`（D.TALK[id]）、掛け合い `src/data/talk_banter_c2.js`（D.TALK_BANTER）
   - K2 で 8 人を足した：`talk_kaidel.js`・`talk_rui.js`・`talk_elnea.js`・`talk_natalia.js`・`talk_bertrand.js`・`talk_ilse.js`・`talk_tula.js`・`talk_mirlene.js`、掛け合い `talk_banter_k2.js`
+  - K3 で C7 の 10 人を足した：`talk_wolfram.js`・`talk_hartmut.js`・`talk_gustav.js`・`talk_timo.js`・`talk_noeris.js`・`talk_ingrid.js`・`talk_lumia.js`・`talk_sieglinde.js`・`talk_annelise.js`・`talk_radmila.js`、掛け合い `talk_banter_k3.js`（周りの名のある人＝ディートリヒ・オトマール・リーゼル・マティアス・オーレンとの因縁も）
 - 画面：出来事の画面をそのまま使う（話題の一覧・話・返し方が「どうする？」の欄に並ぶ）。シートの仲間の札の「話す」は `src/ui/talk.js`
-- 確認：`tests/checks/talk.mjs`（人を足すと、その人の表も自動で確かめる。量の下限を確かめる人は `PEOPLE` に足す）。K2 の 8 人の量・恋と信頼の分け方・全部聞き切る遊びは `tests/checks/talk_k2.mjs`
+- 確認：`tests/checks/talk.mjs`（人を足すと、その人の表も自動で確かめる。量の下限を確かめる人は `PEOPLE` に足す）。K2 の 8 人の量・恋と信頼の分け方・全部聞き切る遊びは `tests/checks/talk_k2.mjs`（C7 の 10 人は `talk_k3.mjs`）
 
 ## 遊び方の流れ
 1. **話す**：行動の「仲間」の欄か、シートの仲間の札の「話す」。一日一度、一手番を使う。好感度が尽きた仲間（F3 で −70 以下）は今まで通り M2 の別れ話になる。
@@ -45,7 +46,7 @@
 | `title` | 一覧に出る見出し（選択肢の文）。`{m}` が使える |
 | `text` | その人の話。文字列か、行の配列（一行ずつ記録に出る） |
 | `replies` | 返し方 2〜3 個（下の表） |
-| `mood` | 立ち絵の表情（`joy`・`anger`・`sorrow`・`fun`）。無ければ文から推す（V8 の `G.guessMood`） |
+| `mood` | 立ち絵の表情。喜怒哀楽（`joy`・`anger`・`sorrow`・`fun`）と、照れ `shy`・驚き `surprise`・得意げ `smug` など（V11。種類と落とし先は `docs/art/moods.md`）。無ければ文から推す（`G.guessMood`） |
 | `step` | 身の上の段（1 から。一覧には一番浅い段だけ出る） |
 | `min` / `max` | 好感度（F3 の −100〜+100）の範囲。`min` の既定は −19（冷たいときは出ない）。冷たい会話は `max` の既定が −20 |
 | `after` | 前に聞いた話題の id。`"dil_a1#yes"` なら、その話題で `key: "yes"` の返しを選んだときだけ |
