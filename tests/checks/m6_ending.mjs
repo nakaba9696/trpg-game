@@ -161,7 +161,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     delete S.m6; delete S.story; delete S.ending;
     try { G.endTurn(); G.m6CanEnd(); S.title = "国王"; G.endTurn(); if (S.m6.pending !== "king") fail("古いセーブで節目に着かない"); }
     catch (e) { fail(`古いセーブで例外 ${e.message}`); }
-    const old = { id: "rold", name: "古い人", cls: "傭兵", goal: "魔人を討ち果たす", end: "dead", cause: "オーガに倒された", date: "ヴェルド暦1127年 春 9日",
+    const old = { id: "rold", name: "古い人", cls: "傭兵", goal: "魔人を討ち果たす", end: "dead", cause: "オーガに倒された", date: "1127年 春 9日",
       location: "迷いの森", turns: 40, fame: 12, title: "", stats: { 筋力: 50 }, chronicle: [{ date: "x", kind: "start", text: "始まり" }], at: 1 };
     const a = G.m6StoryOf(old), b = G.m6StoryOf(old);
     checkStory("古い墓碑", a, true);

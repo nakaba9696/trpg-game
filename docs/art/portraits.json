@@ -1,5 +1,5 @@
 {
- "about": "Morsveld の人物の絵の一覧。tags は Stable Diffusion のポジティブプロンプトに入れる、その人の特徴だけ（画風・品質・構図は持ち主の側で足す）。face は基本の表情（プロンプトでは tags の後ろに付く）。variants は喜怒哀楽の差分（joy・anger・sorrow・fun）の表情のタグで、基本の絵から img2img で作るときに face と差し替える（V8）。tools/portraits.mjs で docs/art/portraits.md を作る",
+ "about": "このゲームの人物の絵の一覧。tags は Stable Diffusion のポジティブプロンプトに入れる、その人の特徴だけ（画風・品質・構図は持ち主の側で足す）。face は基本の表情（プロンプトでは tags の後ろに付く）。variants は喜怒哀楽の差分（joy・anger・sorrow・fun）の表情のタグで、基本の絵から img2img で作るときに face と差し替える（V8）。tools/portraits.mjs で docs/art/portraits.md を作る",
  "size": {
   "width": 512,
   "height": 640,
@@ -252,7 +252,7 @@
   {
    "id": "sixth",
    "group": "c2",
-   "name": "第六騎士団の団長",
+   "name": "オルヴェイン（第六騎士団の団長）",
    "type": "bishonen",
    "file": "assets/portraits/sixth.webp",
    "identity": "1boy, male focus, adult, knight captain, 33 years old, tall, slim, pale skin, black hair, white streak in hair, medium hair, long bangs, black eyes, narrow eyes, cold eyes, thin eyebrows, black plate armor, silver crest, black cape, sword at hip",
@@ -279,7 +279,7 @@
   {
    "id": "captain",
    "group": "c2",
-   "name": "寡黙な隊長",
+   "name": "ロウェル（王国軍の隊長）",
    "type": "classic",
    "file": "assets/portraits/captain.webp",
    "identity": "1boy, male focus, adult, man, 28 years old, broad shoulders, fair skin, dark brown hair, short hair, neat hair, brown eyes, calm eyes, thick eyebrows, stubble, blue military uniform, light armor, spear",
@@ -290,7 +290,7 @@
   {
    "id": "doctor",
    "group": "c2",
-   "name": "博士",
+   "name": "モルヴァン（王国に雇われた博士）",
    "type": "ojisan",
    "file": "assets/portraits/doctor.webp",
    "identity": "1boy, male focus, old man, 61 years old, thin, pale skin, white hair, thin white hair, short hair, receding hairline, pale grey eyes, round eyes, thin eyebrows, wrinkles, gold monocle, white lab coat, ring of keys on belt",
@@ -370,7 +370,7 @@
   {
    "id": "bride",
    "group": "c2",
-   "name": "大槌の姉さん",
+   "name": "マリエッタ（流れの大槌使い）",
    "file": "assets/portraits/bride.webp",
    "identity": "1girl, woman, 34 years old, athletic, fair skin, blonde hair, golden blonde hair, long hair, wavy hair, yellow eyes, gentle eyes, thin eyebrows, black eyepatch with a yellow lightning bolt mark, white flower in hair, silver armor, war hammer resting on shoulder",
    "tags": "blush, hand on hip",
@@ -380,7 +380,7 @@
   {
    "id": "boku",
    "group": "c2",
-   "name": "「ボク」の娘",
+   "name": "テオ（「ボク」の娘。名乗るまでは呼び名）",
    "file": "assets/portraits/boku.webp",
    "identity": "1girl, tomboy, 17 years old, slim, fair skin, brown hair, chestnut brown hair, short hair, bob cut, heterochromia, red eye, green eye, round eyes, thin eyebrows, round glasses, small dark blue top hat, dark blue short coat, white shirt, blue neck ribbon, dark blue shorts",
    "tags": "holding a notebook, pushing up glasses, pencil",
@@ -475,7 +475,7 @@
   {
    "id": "chancellor",
    "group": "named",
-   "name": "帝国の宰相",
+   "name": "オスヴィン（帝国の宰相）",
    "type": "ojisan",
    "file": "assets/portraits/chancellor.webp",
    "tags": "1boy, male focus, adult, old man, 64 years old, grey hair, slicked back hair, narrow eyes, wrinkles, eye bags, black formal clothes, chain of office, hands behind back, holding a scroll",
@@ -599,7 +599,7 @@
   {
    "id": "walker",
    "group": "named",
-   "name": "灰色の外套の旅人",
+   "name": "灰色の外套の旅人（三度目に会うとノエと名乗る）",
    "type": "ojisan",
    "file": "assets/portraits/walker.webp",
    "tags": "1boy, male focus, adult, man, ageless, brown hair, short hair, half-closed eyes, gentle smile, stubble, old grey cloak, traveler",
@@ -608,7 +608,7 @@
   {
    "id": "captain_east",
    "group": "named",
-   "name": "東へ出る船の船長",
+   "name": "コルサーノ（東へ出る船の船長）",
    "type": "ojisan",
    "file": "assets/portraits/captain_east.webp",
    "tags": "1boy, male focus, adult, old man, 52 years old, eyepatch, beard, sea captain, captain hat, navy coat, hand on belt, smoking pipe",
