@@ -1,6 +1,6 @@
 {
  "_comment": "男の人物（一覧の identity・tags に 1boy / male / old man などがある人）だけに重ねる設定。style.json の上に、ここに書いた項目だけ上書きする。持ち主の絵柄は可愛い女の子向けなので、男も女の子と同じ絵師タグ（Inuboshi・miyanogi_jiji・Anan Shokudow・yutokamizu）を入れ、blue archive・no halo は外す（持ち主の決定）。顔立ちは types（型）で替える。手元で変えたいときは style_male.local.json に書く（git に入れない）",
- "prefix": "(Inuboshi:1.2),miyanogi_jiji,Anan Shokudow,yutokamizu, lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color",
+ "prefix": "(Inuboshi:1.2),miyanogi_jiji,Anan Shokudow,yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color",
  "suffix": "solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
  "negative": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, breasts, feminine, makeup, lipstick, long eyelashes, androgynous, blush, nose blush, full-face blush, flushed face, red cheeks, embarrassed, shy, flustered, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears",
  "default_type": "classic",
@@ -53,5 +53,5 @@
   "flustered"
  ],
  "_comment_drop_tags": "drop_tags：男の絵では頬を赤らめない（持ち主の声「おっさん頬をあからめてて気持ち悪い」）。人物のタグ・差分の表情にあっても外し、ネガティブにも入れる",
- "_comment_style": "男の絵柄は BLF（持ち主の決定）：持ち主の絵師タグ＋lack＋AI っぽさを消す語（anime coloring・cel shading・thick lineart・flat color／ネガティブ 3d・glossy skin・airbrushed など）。lack で耳がとがりやすいので pointy ears をネガティブに入れる（エルフなど、タグに耳の語がある人はネガティブから外す）。比べた画像は art-test-male ブランチの docs/art/compare/male/"
+ "_comment_style": "男の絵柄は BOLF（持ち主の決定）：持ち主の絵師タグ＋織音（orion_(orionproject)。括弧はエスケープ）＋lack＋AI っぽさを消す語（anime coloring・cel shading・thick lineart・flat color／ネガティブ 3d・glossy skin・airbrushed など）。lack で耳がとがりやすいので pointy ears をネガティブに入れる（エルフなど、タグに耳の語がある人はネガティブから外す）。比べた画像は art-test-male ブランチの docs/art/compare/male/"
 }
