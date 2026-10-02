@@ -1,14 +1,15 @@
-// 仲間との会話の二回目（K2）：C2 のカイデル・ルイ・エルネア・ナタリア、C4 のベルトラン・イルゼ・トゥーラ・ミルレーネ。
-// 表の形・見せる文は tests/checks/talk.mjs が全員に確かめる。ここでは、この 8 人の量と、恋・信頼の分け方と、話してみて止まらないことを確かめる。
+// 仲間との会話の三回目（K3）：C7 のヴォルフラム・ハルトムート・グスタフ・ティモ・ノエリス・イングリット・ルミア・ジークリンデ・アンネリーゼ・ラドミラ。
+// 表の形・見せる文は tests/checks/talk.mjs が全員に確かめる。ここでは、この 10 人の量と、恋・信頼の分け方と、話してみて止まらないことを確かめる。
 // - 量：話題 20 以上（身の上 5 段以上・場所 5・出来事 5・ほかの仲間 3・世間話と相談 2 以上ずつ・冷たい会話 2・夜 2）。声のかけ方 4 段。信頼（bond）がある
-// - 恋：romance の人だけが恋の話題（love: true）を持つ。ルイ（9）・トゥーラ（14）には恋の話題が無い
-// - 掛け合い：8 人のだれかが入るものが 20 以上。半分くらいは肩を持てる（side）
+// - 恋：romance の人だけが恋の話題（love: true）を持つ。子どもの姿のルミアには恋の話題が無く、信頼（家族）の話題がある
+// - 掛け合い：10 人のだれかが入るものが 25 以上。三分の一以上は肩を持てる（side）。C2・C4 の仲間との組も 6 以上
 // - 遊ぶ：一人ずつ仲間にして、好感度を上げながら話題を全部聞き切る。例外が出ない・置き換えが残らない・身の上が最後の段まで開く
-const PEOPLE = ["kaidel", "rui", "elnea", "natalia", "bertrand", "ilse", "tula", "mirlene"];
+const PEOPLE = ["wolfram", "hartmut", "gustav", "timo", "noeris", "ingrid", "lumia", "sieglinde", "annelise", "radmila"];
+const K1 = ["dil", "sheila", "nora", "zerina", "kaidel", "rui", "elnea", "natalia", "bertrand", "ilse", "tula", "mirlene"];
 
 export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   let n = 0;
-  const F = (m) => { n++; fail("会話K2: " + m); };
+  const F = (m) => { n++; fail("会話K3: " + m); };
   const D0 = G0.data;
   const T = D0.TALK || {};
   const P = D0.C2_PEOPLE || {};
@@ -23,7 +24,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const steps = new Set(tp.filter((t) => t.kind === "past").map((t) => t.step));
     const need = [["話題", tp.length, 20], ["身の上の段", steps.size, 5], ["場所", c((t) => t.kind === "place"), 5], ["出来事への反応", c((t) => t.kind === "event"), 5],
       ["ほかの仲間", c((t) => t.kind === "mate"), 3], ["世間話", c((t) => t.kind === "chat"), 2], ["相談", c((t) => t.kind === "ask" && !t.need), 2],
-      ["冷たい会話", c((t) => t.kind === "cold"), 2], ["夜", c((t) => t.kind === "night"), 2], ["信頼", c((t) => t.kind === "bond"), 1]];
+      ["冷たい会話", c((t) => t.kind === "cold"), 2], ["夜", c((t) => t.kind === "night"), 2], ["信頼", c((t) => t.kind === "bond"), 2]];
     for (const [k, v, m] of need) if (v < m) F(`${who}: ${k}が ${v}（${m} 以上）`);
     if (!p.greet || !["warm", "mid", "low", "cold"].every((k) => (p.greet[k] || []).length)) F(`${who}: 声のかけ方（warm・mid・low・cold）が足りない`);
     if (!(p.bye || []).length || !(p.empty || []).length) F(`${who}: 切り上げ・話すことが無いときの一言が無い`);
@@ -43,11 +44,13 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     if (P[who].romance && adult && !loves.length) F(`${who}: 恋の相手なのに恋の話題が無い`);
     counts.push(`${P[who].name} ${tp.length}`);
   }
-  if (["rui", "tula"].some((w) => T[w] && T[w].topics.some((t) => t.love))) F("ルイ・トゥーラに恋の話題がある");
+  if (T.lumia && T.lumia.topics.some((t) => t.love)) F("ルミア（子どもの姿）に恋の話題がある");
+  if (T.lumia && T.lumia.topics.filter((t) => t.kind === "bond").length < 2) F("ルミアの信頼（家族）の話題が 2 未満");
 
   // ---------------------------------------------------------------- 掛け合い
   const B = (D0.TALK_BANTER || []).filter((b) => PEOPLE.includes(b.a) || PEOPLE.includes(b.b));
-  if (B.length < 20) F(`8 人の入る掛け合いが ${B.length}（20 以上）`);
+  if (B.length < 25) F(`10 人の入る掛け合いが ${B.length}（25 以上）`);
+  if (B.filter((b) => K1.includes(b.a) || K1.includes(b.b)).length < 6) F("C2・C4 の仲間との掛け合いが 6 未満");
   if (B.filter((b) => b.side).length < Math.floor(B.length / 3)) F("肩を持てる掛け合いが少ない");
   for (const b of B) for (const k of ["a", "b"]) if (!T[b[k]]) F(`掛け合い ${b.id}: ${b[k]} は会話の表のある人でない`);
   const pairs = new Set(B.map((b) => [b.a, b.b].sort().join("+")));
@@ -59,7 +62,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     if (!T[who]) return;
     const G = loadEngine();
     const D = G.data;
-    G.rand = seeded(500 + i);
+    G.rand = seeded(700 + i);
     const stats = Object.fromEntries(D.STATS.map((k) => [k, 50]));
     const caps = Object.fromEntries(D.STATS.map((k) => [k, 80]));
     G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: i % 2 ? "女" : "男", age: 24, history: "テスト用", personality: "無口" } });
@@ -74,7 +77,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
       if (!c) { F(`${who} が仲間にならない`); return; }
       const lastStep = Math.max(...T[who].topics.filter((t) => t.kind === "past").map((t) => t.step));
       // 場所を巡り、好感度を高くして話し続ける
-      const locs = ["nerva", "karna", "leavel", "garmund", "zephara", "w2_dranherz", "forest", "ruins", "frost", "fort", "w2_amyrein", "plains"];
+      const locs = ["garmund", "frost", "fort", "zephara", "w2_amyrein", "w2_nagris", "w2_zalgros", "w2_dranherz", "w2_shadow", "nerva", "forest", "ruins", "mountains"];
       for (let k = 0; k < 60; k++) {
         S.loc = locs[k % locs.length];
         S.visited[S.loc] = true;
@@ -121,5 +124,5 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     }
   });
 
-  if (!n) ok(`会話K2（${counts.join("・")}。掛け合い ${B.length}（組 ${pairs.size}）。全部聞き切る遊びで ${heard} 話・夜 ${nights} 人）`);
+  if (!n) ok(`会話K3（${counts.join("・")}。掛け合い ${B.length}（組 ${pairs.size}）。全部聞き切る遊びで ${heard} 話・夜 ${nights} 人）`);
 };

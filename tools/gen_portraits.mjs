@@ -17,8 +17,9 @@
 //   一覧で human: true の敵は、設定の human の suffix・negative に替わる。same_as: <id> の敵は作らない（その絵を使う）
 //   一覧で style: "eldritch" の魔物（人の形を持たない格上の存在。V7）は docs/art/style_eldritch.json（＋ style_eldritch.local.json）で作る（別のモデル）。
 //   モデルの入れ替えを減らすため、ふつうの魔物を先に、異形を後にまとめて送る
-// --variants  喜怒哀楽の差分（V8）：一覧に variants がある人の、基本の絵（assets/portraits/<id>.webp）を元に /sdapi/v1/img2img で作り、
-//   assets/portraits/<id>_<joy|anger|sorrow|fun>.webp に置く。同じ人に見えるよう、seed は基本と同じ（一覧の seed か seeds.local.json）、
+// --variants  表情の差分（V8・V11）：一覧に variants がある人の、基本の絵（assets/portraits/<id>.webp）を元に /sdapi/v1/img2img で作り、
+//   assets/portraits/<id>_<表情>.webp に置く（表情は喜怒哀楽の joy・anger・sorrow・fun と、その人らしい表情。種類は docs/art/moods.json）。
+//   --mood <表情>[,<表情>…] でその表情だけ（例：--variants --mood shy,surprise）。同じ人に見えるよう、seed は基本と同じ（一覧の seed か seeds.local.json）、
 //   プロンプトは基本の絵と同じ見た目（identity）・ポーズ（tags）のまま、表情（face）を差分の表情のタグに差し替えるだけ（V10）、
 //   denoising_strength は設定の variants.denoising（既定 0.35。0.3〜0.45 で）。
 //   基本の絵が無い人は飛ばす。--only・--force・--dry も使える（--only dil,nora か、--only dil_joy で一枚だけ）
@@ -136,6 +137,8 @@ const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : baseOf(p)
 const exists = (id) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(outDir, `${id}.${e}`)));
 const isEld = (p) => MON && p.style === "eldritch";
 const VARIANTS = flag("--variants") && !MON;
+const onlyMood = ids(opt("--mood")) && new Set(ids(opt("--mood")));
+if (onlyMood) { if (!VARIANTS) { console.error("--mood は --variants と一緒に使う"); process.exit(1); } for (const m of onlyMood) if (!P.MOODS.includes(m)) console.warn(`docs/art/moods.json に表情 ${m} が無い（${P.MOODS.join("・")}）`); }
 const ofType = (p) => !onlyType || onlyType.has(typeOf(p));
 if (onlyType) { if (MON) { console.error("--type は人物の男の型（--monsters では使えない）"); process.exit(1); } const known = Object.keys(maleBase().types || {}).filter((k) => !k.startsWith("_")); for (const t of onlyType) if (!known.includes(t)) console.warn(`style_male.json の types に ${t} が無い（${known.join("・")}）`); }
 const todo = list.filter((p) => !p.same_as && (!only || only.has(p.id)) && ofType(p) && (force || !exists(p.id)));
@@ -263,23 +266,24 @@ for (const p of todo) {
 const M_ = MON ? " --monsters" : "";
 if (!dry) console.log(`\n${made} 枚 作った。気に入った絵は${M_} --keep <id> で seed を一覧に残す。気に入らない絵は${M_} --only <id> --force --new-seed で作り直す。終わったら node tools/build.mjs`);
 
-// ---------------------------------------------------------------- --variants：喜怒哀楽の差分（V8）
+// ---------------------------------------------------------------- --variants：表情の差分（V8・V11）
 async function runVariants() {
   const MOODS = P.MOODS;
+  for (const p of list) for (const m of Object.keys(p.variants || {})) if (!MOODS.includes(m)) console.warn(`${p.id} の variants の ${m} は docs/art/moods.json に無い表情（作るが、ゲームでは使われない）`);
   const v = Object.assign({ denoising: 0.35 }, style.variants || {});
   const baseFile = (id) => ["webp", "png", "jpg", "jpeg"].map((e) => path.join(outDir, `${id}.${e}`)).find((f) => existsSync(f));
   const jobs = [];
   for (const p of list.filter((x) => x.variants && ofType(x))) {
     const base = baseFile(p.id);
-    for (const m of MOODS) {
+    for (const m of Object.keys(p.variants)) {
       const id = `${p.id}_${m}`;
-      if (!p.variants[m] || (only && !only.has(p.id) && !only.has(id))) continue;
+      if (!p.variants[m] || (onlyMood && !onlyMood.has(m)) || (only && !only.has(p.id) && !only.has(id))) continue;
       if (!base) { if (only) console.warn(`${id}：基本の絵（assets/portraits/${p.id}.webp）が無いので飛ばす`); continue; }
       if (!force && exists(id)) continue;
       jobs.push({ p, m, id, base });
     }
   }
-  if (only) for (const id of only) if (!list.some((p) => p.variants && (p.id === id || MOODS.some((m) => `${p.id}_${m}` === id)))) console.warn(`差分のある人に ${id} がいない`);
+    if (only) for (const id of only) if (!list.some((p) => p.variants && (p.id === id || Object.keys(p.variants).some((m) => `${p.id}_${m}` === id)))) console.warn(`差分のある人に ${id} がいない`);
   const seedOfVariant = (p) => (Number.isInteger(p.seed) ? p.seed : seeds[p.id] && Number.isInteger(seeds[p.id].seed) ? seeds[p.id].seed : -1);
   const bodyOfVariant = ({ p, m, base }) => {
     const b = bodyOf(p);

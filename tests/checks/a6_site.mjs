@@ -144,7 +144,7 @@ export default ({ G, fail, ok }) => {
         if (!existsSync(path.join(root, local))) F(`files.json の ${local} が無い`);
         if (local !== "dist/site/" + pub) F(`files.json の ${pub} のローカルパスが違う：${local}`);
       }
-      const want = Object.values(map).sort().join(), have = Object.keys(files).sort().join();
+      const want = [...new Set(Object.values(map).map((v) => v.replace(/#.*$/, "")))].sort().join(), have = Object.keys(files).sort().join(); // 差分はスプライトの「#xywh=」（A8）
       if (want !== have) F("files.json と HTML の画像の一覧が合わない（ビルドし直す）");
     }
     if (plan.batches.length > 1) for (let i = 1; i <= plan.batches.length; i++) if (!existsSync(path.join(root, `dist/site/files-${i}.json`))) F(`分けて載せる一覧 files-${i}.json が無い`);
