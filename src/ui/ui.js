@@ -60,7 +60,9 @@
     }
     box.hidden = false;
     const kind = G.PEOPLE && G.PEOPLE[who.kind];
-    box.querySelector(".whoName").textContent = who.name || (kind ? kind.name : "");
+    const tag = G.whoTag && G.whoTag(who, S); // C3：名前＋役職の札
+    if (tag && G.c3Plate) G.c3Plate(box.querySelector(".whoName"), tag);
+    else box.querySelector(".whoName").textContent = who.name || (kind ? kind.name : "");
     const sig = JSON.stringify(who) + "|" + box.clientWidth;
     if (sig === lastWho) return;
     lastWho = sig;
@@ -459,7 +461,7 @@
   async function copyLog() {
     const S = G.S;
     const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}成長${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
-    const txt = `『Morsveld』 ${S.clsName} ${S.profile.name} ── 目的：${S.goal.text}\n` + lines.join("\n");
+    const txt = `${S.clsName} ${S.profile.name}の人生 ── 目的：${S.goal.text}\n` + lines.join("\n");
     try { await navigator.clipboard.writeText(txt); ui.toast("ログをコピーしました"); }
     catch { const ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.append(ta); ta.select(); try { document.execCommand("copy"); ui.toast("ログをコピーしました"); } catch { ui.toast("コピーできませんでした"); } ta.remove(); }
   }

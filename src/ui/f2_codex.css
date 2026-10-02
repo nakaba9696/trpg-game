@@ -43,3 +43,15 @@ button.f2cell:hover, .f2cell.on { background: var(--item-hover); border-color: v
 .f2ago { display: block; font-family: var(--f-ui); font-size: 11px; color: var(--muted); font-style: normal; }
 @media (max-width: 760px) { .f2words { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }
 .f2who { width: 48px; height: 60px; border-radius: 2px; }
+/* F3：人物の好感度（−100〜+100。0 が真ん中） */
+.f3aff { margin: 8px 0 6px; font-size: 13px; }
+.f3affhead { display: flex; justify-content: space-between; gap: 8px; }
+.f3afflabel { color: var(--muted); }
+.f3aff.pos .f3affval { color: var(--ok); }
+.f3aff.neg .f3affval { color: var(--ng); }
+.f3aff.none .f3affval { color: var(--muted); }
+.f3affbar { position: relative; height: 6px; margin-top: 4px; border-radius: 3px; background: var(--track); }
+.f3affbar::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); }
+.f3afffill { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: var(--ok); }
+.f3aff.neg .f3afffill { background: var(--ng); }
+.f3affnote { margin: 2px 0 0; font-size: 12px; }

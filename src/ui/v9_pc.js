@@ -53,16 +53,17 @@
     if (!S) return [];
     const out = [], seen = new Set();
     const st = G.stand || {};
-    const add = (who, role) => {
+    const add = (who, role, tag) => {
       if (!who || out.length >= v9.MAX_CAST) return;
       const key = (st.sig && st.sig(who)) || JSON.stringify([who.seed || "", who.kind || "", who.name || ""]);
       if (seen.has(key)) return;
       seen.add(key);
-      out.push({ who, role, key, big: !!(st.big && st.big(who)), name: st.nameOf ? st.nameOf(who) : who.name || "" });
+      tag = tag || (G.whoTag ? G.whoTag(who, S) : null); // C3：名前＋役職の札
+      out.push({ who, role, key, big: !!(st.big && st.big(who)), name: tag ? tag.label : st.nameOf ? st.nameOf(who) : who.name || "", tag });
     };
-    if (S.combat) { if (G.heroWho && S.profile) add(G.heroWho(S.profile, S.cls), "hero"); }
+    if (S.combat) { if (G.heroWho && S.profile) add(G.heroWho(S.profile, S.cls), "hero", { name: S.profile.name || "", role: S.clsName || "", label: G.c3Label ? G.c3Label(S.profile.name, S.clsName) : S.profile.name || "" }); }
     else if (st.whoOf) add(st.whoOf(S), "speaker");
-    (S.companions || []).forEach((c) => add(G.companionWho ? G.companionWho(c) : null, "ally"));
+    (S.companions || []).forEach((c) => add(G.companionWho ? G.companionWho(c) : null, "ally", G.compTag ? G.compTag(c) : null));
     return out;
   };
 
@@ -274,7 +275,8 @@
       el.style.setProperty("--h", p.h + "px");
       el.style.setProperty("--dim", String(p.dim));
       el.style.zIndex = String(p.z);
-      f.nm.textContent = c.name || "";
+      if (c.tag && G.c3Plate) G.c3Plate(f.nm, c.tag);
+      else f.nm.textContent = c.name || "";
       // 描き直すのは、人か出来事（表情）が変わったとき。人が同じなら、出入りはせずにその場で描き直す
       const sig = JSON.stringify(c.who) + "|" + (S.mode === "event" ? S.event : S.mode) + "|" + p.h;
       if (sig !== f.sig) { f.sig = sig; if (G.drawPortrait) G.drawPortrait(f.cv, c.who); }

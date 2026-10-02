@@ -18,10 +18,12 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const D = G.data;
   let n = 0;
   const F = (m) => { n++; fail("C2: " + m); };
-  const P = D.C2_PEOPLE;
+  // シート（キャラメモ）の人だけ。C4 で足した人（c4: true）は tests/checks/c4_people.mjs が確かめる
+  const P = Object.fromEntries(Object.entries(D.C2_PEOPLE).filter(([, p]) => !p.c4));
 
   // ---------------------------------------------------------------- 表と出来事
-  const names = Object.values(P).map((p) => p.name);
+  // C3 で名前を付けた人は、シートの呼び名を was に残している
+  const names = Object.entries(P).flatMap(([id, p]) => [p.name, ...(((D.C3_NAMES || {})[id] || {}).was || [])]);
   for (const s of SHEET) if (!names.includes(s)) F(`シートの人物 ${s} が表に無い`);
   const evs = D.EVENTS.filter((e) => e.id.startsWith("c2_"));
   const ids = (e) => (e.c2 ? (Array.isArray(e.c2) ? e.c2 : [e.c2]) : e.c2talk ? [e.c2talk] : []);

@@ -125,7 +125,12 @@ const baseOf = (p) => {
 const join = P.joinTags;
 // 人の姿の敵（魔物の一覧の human: true）は、設定の human の項目で後置き・ネガティブを替える
 const styleOf = (p) => { const b = baseOf(p); return p.human && b.human ? Object.assign({}, b, b.human) : b; };
-const promptOf = (p, face) => uniqTags(join(baseOf(p).prefix, P.featureOf(p, face), styleOf(p).suffix));
+// 男は style_male.json の drop_tags（頬の赤らみなど）を、人物のタグ・差分の表情からも外す（ネガティブにも入っている）
+const dropOf = (p) => new Set(isMale(p) ? (maleBase().drop_tags || []).map((x) => x.trim().toLowerCase()) : []);
+// タグに耳の語（elf・pointy ears など）がある人は、ネガティブの pointy ears・elf ears を外す（男の絵のネガティブにある）
+const EARS = /\b(elf|elven|half-elf|pointy ears|long pointy ears|elf ears)\b/i;
+const negOf = (p, neg) => (EARS.test(P.featureOf(p)) ? splitTags(neg).filter((t) => !/^(pointy ears|elf ears)$/i.test(t)).join(", ") : neg);
+const promptOf = (p, face) => { const d = dropOf(p); return uniqTags(splitTags(join(baseOf(p).prefix, P.featureOf(p, face), styleOf(p).suffix)).filter((t) => !d.has(t.toLowerCase())).join(", ")); };
 const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : baseOf(p).seed ?? -1);
 
 const exists = (id) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(outDir, `${id}.${e}`)));
@@ -149,6 +154,7 @@ function bodyOf(p) {
   const st = styleOf(p);
   for (const k of PASS) if (st[k] !== undefined) b[k] = st[k];
   if (st.negative !== undefined && b.negative_prompt === undefined) b.negative_prompt = st.negative;
+  if (b.negative_prompt) b.negative_prompt = negOf(p, b.negative_prompt);
   return Object.assign(b, baseOf(p).extra || {});
 }
 async function txt2img(p) {
