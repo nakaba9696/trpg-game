@@ -70,9 +70,9 @@ button { cursor: pointer; }
 /* ヘッダー */
 .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding-block: 16px 10px; border-bottom: 2px solid var(--ink); }
 .top h1 { font-family: var(--f-display); font-weight: 400; font-size: 30px; margin: 0; letter-spacing: .08em; }
-/* 題のロゴ。Mors（死）を血の色、veld を墨の色で */
+/* 題のロゴ。Nocht（夜）を血の色、ara を墨の色で */
 .logo, .logoBig { font-family: var(--f-logo); font-weight: 700; text-transform: uppercase; line-height: 1; white-space: nowrap; }
-.logo .mors, .logoBig .mors { color: var(--blood); }
+.logo .noct, .logoBig .noct { color: var(--blood); }
 .top h1.logo { font-size: 26px; letter-spacing: .16em; }
 body:has(#setup[data-step="title"]:not([hidden])) .top h1.logo { visibility: hidden; }
 .titleHero { text-align: center; padding-block: 28px 8px; }
@@ -644,7 +644,7 @@ body:has(.scene.quake) .bgLayer.on { animation: fxQuake .56s cubic-bezier(.36,.0
 /* 絵の上にじかに載る字（題・場面の名前・タイトルの注記）は、明暗どちらでも明るい字 */
 .top h1.logo, .logoBig { color: #ece1c6; }
 #setup[data-step="title"] .fine { color: #d8ccb0; text-shadow: 0 1px 3px #000; }
-.logo .mors, .logoBig .mors { color: var(--blood); text-shadow: 0 0 18px rgba(184, 57, 44, .4), 0 2px 4px #000; }
+.logo .noct, .logoBig .noct { color: var(--blood); text-shadow: 0 0 18px rgba(184, 57, 44, .4), 0 2px 4px #000; }
 .logoBig { text-shadow: 0 0 24px rgba(234, 214, 166, .2), 0 3px 6px #000; }
 .titleHero .reading { color: #ead6a6; text-shadow: 0 1px 4px #000; }
 

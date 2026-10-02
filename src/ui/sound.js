@@ -8,11 +8,11 @@
   const AC = globalThis.AudioContext || globalThis.webkitAudioContext;
 
   // ---------------------------------------------------------------- 設定（このブラウザに保存）
-  const SKEY = "morsveld-sound";
+  const SKEY = (G.PREF_KEYS && G.PREF_KEYS.sound) || "nochtara-sound";
   // mute は全体の切り替え。sfxOn・ambOn・dice は音ごとのオンオフ（S2。古い設定に無ければ既定値）
   const DEF = { mute: false, sfx: 0.7, amb: 0.4, sfxOn: true, ambOn: true, dice: true };
   snd.DEF = DEF;
-  const loadSet = () => { try { const j = JSON.parse(globalThis.localStorage.getItem(SKEY)); return { ...DEF, ...(j || {}) }; } catch { return { ...DEF }; } };
+  const loadSet = () => { try { if (G.migrateSaveKeys) G.migrateSaveKeys(globalThis.localStorage); const j = JSON.parse(globalThis.localStorage.getItem(SKEY)); return { ...DEF, ...(j || {}) }; } catch { return { ...DEF }; } };
   const saveSet = () => { try { globalThis.localStorage.setItem(SKEY, JSON.stringify(snd.settings)); } catch {} };
   snd.settings = loadSet();
 

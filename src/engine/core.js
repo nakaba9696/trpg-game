@@ -22,7 +22,7 @@
   G.dateOf = (day) => {
     const y = 1127 + Math.floor((day - 1) / 360);
     const r = (day - 1) % 360;
-    return `ヴェルド暦${y}年 ${G.SEASONS[Math.floor(r / 90)]} ${(r % 90) + 1}日`;
+    return `ノクターラ暦${y}年 ${G.SEASONS[Math.floor(r / 90)]} ${(r % 90) + 1}日`;
   };
   G.date = () => G.dateOf(G.S.day);
   G.pass = (n) => { const S = G.S; S.phase += n; while (S.phase >= 4) { S.phase -= 4; S.day++; } };

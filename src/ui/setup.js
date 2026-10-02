@@ -72,9 +72,9 @@
     const hero = h("div", "titleHero");
     const logo = h("div", "logoBig");
     logo.setAttribute("role", "img");
-    logo.setAttribute("aria-label", "Morsveld");
-    logo.append(h("span", "mors", "Mors"), h("span", "veld", "veld"));
-    hero.append(logo, h("div", "reading", "モルスヴェルド")); // 副題は置かない（持ち主の決定 #56）
+    logo.setAttribute("aria-label", "Nochtara");
+    logo.append(h("span", "noct", "Nocht"), h("span", "ara", "ara"));
+    hero.append(logo, h("div", "reading", "ノクターラ")); // 副題は置かない（持ち主の決定 #56）
     root.append(hero);
 
     const menu = h("div", "titleMenu");

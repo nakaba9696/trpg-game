@@ -75,7 +75,7 @@ export default ({ fail, loadEngine, seeded }) => {
   const gm = D.LORE_GM.join("\n") + Object.values(D.MAJIN).map((m) => m.secret || "").join("\n");
   if (OLD.test(gm)) fail(`GM への説明に古い設定「${gm.match(OLD)[0]}」が残っている`);
   if (!/神々はもういない/.test(gm)) fail("GM への説明に「神々はもういない」が無い");
-  if (!/魔王は幕引きの夜（ヴェルド暦元年）に死に/.test(gm)) fail("GM への説明に、昔の魔王が死んでいることが無い");
+  if (!/魔王は幕引きの夜（ノクターラ暦元年）に死に/.test(gm)) fail("GM への説明に、昔の魔王が死んでいることが無い");
   if (!/今の人は魔王という存在そのものを知らない/.test(gm)) fail("GM への説明に、今の人は魔王を知らないことが無い");
   if (!/誰の命令でもない/.test(gm)) fail("GM への説明に、使徒の襲来は誰の命令でもないことが無い");
   if (/人に紛れて歩|人間の世界のそこらへんを普通に歩いている/.test(gm)) fail("GM への説明に、取りやめた「魔王は人に紛れて歩く」が残っている");

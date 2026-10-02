@@ -5,7 +5,7 @@
 // - 古いセーブ（S.u7lore が無い）は、訪れた場所から静かに開き直す
 // - 150 回のランダムな遊びの終わりには、いくつも開いている
 const PROFILE = { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" };
-const MOVED = ["ヴェルド", "レオネスト王国", "ノルディア帝国", "エルメシア共和国", "自由都市連合", "シェルアーク", "三国の協定", "人と種族", "光天教会", "遺跡の品", "格", "術", "凶暴な魔物", "間の抜けた魔物"];
+const MOVED = ["ノクターラ", "レオネスト王国", "ノルディア帝国", "エルメシア共和国", "自由都市連合", "シェルアーク", "三国の協定", "人と種族", "光天教会", "遺跡の品", "格", "術", "凶暴な魔物", "間の抜けた魔物"];
 
 export default ({ fail, loadEngine, seeded }) => {
   const start = (G, cls, goal) => {
@@ -82,7 +82,7 @@ export default ({ fail, loadEngine, seeded }) => {
     if (has("レオネスト王国")) fail("王国の町に着く前に「レオネスト王国」が見える");
     G.arrive("leavel"); G.endTurn();
     if (!has("レオネスト王国") || !(S.lore.u7_leonest || []).includes("king")) fail("王都に着いても「レオネスト王国」（王の行）が開かない");
-    if (!has("ヴェルド") && S.counters.travels) fail("旅をしても「ヴェルド」が開かない");
+    if (!has("ノクターラ") && S.counters.travels) fail("旅をしても「ノクターラ」が開かない");
     if (has("光天教会")) fail("教会に入る前に「光天教会」が見える");
     G.exploreAct("fac", "church");
     if (!has("光天教会") || !noted("光天教会")) fail("教会に入っても「光天教会」が開かない");
