@@ -40,6 +40,7 @@
   if (!ui || !ui.render || !st || !st.whoOf || !st.big) return;
   const calm = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  let waiting = null; // 読み込みを待っている差分の鍵
   // 今の立ち絵（#stand の最後の人。出ていく人は前に残っている）の顔を、その場の表情に合わせる
   function sync() {
     const box = document.getElementById("stand");
@@ -54,6 +55,18 @@
     const face = G.v8WithMood(who, S);
     const key = G.v4PortraitKey(face) || "";
     if (top.dataset.v8key === key) return;
+    // 外のファイルの差分がまだ読めていなければ、今の顔のまま読み終わるのを待つ（読めなければ通常の絵の代わりの絵で入れ替える）
+    const img = key && G.v4Image ? G.v4Image(key) : null;
+    if (img && !img.v4bad && !(img.complete && (img.naturalWidth || img.width))) {
+      if (waiting !== key) {
+        waiting = key;
+        const go = () => { if (waiting === key) { waiting = null; sync(); } };
+        img.addEventListener("load", go, { once: true });
+        img.addEventListener("error", go, { once: true });
+      }
+      return;
+    }
+    waiting = null;
     // 新しい顔を上に重ねてフェードで入れ、古い顔を外す
     const cv = document.createElement("canvas");
     cv.className = top.className;
