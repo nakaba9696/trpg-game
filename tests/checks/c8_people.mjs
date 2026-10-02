@@ -87,7 +87,9 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       if (pt.group !== "c2" || !pt.identity || !pt.tags || !pt.memo) F(`${w}: 立ち絵の group・identity・tags・memo のどれかが無い`);
       if (isMale(pt) !== (p.sex === "男")) F(`${w}: 立ち絵の性別がデータと違う`);
       if (isMale(pt) && pt.type !== c.type) F(`${w}: 立ち絵の型（${pt.type}）がデータ（${c.type}）と違う`);
-      if (p.join && !(pt.variants && pt.variants.joy && pt.variants.anger && pt.variants.sorrow && pt.variants.fun)) F(`${w}: 仲間なのに表情の差分が無い`);
+      // 差分のタグは書いておく。V8 の差分の予算（20 人・4MB）がいっぱいなので、決まるまでは variants_wait に置く（生成の道具は読まない）
+      const vv = pt.variants || pt.variants_wait;
+      if (p.join && !(vv && vv.joy && vv.anger && vv.sorrow && vv.fun)) F(`${w}: 仲間なのに表情の差分のタグが無い`);
     }
     const own = evs.filter((e) => !e.c2talk && inEv(e).includes(id));
     if (own.length < 2 || own.length > 4) F(`${w}: 出てくる出来事が 2〜4 個でない：${own.length}`);

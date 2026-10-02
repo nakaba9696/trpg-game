@@ -830,7 +830,7 @@
    "identity": "1girl, adult woman, 28 years old, goblin, green skin, pointy ears, long pointy ears, short, slim, black hair, messy hair, short hair, yellow eyes, sharp eyes, sharp teeth, fang, dirt on cheek, hoop earring, patched brown rags, red bandana, belt with many small pouches, coin pouch, small wooden keg on back",
    "tags": "biting a silver coin, hand on hip",
    "face": "smug grin",
-   "variants": {
+   "variants_wait": {
     "joy": "embarrassed, blush, looking away, hiding behind keg",
     "anger": "angry, shouting, fangs",
     "sorrow": "sad smile, looking down",
@@ -847,7 +847,7 @@
    "identity": "1boy, male focus, adult, middle-aged man, 47 years old, very tall, huge man, muscular, broad shoulders, tan skin, dark brown hair, long hair, wild hair, amber eyes, sharp eyes, thick eyebrows, two curved horns on forehead, scales on cheeks and forearms, full beard, scar on cheek, fur mantle, battered bronze armor, greatsword on back",
    "tags": "holding a small notebook with pressed flowers",
    "face": "serious, frown",
-   "variants": {
+   "variants_wait": {
     "joy": "gentle smile, closed eyes",
     "anger": "angry, roaring, clenched teeth",
     "sorrow": "sad, looking down, holding a flower",
@@ -864,7 +864,7 @@
    "identity": "1boy, male focus, adult, middle-aged man, 54 years old, slender, tall, dark grey hair, grey hair, medium hair, topknot, squinting eyes, closed eyes, black eyes, thin eyebrows, stubble, nasolabial folds, wrinkles, dark navy kimono, haori, hair ornament in sleeve",
    "tags": "twirling a playing card between fingers, standing on a pier",
    "face": "smile, closed eyes",
-   "variants": {
+   "variants_wait": {
     "joy": "laughing, closed eyes",
     "anger": "slightly opened eyes, cold smile",
     "sorrow": "sad smile, looking at sea",
@@ -880,7 +880,7 @@
    "identity": "1girl, elf, pointy ears, petite, small, silver hair, pale silver hair, very long hair, straight hair, blue eyes, sleepy eyes, half-closed eyes, thin eyebrows, dark red kimono, white obi, oversized old katana at waist",
    "tags": "sitting on a wooden bench, holding a tea cup",
    "face": "sleepy smile",
-   "variants": {
+   "variants_wait": {
     "joy": "gentle smile, closed eyes",
     "anger": "stern, cold eyes, hand on katana",
     "sorrow": "sad smile, looking at sea",
@@ -897,7 +897,7 @@
    "identity": "1boy, male focus, young man, 20 years old, wolf boy, wolf ears, wolf tail, athletic, grey hair, ash grey hair, short hair, spiky hair, amber eyes, round eyes, thick eyebrows, scar on nose, bandage on cheek, white headband, navy blue short kimono, rolled-up sleeves, braided bracelet of seven cords, katana at waist",
    "tags": "pointing the wrong way, fist on chest",
    "face": "big grin, teeth",
-   "variants": {
+   "variants_wait": {
     "joy": "laughing, closed eyes, thumbs up",
     "anger": "angry, fangs, shouting",
     "sorrow": "teary eyes, biting lip",
@@ -914,7 +914,7 @@
    "identity": "1boy, male focus, young man, elf, pointy ears, slender, pale skin, dark blue hair, blue-black hair, medium hair, parted bangs, green eyes, narrow eyes, thin eyebrows, round glasses, dark circles under eyes, dark green scholar robe, many keys on belt, rolled papers under arm",
    "tags": "holding a scalpel and an anatomy sketch",
    "face": "expressionless",
-   "variants": {
+   "variants_wait": {
     "joy": "faint smile, adjusting glasses",
     "anger": "cold glare, frown",
     "sorrow": "looking down, expressionless, holding papers",
@@ -930,7 +930,7 @@
    "identity": "1girl, adult woman, 31 years old, soldier, dark blonde hair, hair bun, medium hair, blue eyes, sharp eyes, worried eyebrows, dark circles under eyes, grey padded gambeson, steel pauldron, many small name patches sewn on sleeve, spear on back",
    "tags": "holding a ledger and a quill",
    "face": "expressionless, serious",
-   "variants": {
+   "variants_wait": {
     "joy": "small smile, slight blush",
     "anger": "annoyed, frown",
     "sorrow": "teary eyes, looking down, sewing",
@@ -946,7 +946,7 @@
    "identity": "1girl, adult woman, 27 years old, bird girl, hawk wings on back, brown wings, one wing with black feathers, tall, slender, dark brown hair, long hair, golden eyes, sharp eyes, scar on cheek, old leather collar on neck, dark red leather armor, spear",
    "tags": "perched on a rock, wings half spread",
    "face": "confident smirk",
-   "variants": {
+   "variants_wait": {
     "joy": "wide eyes, sparkling eyes, holding a round pastry",
     "anger": "fierce, battle smile, wings spread",
     "sorrow": "looking down, touching collar",
@@ -963,7 +963,7 @@
    "identity": "1boy, male focus, adult, middle-aged man, 50 years old, stocky, broad shoulders, brown hair, receding hairline, short hair, brown eyes, smiling eyes, bushy eyebrows, stubble, wrinkles, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel",
    "tags": "holding a wine bottle, shovel on shoulder",
    "face": "grin",
-   "variants": {
+   "variants_wait": {
     "joy": "laughing, mouth open",
     "anger": "angry, shouting",
     "sorrow": "singing, closed eyes, solemn",
@@ -980,7 +980,7 @@
    "identity": "1boy, male focus, old man, 66 years old, rat ears, round ears, very short, hunched back, white hair, short hair, messy hair, black eyes, round eyes, bushy white eyebrows, white beard, wrinkles, patched brown tunic, frayed bell rope tied at waist",
    "tags": "raising a walking stick, pretending to ring a bell",
    "face": "proud grin",
-   "variants": {
+   "variants_wait": {
     "joy": "laughing, closed eyes",
     "anger": "angry, red face, shouting",
     "sorrow": "sad, looking up at bell tower",

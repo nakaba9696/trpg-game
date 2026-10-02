@@ -39,7 +39,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
   }
   if (vids.length < 8 || vids.length > 20) F(`差分のある人が ${vids.length} 人（仲間（キャラメモ 8 人と C4 の 4 人）＋主要な数人、20 人まで）`);
-  for (const id of Object.keys(D.C2_PEOPLE)) if (D.C2_PEOPLE[id].join && !vids.includes(id)) F(`仲間になる ${id} に差分（variants）が無い`);
+  // 差分の予算（20 人）を越える仲間（C5〜C8）は、喜怒哀楽のタグを variants_wait に書いて待たせる（生成の道具は読まない。予算を決め直したら variants に移す）
+  const wait = new Set(list.filter((p) => p.variants_wait && MOODS.every((m) => p.variants_wait[m])).map((p) => p.id));
+  for (const id of Object.keys(D.C2_PEOPLE)) if (D.C2_PEOPLE[id].join && !vids.includes(id) && !wait.has(id)) F(`仲間になる ${id} に差分（variants か、予算待ちの variants_wait）が無い`);
 
   // assets/ に置いた差分の絵は、variants のある人のもの
   const dir = new URL("../../assets/portraits/", import.meta.url);
