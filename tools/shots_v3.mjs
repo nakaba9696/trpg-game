@@ -13,7 +13,7 @@ const ONLY = process.argv[4] ? process.argv[4].split(",") : null; // 一部だ�
 const FOES = ["goblin", "barrelgob", "wolf", "slime", "orc", "spider", "wyvern", "mimic", "blackknight", "chimera", "bonedragon", "graw"];
 const browser = await pw.chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, deviceScaleFactor: 1 });
-await page.goto(pathToFileURL(new URL("../dist/morsveld.html", import.meta.url).pathname).href);
+await page.goto(pathToFileURL(new URL("../dist/site/index.html", import.meta.url).pathname).href);
 await page.waitForFunction(() => window.G && G.paintMonster && G.drawPortrait);
 const sheet = async (kind) => {
   const data = await page.evaluate(({ kind, FOES, K, ONLY }) => {
