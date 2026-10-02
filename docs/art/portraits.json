@@ -32,7 +32,7 @@
    "name": "ディル",
    "type": "bishonen",
    "file": "assets/portraits/dil.webp",
-   "identity": "1boy, male focus, adult, young man, 24 years old, lean, fair skin, black hair, dark hair, short hair, messy spiky hair, swept bangs, dark brown eyes, sharp eyes, thin eyebrows, untucked white shirt, open collar, rolled-up sleeves, worn brown vest, brown leather belt, daggers on belt, pencil behind ear, narrow face, pointed chin",
+   "identity": "1boy, male focus, adult, young man, 24 years old, lean, tan skin, black hair, dark hair, short hair, messy spiky hair, swept bangs, amber eyes, sharp eyes, thin eyebrows, untucked white shirt, open collar, rolled-up sleeves, worn brown vest, brown leather belt, daggers on belt, pencil behind ear, narrow face, pointed chin",
    "tags": "hand in pocket, holding an old book with a torn cover",
    "face": "sly smirk",
    "variants": {
@@ -53,7 +53,7 @@
    "name": "カイデル",
    "type": "ojisan",
    "file": "assets/portraits/kaidel.webp",
-   "identity": "1boy, male focus, adult, man, 30 years old, muscular, broad shoulders, tan skin, black hair, jet black hair, short hair, messy hair, black eyes, droopy eyes, thick eyebrows, stubble, scar on face, bandages on arms, worn dark grey martial arts gi, open collar, torn sleeves, black martial arts belt, rugged face, square jaw",
+   "identity": "1boy, male focus, adult, man, 30 years old, muscular, broad shoulders, tan skin, black hair, jet black hair, short hair, short topknot, red headband, black eyes, droopy eyes, thick eyebrows, stubble, scar on face, bandages on arms, worn dark grey martial arts gi, open collar, torn sleeves, black martial arts belt, rugged face, square jaw",
    "tags": "hands behind head",
    "face": "big grin",
    "variants": {
@@ -91,6 +91,7 @@
   {
    "id": "sheila",
    "group": "c2",
+   "kin": "leonest",
    "name": "シェイラ",
    "file": "assets/portraits/sheila.webp",
    "identity": "1girl, princess, 18 years old, petite, slim, pale skin, white hair, silver-white hair, long hair, straight hair, long bangs, hair between eyes, blue eyes, light blue eyes, half-closed eyes, sleepy eyes, thin eyebrows, silver hair clip, blue hooded cloak, white dress, blue gem pendant",
@@ -134,7 +135,7 @@
    "group": "c2",
    "name": "ゼリナ",
    "file": "assets/portraits/zerina.webp",
-   "identity": "1girl, 23 years old, slim, light skin, light brown hair, honey brown hair, short hair, side bangs, green eyes, bright eyes, thick eyebrows, brown wide-brimmed hat with a red feather, white blouse, green merchant vest, brown leather coin pouch, large backpack",
+   "identity": "1girl, 23 years old, slim, light skin, red hair, copper red hair, medium hair, hair pulled back, low bun, side bangs, green eyes, bright eyes, thick eyebrows, brown wide-brimmed hat with a red feather, white blouse, green merchant vest, brown leather coin pouch, large backpack",
    "tags": "confident, hand on hip, holding an abacus",
    "face": "closed eyes, big grin",
    "variants": {
@@ -175,9 +176,9 @@
    "group": "c2",
    "name": "ナタリア",
    "file": "assets/portraits/natalia.webp",
-   "identity": "1girl, 24 years old, athletic, fair skin, black hair, glossy black hair, long hair, single braid, blunt bangs, dark brown eyes, half-closed eyes, thin eyebrows, blush, dark blue martial arts uniform, white sash, hand wraps",
-   "tags": "martial artist, drunk, hand on hip, holding a sake bottle",
-   "face": "grin",
+   "identity": "1girl, 24 years old, athletic, fair skin, black hair, glossy black hair, long hair, single braid, blunt bangs, dark brown eyes, thin eyebrows, dark blue martial arts uniform, white sash, hand wraps",
+   "tags": "martial artist, hand on hip, holding a sake bottle",
+   "face": "grin, drunk, blush, half-closed eyes",
    "variants": {
     "joy": "smile, closed eyes, happy",
     "anger": "angry, glaring, frown, clenched teeth",
@@ -193,6 +194,7 @@
   {
    "id": "valeon",
    "group": "c2",
+   "kin": "leonest",
    "name": "ヴァレオン",
    "type": "ojisan",
    "file": "assets/portraits/valeon.webp",
@@ -213,6 +215,7 @@
   {
    "id": "raios",
    "group": "c2",
+   "kin": "leonest",
    "name": "ライオス",
    "type": "classic",
    "file": "assets/portraits/raios.webp",
@@ -233,10 +236,11 @@
   {
    "id": "serios",
    "group": "c2",
+   "kin": "leonest",
    "name": "セリオス",
    "type": "bishonen",
    "file": "assets/portraits/serios.webp",
-   "identity": "1boy, male focus, adult, prince, 30 years old, tall, slender, pale skin, silver hair, platinum silver hair, long hair, straight hair, side-swept bangs, violet eyes, half-closed eyes, sleepy eyes, thin eyebrows, handsome, dark grey long coat, white cravat, blue gem brooch, paint stains",
+   "identity": "1boy, male focus, adult, prince, 30 years old, tall, slender, pale skin, silver hair, platinum silver hair, medium hair, wavy hair, side-swept bangs, violet eyes, half-closed eyes, sleepy eyes, thin eyebrows, handsome, dark grey long coat, white cravat, blue gem brooch, paint stains",
    "tags": "hand on chin, holding a paintbrush",
    "face": "aloof",
    "variants": {
@@ -253,6 +257,7 @@
   {
    "id": "farina",
    "group": "c2",
+   "kin": "leonest",
    "name": "ファリナ",
    "file": "assets/portraits/farina.webp",
    "identity": "1girl, princess, 28 years old, slim, pale skin, black hair, blue-black hair, long hair, low ponytail, straight bangs, grey eyes, narrow eyes, cold eyes, thin eyebrows, silver-rimmed glasses, dark blue noble dress, high collar, silver chain necklace",
@@ -272,6 +277,7 @@
   {
    "id": "greol",
    "group": "c2",
+   "kin": "leonest",
    "name": "グレオル",
    "type": "classic",
    "file": "assets/portraits/greol.webp",
@@ -292,6 +298,7 @@
   {
    "id": "neilas",
    "group": "c2",
+   "kin": "leonest",
    "name": "ネイラス",
    "type": "bishonen",
    "file": "assets/portraits/neilas.webp",
@@ -313,6 +320,7 @@
   {
    "id": "tiria",
    "group": "c2",
+   "kin": "leonest",
    "name": "ティリア",
    "file": "assets/portraits/tiria.webp",
    "identity": "1girl, princess, 23 years old, slim, fair skin, chestnut hair, soft brown hair, long hair, single braid over shoulder, soft bangs, hazel eyes, gentle eyes, thin eyebrows, wheat ear in hair, dirt on cheek, neat modest green dress, white collar",
@@ -333,9 +341,9 @@
    "id": "sixth",
    "group": "c2",
    "name": "オルヴェイン（第六騎士団の団長）",
-   "type": "bishonen",
+   "type": "classic",
    "file": "assets/portraits/sixth.webp",
-   "identity": "1boy, male focus, adult, knight captain, 33 years old, tall, slim, pale skin, black hair, white streak in hair, medium hair, long bangs, black eyes, narrow eyes, cold eyes, thin eyebrows, black plate armor, silver crest, black cape, sword at hip",
+   "identity": "1boy, male focus, adult, knight captain, 33 years old, tall, slim, pale skin, black hair, white streak in hair, medium hair, slicked back hair, golden eyes, narrow eyes, cold eyes, thin eyebrows, black plate armor, silver crest, black cape, sword at hip",
    "tags": "hand on sword hilt",
    "face": "expressionless",
    "variants": {
@@ -354,7 +362,7 @@
    "group": "c2",
    "name": "アンジェリカ",
    "file": "assets/portraits/angelica.webp",
-   "identity": "1girl, woman, 31 years old, fit, light skin, dirty blonde hair, ash blonde hair, long hair, hair bun, side bangs, green eyes, sharp eyes, thick eyebrows, blue military cap, blue military uniform, light armor, gold medal, pistol in holster",
+   "identity": "1girl, woman, 31 years old, fit, light skin, blonde hair, honey blonde hair, medium hair, hair bun, side bangs, hazel eyes, sharp eyes, thick eyebrows, blue military cap, blue military uniform, light armor, gold medal, pistol in holster",
    "tags": "hand on hip",
    "face": "confident smile",
    "variants": {
@@ -375,7 +383,7 @@
    "name": "ロウェル（王国軍の隊長）",
    "type": "classic",
    "file": "assets/portraits/captain.webp",
-   "identity": "1boy, male focus, adult, man, 28 years old, broad shoulders, fair skin, dark brown hair, short hair, neat hair, brown eyes, calm eyes, thick eyebrows, stubble, blue military uniform, light armor, spear",
+   "identity": "1boy, male focus, adult, man, 28 years old, broad shoulders, fair skin, red hair, dark red hair, short hair, neat hair, green eyes, calm eyes, thick eyebrows, stubble, blue military uniform, light armor, spear",
    "tags": "standing at attention",
    "face": "calm, stoic",
    "variants": {
@@ -395,7 +403,7 @@
    "name": "モルヴァン（王国に雇われた博士）",
    "type": "ojisan",
    "file": "assets/portraits/doctor.webp",
-   "identity": "1boy, male focus, old man, 61 years old, thin, pale skin, white hair, thin white hair, short hair, receding hairline, pale grey eyes, round eyes, thin eyebrows, wrinkles, gold monocle, white lab coat, ring of keys on belt",
+   "identity": "1boy, male focus, old man, 61 years old, thin, pale skin, white hair, long hair, unkempt hair, low ponytail, pale grey eyes, round eyes, thin eyebrows, wrinkles, gold monocle, white lab coat, ring of keys on belt",
    "tags": "hands behind back, holding a small vial",
    "face": "creepy smile",
    "variants": {
@@ -453,7 +461,7 @@
    "group": "c2",
    "name": "フェリダ",
    "file": "assets/portraits/ferida.webp",
-   "identity": "1girl, 26 years old, athletic, fair skin, blonde hair, golden blonde hair, long hair, high ponytail, blue eyes, sharp eyes, thin eyebrows, gold lightning bolt hair ornament, white plate armor, gold crest, lance",
+   "identity": "1girl, 26 years old, athletic, tan skin, blonde hair, golden blonde hair, short hair, choppy hair, amber eyes, sharp eyes, thin eyebrows, gold lightning bolt hair ornament, light blue plate armor, gold crest, lance",
    "tags": "hand on hip",
    "face": "confident smirk",
    "variants": {
@@ -492,7 +500,7 @@
    "group": "c2",
    "name": "ライーシャ",
    "file": "assets/portraits/raisha.webp",
-   "identity": "1girl, 28 years old, slim, pale skin, dark grey hair, ash grey hair, long hair, straight hair, messy bangs, dark blue eyes, half-closed eyes, eye bags, glaring, thin eyebrows, black cloak, sword at hip",
+   "identity": "1girl, 28 years old, slim, pale skin, purple hair, dark purple hair, long hair, messy hair, messy bangs, dark blue eyes, half-closed eyes, eye bags, glaring, thin eyebrows, black cloak, sword at hip",
    "tags": "slouching",
    "face": "bored expression",
    "variants": {
@@ -513,7 +521,7 @@
    "type": "ojisan",
    "file": "assets/portraits/zork.webp",
    "identity": "1boy, male focus, adult, man, 43 years old, wiry, tan skin, grey hair, steel grey hair, short hair, receding hairline, grey eyes, sharp eyes, thick eyebrows, black eyepatch, scar, stubble, black wide-brimmed hat, dark long coat, chain, sword",
-   "tags": "thumb hooked in belt, holding a wanted poster",
+   "tags": "thumb hooked in belt, hand on sword hilt",
    "face": "smirk",
    "variants": {
     "joy": "grin",
@@ -568,10 +576,11 @@
   {
    "id": "greiol",
    "group": "c2",
+   "kin": "nordia",
    "name": "グレイオル",
    "type": "ojisan",
    "file": "assets/portraits/greiol.webp",
-   "identity": "1boy, male focus, adult, emperor, 42 years old, very tall, muscular, pale skin, black hair, jet black hair, short hair, slicked back hair, ice blue eyes, sharp eyes, thick eyebrows, scars, scar on chin, black military uniform, silver-white fur cape, sword at hip, gaunt cheeks, hard jawline",
+   "identity": "1boy, male focus, adult, emperor, 42 years old, very tall, muscular, pale skin, ash blonde hair, short hair, swept back hair, ice blue eyes, sharp eyes, thick eyebrows, scars, scar on chin, black military uniform, silver-white fur cape, sword at hip, gaunt cheeks, hard jawline",
    "tags": "hand on sword hilt",
    "face": "expressionless",
    "variants": {
@@ -631,7 +640,7 @@
    "name": "ヴァルグ",
    "type": "ojisan",
    "file": "assets/portraits/valg.webp",
-   "identity": "1boy, male focus, adult, wolf boy, man, 33 years old, muscular, tan skin, grey hair, silver grey hair, medium hair, wild hair, grey wolf ears, grey wolf tail, golden eyes, sharp eyes, thick eyebrows, fangs, scar across nose, stubble, dark leather armor, fang necklace, sword at hip",
+   "identity": "1boy, male focus, adult, wolf boy, man, 33 years old, muscular, tan skin, grey hair, silver grey hair, medium hair, wild hair, grey wolf ears, grey wolf tail, ice blue eyes, sharp eyes, thick eyebrows, fangs, scar across nose, stubble, dark leather armor, fang necklace, sword at hip",
    "tags": "crossed arms",
    "face": "fierce grin",
    "variants": {
@@ -667,9 +676,10 @@
   {
    "id": "katia",
    "group": "c2",
+   "kin": "nordia",
    "name": "カティア",
    "file": "assets/portraits/katia.webp",
-   "identity": "1girl, princess, 19 years old, athletic, fair skin, blonde hair, golden blonde hair, long hair, ponytail, white hair ribbon, blue eyes, bright eyes, straight eyebrows, white plate armor, gold crest, sword at hip",
+   "identity": "1girl, princess, 19 years old, athletic, fair skin, blonde hair, golden blonde hair, long hair, straight hair, half updo, white hair ribbon, blue eyes, determined eyes, straight eyebrows, white knight cloak over dark blue tunic, sword at hip",
    "tags": "hand on sword hilt",
    "face": "determined, serious expression",
    "variants": {
@@ -689,7 +699,7 @@
    "group": "c2",
    "name": "アリシア",
    "file": "assets/portraits/alicia.webp",
-   "identity": "1girl, elf, high elf, long pointy ears, young woman, slim, fair skin, blonde hair, platinum blonde hair, medium hair, hair between eyes, blue eyes, sharp eyes, piercing gaze, thin eyebrows, gold circlet, white noble dress, green gem, rapier at hip",
+   "identity": "1girl, elf, high elf, long pointy ears, young woman, slim, fair skin, blonde hair, golden blonde hair, medium hair, wavy hair, hair between eyes, golden eyes, sharp eyes, piercing gaze, thin eyebrows, gold circlet, white noble dress, green gem, rapier at hip",
    "tags": "crossed arms",
    "face": "haughty",
    "variants": {
@@ -739,7 +749,7 @@
    "name": "微笑の使徒カルマトス",
    "type": "bishonen",
    "file": "assets/portraits/mirza.webp",
-   "identity": "1boy, male focus, adult, young man, beautiful, androgynous face, pale skin, silver hair, long hair, straight hair, red eyes, glowing eyes, luxurious dark blue robe, gold embroidery, wide sleeves, too many rings, puppet strings on fingers",
+   "identity": "1boy, male focus, adult, young man, beautiful, androgynous face, pale skin, silver hair, short hair, hair over one eye, red eyes, glowing eyes, luxurious dark blue robe, gold embroidery, wide sleeves, too many rings, puppet strings on fingers",
    "tags": "holding a red parasol, looking down on viewer, dark aura",
    "face": "gentle smile",
    "variants": {
@@ -759,7 +769,7 @@
    "name": "砂塵の使徒ドレイゼ",
    "type": "ojisan",
    "file": "assets/portraits/zalve.webp",
-   "identity": "1boy, male focus, adult, man, 45 years old, gaunt, tan skin, dark brown hair, short hair, messy hair, stubble, narrow eyes, brown eyes, ringed eyes, silver monocle, cracks of light on skin, hair crumbling into sand, white shirt, rolled-up sleeves, black necktie, sand-colored vest, money changer",
+   "identity": "1boy, male focus, adult, man, 45 years old, gaunt, tan skin, dark brown hair, short hair, swept back hair, stubble, narrow eyes, amber eyes, ringed eyes, silver monocle, cracks of light on skin, hair crumbling into sand, white shirt, rolled-up sleeves, black necktie, sand-colored vest, money changer",
    "tags": "hourglass, sand spilling from sleeves",
    "face": "smirk",
    "variants": {
@@ -862,7 +872,7 @@
    "name": "剣翼の使徒ヴァルグレア",
    "type": "ojisan",
    "file": "assets/portraits/azlag.webp",
-   "identity": "1boy, male focus, adult, man, 40 years old, huge man, blonde hair, short hair, slicked back hair, golden eyes, glowing eyes, slit pupils, stubble, feathers in hair, black coat, white shirt, one black bird wing made of blades",
+   "identity": "1boy, male focus, adult, man, 40 years old, huge man, blonde hair, short hair, spiky hair, golden eyes, glowing eyes, slit pupils, stubble, feathers in hair, charcoal grey coat, white shirt, one black bird wing made of blades",
    "tags": "crossed arms",
    "face": "frown",
    "variants": {
@@ -882,7 +892,7 @@
    "name": "百面の使徒ディエラン（北の賢人）",
    "type": "elder",
    "file": "assets/portraits/chezar.webp",
-   "identity": "1boy, male focus, adult, old man, 72 years old, white hair, slicked back hair, grey eyes, monocle, mustache, mask-like face, porcelain skin, cracked skin, noble military coat, many masks hanging at belt, eyes on clothing",
+   "identity": "1boy, male focus, adult, old man, 72 years old, white hair, short hair, slicked back hair, grey eyes, monocle, mustache, mask-like face, porcelain skin, cracked skin, noble military coat, many masks hanging at belt, eyes on clothing",
    "tags": "holding a chess piece",
    "face": "expressionless",
    "variants": {
@@ -921,7 +931,7 @@
    "name": "灰色の外套の旅人（三度目に会うとノエと名乗る）",
    "type": "ojisan",
    "file": "assets/portraits/walker.webp",
-   "tags": "1boy, male focus, adult, man, ageless, brown hair, short hair, half-closed eyes, gentle smile, stubble, old grey cloak, traveler",
+   "tags": "1boy, male focus, adult, man, ageless, dark blonde hair, medium hair, messy hair, half-closed eyes, gentle smile, stubble, old grey cloak, traveler",
    "memo": "年の分からない旅人。何でも珍しそうに喜ぶ"
   },
   {
@@ -1038,7 +1048,7 @@
    "group": "c2",
    "name": "トゥーラ",
    "file": "assets/portraits/tula.webp",
-   "identity": "1girl, teenage girl, 14 years old, short, stocky, small, tan skin, chestnut brown hair, brown hair, short hair, messy hair, bear ears, round ears, amber eyes, round eyes, thick eyebrows, bandaged knuckles, dirt on cheek, oversized padded brown work jacket, rolled-up sleeves, fur cap, wooden carrying frame on back",
+   "identity": "1girl, teenage girl, 14 years old, short, stocky, small, tan skin, chestnut brown hair, brown hair, short hair, messy hair, bear ears, round ears, green eyes, round eyes, thick eyebrows, bandaged knuckles, bandage on nose, oversized padded brown work jacket, rolled-up sleeves, fur cap, wooden carrying frame on back",
    "tags": "arms crossed",
    "face": "scowl, frown",
    "variants": {
@@ -1117,7 +1127,7 @@
    "name": "ゲルハルト",
    "type": "ojisan",
    "file": "assets/portraits/gerhard.webp",
-   "identity": "1boy, male focus, adult, old man, 56 years old, very tall, muscular, broad shoulders, tan skin, grey hair, ash grey hair, short hair, crew cut, blue eyes, sharp eyes, thick eyebrows, short grey beard, scar across nose, deep wrinkles, battered dark steel armor, fur-lined cloak, greatsword on back",
+   "identity": "1boy, male focus, adult, old man, 56 years old, very tall, muscular, broad shoulders, tan skin, grey hair, ash grey hair, short hair, crew cut, green eyes, sharp eyes, thick eyebrows, short grey beard, scar across eyebrow, deep wrinkles, battered dark steel armor, fur-lined cloak, greatsword on back",
    "tags": "crouching, holding a small wooden horse toy",
    "face": "big grin",
    "variants": {
@@ -1196,7 +1206,7 @@
    "name": "イオリ",
    "type": "bishonen",
    "file": "assets/portraits/iori.webp",
-   "identity": "1boy, male focus, adult, young man, 19 years old, slender, frail, very pale skin, black hair, blue-black hair, long hair, low tied hair, side bangs, grey eyes, sleepy eyes, eye bags, thin eyebrows, pale lavender kimono, dark haori, white hand towel in sleeve",
+   "identity": "1boy, male focus, adult, young man, 19 years old, slender, frail, very pale skin, black hair, blue-black hair, long hair, low tied hair, side bangs, violet eyes, sleepy eyes, eye bags, thin eyebrows, pale lavender kimono, dark haori, white hand towel in sleeve",
    "tags": "sitting before a game board, holding a game piece",
    "face": "sleepy, looking down",
    "variants": {
@@ -1236,7 +1246,7 @@
    "name": "ヴォルフラム",
    "type": "ojisan",
    "file": "assets/portraits/wolfram.webp",
-   "identity": "1boy, male focus, adult, old man, 58 years old, very tall, muscular, broad shoulders, weathered skin, white hair, grey hair, short hair, crew cut, blue eyes, round eyes, thick white eyebrows, full white beard, scar across cheek, deep wrinkles, old dented steel cuirass over brown padded tunic, fur-lined cloak, bare knuckles, wrapped hands",
+   "identity": "1boy, male focus, adult, old man, 58 years old, very tall, muscular, broad shoulders, weathered skin, white hair, short hair, combed back hair, black eyes, round eyes, thick white eyebrows, full white beard, scar across cheek, deep wrinkles, old dented steel cuirass over brown padded tunic, bare knuckles, wrapped hands",
    "tags": "holding a large wooden ladle, standing by a big cooking pot",
    "face": "big grin, confused",
    "variants": {
@@ -1257,7 +1267,7 @@
    "name": "ハルトムート",
    "type": "brute",
    "file": "assets/portraits/hartmut.webp",
-   "identity": "1boy, male focus, adult, middle-aged man, 47 years old, huge man, burly, very muscular, big belly, tan skin, dark brown hair, black-brown hair, short hair, messy hair, brown eyes, small eyes, thick eyebrows, full beard, coal dust on face, scar on forehead, worn leather miner apron over grey shirt, rolled-up sleeves, leather gloves, pickaxe on shoulder",
+   "identity": "1boy, male focus, adult, middle-aged man, 47 years old, huge man, burly, very muscular, big belly, tan skin, dark brown hair, medium hair, curly hair, green eyes, small eyes, thick eyebrows, full beard, coal dust on face, scar on forehead, worn leather miner apron over grey shirt, rolled-up sleeves, leather gloves, pickaxe on shoulder",
    "tags": "holding a crumpled sheet of paper, reading aloud",
    "face": "embarrassed, frown, blush",
    "variants": {
@@ -1278,7 +1288,7 @@
    "name": "グスタフ",
    "type": "ojisan",
    "file": "assets/portraits/gustav.webp",
-   "identity": "1boy, male focus, adult, middle-aged man, 41 years old, short, wiry, rat ears, rat tail, grey hair, ash grey hair, short hair, slicked back hair, black eyes, narrow eyes, thin eyebrows, stubble, scar on chin, gold earring, red open vest over bare arms, leather bracers, gladiator belt, short sword at hip, coin pouch",
+   "identity": "1boy, male focus, adult, middle-aged man, 41 years old, short, wiry, rat ears, rat tail, grey hair, ash grey hair, short hair, slicked back hair, black eyes, narrow eyes, thin eyebrows, scar on chin, gold earring, red open vest over bare arms, leather bracers, gladiator belt, short sword at hip, coin pouch",
    "tags": "tossing a handful of sand, smirking over shoulder",
    "face": "sly grin",
    "variants": {
@@ -1340,7 +1350,7 @@
    "group": "c2",
    "name": "イングリット",
    "file": "assets/portraits/ingrid.webp",
-   "identity": "1girl, adult, woman, 33 years old, slender, pale skin, black hair, jet black hair, short hair, bob cut, red eyes, half-closed eyes, eye bags, thin eyebrows, round glasses, white doctor coat over dark dress, rolled sleeves, leather gloves, small bag of scalpels",
+   "identity": "1girl, adult, woman, 33 years old, slender, pale skin, black hair, jet black hair, short hair, hime cut, red eyes, half-closed eyes, eye bags, thin eyebrows, round glasses, white doctor coat over dark dress, rolled sleeves, leather gloves, small bag of scalpels",
    "tags": "pinching someone's sleeve, holding a honey cake",
    "face": "expressionless",
    "variants": {
@@ -1360,7 +1370,7 @@
    "group": "c2",
    "name": "ルミア",
    "file": "assets/portraits/lumia.webp",
-   "identity": "1girl, child, 11 years old, small, petite, pointy ears, elf, pale skin, light blue hair, silver blue hair, very long hair, cyan eyes, sleepy eyes, thin eyebrows, silver circlet, oversized pale blue robe, long sleeves, blanket over shoulders, small wooden staff",
+   "identity": "1girl, child, 11 years old, small, petite, pointy ears, elf, pale skin, white hair, pale blue-tinged white hair, very long hair, green eyes, sleepy eyes, thin eyebrows, silver circlet, oversized pale green robe, long sleeves, blanket over shoulders, small wooden staff",
    "tags": "yawning, sitting under a tree",
    "face": "sleepy, smug",
    "variants": {
@@ -1380,7 +1390,7 @@
    "group": "c2",
    "name": "ジークリンデ",
    "file": "assets/portraits/sieglinde.webp",
-   "identity": "1girl, adult, woman, 31 years old, tall, athletic, fair skin, blonde hair, ash blonde hair, long hair, high ponytail, blue eyes, sharp eyes, straight eyebrows, scar on chin, dark blue military coat over steel cuirass, officer insignia, fur collar, spear",
+   "identity": "1girl, adult, woman, 31 years old, tall, athletic, fair skin, blonde hair, ash blonde hair, long hair, high ponytail, violet eyes, sharp eyes, straight eyebrows, scar on chin, dark blue military coat over steel cuirass, officer insignia, fur collar, spear",
    "tags": "saluting, snow falling",
    "face": "serious, calm",
    "variants": {
@@ -1441,7 +1451,7 @@
    "name": "オトマール",
    "type": "ojisan",
    "file": "assets/portraits/otmar.webp",
-   "identity": "1boy, male focus, adult, old man, 63 years old, stocky, broad shoulders, weathered skin, grey hair, steel grey hair, short hair, receding hairline, grey eyes, narrow eyes, heavy eyebrows, scar on lip, deep wrinkles, black fur-trimmed coat, gold chain, ledger book",
+   "identity": "1boy, male focus, adult, old man, 63 years old, stocky, broad shoulders, weathered skin, grey hair, steel grey hair, short hair, receding hairline, black eyes, heavy-lidded eyes, heavy eyebrows, broken nose, deep wrinkles, black fur-trimmed coat, gold chain, ledger book",
    "tags": "holding a snow shovel",
    "face": "cold stare",
    "variants": {
