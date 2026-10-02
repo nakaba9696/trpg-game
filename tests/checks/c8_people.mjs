@@ -1,6 +1,6 @@
 // C8：仲間にできる主要な人物（src/data/c8_people.js・events_c8.js・zc8_people.js・engine/zzzz_c8_people.js）
 // - 仲間 10 人＋周りの名のある人 4〜6 人。仲間は男女・種族（人でない者が半分以上）・型が散っている。男の仲間は渋いおっさん（ojisan）がいちばん多い
-// - 恋と結婚の相手（join.romance）は 3 人。18 歳以上で子どもの姿でない。人でない者を含む。romance が false の人は noLove も付いている
+// - 恋と結婚の相手（romance: true。R1 の仕組み・docs/romance.md）は 3 人。18 歳以上で子どもの姿でない。人でない者を含む。ほかの仲間は恋の相手にならない
 // - どの人にも、混ぜた型（mix）・ギャップ・過去・好感度の始まり・名前と役職の札・人物図鑑・立ち絵のタグ（男は type。仲間は差分）
 // - 仲間には会話を書く子へのメモ（口調・一人称・好き・嫌い・話題・相性）がある。相性の相手は C8 の仲間
 // - 出来事は 2〜4 個（ふつうに起きる出会いがある）。存在しない場所・人・続き・敵を指していない。仲間はその人だけの話が二つ以上
@@ -45,20 +45,16 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   for (const id of ids) if (names.has(P[id] && P[id].name) || names.has(((D.C3_NAMES || {})[id] || {}).name)) F(`${id}: 名前がほかの人（${names.get(P[id].name) || names.get(D.C3_NAMES[id].name)}）と被る`);
 
   // ---------------------------------------------------------------- 恋と結婚
-  const love = mates.filter((id) => P[id] && P[id].join && P[id].join.romance === true);
+  const love = mates.filter((id) => P[id] && P[id].romance === true);
   if (love.length !== 3) F(`恋と結婚の相手が 3 人でない：${love.join("・")}`);
   if (!love.some((id) => nonHuman.includes(id))) F("恋の相手に人でない者がいない");
   for (const id of love) {
     const p = P[id];
-    if (p.age < 18 || p.childLook || p.join.noLove) F(`${id}: 恋の相手なのに 18 歳未満か子どもの姿か noLove`);
+    if (p.age < 18 || p.childLook) F(`${id}: 恋の相手なのに 18 歳未満か子どもの姿`);
     const v = D.C2_VOICE[id] || {};
     for (const k of ["spark", "confess", "propose", "part", "cold"]) if (!v[k]) F(`${id}: 恋のひとこと ${k} が無い`);
   }
-  for (const id of mates) {
-    const j = P[id] && P[id].join;
-    if (!j || typeof j.romance !== "boolean") F(`${id}: join.romance が true/false でない`);
-    else if (!j.romance && !j.noLove) F(`${id}: romance が false なのに noLove が無い`);
-  }
+  for (const id of mates) if (P[id] && P[id].join && (P[id].join.romance !== undefined || P[id].join.noLove)) F(`${id}: 恋の印は R1 の形（人物の romance）だけにする（join.romance・noLove を使わない）`);
 
   // ---------------------------------------------------------------- 一人ずつ
   const portraits = JSON.parse(readFileSync(path.join(ROOT, "docs/art/portraits.json"), "utf8")).portraits;

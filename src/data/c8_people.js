@@ -5,7 +5,7 @@
 //   c8: true の人は、キャラメモ（シート）の人ではない印。
 //   kin は R1 の種族の表に無い血筋（ゴブリン・竜の血）。仕組みの上の種族（race）は近いものに寄せる（R1 の作成画面には足さない）。
 //   childLook: true は子どもの姿の人（年経た者でも）。恋の相手にしない（src/engine/zzz_love_age.js）。
-//   join.romance：恋と結婚の相手になるか（持ち主の方針で、仲間 50 人のうち 20 人ほど。C8 は 3 人）。false の人は noLove も付けて、今の M10 でも恋の相手にしない。
+//   romance: true：恋と結婚の相手になる（R1 の src/engine/zzzz_romance.js。一覧は docs/romance.md。C8 は 3 人）。無い人は情の出来事になる。
 // 出来事は src/data/events_c8.js、図鑑の説明・名前の札・用語説明は src/data/zc8_people.js、好感度の始まりは src/engine/zzzz_c8_people.js（F3 の初対面の値）。
 //
 // D.C8_PEOPLE[id]：作った人物の控え（GM・作る子のため。プレイヤーには見せない）
@@ -121,10 +121,10 @@
   Object.assign(D.C2_PEOPLE, {
     // ================================================================ 仲間になる人
     gigra: P({
-      name: "ギグラ", full: "樽のギグラ", nation: "断界山脈", kin: "ゴブリン", role: "断界山脈の洞穴で密造酒を仕込む、はぐれゴブリンの女。強欲で卑怯で、口を開けば金の話。そのくせ子どもには甘く、褒められると酒樽に隠れる。昔、群れが人の村から連れてきた子を一人逃がして、群れを追われた", sex: "女", age: 28, race: "human",
+      name: "ギグラ", full: "樽のギグラ", nation: "断界山脈", kin: "ゴブリン", role: "断界山脈の洞穴で密造酒を仕込む、はぐれゴブリンの女。強欲で卑怯で、口を開けば金の話。そのくせ子どもには甘く、褒められると酒樽に隠れる。昔、群れが人の村から連れてきた子を一人逃がして、群れを追われた", sex: "女", age: 28, race: "human", romance: true,
       who: { kind: "rogue", sex: "女", age: 28, seed: "c2:gigra", look: { skin: "#8aa864", hair: "#2a2a1a", hairStyle: "messy", eyes: "sharp", iris: "#e0b030", mouth: "grin", brows: "raised", outfit: "rags", head: "bandana", gear: "daggers", chest: "coins", cloth: "#6a5030", build: "slim", ears: "pointy", marks: ["dirt", "earring"], bg: "#4a4a3a" } },
       join: {
-        cls: "密造酒の親分", desc: "金の分だけ働く。たぶん", power: 50, dmg: 2, trait: "greedy", bond: 50, home: ["fort"], romance: true,
+        cls: "密造酒の親分", desc: "金の分だけ働く。たぶん", power: 50, dmg: 2, trait: "greedy", bond: 50, home: ["fort"],
         life: { home: "断界山脈の、酒樽を並べた洞穴", kin: "昔、逃がした人の子", food: "焦がした茸と、自分の酒", habit: "銀貨を一枚ずつ噛んで、本物か確かめている", secret: "逃がした子の顔は覚えていない。泣き声だけ、今でも覚えている", keep: "底に名前を刻んだ小さな酒樽" },
         t: { sword: 1, spear: 0, bow: 1, magic: 0, pray: 0, stealth: 3, talk: 1, lore: 0, wild: 2 }, f: { drink: 2, dice: 1 },
       },
@@ -133,7 +133,7 @@
       name: "ヴァルドゥン", full: "ヴァルドゥン・ガルハイム", nation: "断界山脈", kin: "竜の血", role: "断界山脈の山の民の長。竜の血を引き、角と鱗がある大男。困れば自分が先頭で殴りに行く熱血漢で、民の暮らしを誰より考える。伝説の長として、山の外でも名が通っている。夜は押し花と詩の帳面をめくる。竜の墓場の骨を守る役目を、帰らない父から継いだ", sex: "男", age: 47, race: "human",
       who: { kind: "soldier", sex: "男", age: 47, seed: "c2:valdun", look: { skin: "#b0866a", hair: "#3a2a22", hairStyle: "wild", eyes: "sharp", iris: "#d89a30", mouth: "frown", brows: "angry", outfit: "armor", head: "horns", gear: "greatsword", chest: "none", cloth: "#4a3a2a", build: "broad", marks: ["scar", "beard"], bg: "#5a5048" } },
       join: {
-        cls: "山の民の長", desc: "山を下りるのは、民のためだけだ", power: 72, dmg: 3, trait: "soft", bond: 52, home: ["fort"], romance: false, noLove: true,
+        cls: "山の民の長", desc: "山を下りるのは、民のためだけだ", power: 72, dmg: 3, trait: "soft", bond: 52, home: ["fort"],
         life: { home: "断界山脈の中腹の、石積みの長の家", kin: "竜の墓場の奥へ行った父", food: "山羊の乳の粥", habit: "道ばたの小さな花を摘んで、帳面に挟んでいる", secret: "鱗が、年々増えている。数えるのを、去年やめた", keep: "押し花を挟んだ詩の帳面" },
         t: { sword: 3, spear: 2, bow: 0, magic: 0, pray: 1, stealth: 0, talk: 1, lore: 1, wild: 2 }, f: { beasts: 1, weather: 2 },
       },
@@ -142,7 +142,7 @@
       name: "ゲンサイ", full: "朧のゲンサイ", nation: "シェルアーク", role: "シェルアーク・朧島の顔役。糸目で、いつも笑い、はんなりした島言葉で物騒なことを言う。島のためなら卑劣な手も平気で使い、悪巧みを隠しもしない。そのくせ島の子どもの名前を全員覚えている。霧の夜に妻を見失った", sex: "男", age: 54, race: "human",
       who: { kind: "ronin", sex: "男", age: 54, seed: "c2:gensai", look: { hair: "#4a4a50", hairStyle: "topknot", eyes: "narrow", iris: "#3a3a3a", mouth: "smile", brows: "calm", outfit: "kimono", head: "none", gear: "none", chest: "none", cloth: "#2a2a3a", build: "slim", marks: ["stubble", "wrinkles"], bg: "#3a4a5a" } },
       join: {
-        cls: "島の顔役", desc: "損はさせへんよ。わしはね", power: 48, dmg: 1, trait: "distrust", bond: 50, home: ["yakumo"], romance: false, noLove: true,
+        cls: "島の顔役", desc: "損はさせへんよ。わしはね", power: 48, dmg: 1, trait: "distrust", bond: 50, home: ["yakumo"],
         life: { home: "朧島の桟橋の、灯籠のある家", kin: "霧の夜に見失った妻", food: "夜釣りの鯵の干物", habit: "賭け札を一枚、指のあいだで回している", secret: "霧の夜の灯の油代は、島の帳面ではなく、自分の財布から出している", keep: "妻の簪" },
         t: { sword: 1, spear: 0, bow: 0, magic: 0, pray: 0, stealth: 2, talk: 3, lore: 1, wild: 0 }, f: { fish: 2, dice: 2 },
       },
@@ -151,16 +151,16 @@
       name: "ツユハ", full: "ツユハ", nation: "シェルアーク", role: "島の都シェルアークの茶屋の縁台で昼寝をしている、子どもの背丈のエルフ。四百年生きていて、自分を「婆」と呼ばせる。おっとりしていて、母のように人の子の世話を焼く。刀を抜くと島でいちばん強い。流れ着いた仲間の、名の無い墓を守っている", sex: "女", age: 412, race: "elf", childLook: true,
       who: { kind: "ronin", sex: "女", age: 11, seed: "c2:tsuyuha", look: { hair: "#d8dce8", hairStyle: "long", eyes: "sleepy", iris: "#6a8ab0", mouth: "smile", brows: "calm", outfit: "kimono", head: "none", gear: "katana", chest: "none", cloth: "#8a3a3a", build: "slim", ears: "pointy", marks: [], bg: "#6a5a4a" } },
       join: {
-        cls: "茶屋の婆さま", desc: "婆は寝ていますよ。用があれば起こしなさい", power: 64, dmg: 3, heal: true, trait: "lazy", bond: 60, home: ["yakumo"], romance: false, noLove: true,
+        cls: "茶屋の婆さま", desc: "婆は寝ていますよ。用があれば起こしなさい", power: 64, dmg: 3, heal: true, trait: "lazy", bond: 60, home: ["yakumo"],
         life: { home: "島の都の茶屋の、日当たりのいい縁台", kin: "名の無い十三の墓", food: "渋い茶と、塩むすび", habit: "人の子の茶碗が空くと、黙っておかわりをよそう", secret: "墓は十三ある。名前は、一つも彫っていない。全部、覚えているから", keep: "鞘の擦り切れた刀" },
         t: { sword: 3, spear: 0, bow: 0, magic: 1, pray: 1, stealth: 1, talk: 1, lore: 2, wild: 0 }, f: { calm: 2, cook: 1, kids: 1 },
       },
     }),
     takimaru: P({
-      name: "タキマル", short: "タキ", full: "タキマル", nation: "シェルアーク", role: "島の都シェルアークの若い衆の頭。狼の獣人。字が読めず勘定もできず、道もよく間違える愛すべき馬鹿。仲間が危ないときだけ、誰より早く正しい道を選ぶ。去年、仲間と鬼ヶ島へ渡り、一人だけ帰ってきた", sex: "男", age: 20, race: "beast", beast: "wolf",
+      name: "タキマル", short: "タキ", full: "タキマル", nation: "シェルアーク", role: "島の都シェルアークの若い衆の頭。狼の獣人。字が読めず勘定もできず、道もよく間違える愛すべき馬鹿。仲間が危ないときだけ、誰より早く正しい道を選ぶ。去年、仲間と鬼ヶ島へ渡り、一人だけ帰ってきた", sex: "男", age: 20, race: "beast", romance: true, beast: "wolf",
       who: { kind: "ronin", sex: "男", age: 20, seed: "c2:takimaru", look: { hair: "#5a5a62", hairStyle: "spiky", eyes: "round", iris: "#c8a040", mouth: "grin", brows: "raised", outfit: "kimono", head: "headband", gear: "katana", chest: "none", cloth: "#2a3a5a", build: "normal", ears: "none", beast: "wolf", marks: ["scar", "bandage"], bg: "#3a5a7a" } },
       join: {
-        cls: "島の若い衆", desc: "兄貴、どっちっすか。……あ、こっちっすね", power: 60, dmg: 2, trait: "loyal", bond: 56, home: ["yakumo"], romance: true,
+        cls: "島の若い衆", desc: "兄貴、どっちっすか。……あ、こっちっすね", power: 60, dmg: 2, trait: "loyal", bond: 56, home: ["yakumo"],
         life: { home: "島の都の浜の、若い衆の番小屋", kin: "鬼ヶ島から帰らなかった七人", food: "浜で焼いた貝", habit: "朝、浜に出て、七人の名前を順に呼ぶ", secret: "七人の名前のうち、一人の顔だけ、もう思い出せない", keep: "七本の紐を編んだ腕輪" },
         t: { sword: 2, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 1, talk: 1, lore: 0, wild: 2 }, f: { fish: 1, nose: 2 },
       },
@@ -169,7 +169,7 @@
       name: "ユリエン", full: "ユリエン・ファルセ", nation: "エルメシア", role: "エル・ナフ遺構に入り浸る、学院を追われたエルフの学者。無表情で、恐ろしいことを淡々と提案する毒舌。魔物の腑分けが趣味で、食事中に平気でその話をする。自分で考えた二つ名を名乗り、誰も呼ばないとすねる。追われた元の論文は誰にも読ませない", sex: "男", age: 140, race: "elf",
       who: { kind: "mage", sex: "男", age: 24, seed: "c2:yurien", look: { hair: "#1e2a40", hairStyle: "parted", eyes: "narrow", iris: "#5ac8a0", mouth: "flat", brows: "calm", outfit: "robe", head: "none", gear: "staff", chest: "keys", cloth: "#2a3a3a", build: "slim", ears: "pointy", marks: ["glasses", "bags"], bg: "#2a3a4a" } },
       join: {
-        cls: "追われた学者", desc: "解剖の手が足りないのです。……冗談ですよ。半分は", power: 46, dmg: 1, fire: true, trait: "cold", bond: 50, home: ["nerva"], romance: false, noLove: true,
+        cls: "追われた学者", desc: "解剖の手が足りないのです。……冗談ですよ。半分は", power: 46, dmg: 1, fire: true, trait: "cold", bond: 50, home: ["nerva"],
         life: { home: "港町の古本屋の二階の、骨と紙の部屋", kin: "学院の同期だった、今の研究所の所長", food: "苦い茶と、乾いた堅焼き", habit: "誰かの手首を見ると、骨の数を小声で数える", secret: "石碑の刻印の写しは七十一枚。最後の一枚の場所は、写していない", keep: "書き込みだらけの解剖図" },
         t: { sword: 0, spear: 0, bow: 0, magic: 3, pray: 0, stealth: 1, talk: 0, lore: 3, wild: 1 }, f: { letters: 2, herbs: 1 },
       },
@@ -178,16 +178,16 @@
       name: "イングリット", full: "イングリット・ファルク", nation: "黒鉄の砦", role: "黒鉄の砦の兵站係の女兵。帳簿と兵糧を一人で回す切れ者で、兵には頼れる姉貴分。冷静で仕事ができるのに私事はまるで駄目で、くじは毎回外れる。砦主には毎冬、名前を忘れられ、袖の名札が増えていく", sex: "女", age: 31, race: "human",
       who: { kind: "soldier", sex: "女", age: 31, seed: "c2:ingrid", look: { hair: "#b89a58", hairStyle: "bun", eyes: "sharp", iris: "#4a6a8a", mouth: "flat", brows: "worried", outfit: "armor", head: "none", gear: "spear", chest: "none", cloth: "#3a3a42", build: "normal", marks: ["bags"], bg: "#4a4a52" } },
       join: {
-        cls: "砦の兵站係", desc: "兵糧は三日分。自分の分は、計算に入れていません", power: 52, dmg: 1, trait: "just", bond: 50, home: ["fort"], romance: false, noLove: true,
+        cls: "砦の兵站係", desc: "兵糧は三日分。自分の分は、計算に入れていません", power: 52, dmg: 1, trait: "just", bond: 50, home: ["fort"],
         life: { home: "黒鉄の砦の、帳簿の積まれた倉の二階", kin: "砦の兵たち", food: "兵の粥（温かいうちに）", habit: "数字が合わないと、黙って三回数え直す", secret: "袖の名札は、冬の数だけある。外したことは一度もない", keep: "名札だらけの袖" },
         t: { sword: 1, spear: 2, bow: 1, magic: 0, pray: 0, stealth: 0, talk: 1, lore: 2, wild: 1 }, f: { needle: 2, compass: 1 },
       },
     }),
     izra: P({
-      name: "イズラ", full: "イズラ", nation: "使徒領", role: "使徒領から断界山脈へ下りてきた、鷹の獣人の女。黒鎧の使徒の居城で門番として飼われていた。強い相手を見ると目の色が変わる戦闘狂だが、勝った相手の手当ては誰よりていねい。人の暮らしを何も知らず、何でも珍しがる。片方の翼だけ、羽が黒い", sex: "女", age: 27, race: "beast", beast: "bird",
+      name: "イズラ", full: "イズラ", nation: "使徒領", role: "使徒領から断界山脈へ下りてきた、鷹の獣人の女。黒鎧の使徒の居城で門番として飼われていた。強い相手を見ると目の色が変わる戦闘狂だが、勝った相手の手当ては誰よりていねい。人の暮らしを何も知らず、何でも珍しがる。片方の翼だけ、羽が黒い", sex: "女", age: 27, race: "beast", romance: true, beast: "bird",
       who: { kind: "adventurer", sex: "女", age: 27, seed: "c2:izra", look: { hair: "#2a2420", hairStyle: "long", eyes: "sharp", iris: "#e8b020", mouth: "smirk", brows: "calm", outfit: "leather", head: "none", gear: "spear", chest: "collar", cloth: "#3a2a2a", build: "slim", ears: "none", beast: "bird", marks: ["scar"], bg: "#5a4a5a" } },
       join: {
-        cls: "使徒領の鷹", desc: "おまえは強いか。……なら、ついていこう", power: 68, dmg: 3, trait: "proud", bond: 50, home: ["fort"], romance: true,
+        cls: "使徒領の鷹", desc: "おまえは強いか。……なら、ついていこう", power: 68, dmg: 3, trait: "proud", bond: 50, home: ["fort"],
         life: { home: "断界山脈の、いちばん高い岩棚", kin: "居城の猟兵頭（育ての親のようなもの）", food: "人の町の焼き菓子（はじめて食べた）", habit: "高いところを見つけると、黙って登って、遠くを見ている", secret: "首の革の輪を、外せるのに外さない", keep: "黒い羽を一枚" },
         t: { sword: 1, spear: 3, bow: 1, magic: 0, pray: 0, stealth: 1, talk: 0, lore: 0, wild: 3 }, f: { weather: 1, beasts: 1 },
       },
@@ -196,7 +196,7 @@
       name: "アンセルモ", full: "アンセルモ・ブルーニ", nation: "レオネスト", role: "聖都エルヴィナの地下墓地の墓掘り修道士。墓から掘り出した物を平気で売る罰当たりで、酒臭く口が悪い。「死者の物は生きている者に回す」と決めていて、筋は一度も曲げない。聖歌を歌うと大聖堂の歌い手が泣く。疫病の年に千人を一人で葬った", sex: "男", age: 50, race: "human",
       who: { kind: "priest", sex: "男", age: 50, seed: "c2:anselmo", look: { hair: "#5a4a3a", hairStyle: "receding", eyes: "smile", iris: "#4a3020", mouth: "grin", brows: "raised", outfit: "vestment", head: "none", gear: "none", chest: "sun", cloth: "#4a3a2a", build: "broad", marks: ["stubble", "wrinkles", "dirt"], bg: "#6a5a48" } },
       join: {
-        cls: "墓掘り修道士", desc: "死んだ奴の物は、生きてる奴が使え。わしもな", power: 54, dmg: 2, heal: true, trait: "drunk", bond: 52, home: ["w1_holy"], romance: false, noLove: true,
+        cls: "墓掘り修道士", desc: "死んだ奴の物は、生きてる奴が使え。わしもな", power: 54, dmg: 2, heal: true, trait: "drunk", bond: 52, home: ["w1_holy"],
         life: { home: "聖都の地下墓地の入り口の、墓守小屋", kin: "拾って聖歌隊に預けた、盲目の娘", food: "安い葡萄酒と、墓守小屋の豆", habit: "道で死んだ鳥を見つけると、穴を掘って埋め、何か一つ持っていく", secret: "弔いの祈りの言葉を、一つだけ、もう三十年思い出せない", keep: "錆びた鋤" },
         t: { sword: 0, spear: 1, bow: 0, magic: 0, pray: 3, stealth: 1, talk: 2, lore: 1, wild: 0 }, f: { song: 3, drink: 1 },
       },
@@ -205,7 +205,7 @@
       name: "ポルフ", full: "鐘番のポルフ", nation: "黒鉄の砦", role: "黒鉄の砦の鐘番。鼠の獣人の爺さん。背は子どもくらいで腰も曲がっているが、若い兵に昔の手柄を三倍に盛って話す。盛った話の半分は本当で、本当の半分がすごい。考えなしに真っ先に突っ込む。四十年鐘を鳴らしてきて、一度だけ鳴らし遅れた夜がある", sex: "男", age: 66, race: "beast", beast: "rat",
       who: { kind: "elder", sex: "男", age: 66, seed: "c2:polf", look: { hair: "#c8c4bc", hairStyle: "messy", eyes: "round", iris: "#2a2a2a", mouth: "grin", brows: "raised", outfit: "tunic", head: "none", gear: "none", chest: "none", cloth: "#5a4a3a", build: "slim", ears: "none", beast: "rat", marks: ["wrinkles", "beard"], bg: "#5a5a62" } },
       join: {
-        cls: "砦の鐘番", desc: "わしが若いころはな、山を一つ、殴って崩したもんじゃ", power: 56, dmg: 2, trait: "braggart", bond: 58, home: ["fort"], romance: false, noLove: true,
+        cls: "砦の鐘番", desc: "わしが若いころはな、山を一つ、殴って崩したもんじゃ", power: 56, dmg: 2, trait: "braggart", bond: 58, home: ["fort"],
         life: { home: "黒鉄の砦の鐘楼の、梯子の上の小部屋", kin: "鳴らし遅れた夜の村にいた息子", food: "干したチーズ", habit: "どこにいても、決まった刻になると、空に向かって鐘を打つ手まねをする", secret: "鳴らし遅れた夜、自分は鐘楼で居眠りをしていた。誰にも話していない", keep: "すり切れた鐘の綱の切れ端" },
         t: { sword: 2, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 2, talk: 1, lore: 1, wild: 1 }, f: { luck: 1, sleep: 1, kids: 1 },
       },
