@@ -23,6 +23,8 @@
 
 **男の型（A5）**：男が全員同じ美形にならないよう、顔立ちを型で分ける。型は `style_male.json` の `types` にあり、[portraits.json](portraits.json) の男の人に `type` で割り振る（無ければ `default_type` の `classic`）。`ojisan`（渋い中年〜初老。劇画寄りの濃い顔・ほうれい線・こけた頬・角ばった顎。いちばん多い）・`classic`（正統派の美形）・`bishonen`（線の細い美形）・`brute`（少しブサイクで愛嬌のある巨漢。この型だけネガティブの `ugly face` を外す）・`elder`（老人）・`boy`（子ども）。プロンプトは共通の前置きの後ろに型の `prefix` が付き（同じタグは一度だけ）、ネガティブは型の `negative_remove` を外して `negative_add` を足す。型の語は特徴だけで、作家名・作品名は書かない（テストが見る）。`node tools/gen_portraits.mjs --dry --type ojisan` でその型の男だけのプロンプトを確かめ、`--type ojisan --force` でその型だけ作り直せる（`--only`・`--variants` と重ねられる）。
 
+**主要人物を似せない（A7）**：持ち主の決まりは「モブや兄弟ならいいけど、主要人物であんまり似たような顔にしないで」。人物を足すとき、主要人物（[portraits.json](portraits.json) の `people`・`hero` 以外）は**髪の色・髪型・目の色・印（眼鏡・眼帯・帽子・傷など）をほかの人と被らせない**。設定に書かれた見た目は残し、書かれていない所で差をつける。`node tools/portraits_similar.mjs` で似すぎの組・近い組・偏り（性別・年齢帯・髪の色・長さ・体格がそろった人の群れ）を確かめる（`node tools/portraits_similar.mjs <id>` でその人に近い順）。似すぎ（点が高い組か、同じ性別・同じ色と長さの髪で年の近い「髪の双子」。獣の耳・顔を覆う物・眼帯・翼・眼鏡・帽子が片方にだけあれば双子にしない）か、3 人以上の偏りがあると `tests/checks/a7_similar.mjs` が失敗する。血縁は行に `"kin": "<家>"` を付ければ比べない（今は `leonest`・`nordia`）。髪や目の色に新しい語を使ったら、道具の `HAIR`・`EYE` に足す（読めない色もテストが失敗にする）。
+
 **画面の欄に入れた絵柄の文は API では使われない。** WebUI の Styles に保存して `style.json` の `"styles": ["名前"]` に書くか、`prefix`・`suffix`・`negative` に書く。
 自分のパソコンだけで設定を変えたいときは、`docs/art/style.local.json` に変えたい項目だけを書く（`style.json` の上に重なる。git には入らない）。使った seed は `docs/art/seeds.local.json`（git には入らない）に残る。このスクリプトは CI やテストでは動かさない。
 
