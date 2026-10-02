@@ -1057,7 +1057,7 @@
    "name": "ブルーノ",
    "type": "brute",
    "file": "assets/portraits/bruno.webp",
-   "identity": "1boy, male focus, adult, man, 38 years old, huge man, very muscular, broad shoulders, tan skin, dirty blonde hair, short hair, messy hair, blue eyes, round eyes, thick eyebrows, worried eyebrows, stubble, many scars on arms, bandaged forearm, red bandana on head, sleeveless dock worker shirt, rope belt, iron chain necklace with nine rings",
+   "identity": "1boy, male focus, adult, man, 38 years old, huge man, very muscular, broad shoulders, tan skin, red hair, short hair, messy hair, green eyes, round eyes, thick eyebrows, worried eyebrows, stubble, many scars on arms, bandaged forearm, red bandana on head, sleeveless dock worker shirt, rope belt, iron chain necklace with nine rings",
    "tags": "carrying three barrels on shoulder, shoulders hunched",
    "face": "nervous, worried, sweating",
    "variants": {
@@ -1066,7 +1066,7 @@
     "sorrow": "crying, tears, sad",
     "fun": "shy grin, scratching cheek"
    },
-   "memo": "C5・仲間。港町ヴァレンツァの荷揚げ人足。熊のような巨漢なのに蜘蛛も雷も怖い臆病者。すぐ謝る。九つの輪の鎖を首に。くすんだ金の短いはね髪、赤い頭巾、無精髭、傷だらけの腕"
+   "memo": "C5・仲間。港町ヴァレンツァの荷揚げ人足。熊のような巨漢なのに蜘蛛も雷も怖い臆病者。すぐ謝る。九つの輪の鎖を首に。赤毛の短いはね髪、赤い頭巾、無精髭、傷だらけの腕"
   },
   {
    "id": "trude",
@@ -1123,7 +1123,7 @@
    "name": "セレスティン",
    "type": "bishonen",
    "file": "assets/portraits/celestin.webp",
-   "identity": "1boy, male focus, elf, pointy ears, young man, slender, pale skin, black hair, blue-black hair, long hair, hair over one eye, cyan eyes, sleepy eyes, thin eyebrows, silver earring, dark green hooded cloak, silver chain clasp, leather bracer, longbow, glowing paper charm at waist",
+   "identity": "1boy, male focus, elf, pointy ears, young man, slender, pale skin, green hair, dark green hair, long hair, single braid, cyan eyes, sleepy eyes, thin eyebrows, silver earring, dark green hooded cloak, silver chain clasp, leather bracer, longbow, glowing paper charm at waist",
    "tags": "sitting on a tree branch, holding a longbow, looking up at the sky",
    "face": "blank stare, absent-minded",
    "variants": {
@@ -1132,7 +1132,7 @@
     "sorrow": "sad eyes, looking down, holding a letter",
     "fun": "slight smirk, head tilt"
    },
-   "memo": "C5・仲間。迷いの森の木の上で暮らすエルフの弓手（九十二歳）。ぼんやりして三拍遅れて返事をする。兄への届かない手紙。黒い長髪で片目が隠れる、深緑の外套、長弓、光る札"
+   "memo": "C5・仲間。迷いの森の木の上で暮らすエルフの弓手（九十二歳）。ぼんやりして三拍遅れて返事をする。兄への届かない手紙。深緑の長い三つ編み、深緑の外套、長弓、光る札"
   },
   {
    "id": "felix",
@@ -1157,20 +1157,20 @@
    "name": "ヴィットリオ",
    "type": "ojisan",
    "file": "assets/portraits/vittorio.webp",
-   "identity": "1boy, male focus, adult, middle-aged man, 47 years old, lean, tan skin, dark brown hair, slicked back hair, short hair, brown eyes, sharp eyes, thick mustache, scar on cheek, gold earring, nasolabial folds, wide-brimmed hat, mustard long coat, red sash, gold coin necklace, rapier",
+   "identity": "1boy, male focus, adult, middle-aged man, 47 years old, lean, tan skin, dark blonde hair, long hair, ponytail, green eyes, sharp eyes, thick mustache, scar on cheek, gold earring, nasolabial folds, wide-brimmed hat, mustard long coat, red sash, gold coin necklace, rapier",
    "tags": "tipping his hat, smug pose",
    "face": "sly grin",
-   "memo": "C5・宿敵。ヴァレンツァの冒険者の一団の頭。横取りと罠の男。団員の葬式には最高の棺。撫でつけた黒褐色の髪、口ひげ、つば広の帽子、からし色の外套"
+   "memo": "C5・宿敵。ヴァレンツァの冒険者の一団の頭。横取りと罠の男。団員の葬式には最高の棺。くすんだ金の長髪を束ね、口ひげ、つば広の帽子、からし色の外套"
   },
   {
    "id": "violaine",
    "group": "c2",
    "name": "ヴィオレーヌ",
    "file": "assets/portraits/violaine.webp",
-   "identity": "1girl, adult, young woman, 22 years old, tall, slender, pale skin, black hair, jet black hair, very long hair, straight hair, violet eyes, sharp eyes, long eyelashes, black long coat, high collar, silver family crest brooch, black gloves, rapier",
+   "identity": "1girl, adult, young woman, 22 years old, tall, slender, pale skin, light blue hair, medium hair, low ponytail, violet eyes, sharp eyes, long eyelashes, black long coat, high collar, silver family crest brooch, black gloves, rapier",
    "tags": "holding a rapier upright before her face, saluting",
    "face": "serious, stiff expression",
-   "memo": "C5・宿敵。王都の剣の家の真面目すぎる娘。決闘しか言わない、方角の分からない剣士。負けると曇る。黒い長髪、紫の目、黒い外套と家紋"
+   "memo": "C5・宿敵。王都の剣の家の真面目すぎる娘。決闘しか言わない、方角の分からない剣士。負けると曇る。水色の髪を低く束ね、紫の目、黒い外套と家紋"
   },
   {
    "id": "yuzuel",
@@ -1189,10 +1189,10 @@
    "name": "聖歌隊の若者（眷属セヴラン）",
    "type": "bishonen",
    "file": "assets/portraits/severin.webp",
-   "identity": "1boy, male focus, young man, slender, delicate features, pale skin, blonde hair, golden blonde hair, short hair, golden eyes, round eyes, long eyelashes, white choir robe, gold sun embroidery, white flower behind ear, faint golden dust in the air",
+   "identity": "1boy, male focus, young man, slender, delicate features, pale skin, pink hair, pale pink hair, short hair, golden eyes, round eyes, long eyelashes, white choir robe, gold sun embroidery, white flower behind ear, faint golden dust in the air",
    "tags": "hands clasped in prayer, singing",
    "face": "serene smile, eyes half-closed",
-   "memo": "C5・眷属（蝶の奥方の）。聖都の聖歌隊でいちばん澄んだ声の若者。聴いた者が自分を傷つける。聖女に名を呼ばれたことがない。淡い金の髪、金の目、白い聖歌隊の衣、金色の粉"
+   "memo": "C5・眷属（蝶の奥方の）。聖都の聖歌隊でいちばん澄んだ声の若者。聴いた者が自分を傷つける。聖女に名を呼ばれたことがない。淡い桃色の短い髪、金の目、白い聖歌隊の衣、金色の粉"
   },
   {
    "id": "rufina",
@@ -1230,20 +1230,20 @@
    "group": "c2",
    "name": "ツユハ",
    "file": "assets/portraits/tsuyuha.webp",
-   "identity": "1girl, adult, woman, 34 years old, slender, fair skin, black hair, jet black hair, long hair, hair bun, ornate hairpin, black eyes, narrow eyes, red lips, gold earring, dark plum kimono with gold coin pattern, haori, abacus",
+   "identity": "1girl, adult, woman, 34 years old, slender, fair skin, light brown hair, medium hair, side braid, ornate hairpin, amber eyes, narrow eyes, red lips, gold earring, dark plum kimono with gold coin pattern, haori, abacus",
    "tags": "holding an abacus, hand on cheek",
    "face": "gentle smile, troubled eyebrows",
-   "memo": "C5・町。島の都の両替屋「露屋」の女主人。はんなりした商人言葉、算盤は島一番なのにお人好しで貸し倒れだらけ。泳げないのに飛び込む。黒髪の髷、かんざし、銭の柄の濃い紫の着物、算盤"
+   "memo": "C5・町。島の都の両替屋「露屋」の女主人。はんなりした商人言葉、算盤は島一番なのにお人好しで貸し倒れだらけ。泳げないのに飛び込む。明るい茶色の横の三つ編み、かんざし、銭の柄の濃い紫の着物、算盤"
   },
   {
    "id": "filie",
    "group": "c2",
    "name": "フィリエ",
    "file": "assets/portraits/filie.webp",
-   "identity": "1girl, elf, pointy ears, adult, woman, petite, short, pale skin, white hair, silver-white hair, long hair, hair bun, green eyes, droopy eyes, gentle eyes, sage green kimono, white apron, headscarf, folded haori over arm",
+   "identity": "1girl, elf, pointy ears, adult, woman, petite, short, pale skin, orange hair, copper hair, medium hair, hair bun, brown eyes, droopy eyes, gentle eyes, indigo kimono, white apron, headscarf, folded haori over arm",
    "tags": "holding a folded haori out, slight bow",
    "face": "gentle smile, troubled eyebrows",
-   "memo": "C5・町。湯の町アミュレインの湯屋の小柄なエルフの女将。誰にでも母のように世話を焼くが、湯は止まり屋根は飛ぶ。夫は人間で百年前に逝った。白い髪の髷、淡い緑の着物と白い前掛け、羽織"
+   "memo": "C5・町。湯の町アミュレインの湯屋の小柄なエルフの女将。誰にでも母のように世話を焼くが、湯は止まり屋根は飛ぶ。夫は人間で百年前に逝った。銅色の髪の髷、藍の着物と白い前掛け、羽織"
   },
   {
    "id": "leopold",
@@ -1251,10 +1251,10 @@
    "name": "レオポルト",
    "type": "classic",
    "file": "assets/portraits/leopold.webp",
-   "identity": "1boy, male focus, adult, man, 36 years old, slim, tall, fair skin, blonde hair, golden blonde hair, medium hair, swept back hair, blue eyes, smiling eyes, gold earring, white shirt with loose collar, royal blue waistcoat, gold chain, no jacket",
+   "identity": "1boy, male focus, adult, man, 36 years old, slim, tall, fair skin, orange hair, ginger hair, short hair, curly hair, green eyes, smiling eyes, freckles, gold earring, white shirt with loose collar, royal blue waistcoat, gold chain, no jacket",
    "tags": "holding betting slips, hand on hip, winking",
    "face": "playful grin",
-   "memo": "C5・町。皇帝の甥の道楽者の興行主。賭けに負けて上着を質に入れる。番組の組み方で死人を出さない。後ろに流した金髪、上着無しの白いシャツと青いチョッキ"
+   "memo": "C5・町。皇帝の甥の道楽者の興行主。賭けに負けて上着を質に入れる。番組の組み方で死人を出さない。赤毛の短い巻き毛、そばかす、上着無しの白いシャツと青いチョッキ"
   },
   {
    "id": "gauthier",
@@ -1262,20 +1262,20 @@
    "name": "ゴーティエ",
    "type": "ojisan",
    "file": "assets/portraits/gauthier.webp",
-   "identity": "1boy, male focus, old man, 58 years old, very tall, burly, broad shoulders, tan skin, grey hair, short hair, brown eyes, gentle eyes, full grey beard, scar on forehead, wrinkles, one-armed, empty left sleeve pinned up, white apron dusted with flour, headscarf",
+   "identity": "1boy, male focus, old man, 58 years old, very tall, burly, broad shoulders, tan skin, white hair, long hair, low ponytail, green eyes, gentle eyes, braided white beard, burn scars on hand, wrinkles, one-armed, empty left sleeve pinned up, white apron dusted with flour, headscarf",
    "tags": "holding a rolling pin, standing in front of a bakery",
    "face": "gentle smile",
-   "memo": "C5・町。王都の路地の焼き菓子屋の片腕の親父。元十指の第一席。子どもに母のように世話を焼く。灰色の髭、粉だらけの白い前掛け、ピンで留めた空の袖、麺棒"
+   "memo": "C5・町。王都の路地の焼き菓子屋の片腕の親父。元十指の第一席。子どもに母のように世話を焼く。白い長髪を低く束ね、編んだ白い髭、粉だらけの白い前掛け、ピンで留めた空の袖、麺棒"
   },
   {
    "id": "magda",
    "group": "c2",
    "name": "マグダ",
    "file": "assets/portraits/magda.webp",
-   "identity": "1girl, mature female, adult, woman, 46 years old, tall, muscular, tan skin, freckles, red hair, orange-red hair, long hair, thick braid, brown eyes, sharp eyes, dirt on face, red bandana, leather vest over rolled-up shirt, leather gloves, pickaxe on shoulder, reading glasses hanging from collar",
+   "identity": "1girl, mature female, adult, woman, 46 years old, tall, muscular, tan skin, mole on cheek, ash blonde hair, short hair, messy hair, brown eyes, sharp eyes, dirt on face, red bandana, leather vest over rolled-up shirt, leather gloves, pickaxe on shoulder, reading glasses hanging from collar",
    "tags": "hand on hip, holding a lantern",
    "face": "loud grin",
-   "memo": "C5・町。遺構の発掘屋の女親方。口より先に鶴嘴。夜は眼鏡で碑文を読む。赤毛の太い三つ編み、そばかす、赤い頭巾、鶴嘴、襟に下げた眼鏡"
+   "memo": "C5・町。遺構の発掘屋の女親方。口より先に鶴嘴。夜は眼鏡で碑文を読む。灰色がかった金の短いはね髪、頬のほくろ、赤い頭巾、鶴嘴、襟に下げた眼鏡"
   },
   {
    "id": "baudouin",

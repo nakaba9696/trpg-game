@@ -164,7 +164,7 @@
     // ================================================================ 仲間になる人
     bruno: P({
       romance: true, name: "ブルーノ", full: "ブルーノ・カルデラ", nation: "レオネスト", role: "港町ヴァレンツァの荷揚げ人足。熊のような巨漢で港いちばんの力持ちなのに、虫も雷も怖い臆病者。すぐ謝る。それでも仲間が倒れると、震えながら前に立つ。借金のかたに村の若い衆と船に売られ、嵐の夜に一人だけ泳ぎ着いた", sex: "男", age: 38, race: "human",
-      who: { kind: "sailor", sex: "男", age: 38, seed: "c2:bruno", look: { hair: "#b8905a", hairStyle: "messy", eyes: "round", iris: "#5a7a9a", mouth: "open", brows: "worried", outfit: "sailor", head: "bandana", gear: "none", chest: "collar", cloth: "#5a4a3a", build: "broad", marks: ["scar", "stubble", "bandage"], bg: "#4a6a7a" } },
+      who: { kind: "sailor", sex: "男", age: 38, seed: "c2:bruno", look: { hair: "#a83a22", hairStyle: "messy", eyes: "round", iris: "#4a8a5a", mouth: "open", brows: "worried", outfit: "sailor", head: "bandana", gear: "none", chest: "collar", cloth: "#5a4a3a", build: "broad", marks: ["scar", "stubble", "bandage"], bg: "#4a6a7a" } },
       schedule: [{ from: "春", to: "冬", loc: "nerva", note: "港の倉で、人の三倍の荷を担いでいる" }],
       join: {
         cls: "荷揚げ人足", desc: "大きい。臆病。でも逃げない", power: 66, dmg: 3, trait: "coward", bond: 62, home: ["nerva"],
@@ -208,7 +208,7 @@
     }),
     celestin: P({
       romance: false, name: "セレスティン", full: "セレスティン・ヴェルテ・アルナリエ", nation: "エルメシア", role: "迷いの森の大きな木の上で暮らす、エルフの若い弓手（九十二歳）。ぼんやりして口数が少なく、話しかけると三拍遅れて返事をする。弓は外したところを誰も見たことがない。結界術士の名家の末っ子で、術の才だけが無い。届かない兄への手紙を、木の洞に入れ続けている", sex: "男", age: 92, race: "elf",
-      who: { kind: "archer", sex: "男", age: 22, seed: "c2:celestin", look: { hair: "#1e2a40", hairStyle: "long", eyes: "sleepy", iris: "#6ad0c0", mouth: "flat", brows: "calm", outfit: "cloak", head: "none", gear: "bow", chest: "chain", cloth: "#2a3a4a", build: "slim", ears: "pointy", marks: ["earring"], bg: "#3a5a4a" } },
+      who: { kind: "archer", sex: "男", age: 22, seed: "c2:celestin", look: { hair: "#2a5a3a", hairStyle: "braid", eyes: "sleepy", iris: "#6ad0c0", mouth: "flat", brows: "calm", outfit: "cloak", head: "none", gear: "bow", chest: "chain", cloth: "#2a3a4a", build: "slim", ears: "pointy", marks: ["earring"], bg: "#3a5a4a" } },
       schedule: [
         { from: "春", to: "秋", loc: "forest", note: "迷いの森の奥の、大きな木の上で暮らしている" },
         { from: "冬", to: "冬", loc: "zephara", note: "冬は首都の、兄の古い屋敷の留守番をしている" },
@@ -232,11 +232,11 @@
     // ================================================================ ライバル・宿敵
     vittorio: P({
       name: "ヴィットリオ", full: "ヴィットリオ・ランツァ", nation: "レオネスト", role: "ヴァレンツァの冒険者の一団の頭。先回り・横取り・罠と、勝つためなら何でもやる。ギルドの決まりを一つも守らない。人を相棒と呼んで裏切る。そのくせ団員の葬式には、自分の金でいちばん高い棺を買う", sex: "男", age: 47, race: "human",
-      who: { kind: "adventurer", sex: "男", age: 47, seed: "c2:vittorio", look: { hair: "#3a2a20", hairStyle: "slick", eyes: "sharp", iris: "#6a4a2a", mouth: "grin", brows: "raised", outfit: "coat", head: "hat", gear: "sword", chest: "coins", cloth: "#6a4a1a", build: "normal", marks: ["mustache", "scar", "earring"], bg: "#5a4a3a" } },
+      who: { kind: "adventurer", sex: "男", age: 47, seed: "c2:vittorio", look: { hair: "#b89a58", hairStyle: "ponytail", eyes: "sharp", iris: "#4a8a5a", mouth: "grin", brows: "raised", outfit: "coat", head: "hat", gear: "sword", chest: "coins", cloth: "#6a4a1a", build: "normal", marks: ["mustache", "scar", "earring"], bg: "#5a4a3a" } },
     }),
     violaine: P({
       name: "ヴィオレーヌ", full: "ヴィオレーヌ・ド・サン＝クレール", nation: "レオネスト", role: "王都の剣の家の、真面目すぎる一人娘。黒衣の剣士。口を開けば決闘の申し込み。方角がまったく分からず、決闘の場所にたどり着けない。融通が利かず、負けるたびに目に見えて曇る。王国十指の空いた席に座ろうとしている", sex: "女", age: 22, race: "human",
-      who: { kind: "noble", sex: "女", age: 22, seed: "c2:violaine", look: { hair: "#1a1a2a", hairStyle: "long", eyes: "sharp", iris: "#9a3a6a", mouth: "flat", brows: "worried", outfit: "coat", head: "none", gear: "sword", chest: "crest", cloth: "#1a1a24", build: "slim", marks: [], bg: "#3a2a3a" } },
+      who: { kind: "noble", sex: "女", age: 22, seed: "c2:violaine", look: { hair: "#8ab8d8", hairStyle: "ponytail", eyes: "sharp", iris: "#9a3a6a", mouth: "flat", brows: "worried", outfit: "coat", head: "none", gear: "sword", chest: "crest", cloth: "#1a1a24", build: "slim", marks: [], bg: "#3a2a3a" } },
     }),
     // ================================================================ 使徒の側
     // 使徒の名は〔進〕。名乗るまで呼び名（name は呼び名。名乗ったあとの名前は zc5_people.js の D.C3_NAMES）
@@ -246,7 +246,7 @@
     }),
     severin: P({
       name: "聖歌隊の若者", full: "セヴラン（蝶の奥方の眷属）", nation: "レオネスト", role: "眷属。聖都の聖歌隊でいちばん澄んだ声で歌う、少年のような若者。歌のあと、聞いた者の何人かが自分を傷つける。誰より熱心に祈る。大聖堂の聖女に拾われた孤児で、褒められたくて何でもする。名を呼ばれたことは一度もない", sex: "男", age: 19, race: "human",
-      who: { kind: "majin", sex: "男", age: 19, seed: "c2:severin", look: { hair: "#f0e8c8", hairStyle: "swept", eyes: "round", iris: "#e0b040", mouth: "smile", brows: "calm", outfit: "vestment", head: "none", gear: "none", chest: "sun", cloth: "#f0ece0", build: "slim", marks: [], bg: "#b8a870" } },
+      who: { kind: "majin", sex: "男", age: 19, seed: "c2:severin", look: { hair: "#e8b0c0", hairStyle: "swept", eyes: "round", iris: "#e0b040", mouth: "smile", brows: "calm", outfit: "vestment", head: "none", gear: "none", chest: "sun", cloth: "#f0ece0", build: "slim", marks: [], bg: "#b8a870" } },
     }),
     rufina: P({
       name: "香売りの姐さん", full: "ルフィナ（香の姐さんの眷属）", nation: "レオネスト", role: "眷属。朧島の香を島の外へ売り歩く、几帳面で面倒見のいい行商。人には親身で、こちらの事情もよく分かってくれる。自分のこととなると運がまるで無く、売り上げは毎度誰かに持っていかれる。歳をとらない", sex: "女", age: 31, race: "human",
@@ -264,23 +264,23 @@
     }),
     tsuyuha: P({
       name: "ツユハ", full: "ツユハ", nation: "レオネスト", role: "島の都シェルアークの両替商「露屋」の女主人。ヴァレンツァにも店を持つ。はんなりした言葉で利子の話を歌うようにする、島一番の算盤の腕。なのにお人好しで、泣きつかれると誰にでも貸してしまう。泳げないのに、溺れる子どもを見ると着物のまま海に飛び込む", sex: "女", age: 34, race: "human",
-      who: { kind: "ronin", sex: "女", age: 34, seed: "c2:tsuyuha", look: { hair: "#1c1c2a", hairStyle: "bun", eyes: "narrow", iris: "#3a2a2a", mouth: "smile", brows: "worried", outfit: "kimono", head: "none", gear: "none", chest: "coins", cloth: "#4a2a3a", build: "slim", marks: ["earring"], bg: "#6a4a4a" } },
+      who: { kind: "ronin", sex: "女", age: 34, seed: "c2:tsuyuha", look: { hair: "#a87a50", hairStyle: "braid", eyes: "narrow", iris: "#c8902a", mouth: "smile", brows: "worried", outfit: "kimono", head: "none", gear: "none", chest: "coins", cloth: "#4a2a3a", build: "slim", marks: ["earring"], bg: "#6a4a4a" } },
     }),
     filie: P({
       name: "フィリエ", full: "フィリエ・ノア", nation: "エルメシア", role: "湯の町アミュレインの湯屋の女将。小柄でしとやかなエルフ。客の誰にでも母親のように世話を焼く。それなのに湯は月に三度止まり、屋根は年に一度飛ぶ。湯屋は百年前に先に逝った人間の夫の形見", sex: "女", age: 240, race: "elf",
-      who: { kind: "host", sex: "女", age: 30, seed: "c2:filie", look: { hair: "#e8e0d0", hairStyle: "bun", eyes: "sleepy", iris: "#6ab04a", mouth: "smile", brows: "worried", outfit: "apron", head: "kerchief", gear: "none", chest: "none", cloth: "#5a6a5a", build: "slim", ears: "pointy", marks: [], bg: "#6a7a6a" } },
+      who: { kind: "host", sex: "女", age: 30, seed: "c2:filie", look: { hair: "#c8642a", hairStyle: "bun", eyes: "sleepy", iris: "#7a5a3a", mouth: "smile", brows: "worried", outfit: "apron", head: "kerchief", gear: "none", chest: "none", cloth: "#2a3a6a", build: "slim", ears: "pointy", marks: [], bg: "#6a7a6a" } },
     }),
     leopold: P({
       name: "レオポルト", full: "レオポルト・フォン・ノルディア", nation: "ノルディア", role: "皇帝の甥で、闘技の都ザルグロスの興行主。賭けに負けて上着まで質に入れる道楽者の皇族。自信家で自由奔放、美人を見ると口説いては振られる。闘技の番組の組み方は帝国一で、彼の組んだ試合では死人が出ない", sex: "男", age: 36, race: "human",
-      who: { kind: "noble", sex: "男", age: 36, seed: "c2:leopold", look: { hair: "#d8bc70", hairStyle: "swept", eyes: "smile", iris: "#4a7ac8", mouth: "grin", brows: "raised", outfit: "noble", head: "none", gear: "none", chest: "chain", cloth: "#2a3a6a", build: "slim", marks: ["earring"], bg: "#5a5a7a" } },
+      who: { kind: "noble", sex: "男", age: 36, seed: "c2:leopold", look: { hair: "#c86a2a", hairStyle: "messy", eyes: "smile", iris: "#4a8a5a", mouth: "grin", brows: "raised", outfit: "noble", head: "none", gear: "none", chest: "chain", cloth: "#2a3a6a", build: "slim", marks: ["earring"], bg: "#5a5a7a" } },
     }),
     gauthier: P({
       name: "ゴーティエ", full: "ゴーティエ・ブラン", nation: "レオネスト", role: "王都の路地の焼き菓子屋の親父。片腕の大男。子どもたちに母親のように世話を焼く。店の前の喧嘩は麺棒一本で黙らせる。二十年前まで王国十指の第一席だった。弟子の女剣士を炭鉱へ送り出したのは彼", sex: "男", age: 58, race: "human",
-      who: { kind: "host", sex: "男", age: 58, seed: "c2:gauthier", look: { hair: "#8a8a88", hairStyle: "short", eyes: "smile", iris: "#6a5a3a", mouth: "smile", brows: "calm", outfit: "apron", head: "kerchief", gear: "none", chest: "none", cloth: "#e0d8c8", build: "broad", marks: ["beard", "scar", "wrinkles"], bg: "#8a6a4a" } },
+      who: { kind: "host", sex: "男", age: 58, seed: "c2:gauthier", look: { hair: "#e8e8e4", hairStyle: "ponytail", eyes: "smile", iris: "#4a8a5a", mouth: "smile", brows: "calm", outfit: "apron", head: "kerchief", gear: "none", chest: "none", cloth: "#e0d8c8", build: "broad", marks: ["beard", "scar", "wrinkles"], bg: "#8a6a4a" } },
     }),
     magda: P({
       name: "マグダ", full: "マグダ・ケルン", nation: "レオネスト", role: "エル・ナフ遺構の入口の発掘屋たちの女親方。日焼けした大柄な女で、口より先に鶴嘴が出る。人をひよっこと呼ぶ。夜は天幕で眼鏡をかけ、碑文の写しを一字ずつ読んでいる。亭主は遺構の奥で、壁の向こうから呼ばれて戻らなかった", sex: "女", age: 46, race: "human",
-      who: { kind: "villager", sex: "女", age: 46, seed: "c2:magda", look: { hair: "#9a3a22", hairStyle: "braid", eyes: "sharp", iris: "#5a4a2a", mouth: "grin", brows: "angry", outfit: "leather", head: "bandana", gear: "none", chest: "keys", cloth: "#6a4a2a", build: "broad", marks: ["dirt", "freckles"], bg: "#7a6a4a" } },
+      who: { kind: "villager", sex: "女", age: 46, seed: "c2:magda", look: { hair: "#c8b890", hairStyle: "messy", eyes: "sharp", iris: "#5a4a2a", mouth: "grin", brows: "angry", outfit: "leather", head: "bandana", gear: "none", chest: "keys", cloth: "#6a4a2a", build: "broad", marks: ["dirt", "freckles"], bg: "#7a6a4a" } },
     }),
     baudouin: P({
       name: "ボードワン", full: "ボードワン", nation: "レオネスト", role: "使徒領・灰の荒野の手前の墓守。行き倒れた冒険者の懐を漁る、口の悪い老人。漁った物には全部、名前の札を付けて小屋に並べ、取りに来る家族を何年でも待っている。娘が荒野へ行って、戻らなかった", sex: "男", age: 61, race: "human",
