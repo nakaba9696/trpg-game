@@ -1,6 +1,46 @@
 {
- "_comment": "男の人物（一覧の identity・tags に 1boy / male / old man などがある人）だけに重ねる設定。style.json の上に、ここに書いた項目だけ上書きする。持ち主の絵柄は可愛い女の子向けなので、男は絵師名を外し、美形の男性の絵に寄せる。手元で変えたいときは style_male.local.json に書く（git に入れない）",
- "prefix": "masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, handsome",
+ "_comment": "男の人物（一覧の identity・tags に 1boy / male / old man などがある人）だけに重ねる設定。style.json の上に、ここに書いた項目だけ上書きする。持ち主の絵柄は可愛い女の子向けなので、男は絵師名を外して男性の絵に寄せる。顔立ちは types（型）で替える。手元で変えたいときは style_male.local.json に書く（git に入れない）",
+ "prefix": "masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus",
  "suffix": "solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
- "negative": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, breasts, feminine, makeup, lipstick, long eyelashes, androgynous"
+ "negative": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, breasts, feminine, makeup, lipstick, long eyelashes, androgynous",
+ "default_type": "classic",
+ "types": {
+  "_comment": "男の型（archetype）。一覧（portraits.json）の男の人に type で割り振る（無ければ default_type）。プロンプト ＝ 共通の prefix ＋ 型の prefix ＋ 特徴のタグ ＋ suffix（同じタグは一度だけ）。ネガティブ ＝ 共通の negative から negative_remove の語を外し、negative_add を足す。作家名・作品名は書かない（特徴の語だけ。tests/checks/a5_male_types.mjs が見る）",
+  "ojisan": {
+   "name": "渋いおっさん（いちばん多く使う）",
+   "prefix": "mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions",
+   "negative_add": "bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, feminine, chibi"
+  },
+  "bishonen": {
+   "name": "線の細い美形",
+   "prefix": "bishounen, beautiful man, slender, slim, delicate features, narrow shoulders, narrow face, sharp chin, smooth skin",
+   "negative_remove": [
+    "androgynous"
+   ],
+   "negative_add": "muscular, bulky, beard, stubble, facial hair, wrinkles, fat, square jaw, old man"
+  },
+  "classic": {
+   "name": "正統派の美形",
+   "prefix": "handsome, chiseled jaw, strong nose, defined cheekbones, confident, athletic build, well-proportioned",
+   "negative_add": "fat, chubby, ugly, androgynous"
+  },
+  "brute": {
+   "name": "少しブサイクな巨漢（愛嬌があってよい）",
+   "prefix": "large man, burly, fat, stocky, thick neck, double chin, big nose, small eyes, crooked teeth, (ugly:0.9), homely, rough face, round face",
+   "negative_remove": [
+    "ugly face"
+   ],
+   "negative_add": "bishounen, pretty boy, handsome, slender, slim, delicate features, beautiful"
+  },
+  "elder": {
+   "name": "老人",
+   "prefix": "elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips",
+   "negative_add": "young, youthful, smooth skin, bishounen, pretty boy"
+  },
+  "boy": {
+   "name": "子ども",
+   "prefix": "young boy, child, round face, big eyes, short stature, small body",
+   "negative_add": "adult, mature male, old, facial hair, beard, stubble, muscular, tall, wrinkles"
+  }
+ }
 }
