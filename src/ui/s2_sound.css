@@ -1,0 +1,7 @@
+/* S2：音の設定の窓。効果音・環境音のオンオフ（チェック）と音量、ダイスの音のオンオフ。レーン S（音）が管理 */
+.dbody.sound .srow.smute, .dbody.sound .srow.sdice { display: flex; align-items: center; gap: 8px; }
+.dbody.sound .srow .son { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.dbody.sound .srow { grid-template-columns: 6.5em 1fr 2.5em; }
+.dbody.sound input[type="range"]:disabled { opacity: .4; }
+.dbody.sound input[type="checkbox"] { accent-color: var(--accent); }
+.dbody.sound .srow.sdice input:disabled + * , .dbody.sound .srow.sdice:has(input:disabled) { opacity: .55; }
