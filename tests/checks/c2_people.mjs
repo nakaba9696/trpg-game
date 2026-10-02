@@ -18,8 +18,8 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const D = G.data;
   let n = 0;
   const F = (m) => { n++; fail("C2: " + m); };
-  // シート（キャラメモ）の人だけ。C4 で足した人（c4: true）は tests/checks/c4_people.mjs が確かめる
-  const P = Object.fromEntries(Object.entries(D.C2_PEOPLE).filter(([, p]) => !p.c4));
+  // シート（キャラメモ）の人だけ。C4・C8 で足した人（c4・c8: true）は tests/checks/c4_people.mjs・c8_people.mjs が確かめる
+  const P = Object.fromEntries(Object.entries(D.C2_PEOPLE).filter(([, p]) => !p.c4 && !p.c8));
 
   // ---------------------------------------------------------------- 表と出来事
   // C3 で名前を付けた人は、シートの呼び名を was に残している
