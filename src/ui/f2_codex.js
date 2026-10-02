@@ -324,7 +324,7 @@
     detail.textContent = "";
     const cv = personCanvas(id, 150, 188, false);
     detail.append(cv);
-    detail.append(h("h3", "f2title", F2.personName(id)), h("p", "fine", q.title || ""));
+    detail.append(h("p", "fine c3role", F2.personRole ? F2.personRole(id) : q.title || ""), h("h3", "f2title", F2.personName(id)));
     const rels = Object.keys(rec.rels || {});
     detail.append(kv([["人柄", q.face || ""], ["仲間", rec.joined ? "なったことがある" : "まだ"], ["間柄", rels.filter((r) => r !== "仲間").join("・") || "—"]].filter(([, v]) => v)));
     detail.append(where("主に会える場所", G.codexPersonWhere(id)));

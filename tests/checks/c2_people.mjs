@@ -21,7 +21,8 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const P = D.C2_PEOPLE;
 
   // ---------------------------------------------------------------- 表と出来事
-  const names = Object.values(P).map((p) => p.name);
+  // C3 で名前を付けた人は、シートの呼び名を was に残している
+  const names = Object.entries(P).flatMap(([id, p]) => [p.name, ...(((D.C3_NAMES || {})[id] || {}).was || [])]);
   for (const s of SHEET) if (!names.includes(s)) F(`シートの人物 ${s} が表に無い`);
   const evs = D.EVENTS.filter((e) => e.id.startsWith("c2_"));
   const ids = (e) => (e.c2 ? (Array.isArray(e.c2) ? e.c2 : [e.c2]) : e.c2talk ? [e.c2talk] : []);
