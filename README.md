@@ -5,7 +5,7 @@
 普段の遊びで Claude（トークン）は使わない。自由入力で「GM に任せる」を選んだときだけ使う。
 
 ## 遊び方
-- 持ち主が公開した claude.ai の Artifact で `dist/morsveld.html` を開いて遊ぶ。手元では `node tools/build.mjs` で `dist/morsveld.html` ができ、ブラウザで直接開いても遊べる（GM に任せる自由行動だけは Artifact の中でしか動かない）。
+- 持ち主が公開した claude.ai の Artifact で遊ぶ（ページ `dist/site/index.html` と画像の別ファイル。載せ方は [docs/publish.md](docs/publish.md)）。手元では `node tools/build.mjs` で `dist/site/` ができ、`dist/site/index.html` をブラウザで直接開いても遊べる（GM に任せる自由行動だけは Artifact の中でしか動かない）。画像を埋め込んだ 1 枚の HTML は `node tools/build.mjs --embed`（`dist/morsveld.html`）。
 - タイトル →「はじめる」→ 名前・性別・年齢・種族・生まれ・職業・目的・生い立ちを一画面で選ぶ → 能力値を好きなだけ振り直す（鍵とボーナス点）→ キャラクターシート → 短い導入 → 最初の町。
 - 町・野外・迷宮を歩き、施設を使い、出来事の選択肢を選び、戦う。判定の成功率は画面に出る。失敗した判定は、貴重な回数を使って振り直せる。
 - セーブは自動。スマホでも遊べる。
@@ -25,7 +25,7 @@
 ```
 node tools/build.mjs && node tests/run.mjs
 ```
-- `tools/build.mjs`：`src/` を1枚の HTML（`dist/morsveld.html`）にまとめる。
+- `tools/build.mjs`：`src/` を1枚の HTML（`dist/site/index.html`）にまとめ、画像を隣に置き、Artifact に載せる一覧（`dist/site/files.json`）を書く。`--embed` なら画像を埋め込んだ `dist/morsveld.html`。
 - `tests/run.mjs`：データの整合、決まった乱数で 150 回のランダムプレイ、`tests/checks/*.mjs`（仕組みごとの確認。置けば自動で読まれる）。PR の前に必ず通す。CI の必須チェックは `CI result`。
 - `tests/balance.mjs`：職業ごとの釣り合いの測定（ランダムと筋のよい遊び方）。`tests/goals.mjs`：目的 5 つの道筋の通し確認。
 - 新しい内容は新しいファイルに書く（`src/data/`・`src/engine/`・`src/ui/` に置けば自動で読まれる）。

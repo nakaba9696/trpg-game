@@ -1,18 +1,25 @@
-// src/ を1枚の HTML（dist/morsveld.html）にまとめる。Artifact として公開するのはこのファイル。
-// node tools/build.mjs
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
+// src/ を HTML にまとめる。形は二つ（どちらもコードと CSS は 1 枚の HTML に入れる）：
+//   node tools/build.mjs          … 既定。dist/site/index.html ＋ 画像の別ファイル（dist/site/portraits/<id>.webp・monsters/<id>.webp）。
+//                                   HTML には画像の一覧（鍵 → 相対パス・バイト数）だけを入れ、無い画像は読みに行かない。
+//                                   Artifact に載せるファイルの一覧（公開パス → ローカルパス）を dist/site/files.json に書く（載せ方は docs/publish.md）
+//   node tools/build.mjs --embed  … 予備。今まで通り画像を埋め込んだ 1 枚の dist/morsveld.html（上限を超えるなら差分を省く）
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import vm from "node:vm";
 import { listFiles } from "./files.mjs";
-import { collectAssets, assetsScript } from "./assets.mjs";
+import { collectAssets, siteAssets, assetsScript } from "./assets.mjs";
+import { planSite, SITE_LIMITS, MB } from "./site.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const src = path.join(here, "..", "src");
-const out = path.join(here, "..", "dist");
+const root = path.join(here, "..");
+const src = path.join(root, "src");
+const out = path.join(root, "dist");
+const embed = process.argv.includes("--embed");
 const { engine, ui } = listFiles(src); // manifest の順 → 無いものを名前順で足す → main.js（tools/files.mjs）
 const files = [...engine, ...ui];
-const assets = collectAssets(path.join(here, "..", "assets")); // 持ち主が作った画像（tools/assets.mjs・docs/art/）
+const assetsDir = path.join(root, "assets"); // 持ち主が作った画像（tools/assets.mjs・docs/art/）
+const assets = embed ? collectAssets(assetsDir, { shrink: true }) : siteAssets(assetsDir);
 assets.notes.forEach((n) => console.warn("画像：" + n));
 const js = assetsScript(assets) + files.map((f) => `// ==== ${f}\n` + readFileSync(path.join(src, f), "utf8")).join("\n");
 if (/<\/script/i.test(js)) throw new Error("スクリプトの中に </script が含まれている");
@@ -23,7 +30,31 @@ const uiCss = readdirSync(path.join(src, "ui")).filter((n) => n.endsWith(".css")
 const css = [readFileSync(path.join(src, "style.css"), "utf8"), ...uiCss.map((n) => `/* ==== ui/${n} */\n` + readFileSync(path.join(src, "ui", n), "utf8"))].join("\n");
 let html = readFileSync(path.join(src, "index.html"), "utf8");
 html = html.replace("/*@STYLE@*/", () => css).replace("/*@SCRIPTS@*/", () => js);
+const htmlBytes = Buffer.byteLength(html);
+const kb = (n) => (n / 1024).toFixed(0) + " KB";
 
 mkdirSync(out, { recursive: true });
-writeFileSync(path.join(out, "morsveld.html"), html);
-console.log(`dist/morsveld.html ${(html.length / 1024).toFixed(0)} KB（${files.length} ファイル${assets.files.length ? `・画像 ${assets.files.length} 枚 ${(assets.total / 1024).toFixed(0)} KB` : ""}）`);
+if (embed) {
+  if (htmlBytes >= SITE_LIMITS.page) throw new Error(`dist/morsveld.html が ${(htmlBytes / MB).toFixed(1)}MB で、Artifact の 1 ページの上限 ${SITE_LIMITS.page / MB}MB を超える`);
+  writeFileSync(path.join(out, "morsveld.html"), html);
+  console.log(`dist/morsveld.html ${kb(htmlBytes)}（${files.length} ファイル${assets.files.length ? `・画像 ${assets.files.length} 枚 ${kb(assets.total)}` : ""}${assets.dropped.length ? `・差分 ${assets.dropped.length} 枚を省いた` : ""}）`);
+} else {
+  const site = path.join(out, "site");
+  rmSync(site, { recursive: true, force: true });
+  mkdirSync(site, { recursive: true });
+  writeFileSync(path.join(site, "index.html"), html);
+  const rel = (abs) => path.relative(root, abs).split(path.sep).join("/");
+  const list = assets.files.map((f) => {
+    const dest = path.join(site, ...f.pub.split("/"));
+    mkdirSync(path.dirname(dest), { recursive: true });
+    copyFileSync(f.abs, dest);
+    return { pub: f.pub, local: rel(dest), bytes: f.bytes };
+  });
+  const plan = planSite({ pageBytes: htmlBytes, files: list });
+  if (plan.errors.length) throw new Error("Artifact に載らない：" + plan.errors.join("／"));
+  // 載せるファイルの一覧（公開パス → リポジトリの根からのローカルパス）。1 回で載らないときは回ごとの一覧も書く
+  writeFileSync(path.join(site, "files.json"), JSON.stringify(Object.fromEntries(list.map((f) => [f.pub, f.local])), null, 1) + "\n");
+  if (plan.batches.length > 1) plan.batches.forEach((b, i) => writeFileSync(path.join(site, `files-${i + 1}.json`), JSON.stringify(b.files, null, 1) + "\n"));
+  console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル）＋ 画像 ${list.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル）`);
+  if (plan.batches.length > 1) console.log(`  1 回の公開（${SITE_LIMITS.batchFiles} ファイル・${SITE_LIMITS.batchBytes / MB}MB まで）に収まらないので ${plan.batches.length} 回に分けて載せる：dist/site/files-1.json 〜 files-${plan.batches.length}.json（docs/publish.md）`);
+}

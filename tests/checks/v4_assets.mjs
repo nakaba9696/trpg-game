@@ -3,7 +3,7 @@
 // - 名のある人は、どの出来事・仲間でも同じ顔（canvas の絵の who が一つに固定されている）
 // - タグに画風・品質・性的な言葉が無い
 // - 画像が無くても今の canvas の絵で描ける。画像があれば、名のある人・型（主人公・名もない人）に正しい画像を選んで描く
-// - 埋め込み：assets/ の合計が 12MB を超えたら落とす。webp を優先し、拡張子で種類を付ける
+// - 埋め込み（予備の --embed）：差分を省いても assets/ の合計が 12MB を超えたら落とす。webp を優先し、拡張子で種類を付ける
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import vm from "node:vm";
@@ -142,8 +142,10 @@ export default ({ G, fail, ok }) => {
   G.ASSETS = undefined;
 
   // ---------------------------------------------------------------- 埋め込み
-  const real = collectAssets(new URL("../../assets", import.meta.url).pathname);
-  if (real.total > LIMIT) fail(`assets/ の埋め込みが ${(real.total / 1048576).toFixed(1)}MB で 12MB を超える`);
+  // 埋め込みは予備（--embed）。上限を超えるなら差分を省いて収める（外のファイルの形の大きさは a6_site.mjs）
+  let real = null;
+  try { real = collectAssets(new URL("../../assets", import.meta.url).pathname, { shrink: true }); } catch (e) { fail("予備の埋め込み（--embed）が差分を省いても上限に収まらない：" + e.message); }
+  if (real && real.total > LIMIT) fail(`assets/ の埋め込みが ${(real.total / 1048576).toFixed(1)}MB で 12MB を超える`);
   const dir = mkdtempSync(path.join(tmpdir(), "v4-"));
   try {
     mkdirSync(path.join(dir, "portraits"));
