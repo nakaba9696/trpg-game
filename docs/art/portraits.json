@@ -145,9 +145,9 @@
    "group": "c2",
    "name": "ナタリア",
    "file": "assets/portraits/natalia.webp",
-   "identity": "1girl, 24 years old, athletic, fair skin, black hair, glossy black hair, long hair, single braid, blunt bangs, dark brown eyes, half-closed eyes, thin eyebrows, blush, dark blue martial arts uniform, white sash, hand wraps",
-   "tags": "martial artist, drunk, hand on hip, holding a sake bottle",
-   "face": "grin",
+   "identity": "1girl, 24 years old, athletic, fair skin, black hair, glossy black hair, long hair, single braid, blunt bangs, dark brown eyes, thin eyebrows, dark blue martial arts uniform, white sash, hand wraps",
+   "tags": "martial artist, hand on hip, holding a sake bottle",
+   "face": "grin, drunk, blush, half-closed eyes",
    "variants": {
     "joy": "smile, closed eyes, happy",
     "anger": "angry, glaring, frown, clenched teeth",
@@ -363,7 +363,7 @@
    "type": "ojisan",
    "file": "assets/portraits/zork.webp",
    "identity": "1boy, male focus, adult, man, 43 years old, wiry, tan skin, grey hair, steel grey hair, short hair, receding hairline, grey eyes, sharp eyes, thick eyebrows, black eyepatch, scar, stubble, black wide-brimmed hat, dark long coat, chain, sword",
-   "tags": "thumb hooked in belt, holding a wanted poster",
+   "tags": "thumb hooked in belt, hand on sword hilt",
    "face": "smirk",
    "memo": "王国十指《首狩りゾルク》。非公認の賞金稼ぎ"
   },
