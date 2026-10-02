@@ -60,7 +60,9 @@
     }
     box.hidden = false;
     const kind = G.PEOPLE && G.PEOPLE[who.kind];
-    box.querySelector(".whoName").textContent = who.name || (kind ? kind.name : "");
+    const tag = G.whoTag && G.whoTag(who, S); // C3：名前＋役職の札
+    if (tag && G.c3Plate) G.c3Plate(box.querySelector(".whoName"), tag);
+    else box.querySelector(".whoName").textContent = who.name || (kind ? kind.name : "");
     const sig = JSON.stringify(who) + "|" + box.clientWidth;
     if (sig === lastWho) return;
     lastWho = sig;
