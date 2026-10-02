@@ -343,7 +343,8 @@
     // 増えた文章は少しずつ浮かび上がる
     let k = 0;
     kids.forEach((el) => { if (el.classList.contains("new") && !el.classList.contains("v9old")) el.style.animationDelay = Math.min(1200, k++ * 110) + "ms"; });
-    // 用語
+    // 用語（U8 の強調 ui/u8_glossary.js があれば、そちらに任せる）
+    if (G.gloss && G.gloss.mark) return;
     const D = G.data || {};
     const secs = D.WORLD ? D.WORLD.sections : [];
     const sig = JSON.stringify(secs.map(([t, rows]) => [t, rows.length]));

@@ -1,0 +1,20 @@
+/* I2：アイテムのフレーバーの説明（src/ui/zi2_flavor.js）。札は V9 の用語の札（#v9tip）に合わせる */
+#i2card { position: fixed; z-index: 41; width: max-content; max-width: min(320px, calc(100vw - 16px)); padding: 9px 13px 10px; display: grid; gap: 3px; pointer-events: none;
+  background: var(--win-solid); color: var(--ink); border: 1px solid var(--win-edge); border-radius: 2px; box-shadow: 0 6px 20px rgba(0, 0, 0, .4); font-size: 13px; line-height: 1.6; }
+#i2card[hidden] { display: none; }
+#i2card .i2name, .i2more .i2name { font-family: var(--f-display); font-weight: 400; font-size: 15px; color: var(--head); letter-spacing: .06em; }
+#i2card .i2eff, .i2more .i2eff { font-family: var(--f-ui); font-size: 12.5px; color: var(--muted); }
+#i2card .i2fl, .i2more .i2fl { margin: 4px 0 0; padding-top: 6px; border-top: 1px solid var(--rule); font-family: var(--f-body); font-style: italic; font-size: 13.5px; line-height: 1.8; color: var(--ink); }
+
+/* 持ち物の窓：名前を押すと、行の下に説明が開く */
+.inv li.i2row { flex-wrap: wrap; }
+.inv .i2pick { cursor: pointer; text-decoration: underline dotted var(--rule); text-underline-offset: 3px; }
+.inv .i2pick:hover, .inv .i2pick[aria-expanded="true"] { color: var(--head); text-decoration-color: var(--accent); }
+.inv .i2pick:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+.inv .i2more { flex-basis: 100%; display: grid; gap: 2px; padding: 4px 2px 6px 10px; border-left: 2px solid var(--rule); margin: 2px 0 4px; }
+.inv .i2more .i2name { display: none; }
+.inv .i2more .i2fl { border-top: 0; padding-top: 0; margin-top: 2px; }
+
+/* 記録の文の品の名前 */
+.i2name[data-i2item] { text-decoration: underline dotted var(--accent); text-underline-offset: 4px; text-decoration-thickness: 1px; cursor: help; }
+dd[data-i2item] { cursor: help; }
