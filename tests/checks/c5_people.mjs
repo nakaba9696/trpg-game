@@ -101,7 +101,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     }
     const own = evs.filter((e) => inEv(e).includes(id));
     if (own.length < 2 || own.length > 4) F(`${w}: 出てくる出来事が 2〜4 個でない：${own.length}`);
-    if (!own.some((e) => e.w > 0 && e.id.startsWith("c5_") && e.cond && e.cond({ day: 10, flags: {}, c2: {}, companions: [] }))) F(`${w}: 十日目に、ふつうに起きる出会いの出来事が無い`);
+    if (!own.some((e) => e.w > 0 && e.id.startsWith("c5_") && e.cond && e.cond({ day: 20, flags: {}, c2: {}, companions: [] }))) F(`${w}: 二十日目に、ふつうに起きる出会いの出来事が無い`);
     if (evs.some((e) => e.c2talk === id)) F(`${w}: 仲間の会話（c2talk）は K1 の仕組みの上で書く`);
     if (p.join) {
       if (!own.some((e) => outs(e).some((o) => o.c2join === id || (Array.isArray(o.c2join) && o.c2join.includes(id))))) F(`${w}: 仲間に加わる出来事が無い`);
@@ -205,7 +205,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     g.newGame({ cls: "merc", stats, caps, goal: Object.keys(g.data.GOALS)[0], profile: { ...PROFILE } });
     g.S.maxHp = g.S.hp = 999;
     g.S.gold = 500;
-    g.S.day = 10;
+    g.S.day = 20;
     if (loc) { g.S.loc = loc; g.S.visited[loc] = true; }
     return g.S;
   };
@@ -270,10 +270,11 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   if (!g.S.flags.c5_sev_name) F("聖歌の眷属を退けても、名が分からない");
   if (!g.e3Keys("aurelia").some((k) => k.id === "c5_severin" && k.met)) F("金色の鱗粉の小瓶が、蝶の奥方の条件にならない");
   // 香売り：屋台 → 鏡を伏せる → 船宿に香を届ける → 香の姐さんの条件
-  start("nerva");
+  start("yakumo");
   if (begin("c5_ruf_stall")) choose("香を一包み買う");
   g.S.day += 8;
   if (begin("c5_ruf_mirror")) choose("黙って");
+  g.S.loc = "nerva";
   g.S.day += 10;
   if (begin("c5_ruf_home")) choose("香を一包み届ける");
   if (!g.S.inv.c5_ember || !g.S.flags.c5_ruf_home) F("香売りの頼みを果たしても、古い香の燃えさしが手に入らないか、名が分からない");
