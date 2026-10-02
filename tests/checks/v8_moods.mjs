@@ -3,7 +3,7 @@
 // - 出来事・結果の mood の値が 4 種（と "normal"）のどれか
 // - 出来事が始まると表情が決まり（データの mood ＞ 文から推す ＞ 続いた結果の mood）、終わると通常に戻る。古いセーブ（S.mood 無し）でも動く
 // - 差分の絵が無ければ通常の絵、あれば差分。立ち絵の印は表情で変わらない（人は出入りせず、顔だけ入れ替わる）
-import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import vm from "node:vm";
 import { JSON_PATH, MOODS as MD_MOODS } from "../../tools/portraits.mjs";
 
@@ -52,12 +52,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (m && !vids.includes(m[1])) F(`assets/portraits/${f} は差分の絵だが、一覧の ${m[1]} に variants が無い`);
     }
   }
-  // 埋め込みの上限：置いてある差分の絵の合計が、上限（12MB）に余裕を残す（4MB まで。タグだけの人は数えない。C7 で人数の見積もりから実物の大きさに）
-  if (existsSync(dir)) {
-    const re = new RegExp(`_(${MOODS.join("|")})\\.(webp|png|jpe?g)$`);
-    const bytes = readdirSync(dir).filter((f) => re.test(f)).reduce((a, f) => a + statSync(new URL(f, dir)).size, 0);
-    if (bytes * 1.34 > 4 * 1024 * 1024) F(`差分の絵が大きすぎる（${Math.round(bytes / 1024)}KB。埋め込みの上限 12MB を圧迫する）`);
-  }
+  // 大きさ：既定は画像を外のファイルにする形（tools/build.mjs）なので、差分の数は埋め込みの上限に縛られない。
+  // 予備の埋め込み（--embed）は上限を超えると差分を省く（tools/assets.mjs の shrink）。外のファイルの大きさは a6_site.mjs が見る
 
   // ---------------------------------------------------------------- 出来事の mood
   const okMood = (m) => m === undefined || MOODS.includes(m);

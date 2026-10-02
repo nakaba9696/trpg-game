@@ -1,4 +1,5 @@
-// V6：持ち主が作った魔物の絵（assets/monsters/<id>.webp。ビルドで G.ASSETS["monsters/<id>"] に埋め込まれる。tools/assets.mjs）を戦闘で描く。
+// V6：持ち主が作った魔物の絵（assets/monsters/<id>.webp。tools/assets.mjs）を戦闘で描く。G.ASSETS["monsters/<id>"] は外のファイルの形（既定）なら
+// HTML の隣の monsters/<id>.webp への相対パス、埋め込み（--embed）なら data URI。どちらも Image の src にそのまま使う。
 // art_monsters.js の入口 G.paintMonster を包むだけ。画像があればそれを、無ければ（読み込み前・読めないときも）今の canvas の絵を描く。
 // 画像は白い無地の背景で作る（docs/art/style_monsters.json）。描く前に一度だけ、縁から続く白を消し、周りをぼかし、足元を闇に沈めて、戦闘の背景になじませる。
 // 出来事・仲間の胸から上の絵（art_people.js が look を付けて呼ぶ）は、切り取り方が canvas の絵に合わせてあるので今の絵のまま。
@@ -93,8 +94,12 @@
     g.globalCompositeOperation = "source-over";
     return (sprites[id] = c);
   }
-  // 埋め込まれた魔物の絵は、最初に読み始めておく（戦闘が始まったときに間に合うように）
-  if (typeof Image === "function") for (const k of Object.keys(A())) if (k.startsWith("monsters/")) image(k.slice(9));
+  // 魔物の絵は、最初に読み始めておく（戦闘が始まったときに間に合うように）。外のファイルの形では、起動の読み込みと取り合わないよう少し後で
+  const preload = () => { for (const k of Object.keys(A())) if (k.startsWith("monsters/")) image(k.slice(9)); };
+  if (typeof Image === "function") {
+    if (G.ASSET_MODE === "files" && typeof setTimeout === "function") setTimeout(preload, 1500);
+    else preload();
+  }
 
   // ---------------------------------------------------------------- 描く（x：真ん中、base：足元、s：大きさ。art_monsters.js と同じ）
   const paint0 = G.paintMonster;
