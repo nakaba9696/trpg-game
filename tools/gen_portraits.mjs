@@ -92,7 +92,14 @@ function loadStyle(name, localPath) {
 const style = loadStyle(KIND.style, stylePath);
 // 異形（魔物の一覧の style: "eldritch"）は別の設定。使うときだけ読む。url は魔物の設定のもの
 const STYLES = { monsters: style };
+// 男の人物（人物の一覧で identity・tags に 1boy / male / old man / boy がある人）は style_male.json を重ねる（持ち主の絵柄は可愛い女の子向けのため）
+const MALE_RE = /(^|,\s*)(\d*boys?|male|male focus|old man|man|young man)(\s*,|$)/i;
+const isMale = (p) => !MON && MALE_RE.test([p.identity, p.tags].flat().filter(Boolean).join(", "));
 const baseOf = (p) => {
+  if (isMale(p)) {
+    if (!STYLES.male) STYLES.male = Object.assign({}, style, loadStyle("style_male", path.join(art, "style_male.local.json")));
+    return STYLES.male;
+  }
   if (!MON || p.style !== "eldritch") return style;
   if (!STYLES.eldritch) STYLES.eldritch = loadStyle("style_eldritch", path.join(art, "style_eldritch.local.json"));
   return STYLES.eldritch;
