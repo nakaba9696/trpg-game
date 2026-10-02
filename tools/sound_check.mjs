@@ -38,6 +38,17 @@ const res = await page.evaluate(async () => {
     S._offline(ctx, name, false);
     out.push({ kind: "効果音", name, ...measure(await ctx.startRendering()) });
   }
+  // S2：ダイスを振る音は毎回違うので、何度か鳴らして確かめる。振る音 → 結果の音（遅らせて重ねる）の組も見る
+  for (let i = 0; i < 6; i++) for (const name of ["roll", "rollShort"]) {
+    const ctx = new OfflineAudioContext(2, 44100 * 3, 44100);
+    S._offline(ctx, name, false);
+    out.push({ kind: "効果音", name: `${name}#${i + 1}`, ...measure(await ctx.startRendering()) });
+  }
+  for (const res of ["ok", "ng", "crit", "fumble"]) {
+    const ctx = new OfflineAudioContext(2, 44100 * 5, 44100);
+    S._offline(ctx, ["roll", res], false, [0, S.ROLL_LAG]);
+    out.push({ kind: "効果音", name: `roll→${res}`, ...measure(await ctx.startRendering()) });
+  }
   for (const name of S.ambNames) {
     const ctx = new OfflineAudioContext(2, 44100 * 8, 44100);
     S._offline(ctx, name, true);
