@@ -174,6 +174,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const chain = (key, loc, setup) => {
     S = start("男");
     setup(S);
+    if (D.R2 && D.R2.AP_MEET && D.R2.AP_MEET[key]) D.R2.AP_MEET[key](S); // R2 で足した段（気になる・すれ違い・難しい道）をそろえる（src/data/romance_<key>.js）
     S.loc = loc; S.mode = "explore";
     S.day = 50;
     for (let n = 1; n <= 4; n++) {
