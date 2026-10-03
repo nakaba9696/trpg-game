@@ -930,7 +930,7 @@
     "faint_smile": "faint smile, eyes closed, sleeping"
    },
    "memo": "眠り続ける幼子の姿の使徒（使徒リスト 2）。いつも目を閉じて眠っている。逆さの夢に出る。子どもらしく",
-   "redo": "multi"
+   "art": 2
   },
   {
    "id": "walker",
@@ -2579,7 +2579,7 @@
    "identity": "1girl, woman, 30 years old, chestnut brown hair, bob cut, blunt bangs, violet eyes",
    "tags": "merchant, vest, coin pouch",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_guard_m",
@@ -2599,7 +2599,7 @@
    "identity": "1girl, woman, 30 years old, auburn hair, long hair, blunt bangs, blue eyes",
    "tags": "town guard, helmet, tabard, spear",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_priest_m",
@@ -2619,7 +2619,7 @@
    "identity": "1girl, woman, 30 years old, dark brown hair, long hair, blunt bangs, green eyes",
    "tags": "priest, white vestment, sun emblem",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_noble_m",
@@ -2639,7 +2639,7 @@
    "identity": "1girl, woman, 30 years old, lavender hair, long hair, crown braid, blunt bangs, amber eyes",
    "tags": "noble, elegant clothes, jewelry",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_rogue_m",
@@ -2659,7 +2659,7 @@
    "identity": "1girl, woman, 30 years old, dark blue hair, long hair, blunt bangs, amber eyes",
    "tags": "rogue, bandana, dark leather clothes, dagger, scar",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_soldier_m",
@@ -2717,7 +2717,7 @@
    "identity": "1girl, woman, 30 years old, teal hair, medium hair, light blue eyes",
    "tags": "sailor, striped shirt, bandana, earring",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_mage_m",
@@ -2794,7 +2794,7 @@
    "identity": "1girl, woman, 30 years old, ash blonde hair, long hair, amber eyes",
    "tags": "ragged clothes, dirty, tired",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_archer_m",
@@ -2814,7 +2814,7 @@
    "identity": "1girl, woman, 30 years old, dark green hair, medium hair, amber eyes",
    "tags": "hunter, archer, green hooded cloak, bow",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_adventurer_m",
@@ -2834,7 +2834,7 @@
    "identity": "1girl, woman, 30 years old, pink hair, medium hair, blunt bangs, violet eyes",
    "tags": "adventurer, leather armor, sword",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "redo": "color"
+   "art": 2
   },
   {
    "id": "kind_elder_m",
