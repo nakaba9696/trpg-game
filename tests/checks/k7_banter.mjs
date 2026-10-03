@@ -92,7 +92,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     for (const b of trios) {
       if (!(P[b.c] || {}).join) F(`${b.id}: 三人目 ${b.c} が仲間になる人でない`);
       if (b.c === b.a || b.c === b.b) F(`${b.id}: 三人目が重なっている`);
-      if (!b.lines.some((l) => Array.isArray(l) && l[0] === "c")) F(`${b.id}: 三人目が話さない`);
+      if (!b.lines.some((l) => Array.isArray(l) && (l[0] === "c" || /\{c\}/.test(l[1])))) F(`${b.id}: 三人目が出てこない（c が話すか、地の文に {c}）`);
       if (b.side) for (const s of ["a", "b", "none"]) if (b.side[s] && b.side[s].aff && b.side[s].aff.length > 3) F(`${b.id}: aff が長い`);
     }
     for (const b of B) {
@@ -184,7 +184,9 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
       else {
         G.tk.banter(got);
         const cName = G.m2Short(S.companions.find((c) => c.c2 === got.c));
-        if (!S.log.some((l) => (l.text || "").startsWith(cName + "「"))) F("三人の場面で三人目の台詞に名前が付かない");
+        const speaks = got.lines.some((l) => l[0] === "c");
+        if (speaks && !S.log.some((l) => (l.text || "").startsWith(cName + "「"))) F("三人の場面で三人目の台詞に名前が付かない");
+        if (!speaks && !S.log.some((l) => (l.text || "").includes(cName))) F("三人の場面に三人目の名前が出ない");
         if (S.log.some((l) => leftover(l.text || ""))) F("三人の場面の記録に置き換えが残る");
         if (S.event === "tk_banter") { G.act("ev:0"); if (S.tk.cur || S.mode !== "explore") F("三人の場面の肩を持つ選択のあと、会話が終わらない"); }
       }
