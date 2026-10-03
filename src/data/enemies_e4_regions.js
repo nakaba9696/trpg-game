@@ -1,5 +1,5 @@
 // 地域ごとの魔物・獣・賊・亡者（E4）。欄の意味は enemies.js・enemies_2.js と同じ。加えて任意の欄（engine/zzz_e4_foes.js が読む）：
-//   rg    出る地域（D.E4.RG の鍵）。その地域の、危険度に合う段（危険度 -1〜危険度）の野と迷宮の出現表に、読み込みのあとで入る。
+//   rg    出る地域（D.E4.RG の鍵）。その地域の、危険度に合う段（危険度 -1〜危険度）の野と迷宮の出現表（L.e4pool）に、読み込みのあとで入る。
 //         W3・W4 の新しい場所も、地域名が合えば自動で入る。also: [場所 id] はそれに加えて必ず入る場所
 //   when  出る時（{ night: true } 夜だけ / { day: true } 昼だけ / season: ["冬"] / weather: ["雪", "霧"]）。迷宮の中では見ない
 //   pack  [最小, 最大] 群れで出る数（2〜4）
@@ -109,6 +109,13 @@
       look: { body: "quad", head: "wolf", skin: "#8a6a4a", skin2: "#e0c8a8", eyes: "slit", mouth: "fangs", tail: "thin", extra: ["scarf"], mood: "fierce" },
     },
 
+    e4_cinderhound: {
+      name: "火口の犬", tier: 3, hp: 26, dmg: [1, 8, 2], hit: 60, def: 10, agi: 55, will: 60, mres: 15, gold: [0, 20], loot: [["fang", 0.4], ["gem", 0.06]], shape: "beast", eye: "#ffb03a",
+      rg: "王国", acts: ["enrage"], weak: "ice",
+      desc: "王国の南の火山の斜面に棲む、炭のような毛の犬。走った跡の草が焦げる。冷やされると、毛の火が消えて縮こまる。",
+      look: { body: "quad", head: "wolf", skin: "#2a2220", skin2: "#ff8a3a", eyes: "glow", mouth: "fangs", tail: "spike", pattern: "lava", extra: ["smoke"], mood: "fierce" },
+    },
+
     // ================================================================ 教会領（聖都の地下墓地と、その周り）
     e4_penitent: {
       name: "鞭打ちの巡礼", tier: 2, hp: 22, dmg: [1, 6, 1], hit: 55, def: 5, agi: 30, will: 70, mres: 10, gold: [2, 15], loot: [["holywater", 0.15]], shape: "humanoid", eye: "#ff8a6a",
@@ -138,9 +145,9 @@
       look: { body: "biped", build: "stubby", skin: "#f0e0c0", skin2: "#fff4d8", head: "plain", eyes: "closed", mouth: "flat", arms: "hands", outfit: "robe", cloth: "#e8d8b0", pattern: "cracks", extra: ["runes", "smoke"], mood: "calm" },
     },
     e4_ossuaryhound: {
-      name: "骨堂の番犬", tier: 3, hp: 26, dmg: [1, 8, 2], hit: 60, def: 10, agi: 55, will: 999, mres: 10, undead: true, gold: [0, 10], loot: [["fang", 0.4]], shape: "beast", eye: "#7dffb0",
-      rg: "教会領", pack: [2, 2], acts: ["call"], weak: "holy",
-      desc: "墓所に埋められた番犬の骨が、主を待ってまだ歩いている。遠吠えで、ほかの骨を起こす。",
+      name: "骨堂の番犬", tier: 3, hp: 18, dmg: [1, 6, 1], hit: 55, def: 10, agi: 55, will: 999, mres: 10, undead: true, gold: [0, 10], loot: [["fang", 0.4]], shape: "beast", eye: "#7dffb0",
+      rg: "教会領", pack: [2, 2], acts: ["rout"], weak: "holy",
+      desc: "墓所に埋められた番犬の骨が、主を待って二頭ずつ歩いている。片割れが崩れると、残った一頭は主を探しに奥へ去る。",
       look: { body: "quad", head: "wolf", bones: true, skin: "#2a2a24", skin2: "#e0dccb", eyes: "hollow", mouth: "jaw", tail: "thin", mood: "fierce" },
     },
     e4_candlewidow: {
@@ -206,9 +213,9 @@
       elder: { id: "e4_snowwolf_x", name: "雪狼の頭目", desc: "銀色の毛に古い矢傷が何本も走る、大きな雌の雪狼。群れは、この遠吠えで動く。", item: ["銀の狼皮", "雪狼の頭目の毛皮。銀色で、雪の光を吸ったように淡く光る。帝国の将校が外套の襟に欲しがるが、持っている者は少ない。", 100] },
     },
     e4_iciclewraith: {
-      name: "氷柱の霊", tier: 3, hp: 24, dmg: [1, 8, 2], hit: 60, def: 10, agi: 50, will: 999, mres: 25, undead: true, gold: [0, 20], loot: [["manawater", 0.2]], shape: "winged", eye: "#bfe8ff",
-      rg: "帝国", when: { season: ["冬", "秋"] }, acts: ["sleep"], weak: "fire",
-      desc: "軒先の氷柱に宿った、凍え死んだ者の気配。吐く息で、相手を眠るように凍えさせる。",
+      name: "氷柱の霊", tier: 3, hp: 22, dmg: [1, 8, 1], hit: 55, def: 10, agi: 50, will: 999, mres: 10, undead: true, gold: [0, 20], loot: [["manawater", 0.2]], shape: "winged", eye: "#bfe8ff",
+      rg: "帝国", when: { season: ["冬", "秋"] }, acts: ["drain"], weak: "fire",
+      desc: "軒先の氷柱に宿った、凍え死んだ者の気配。触れた者の温もりを吸って、自分の氷を太らせる。",
       look: { body: "blob", skin: "#a8d0e8", skin2: "#e8f8ff", eyes: "hollow", mouth: "o", pattern: "cracks", extra: ["float", "smoke"], mood: "fierce" },
     },
     e4_pressgang: {
@@ -225,7 +232,7 @@
       look: { body: "biped", build: "stubby", skin: "#8a8a7a", head: "human", hair: "#3a3a3a", eyes: "hollow", mouth: "jaw", weapon: "axe", outfit: "rags", cloth: "#4a4038", pattern: "ribs", extra: ["cap", "pouch"], mood: "fierce" },
     },
     e4_frostbear: {
-      name: "霜熊", tier: 3, hp: 36, dmg: [2, 6, 1], hit: 55, def: 10, agi: 30, will: 60, mres: 5, gold: [0, 0], loot: [["pelt", 0.6], ["fang", 0.3]], shape: "beast", eye: "#e8f0ff",
+      name: "霜熊", tier: 3, hp: 32, dmg: [2, 6, 0], hit: 55, def: 10, agi: 30, will: 60, mres: 5, gold: [0, 0], loot: [["pelt", 0.6], ["fang", 0.3]], shape: "beast", eye: "#e8f0ff",
       rg: "帝国", acts: ["enrage"],
       desc: "毛に霜をまとった大熊。冬眠し損ねた年は気が立っていて、深手を負うと手がつけられなくなる。",
       look: { body: "quad", head: "plain", skin: "#c8d0d8", skin2: "#f0f4f8", ears: "round", eyes: "slit", mouth: "fangs", arms: "claws", tail: "none", extra: ["fur"], mood: "fierce" },

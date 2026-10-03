@@ -1260,6 +1260,13 @@
    "name": "赤砂の女王蠍",
    "tags": "giant scorpion, red carapace, stinger tail, four glowing eyes, red sand, much larger, old, grizzled, many battle scars, imposing",
    "memo": "赤砂の蠍の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_cinderhound",
+   "file": "assets/monsters/e4_cinderhound.webp",
+   "name": "火口の犬",
+   "tags": "volcanic hound, charcoal black fur, glowing orange lava cracks, embers, smoke, fangs, spiked tail",
+   "memo": "火山の斜面の、炭のような毛の犬"
   }
  ]
 }

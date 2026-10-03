@@ -30,7 +30,7 @@
 | `assets/monsters/e2_mordu.webp` | 苔衣の使徒セグリトス | plant monster, tall, gardener, covered in mud and moss, wilted flowers growing from head, wide-brimmed hat, one glowing eye, long claws, holding pitchfork, pollen, spores, rotting | 使徒（ボス）の魔物の姿。泥と苔の庭師。甘い腐臭 |
 | `assets/monsters/w2_ironwarden.webp` | 溶けかけた機械兵 | iron golem, giant robot, ancient machine, huge, melted metal, acid, rust, glowing eyes, heavy armor, holding club, steam | ボス。半分溶けた鉄の巨人 |
 
-## 魔物（140）
+## 魔物（141）
 
 ふつうの敵のうち、魔物の姿のもの。
 
@@ -176,6 +176,7 @@
 | `assets/monsters/e4_ladderGob_x.webp` | ゴブリン隊の頭目 | goblin soldiers, carrying siege ladder, helmets, spears, crude armor, war cry, much larger, old, grizzled, many battle scars, imposing | 梯子担ぎのゴブリン隊の強い個体。ひと回り大きく、古傷だらけ |
 | `assets/monsters/e4_ashwyrm_x.webp` | 年経た灰の地竜 | wingless dragon, ash-grey scales, glowing lava cracks, long horns, crawling through ash, much larger, old, grizzled, many battle scars, imposing | 灰の地竜の強い個体。ひと回り大きく、古傷だらけ |
 | `assets/monsters/e4_redscorpion_x.webp` | 赤砂の女王蠍 | giant scorpion, red carapace, stinger tail, four glowing eyes, red sand, much larger, old, grizzled, many battle scars, imposing | 赤砂の蠍の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_cinderhound.webp` | 火口の犬 | volcanic hound, charcoal black fur, glowing orange lava cracks, embers, smoke, fangs, spiked tail | 火山の斜面の、炭のような毛の犬 |
 
 ## 人の姿の敵（20）
 

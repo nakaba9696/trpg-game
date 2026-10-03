@@ -18,7 +18,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const kin = ids.filter((id) => E[id].kinOf);
   const packs = ids.filter((id) => E[id].pack);
   const ACTS = Object.keys(E4.ACT_NAME || {});
-  const inPool = (id) => Object.values(D.LOCS).some((L) => (L.pool || []).includes(id));
+  const inPool = (id) => Object.values(D.LOCS).some((L) => (L.e4pool || []).includes(id));
 
   // ---------------------------------------------------------------- 数と地域
   if (regional.length < 50) F(`地域の魔物が ${regional.length}（50 以上）`);
@@ -33,11 +33,12 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const [region, danger, want] of [["人類の最前線", 4, "e4_ladderGob"], ["南西の島々", 3, "e4_islepirate"], ["光天教会領", 2, "e4_bellbat"], ["レオネスト王国", 2, "e4_brokenknight"]]) {
     D.LOCS.e4_test = { name: "試しの野", region, type: "wild", danger, pool: ["goblin"] };
     E4.spread();
-    if (!D.LOCS.e4_test.pool.includes(want)) F(`新しい場所（${region}・危険度 ${danger}）に ${want} が入らない`);
-    if (D.LOCS.e4_test.pool.some((id) => /^e4/.test(id) && (E[id].tier > danger || E[id].kinOf))) F(`新しい場所（${region}）に段の合わない敵か眷属が入った`);
+    if (!(D.LOCS.e4_test.e4pool || []).includes(want)) F(`新しい場所（${region}・危険度 ${danger}）に ${want} が入らない`);
+    if ((D.LOCS.e4_test.e4pool || []).some((id) => /^e4/.test(id) && (E[id].tier > danger || E[id].kinOf))) F(`新しい場所（${region}）に段の合わない敵か眷属が入った`);
     delete D.LOCS.e4_test;
   }
-  for (const L of Object.values(D.LOCS)) for (const id of L.pool || []) if (/^e4/.test(id) && E[id].tier > Math.max(2, L.danger + 1)) F(`${L.name}（危険度 ${L.danger}）に段 ${E[id].tier} の ${id}`);
+  for (const L of Object.values(D.LOCS)) for (const id of L.pool || []) if (/^e4/.test(id)) F(`${L.name} の pool に E4 の敵 ${id}（e4pool に置く）`);
+  for (const L of Object.values(D.LOCS)) for (const id of L.e4pool || []) if (E[id].tier > Math.max(2, L.danger + 1)) F(`${L.name}（危険度 ${L.danger}）に段 ${E[id].tier} の ${id}`);
   const timed = ids.filter((id) => E[id].when);
   if (timed.filter((id) => E[id].when.night).length < 5 || timed.filter((id) => E[id].when.season).length < 3 || timed.filter((id) => E[id].when.weather).length < 3) F("夜・季節・天候で出る魔物が少ない（夜 5・季節 3・天候 3 以上）");
 
@@ -52,19 +53,22 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   };
   const at = (g, loc, phase, sky) => { g.S.loc = loc; g.S.phase = phase; g.S.travel = null; g.S.mode = "explore"; g.S.combat = null; g.skyAt = () => sky || { season: "春", weather: "晴" }; };
 
-  // ---------------------------------------------------------------- 昼夜：夜だけの魔物は昼に出ない
+  // ---------------------------------------------------------------- 昼夜：夜だけの魔物は昼に出ない。出会いに E4 の敵が混ざる
   {
     const g = loadEngine();
     start(g, 11);
+    const seen = (loc, phase, sky, n) => { const out = new Set(); for (let i = 0; i < n; i++) { at(g, loc, phase, sky); g.startCombat(["goblin"], {}); g.S.combat.foes.forEach((f) => out.add(f.id)); } g.S.combat = null; return out; };
+    const day = seen("forest", 1, null, 120), night = seen("forest", 3, null, 120);
+    if (day.has("e4_mosswisp")) F("夜だけの苔灯りが昼に出た");
+    if (!night.has("e4_mosswisp")) F("夜の森に苔灯りが出ない");
+    if (![...day].some((id) => /^e4_/.test(id))) F("森の出会いに E4 の魔物が混ざらない");
+    if (!day.has("goblin")) F("E4 の魔物ばかりで、前からの敵が出なくなった");
+    if (seen("plains", 1, { season: "冬", weather: "晴" }, 120).has("e4_cropcrow")) F("夏と秋だけの大烏が冬に出た");
+    if (!seen("plains", 1, { season: "秋", weather: "晴" }, 120).has("e4_cropcrow")) F("秋の丘陵に大烏が出ない");
     at(g, "forest", 1);
-    for (let i = 0; i < 40; i++) { g.startCombat(["e4_mosswisp"], {}); if (g.S.combat.foes.some((f) => f.id === "e4_mosswisp")) { F("夜だけの苔灯りが昼に出た"); break; } g.S.combat = null; }
-    at(g, "forest", 3);
     g.startCombat(["e4_mosswisp"], {});
-    if (!g.S.combat.foes.some((f) => f.id === "e4_mosswisp" || f.id === E4.ELDER_OF.e4_mosswisp)) F("夜の苔灯りが夜に出ない");
-    at(g, "plains", 1, { season: "冬", weather: "晴" });
-    g.startCombat(["e4_cropcrow"], {});
-    if (g.S.combat.foes.some((f) => f.id === "e4_cropcrow")) F("夏と秋だけの大烏が冬に出た");
-    // 名指しの戦い（出来事・迷宮の主）は引き直さない
+    if (g.S.combat.foes.some((f) => f.id === "e4_mosswisp")) F("名指しで呼んでも、夜だけの苔灯りが昼に出た");
+    // 勝ったときの結果つきの戦い（出来事・迷宮の主）は引き直さない
     at(g, "plains", 1, { season: "冬", weather: "晴" });
     g.startCombat(["e4_cropcrow"], { win: { fame: 1 } });
     if (g.S.combat.foes[0].id !== "e4_cropcrow") F("名指しの戦いの敵が引き直された");
@@ -155,7 +159,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const id of kin) {
     const e = E[id];
     if (!L3[e.kinOf]) F(`${id}: 使徒 ${e.kinOf} がいない`);
-    if (!(e.where || []).length || !e.where.every((l) => (D.LOCS[l].pool || []).includes(id))) F(`${id}: 縄張りの出現表にいない`);
+    if (!(e.where || []).length || !e.where.every((l) => !D.LOCS[l] || (D.LOCS[l].e4pool || []).includes(id))) F(`${id}: 縄張りの出現表にいない`);
     if (!e.clue || !e.clue.text || !e.clue.memo) F(`${id}: 倒したときの手がかりが無い`);
   }
   {

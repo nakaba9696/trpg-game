@@ -1,6 +1,6 @@
 // 使徒の眷属（E4）。使徒（data/e3_apostles.js の D.E3.LIST）ごとに、縄張りに出る眷属を 2 種ずつ。
 // 欄は enemies_e4_regions.js と同じ（acts・weak・pack・when）。加えて：
-//   kinOf  どの使徒の眷属か（D.E3.LIST の id）。where [場所 id] の出現表に入る（町に棲む使徒は、隣の野）。出現表から引かれても半分は見送る
+//   kinOf  どの使徒の眷属か（D.E3.LIST の id）。where [場所 id] の出現表（L.e4pool）に入る（町に棲む使徒は、隣の野）。出現表から引かれても半分は見送る
 //   clue   初めて倒したとき、使徒の弱みの手がかりを一行（{ text, memo }）。答えは書かない
 // 縄張りの眷属を二体退けると、その使徒は弱る（条件をもう一つ満たしたのに近い。下の CORE。engine/zzz_e4_foes.js が数えて G.e3Mods を包む）。
 // 正体・使徒の名前は地の文に出さない（docs/lore/voice.md）。レーン E（敵）が管理
@@ -244,9 +244,9 @@
     // ---------------------------------------------------------------- 閉じ月（野。二つ目の月の夜）
     e4k_moonhare: {
       name: "二つ月の兎", tier: 3, hp: 20, dmg: [1, 6, 2], hit: 60, def: 5, agi: 80, will: 999, mres: 20, gold: [0, 15], loot: [["pelt", 0.4]], shape: "beast", eye: "#fff0a0",
-      kinOf: "tojizuki", where: ["frost", "w2_echo", "mountains"], when: { night: true }, acts: ["fleecall"], call: "e4k_moonarcher",
+      kinOf: "tojizuki", where: ["frost", "w2_echo", "mountains"], when: { night: true }, acts: ["fleecall"],
       clue: { text: "兎は、水たまりに映った月を見て足を止めた。空の月には跳びかかるのに、水の中の月には近づかない。", memo: "二つ月の兎は、水に映った月には近づかない" },
-      desc: "二つ目の月が昇る夜にだけ跳ね回る白い兎。深手を負うと月へ逃げ、弓を持った者を連れて戻る。",
+      desc: "二つ目の月が昇る夜にだけ跳ね回る白い兎。深手を負うと月へ逃げ、別の兎を連れて戻る。",
       look: { body: "quad", head: "plain", skin: "#f0ece0", skin2: "#ffffff", ears: "pointy", eyes: "glow", mouth: "o", tail: "none", extra: ["float"], mood: "fierce" },
     },
     e4k_moonarcher: {
@@ -282,7 +282,7 @@
       look: { body: "biped", build: "lanky", skin: "#9a8a7a", head: "hood", eyes: "hollow", mouth: "frown", arms: "forward", outfit: "rags", cloth: "#4a3a2a", pattern: "scars", extra: ["bone"], mood: "fierce" },
     },
     e4k_guiltdog: {
-      name: "咎の犬", tier: 3, hp: 24, dmg: [1, 8, 2], hit: 60, def: 10, agi: 60, will: 999, mres: 5, gold: [0, 15], loot: [["fang", 0.4]], shape: "beast", eye: "#ff3a3a",
+      name: "咎の犬", tier: 3, hp: 20, dmg: [1, 6, 2], hit: 55, def: 10, agi: 60, will: 999, mres: 5, gold: [0, 15], loot: [["fang", 0.4]], shape: "beast", eye: "#ff3a3a",
       kinOf: "togaoi", where: ["w2_echo"], acts: ["call"],
       clue: { text: "犬は、血の匂いを嗅ぎ分けて吠える。けれど煙玉の煙を浴びると、くしゃみをして、追う相手を見失った。", memo: "咎の犬は、煙玉の煙で追う相手を見失った" },
       desc: "人を殺めた者の匂いを追う犬。吠えれば、谷じゅうの咎の犬が集まる。",

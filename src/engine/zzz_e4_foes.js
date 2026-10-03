@@ -1,7 +1,7 @@
 // E4：地域の魔物・強い個体・群れ・眷属・戦いの手ざわり（data/enemies_e4_regions.js・data/enemies_e4_kin.js）。
 // combat.js・explore.js は書き換えず、包む：
-//   1. 出現表：rg（地域）・also・where を、読み込みのあとで場所の pool に入れる（W3・W4 の新しい場所も地域名で当たる）
-//   2. 出会い（G.startCombat）：出現表から引いた敵だけ、when（昼夜・季節・天候）に合わなければ引き直す。眷属は半分見送る。
+//   1. 出現表：rg（地域）・also・where を、読み込みのあとで場所の e4pool に入れる（W3・W4 の新しい場所も地域名で当たる）
+//   2. 出会い（G.startCombat）：出現表から引いた敵を、ある割合で e4pool の敵に替える。when（昼夜・季節・天候）に合う敵だけ。眷属は半分見送る。
 //      強い個体（elder）にまれに入れ替わる。群れ（pack）は数をそろえる
 //   3. 手番（G.combatAct）：眠り・武器を落とした・仲間が押さえ込まれた分を先に済ませ、庇う（guard）を当て、
 //      手番のあとに弱点（weak）の上乗せと、敵ごとの行動（acts）を出す。倒した眷属は手がかりと縄張りの数に、強い個体はトロフィーに
@@ -15,6 +15,8 @@
   const kinOf = (id) => (E()[id] || {}).kinOf;
 
   // ---------------------------------------------------------------- 1. 出現表
+  // E4 の敵は場所の pool には入れず、場所ごとの別の表 L.e4pool に置く。出会いのときに pool から引いた敵と、ある割合で入れ替える。
+  // （pool を数える仕組み〔依頼の的・ボットの見積もり・ほかの子の出来事〕を変えないため。図鑑の出現場所は e4pool からも引く）
   const RG = Object.fromEntries(Object.entries(E4.RG || {}).map(([k, v]) => [k, new RegExp(v)]));
   E4.fitTier = (tier, danger) => danger >= 1 && tier <= danger && tier >= Math.max(1, danger - 1);
   E4.placeOf = (id, lid) => {
@@ -27,13 +29,15 @@
     const ids = Object.keys(E()).filter(isE4);
     Object.keys(D.LOCS).forEach((lid) => {
       const L = D.LOCS[lid];
-      ids.forEach((id) => { if (E4.placeOf(id, lid) && !L.pool.includes(id)) L.pool.push(id); });
+      ids.forEach((id) => { if (E4.placeOf(id, lid)) { L.e4pool = L.e4pool || []; if (!L.e4pool.includes(id)) L.e4pool.push(id); } });
     });
   };
   E4.spread();
+  E4.where = (id) => Object.keys(D.LOCS).filter((lid) => (D.LOCS[lid].e4pool || []).includes(id));
 
   // ---------------------------------------------------------------- 2. 出会い
-  const P = { elder: 0.05, elderNight: 0.08, kinSkip: 0.5 };
+  // mix：pool から引いた一体が E4 の敵に替わる割合の上限（e4pool の数 ÷ 両方の数。多くても 35%）
+  const P = { elder: 0.05, elderNight: 0.08, kinSkip: 0.5, mix: 0.35 };
   E4.P = P;
   E4.whenOk = (e, S) => {
     const w = e && e.when;
@@ -47,40 +51,44 @@
     if (w.weather && sky && !w.weather.includes(sky.weather)) return false;
     return true;
   };
-  // 出現表から引いた出会いか（出来事の「その場の敵」も含む）。決めて呼ばれた敵（ボス・中ボス・出来事の名指し）は触らない
-  const poolNow = (S) => {
-    const out = new Set((D.LOCS[S.loc] || {}).pool || []);
-    if (S.travel) ((D.LOCS[S.travel] || {}).pool || []).forEach((x) => out.add(x));
-    return out;
-  };
+  // 出現表（pool か e4pool）から引いた出会いか（出来事の「その場の敵」も含む）。勝ったときの結果つきの戦い（ボス・中ボス・出来事の名指し）は触らない
   E4.shape = (ids) => {
     const S = G.S;
     if (!S || !ids.length) return ids;
-    const pool = poolNow(S);
-    if (!ids.every((id) => pool.has(id) && E()[id] && !E()[id].boss)) return ids;
-    if (!ids.some((id) => isE4(id))) return ids; // 前からの敵だけなら乱数も使わない
+    const locs = [S.loc, S.travel].filter(Boolean).map((l) => D.LOCS[l]).filter((L) => L && (L.pool || []).length);
+    const from = (id) => locs.find((L) => L.pool.includes(id) || (L.e4pool || []).includes(id));
+    if (!ids.every((id) => E()[id] && !E()[id].boss && from(id))) return ids;
     const okFor = (id) => E4.whenOk(E()[id], S);
-    const plain = [...pool].filter((id) => E()[id] && !E()[id].boss && !kinOf(id) && okFor(id));
     let out = ids.map((id) => {
-      const e = E()[id];
-      if (!isE4(id)) return id;
-      if (!okFor(id) || (e.kinOf && G.rand() < P.kinSkip)) return plain.length ? G.pick(plain) : id;
-      return id;
+      const L = from(id);
+      const plain = L.pool.filter((x) => E()[x] && !E()[x].boss && !isE4(x));
+      if (isE4(id)) { // 名指しの E4 の敵：時と空が合わなければ、眷属は半分、その場の並の敵に替える
+        if (!okFor(id) || (E()[id].kinOf && G.rand() < P.kinSkip)) return plain.length ? G.pick(plain) : id;
+        return id;
+      }
+      const extra = (L.e4pool || []).filter(okFor);
+      if (!extra.length || G.rand() >= Math.min(P.mix, extra.length / (plain.length + extra.length))) return id;
+      const x = G.pick(extra);
+      return E()[x].kinOf && G.rand() < P.kinSkip ? id : x;
     });
     // 強い個体（まれ。夜は少し多い）
     out = out.map((id) => {
       const x = (E4.ELDER_OF || {})[id];
       return x && E()[x] && G.rand() < (S.phase === 3 ? P.elderNight : P.elder) ? x : id;
     });
-    // 群れ：数をそろえる（全体で 4 体まで）
+    // 群れ：数をそろえる（全体の数は場所の危険度まで：危険度 1 は 2 体・2〜3 は 3 体・4 から 4 体）
     const head = out.find((id) => E()[id].pack);
     if (head) {
       const [lo, hi] = E()[head].pack;
       const n = lo + Math.floor(G.rand() * (hi - lo + 1));
-      while (out.filter((x) => x === head).length < n && out.length < 4) out.push(head);
+      const cap = E4.packCap(S);
+      if (out.length > cap) out = out.slice(0, cap);
+      while (out.filter((x) => x === head).length < n && out.length < cap) out.push(head);
     }
     return out;
   };
+  const dangerNow = (S) => Math.max((D.LOCS[S.loc] || {}).danger || 1, S.travel ? (D.LOCS[S.travel] || {}).danger || 1 : 1);
+  E4.packCap = (S) => { const d = dangerNow(S); return d <= 1 ? 2 : d <= 3 ? 3 : 4; };
   const baseStart = G.startCombat;
   G.startCombat = (ids, opt) => {
     const o = opt || {};
@@ -138,11 +146,12 @@
     if (G.codexMeet) G.codexMeet(id);
     return f;
   }
+  const callMax = () => (dangerNow(G.S) <= 3 ? 1 : 2); // 呼べる数（危険度 3 までの場所では一度だけ）
   // 行動ひとつずつ（手番のあと、凍っていない敵が、決まった見込みで）
   const ACT = {
     poison: (f, e) => {
       const S = G.S;
-      if (S.conds.includes("毒") || G.rand() >= 0.28) return;
+      if (S.conds.includes("毒") || G.rand() >= 0.2) return;
       if (G.d(100) > G.clamp(e.hit - Math.floor(G.statEff("敏捷") / 5), 5, 90)) { G.note(`${f.name}の毒をかわした。`); return; }
       S.conds.push("毒");
       G.say(`${f.name}の毒が傷口から回った。体が重い。`);
@@ -195,7 +204,7 @@
     },
     call: (f, e) => {
       const C = G.S.combat;
-      if ((C.e4calls || 0) >= 2 || G.rand() >= 0.18) return;
+      if ((C.e4calls || 0) >= callMax() || G.alive().length >= E4.packCap(G.S) || G.rand() >= 0.15) return;
       C.e4calls = (C.e4calls || 0) + 1;
       if (!addFoe(e.call || f.id, `${f.name}の呼び声に応えて、{n}が駆けつけた。`)) C.e4calls--;
     },
@@ -204,7 +213,7 @@
       if (f.hp > f.max * 0.4 || f.e4fled || G.rand() >= 0.5) return;
       C.foes.splice(C.foes.indexOf(f), 1);
       G.say(`${f.name}は身をひるがえして逃げていった。……遠くで、何かを呼ぶ声がする。`);
-      if ((C.e4calls || 0) < 2) { C.e4calls = (C.e4calls || 0) + 1; addFoe(e.call || f.id, "{n}が、逃げた者に連れられて現れた。"); }
+      if ((C.e4calls || 0) < callMax()) { C.e4calls = (C.e4calls || 0) + 1; addFoe(e.call || f.id, "{n}が、逃げた者に連れられて現れた。"); }
     },
     regen: (f) => {
       if (f.hp >= f.max) return;
@@ -372,7 +381,7 @@
       return rows;
     };
   }
-  // 強い個体の出現場所：元の種の出現場所を「まれに」で
+  // 出現場所：e4pool の場所と、強い個体は元の種の出現場所を「まれに」で
   if (G.f2 && G.f2.index) {
     const F2 = G.f2;
     const baseIndex = F2.index;
@@ -381,6 +390,10 @@
       const ix = baseIndex();
       if (done === ix) return ix;
       done = ix;
+      Object.entries(D.LOCS).forEach(([lid, L]) => (L.e4pool || []).forEach((id) => {
+        const a = (ix.foe[id] = ix.foe[id] || []);
+        if (!a.some((r) => r.text === L.name)) a.push({ rank: 0, text: L.name, region: L.region, n: a.length });
+      }));
       Object.entries(E4.ELDER_OF || {}).forEach(([base, x]) => {
         if (ix.foe[x]) return;
         ix.foe[x] = (ix.foe[base] || []).map((r, n) => ({ rank: r.rank, text: `${r.text}（まれに）`, region: r.region, n }));
