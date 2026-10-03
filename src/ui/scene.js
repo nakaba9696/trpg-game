@@ -622,6 +622,83 @@
       for (let i = 0; i < 7; i++) { const g = ctx.createLinearGradient(0, h * (0.5 + i * 0.06), 0, h * (0.58 + i * 0.06)); g.addColorStop(0, "rgba(160,220,110,0)"); g.addColorStop(0.5, "rgba(160,220,110,.16)"); g.addColorStop(1, "rgba(160,220,110,0)"); ctx.fillStyle = g; ctx.fillRect(0, h * (0.5 + i * 0.06), w, h * 0.08); }
       ctx.fillStyle = near; ctx.fillRect(0, h * 0.96, w, h);
     },
+    // W3：港の商都カルメラント（港に、倉庫と帳場の屋根が重なる。戸口ごとの小さな鈴）
+    w3_harbor(ctx, w, h, sk, R) {
+      OUT.port(ctx, w, h, sk, R);
+      const [, mid] = layers(sk);
+      buildings(ctx, w * 0.45, h * 0.9, h * 0.22, mix(mid, "#3a2a1a", 0.3), sk.night || sk.dusk, R, true);
+      for (let i = 0; i < 6; i++) { const x = w * (0.04 + i * 0.07), y = h * 0.8; ctx.fillStyle = "#c8a040"; ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); }
+    },
+    // W3：森と湖の都リグノア（湖の上の砦と、上がった跳ね橋。湖を囲む森）
+    w3_lake(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ridge(ctx, w, h, h * 0.58, h * 0.05, 1, far, R);
+      pines(ctx, w, h * 0.66, h * 0.1, 40, mix(far, mid, 0.5), R);
+      ctx.fillStyle = mix(sk.bot, "#2a4a62", 0.55); ctx.fillRect(0, h * 0.66, w, h * 0.22);
+      for (let i = 0; i < 12; i++) { ctx.fillStyle = rgba("#ffffff", 0.08); ctx.fillRect(R() * w, h * (0.68 + R() * 0.18), 20 + R() * 40, 1.5); }
+      buildings(ctx, w * 0.3, h * 0.7, h * 0.18, mid, sk.night || sk.dusk, R, true);
+      ctx.save(); ctx.translate(w * 0.35, 0); tower(ctx, w * 0.05, h * 0.7, 16, h * 0.34, mid, mid, "#3a6a3a"); ctx.restore();
+      ctx.fillStyle = mid; ctx.save(); ctx.translate(w * 0.62, h * 0.7); ctx.rotate(-1.1); ctx.fillRect(0, -3, h * 0.14, 6); ctx.restore();
+      pines(ctx, w, h * 1.02, h * 0.26, 8, near, R);
+    },
+    // W3：火山の都フロスレイア（煙を上げる火山の斜面に、白い家が段々に貼りつく）
+    w3_volcano(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ctx.fillStyle = far; ctx.beginPath(); ctx.moveTo(w * 0.1, h * 0.8); ctx.lineTo(w * 0.42, h * 0.22); ctx.lineTo(w * 0.52, h * 0.22); ctx.lineTo(w * 0.9, h * 0.8); ctx.fill();
+      glow(ctx, w * 0.47, h * 0.22, 60, "#ff7a3a", 0.35);
+      for (let i = 0; i < 6; i++) { ctx.fillStyle = rgba("#5a5450", 0.3 - i * 0.04); ctx.beginPath(); ctx.ellipse(w * (0.47 + i * 0.04), h * (0.16 - i * 0.03), 30 + i * 14, 12 + i * 5, 0, 0, Math.PI * 2); ctx.fill(); }
+      ridge(ctx, w, h, h * 0.8, h * 0.05, 1, mid, R);
+      buildings(ctx, w, h * 0.86, h * 0.14, mix(mid, "#e8e4dc", sk.night ? 0.15 : 0.45), sk.night || sk.dusk, R, true);
+      buildings(ctx, w, h * 0.98, h * 0.16, near, sk.night, R, true);
+      particles(ctx, w, h, 30, "rgba(90,84,80,.5)", 1.5, R);
+    },
+    // W3：鐘撞きの丘（丘ごとに見張り塔と鐘）
+    w3_bells(ctx, w, h, sk, R) {
+      OUT.plains(ctx, w, h, sk, R);
+      const [, mid] = layers(sk);
+      for (const [x, y, s] of [[0.2, 0.7, 0.9], [0.55, 0.64, 0.6], [0.82, 0.76, 1.1]]) { tower(ctx, w * x, h * y, 12 * s, h * 0.22 * s, mid, mid, "#c8a040"); ctx.fillStyle = "#c8a040"; ctx.beginPath(); ctx.arc(w * x, h * y - h * 0.18 * s, 4 * s, Math.PI, 0); ctx.fill(); }
+    },
+    // W3：沈黙の修道院（糸杉の丘に、屋根の落ちた修道院）
+    w3_abbey(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ridge(ctx, w, h, h * 0.62, h * 0.06, 1, far, R);
+      for (let i = 0; i < 8; i++) { const x = w * (0.05 + i * 0.13), b = h * 0.78, s = h * (0.16 + R() * 0.08); ctx.fillStyle = mid; ctx.beginPath(); ctx.ellipse(x, b - s / 2, s * 0.12, s / 2, 0, 0, Math.PI * 2); ctx.fill(); }
+      const stone = mix(mid, "#b8b0a0", sk.night ? 0.2 : 0.45);
+      ctx.fillStyle = stone; ctx.fillRect(w * 0.32, h * 0.52, w * 0.36, h * 0.3);
+      ctx.fillStyle = mix(stone, near, 0.6); for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.arc(w * (0.36 + i * 0.07), h * 0.66, w * 0.022, Math.PI, 0); ctx.lineTo(w * (0.36 + i * 0.07) + w * 0.022, h * 0.76); ctx.lineTo(w * (0.36 + i * 0.07) - w * 0.022, h * 0.76); ctx.fill(); }
+      ctx.fillStyle = sk.bot; for (let i = 0; i < 6; i++) ctx.fillRect(w * (0.32 + R() * 0.32), h * 0.52, w * 0.04, h * (0.02 + R() * 0.06));
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.82, w, h);
+    },
+    // W3：数の合わない島（霧の海に、小島がいくつも浮かぶ）
+    w3_isles(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ctx.fillStyle = mix(sk.bot, "#2a4a62", 0.5); ctx.fillRect(0, h * 0.62, w, h);
+      for (let i = 0; i < 9; i++) { const x = R() * w, y = h * (0.62 + R() * 0.2), s = 20 + R() * 60 * (y / h); ctx.fillStyle = mix(far, mid, y / h - 0.5); ctx.beginPath(); ctx.ellipse(x, y, s, s * 0.3, 0, Math.PI, 0); ctx.fill(); }
+      for (let i = 0; i < 5; i++) { const g = ctx.createLinearGradient(0, h * (0.6 + i * 0.06), 0, h * (0.66 + i * 0.06)); g.addColorStop(0, "rgba(220,228,232,0)"); g.addColorStop(0.5, "rgba(220,228,232,.18)"); g.addColorStop(1, "rgba(220,228,232,0)"); ctx.fillStyle = g; ctx.fillRect(0, h * (0.6 + i * 0.06), w, h * 0.06); }
+      ctx.fillStyle = near; ctx.beginPath(); ctx.ellipse(w * 0.2, h * 1.02, w * 0.35, h * 0.12, 0, Math.PI, 0); ctx.fill();
+    },
+    // W3：灰の観測所（火山の中腹、灰に半分埋もれた丸屋根）
+    w3_ashvault(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ctx.fillStyle = far; ctx.beginPath(); ctx.moveTo(0, h * 0.7); ctx.lineTo(w * 0.7, h * 0.18); ctx.lineTo(w, h * 0.4); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.fill();
+      glow(ctx, w * 0.7, h * 0.18, 50, "#ff7a3a", 0.25);
+      const ash = mix(sk.bot, "#5a5450", 0.6);
+      ctx.fillStyle = ash; ctx.fillRect(0, h * 0.78, w, h);
+      ctx.fillStyle = mix(mid, "#8a8478", 0.4); ctx.beginPath(); ctx.arc(w * 0.45, h * 0.8, h * 0.18, Math.PI, 0); ctx.fill();
+      ctx.fillStyle = "#0a0806"; ctx.fillRect(w * 0.43, h * 0.7, w * 0.04, h * 0.1);
+      ctx.fillStyle = ash; ctx.beginPath(); ctx.ellipse(w * 0.45, h * 0.82, h * 0.3, h * 0.05, 0, 0, Math.PI * 2); ctx.fill();
+      particles(ctx, w, h, 40, "rgba(120,114,108,.5)", 1.5, R);
+      ctx.fillStyle = near; ctx.fillRect(0, h * 0.96, w, h);
+    },
+    // W3：潮鳴りの洞（磯の崖に口を開ける海蝕洞）
+    w3_seacave(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ctx.fillStyle = mix(sk.bot, "#2a4a62", 0.5); ctx.fillRect(0, h * 0.64, w, h);
+      ctx.fillStyle = mid; ctx.beginPath(); ctx.moveTo(w * 0.3, h); ctx.lineTo(w * 0.36, h * 0.3); ctx.lineTo(w * 0.7, h * 0.24); ctx.lineTo(w * 0.95, h * 0.4); ctx.lineTo(w, h); ctx.fill();
+      ctx.fillStyle = "#050608"; ctx.beginPath(); ctx.ellipse(w * 0.6, h * 0.78, w * 0.1, h * 0.16, 0, Math.PI, 0); ctx.fill();
+      for (let i = 0; i < 6; i++) { ctx.fillStyle = rgba("#ffffff", 0.25); ctx.fillRect(w * (0.4 + R() * 0.4), h * (0.8 + R() * 0.12), 16 + R() * 30, 2); }
+      ridge(ctx, w, h, h * 0.97, h * 0.04, 2, near, R);
+    },
     forest(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
       ridge(ctx, w, h, h * 0.58, h * 0.06, 1, far, R);
@@ -1038,6 +1115,23 @@
       ctx.fillStyle = "#1a120c"; ctx.fillRect(w * 0.76, h * 0.62, w * 0.24, h * 0.06);
       ctx.fillStyle = "#9a9894"; ctx.fillRect(w * 0.8, h * 0.45, w * 0.16, h * 0.17); ctx.fillStyle = "#3a2418"; ctx.fillRect(w * 0.95, h * 0.5, w * 0.05, h * 0.05);
       ctx.fillStyle = "#1a0e08"; ctx.fillRect(w * 0.04, h * 0.64, 7, 12); glow(ctx, w * 0.04 + 3, h * 0.7, 10, "#ffcf6e", 0.4);
+    },
+    // 灰の観測所の中：灰の積もった書庫、帳面の山、灰に埋まった窓
+    w3_ashvault_in(ctx, w, h, R) {
+      interior(ctx, w, h, "#5a5450", "#3a3632", R);
+      ctx.fillStyle = "#2a2622"; for (let i = 0; i < 5; i++) ctx.fillRect(w * (0.06 + i * 0.19), h * 0.2, w * 0.14, h * 0.45);
+      ctx.fillStyle = "#c8c0b0"; for (let i = 0; i < 40; i++) ctx.fillRect(w * (0.07 + (i % 5) * 0.19) + (i % 3) * 8, h * (0.24 + Math.floor(i / 5) * 0.05), 6, h * 0.035);
+      glow(ctx, w * 0.5, h * 0.7, 120, "#ffb03a", 0.3);
+      particles(ctx, w, h, 60, "rgba(160,150,140,.5)", 1.5, R);
+    },
+    // 潮鳴りの洞の中：濡れた岩の洞、足もとの潮、奥の青い光
+    w3_seacave_in(ctx, w, h, R) {
+      ctx.fillStyle = "#06090c"; ctx.fillRect(0, 0, w, h);
+      glow(ctx, w * 0.5, h * 0.5, w * 0.4, "#3ac8d0", 0.18);
+      ctx.fillStyle = "#0e1418"; for (let i = 0; i < 14; i++) { const x = R() * w, l = 20 + R() * h * 0.25; ctx.beginPath(); ctx.moveTo(x - 10, 0); ctx.lineTo(x, l); ctx.lineTo(x + 10, 0); ctx.fill(); }
+      ctx.fillStyle = "rgba(60,140,160,.45)"; ctx.fillRect(0, h * 0.82, w, h);
+      for (let i = 0; i < 10; i++) { ctx.fillStyle = "rgba(200,240,240,.25)"; ctx.fillRect(R() * w, h * (0.84 + R() * 0.12), 20 + R() * 30, 2); }
+      ridge(ctx, w, h, h * 0.86, h * 0.04, 3, "#080c10", R);
     },
     dungeon(ctx, w, h, R) {
       ctx.fillStyle = "#0c0b0d"; ctx.fillRect(0, 0, w, h);
