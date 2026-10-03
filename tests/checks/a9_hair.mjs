@@ -69,7 +69,7 @@ export default ({ fail, ok }) => {
   if (!/"--redo"/.test(gen)) F("tools/gen_portraits.mjs に --redo（作り直しの印の人を作り直す）が無い");
 
   // ---------------------------------------------------------------- 作り直しの印・手順
-  const REDO = new Set(["multi"]);
+  const REDO = new Set(["multi", "color"]);
   const redo = list.filter((p) => p.redo !== undefined);
   for (const p of redo) if (!REDO.has(p.redo)) F(`${p.id} の redo（作り直しの印）が決まった値でない：${p.redo}（${[...REDO].join("・")}）`);
   const readme = readFileSync(new URL("../../docs/art/README.md", import.meta.url), "utf8");
