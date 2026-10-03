@@ -73,7 +73,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     if (b.a === b.b) F(`掛け合い ${b.id}: 一人で掛け合っている`);
     if (!b.lines || b.lines.length < 2 || b.lines.length > 6) F(`掛け合い ${b.id}: 行が ${b.lines && b.lines.length}（2〜6）`);
     for (const a of [].concat(b.where || [])) if (!TAGS.has(a) && !D0.LOCS[a]) F(`掛け合い ${b.id}: 場所 ${a} が無い`);
-    if (b.after && !B.some((x) => x.id === b.after)) F(`掛け合い ${b.id}: 前の掛け合い ${b.after} が無い`);
+    if (b.after && !B.some((x) => x.id === String(b.after).split("#")[0])) F(`掛け合い ${b.id}: 前の掛け合い ${b.after} が無い`);
     if (b.side && !(b.side.a && b.side.b)) F(`掛け合い ${b.id}: 肩を持つ選択が二人分ない`);
   }
   const mine = B.filter((b) => PEOPLE.includes(b.a) && PEOPLE.includes(b.b));
