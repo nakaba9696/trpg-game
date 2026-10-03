@@ -9,7 +9,9 @@
 //   trap    迷宮の罠と隠し部屋 loc 迷宮 / floor 階 / sign 前触れ / safe 正しい手 / wrong 誘う手 / stat・diff 調べる判定 / dmg / spring かかった文 /
 //                             dodge 調べて気づいた文 / avoid 正しい手の結果 / find 隠し部屋。その冒険で初めてその階に着くと、出来事（kn_trap_<loc>_<floor>）として起きる
 //   apostle 使徒の守りの綻び  ap 使徒の id（D.E3.LIST）。戦ったときに見たことの書きつけ
-//   敵のデータに know: { aim, text } を書くと foe_<敵の id> の覚え書きになる（E4 の敵など。docs/know.md）
+//   fact    魔物について分かったこと  E4 が敵のデータに置く e.know = [{ id, text }]（データから分かる弱点・行動・出る時など）を fact_<敵>_<id> にする。
+//                             その魔物を倒すたびに一つずつ（データの順に）分かる。死に際・噂・仲間の話でも分かる
+//   敵のデータに know: { aim, text }（配列でなく一つ）を書くと foe_<敵の id> の癖の書きつけになる（docs/know.md）
 // 覚え書きが残るきっかけ（how）：fail しくじった / seen 見た・戦い慣れた / death 死に際に / rumor 噂で / ally 仲間に聞いた
 //   死んだときは、死に際に覚えたことを必ず一つ残す（その場の敵・使徒・罠 → その場所に関わること → まだ知らないどれか）。
 //
@@ -27,6 +29,7 @@
   D.KNOW = D.KNOW || {};
 
   L1.KINDS = [
+    { key: "fact", name: "魔物について分かったこと" },
     { key: "foe", name: "魔物の癖と弱点" },
     { key: "trap", name: "迷宮の罠と隠し部屋" },
     { key: "apostle", name: "使徒の守りの綻び" },
@@ -43,7 +46,13 @@
     if (built) return D.KNOW;
     built = true;
     Object.entries(D.ENEMIES || {}).forEach(([id, e]) => {
-      if (e && e.know && !D.KNOW["foe_" + id]) D.KNOW["foe_" + id] = Object.assign({ kind: "foe", foe: id, title: e.name }, e.know);
+      if (!e || !e.know) return;
+      // E4：データから分かること e.know = [{ id, text }] は、魔物ごとに一つずつ分かっていく（fact_<敵>_<id>）
+      if (Array.isArray(e.know)) e.know.forEach((x, n) => {
+        const k = `fact_${id}_${x.id}`;
+        if (x && x.id && x.text && !D.KNOW[k]) D.KNOW[k] = { kind: "fact", foe: id, n, title: e.name, text: `${e.name}：${x.text}` };
+      });
+      else if (!D.KNOW["foe_" + id]) D.KNOW["foe_" + id] = Object.assign({ kind: "foe", foe: id, title: e.name }, e.know);
     });
     Object.values(D.KNOW).forEach((k) => {
       if (k.kind === "foe" && !k.title) k.title = ((D.ENEMIES || {})[k.foe] || {}).name || k.foe;
@@ -125,18 +134,22 @@
   G.knowList = (kind) => L1.ids(kind).filter(G.knowHas).map((id) => Object.assign({ id }, D.KNOW[id], { rec: prof().know[id] }));
 
   // ---------------------------------------------------------------- 引く
-  const idx = { foe: {}, ap: {}, trap: {} };
+  const idx = { foe: {}, ap: {}, trap: {}, fact: {} };
   let indexed = false;
   const index = () => {
     if (indexed) return;
     indexed = true;
     Object.entries(L1.build()).forEach(([id, k]) => {
       if (k.kind === "foe") idx.foe[k.foe] = id;
+      else if (k.kind === "fact") (idx.fact[k.foe] = idx.fact[k.foe] || []).push(id);
       else if (k.kind === "apostle") idx.ap[k.ap] = id;
       else if (k.kind === "trap") idx.trap[k.loc + ":" + k.floor] = id;
     });
   };
   L1.foeKnowId = (foe) => { index(); return idx.foe[foe] || null; };
+  // まだ分かっていない、その魔物の次のこと（データの順）
+  L1.factIds = (foe) => { index(); return idx.fact[foe] || []; };
+  L1.nextFact = (foe) => L1.factIds(foe).find((id) => !G.knowHas(id)) || null;
   L1.trapId = (loc, floor) => { index(); return idx.trap[loc + ":" + floor] || null; };
   L1.apKnowId = (foe) => { index(); const a = G.e3Of && G.e3Of(foe); return (a && idx.ap[a.id]) || null; };
   // 図鑑の出来事の頁の分母（ふだん起きるものと、罠）
@@ -219,6 +232,10 @@
       if (nogood.length) out.push(["効かなかった手", nogood.join("・")]);
       if (rec.slew) out.push(["あなたを倒した", `${rec.slew}度`]);
     }
+    const facts = L1.factIds(id).filter(G.knowHas);
+    if (facts.length) out.push(["分かったこと", facts.map((f) => D.KNOW[f].text.replace(/^[^：]*：/, "")).join(" ")]);
+    const rest = L1.factIds(id).length - facts.length;
+    if (rest) out.push(["まだ分からないこと", `${rest} つ`]);
     const k = L1.foeKnowId(id) || L1.apKnowId(id);
     if (k && G.knowHas(k)) out.push(["覚え書き", D.KNOW[k].text]);
     return out;
@@ -232,6 +249,9 @@
   const baseKill = G.codexKill;
   if (baseKill) G.codexKill = (id, quiet, n) => {
     const r = baseKill(id, quiet, n);
+    // 倒すたびに、その魔物について一つ分かる
+    const f = L1.nextFact(id);
+    if (f && G.S && !G.S.over) G.learn(f, "seen");
     const k = L1.foeKnowId(id);
     const rec = G.codexFoe && G.codexFoe(id);
     if (k && rec && (rec.kills || 0) >= 3 && G.S && !G.S.over) G.learn(k, "seen");
@@ -288,8 +308,8 @@
     const L = G.loc(S.loc);
     const near = new Set([S.loc, ...Object.keys((L && L.links) || {}), ...Object.keys((L && L.sea) || {})]);
     const pools = new Set();
-    near.forEach((l) => ((D.LOCS[l] || {}).pool || []).forEach((f) => pools.add(f)));
-    const score = (k) => (k.kind === "trap" ? (k.loc === S.loc ? 0 : near.has(k.loc) ? 1 : 4) : k.kind === "foe" ? (pools.has(k.foe) ? 1 : 3) : 5);
+    near.forEach((l) => [...((D.LOCS[l] || {}).pool || []), ...((D.LOCS[l] || {}).e4pool || [])].forEach((f) => pools.add(f)));
+    const score = (k) => (k.kind === "trap" ? (k.loc === S.loc ? 0 : near.has(k.loc) ? 1 : 4) : k.kind === "foe" || k.kind === "fact" ? (pools.has(k.foe) ? 1 : 3) : 5);
     return L1.ids().filter((id) => !G.knowHas(id) && (!kinds || kinds.includes(D.KNOW[id].kind)) && D.KNOW[id].rumor !== false)
       .map((id, n) => [id, score(D.KNOW[id]), n]).sort((a, b) => a[1] - b[1] || a[2] - b[2]).map((x) => x[0]);
   };
@@ -308,7 +328,7 @@
     if (S.over || S.mode === "combat" || !(S.companions || []).length) return;
     const st = kn(S);
     if (st.allyDay != null && S.day - st.allyDay < 5) return;
-    const ids = L1.nearIds(S, ["foe", "trap"]);
+    const ids = L1.nearIds(S, ["fact", "foe", "trap"]);
     if (!ids.length) return;
     st.allyDay = S.day;
     const c = S.companions[(S.day || 0) % S.companions.length];
@@ -321,7 +341,7 @@
   L1.deathPick = (S) => {
     const out = [];
     const add = (id) => { if (id && !G.knowHas(id) && !out.includes(id)) out.push(id); };
-    ((S.combat && S.combat.foes) || []).forEach((f) => { add(L1.foeKnowId(f.id)); add(L1.apKnowId(f.id)); });
+    ((S.combat && S.combat.foes) || []).forEach((f) => { add(L1.nextFact(f.id)); add(L1.foeKnowId(f.id)); add(L1.apKnowId(f.id)); });
     if (S.depth) add(L1.trapId(S.loc, S.depth));
     if (out.length) return out[0];
     return L1.nearIds(S)[0] || L1.ids().find((id) => !G.knowHas(id)) || null;

@@ -14,6 +14,9 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   const c0 = G0.knowCount();
   for (const k of ["foe", "trap"]) if (!(c0.kinds[k].all >= 30)) F(`${k} の覚え書きが ${c0.kinds[k].all} 件（30 件以上にする）`);
   if (!(c0.kinds.apostle.all >= 10)) F("使徒の覚え書きが少ない");
+  // E4 の敵のデータ（e.know = [{ id, text }]）は、魔物について分かったこととして拾う
+  const e4n = Object.values(D0.ENEMIES).reduce((a, e) => a + (Array.isArray(e.know) ? e.know.length : 0), 0);
+  if (c0.kinds.fact.all !== e4n) F(`E4 の know を拾い切れていない（${c0.kinds.fact.all} / ${e4n}）`);
   const TRUE = { magic: (e) => e.mres < e.def || e.mres <= 0, blade: (e) => e.def <= e.mres || e.def <= 5, talk: (e) => e.will < 999 && e.will <= 60, flee: (e) => e.agi <= 35, habit: () => true };
   for (const [id, k] of Object.entries(D0.KNOW)) {
     if (!k.text || typeof k.text !== "string") F(`${id}: text が無い`);
@@ -29,6 +32,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
       if (/覚えて|前の冒険|前にそう/.test(k.avoid || "")) F(`${id}: avoid がキャラの記憶で避けている（覚えるのはプレイヤー）`);
       const ev = D0.EVENTS.find((e) => e.id === G0.l1.trapEventId(id));
       if (!ev || ev.w !== 0 || ev.choices.length !== 3) F(`${id}: 罠の出来事が無い`);
+    } else if (k.kind === "fact") {
+      if (!D0.ENEMIES[k.foe]) F(`${id}: 敵 ${k.foe} が無い`);
     } else if (k.kind === "apostle") { if (!(D0.E3 && D0.E3.LIST[k.ap])) F(`${id}: 使徒 ${k.ap} が無い`); }
     else F(`${id}: 種類 ${k.kind} が無い`);
   }
@@ -57,13 +62,19 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     G.hurt(99, "テストで倒れた");
     const g = G.P.graves[0];
     if (G.S.over !== "dead") F("死ななかった");
-    if (!G.knowHas("foe_slime")) F(`死に際に、その場の敵（酸のスライム）を覚えない：${Object.keys(G.P.know || {}).join(",")}`);
+    const slimeFact = G.l1.factIds("slime")[0];
+    if (slimeFact && !G.knowHas(slimeFact)) F(`死に際に、その場の敵（酸のスライム）のことが分からない：${Object.keys(G.P.know || {}).join(",")}`);
     if (!(g && g.know && g.know.some((x) => x.death))) F("墓碑に死に際に覚えたことが無い");
     const last = G.lastOfRun(g);
     if (!last || last.cause !== "テストで倒れた" || !last.foes.length || !last.foes[0].name.includes("スライム") || !last.lines.length) F(`墓碑に最期の様子が無い：${JSON.stringify(last)}`);
     if (!((G.P.kfoe.slime || {}).slew >= 1)) F("あなたを倒した敵の記録が無い");
     if (!((G.P.kfoe.slime || {}).a.attack || [])[0]) F("試した手の記録が無い");
     if (!G.codexFoeStats("slime").some(([k]) => k === "試した手")) F("図鑑の魔物の頁に試した手が出ない");
+    if (slimeFact && !G.codexFoeStats("slime").some(([k]) => k === "分かったこと")) F("図鑑の魔物の頁に分かったことが出ない");
+    // 倒すたびに一つずつ分かる。三度倒すと癖の書きつけ
+    for (let i = 0; i < 3; i++) { start(G, 40 + i); G.codexKill("slime"); }
+    if (!G.knowHas("foe_slime")) F("三度倒しても癖の書きつけが残らない");
+    if (G.l1.factIds("slime").length >= 2 && !G.knowHas(G.l1.factIds("slime")[1])) F("倒しても、その魔物について次のことが分からない");
     if (!G.codexFoeStats("slime").some(([k, v]) => k === "覚え書き" && v === G.data.KNOW.foe_slime.text)) F("図鑑の魔物の頁に覚え書きが出ない");
     // 何も関係ない死に方でも、一つは残す
     start(G, 12);
@@ -173,5 +184,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     } catch (e) { F("古いセーブで例外：" + e.message); }
   }
 
+  // 罠のある階（ボスのいない階のうち）。足りなくても失敗にはしない（新しい迷宮は docs/know.md のとおり足す）
+  const floors = Object.entries(D0.LOCS).filter(([, L]) => L.type === "dungeon").reduce((a, [id, L]) => a + Math.max(0, L.floors - 1), 0);
+  if (!n) ok(`l1 罠のある階 ${traps.length} / ${floors}`);
   if (!n) ok(`l1 覚え書きと記録（${Object.entries(c0.kinds).map(([k, v]) => `${k} ${v.all}`).join("・")}・出来事 ${c0.events.all}・店 ${c0.shops.all}）`);
 };
