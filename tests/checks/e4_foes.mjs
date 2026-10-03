@@ -90,6 +90,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     at(g, "forest", 1);
     g.data.E4.P.elder = 1;
     g.startCombat(["e4_thornboar"], {});
+    if (g.S.combat.foes[0].id !== "e4_thornboar") F("危険度 1 の場所に強い個体が出た");
+    at(g, "ruins", 1);
+    g.startCombat(["e4_thornboar"], {});
     const f = g.S.combat.foes[0];
     if (f.id !== "e4_thornboar_x") F("出会いで強い個体に入れ替わらない");
     g.data.E4.P.elder = 0.05;

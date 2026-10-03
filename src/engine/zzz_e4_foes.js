@@ -39,6 +39,7 @@
   // mix：pool から引いた一体が E4 の敵に替わる割合の上限（e4pool の数 ÷ 両方の数。多くても 35%）
   const P = { elder: 0.05, elderNight: 0.08, kinSkip: 0.5, mix: 0.35 };
   E4.P = P;
+  const dangerNow = (S) => Math.max((D.LOCS[S.loc] || {}).danger || 1, S.travel ? (D.LOCS[S.travel] || {}).danger || 1 : 1);
   E4.whenOk = (e, S) => {
     const w = e && e.when;
     if (!w || !S) return true;
@@ -71,8 +72,8 @@
       const x = G.pick(extra);
       return E()[x].kinOf && G.rand() < P.kinSkip ? id : x;
     });
-    // 強い個体（まれ。夜は少し多い）
-    out = out.map((id) => {
+    // 強い個体（まれ。夜は少し多い。危険度 1 の場所には出ない）
+    if (dangerNow(S) >= 2) out = out.map((id) => {
       const x = (E4.ELDER_OF || {})[id];
       return x && E()[x] && G.rand() < (S.phase === 3 ? P.elderNight : P.elder) ? x : id;
     });
@@ -87,7 +88,6 @@
     }
     return out;
   };
-  const dangerNow = (S) => Math.max((D.LOCS[S.loc] || {}).danger || 1, S.travel ? (D.LOCS[S.travel] || {}).danger || 1 : 1);
   E4.packCap = (S) => { const d = dangerNow(S); return d <= 1 ? 2 : d <= 3 ? 3 : 4; };
   const baseStart = G.startCombat;
   G.startCombat = (ids, opt) => {

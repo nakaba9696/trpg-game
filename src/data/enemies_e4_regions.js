@@ -7,7 +7,7 @@
 //         call 仲間を呼ぶ / fleecall 深手で逃げて仲間を呼ぶ / guard 仲間を庇う / regen 傷がふさがる / enrage 深手で猛る /
 //         drain 生気を吸う / corrode 鎧の継ぎ目を緩める / rout 群れが崩れると逃げる）
 //   weak  弱点の属性（blade 刃 / fire 炎 / ice 氷 / bolt 雷 / holy 聖水）。当たると 1.5 倍
-//   elder 強い個体（「年経た〜」「〜の頭目」）。まれに（5%）入れ替わって出る。{ id, name, desc, item: [名前, 説明, 値段] }
+//   elder 強い個体（「年経た〜」「〜の頭目」）。危険度 2 以上の場所で、まれに（5%・夜 8%）入れ替わって出る。{ id, name, desc, item: [名前, 説明, 値段] }
 // 正体・使徒の名前は書かない（docs/lore/voice.md）。レーン E（敵）が管理
 (function (G) {
   const D = (G.data = G.data || {});
@@ -206,7 +206,7 @@
 
     // ================================================================ 帝国（凍てつく街道・懺悔の谷・影の谷・酸の谷）
     e4_snowwolf: {
-      name: "雪狼", tier: 2, hp: 14, dmg: [1, 6, 1], hit: 60, def: 5, agi: 65, will: 50, mres: 0, gold: [0, 0], loot: [["pelt", 0.5]], shape: "beast", eye: "#bfe8ff",
+      name: "雪狼", tier: 2, hp: 12, dmg: [1, 6, 0], hit: 55, def: 5, agi: 65, will: 50, mres: 0, gold: [0, 0], loot: [["pelt", 0.5]], shape: "beast", eye: "#bfe8ff",
       rg: "帝国", when: { season: ["冬"], weather: ["雪"] }, pack: [2, 3], acts: ["call"],
       desc: "雪の日にだけ街道へ降りてくる白い狼。遠吠えで群れを集める。雪がやむと、足跡ごと消える。",
       look: { body: "quad", head: "wolf", skin: "#d8e0e8", skin2: "#ffffff", eyes: "glow", mouth: "fangs", tail: "thin", extra: ["fur"], mood: "fierce" },
@@ -220,21 +220,21 @@
     },
     e4_pressgang: {
       name: "徴兵隊", tier: 2, hp: 16, dmg: [1, 6, 1], hit: 55, def: 15, agi: 35, will: 50, mres: 0, gold: [8, 25], loot: [["potion", 0.15]], shape: "humanoid", eye: "#d9d9d9", bribe: 25,
-      rg: "帝国", pack: [2, 3], acts: ["guard"],
+      rg: "帝国", pack: [2, 2], acts: ["guard"],
       desc: "前線の兵を補うために、街道で旅人を捕まえる帝国の兵。逆らえば殴り、払えば見逃す。互いをかばう訓練だけは受けている。",
       look: { body: "biped", build: "normal", skin: "#d8b090", head: "human", hair: "#4a3a2a", eyes: "dot", mouth: "frown", weapon: "spear", outfit: "armor", cloth: "#3a3a4a", extra: ["helmet"] },
       lines: { open: ["「そこの者、帝国の名において兵役を命ずる。拒めば……分かるな」"] },
     },
     e4_minerghost: {
-      name: "坑夫の亡者", tier: 3, hp: 28, dmg: [1, 10, 1], hit: 55, def: 10, agi: 25, will: 999, mres: 10, undead: true, gold: [5, 30], loot: [["gem", 0.12]], shape: "humanoid", eye: "#ffd84a",
+      name: "坑夫の亡者", tier: 3, hp: 26, dmg: [1, 8, 1], hit: 55, def: 10, agi: 25, will: 999, mres: 10, undead: true, gold: [5, 30], loot: [["gem", 0.12]], shape: "humanoid", eye: "#ffd84a",
       rg: "帝国", acts: ["disarm"], weak: "holy",
       desc: "落盤で埋まった坑道の坑夫。つるはしで、行く手の物を何でも叩き落とす。腰の袋には、まだ鉱石が入っている。",
       look: { body: "biped", build: "stubby", skin: "#8a8a7a", head: "human", hair: "#3a3a3a", eyes: "hollow", mouth: "jaw", weapon: "axe", outfit: "rags", cloth: "#4a4038", pattern: "ribs", extra: ["cap", "pouch"], mood: "fierce" },
     },
     e4_frostbear: {
-      name: "霜熊", tier: 3, hp: 32, dmg: [2, 6, 0], hit: 55, def: 10, agi: 30, will: 60, mres: 5, gold: [0, 0], loot: [["pelt", 0.6], ["fang", 0.3]], shape: "beast", eye: "#e8f0ff",
-      rg: "帝国", acts: ["enrage"],
-      desc: "毛に霜をまとった大熊。冬眠し損ねた年は気が立っていて、深手を負うと手がつけられなくなる。",
+      name: "霜熊", tier: 3, hp: 30, dmg: [2, 6, 0], hit: 50, def: 10, agi: 30, will: 60, mres: 5, gold: [0, 0], loot: [["pelt", 0.6], ["fang", 0.3]], shape: "beast", eye: "#e8f0ff",
+      rg: "帝国", acts: ["enrage"], weak: "fire",
+      desc: "毛に霜をまとった大熊。冬眠し損ねた年は気が立っていて、深手を負うと手がつけられなくなる。火を見ると、霜が溶けてひるむ。",
       look: { body: "quad", head: "plain", skin: "#c8d0d8", skin2: "#f0f4f8", ears: "round", eyes: "slit", mouth: "fangs", arms: "claws", tail: "none", extra: ["fur"], mood: "fierce" },
       elder: { id: "e4_frostbear_x", name: "年経た霜熊", desc: "背の毛が氷の鎧になった、小屋ほどの熊。猟師の村では、この熊の名で子どもを叱る。", item: ["氷の熊爪", "年経た霜熊の爪。冷たくて、握っていると手がしびれる。帝国の北の村では、婚礼の贈り物にする。熊より強い婿だという印だ。", 110] },
     },

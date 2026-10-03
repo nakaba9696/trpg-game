@@ -108,7 +108,7 @@
 | `assets/monsters/e4k_bladechick.webp` | 刃羽の雛 | chick of giant bird, feathers made of soft metal blades, big round eyes, fluffy | 刃の羽の雛 |
 | `assets/monsters/e4k_cliffwatch.webp` | 崖の羽番 | bird-headed guard, beak, armor made of blade feathers, spear, feathered wings, plume | 抜け羽を鎧にした番人 |
 | `assets/monsters/e4k_bellfish.webp` | 鐘鳴り魚 | big round fish, blue spotted scales, googly eyes, small bell visible inside belly, bubbles | 腹で鐘が鳴る魚 |
-| `assets/monsters/e4k_drownedsailor.webp` | 沈んだ水夫 | drowned sailor, undead, waterlogged pale skin, bandana, tattered sailor clothes, visible ribs, reaching | 沖の歌に呑まれた水夫 |
+| `assets/monsters/e4k_drownedsailor.webp` | 舟歌の亡者 | drowned sailor, undead, waterlogged pale skin, bandana, tattered sailor clothes, visible ribs, reaching | 沖の歌に呑まれた水夫 |
 | `assets/monsters/e4k_unsaid.webp` | 言いかけの影 | shadow figure, black silhouette, glowing eyes, open mouth as if speaking, smoky edges, floating | 言いかけの影 |
 | `assets/monsters/e4k_blackmite.webp` | 黒い羽虫 | swarm of black insects, black feather-like wings, red glowing eyes, stingers | 黒い羽のかけらの虫 |
 | `assets/monsters/e4k_moonhare.webp` | 二つ月の兎 | white hare, glowing eyes, long ears, moonlight, two moons, floating | 二つ月の夜の兎 |

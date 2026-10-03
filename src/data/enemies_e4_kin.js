@@ -209,19 +209,19 @@
       look: { body: "biped", build: "lanky", skin: "#8a9aa8", head: "plain", eyes: "slit", mouth: "beak", weapon: "spear", wings: "feather", outfit: "armor", cloth: "#5a6a7a", extra: ["plume"], mood: "fierce" },
     },
 
-    // ---------------------------------------------------------------- 海嘯の蛇竜（港の沖。島の洞窟の外の磯）
+    // ---------------------------------------------------------------- 海嘯の蛇竜（港の沖。島の洞窟の外の磯と、潮鳴りの洞）
     e4k_bellfish: {
       name: "鐘鳴り魚", tier: 3, hp: 26, dmg: [1, 8, 1], hit: 55, def: 10, agi: 45, will: 999, mres: 15, gold: [0, 20], loot: [["gem", 0.1]], shape: "blob", eye: "#7ad8ff",
-      kinOf: "lugu", where: ["onigashima"], acts: ["sleep"], weak: "bolt",
+      kinOf: "lugu", where: ["onigashima", "w3_seacave"], acts: ["sleep"], weak: "bolt",
       clue: { text: "魚の腹の中で、小さな鐘が鳴っていた。沈んだ町の鐘楼のかけらだろうか。鐘の音は、錆びた鎖に耳を当てたときの音とよく似ている。", memo: "鐘鳴り魚の腹で鐘が鳴る。錆びた鎖の音と似ている" },
       desc: "腹の中で鐘が鳴る、大きな魚。浅瀬に跳ね上がって鐘を鳴らし、聞いた者を波の底へ眠らせる。",
       look: { body: "blob", skin: "#3a6a8a", skin2: "#8ac8e0", eyes: "googly", eyeN: 2, mouth: "o", tail: "fin", pattern: "spots", extra: ["bubbles"], mood: "silly" },
     },
     e4k_drownedsailor: {
-      name: "沈んだ水夫", tier: 3, hp: 22, dmg: [1, 8, 1], hit: 55, def: 5, agi: 30, will: 999, mres: 10, undead: true, gold: [5, 25], loot: [["ale", 0.3]], shape: "humanoid", eye: "#7ad8ff",
-      kinOf: "lugu", where: ["onigashima"], pack: [2, 3], acts: ["pin", "rout"], weak: "holy",
+      name: "舟歌の亡者", tier: 3, hp: 22, dmg: [1, 8, 1], hit: 55, def: 5, agi: 30, will: 999, mres: 10, undead: true, gold: [5, 25], loot: [["ale", 0.3]], shape: "humanoid", eye: "#7ad8ff",
+      kinOf: "lugu", where: ["onigashima", "w3_seacave"], pack: [2, 3], acts: ["pin", "rout"], weak: "holy",
       clue: { text: "水夫は、死んでも舟歌を口ずさんでいた。歌い返しの節のところで、毎回つかえる。返し歌を知っていれば、この人は呑まれなかったのかもしれない。", memo: "沈んだ水夫は舟歌の返しの節でつかえる" },
-      desc: "沖の歌に呑まれた船の水夫たち。濡れた手で、生きている者を海へ引こうとする。",
+      desc: "沖の歌に呑まれた船の水夫たち。死んでも舟歌をやめず、濡れた手で生きている者の連れを海へ引こうとする。",
       look: { body: "biped", build: "normal", skin: "#7a9aa0", head: "human", hair: "#2a3a3a", eyes: "hollow", mouth: "jaw", arms: "forward", outfit: "rags", cloth: "#3a4a5a", pattern: "ribs", extra: ["bandana"], mood: "fierce" },
     },
 
