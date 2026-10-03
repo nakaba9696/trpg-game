@@ -271,12 +271,14 @@
     G.startEvent(L1.trapEventId(id));
   }
 
-  // 店の品と値段（入ったとき）
+  // 店の品と値段（入ったとき。画面に並ぶ「買う」の品と値段をそのまま写す。日替わりの品・相場の揺れ〔I3・M4〕もそのまま）
   function shop(S) {
-    const L = G.loc();
-    const stock = [...new Set([...(L.shop || []), ...(D.SHOP_BASE || [])])].filter((id) => D.ITEMS[id]);
     const rec = box("kshop")[S.loc] || (box("kshop")[S.loc] = { items: {} });
-    stock.forEach((id) => { rec.items[id] = D.ITEMS[id].price; });
+    G.actions().forEach((g) => g.list.forEach((a) => {
+      const m = /^shop:buy:(.+)$/.exec(a.id);
+      const p = /(\d+)G/.exec(a.sub || "");
+      if (m && p && G.itemInfo(m[1])) rec.items[m[1]] = Number(p[1]);
+    }));
     rec.date = G.dateOf ? G.dateOf(S.day) : "";
     saved();
   }

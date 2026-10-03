@@ -99,7 +99,7 @@
         if (!L) return;
         const li = h("li", "");
         li.append(h("p", "l1evt", L.name));
-        li.append(h("p", "l1text", Object.entries(r.items || {}).map(([id, p]) => `${(D.ITEMS[id] || {}).name || id} ${p}G`).join("・")));
+        li.append(h("p", "l1text", Object.entries(r.items || {}).map(([id, p]) => `${(G.itemInfo(id) || {}).name || id} ${p}G`).join("・")));
         if (r.date) li.append(h("p", "fine", `${r.date}に見た`));
         su.append(li);
       });
