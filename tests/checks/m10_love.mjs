@@ -128,6 +128,8 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   if (S.hp !== S.maxHp) F("家に帰っても HP が戻らない");
   if (!S.m10.child) F("家に帰っても、小さな靴の出来事が起きない");
   noBraces("家");
+  // 最後の家の手番の終わりに、乱数で世界の出来事（M4 など）が始まっていることがある。家の行動だけを見るので閉じておく（乱数の並びは足した人物で動く）
+  if (S.mode === "event" && !String(S.event).startsWith("m10_")) { S.mode = "explore"; S.event = null; }
   if (!has("m10bring")) F("「連れ出す」が出ない");
   // 留守の家：家ごと失う（理不尽）
   S.loc = "nerva"; S.mode = "explore"; S.fac = null;
