@@ -11,7 +11,7 @@
 - 「**異形**」と書いた魔物（一覧の `style: "eldritch"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。
 - 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。
 
-## 使徒・ボス（14）
+## 使徒・ボス（16）
 
 使徒の魔物の姿と、ボス。特にていねいに。気に入った絵は `--keep <id>` で seed を残す。
 
@@ -29,10 +29,12 @@
 | `assets/monsters/e2_marmit.webp` | 料理長マルミット | 1boy, old man, chef, white hair, stubble, smirk, lanky, white apron, blood on apron, holding meat cleaver | ボス。人を見ると部位を数える料理長 |
 | `assets/monsters/e2_mordu.webp` | 苔衣の使徒セグリトス | plant monster, tall, gardener, covered in mud and moss, wilted flowers growing from head, wide-brimmed hat, one glowing eye, long claws, holding pitchfork, pollen, spores, rotting | 使徒（ボス）の魔物の姿。泥と苔の庭師。甘い腐臭 |
 | `assets/monsters/w2_ironwarden.webp` | 溶けかけた機械兵 | iron golem, giant robot, ancient machine, huge, melted metal, acid, rust, glowing eyes, heavy armor, holding club, steam | ボス。半分溶けた鉄の巨人 |
+| `assets/monsters/w4_borermother.webp` | 地喰いの古殻 | colossal beetle, huge cracked shell, many glowing eyes, long horns, rusted cannonballs embedded in back, smaller beetles crawling out of shell seams, chewing iron rail | 地喰いの古殻。背に大筒の弾が三つ |
+| `assets/monsters/w4_gatekeeper.webp` | 関守の石人 | stone giant guardian, ancient stone armor, helmet with single glowing eye, holding stone spear, carved runes, height measuring marks on chest, cracks | 関守の石人。古い関所の門番 |
 | `assets/monsters/w3_ashscribe.webp` | 灰の書記 | ash covered scribe, robed figure made of ash, hood, glowing eyes, dry cracked face, holding quill pen, crumbling, smoke | ボス。灰をかぶって書き続ける者 |
 | `assets/monsters/w3_tidemaw.webp` | 潮呑み | giant sea blob, huge mouth with fangs, one big eye, teal water body, bubbles, drooling, anchor and sandal inside | ボス。洞の奥の口だけのもの |
 
-## 魔物（145）
+## 魔物（149）
 
 ふつうの敵のうち、魔物の姿のもの。
 
@@ -80,6 +82,10 @@
 | `assets/monsters/m5_oldbeast.webp` | 首に布を巻いた獣 | beast, large wolf, four legs, brown fur, visible ribs, glowing eyes, fangs, cloth tied around neck, embroidered cloth | 首に名前入りの布を巻いた獣。哀しい |
 | `assets/monsters/c2_captainbeast.webp` | 隊長だったもの | monster, giant, mutated soldier, three arms, extra arm, torn blue military uniform, insignia patch, glowing eyes, fangs, drooling, scars, holding club | 隊長だったもの。哀しくおぞましい |
 | `assets/monsters/c2_rustspawn.webp` | 錆鎧の分かれ身 | living armor, empty armor, giant knight, rusty armor, chains inside helmet, glowing eyes, holding greatsword, rust particles, smoke, pauldrons | 錆鎧の分かれ身。兜の中は鎖 |
+| `assets/monsters/w4_borer.webp` | 地喰い虫の子 | giant beetle, many legs, grey-brown hard shell, ore-like spikes on back, glowing orange eyes, mandibles chewing iron rail | 地喰い虫の子。背に鉱石のような突起 |
+| `assets/monsters/w4_hungryrock.webp` | 腹ぺこ岩 | living boulder, round rock with big mouth, googly eyes, drooling, cracks, lunch bundles inside mouth, comical | 腹ぺこ岩。座るのにちょうどいい岩 |
+| `assets/monsters/w4_hushed.webp` | 音を食われた狩人 | undead hunter, hooded, gaunt, mouth wide open screaming silently, holding spear, tattered green cloak, hollow eyes | 音を食われた狩人。口を開けたまま声が出ない |
+| `assets/monsters/w4_saltwalker.webp` | 逆さ歩き | pale humanoid, white robe, featureless face with one hollow eye, floating, standing upside down, salt crystals, long claws | 逆さ歩き。空に映った側を歩く |
 | `assets/monsters/w3_hermit.webp` | 舟殻ヤドカリ | giant hermit crab, wearing small wooden rowboat as shell, red legs, big claws, googly eyes, name plate on boat, bubbles | 小舟を背負ったヤドカリ。まぬけ |
 | `assets/monsters/w3_cinder.webp` | 火の粉小僧 | small fire spirit, ember blob, glowing orange, sparks, grin, googly eyes, floating, smoke | 火山の火の粉の小鬼。まぬけ |
 | `assets/monsters/w3_drowned.webp` | 溺れ船乗り | drowned sailor, undead, pale green skin, wet ragged clothes, rope around waist, hollow eyes, open mouth, seaweed, rowing motion | 海から上がった死者 |
