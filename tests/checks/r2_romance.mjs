@@ -282,6 +282,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     G.m10Do("love", c1);
     G.r2Of("dil", S).st = 6;
     G.r2Of("ilse", S).st = 3;
+    G.tk.relAdd("dil", "ilse", 30, S); // 始まりの間柄（−15）では冷やかしの線（−10）に届かないので、少し打ち解けたことにする
     const ty = G.r2Typed("ilse", "dil", S);
     if (!ty.some((b) => b.typed === "r2tease")) F("恋仲の相手を、ほかの仲間がからかう型が組めない");
     if (!ty.some((b) => b.typed === "r2rival")) F("恋の筋の進んだ二人の、張り合いの型が組めない");
