@@ -138,16 +138,23 @@
     // ひねり（その型の文があるものだけ）
     const tws = (t.twists || []).filter((x) => (x !== "liar" || t.lie) && (x !== "victim" || t.victim));
     const twist = tws.length && G.rand() < 0.4 ? G.pick(tws) : "";
+    // 前触れ（ひねりのある依頼はたいてい見える。無い依頼にも、ときどき紛れる）
+    const TW = Q.TWISTS;
+    let tell = "";
+    if (TW[twist] && TW[twist].tells) { if (G.rand() < 0.8) tell = G.pick(TW[twist].tells); }
+    else if (twist === "rival") { if (G.rand() < 0.7) tell = G.pick(Q.RIVAL_TELLS); }
+    else if (G.rand() < 0.12) tell = G.pick(Object.values(TW).flatMap((x) => x.tells || []));
     // 報酬・名声・期限
     let reward;
     if (t.mech === "hunt") reward = (t.pay[0] + t.pay[1] * danger + G.d(15)) * Math.max(1, need);
     else if (L.type === "town") reward = t.pay[0] + t.pay[1] * days + G.d(20);
     else reward = t.pay[0] + t.pay[1] * danger + G.d(20);
+    if (twist === "ambush") reward = Math.round(reward * 1.3); // 罠の依頼は、相場より妙に高い
     const fame = L.type === "town" ? 2 + ((t.fame || 0) >= 20 ? 3 : 1) : 1 + 3 * danger + ((t.fame || 0) >= 20 ? 2 : 0);
     const dur = Math.max(3, t.days + days * 2);
     let item = "";
     if (danger >= 2 && L.type !== "town" && G.rand() < 0.18) {
-      const goods = Object.keys(D.ITEMS).filter((id) => /^i[13]_/.test(id) && ["weapon", "armor", "ring"].includes(D.ITEMS[id].type) && D.ITEMS[id].price >= 30 && D.ITEMS[id].price <= 90 * danger);
+      const goods = Object.keys(D.ITEMS).filter((id) => /^i(1|3[a-z]?)_/.test(id) && ["weapon", "armor", "ring"].includes(D.ITEMS[id].type) && D.ITEMS[id].price >= 30 && D.ITEMS[id].price <= 90 * danger);
       if (goods.length) item = G.pick(goods);
     }
     const q = {
@@ -155,6 +162,7 @@
       reward, fame, dur, twist, client, v, from: here, nation: G.nationOf(here) || "", foe, mids: 0,
     };
     if (item) q.item = item;
+    if (tell) q.tell = tell;
     if (need) q.need = need;
     if (t.mech === "hunt") Object.assign(q, { target: foe, progress: 0 });
     return q;
@@ -218,7 +226,7 @@
     if (c.bonus) o.bonus = c.bonus;
     if (c.cost) o.cost = c.cost;
     if (c.cond === "herb") o.cond = () => G.count("herb") > 0;
-    if (c.fight) { o.fight = foesOf(c.fight, q); o.win = outOf(c.win || {}, q); }
+    if (c.fight) { o.fight = foesOf(c.fight, q); o.win = outOf(c.win || {}, q); if (c.firstStrike) o.firstStrike = true; }
     if (c.ok) o.ok = outOf(c.ok, q);
     if (c.ng) o.ng = outOf(c.ng, q);
     return o;
@@ -241,13 +249,31 @@
     const sc = Q.CLIMAX[q.kind];
     if (!sc || !t) return null;
     let text = fill(sc.text[(cur.t || 0) % sc.text.length], q.v);
-    let choices = sc.choices;
-    if (q.twist === "liar" && t.lie) { text += fill(t.lie, q.v); choices = Q.TWISTS.liar.choices; }
-    else if (q.twist === "victim" && t.victim) { text += fill(t.victim, q.v); choices = Q.TWISTS.victim.choices; }
-    else if (q.twist === "ambush") { const r = Q.TWISTS.ambush.reveal; text += fill(r[(cur.t || 0) % r.length], q.v); choices = Q.TWISTS.ambush.choices; }
+    let choices = sc.choices.map((c) => choiceOf(c, q));
+    const big = ["liar", "victim", "ambush"].includes(q.twist);
+    if (big && q.revealed) {
+      // 先に確かめて、見抜いた
+      const tw = Q.TWISTS[q.twist];
+      if (q.twist === "liar") text += fill(t.lie, q.v);
+      else if (q.twist === "victim") text += fill(t.victim, q.v);
+      else text += fill(tw.reveal[(cur.t || 0) % tw.reveal.length], q.v);
+      choices = tw.choices.map((c) => choiceOf(c, q));
+    } else {
+      // 罠に気づかないまま進むと、どの手を選んでも不意打ちになる
+      if (q.twist === "ambush") {
+        const A = Q.TWISTS.ambush;
+        const sprung = { text: A.sprung[(cur.t || 0) % A.sprung.length], hp: -4, memo: A.know.text, fight: ["bandit", "bandit", "bandit"], win: A.choices[0].win };
+        choices = sc.choices.map((c) => ({ label: fill(c.label, q.v), ok: outOf(sprung, q) }));
+      }
+      // 話の裏と物陰を確かめる（ひねりの起こりうる型だけ。一度きり）
+      const t2 = Q5.type(q.kind);
+      if (!q.probed && t2 && (t2.twists || []).some((x) => ["liar", "victim", "ambush"].includes(x))) {
+        choices = [{ label: Q.PROBE.label, stat: "知力", diff: "普通", ok: { q5: { r: "probe", qid: q.id } }, ng: { q5: { r: "probefail", qid: q.id } } }, ...choices];
+      }
+    }
     const wk = SCENE_WHO[q.kind];
-    const who = wk && !(q.twist === "liar") ? { kind: wk, seed: `q5:${q.id}:${q.kind}` } : clientWho(q);
-    return { title: q.title, text, choices: choices.map((c) => choiceOf(c, q)), who };
+    const who = wk && !(q.twist === "liar" && q.revealed) ? { kind: wk, seed: `q5:${q.id}:${q.kind}` } : clientWho(q);
+    return { title: q.title, text, choices, who };
   };
 
   // 出来事の殻（中身は今の場面から読む。乱数は使わない）
@@ -336,6 +362,14 @@
   const repDown = (n, v) => { const S = G.S; if (n && S.repute && S.repute[n]) S.repute[n].rep = Math.max(0, S.repute[n].rep - v); };
   const repUp = (n, v) => { if (n && G.repOf) G.repOf(n).rep += v; };
   const affTo = (q, n) => { const id = q.client && q.client.id; if (id && G.affAdd) G.affAdd(id, n); };
+  // 覚え書きの元（L1 が冒険をまたいで拾う）。この冒険で知ったものは S.q5.know に印
+  Q5.KNOW = () => Object.values(Q.TWISTS).map((t) => t.know).filter(Boolean);
+  Q5.learn = (k) => {
+    if (!k) return;
+    G.memo(k.text);
+    const st = G.q5State(G.S);
+    (st.know || (st.know = {}))[k.id] = true;
+  };
   Q5.resolve = (qid, r, x) => {
     const S = G.S;
     const q = find(qid);
@@ -372,6 +406,24 @@
         }
         break;
       case "keep": break;
+      case "probe":
+      case "probefail": {
+        q.probed = true;
+        G.pass(1);
+        const big = ["liar", "victim", "ambush"].includes(q.twist);
+        if (r === "probe" && big) {
+          q.revealed = true;
+          G.say(fill(Q.PROBE[q.twist], q.v));
+          Q5.learn(Q.TWISTS[q.twist].know);
+        } else if (r === "probefail" && q.twist === "ambush") {
+          // 確かめそこねた。罠はそのまま口を開ける
+          const A = Q.TWISTS.ambush;
+          G.apply(outOf({ text: A.sprung[0], hp: -4, memo: A.know.text, fight: ["bandit", "bandit", "bandit"], win: A.choices[0].win }, q));
+          return;
+        } else G.say(fill(r === "probe" ? Q.PROBE.none : Q.PROBE.miss, q.v));
+        if (!S.over) Q5.begin(q.id, true);
+        break;
+      }
       default: Q5.end(q, r, x);
     }
   };
@@ -422,6 +474,13 @@
     repUp(q.nation, 2);
     if (q.kind === "bounty") G.chron(`賞金首の${q.v.outlaw}をギルドに引き渡す`, "event");
     if (q.client && q.client.id) G.say(`帳場に、${q.client.name}からの言付けが添えてあった。「助かりました」とだけ。`);
+    // 見抜かずに片づけた嘘と、聞かずに済ませた相手の言い分は、あとから知れる
+    if ((q.twist === "liar" || q.twist === "victim") && !q.revealed) {
+      const tw = Q.TWISTS[q.twist];
+      G.say(fill(tw.after, q.v));
+      if (q.twist === "liar" && q.nation) G.addInfamy(2, q.nation);
+      Q5.learn(tw.know);
+    }
     Q5.record(q, "ok");
   };
 
@@ -465,6 +524,7 @@
     if (q.done) parts.push("報告を待つ");
     else if (left != null) parts.push(left > 0 ? `期限まであと${left}日` : "期限は今日まで");
     parts.push(`依頼人 ${q.client.name}`);
+    if (q.tell && !q.done && !q.revealed) parts.push(q.tell);
     if (q.reward) parts.push(`${q.reward}G${q.item ? "＋品" : ""}`);
     return parts.filter(Boolean).join("・");
   };
@@ -552,7 +612,7 @@
     grp.list.forEach((a) => {
       if (a.id.startsWith("guild:take:")) {
         const q = S.board && S.board.list.find((x) => "guild:take:" + x.id === a.id);
-        if (q && q.q5) { const t = Q5.type(q.kind); a.sub = `${q.reward}G${q.item ? "＋品" : ""}・${t ? t.name : ""}・期限${q.dur}日・依頼人 ${q.client.name}・${q.desc}`; }
+        if (q && q.q5) { const t = Q5.type(q.kind); a.sub = `${q.reward}G${q.item ? "＋品" : ""}・${t ? t.name : ""}・期限${q.dur}日・依頼人 ${q.client.name}・${q.desc}${q.tell ? `（${q.tell}）` : ""}`; }
       } else if (a.id.startsWith("guild:report:")) {
         const q = S.quests.find((x) => "guild:report:" + x.id === a.id);
         if (q && q.item && D.ITEMS[q.item]) a.sub += `・${D.ITEMS[q.item].name}`;
@@ -595,7 +655,7 @@
       if (q && q.q5 && q.deadline == null) {
         q.deadline = S.day + q.dur;
         q.takenDay = S.day;
-        G.say(`依頼人は${q.client.name}。期限は${q.dur}日。`);
+        G.say(`依頼人は${q.client.name}。期限は${q.dur}日。${q.tell ? q.tell + "。" : ""}`);
         if (q.kind === "smuggle") { G.give("package"); G.note("封のある荷を預かった。"); }
         if (q.type === "q5escort") G.note(`${q.client.short}が旅の連れになった。${q.v.place}まで送り届ける。`);
       }

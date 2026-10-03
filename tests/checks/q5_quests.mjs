@@ -108,7 +108,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
             if (q.type === "hunt" && !(D.ENEMIES[q.target] && q.need >= 1)) F(`${q.kind}: 討伐の相手か数が変`);
             if (q.item && !D.ITEMS[q.item]) F(`${q.kind}: 報酬の品 ${q.item} が無い`);
             if (examples.length < 6 && q.twist && !examples.some((e) => e.includes(q.kind))) examples.push(`[${q.kind}/${q.twist}] ${q.title}──${q.desc}（依頼人 ${q.client.name}・${q.reward}G・${q.dur}日）`);
-            const texts = [["題", q.title], ["説明", q.desc], ["依頼人", q.client.name]];
+            const texts = [["題", q.title], ["説明", q.desc], ["依頼人", q.client.name], ["前触れ", q.tell || ""]];
+            Object.entries(Q.PROBE).forEach(([k, t]) => texts.push(["確かめる " + k, G.q5.fill(t, q.v)]));
+            Object.entries(Q.TWISTS).forEach(([k, tw]) => [tw.after, ...(tw.sprung || []), ...(tw.tells || []), tw.know && tw.know.text].filter(Boolean).forEach((t) => texts.push(["ひねり " + k, G.q5.fill(t, q.v)])));
             // 取りかかる場面と、当てはまる途中の出来事をすべて組み立てる
             const curs = [];
             if (q.type === "q5scene" || q.type === "q5escort") for (let t = 0; t < 2; t++) curs.push({ qid: q.id, sc: "climax", t });
@@ -177,7 +179,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       else {
         G.act(go.id);
         if (S.mode !== "event" || S.event !== "q5_scene") F(`取りかかっても場面にならない（${S.mode}）`);
-        const i = G.eventChoices().findIndex(({ c }) => !c.fight && c.stat);
+        const i = G.eventChoices().findIndex(({ c }) => !c.fight && c.stat && c.label !== D.Q5.PROBE.label);
         G.rand = () => 0.01; // 判定は成功
         G.act("ev:" + G.eventChoices()[i].i);
         G.rand = seeded(12);
@@ -195,13 +197,21 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   }
   {
     // ひねり：依頼人の嘘 → 嘘を暴く。相手も被害者 → 手を組む。罠 → 切り抜ける
-    for (const [kind, twist, label, want] of [["collect", "liar", "嘘を、ギルドに", "expose"], ["missing", "victim", "手を組み", "ally"], ["spy", "ambush", "迎え撃つ", "trap"]]) {
+    for (const [kind, twist, label, want] of [["collect", "liar", "嘘を、ギルドに", "expose"], ["missing", "victim", "手を組み", "ally"], ["spy", "ambush", "先に仕掛ける", "trap"]]) {
       const S = newGame(G, 21);
       S.loc = "karna"; S.fame = 100;
       const q = takeKind(S, kind, twist, "karna");
       if (!q) { F(`${kind} を受けられない`); continue; }
       S.mode = "explore"; S.fac = null;
       G.act("q5go:" + q.id);
+      // 先に確かめる（知力）と、ひねりを見抜いて、ひねりの選択肢になる
+      const probe = G.eventChoices().find(({ c }) => c.label === D.Q5.PROBE.label);
+      if (!probe) { F(`${kind}/${twist}: 「先に確かめる」が出ない`); continue; }
+      G.rand = () => 0.01;
+      G.act("ev:" + probe.i);
+      G.rand = seeded(23);
+      if (!q.revealed || S.event !== "q5_scene") F(`${kind}/${twist}: 確かめても見抜けない`);
+      if (!S.memos.includes(D.Q5.TWISTS[twist].know.text)) F(`${kind}/${twist}: 見抜いても覚え書きの元が残らない`);
       const ch = G.eventChoices().find(({ c }) => c.label.includes(label));
       if (!ch) { F(`${kind}/${twist}: ひねりの選択肢「${label}」が出ない（${G.eventChoices().map(({ c }) => c.label).join("・")}）`); continue; }
       const affBefore = S.gold;
@@ -212,6 +222,36 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (S.quests.includes(q)) F(`${kind}/${twist}: 別の結末なのに依頼が残る`);
       if (!(G.P.q5 && G.P.q5.kinds[kind] && G.P.q5.kinds[kind][want] === 1)) F(`${kind}/${twist}: 記録が ${want} にならない（${JSON.stringify(G.P.q5 && G.P.q5.kinds[kind])}）`);
       void affBefore;
+    }
+    // 確かめずに進むと：罠は不意打ち（三人・傷を負って始まる）、嘘は報告のあとで露見して悪名
+    {
+      const S = newGame(G, 24);
+      S.loc = "karna"; S.fame = 100;
+      const q = takeKind(S, "spy", "ambush", "karna");
+      S.mode = "explore"; S.fac = null;
+      G.act("q5go:" + q.id);
+      const hp = S.hp;
+      const ch = G.eventChoices().find(({ c }) => c.label !== D.Q5.PROBE.label);
+      G.act("ev:" + ch.i);
+      if (S.mode !== "combat" || S.combat.foes.length !== 3 || !(S.hp < hp)) F(`罠に気づかず進んでも不意打ちにならない（${S.mode}・${S.hp}/${hp}）`);
+      const S2 = newGame(G, 25);
+      S2.loc = "karna"; S2.fame = 100;
+      const q2 = takeKind(S2, "collect", "liar", "karna");
+      S2.mode = "explore"; S2.fac = null;
+      G.act("q5go:" + q2.id);
+      const c2 = G.eventChoices().find(({ c }) => c.label.includes("道理を説いて"));
+      G.rand = () => 0.01; G.act("ev:" + c2.i); G.rand = seeded(26);
+      const inf = G.repOf("自由都市連合").inf;
+      S2.mode = "fac"; S2.fac = "guild";
+      G.act("guild:report:" + q2.id);
+      if (!(G.repOf("自由都市連合").inf > inf)) F("見抜かずに嘘の片棒を担いでも、あとで悪名が付かない");
+      // 前触れ：罠・嘘の依頼は、たいてい掲示に前触れが見える。罠は報酬が高い
+      const S3 = newGame(G, 27);
+      S3.fame = 100; S3.loc = "karna";
+      let tw = 0, told = 0;
+      for (let i = 0; i < 300; i++) { const q3 = G.q5.make(G.q5.type("spy"), S3, {}); if (["ambush", "liar", "victim"].includes(q3.twist)) { tw++; if (q3.tell) told++; } }
+      if (!(tw && told / tw > 0.6)) F(`ひねりのある依頼に前触れが見えない（${told}/${tw}）`);
+      if (G.q5.KNOW().length < 3) F("覚え書きの元（G.q5.KNOW）が足りない");
     }
     // 裏切ると、その国で悪名が付く
     const S = newGame(G, 31);
@@ -270,7 +310,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       S.mode = "explore"; S.fac = null;
       G.arrive("nerva");
       if (S.event !== "q5_scene") F("送り先に着いても場面にならない");
-      else { G.act("ev:0"); if (!q.done) F("送り届けても果たせない"); }
+      else { const c = G.eventChoices().find(({ c }) => c.label !== D.Q5.PROBE.label); G.act("ev:" + c.i); if (!q.done) F("送り届けても果たせない"); }
     } else F("護衛を受けられない");
   }
 
