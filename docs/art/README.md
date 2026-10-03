@@ -17,7 +17,7 @@
 3. WebUI を `--api` を付けて起動する（例：`webui-user.bat` の `COMMANDLINE_ARGS` に `--api`）。
 4. このフォルダで `node tools/gen_portraits.mjs --dry` を動かし、送るプロンプトと設定を確かめる。よければ `node tools/gen_portraits.mjs` で、まだ画像の無い人をすべて作る（`--only dil,nora` でその人だけ）。
 5. 絵を**1枚ごとに見る**（`assets/portraits/`）。
-   - **2人以上写っていたら作り直す**（背景の小さな人影・持ち物や服の柄の中の顔・鏡や水に映った姿も数える）。`node tools/gen_portraits.mjs --only <id> --force --new-seed` で seed を変える。すぐ作り直せないときは一覧（[portraits.json](portraits.json)）のその人に `"redo": "multi"` を付けておき、あとで `node tools/gen_portraits.mjs --redo --new-seed` でまとめて作り直す（作り直すと印は消える）。差分（img2img）も元の絵の人数を引き継ぐので、差分を作る前に基本の絵を見ること。
+   - **2人以上写っていたら作り直す**（背景の小さな人影・持ち物や服の柄の中の顔・鏡や水に映った姿も数える）。`node tools/gen_portraits.mjs --only <id> --force --new-seed` で seed を変える。すぐ作り直せないときは一覧（[portraits.json](portraits.json)）のその人に `"redo": "multi"` を付けておき、あとで `node tools/gen_portraits.mjs --redo --new-seed` でまとめて作り直す（作り直すと印は消える）。髪の色など identity を変えて描き直す人には `"redo": "color"` を付ける（持ち主の決定で、白に寄っていた女のモブの型 9 人の髪の色を散らした）。差分（img2img）も元の絵の人数を引き継ぐので、差分を作る前に基本の絵を見ること。
    - 気に入った名のある人物は `node tools/gen_portraits.mjs --keep dil,nora` で、そのときの seed を一覧に残す（作り直しても同じ見た目を保ちやすくなる）。
    - 気に入らない人は `node tools/gen_portraits.mjs --only <id> --force --new-seed` で作り直す。
 6. できた `assets/portraits/` と、`--keep` したなら `docs/art/portraits.json`・`portraits.md` を、配り役（Claude）に渡すか、コミットする。`node tools/build.mjs && node tests/run.mjs` で大きさを確かめられる。

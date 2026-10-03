@@ -10,7 +10,7 @@
 //
 // node tools/gen_portraits.mjs                    … まだ画像の無い人をすべて作る
 //   --only <id>[,<id>…]  その人だけ        --force  あっても作り直す        --dry  送らずに、最終的なプロンプトと設定だけ表示
-//   --redo               一覧で redo（作り直しの印。multi＝2人以上写っていた）が付いた人も作り直す（--new-seed と使う）
+//   --redo               一覧で redo（作り直しの印。multi＝2人以上写っていた・color＝髪の色を変えた）が付いた人も作り直す（--new-seed と使う）
 //   --new-seed           一覧の seed を使わずに作る（別の見た目を探す）       --style <file>  上書きの設定ファイル（既定は style.local.json）
 // node tools/gen_portraits.mjs --keep <id>[,<id>…]   … 最後に作ったときの seed を一覧（portraits.json・md）に書き戻す。<id>=<seed> で直に書ける
 // --monsters  魔物の絵（V6）：一覧は docs/art/monsters.json、設定は docs/art/style_monsters.json（＋ style_monsters.local.json）、
