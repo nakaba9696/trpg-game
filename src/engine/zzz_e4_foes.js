@@ -359,6 +359,59 @@
     if (S.mode === "combat" && S.combat === C && !G.alive().length) G._endCombat("win");
   };
 
+  // ---------------------------------------------------------------- 3b. 知っていれば有利なこと（覚え書きの元）
+  // 持ち主の方針：何度も死んで、有利なことを覚えていく。敵ごとに e.know = [{ id, text }]（L1 の冒険をまたぐ覚え書きが拾う。形は L1 に合わせて直す）。
+  // データに know を書いた敵はそれを先に置き、データから分かること（弱点・行動とその受け方・出る時・逃げる条件など）を足す。
+  const KNOW_ACT = {
+    poison: "毒を持つ。毒は宿屋か教会で抜ける。薬を多めに持っていけ。",
+    sleep: "眠りに誘ってくる。知力が高ければ払いのけやすい。",
+    disarm: "武器を払い落としにくる。筋力があれば握りしめて離さない。",
+    steal: "懐を狙い、盗むと逃げる。敏捷が高ければ守れる。",
+    pin: "連れを押さえ込んでくる。連れに頼りすぎるな。",
+    call: "放っておくと仲間を呼ぶ。早く片づけるほど楽になる。",
+    fleecall: "深手を負うと逃げて、仲間を連れて戻る。逃げる前に一気に倒し切れ。",
+    guard: "仲間を庇う。庇う者から先に倒すと早い。",
+    regen: "傷がひとりでにふさがる。手数で押し切れ。",
+    enrage: "深手を負うと猛って強く当たる。最後の一押しは守りを固めてから。",
+    drain: "生気を吸って自分の傷を癒す。長引かせるな。",
+    corrode: "鎧の継ぎ目を緩めてくる。緩んだ次の手番は身を守れ。",
+    rout: "群れの片割れが倒れると、残りは逃げ出しやすい。",
+  };
+  const WHEN_TEXT = (w) => [w.night ? "夜" : "", w.day ? "昼" : "", (w.season || []).join("・"), (w.weather || []).join("・") ? `${(w.weather || []).join("・")}の日` : ""].filter(Boolean).join("の、");
+  E4.know = (id) => {
+    const e = E()[id];
+    if (!e) return [];
+    const out = [];
+    const add = (k, text) => { if (!out.some((x) => x.id === k)) out.push({ id: k, text }); };
+    (Array.isArray(e.know) ? e.know : []).forEach((x) => x && x.id && x.text && add(x.id, x.text));
+    if (e.weak) add("weak:" + e.weak, `${ELEM[e.weak]}に弱い。当たれば深く効く。`);
+    (e.acts || []).forEach((a) => KNOW_ACT[a] && add("act:" + a, KNOW_ACT[a]));
+    if (e.when) add("when", `${WHEN_TEXT(e.when)}にしか出ない。避けたければ時を選べ。`);
+    if (e.undead) add("undead", "不死のもの。聖水がよく効く。");
+    if (e.majin) add("majin", "見えない守り（絶界）がある。破る手立てを持たずに挑むな。");
+    if (e.mres >= 25 && e.def >= 20) add("hard", "刃も魔法も通りにくい。急所を狙うか、弱みを探せ。");
+    else {
+      if (e.mres < 0) add("mres", "魔法に弱い。");
+      else if (e.mres >= 25) add("mres", "魔法が効きにくい。刃で攻めよ。");
+      if (e.def >= 20) add("def", "刃が通りにくい。魔法か、急所を狙え。");
+    }
+    if (e.magic) add("magic", "攻撃は鎧を素通りする。鎧より体力を頼れ。");
+    if (e.bribe) add("bribe", `${e.bribe}G 払えば見逃してくれる。`);
+    if (e.will <= 30) add("will", "脅しに弱い。威圧すれば逃げ出すことが多い。");
+    if (e.fleeAt && !e.boss) add("flee", "深手を負うと逃げ出す。逃げられると何も残さない。");
+    if (e.pack) add("pack", `群れで出る（${e.pack[0]}〜${e.pack[1]}体）。雷のように皆を打つ手が役に立つ。`);
+    if (e.elderOf) add("elder", `まれに出る強い個体。必ず${((D.ITEMS[(e.loot[0] || [])[0]]) || {}).name || "珍しい素材"}を落とす。`);
+    if (e.kinOf) add("kin", "使徒の眷属。縄張りで二体退けると、主が弱る。初めて倒すと主の弱みの手がかりが得られる。");
+    if (!out.length || out.every((x) => /^(pack|kin|elder)$/.test(x.id))) {
+      if (e.agi <= 25) add("agi", "足が遅い。勝てないと思ったら逃げやすい。");
+      else if (e.agi >= 65) add("agi", "素早い。逃げるのは難しい。戦うと決めてから近づけ。");
+      else if (e.will >= 999) add("will", "話が通じない。威圧も賄賂も効かない。");
+      else add("hit", `命中はおよそ${e.hit}%。身を守れば受ける傷は半分になる。`);
+    }
+    return out;
+  };
+  Object.keys(E()).forEach((id) => { E()[id].know = E4.know(id); });
+
   // ---------------------------------------------------------------- 4. 図鑑
   if (G.codexFoeStats) {
     const baseStats = G.codexFoeStats;

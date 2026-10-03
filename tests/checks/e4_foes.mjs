@@ -4,6 +4,7 @@
 // - 群れ：2〜4 体で出る。崩れると逃げる・仲間を呼ぶ・庇うが働く
 // - 眷属：使徒ごとに 2 種以上、縄張りの出現表にいる。倒すと手がかり（覚え書き）、二体で使徒が弱る
 // - 行動：E4 の敵はみな行動か弱点を持つ。眠り・武器を落とす・弱点が効く。どの敵とも例外なく戦える
+// - 知っていれば有利なこと：すべての敵に覚え書きの元（know: [{ id, text }]）がある。弱点は必ず載る
 // - 絵：look があり、docs/art/monsters.json にタグがある（異形の設定は使わない）
 import { readFileSync } from "node:fs";
 
@@ -236,6 +237,13 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
     if (g.S.over) F("試しの戦いで死んだ（HP を足す）");
     if (!rounds) F("試しの戦いが一度も回らない");
+  }
+
+  // ---------------------------------------------------------------- 知っていれば有利なこと（覚え書きの元。すべての敵に一行以上）
+  for (const [id, e] of Object.entries(E)) {
+    if (!Array.isArray(e.know) || !e.know.length || !e.know.every((k) => k.id && typeof k.text === "string" && k.text.length >= 6)) { F(`${id}: 覚え書きの元（know: [{ id, text }]）が無い`); continue; }
+    if (new Set(e.know.map((k) => k.id)).size !== e.know.length) F(`${id}: 覚え書きの id が重なる`);
+    if (e.weak && !e.know.some((k) => k.id === "weak:" + e.weak)) F(`${id}: 弱点が覚え書きに無い`);
   }
 
   // ---------------------------------------------------------------- 絵
