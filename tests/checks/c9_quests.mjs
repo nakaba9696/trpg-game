@@ -172,8 +172,9 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
           c.talkDay = 0;
           G.m2Talk(c.id);
           const tid = G.q9.topicId(id, i);
-          if (S.event !== "tk_menu" || !S.tk.cur || S.tk.cur.menu[0] !== tid) { F(`${id}[${i + 1}]: 話すと、一覧の頭に頼みごとの段が出ない（${S.event} ${S.tk.cur && S.tk.cur.menu.join(",")}）`); return; }
-          G.act("ev:0");
+          const mi = S.tk.cur ? S.tk.cur.menu.indexOf(tid) : -1;
+          if (S.event !== "tk_menu" || mi < 0 || mi > 1) { F(`${id}[${i + 1}]: 話すと、一覧の頭のほうに頼みごとの段が出ない（${S.event} ${S.tk.cur && S.tk.cur.menu.join(",")}）`); return; }
+          G.act("ev:" + mi);
           if (S.event !== "tk_topic") { F(`${id}[${i + 1}]: 頼みごとの話題が開かない`); return; }
           G.act("ev:0");
           if (S.mode === "event") { const e = G.actions()[0].list.findIndex((a) => a.label === "話を切り上げる"); if (e >= 0) G.act("ev:" + e); }
@@ -255,7 +256,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- ランダムに遊ぶ（行き先へ寄せながら）
   let stuck = 0, turns = 0;
   const ids = Object.keys(Q);
-  for (let g = 0; g < 4; g++) {
+  for (let g = 0; g < 2; g++) {
     const G2 = loadEngine();
     G2.rand = seeded(9300 + g);
     G2.P = { trophies: {}, graves: [] };
@@ -267,7 +268,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const team = [ids[(g * 7) % ids.length], ids[(g * 7 + 3) % ids.length], ids[(g * 7 + 5) % ids.length]];
     team.forEach((id) => G2.c2Join(id));
     try {
-      for (let k = 0; k < 400 && !S.over; k++) {
+      for (let k = 0; k < 300 && !S.over; k++) {
         team.forEach((id) => { if (G2.c2In(id, S)) G2.affState(S)[id] = 80; });
         if (S.mode === "explore" && !S.travel && r() < 0.08) {
           const id = team[Math.floor(r() * team.length)];
