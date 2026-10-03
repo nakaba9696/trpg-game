@@ -290,7 +290,7 @@
    "id": "e1_melted",
    "file": "assets/monsters/e1_melted.webp",
    "name": "溶けかけた見習いたち",
-   "tags": "blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles, runes",
+   "tags": "blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles",
    "memo": "溶け合った見習いたち。おぞましい"
   },
   {
@@ -379,7 +379,7 @@
    "file": "assets/monsters/e2_gormoa.webp",
    "name": "灼け口の使徒テルグリス",
    "boss": true,
-   "tags": "giant, enormously fat, obese, three mouths, mouth on belly, long tongue, drooling, pink skin, spots, small horns, three eyes, beard, bib, loincloth, holding club, barrier",
+   "tags": "monster, ogre-like giant, grotesque, enormously fat, round belly covered by a huge stained apron, mouth on belly, three eyes, small horns, long tongue, drooling, pink spotted skin, wearing a bib and a tattered tunic, holding a giant ladle like a club",
    "memo": "使徒（ボス）。丘のように太った暴食の使徒。おぞましく、少しまぬけ"
   },
   {

@@ -25,7 +25,7 @@
 | `assets/monsters/royalguard.webp` | 近衛騎士団長 | 1boy, man, knight commander, royal guard, grey hair, stern, ornate plate armor, white armor, gold trim, blue cape, holding longsword, shield | ボス。王国最強の騎士 |
 | `assets/monsters/w1_vespa.webp` | 異端審問官ヴェスパ | inquisitor, iron mask, full face mask, tall, thin, grey armor, red cape, holding spear, torch, smoke | ボス。鉄仮面の異端審問官 |
 | `assets/monsters/w1_gregor.webp` | 墓守グレゴル | 1boy, old man, necromancer, priest, white hair, long beard, gaunt, glowing eyes, smirk, black robe, holding staff, runes | ボス。死体を歩かせる老司祭 |
-| `assets/monsters/e2_gormoa.webp` | 灼け口の使徒テルグリス | giant, enormously fat, obese, three mouths, mouth on belly, long tongue, drooling, pink skin, spots, small horns, three eyes, beard, bib, loincloth, holding club, barrier | 使徒（ボス）。丘のように太った暴食の使徒。おぞましく、少しまぬけ |
+| `assets/monsters/e2_gormoa.webp` | 灼け口の使徒テルグリス | monster, ogre-like giant, grotesque, enormously fat, round belly covered by a huge stained apron, mouth on belly, three eyes, small horns, long tongue, drooling, pink spotted skin, wearing a bib and a tattered tunic, holding a giant ladle like a club | 使徒（ボス）。丘のように太った暴食の使徒。おぞましく、少しまぬけ |
 | `assets/monsters/e2_marmit.webp` | 料理長マルミット | 1boy, old man, chef, white hair, stubble, smirk, lanky, white apron, blood on apron, holding meat cleaver | ボス。人を見ると部位を数える料理長 |
 | `assets/monsters/e2_mordu.webp` | 苔衣の使徒セグリトス | plant monster, tall, gardener, covered in mud and moss, wilted flowers growing from head, wide-brimmed hat, one glowing eye, long claws, holding pitchfork, pollen, spores, rotting | 使徒（ボス）の魔物の姿。泥と苔の庭師。甘い腐臭 |
 | `assets/monsters/w2_ironwarden.webp` | 溶けかけた機械兵 | iron golem, giant robot, ancient machine, huge, melted metal, acid, rust, glowing eyes, heavy armor, holding club, steam | ボス。半分溶けた鉄の巨人 |
@@ -60,7 +60,7 @@
 | `assets/monsters/e1_frogprophet.webp` | 沼の預言蛙 | giant frog, green skin, spots, wide mouth, grin, googly eyes, rune necklace, sitting, drooling | 死の預言を外し続ける大蛙。まぬけ |
 | `assets/monsters/e1_sweeper.webp` | 掃除人形 | stone golem, ancient automaton, stone doll, stubby body, single eye, glowing eye, cracks, runes, holding broom | 遺跡を掃除する石の人形。人をほこりと見なす |
 | `assets/monsters/e1_lantern.webp` | 提灯お化け | chouchin obake, paper lantern, lantern monster, one eye, long tongue, flame, burnt paper, floating | 化け提灯。自分の火で焦げる。まぬけ |
-| `assets/monsters/e1_melted.webp` | 溶けかけた見習いたち | blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles, runes | 溶け合った見習いたち。おぞましい |
+| `assets/monsters/e1_melted.webp` | 溶けかけた見習いたち | blob monster, fused bodies, melted flesh, purple flesh, many eyes, open jaws, bones, melting robes, bubbles | 溶け合った見習いたち。おぞましい |
 | `assets/monsters/e1_sleepgiant.webp` | 寝返り巨人 | giant, huge, fat, beard, wild hair, eyes closed, sleepy, drooling, snot bubble, loincloth | 寝たまま歩く巨人。まぬけで規模が大きい |
 | `assets/monsters/e1_bonepicker.webp` | 骨並べ | skeleton, tall, lanky, skull head, hollow eyes, ragged cloth, bone pouch, holding bone club, carrying bones | 骨を大きさ順に並べる魔物。不気味 |
 | `assets/monsters/e1_herald.webp` | 使徒の触れ役 | imp, demon messenger, purple skin, ram horns, bat wings, glowing eyes, grin, dark robe, holding scroll, feather plume, floating | 使徒の布告を触れ回る使い魔。陽気で邪悪 |
