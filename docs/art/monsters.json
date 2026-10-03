@@ -494,6 +494,50 @@
    "human": true,
    "tags": "1boy, man, hooded, scarf, smirk, ragged cloak, holding dagger",
    "memo": "裏切った仲間"
+  },
+  {
+   "id": "w4_borer",
+   "file": "assets/monsters/w4_borer.webp",
+   "name": "地喰い虫の子",
+   "tags": "giant beetle, many legs, grey-brown hard shell, ore-like spikes on back, glowing orange eyes, mandibles chewing iron rail",
+   "memo": "地喰い虫の子。背に鉱石のような突起"
+  },
+  {
+   "id": "w4_hungryrock",
+   "file": "assets/monsters/w4_hungryrock.webp",
+   "name": "腹ぺこ岩",
+   "tags": "living boulder, round rock with big mouth, googly eyes, drooling, cracks, lunch bundles inside mouth, comical",
+   "memo": "腹ぺこ岩。座るのにちょうどいい岩"
+  },
+  {
+   "id": "w4_hushed",
+   "file": "assets/monsters/w4_hushed.webp",
+   "name": "音を食われた狩人",
+   "tags": "undead hunter, hooded, gaunt, mouth wide open screaming silently, holding spear, tattered green cloak, hollow eyes",
+   "memo": "音を食われた狩人。口を開けたまま声が出ない"
+  },
+  {
+   "id": "w4_saltwalker",
+   "file": "assets/monsters/w4_saltwalker.webp",
+   "name": "逆さ歩き",
+   "tags": "pale humanoid, white robe, featureless face with one hollow eye, floating, standing upside down, salt crystals, long claws",
+   "memo": "逆さ歩き。空に映った側を歩く"
+  },
+  {
+   "id": "w4_borermother",
+   "file": "assets/monsters/w4_borermother.webp",
+   "name": "地喰いの古殻",
+   "boss": true,
+   "tags": "colossal beetle, huge cracked shell, many glowing eyes, long horns, rusted cannonballs embedded in back, smaller beetles crawling out of shell seams, chewing iron rail",
+   "memo": "地喰いの古殻。背に大筒の弾が三つ"
+  },
+  {
+   "id": "w4_gatekeeper",
+   "file": "assets/monsters/w4_gatekeeper.webp",
+   "name": "関守の石人",
+   "boss": true,
+   "tags": "stone giant guardian, ancient stone armor, helmet with single glowing eye, holding stone spear, carved runes, height measuring marks on chest, cracks",
+   "memo": "関守の石人。古い関所の門番"
   }
  ]
 }
