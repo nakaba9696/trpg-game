@@ -1,0 +1,14 @@
+/* I3：武具の比べの印と稀さの色（src/ui/zi3_gear.js） */
+.i3cmp { font-family: var(--f-ui); font-size: 12px; letter-spacing: .02em; margin-left: 6px; color: var(--muted); white-space: nowrap; }
+.i3cmp.i3up { color: var(--ok); }
+.i3cmp.i3down { color: var(--ng); }
+.i3cmp.i3unk { color: var(--crit); }
+.act > span > .i3cmp { margin-left: 0; }
+
+/* 稀さ：上・逸品・伝説 */
+.i3rar1 { color: var(--ok); }
+.i3rar2 { color: var(--accent); font-weight: 700; }
+.i3rar3 { color: var(--crit); font-weight: 700; text-shadow: 0 0 6px var(--accent-soft); }
+
+/* 図鑑の材質と銘 */
+.i3codex { display: contents; }
