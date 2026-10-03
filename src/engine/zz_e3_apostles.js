@@ -122,7 +122,13 @@
 
   // ---------------------------------------------------------------- 使徒を倒した印も「使徒を討つ」に数える（q4_paths.js）
   const flags0 = G.majinFlags;
-  if (flags0) G.majinFlags = () => [...new Set([...flags0(), ...Object.values(LIST).map((a) => a.flag)])];
+  // 毎手番の節目の確認で呼ばれ、場所を全部見直して遅かったので覚えておく（場所や使徒の数が変わったら作り直す。中身は同じ）
+  let flagsMemo = null;
+  if (flags0) G.majinFlags = () => {
+    const key = Object.keys(D.LOCS).length + ":" + Object.keys(D.ENEMIES).length + ":" + Object.keys(LIST).length;
+    if (!flagsMemo || flagsMemo.key !== key) flagsMemo = { key, list: [...new Set([...flags0(), ...Object.values(LIST).map((a) => a.flag)])] };
+    return flagsMemo.list.slice();
+  };
 
   // ---------------------------------------------------------------- 居城の謁見に「弱みを突いて挑む」を足す（剣が無くても、zekkai の条件で）
   Object.values(LIST).filter((a) => a.lair).forEach((a) => {

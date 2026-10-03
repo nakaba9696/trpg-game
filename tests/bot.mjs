@@ -39,8 +39,6 @@ export function makeSmartBot(G) {
     }
     return out;
   }
-  const bestMelee = (e, n) => Math.max(...myOptions(e, n).filter((o) => !o.mp).map((o) => o.dmg));
-  const bestSpell = (e, n) => Math.max(0, ...myOptions(e, n).filter((o) => o.mp).map((o) => o.dmg));
   function companionDpr(e) {
     return (S().companions || []).reduce((a, c) => a + (clamp(c.power - (c.fire ? e.mres : e.def), 5, 95) / 100) * ((c.fire ? 7 : 3.5) + (c.dmg || 0)), 0);
   }
@@ -56,19 +54,23 @@ export function makeSmartBot(G) {
     const foes = ids.map((id) => ({ e: D.ENEMIES[id], hp: hpLeft ? hpLeft[ids.indexOf(id)] : D.ENEMIES[id].hp })).sort((a, b) => a.hp - b.hp);
     let taken = 0;
     let rounds = 0;
+    // 見積もりは一つの敵を相手にしている間は変わらないので、手番ごとに計り直さない（速さのため。数字は同じ）
+    const dpr = foes.map((f) => foeDpr(f.e));
     for (let i = 0; i < foes.length; i++) {
       const f = foes[i];
       let hp = f.hp;
+      const n = foes.length - i;
+      const opts = myOptions(f.e, n);
+      const spell = Math.max(0, ...opts.filter((o) => o.mp).map((o) => o.dmg));
+      const melee = Math.max(...opts.filter((o) => !o.mp).map((o) => o.dmg));
+      const comp = companionDpr(f.e);
       while (hp > 0 && rounds < 60) {
-        const n = foes.length - i;
-        const spell = bestSpell(f.e, n);
-        const melee = bestMelee(f.e, n);
         let dmg = melee;
         if (spell > melee && mp >= 3) { dmg = spell; mp -= 3; }
-        dmg += companionDpr(f.e);
+        dmg += comp;
         hp -= Math.max(0.3, dmg);
         rounds++;
-        for (let j = i; j < foes.length; j++) if (j > i || hp > 0) taken += foeDpr(foes[j].e);
+        for (let j = i; j < foes.length; j++) if (j > i || hp > 0) taken += dpr[j];
       }
       if (f.e.majin && !G.weapon().pierce) return Infinity;
     }

@@ -8,9 +8,12 @@ import { listFiles } from "../tools/files.mjs";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "src");
 const { engine } = listFiles(root); // build.mjs と同じ順番
 
+// 読んで組み立てた（コンパイルした）スクリプトは使い回す。中身は毎回新しい文脈で動かすので、エンジンは毎回まっさら
+let scripts = null;
 export function loadEngine() {
+  scripts ||= engine.map((f) => new vm.Script(readFileSync(path.join(root, f), "utf8"), { filename: f }));
   const ctx = vm.createContext({ console });
-  for (const f of engine) vm.runInContext(readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
+  for (const s of scripts) s.runInContext(ctx);
   return ctx.G;
 }
 

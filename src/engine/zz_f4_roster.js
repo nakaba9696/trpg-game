@@ -216,7 +216,13 @@
     });
     return { out, back };
   };
-  F4.eventsNow = (S) => adjusted(S || G.S).out;
+  // 「訪ねる」の一覧を作る間だけ、予定合わせの結果を使い回す（人ごとに同じものを作り直していて遅かった。中身は同じ）
+  let nowMemo = null;
+  F4.eventsNow = (S) => {
+    S = S || G.S;
+    if (nowMemo && nowMemo.S === S) return nowMemo.out || (nowMemo.out = adjusted(S).out);
+    return adjusted(S).out;
+  };
   const baseRandom = G.randomEvent;
   G.randomEvent = () => {
     const S = G.S;
@@ -303,7 +309,9 @@
     }
     // 訪ねる：図鑑で知っている人が、いまここに居て、出会いの出来事を起こせるとき（今の冒険でまだ会っていない人）
     if (!(L.type === "dungeon" && S.depth > 0)) {
-      const seek = Object.keys(P()).filter((id) => F4.joinable(id) && knows(id) && !m.met[id] && !(m.gone || {})[id] && F4.entriesHere(id, S).length);
+      nowMemo = { S, out: null };
+      let seek;
+      try { seek = Object.keys(P()).filter((id) => F4.joinable(id) && knows(id) && !m.met[id] && !(m.gone || {})[id] && F4.entriesHere(id, S).length); } finally { nowMemo = null; }
       if (seek.length) groups.push({ title: "訪ねる（図鑑で知っている人）", list: seek.map((id) => ({
         id: "f4seek:" + id, label: `${F4.nameKnown(id)}を訪ねる`, sub: (F4.whereNow(id, S) || {}).note || "ここにいるはず", kw: ["訪", "探", F4.nameKnown(id)],
       })) });
