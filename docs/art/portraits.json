@@ -1516,7 +1516,7 @@
    "type": "elder",
    "file": "assets/portraits/sylvestre.webp",
    "identity": "1boy, male focus, old man, 74 years old, thin, pale skin, grey hair, long hair, long white beard, sleepy eyes, brown eyes, raised eyebrows, deep wrinkles, round spectacles, crimson long robe, silver chain of office, soot on sleeves, wooden staff",
-   "tags": "turning pages of a book beside a bonfire",
+   "tags": "holding a closed old book under arm, standing beside a small bonfire",
    "face": "mischievous smile",
    "variants": {
     "joy": "gentle smile, closed eyes",
@@ -2125,7 +2125,7 @@
    "type": "classic",
    "file": "assets/portraits/jonas.webp",
    "identity": "1boy, male focus, young man, teenage boy, 17 years old, slim, platinum blonde hair, curly hair, short hair, blue eyes, round eyes, freckles, steel helmet, grey gambeson, spear",
-   "tags": "holding a travel pass with both hands, standing at attention",
+   "tags": "holding a spear upright, standing at attention",
    "face": "nervous, blush",
    "variants": {
     "joy": "smile, happy, relieved",
@@ -2513,8 +2513,8 @@
    "name": "ボードワン",
    "type": "ojisan",
    "file": "assets/portraits/baudouin.webp",
-   "identity": "1boy, male focus, old man, 61 years old, slim, gaunt, weathered skin, white hair, grey hair, messy hair, medium hair, grey eyes, narrow eyes, stubble, scar on lip, deep wrinkles, grey hooded cloak covered in ash, many wooden name tags hanging from belt, shovel",
-   "tags": "writing on a wooden tag with charcoal",
+   "identity": "1boy, male focus, old man, 61 years old, slim, gaunt, weathered skin, white hair, grey hair, messy hair, medium hair, grey eyes, narrow eyes, stubble, scar on lip, deep wrinkles, grey hooded cloak covered in ash, small blank wooden markers hanging from belt, shovel",
+   "tags": "leaning on a shovel",
    "face": "grumpy frown",
    "memo": "C5・町。灰の荒野の手前の墓守。行き倒れの懐を漁る口の悪い老人。遺品に名前の札を付けて家族を待つ。灰をかぶった頭巾の外套、腰の名札の束、炭",
    "variants": {
