@@ -3,14 +3,50 @@
 // 2. ランダムに遊び続けるテスト（例外が出ないか、数値が範囲に収まるか）
 // 3. 釣り合いの測定（職業ごとの数字を出すだけ。失敗にはしない）。tests/balance.mjs
 // 新しい確認は tests/checks/<id>.mjs に置けば名前順に自動で読まれる（export default ({ G, fail, ok, loadEngine, seeded }) => {...}）
+// 速さ：tests/checks と釣り合いの測定は node:worker_threads で並べて動かす（下の 2z）。出力は名前順のまま、最後に遅いものの一覧を出す。
+//   JOBS=1 node tests/run.mjs   … 並べずに一つずつ（既定はコアの数）
+//   ONLY=q2,q4 node tests/run.mjs … 名前にその文字を含む checks だけ（手元で直すとき。CI では使わない。釣り合いの測定は ONLY に balance を含めたときだけ）
+// checks は別々の働き手で、ほかの checks と同時に動く。ほかの check の後始末やグローバルの状態に頼らないこと（今までも順番には頼れなかった）
 import { readFileSync, readdirSync } from "node:fs";
+import { availableParallelism } from "node:os";
+import { Worker } from "node:worker_threads";
 import vm from "node:vm";
 import { loadEngine, seeded } from "./lib.mjs";
-import { measureBalance } from "./balance.mjs";
+import { drain } from "./worker.mjs";
+import { balancePlan, measureBalance, playGames, mergeRows } from "./balance.mjs";
 
 let failures = 0;
 const fail = (msg) => { failures++; console.log("FAIL " + msg); };
 const ok = (msg) => console.log("OK   " + msg);
+
+// ---------------------------------------------------------------- 並べて動かす仕事（tests/checks/*.mjs と釣り合いの測定）
+// 先に働き手を起こしておき、下の 1〜2c を親が動かしているあいだに checks を進めさせる。
+// 重いものから取らせると早く終わる（HEAVY は目安。載っていない check は名前順で後ろに続く）
+const HEAVY = ["q2_balance.mjs", "e3_apostles.mjs", "balance", "balance_random"];
+const timings = [];
+let lap = performance.now();
+const timed = (name) => { const t = performance.now(); timings.push([name, t - lap]); lap = t; };
+const checkDir = new URL("./checks/", import.meta.url);
+const checkNames = readdirSync(checkDir).filter((n) => n.endsWith(".mjs")).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
+  .filter((n) => !process.env.ONLY || process.env.ONLY.split(",").some((k) => n.includes(k)));
+// 釣り合いの測定は、遊び方ごと・職業ごとに分けて並べる（種は職業ごと・回ごとに決まっているので、分けても数字は同じ）
+// ランダムのはじめの SHARED 回は tests/checks/q2_balance.mjs が同じ種・同じ行動の上限で遊ぶので、その結果を使い回す
+// （q2 が遊ばなかったとき・回数や種が合わないときは、最後に親が遊んで足す。表はどちらでも同じ）
+const SHARED = 240;
+const balanceParts = process.env.BALANCE === "0" || (process.env.ONLY && !process.env.ONLY.includes("balance")) ? [] : balancePlan().flatMap((p, _, __, classes = Object.keys(loadEngine().data.CLASSES)) => classes.map((cls) => ({ kind: "balance", name: `釣り合いの測定 ${p.mode} ${cls}`, ...p, cls, start: p.mode === "random" && p.games > SHARED ? SHARED : 0 })));
+const shown = [...checkNames.map((name) => ({ kind: "check", name })), ...balanceParts];
+const rank = (t) => { const i = HEAVY.indexOf(t.kind === "balance" ? (t.mode === "smart" ? "balance" : "balance_random") : t.name); return i < 0 ? HEAVY.length : i; };
+const tasks = shown.map((t, at) => ({ ...t, at })).sort((a, b) => rank(a) - rank(b) || a.at - b.at);
+const results = new Array(tasks.length);
+const counter = new Int32Array(new SharedArrayBuffer(4));
+const JOBS = Math.max(1, Number(process.env.JOBS || availableParallelism()));
+const workers = Array.from({ length: Math.min(JOBS - 1, tasks.length) }, () => new Promise((resolve) => {
+  const w = new Worker(new URL("./worker.mjs", import.meta.url), { workerData: { tasks, counter: counter.buffer } });
+  let died = null;
+  w.on("message", (m) => { if (m.end) w.terminate(); else results[m.i] = m; });
+  w.on("error", (e) => { died = e; });
+  w.on("exit", () => resolve(died));
+}));
 
 // ---------------------------------------------------------------- 1. データの整合
 {
@@ -67,6 +103,7 @@ const ok = (msg) => console.log("OK   " + msg);
   for (const [id, L] of Object.entries(D.LOCS)) if (L.reward?.trophy && !D.TROPHIES.some((t) => t.key === L.reward.trophy)) fail(`${id}: トロフィー ${L.reward.trophy} が無い`);
   if (failures === before) ok(`データの整合（場所 ${Object.keys(D.LOCS).length}・敵 ${Object.keys(D.ENEMIES).length}・アイテム ${Object.keys(D.ITEMS).length}・出来事 ${D.EVENTS.length}）`);
 }
+timed("1. データの整合");
 
 // ---------------------------------------------------------------- 1a. どの場所にも、どの出発地からも道か船で行ける
 {
@@ -84,6 +121,7 @@ const ok = (msg) => console.log("OK   " + msg);
   }
   if (failures === before) ok(`どの場所にも行ける（場所 ${Object.keys(D.LOCS).length}）`);
 }
+timed("1a. どの場所にも、どの出発地からも道か船で行ける");
 
 // ---------------------------------------------------------------- 1b. 敵の台詞と逃げ方（engine/foe_quirks.js）
 {
@@ -119,6 +157,7 @@ const ok = (msg) => console.log("OK   " + msg);
   if (G.S.mode !== "explore") fail(`敵が逃げたあとの mode が変 ${G.S.mode}`);
   if (failures === before) ok(`敵の台詞と逃げ方（台詞あり ${Object.values(D.ENEMIES).filter((e) => e.lines).length} 種・逃げる ${Object.values(D.ENEMIES).filter((e) => e.fleeAt).length} 種）`);
 }
+timed("1b. 敵の台詞と逃げ方");
 
 // ---------------------------------------------------------------- 1c. 装飾品の枠（I1）
 {
@@ -177,6 +216,7 @@ const ok = (msg) => console.log("OK   " + msg);
   if (G.equip("herb")) fail("薬草を装備できた");
   if (failures === before) ok(`装飾品の枠（装飾品 ${Object.values(D.ITEMS).filter((it) => it.type === "ring").length} 種・I1 の品 ${i1.length} 種すべてに入手先あり）`);
 }
+timed("1c. 装飾品の枠");
 
 // ---------------------------------------------------------------- 1d. 魔法の種類と習得（M1）
 {
@@ -299,6 +339,7 @@ const ok = (msg) => console.log("OK   " + msg);
   if (!((S.magicDebt || 0) > debt)) fail("術の大失敗で借りが増えない");
   if (failures === before) ok(`魔法の種類と習得（術 ${Object.keys(D.SPELLS).length} 種・魔導書 ${tomes.length} 冊・古いセーブ・学院・魔導書・戦闘の効き目）`);
 }
+timed("1d. 魔法の種類と習得");
 
 // ---------------------------------------------------------------- 2. ランダムに遊ぶ
 {
@@ -383,6 +424,7 @@ const ok = (msg) => console.log("OK   " + msg);
   console.log(`NOTE ランダムプレイで覚えた術: ${Object.entries(learned).map(([id, n]) => `${D.SPELLS[id].name} ${n}`).join("・") || "なし"}`);
   if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
 }
+timed("2. ランダムに遊ぶ");
 
 // ---------------------------------------------------------------- 2b. モンスターの絵（DOM なしの偽の canvas で描く）
 {
@@ -411,6 +453,7 @@ const ok = (msg) => console.log("OK   " + msg);
   try { G.paintMonster(ctx, 200, 240, 120, { id: "zz_unknown", shape: "dragon" }); } catch (err) { fail(`絵: データに無い敵で例外 ${err.message}`); }
   if (failures === before) ok(`モンスターの絵（${seen.size} 種が別々の見た目・ボスはオーラ・使徒は絶界）`);
 }
+timed("2b. モンスターの絵");
 
 // ---------------------------------------------------------------- 2c. 人物の絵（DOM なしの偽の canvas で描く）
 {
@@ -467,6 +510,7 @@ const ok = (msg) => console.log("OK   " + msg);
   if (G.companionWho({ name: "僧侶のセラ", cls: "僧侶" }).sex !== "女") fail("人物の絵: 仲間の名前から性別を拾えない");
   if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
 }
+timed("2c. 人物の絵");
 
 // ---------------------------------------------------------------- 保存の鍵の移し替え（古い名前 → Morsveld）
 {
@@ -498,29 +542,47 @@ const ok = (msg) => console.log("OK   " + msg);
   G.migrateSaveKeys({ getItem() { throw new Error("blocked"); } });
   if (failures === before) ok("保存の鍵の移し替え（古い鍵 → " + K.save + "・" + K.profile + "）");
 }
+timed("保存の鍵の移し替え");
 
-// ---------------------------------------------------------------- 2z. tests/checks/*.mjs（置くだけで読まれる確認）
-{
-  const dir = new URL("./checks/", import.meta.url);
-  const names = readdirSync(dir).filter((n) => n.endsWith(".mjs")).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
-  for (const n of names) {
-    const before = failures;
-    try {
-      const mod = await import(new URL(n, dir));
-      await mod.default({ G: loadEngine(), fail: (m) => fail(`${n}: ${m}`), ok, loadEngine, seeded });
-    } catch (e) {
-      fail(`${n}: 例外 ${e.stack || e}`);
+// ---------------------------------------------------------------- 2z. tests/checks/*.mjs（置くだけで読まれる確認）と 3. 釣り合いの測定（失敗にはしない）
+// 働き手と一緒に親も残りの仕事を取る。終わったら名前順に出す（釣り合いの表は最後）
+await drain(tasks, counter, (i, r) => { results[i] = r; });
+for (const e of await Promise.all(workers)) if (e) fail(`働き手が止まった: ${e.stack || e}`);
+const played = {};
+for (const [at, t] of shown.entries()) {
+  const r = results[tasks.findIndex((x) => x.at === at)];
+  if (!r) { fail(`${t.name}: 結果が返ってこなかった（働き手が途中で止まった）`); continue; }
+  for (const l of r.lines) console.log(l);
+  failures += r.failures;
+  timings.push([t.kind === "check" ? `tests/checks/${t.name}` : t.name, r.ms]);
+  if (t.kind === "balance") {
+    const p = (played[t.mode] ||= { rows: [], ms: 0, error: null });
+    p.ms += r.ms;
+    if (r.data?.error) { p.error = r.data.error; continue; }
+    let rows = r.data;
+    if (t.start) {
+      // はじめの回：q2 が遊んだもの（同じ遊び方・回数・行動の上限・種）か、無ければここで遊ぶ
+      const pre = results.flatMap((x) => x?.played || []).find((x) => x.mode === t.mode && x.start === 0 && x.games === t.start && x.steps === t.steps && x.seed === t.seed && x.rows.some((y) => y.cls === t.cls));
+      const t0 = performance.now();
+      const head = pre ? pre.rows.filter((y) => y.cls === t.cls) : playGames({ mode: t.mode, games: t.start, steps: t.steps, seed: t.seed, classes: [t.cls] });
+      p.ms += performance.now() - t0;
+      rows = head.map((a) => { const b = rows.find((y) => y.cls === a.cls); return b ? mergeRows(a, b) : a; }).concat(rows.filter((b) => !head.some((a) => a.cls === b.cls)));
     }
-    if (failures === before) ok(`tests/checks/${n}`);
+    p.rows.push(...rows);
+  }
+}
+// 3. 釣り合いの測定（失敗にはしない）
+if (balanceParts.length) {
+  const bad = Object.values(played).find((p) => p.error);
+  try {
+    if (bad) throw new Error(bad.error);
+    measureBalance({ played });
+  } catch (e) {
+    console.log("NOTE 釣り合いの測定を出せなかった（失敗にはしない）: " + (e.stack || e));
   }
 }
 
-// ---------------------------------------------------------------- 3. 釣り合いの測定（失敗にはしない）
-try {
-  measureBalance();
-} catch (e) {
-  console.log("NOTE 釣り合いの測定を出せなかった（失敗にはしない）: " + (e.stack || e));
-}
-
+const slow = timings.sort((a, b) => b[1] - a[1]).slice(0, 12).map(([n, ms]) => `${n} ${(ms / 1000).toFixed(1)}s`);
+console.log(`TIME 全体 ${(performance.now() / 1000).toFixed(1)}s（働き手 ${workers.length}＋親）。遅い順：${slow.join("・")}`);
 console.log(failures ? `DONE failures=${failures}` : "DONE failures=0");
 process.exit(failures ? 1 : 0);
