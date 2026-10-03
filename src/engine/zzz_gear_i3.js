@@ -158,8 +158,15 @@
 
   // ---------------------------------------------------------------- 効き目の文（画面と店の説明・図鑑）
   const KIND = { fire: "炎の魔法", ice: "氷の魔法", bolt: "雷の魔法", curse: "呪い", ward: "加護", heal: "癒し", steal: "盗み", trap: "罠", talk: "話術" };
+  const effMemo = new WeakMap();
   API.effectText = (it) => {
     if (!it) return "";
+    if (effMemo.has(it)) return effMemo.get(it);
+    const v = effectText0(it);
+    effMemo.set(it, v);
+    return v;
+  };
+  const effectText0 = (it) => {
     const out = [];
     if (it.type === "weapon") { out.push(`${it.dmg[0]}D${it.dmg[1]}${it.dmg[2] ? "+" + it.dmg[2] : ""}`); if (it.hit) out.push("命中" + G.sign(it.hit)); }
     if (it.type === "armor") { out.push("防御" + (it.def || 0)); if (it.agi) out.push("敏捷" + G.sign(it.agi)); }
@@ -230,7 +237,17 @@
     const unk = it.i3g && it.i3g.unk;
     return { dir, mark: unk ? "？" : dir > 0 ? "▲" : dir < 0 ? "▼" : "＝", text: unk ? "鑑定前" : diff.join("・") };
   };
-  API.compareLabel = (id) => { const c = API.compare(id); return c ? `${c.mark}${c.text ? c.text : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : ""; };
+  // 比べの文は、品と今の装備の組で決まるので覚えておく（店の一覧は行動のたびに描き直される）
+  const cmpMemo = new Map();
+  API.compareLabel = (id) => {
+    const S = G.S;
+    const key = S ? `${id}|${S.weapon}|${S.armor}|${S.ring}` : "";
+    if (key && cmpMemo.has(key)) return cmpMemo.get(key);
+    const c = API.compare(id);
+    const v = c ? `${c.mark}${c.text ? c.text : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : "";
+    if (key) { if (cmpMemo.size > 2000) cmpMemo.clear(); cmpMemo.set(key, v); }
+    return v;
+  };
 
   // ---------------------------------------------------------------- 状態
   const st = (S) => {
@@ -395,7 +412,8 @@
   API.TOWN_LV = { karna: 1, nerva: 1, leavel: 2, garmund: 2, fort: 3, zephara: 2, yakumo: 2, w1_holy: 2, w1_oboro: 2, w2_granbel: 0, w2_dranherz: 3, w2_zalgros: 2, w2_amyrein: 1, w2_nagris: 1 };
   API.SMITH_TOWN = "w2_dranherz";
   const townLv = (loc) => { const S = G.S; return Math.min(5, (API.TOWN_LV[loc] !== undefined ? API.TOWN_LV[loc] : 1) + (S.fame >= 300 ? 2 : S.fame >= 100 ? 1 : 0)); };
-  const seedOf = (S) => hash([S.profile && S.profile.name, S.cls, JSON.stringify(S.startStats || {}), S.goal && S.goal.id].join("|"));
+  const seeds = new WeakMap();
+  const seedOf = (S) => { let v = seeds.get(S); if (v === undefined) { v = hash([S.profile && S.profile.name, S.cls, JSON.stringify(S.startStats || {}), S.goal && S.goal.id].join("|")); seeds.set(S, v); } return v; };
   API.stockKey = (loc, day) => `${loc}:${day}`;
   // その町のその日の品（基本の品ぞろえ L.shop と D.SHOP_BASE の他に並ぶもの）
   API.stock = (loc, day) => {
@@ -633,7 +651,7 @@
     const r = baseExploreAct(head, arg, a);
     if ((head === "explore" || head === "deeper") && !S.over && S.mode === "explore" && !S.combat && S.gold > g0) {
       const L = G.loc();
-      if (G.rand() < (L.type === "dungeon" ? 0.35 : 0.15)) {
+      if (G.rand() < (L.type === "dungeon" ? 0.25 : 0.1)) {
         G.say(G.pick(["金貨の下に、布に包まれた何かがあった。", "骨の手が、最後まで何かを握っていた。", "崩れた棚の奥に、誰かの忘れ物が残っていた。"]));
         API.loot(API.depthLv(S));
       }
@@ -697,7 +715,7 @@
       }
       const tier = Math.max(...foes.map(({ e }) => e.tier || 1));
       const boss = foes.some(({ e }) => e.boss);
-      const p = boss ? 0.5 : 0.03 + 0.02 * tier + (G.loc().type === "dungeon" ? 0.03 : 0);
+      const p = boss ? 0.5 : 0.02 + 0.01 * tier + (G.loc().type === "dungeon" ? 0.02 : 0);
       if (G.rand() < p) API.loot(Math.max(API.depthLv(S), tier - 1 + (boss ? 1 : 0)));
     }
     return r;

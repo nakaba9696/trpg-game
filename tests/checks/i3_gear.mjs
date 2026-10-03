@@ -203,8 +203,8 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- ランダムに遊んで止まらない
   let errs = 0, steps = 0, smith = 0, legends = 0, finds = 0;
+  const g = loadEngine(); // 一つのエンジンで新しい冒険を 24 回（読み込み直しは時間がかかる）
   for (let game = 0; game < 24; game++) {
-    const g = loadEngine();
     g.rand = seeded(1000 + game);
     g.P = { trophies: {}, graves: [] };
     start(g);
