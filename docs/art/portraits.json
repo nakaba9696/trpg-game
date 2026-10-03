@@ -1576,8 +1576,8 @@
    "type": "brute",
    "file": "assets/portraits/hartmut.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 47 years old, huge man, burly, very muscular, big belly, tan skin, dark brown hair, medium hair, curly hair, green eyes, small eyes, thick eyebrows, full beard, coal dust on face, scar on forehead, worn leather miner apron over grey shirt, rolled-up sleeves, leather gloves, pickaxe on shoulder",
-   "tags": "holding a crumpled sheet of paper, reading aloud",
-   "face": "embarrassed, frown, blush",
+   "tags": "holding a crumpled sheet of paper",
+   "face": "embarrassed, frown, blush, reading aloud",
    "variants": {
     "joy": "shy smile, looking away",
     "anger": "angry, shouting, teeth",
@@ -1678,9 +1678,9 @@
    "group": "c2",
    "name": "ルミア",
    "file": "assets/portraits/lumia.webp",
-   "identity": "1girl, child, 11 years old, small, petite, pointy ears, elf, pale skin, white hair, pale blue-tinged white hair, very long hair, green eyes, sleepy eyes, thin eyebrows, silver circlet, oversized pale green robe, long sleeves, blanket over shoulders, small wooden staff",
-   "tags": "yawning, sitting under a tree",
-   "face": "sleepy, smug",
+   "identity": "1girl, child, 11 years old, small, petite, pointy ears, elf, pale skin, white hair, pale blue-tinged white hair, very long hair, green eyes, thin eyebrows, silver circlet, oversized pale green robe, long sleeves, blanket over shoulders, small wooden staff",
+   "tags": "sitting under a tree",
+   "face": "sleepy, smug, sleepy eyes, yawning",
    "variants": {
     "joy": "gentle motherly smile, closed eyes",
     "anger": "stern, scolding, pointing finger",
