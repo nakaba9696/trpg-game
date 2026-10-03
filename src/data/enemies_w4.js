@@ -29,7 +29,7 @@
       },
     },
     w4_hushed: {
-      name: "音を食われた狩人", tier: 3, hp: 28, dmg: [1, 8, 2], hit: 60, def: 10, agi: 45, will: 999, mres: 15, undead: true, gold: [0, 20], loot: [["pelt", 0.3], ["herb", 0.3]], shape: "humanoid", eye: "#c8d8e8",
+      name: "音を食われた狩人", tier: 3, hp: 24, dmg: [1, 6, 1], hit: 55, def: 10, agi: 45, will: 999, mres: 15, undead: true, gold: [0, 20], loot: [["pelt", 0.3], ["herb", 0.3]], shape: "humanoid", eye: "#c8d8e8",
       desc: "沈黙の森で迷った狩人の成れの果て。口を大きく開けているが、声は出ない。弓を引いても、弦は鳴らない。",
       look: { body: "biped", build: "lanky", skin: "#8a9890", head: "hood", eyes: "hollow", mouth: "o", weapon: "spear", outfit: "rags", cloth: "#3a4a3a", pattern: "ribs", mood: "fierce" },
       lines: {
@@ -52,7 +52,7 @@
     // 主
     w4_borermother: {
       name: "地喰いの古殻", tier: 4, boss: true, hp: 115, dmg: [2, 6, 4], hit: 70, def: 30, agi: 20, will: 999, mres: 20, gold: [80, 180], loot: [["gem", 1], ["relic", 0.5]], shape: "beast", eye: "#ff8a2a",
-      desc: "古い鉄の道の奥で、親の抜け殻に入ったまま大きくなったもの。殻は帝国の大筒の弾を三発、まだ背中に埋めている。",
+      desc: "古い鉄の道の奥で、親の抜け殻に入ったまま大きくなったもの。帝国が遺跡から掘り出した大筒の弾を三発、まだ背中に埋めている。",
       look: { body: "bug", skin: "#5a4a3a", skin2: "#c89a5a", eyes: "glow", eyeN: 6, mouth: "fangs", horns: "long", pattern: "cracks", extra: ["sword_in", "smoke"], mood: "fierce", mat: "chitin", size: 1.2 },
       lines: {
         open: ["坑道がまるごと動いた。壁だと思っていたのは、殻だった。背中に、錆びた大筒の弾が三つ埋まっている。"],
@@ -68,5 +68,17 @@
         turn: ["石人は、あなたの背丈を指で測り直している。", "石人の胸の刻み目が、一本ずつ光っては消える。"],
       },
     },
+  });
+
+  // ボスの前口上（src/data/boss_lines.js と同じ形。tests/checks/b1_fx.mjs）
+  D.BOSS_LINES = Object.assign(D.BOSS_LINES || {}, {
+    w4_borermother: { lines: [
+      "殻の継ぎ目が、かり、かり、と鳴った。線路を噛む音と同じ拍子だった。",
+      "背中の錆びた弾が、松明の光をひとつずつ照り返した。古殻は、まだ何かを噛んでいる。",
+    ] },
+    w4_gatekeeper: { lines: [
+      "石の大男は、あなたの背丈を指で測った。測り直した。それから、槍を構えた。",
+      "「……手形を」読めない言葉なのに、そう聞こえた。",
+    ] },
   });
 })(globalThis.G = globalThis.G || {});

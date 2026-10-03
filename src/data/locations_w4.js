@@ -43,7 +43,7 @@
       links: {},
     },
     w4_silent: {
-      name: "沈黙の森", region: "エルメシア共和国", type: "wild", danger: 3, scene: "w4_silent", x: 91, y: 70,
+      name: "沈黙の森", region: "エルメシア共和国", type: "wild", danger: 2, scene: "w4_silent", x: 91, y: 70,
       desc: "鳥がいるのに、鳴かない。足もとの枯れ枝を踏んでも、音がしない。木の幹のあちこちに、古い結界の札が貼られたまま白く褪せていて、そのうち何枚かは、新しい。",
       pool: ["w4_hushed", "spider", "werewolf", "e2_rotbloom"],
       links: {},
@@ -86,7 +86,6 @@
   link("w4_tulier", "w2_amyrein", 2);
   link("w4_tulier", "w2_nagris", 2);
   link("w4_silent", "w4_tulier", 2);
-  link("w4_silent", "w2_amyrein", 3);
   link("w4_watch", "fort", 1);
   link("w4_watch", "mountains", 2);
   link("w4_pass", "mountains", 2);
