@@ -12,6 +12,7 @@
   - K4 で C8 の 10 人を足した：`talk_gigra.js`・`talk_valdun.js`・`talk_gensai.js`・`talk_tsuyuha.js`・`talk_takimaru.js`・`talk_yurien.js`・`talk_roswitha.js`・`talk_izra.js`・`talk_anselmo.js`・`talk_polf.js`、掛け合い `talk_banter_k4.js`（人でない種族どうし・人とのすれ違いと和解。周りの名のある人＝ヨナス・ルドガー・リオネッタ・ゼルギスとの因縁も。恋はギグラ・タキマル・イズラだけで、好感度 60・75 の難しい道。ツユハは子どもの姿なので家族の情）
   - K5 で C5 の 6 人を足した：`talk_bruno.js`・`talk_trude.js`・`talk_souhaku.js`・`talk_adele.js`・`talk_celestin.js`・`talk_felix.js`、掛け合い `talk_banter_k5.js`（6 人どうしと、C2・C4・C7・C8 の仲間との組。周りの名のある人＝シオネ・ヴィットリオ・コンスタンス・ヴィオレーヌ・レオポルト・灯台守の婆さまとの因縁も）
   - K6 で C6 の 10 人を足した：`talk_lucien.js`・`talk_barnabe.js`・`talk_selevan.js`・`talk_aubin.js`・`talk_lazare.js`・`talk_rodolphe.js`・`talk_margot.js`・`talk_solenne.js`・`talk_pipinelle.js`・`talk_lisette.js`、掛け合い `talk_banter_k6.js`（周りの名のある人＝グラモン・ベランジェール・マリオン・シルヴェストル・オデットとの因縁も。C5・C8 の仲間との組は、その人の会話の表が無くても起きる）
+  - K8 で地域をまたぐ掛け合いを足した：`talk_banter_k8_a.js`〜`_e.js`（C2・C4・C5 の仲間を片方に含む、前の回に無かった組 66・掛け合い 154。どの組も `after` で続き物。確認は `tests/checks/talk_k8.mjs`）
 - 画面：出来事の画面をそのまま使う（話題の一覧・話・返し方が「どうする？」の欄に並ぶ）。シートの仲間の札の「話す」は `src/ui/talk.js`
 - 確認：`tests/checks/talk.mjs`（人を足すと、その人の表も自動で確かめる。量の下限を確かめる人は `PEOPLE` に足す）。K2 の 8 人の量・恋と信頼の分け方・全部聞き切る遊びは `tests/checks/talk_k2.mjs`（C7 の 10 人は `talk_k3.mjs`、C8 の 10 人は `talk_k4.mjs`、C5 の 6 人は `talk_k5.mjs`、C6 の 10 人は `talk_k6.mjs`。K4 では表情がその人の絵にあるかも見る）
 
