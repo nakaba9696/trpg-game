@@ -1268,7 +1268,7 @@
    "kin": "moulin",
    "type": "brute",
    "file": "assets/portraits/barnabe.webp",
-   "identity": "1boy, male focus, adult, man, 34 years old, huge man, burly, muscular, big hands, tan skin, freckles, dark blonde hair, short hair, round eyes, green eyes, thick eyebrows, flour dust on face, white kerchief on head, rolled-up sleeves, flour-stained cream shirt, brown miller apron, wooden name tag on cord around neck",
+   "identity": "1boy, male focus, adult, man, 34 years old, huge man, burly, muscular, big hands, tan skin, freckles, dark blonde hair, short hair, round eyes, green eyes, thick eyebrows, flour dust on face, white kerchief on head, rolled-up sleeves, flour-stained cream shirt, brown miller apron, plain wooden pendant on cord around neck",
    "tags": "carrying a large sack of flour on shoulder",
    "face": "big grin, open mouth",
    "variants": {
@@ -1659,7 +1659,7 @@
    "name": "イングリット",
    "file": "assets/portraits/ingrid.webp",
    "identity": "1girl, adult, woman, 33 years old, slender, pale skin, black hair, jet black hair, short hair, hime cut, red eyes, half-closed eyes, eye bags, thin eyebrows, round glasses, white doctor coat over dark dress, rolled sleeves, leather gloves, small bag of scalpels",
-   "tags": "pinching someone's sleeve, holding a honey cake",
+   "tags": "holding a honey cake on a plate",
    "face": "expressionless",
    "variants": {
     "joy": "tiny smile, faint blush",
