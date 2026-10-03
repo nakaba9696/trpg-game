@@ -135,11 +135,26 @@
   // 装飾品の説明の頭にある効き目（「体力+2。」）は組み立て直すので外す
   const stripEffect = (b) => { const d = b.desc || (b.i3 && b.i3.line) || ""; return b.type === "ring" ? d.replace(/^[^。]*[+-]\d+[^。]*。/, "") : d; };
 
-  // D.ITEMS を包む。組み合わせの品の id を引いたときだけ組み立てる
-  D.ITEMS = new Proxy(RAW, {
-    get(t, k) { if (typeof k === "string" && !(k in t) && isGen(k)) return build(k) || undefined; return t[k]; },
-    has(t, k) { return k in t || (typeof k === "string" && isGen(k) && !!build(k)); },
-  });
+  // 空の枠（S.ring・S.armor が ""）は引かない（D.ITEMS に無い鍵を引くと、下の組み立て役まで降りていって遅い）
+  G.ring = () => (G.S.ring ? RAW[G.S.ring] || null : null);
+  const baseArmor = G.armor;
+  G.armor = () => (G.S.armor ? baseArmor() : null);
+
+  // D.ITEMS の後ろ（プロトタイプ）に組み立て役を置く。ふつうの品は今までどおり D.ITEMS 自身から速く引け、
+  // 無い id を引いたときだけここに来る。組み合わせの品なら組み立てて、数えない欄（enumerable: false）として D.ITEMS に置く
+  // （二度目からはふつうの品と同じ速さ。Object.keys(D.ITEMS) には出ない）
+  const OP = Object.prototype;
+  Object.setPrototypeOf(RAW, new Proxy(Object.create(null), {
+    get(t, k, recv) {
+      if (typeof k === "string" && isGen(k)) {
+        const it = build(k);
+        if (it) Object.defineProperty(RAW, k, { value: it, enumerable: false, configurable: true, writable: true });
+        return it || undefined;
+      }
+      return Reflect.get(OP, k, recv);
+    },
+    has(t, k) { return k in OP || (typeof k === "string" && isGen(k) && !!build(k)); },
+  }));
 
   // ---------------------------------------------------------------- 効き目の文（画面と店の説明・図鑑）
   const KIND = { fire: "炎の魔法", ice: "氷の魔法", bolt: "雷の魔法", curse: "呪い", ward: "加護", heal: "癒し", steal: "盗み", trap: "罠", talk: "話術" };
@@ -227,33 +242,57 @@
   };
   API.state = st;
   // 荷の重さ：持ち物の武具（装備中は数えない）。上限を越えると身のこなしが落ちる
-  API.CAP = 10;
-  API.load = (S) => { S = S || G.S; return Object.entries(S.inv || {}).reduce((a, [id, n]) => { const it = D.ITEMS[id]; return a + (it && SLOT[it.type] && !it.key ? n : 0); }, 0); };
+  const CAP = 10;
+  API.CAP = CAP;
+  // 持ち物は G.give・G.take（とここの預ける・まとめ売り）でしか変わらないので、変わった回数で覚えておく（能力値の判定のたびに数え直さない）
+  let invVer = 0;
+  const loadMemo = { inv: null, ver: -1, v: 0 };
+  API.load = (S) => {
+    S = S || G.S;
+    const inv = S.inv || {};
+    if (loadMemo.inv === inv && loadMemo.ver === invVer) return loadMemo.v;
+    let v = 0;
+    for (const id in inv) { const it = D.ITEMS[id]; if (it && SLOT[it.type] && !it.key) v += inv[id]; }
+    loadMemo.inv = inv; loadMemo.ver = invVer; loadMemo.v = v;
+    return v;
+  };
   API.overPenalty = (S) => Math.min(25, Math.max(0, API.load(S) - API.CAP) * 5);
 
   // ---------------------------------------------------------------- 能力値・補正（武器と防具の stats・bonus。装飾品は core.js が見る）
+  // 判定のたびに呼ばれるので、今の武器と防具の id が同じあいだは足し合わせた表を使い回す
+  const gearMemo = { w: null, a: null, stats: null, bonus: null };
+  const gearSum = (S) => {
+    if (gearMemo.w === S.weapon && gearMemo.a === S.armor && gearMemo.stats) return gearMemo;
+    const stats = {}, bonus = {};
+    [G.weapon(), G.armor()].forEach((it) => {
+      if (!it) return;
+      Object.entries(it.stats || {}).forEach(([k, n]) => { stats[k] = (stats[k] || 0) + n; });
+      Object.entries(it.bonus || {}).forEach(([k, n]) => { bonus[k] = (bonus[k] || 0) + n; });
+    });
+    gearMemo.w = S.weapon; gearMemo.a = S.armor; gearMemo.stats = stats; gearMemo.bonus = bonus;
+    return gearMemo;
+  };
   const baseStatEff = G.statEff;
   G.statEff = (k) => {
     let v = baseStatEff(k);
     const S = G.S;
     if (!S) return v;
-    const w = G.weapon(), a = G.armor();
-    if (w && w.stats) v += w.stats[k] || 0;
-    if (a && a.stats) v += a.stats[k] || 0;
-    if (k === "敏捷") v -= API.overPenalty(S);
+    v += gearSum(S).stats[k] || 0;
+    if (k === "敏捷") { const l = API.load(S); if (l > CAP) v -= Math.min(25, (l - CAP) * 5); }
     return v;
   };
   const baseGearBonus = G.gearBonus;
   G.gearBonus = (kind) => {
-    let b = baseGearBonus(kind);
-    const w = G.weapon(), a = G.armor();
-    if (w && w.bonus) b += w.bonus[kind] || 0;
-    if (a && a.bonus) b += a.bonus[kind] || 0;
-    return b;
+    const b = baseGearBonus(kind);
+    const S = G.S;
+    return S ? b + (gearSum(S).bonus[kind] || 0) : b;
   };
 
   // ---------------------------------------------------------------- 手に入れる（伝説の品の印・正体不明の品の知らせ）
-  const baseGive = G.give;
+  const baseGive0 = G.give;
+  const baseGive = (id, n) => { invVer++; return baseGive0(id, n); };
+  const baseTake = G.take;
+  G.take = (id, n) => { invVer++; return baseTake(id, n); };
   G.give = (id, n) => {
     const r = baseGive(id, n);
     if (r && G.S) { const it = D.ITEMS[id]; if (it && it.legend) st().legends[id] = 1; }
@@ -365,8 +404,17 @@
     day = day || S.day;
     const L = D.LOCS[loc];
     if (!L || L.type !== "town" || !(L.fac || []).includes("shop")) return [];
-    const rnd = mulberry(seedOf(S) ^ hash(API.stockKey(loc, day)));
     const lv = townLv(loc);
+    const b = st(S).bought;
+    const gone = b && b.key === API.stockKey(loc, day) ? b.ids : [];
+    const mk = `${seedOf(S)}|${loc}|${day}|${lv}`;
+    if (!stockMemo.has(mk)) { if (stockMemo.size > 64) stockMemo.clear(); stockMemo.set(mk, makeStock(S, L, loc, day, lv)); }
+    return stockMemo.get(mk).filter((id) => !gone.includes(id));
+  };
+  const stockMemo = new Map();
+  // 品ぞろえは人物・町・日・町の深さだけで決まるので、一度作ったら覚えておく
+  function makeStock(S, L, loc, day, lv) {
+    const rnd = mulberry(seedOf(S) ^ hash(API.stockKey(loc, day)));
     const out = [];
     const take = (id) => { if (id && !out.includes(id) && D.ITEMS[id]) out.push(id); };
     // この町の名物（i3.from）から三つまで、各地の型から二つ
@@ -377,10 +425,8 @@
     // 組み合わせの品（鍛冶の都は多く、よい物が出る）
     const n = loc === API.SMITH_TOWN ? 5 : 3;
     for (let i = 0; i < n; i++) take(API.roll(lv + (loc === API.SMITH_TOWN ? 1 : 0), { shop: true, rnd }));
-    const b = st(S).bought;
-    const gone = b && b.key === API.stockKey(loc, day) ? b.ids : [];
-    return out.filter((id) => !gone.includes(id));
-  };
+    return out;
+  }
 
   // ---------------------------------------------------------------- 鍛冶（強化・銘入れ・修理・鑑定）
   API.MAX_PLUS = (loc) => (loc === API.SMITH_TOWN ? 5 : 2);
@@ -548,7 +594,7 @@
       }
       if (kind === "i3junk") {
         let sum = 0, n = 0;
-        junkList().forEach((jid) => { const k = S.inv[jid]; const p = Math.floor(D.ITEMS[jid].price / 2) * k; sum += p; n += k; delete S.inv[jid]; });
+        junkList().forEach((jid) => { const k = S.inv[jid]; const p = Math.floor(D.ITEMS[jid].price / 2) * k; sum += p; n += k; delete S.inv[jid]; invVer++; });
         S.gold += sum;
         G.log("you", "要らない武具をまとめて売る");
         G.note(`${n}点を売った。（+${sum}G）`);
@@ -562,7 +608,7 @@
     if (head === "inn" && arg === "i3put") {
       const x = st(S);
       const ids = spareGear();
-      ids.forEach((id) => { x.stash[id] = (x.stash[id] || 0) + S.inv[id]; delete S.inv[id]; });
+      ids.forEach((id) => { x.stash[id] = (x.stash[id] || 0) + S.inv[id]; delete S.inv[id]; invVer++; });
       G.log("you", "武具を宿に預ける");
       G.note(`${ids.length}種を預けた。`);
       return;
