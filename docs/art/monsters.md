@@ -11,7 +11,7 @@
 - 「**異形**」と書いた魔物（一覧の `style: "eldritch"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。
 - 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。
 
-## 使徒・ボス（14）
+## 使徒・ボス（16）
 
 使徒の魔物の姿と、ボス。特にていねいに。気に入った絵は `--keep <id>` で seed を残す。
 
@@ -31,8 +31,10 @@
 | `assets/monsters/w2_ironwarden.webp` | 溶けかけた機械兵 | iron golem, giant robot, ancient machine, huge, melted metal, acid, rust, glowing eyes, heavy armor, holding club, steam | ボス。半分溶けた鉄の巨人 |
 | `assets/monsters/w4_borermother.webp` | 地喰いの古殻 | colossal beetle, huge cracked shell, many glowing eyes, long horns, rusted cannonballs embedded in back, smaller beetles crawling out of shell seams, chewing iron rail | 地喰いの古殻。背に大筒の弾が三つ |
 | `assets/monsters/w4_gatekeeper.webp` | 関守の石人 | stone giant guardian, ancient stone armor, helmet with single glowing eye, holding stone spear, carved runes, height measuring marks on chest, cracks | 関守の石人。古い関所の門番 |
+| `assets/monsters/w3_ashscribe.webp` | 灰の書記 | ash covered scribe, robed figure made of ash, hood, glowing eyes, dry cracked face, holding quill pen, crumbling, smoke | ボス。灰をかぶって書き続ける者 |
+| `assets/monsters/w3_tidemaw.webp` | 潮呑み | giant sea blob, huge mouth with fangs, one big eye, teal water body, bubbles, drooling, anchor and sandal inside | ボス。洞の奥の口だけのもの |
 
-## 魔物（46）
+## 魔物（50）
 
 ふつうの敵のうち、魔物の姿のもの。
 
@@ -84,8 +86,12 @@
 | `assets/monsters/w4_hungryrock.webp` | 腹ぺこ岩 | living boulder, round rock with big mouth, googly eyes, drooling, cracks, lunch bundles inside mouth, comical | 腹ぺこ岩。座るのにちょうどいい岩 |
 | `assets/monsters/w4_hushed.webp` | 音を食われた狩人 | undead hunter, hooded, gaunt, mouth wide open screaming silently, holding spear, tattered green cloak, hollow eyes | 音を食われた狩人。口を開けたまま声が出ない |
 | `assets/monsters/w4_saltwalker.webp` | 逆さ歩き | pale humanoid, white robe, featureless face with one hollow eye, floating, standing upside down, salt crystals, long claws | 逆さ歩き。空に映った側を歩く |
+| `assets/monsters/w3_hermit.webp` | 舟殻ヤドカリ | giant hermit crab, wearing small wooden rowboat as shell, red legs, big claws, googly eyes, name plate on boat, bubbles | 小舟を背負ったヤドカリ。まぬけ |
+| `assets/monsters/w3_cinder.webp` | 火の粉小僧 | small fire spirit, ember blob, glowing orange, sparks, grin, googly eyes, floating, smoke | 火山の火の粉の小鬼。まぬけ |
+| `assets/monsters/w3_drowned.webp` | 溺れ船乗り | drowned sailor, undead, pale green skin, wet ragged clothes, rope around waist, hollow eyes, open mouth, seaweed, rowing motion | 海から上がった死者 |
+| `assets/monsters/w3_ashmoth.webp` | 灰喰い蛾 | giant moth, grey ash colored wings, dusty scales, glowing eyes, fluttering, paper scraps | 書庫の灰と紙を食う蛾 |
 
-## 人の姿の敵（10）
+## 人の姿の敵（12）
 
 盗賊・衛兵など、人の姿の敵（一覧の `human: true`）。後置きとネガティブが人向けに替わる（`style_monsters.json` の `human`）。
 
@@ -101,6 +107,8 @@
 | `assets/monsters/m5_nightwatch.webp` | 夜番崩れ | 1boy, man, huge man, night watchman, hairy, black beard, glowing eyes, lantern on belt, leather armor, holding hatchet, chipped blade | 夜番崩れの大男 |
 | `assets/monsters/m3_hunter.webp` | 賞金稼ぎ | 1boy, man, bounty hunter, hooded cloak, scar, smirk, holding sword, wanted posters, pouch | 賞金稼ぎ |
 | `assets/monsters/m2_traitor.webp` | 裏切った仲間 | 1boy, man, hooded, scarf, smirk, ragged cloak, holding dagger | 裏切った仲間 |
+| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | thug, burly man, thick neck, bandana, stubble, grin, holding wooden club, small bell on belt, dock worker clothes | 密輸の荷の見張り。腰に鈴 |
+| `assets/monsters/w3_silentmonk.webp` | 口縫いの修道士 | monk, grey hooded robe, lips sewn shut with thick thread, finger on lips, holding wooden staff, gaunt | 唇を縫った修道士 |
 
 ## 人物の側に任せる敵
 

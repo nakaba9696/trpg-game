@@ -82,6 +82,7 @@
   link("w4_valmiria", "w2_zalgros", 2);
   link("w4_valmiria", "garmund", 3);
   link("w4_valmiria", "w2_dranherz", 3);
+  link("w4_valmiria", "w3_lignoa", 2);    // 王国の北西の森と湖の都（W3）。国境の街道
   link("w4_tulier", "zephara", 2);
   link("w4_tulier", "w2_amyrein", 2);
   link("w4_tulier", "w2_nagris", 2);
