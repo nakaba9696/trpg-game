@@ -34,7 +34,7 @@
 | `assets/monsters/w3_ashscribe.webp` | 灰の書記 | ash covered scribe, robed figure made of ash, hood, glowing eyes, dry cracked face, holding quill pen, crumbling, smoke | ボス。灰をかぶって書き続ける者 |
 | `assets/monsters/w3_tidemaw.webp` | 潮呑み | giant sea blob, huge mouth with fangs, one big eye, teal water body, bubbles, drooling, anchor and sandal inside | ボス。洞の奥の口だけのもの |
 
-## 魔物（50）
+## 魔物（150）
 
 ふつうの敵のうち、魔物の姿のもの。
 
@@ -90,8 +90,108 @@
 | `assets/monsters/w3_cinder.webp` | 火の粉小僧 | small fire spirit, ember blob, glowing orange, sparks, grin, googly eyes, floating, smoke | 火山の火の粉の小鬼。まぬけ |
 | `assets/monsters/w3_drowned.webp` | 溺れ船乗り | drowned sailor, undead, pale green skin, wet ragged clothes, rope around waist, hollow eyes, open mouth, seaweed, rowing motion | 海から上がった死者 |
 | `assets/monsters/w3_ashmoth.webp` | 灰喰い蛾 | giant moth, grey ash colored wings, dusty scales, glowing eyes, fluttering, paper scraps | 書庫の灰と紙を食う蛾 |
+| `assets/monsters/e4k_squire.webp` | 黒鎧の従騎士 | small black knight, black full plate armor, helmet with glowing red eyes, sword and shield, cape | 黒い鎧の主の従騎士 |
+| `assets/monsters/e4k_chainhound.webp` | 鎖の黒犬 | black hound, huge dark dog, broken chain collar, glowing red eyes, lava-like cracks, spiked tail | 鎖を引きずる黒い大犬 |
+| `assets/monsters/e4k_taster.webp` | 毒見の小鬼 | goblin, poison taster, green spotted skin, cook cap, drooling, sick, holding spoon and dagger | 毒見をさせられる小鬼 |
+| `assets/monsters/e4k_cauldron.webp` | 歩く大鍋 | living cauldron, big iron pot monster, bubbling stew, steam, fangs on rim, glowing eyes | 煮え立つまま歩く大鍋 |
+| `assets/monsters/e4k_mossdog.webp` | 苔むした番犬 | guard dog covered in moss, green mossy fur, small plants growing on back, glowing eyes | 苔むした庭の番犬 |
+| `assets/monsters/e4k_pruner.webp` | 枝打ち人形 | wooden puppet gardener, lanky wooden body, shear-shaped blade hands, single lens eye, cracked wood | 庭師が作った枝打ち人形 |
+| `assets/monsters/e4k_inkling.webp` | 滲み文字 | swarm of living ink letters, floating dark blue ink characters, runes, dripping ink | 水に溶けた本の文字の群れ |
+| `assets/monsters/e4k_drowned.webp` | 書庫の溺れ人 | drowned man, pale waterlogged skin, wet dark long hair, holding soaked book, hollow eyes, dripping water | 名前を失った書庫の溺れ人 |
+| `assets/monsters/e4k_puppet.webp` | 糸吊りの踊り手 | dancing marionette people, strings from above, crying faces, closed eyes, tattered clothes, floating | 糸で吊られて踊る旅人 |
+| `assets/monsters/e4k_smiler.webp` | 笑い面の侍従 | masked servant, smiling white mask, elegant purple robe, holding parasol staff, bowing | 笑い面の侍従 |
+| `assets/monsters/e4k_fogscribe.webp` | 霧の書記 | hooded scribe, grey robe, glowing eyes in hood, holding open book, quill, mist, floating | 霧の中で先を書く書記 |
+| `assets/monsters/e4k_fogowl.webp` | 霧梟 | owl, pale grey feathers, big round eyes, carrying torn paper page, mist | 紙を盗む霧梟 |
+| `assets/monsters/e4k_sandimp.webp` | 砂の小僧 | small imp made of sand, crumbling sandy body, cracked, grinning, stolen coin pouch, sand trailing | 砂でできたすりの小僧 |
+| `assets/monsters/e4k_hourglass.webp` | 砂時計の番人 | sand golem with large hourglass in chest, cracked sandstone body, single lens eye, runes | 胸に砂時計を抱えた人形 |
+| `assets/monsters/e4k_whiteacolyte.webp` | 白目の侍祭 | acolyte, white robes, long white hair, cloudy white blind eyes, serene smile, holding staff | 目が白く濁った侍祭 |
+| `assets/monsters/e4k_haloshade.webp` | 後光の影 | small winged shadow spirit, pale pink glow, moth wings covered in eye patterns, three glowing eyes | 後光から剥がれた羽の影 |
+| `assets/monsters/e4k_smokecat.webp` | 煙の猫 | cat made of smoke, lavender grey fur dissolving into incense smoke, slit eyes, smirk | 香の煙の猫 |
+| `assets/monsters/e4k_maskguard.webp` | 銀面の衛士 | guard with silver mask, expressionless silver face mask, armor, spear and shield, cape | 銀の面の衛士 |
+| `assets/monsters/e4k_nailer.webp` | 釘打ち人形 | stubby wooden puppet, hammer in hand, goggle eyes, nail pouch, cracked wood | 面を打ちつける釘打ち人形 |
+| `assets/monsters/e4k_dreamsheep.webp` | 逆さ羊 | dream sheep, fluffy white wool, curled ram horns, closed eyes, peaceful smile, floating upside down | 逆さに歩く夢の羊 |
+| `assets/monsters/e4k_sleepwalkers.webp` | 夢遊びの子ら | group of sleepwalking children, eyes closed, holding hands, pale nightclothes, arms forward, floating | 目を閉じて歩く子どもたち |
+| `assets/monsters/e4k_bladechick.webp` | 刃羽の雛 | chick of giant bird, feathers made of soft metal blades, big round eyes, fluffy | 刃の羽の雛 |
+| `assets/monsters/e4k_cliffwatch.webp` | 崖の羽番 | bird-headed guard, beak, armor made of blade feathers, spear, feathered wings, plume | 抜け羽を鎧にした番人 |
+| `assets/monsters/e4k_bellfish.webp` | 鐘鳴り魚 | big round fish, blue spotted scales, googly eyes, small bell visible inside belly, bubbles | 腹で鐘が鳴る魚 |
+| `assets/monsters/e4k_drownedsailor.webp` | 舟歌の亡者 | drowned sailor, undead, waterlogged pale skin, bandana, tattered sailor clothes, visible ribs, reaching | 沖の歌に呑まれた水夫 |
+| `assets/monsters/e4k_unsaid.webp` | 言いかけの影 | shadow figure, black silhouette, glowing eyes, open mouth as if speaking, smoky edges, floating | 言いかけの影 |
+| `assets/monsters/e4k_blackmite.webp` | 黒い羽虫 | swarm of black insects, black feather-like wings, red glowing eyes, stingers | 黒い羽のかけらの虫 |
+| `assets/monsters/e4k_moonhare.webp` | 二つ月の兎 | white hare, glowing eyes, long ears, moonlight, two moons, floating | 二つ月の夜の兎 |
+| `assets/monsters/e4k_moonarcher.webp` | 月を射る亡者 | skeleton archer, tattered cloak, longbow aimed upward, hollow eyes, moonlight | 月を射ろうとした亡者 |
+| `assets/monsters/e4k_rustgnaw.webp` | 錆かじり | small rust-colored rodent, gnawing on iron, sharp teeth, round ears, spotted | 鉄をかじる小さな獣 |
+| `assets/monsters/e4k_ironmite.webp` | 鉄虫 | armored beetle, iron grey carapace, metal shell, glowing eyes, mandibles | 鎧をかじる鉄虫 |
+| `assets/monsters/e4k_bellsinner.webp` | 鈴振りの罪人 | undead sinner, hooded rags, bell hanging from neck, scarred, hollow eyes, chained | 鈴を下げた罪人の亡者 |
+| `assets/monsters/e4k_guiltdog.webp` | 咎の犬 | black hound, scarred dark fur, glowing red eyes, sniffing, spiked tail, menacing | 咎人を追う犬 |
+| `assets/monsters/e4k_scarecrow.webp` | 動く案山子 | living scarecrow, straw body, burlap face with stitched grin, straw hat, ragged clothes, scarf | 畑から歩き出した案山子 |
+| `assets/monsters/e4k_furrowmole.webp` | 畝走りの土竜 | giant mole, brown fur, digging claws, pink nose, seeds in paws, farm field | 畝の下を走る大土竜 |
+| `assets/monsters/e4k_acidbud.webp` | 酸の芽 | acid slime sprout, bright green bubbling blob, three eyes, dripping acid | 酸の溜まりの芽 |
+| `assets/monsters/e4k_greenwatch.webp` | 緑の見張り | mossy stone sentinel, green stone golem, single lens eye, spear, empty socket in chest, runes | 溜まりを囲む石の見張り |
+| `assets/monsters/e4k_rootling.webp` | 根の子 | small root creature, body of twisted tree roots, dot eyes, claw-like rootlets | 大樹の根から芽吹いた子 |
+| `assets/monsters/e4k_ember.webp` | 燠喰い虫 | beetle, dark shell with glowing orange cracks, eating embers, smoke, mandibles | 火の粉を食べる甲虫 |
+| `assets/monsters/e4_mosswisp.webp` | 苔灯り | glowing moss ball, floating orb of moss, small round body, bioluminescent green moss, tiny dot eyes, spores drifting, night forest glow | 夜の森の光る苔の玉。眠りの胞子。ふわふわでかわいい |
+| `assets/monsters/e4_satchelrat.webp` | 鞄ネズミ | giant rat, brown fur, round ears, big nose, carrying stolen leather pouch, thin tail, sneaky, standing on hind legs | 鞄を狙うネズミ。小ずるくてまぬけ |
+| `assets/monsters/e4_thornboar.webp` | 棘猪 | wild boar, thorny brambles growing from back, dark brown bristly fur, tusks, angry, thorn spikes | 背に茨の棘が生えた猪 |
+| `assets/monsters/e4_relicmole.webp` | 遺構モグラ | giant mole, dark fur, huge digging claws, pink nose, small eyes, holding shiny old gold coin, dirt | 光り物好きの大モグラ。とぼけた顔 |
+| `assets/monsters/e4_lampghost.webp` | 灯し番の亡霊 | ghost lamplighter, hooded robe, pale translucent body, holding lantern pole, glowing yellow eyes, floating, wisps of smoke | 消えた灯りを点けて回る亡霊。人の温もりを吸う |
+| `assets/monsters/e4_rustwatch.webp` | 錆びた見張り | rusted iron automaton, stubby body, single round lens eye, holding spear, cracked rusty armor plates, ancient guardian | 錆びた鉄の見張り人形 |
+| `assets/monsters/e4_cropcrow.webp` | 麦畑の大烏 | giant crow, black feathers, sharp beak, flock, wheat field, mischievous | 麦畑を荒らす大烏の群れ |
+| `assets/monsters/e4_mudhound.webp` | 泥浴び犬 | feral dog, mud-caked fur, muddy, tongue out, scruffy, spotted coat, pack dog | 泥まみれの野良犬 |
+| `assets/monsters/e4_rainslug.webp` | 雨の大なめくじ | giant slug, slimy grey-brown body, eye stalks, glistening mucus, dripping slime, rain | 雨の日の牛ほどのなめくじ |
+| `assets/monsters/e4_lordhound.webp` | 領主の猟犬 | hunting hound, sleek tan coat, red scarf collar, bared fangs, lean muscular dog | 逃げ出した領主の猟犬 |
+| `assets/monsters/e4_bellbat.webp` | 鐘楼の蝙蝠 | giant bat, dark purple membrane wings, pointy ears, red glowing eyes, fangs, bell tower | 鐘楼の蝙蝠の群れ |
+| `assets/monsters/e4_waxsaint.webp` | 蝋の聖人像 | wax statue of a saint, melted candle wax body, closed eyes, serene face, dripping wax, robe of wax, lit candles on shoulders | 蝋燭が溶け重なった聖人の像 |
+| `assets/monsters/e4_ossuaryhound.webp` | 骨堂の番犬 | skeletal dog, undead hound, bones, empty eye sockets, green ghostly glow, ossuary | 骨だけの番犬 |
+| `assets/monsters/e4_candlewidow.webp` | 蝋燭売りの寡婦 | ghost woman, widow, black hooded mourning dress, pale grey skin, long hair, holding candle staff, hollow eyes, floating | 夜の参道で蝋燭を売る寡婦の亡霊 |
+| `assets/monsters/e4_tidecrab.webp` | 磯の大蟹 | giant crab, red shell, huge pincers, googly eye stalks, barnacles, rocky shore | 荷車ほどの磯の大蟹 |
+| `assets/monsters/e4_reedimp.webp` | 葦の小鬼 | small green water imp, plate-like flat head, beak mouth, webbed hands, spotted skin, mischievous, reeds | 葦の中の皿頭の小鬼 |
+| `assets/monsters/e4_seafog.webp` | 沖の黒坊主 | giant dark sea spirit, huge bald black figure, faceless except glowing eyes, emerging from fog, wet, looming | 霧の浜に立つ黒い坊主 |
+| `assets/monsters/e4_drumbadger.webp` | 腹鼓の狸 | fat raccoon dog, round belly, drumming on belly, striped tail, blushing cheeks, sake gourd, cheerful | 腹鼓を打つ狸。のんき |
+| `assets/monsters/e4_shellwitch.webp` | 海女の亡霊 | ghost woman, drowned pearl diver, white diving clothes, long wet black hair, pale bluish skin, hollow eyes, reaching hands | 嵐で戻らなかった海女の亡霊 |
+| `assets/monsters/e4_snowwolf.webp` | 雪狼 | white wolf, snow wolf, thick white fur, glowing pale blue eyes, fangs, snow | 雪の日の白い狼 |
+| `assets/monsters/e4_iciclewraith.webp` | 氷柱の霊 | ice wraith, spirit made of icicles, translucent blue ice body, hollow eyes, frost mist, floating | 氷柱に宿った霊 |
+| `assets/monsters/e4_minerghost.webp` | 坑夫の亡者 | undead miner, skeleton, mining helmet, pickaxe, ragged clothes, hollow eyes, ore pouch | 落盤で死んだ坑夫の亡者 |
+| `assets/monsters/e4_frostbear.webp` | 霜熊 | giant bear, frost-covered pale fur, icy breath, huge claws, snarling | 霜をまとった大熊 |
+| `assets/monsters/e4_warcrow.webp` | 戦場鴉 | crow, black feathers, red glowing eyes, battlefield, ominous, flock | 戦場を渡る鴉の群れ |
+| `assets/monsters/e4_bogleech.webp` | 大蛭 | giant leech, slimy dark segmented body, circular toothed mouth, swamp | 腕ほどもある大蛭 |
+| `assets/monsters/e4_brokenspirit.webp` | 契約を破られた精霊 | small angry fairy spirit, translucent teal body, moth wings, pointed ears, glowing eyes, floating runes | 契約を破られた小さな精霊 |
+| `assets/monsters/e4_mudcroc.webp` | 泥鰐 | crocodile, muddy green scales, wide jaws full of teeth, swamp water, spiked tail | 泥に沈んで待つ鰐 |
+| `assets/monsters/e4_poisonfrog.webp` | 毒蛙 | poison dart frog, bright orange and yellow spots, small, googly eyes, glossy skin | 派手な色の毒蛙の群れ |
+| `assets/monsters/e4_dustmoth.webp` | 鱗粉蛾 | giant moth, dusty brown wings with eye spots, fuzzy body, scattering scales, night | 皿ほどの鱗粉蛾 |
+| `assets/monsters/e4_rockeater.webp` | 岩喰い鳥 | giant bird, grey stone-like feathers, heavy beak, cracked rocky texture, mountain cliff | 岩を食べる大きな鳥 |
+| `assets/monsters/e4_hillorc.webp` | 境の山オーク | orc, pig face, tusks, green-grey skin, fur mantle, shoulder armor, battle axe, war horn | 山の洞穴のオーク |
+| `assets/monsters/e4_gravejackal.webp` | 墓荒らし山犬 | jackal, scrawny wild dog, spotted tan fur, pointy ears, bone in mouth, graveyard | 竜の墓場の山犬の群れ |
+| `assets/monsters/e4_oldlegion.webp` | 古戦場の亡兵 | skeleton soldiers, undead legion, rusty helmets and armor, spears, marching in formation, green glow | 隊列を組んだ古戦場の亡兵 |
+| `assets/monsters/e4_stonetroll.webp` | 石肌の巨人 | stone giant, rocky grey skin, cracked boulder texture, tusks, huge stone club, hulking | 岩肌の巨人 |
+| `assets/monsters/e4_cliffharpy.webp` | 崖の鳥女 | harpy, woman with feathered wings for arms, talons, wild red-brown long hair, ragged clothes, mischievous grin | 光り物好きの崖の鳥女 |
+| `assets/monsters/e4_ladderGob.webp` | 梯子担ぎのゴブリン隊 | goblin soldiers, carrying siege ladder, helmets, spears, crude armor, war cry | 攻め梯子を担いだゴブリン隊 |
+| `assets/monsters/e4_ashogre.webp` | 灰被りのオーガ | ogre, covered in white ash, grey skin, tusks, wild hair, huge club, smoke | 灰を浴びて白くなったオーガ |
+| `assets/monsters/e4_scoutbird.webp` | 魔物の斥候鳥 | monstrous bird, dark red feathers, three glowing eyes, sharp beak, scout, flying | 使徒領の斥候鳥 |
+| `assets/monsters/e4_deadsentry.webp` | 砦の亡霊兵 | ghost soldier, translucent green armor, helmet, spear and shield, tattered cape, hollow eyes, floating | 砦の外の亡霊兵 |
+| `assets/monsters/e4_warbeast.webp` | 鎖付きの魔獣 | war beast, lion-like monster, dark fur, broken chain collar, scars, spiked tail, glowing red eyes | 鎖を引きずる魔獣 |
+| `assets/monsters/e4_ashwyrm.webp` | 灰の地竜 | wingless dragon, ash-grey scales, glowing lava cracks, long horns, crawling through ash | 翼の無い灰の地竜 |
+| `assets/monsters/e4_bonecarter.webp` | 骨車引き | hulking hooded figure, pulling cart piled with bones, ragged cloak, glowing eyes under hood, huge club | 骨の荷車を引く大男 |
+| `assets/monsters/e4_shadewalker.webp` | 影歩き | shadow assassin, black mask, dark wrappings, glowing purple eyes, dagger, dissolving into shadow smoke | 影から影へ渡る者 |
+| `assets/monsters/e4_redscorpion.webp` | 赤砂の蠍 | giant scorpion, red carapace, stinger tail, four glowing eyes, red sand | 赤砂の大蠍 |
+| `assets/monsters/e4_hollowknight.webp` | 抜け殻の騎士 | empty suit of armor, animated armor, no body inside, glowing red eyes in helmet, sword and shield, plume, smoke | 中身の無い騎士の鎧 |
+| `assets/monsters/e4_vulture.webp` | 屍食い禿鷲 | vulture, bald pink head, dark brown feathers, hooked beak, scarred, wasteland | 屍を待つ禿鷲 |
+| `assets/monsters/e4_satchelrat_x.webp` | 鞄ネズミの頭目 | giant rat, brown fur, round ears, big nose, carrying stolen leather pouch, thin tail, sneaky, standing on hind legs, much larger, old, grizzled, many battle scars, imposing | 鞄ネズミの強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_thornboar_x.webp` | 年経た棘猪 | wild boar, thorny brambles growing from back, dark brown bristly fur, tusks, angry, thorn spikes, much larger, old, grizzled, many battle scars, imposing | 棘猪の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_mudhound_x.webp` | 泥浴び犬の頭目 | feral dog, mud-caked fur, muddy, tongue out, scruffy, spotted coat, pack dog, much larger, old, grizzled, many battle scars, imposing | 泥浴び犬の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_tidecrab_x.webp` | 年経た大蟹 | giant crab, red shell, huge pincers, googly eye stalks, barnacles, rocky shore, much larger, old, grizzled, many battle scars, imposing | 磯の大蟹の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_snowwolf_x.webp` | 雪狼の頭目 | white wolf, snow wolf, thick white fur, glowing pale blue eyes, fangs, snow, much larger, old, grizzled, many battle scars, imposing | 雪狼の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_frostbear_x.webp` | 年経た霜熊 | giant bear, frost-covered pale fur, icy breath, huge claws, snarling, much larger, old, grizzled, many battle scars, imposing | 霜熊の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_mudcroc_x.webp` | 年経た泥鰐 | crocodile, muddy green scales, wide jaws full of teeth, swamp water, spiked tail, much larger, old, grizzled, many battle scars, imposing | 泥鰐の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_rockeater_x.webp` | 年経た岩喰い鳥 | giant bird, grey stone-like feathers, heavy beak, cracked rocky texture, mountain cliff, much larger, old, grizzled, many battle scars, imposing | 岩喰い鳥の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_hillorc_x.webp` | 山オークの頭目 | orc, pig face, tusks, green-grey skin, fur mantle, shoulder armor, battle axe, war horn, much larger, old, grizzled, many battle scars, imposing | 境の山オークの強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_stonetroll_x.webp` | 年経た石肌の巨人 | stone giant, rocky grey skin, cracked boulder texture, tusks, huge stone club, hulking, much larger, old, grizzled, many battle scars, imposing | 石肌の巨人の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_ladderGob_x.webp` | ゴブリン隊の頭目 | goblin soldiers, carrying siege ladder, helmets, spears, crude armor, war cry, much larger, old, grizzled, many battle scars, imposing | 梯子担ぎのゴブリン隊の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_ashwyrm_x.webp` | 年経た灰の地竜 | wingless dragon, ash-grey scales, glowing lava cracks, long horns, crawling through ash, much larger, old, grizzled, many battle scars, imposing | 灰の地竜の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_redscorpion_x.webp` | 赤砂の女王蠍 | giant scorpion, red carapace, stinger tail, four glowing eyes, red sand, much larger, old, grizzled, many battle scars, imposing | 赤砂の蠍の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_cinderhound.webp` | 火口の犬 | volcanic hound, charcoal black fur, glowing orange lava cracks, embers, smoke, fangs, spiked tail | 火山の斜面の、炭のような毛の犬 |
+| `assets/monsters/e4_firearrowimp.webp` | 火矢の小鬼 | small goblin archer, brown skin, pointy ears, grin, shortbow with flaming arrow, ragged clothes, smoke, pair | 見張り塔に火矢を射かける小鬼 |
 
-## 人の姿の敵（12）
+## 人の姿の敵（23）
 
 盗賊・衛兵など、人の姿の敵（一覧の `human: true`）。後置きとネガティブが人向けに替わる（`style_monsters.json` の `human`）。
 
@@ -109,6 +209,17 @@
 | `assets/monsters/m2_traitor.webp` | 裏切った仲間 | 1boy, man, hooded, scarf, smirk, ragged cloak, holding dagger | 裏切った仲間 |
 | `assets/monsters/w3_smuggler.webp` | 港の用心棒 | thug, burly man, thick neck, bandana, stubble, grin, holding wooden club, small bell on belt, dock worker clothes | 密輸の荷の見張り。腰に鈴 |
 | `assets/monsters/w3_silentmonk.webp` | 口縫いの修道士 | monk, grey hooded robe, lips sewn shut with thick thread, finger on lips, holding wooden staff, gaunt | 唇を縫った修道士 |
+| `assets/monsters/e4k_bouncer.webp` | 賭場の用心棒 | 1boy, burly man, gambling den bouncer, black hair, scars, stubble, purple kimono-like outfit, scarf, holding club | 賭場の用心棒 |
+| `assets/monsters/e4_poacher.webp` | 密猟者 | 1boy, man, poacher, lean, stubble, leather cap, green hunting cloak, holding longbow, quiver, wary expression | 領主の森の密猟者。追い詰められた男 |
+| `assets/monsters/e4_brokenknight.webp` | 落ちぶれ騎士 | 1boy, man, fallen knight, middle-aged, greying hair, stubble, battered dented armor, tattered cape, chipped sword, proud but weary | 落ちぶれた元騎士。誇りだけは高い |
+| `assets/monsters/e4_penitent.webp` | 鞭打ちの巡礼 | 1boy, flagellant pilgrim, hooded brown robe, bloody whip marks, scarred back, holding whip, gaunt, fervent eyes | 自分を鞭打つ巡礼 |
+| `assets/monsters/e4_relicthief.webp` | 聖遺物盗り | 1boy, man, grave robber, thin, black hair, sly smirk, dark hood and scarf, dagger, sack of bones | 聖遺物盗りの男。小ずるい |
+| `assets/monsters/e4_islepirate.webp` | 島荒らしの海賊 | 1boy, man, pirate, tanned, bandana, eyepatch, stubble, cutlass, ragged red coat, grinning | 島荒らしの海賊 |
+| `assets/monsters/e4_pressgang.webp` | 徴兵隊 | 1boy, imperial soldier, helmet, grey uniform, steel armor, spear, stern face | 旅人を捕まえる帝国の徴兵隊 |
+| `assets/monsters/e4_bogwitch.webp` | 沼の魔女見習い | 1girl, young witch apprentice, green hood, small, holding staff, smug smile, rune charms, swamp hut | 学院を追われた沼の魔女見習い。生意気 |
+| `assets/monsters/e4_poacher_x.webp` | 密猟者の頭目 | 1boy, man, poacher, lean, stubble, leather cap, green hunting cloak, holding longbow, quiver, wary expression, much larger, old, grizzled, many battle scars, imposing | 密猟者の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_islepirate_x.webp` | 海賊の頭目 | 1boy, man, pirate, tanned, bandana, eyepatch, stubble, cutlass, ragged red coat, grinning, much larger, old, grizzled, many battle scars, imposing | 島荒らしの海賊の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_runawaywatch.webp` | 持ち場を捨てた見張り | 1boy, man, deserter sentry, helmet, worn grey armor, spear, stubble, nervous frown | 持ち場を捨てた見張り。追い詰められた男 |
 
 ## 人物の側に任せる敵
 
