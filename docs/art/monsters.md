@@ -34,7 +34,7 @@
 | `assets/monsters/w3_ashscribe.webp` | 灰の書記 | ash covered scribe, robed figure made of ash, hood, glowing eyes, dry cracked face, holding quill pen, crumbling, smoke | ボス。灰をかぶって書き続ける者 |
 | `assets/monsters/w3_tidemaw.webp` | 潮呑み | giant sea blob, huge mouth with fangs, one big eye, teal water body, bubbles, drooling, anchor and sandal inside | ボス。洞の奥の口だけのもの |
 
-## 魔物（149）
+## 魔物（150）
 
 ふつうの敵のうち、魔物の姿のもの。
 
@@ -189,8 +189,9 @@
 | `assets/monsters/e4_ashwyrm_x.webp` | 年経た灰の地竜 | wingless dragon, ash-grey scales, glowing lava cracks, long horns, crawling through ash, much larger, old, grizzled, many battle scars, imposing | 灰の地竜の強い個体。ひと回り大きく、古傷だらけ |
 | `assets/monsters/e4_redscorpion_x.webp` | 赤砂の女王蠍 | giant scorpion, red carapace, stinger tail, four glowing eyes, red sand, much larger, old, grizzled, many battle scars, imposing | 赤砂の蠍の強い個体。ひと回り大きく、古傷だらけ |
 | `assets/monsters/e4_cinderhound.webp` | 火口の犬 | volcanic hound, charcoal black fur, glowing orange lava cracks, embers, smoke, fangs, spiked tail | 火山の斜面の、炭のような毛の犬 |
+| `assets/monsters/e4_firearrowimp.webp` | 火矢の小鬼 | small goblin archer, brown skin, pointy ears, grin, shortbow with flaming arrow, ragged clothes, smoke, pair | 見張り塔に火矢を射かける小鬼 |
 
-## 人の姿の敵（22）
+## 人の姿の敵（23）
 
 盗賊・衛兵など、人の姿の敵（一覧の `human: true`）。後置きとネガティブが人向けに替わる（`style_monsters.json` の `human`）。
 
@@ -218,6 +219,7 @@
 | `assets/monsters/e4_bogwitch.webp` | 沼の魔女見習い | 1girl, young witch apprentice, green hood, small, holding staff, smug smile, rune charms, swamp hut | 学院を追われた沼の魔女見習い。生意気 |
 | `assets/monsters/e4_poacher_x.webp` | 密猟者の頭目 | 1boy, man, poacher, lean, stubble, leather cap, green hunting cloak, holding longbow, quiver, wary expression, much larger, old, grizzled, many battle scars, imposing | 密猟者の強い個体。ひと回り大きく、古傷だらけ |
 | `assets/monsters/e4_islepirate_x.webp` | 海賊の頭目 | 1boy, man, pirate, tanned, bandana, eyepatch, stubble, cutlass, ragged red coat, grinning, much larger, old, grizzled, many battle scars, imposing | 島荒らしの海賊の強い個体。ひと回り大きく、古傷だらけ |
+| `assets/monsters/e4_runawaywatch.webp` | 持ち場を捨てた見張り | 1boy, man, deserter sentry, helmet, worn grey armor, spear, stubble, nervous frown | 持ち場を捨てた見張り。追い詰められた男 |
 
 ## 人物の側に任せる敵
 

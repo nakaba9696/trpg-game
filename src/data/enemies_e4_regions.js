@@ -364,6 +364,21 @@
       look: { body: "quad", head: "lion", skin: "#4a3a3a", skin2: "#7a5a4a", eyes: "glow", mouth: "fangs", tail: "spike", pattern: "scars", extra: ["scarf"], mood: "fierce" },
     },
 
+    e4_firearrowimp: {
+      name: "火矢の小鬼", tier: 3, hp: 16, dmg: [1, 6, 2], hit: 60, def: 5, agi: 60, will: 40, mres: 5, gold: [5, 20], loot: [["smoke", 0.2]], shape: "small", eye: "#ff8a3a",
+      rg: "最前線", pack: [2, 2], acts: ["rout"], weak: "ice",
+      desc: "見張り塔に火矢を射かける小鬼の二人組。片方が倒れると、残った方は弓を捨てて逃げる。矢の火は、冷やせばすぐ消える。",
+      look: { body: "biped", build: "small", skin: "#8a6a3a", head: "plain", ears: "pointy", eyes: "slit", mouth: "grin", weapon: "bow", outfit: "rags", cloth: "#5a3a2a", extra: ["smoke", "nose"], mood: "fierce" },
+      lines: { turn: ["小鬼の火矢が、あなたの足元の草を焦がした。"] },
+    },
+    e4_runawaywatch: {
+      name: "持ち場を捨てた見張り", tier: 3, hp: 24, dmg: [1, 8, 1], hit: 60, def: 15, agi: 45, will: 40, mres: 0, gold: [10, 35], loot: [["potion", 0.3], ["jerky", 0.3]], shape: "humanoid", eye: "#d9d9d9", bribe: 35,
+      rg: "最前線", acts: ["fleecall"], call: "deserter",
+      desc: "鐘を鳴らす役を放り出して逃げた見張り。見つかれば首が飛ぶので、見た者を口封じにくる。深手を負うと、同じ逃げ仲間を呼びに走る。",
+      look: { body: "biped", build: "normal", skin: "#d0a888", head: "human", hair: "#5a4a3a", eyes: "dot", mouth: "frown", weapon: "spear", outfit: "armor", cloth: "#3a3a3a", extra: ["helmet", "stubble"] },
+      lines: { open: ["「鐘なんか鳴らしたって、誰も来やしねえんだよ」"], flee: "見張りは塔の陰へ走っていった。仲間を呼ぶ声がする。" },
+    },
+
     // ================================================================ 使徒領（灰の荒野・大厨房・黒鎧の使徒の居城）
     e4_ashwyrm: {
       name: "灰の地竜", tier: 5, hp: 62, dmg: [2, 8, 3], hit: 65, def: 25, agi: 30, will: 999, mres: 15, gold: [10, 50], loot: [["wyvernscale", 0.5], ["gem", 0.2]], shape: "dragon", eye: "#ff6a3a",

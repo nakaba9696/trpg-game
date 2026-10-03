@@ -1371,6 +1371,21 @@
    "name": "火口の犬",
    "tags": "volcanic hound, charcoal black fur, glowing orange lava cracks, embers, smoke, fangs, spiked tail",
    "memo": "火山の斜面の、炭のような毛の犬"
+  },
+  {
+   "id": "e4_firearrowimp",
+   "file": "assets/monsters/e4_firearrowimp.webp",
+   "name": "火矢の小鬼",
+   "tags": "small goblin archer, brown skin, pointy ears, grin, shortbow with flaming arrow, ragged clothes, smoke, pair",
+   "memo": "見張り塔に火矢を射かける小鬼"
+  },
+  {
+   "id": "e4_runawaywatch",
+   "file": "assets/monsters/e4_runawaywatch.webp",
+   "name": "持ち場を捨てた見張り",
+   "human": true,
+   "tags": "1boy, man, deserter sentry, helmet, worn grey armor, spear, stubble, nervous frown",
+   "memo": "持ち場を捨てた見張り。追い詰められた男"
   }
  ]
 }
