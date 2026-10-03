@@ -170,7 +170,7 @@
   // ---------------------------------------------------------------- 並べ方・台詞の選び方の乱数
   // 話題の並び・声のかけ方・切り上げの一言は、状態（冒険・手番・日・仲間・何番目の話）から決まる乱数で選ぶ。
   // G.rand の並びを使わないので、会話をしても戦い・出来事の乱数の並びは変わらない（テストでは種で固定される）。
-  // 起きるかどうか（夜の会話・掛け合い）だけは G.rand で決める。種は冒険の初めに G.rand で引く S.wseed（weather.js。S.id は Date.now を含むのでテストで揺れる。古いセーブは S.id に戻る）
+  // 起きるかどうか（夜の会話・掛け合い）も、この乱数で決める（K4：仲間や話題を足しても、戦い・出来事の乱数の並びと釣り合いの測定が揺れないように）。種は冒険の初めに G.rand で引く S.wseed（weather.js。S.id は Date.now を含むのでテストで揺れる。古いセーブは S.id に戻る）
   TK.roll = (salt) => {
     const S = G.S || {};
     const k = S.tk && S.tk.cur;
@@ -477,11 +477,11 @@
     if (!cands.length) return false;
     // 話す人と、話す話題が決まってから乱数を使う
     const ready = cands.map((c) => [c, G.tkTopics(c, S, { night: true, where }).filter((tp) => tp.kind === "night" || tp.kind === "past" || tp.kind === "love" || tp.kind === "bond")]).filter(([, l]) => l.length);
-    if (!ready.length || G.rand() >= 0.45) return false;
+    if (!ready.length || TK.roll("night") >= 0.45) return false;
     const best = Math.max(...ready.map(([c]) => TK.aff(c)));
-    const [c, list] = G.pick(ready.filter(([x]) => TK.aff(x) >= best - 15));
+    const [c, list] = pickL(ready.filter(([x]) => TK.aff(x) >= best - 15), "nightWho");
     const nights = list.filter((x) => x.kind === "night"), others = list.filter((x) => x.kind !== "night");
-    const tp = nights.length ? G.pick(nights) : others.reduce((a, b) => ((a.step || 0) <= (b.step || 0) ? a : b));
+    const tp = nights.length ? pickL(nights, "nightTopic") : others.reduce((a, b) => ((a.step || 0) <= (b.step || 0) ? a : b));
     t.night = S.day;
     t.banterDay = S.day; // 夜の会話のあった夜は、掛け合いを重ねない
     TK.open(c, { night: true });
@@ -495,7 +495,7 @@
     if (TK.night(where)) return;
     if (!S || S.over || S.combat || S.mode === "event" || G.tkState(S).banterDay === S.day) return;
     const list = TK.banters(S, where === "inn" ? "inn" : "camp");
-    if (list.length && G.rand() < 0.3) TK.banter(G.pick(list));
+    if (list.length && TK.roll("bantNight") < 0.3) TK.banter(pickL(list, "bantWhich"));
   };
   const explore0 = G.exploreAct;
   G.exploreAct = (head, arg, a) => {
@@ -556,7 +556,7 @@
       if (S.mode === "explore" && !S.combat && !S.travel && !t.cur && t.banterDay !== S.day && t.talkTurn !== S.turn) {
         const moved = t.lastLoc !== undefined && t.lastLoc !== S.loc;
         const list = TK.banters(S, moved ? "road" : null);
-        if (list.length && G.rand() < (moved ? 0.3 : 0.05)) TK.banter(G.pick(list));
+        if (list.length && TK.roll("bant") < (moved ? 0.3 : 0.05)) TK.banter(pickL(list, "bantWhich"));
       }
       t.lastLoc = S.loc;
     }
