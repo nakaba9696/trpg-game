@@ -1,0 +1,27 @@
+/* L1：覚え書き（ui/zk_know_l1.js） */
+.l1pane { margin-top: 8px; }
+.l1sum { margin: 0 0 6px; }
+.l1group h3 { margin: 14px 0 6px; font-family: var(--f-display); font-size: 15px; color: var(--head); font-weight: 400; }
+.l1list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
+.l1list li { padding: 8px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--field); }
+.l1list li p { margin: 0; }
+.l1list .l1text { font-family: var(--f-body); line-height: 1.7; }
+.l1list .fine { margin-top: 2px; font-size: 11px; }
+.l1list .l1unknown { color: var(--muted); border-style: dashed; background: transparent; }
+.l1next { border: 1px dashed var(--rule); padding: 10px 14px; margin-top: 8px; font-size: 14px; background: var(--paper); }
+.l1next h3 { margin: 0 0 4px; font-family: var(--f-display); font-size: 15px; font-weight: 400; }
+.l1next ul { margin: 0; padding-left: 1.2em; }
+.l1next li { line-height: 1.7; }
+.l1next li.death b { color: var(--ng); font-weight: 400; margin-right: 4px; }
+@media (max-width: 760px) { .l1list { grid-template-columns: 1fr; } }
+.l1ev .l1evt, .l1list .l1evt { font-family: var(--f-display); margin-bottom: 2px; }
+.l1ch { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+.l1list .l1ch li { display: flex; gap: 6px; color: var(--muted); border: 0; padding: 1px 0; background: none; }
+.l1ch li.seen, .l1ch li.dead { color: var(--ink); }
+.l1ch .l1mark { flex: none; min-width: 3.2em; font-family: var(--f-num, inherit); }
+.l1ch li.dead .l1mark { color: var(--ng); }
+.l1last { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0 0 6px; }
+.l1last dt { color: var(--muted); }
+.l1last dd { margin: 0; }
+.l1lines { margin: 0 0 8px; padding-left: 1.6em; font-size: 13px; color: var(--muted); }
+.l1next h3 + .fine { margin: 0; }
