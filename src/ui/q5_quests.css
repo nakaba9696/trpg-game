@@ -1,0 +1,5 @@
+/* Q5：依頼の画面（ui/q5_quests.js） */
+.q5brief { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.q5brief.soon { color: var(--ng); }
+.q5log { margin: 4px 0 0; padding-left: 1.2em; font-size: 13px; line-height: 1.6; }
+.q5log .q5r-betray, .q5log .q5r-fail, .q5log .q5r-late, .q5log .q5r-lost { color: var(--muted); }
