@@ -21,7 +21,8 @@
   C9.MIN = [10, 25, 40, 55, 65]; // 段ごとの好感度の既定（F3 の −100〜+100）
   C9.STAGE_AFF = 6; // 段を済ませたときの好感度の既定
   C9.END_AFF = 12; // 結末のときの好感度の既定
-  C9.MATE_REL = 4; // ほかの仲間の選択肢を選んだときの、二人の間柄の動きの既定
+  C9.MATE_REL = 4;
+  C9.PAST_STEP = 2; // 最初の段が開くのに聞いておく身の上の段 // ほかの仲間の選択肢を選んだときの、二人の間柄の動きの既定
 
   // ---------------------------------------------------------------- 状態
   G.q9State = (S) => {
@@ -70,6 +71,11 @@
     if (i > 0 && S.day <= (st.day || 0)) return false; // 前の段を済ませた日のうちには、次を頼まない
     c = c || comp(id, S);
     if (!c) return false;
+    // 最初の段は、その人が身の上を二段目まで話してから（打ち明けてから頼む）
+    if (i === 0) {
+      const past = ((D.TALK || {})[id] || {}).topics || [];
+      if (past.some((t) => t.kind === "past") && !past.some((t) => t.kind === "past" && (t.step || 0) >= C9.PAST_STEP && heard(S, t.id))) return false;
+    }
     const min = q.steps[i].min !== undefined ? q.steps[i].min : C9.MIN[Math.min(i, C9.MIN.length - 1)];
     return aff(c) >= min;
   };
@@ -94,7 +100,10 @@
   };
 
   // ---------------------------------------------------------------- 話題（頼まれる）
-  // D.TALK[id].topics に段ごとの話題を足す（kind: "ask"。q9: true の印で、ふつうの並びからは外し、頼めるときに一覧の頭に置く）
+  // D.TALK[id].topics に段ごとの話題を足す（kind: "ask"。q9: true の印で、ふつうの並びからは外し、頼めるときに一覧の後ろの話題と入れ替える）
+  // 表情は、だれの絵にもある喜怒哀楽だけ（ほかは文から推す）
+  const MOODS = ["joy", "anger", "sorrow", "fun"];
+  const moodOk = (m) => (MOODS.includes(m) ? m : undefined);
   const placeName = (at) => lines(at).map((l) => (D.LOCS[l] ? D.LOCS[l].name : l)).join("か");
   const addTopics = () => {
     const T = D.TALK || {};
@@ -111,7 +120,7 @@
           { tone: "quiet", label: "黙ってうなずく", text: "{n}は、それで十分だという顔をした。", aff: 2 },
         ]).map((r) => Object.assign({ aff: r.aff !== undefined ? r.aff : 2 }, r, { memo: r.memo || `${P()[id].short || P()[id].name}の頼み（${q.title}）：${placeName(st.at)}へ。${st.title}` }));
         p.topics.push({
-          id: tid, kind: "ask", q9: true, title: a.title || `${q.title}（${i + 1}）`, text: a.text || "……", mood: a.mood, replies,
+          id: tid, kind: "ask", q9: true, title: a.title || `${q.title}（${i + 1}）`, text: a.text || "……", mood: moodOk(a.mood), replies,
           min: -19, when: (S, c) => C9.canAsk(id, i, S, c),
         });
       });
@@ -120,7 +129,7 @@
         lines(e.topics || (e.topic ? [e.topic] : [])).forEach((t, j) => {
           const tid = `q9_${id}_e_${k}${j ? "_" + j : ""}`;
           if (p.topics.some((x) => x.id === tid)) return;
-          p.topics.push(Object.assign({ kind: "past", step: 0, min: 10 }, t, { id: tid, q9end: k, when: (S) => C9.end(id, S) === k }));
+          p.topics.push(Object.assign({ kind: "past", step: 0, min: 10 }, t, { mood: moodOk(t.mood), id: tid, q9end: k, when: (S) => C9.end(id, S) === k }));
         });
       });
     });
@@ -144,7 +153,9 @@
       if (!id || !Q()[id] || aff(c) <= -20) return out;
       const st = C9.of(id, S);
       const tp = TK.topic(C9.topicId(id, st.n));
-      if (tp && TK.can(tp, c, S)) { out.unshift(tp); if (out.length > 5) out.pop(); }
+      // 一覧の数は変えない（いちばん後ろの話題と入れ替える。ランダムに遊ぶボットの選び方の並びを揺らしにくい）
+      // 恋の筋（zzzzzz_romance2.js）が頭に足して五つに切っても残るように、五つあるときは後ろから二つ目と入れ替える
+      if (tp && TK.can(tp, c, S)) { if (out.length >= 5) out[out.length - 2] = tp; else if (out.length >= 3) out[out.length - 1] = tp; else out.push(tp); }
       return out;
     };
   }
@@ -184,7 +195,7 @@
         if (c.mate) { const m = st.mate; x.cond = (S) => !!comp(m, S) && (!c.cond || c.cond(S)); }
         return x;
       });
-      const e = { id: eid, where: [], w: 0, q9: { id, i }, mood: st.mood };
+      const e = { id: eid, where: [], w: 0, q9: { id, i }, mood: moodOk(st.mood) };
       if (typeof st.who === "string" && P()[st.who]) e.c2 = st.who;
       Object.defineProperty(e, "title", { get: () => C9.fill(st.title || q.title, id, i), enumerable: true });
       Object.defineProperty(e, "text", { get: () => {

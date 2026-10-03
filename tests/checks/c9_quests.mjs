@@ -168,12 +168,17 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
           S.mode = "explore"; S.event = null;
           G.affState(S)[id] = 90;
           if (withMate) G.affState(S)[mateOf] = 60;
-          // 話す：一覧の頭に頼みごとの段が出る
+          // 最初の段は、身の上を二段目まで聞いてから
+          if (i === 0) {
+            if (G.q9.canAsk(id, 0, S)) F(`${id}: 身の上を聞く前に、最初の段が頼まれる`);
+            T[id].topics.filter((t) => t.kind === "past" && !t.q9end && t.step <= 2).forEach((t) => (S.tk.heard[t.id] = { day: S.day, k: "", seq: 0 }));
+          }
+          // 話す：一覧に頼みごとの段が出る
           c.talkDay = 0;
           G.m2Talk(c.id);
           const tid = G.q9.topicId(id, i);
           const mi = S.tk.cur ? S.tk.cur.menu.indexOf(tid) : -1;
-          if (S.event !== "tk_menu" || mi < 0 || mi > 1) { F(`${id}[${i + 1}]: 話すと、一覧の頭のほうに頼みごとの段が出ない（${S.event} ${S.tk.cur && S.tk.cur.menu.join(",")}）`); return; }
+          if (S.event !== "tk_menu" || mi < 0) { F(`${id}[${i + 1}]: 話すと、一覧に頼みごとの段が出ない（${S.event} ${S.tk.cur && S.tk.cur.menu.join(",")}）`); return; }
           G.act("ev:" + mi);
           if (S.event !== "tk_topic") { F(`${id}[${i + 1}]: 頼みごとの話題が開かない`); return; }
           G.act("ev:0");
