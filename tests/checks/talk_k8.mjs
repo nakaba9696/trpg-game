@@ -16,7 +16,7 @@ export default ({ G: G0, fail, ok, loadEngine }) => {
   const ALL = D0.TALK_BANTER || [];
   const B = ALL.filter((b) => /^bt_k8_/.test(b.id));
   const key = (b) => [b.a, b.b].sort().join("+");
-  const old = new Set(ALL.filter((b) => !/^bt_k8_/.test(b.id)).map(key));
+  const old = new Set(ALL.filter((b) => !/^bt_k8_/.test(b.id) && !/^bt_r2_/.test(b.id)).map(key));
 
   // ---------------------------------------------------------------- 量
   const pairs = new Map();
