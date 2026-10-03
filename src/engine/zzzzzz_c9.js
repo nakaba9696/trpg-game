@@ -142,6 +142,20 @@
     })));
   };
 
+  if (TK.reply) {
+    const reply0 = TK.reply;
+    TK.reply = (ri) => {
+      const S = G.S;
+      const k = S && S.tk && S.tk.cur;
+      const tp = k && k.topic && TK.topic(k.topic);
+      const r = reply0(ri);
+      if (tp && tp.q9 && G.S) {
+        const m = /^q9_(.+)_(\d+)$/.exec(tp.id);
+        if (m) C9.notes(m[1], Number(m[2]) - 1).slice(-2).forEach((t) => G.memo(`前の冒険の覚え書き：${t}`));
+      }
+      return r;
+    };
+  }
   if (TK.pickMenu) {
     const topics0 = G.tkTopics;
     G.tkTopics = (c, S, opt) => (topics0(c, S, opt) || []).filter((tp) => !tp.q9);
@@ -193,6 +207,12 @@
         if (c.ng) x.ng = mark(c.ng, id, i, "c" + ci + "ng", last, rel);
         if (c.win) x.win = mark(c.win, id, i, "c" + ci, last, rel);
         if (c.mate) { const m = st.mate; x.cond = (S) => !!comp(m, S) && (!c.cond || c.cond(S)); }
+        // 持っていく物（need: { item }）：持っているときだけ出る。選ぶと渡す
+        if (c.need && c.need.item) {
+          const it = c.need.item, cond0 = x.cond;
+          x.cond = (S) => !!(S.inv && S.inv[it] > 0) && (!cond0 || cond0(S));
+          ["ok", "ng", "win"].forEach((k) => { if (x[k]) x[k] = Object.assign({}, x[k], { remove: x[k].remove || it }); });
+        }
         return x;
       });
       const e = { id: eid, where: [], w: 0, q9: { id, i }, mood: moodOk(st.mood) };
@@ -246,12 +266,14 @@
     delete o2.rel;
     delete o2.end;
     delete o2.key;
+    delete o2.hint;
     if (o2.text) o2.text = fillAll(o2.text, id, i);
     if (Array.isArray(o2.text)) o2.text = o2.text.join("");
     if (o2.memo) o2.memo = C9.fill(o2.memo, id, i);
     // 段を済ませる（好感度は書いてあればその数、無ければ既定）
     if (!o2.aff && c) o2.aff = { [id]: C9.STAGE_AFF };
     apply0(o2);
+    if (o.hint) C9.note(id, o.hint, i);
     if (S.over || !q) return;
     const s = C9.of(id, S);
     if (s.n === i && !s.end) {
@@ -287,6 +309,7 @@
       if (ch.length) G.note(`${short(c)}が変わった（${ch.join("・")}）`);
     }
     if (e.memo) G.memo(C9.fill(e.memo, id, 0, S));
+    lines(e.hint).forEach((h) => C9.note(id, h, q.steps.length - 1));
     G.note(`（${nameOf(id, S)}の頼みごと「${q.title}」の結末：${e.name}）`);
     if (G.chron) G.chron(`${nameOf(id, S)}の頼みごと「${q.title}」：${e.name}`, "event");
     C9.record(id, k);
@@ -302,6 +325,21 @@
     m[k] = { by: S && S.profile ? `${S.clsName || ""} ${S.profile.name || ""}`.trim() : "", date: S && G.dateOf ? G.dateOf(S.day) : "", at: Date.now() };
     if (G.onProfile) try { G.onProfile(); } catch (err) { /* 保存は画面の仕事 */ }
   };
+  // 覚え書きの元（hint）：周回で役に立つ一行。冒険をまたいで残す（G.P.q9notes = { 人の id: [{ t 一行, i 段 }] }）。
+  // 次の冒険で、その段を頼まれたときに「前の冒険の覚え書き」として memo に出す。冒険をまたぐ覚え書きの仕組み（L1）が拾えるよう、D.Q9 の hint に書いておく
+  C9.note = (id, t, i) => {
+    t = C9.fill(String(t || ""), id, i);
+    if (!t) return;
+    if (G.S && G.memo) G.memo(`覚え書き：${t}`);
+    if (!G.P) return;
+    const all = G.P.q9notes || (G.P.q9notes = {});
+    const list = all[id] || (all[id] = []);
+    if (list.some((x) => x.t === t)) return;
+    list.push({ t, i: i || 0 });
+    if (list.length > 24) list.shift();
+    if (G.onProfile) try { G.onProfile(); } catch (err) { /* 保存は画面の仕事 */ }
+  };
+  C9.notes = (id, i) => (((G.P && G.P.q9notes) || {})[id] || []).filter((x) => i === undefined || x.i === i).map((x) => x.t);
   C9.seen = (id) => Object.keys(((G.P && G.P.q9) || {})[id] || {});
   if (G.codexPersonLines) {
     const lines0 = G.codexPersonLines;
@@ -314,7 +352,8 @@
       if (!seen.length) return out;
       const rec = G.P.q9[id];
       const got = all.filter((k) => seen.includes(k)).map((k) => `頼みごと「${q.title}」の結末：${q.ends[k].name}。${q.ends[k].codex || ""}（${rec[k].by || "誰か"}が見た）`);
-      return out.concat(got, all.length > got.length ? [`（結末 ${got.length}／${all.length}。ほかの結末は、まだ見ていない）`] : []);
+      const notes = C9.notes(id);
+      return out.concat(got, notes.length ? [`覚え書き：${notes.slice(-3).join("／")}`] : [], all.length > got.length ? [`（結末 ${got.length}／${all.length}。ほかの結末は、まだ見ていない）`] : []);
     };
   }
 

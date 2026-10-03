@@ -5,6 +5,7 @@
 // - 結末でその人が変わる（台詞・声のかけ方・話題・能力・人生の物語の一行）。恋の段を書いていない。18 歳未満・子どもの姿の人に酒と色恋が無い
 // - 見せる文：書かない言葉が無い。地の文が叫ばない。置き換えが残らない
 // - 遊ぶ：好感度を上げて話すと段が開き、行き先で出来事が起き、最後の段で結末になる。図鑑に残る。ほかの仲間の選択肢で間柄が動く
+// - 周回の手がかり：結末ごとに覚え書きの元（hint）があり、冒険をまたいで残り、次の冒険で頼まれたときに出る。持っていく物で開く選択肢と、痛い失敗が一人一つ以上
 // - 古いセーブ（S.q9・S.tk が無い）で動く。ランダムに遊んでも止まらない
 const BANNED = /見世物|観客|客席|舞台|台本|言霊|神々|魔王|魔人|正体|もういない|胸|童貞|貧乳|巨乳|ナイスバディ|ロリ|体つき|裸|下着|情欲|色気/;
 const TONES = ["earnest", "tease", "joke", "praise", "sweet", "scold", "cold", "quiet"];
@@ -46,8 +47,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     totalSteps += steps.length;
     totalEnds += ends.length;
     counts.push(`${P[id] ? P[id].short || P[id].name : id} ${steps.length}段${ends.length}結`);
-    let mates = 0, prevMin = -100;
-    const reach = new Set();
+    let mates = 0, prevMin = -100, needs = 0, hints = 0, hurts = 0;
+    const reach = new Set(), hinted = new Set();
     steps.forEach((st, i) => {
       const s = w(`[${i + 1}]`);
       const last = i === steps.length - 1;
@@ -72,9 +73,10 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
         if (!(st.choices || []).some((c) => c.mate)) F(`${s}: ほかの仲間の選択肢（mate: true）が無い`);
         if (!st.mateText) F(`${s}: ほかの仲間がいるときの文（mateText）が無い`);
       }
-      const cs = (st.choices || []).filter((c) => !c.mate);
+      const cs = (st.choices || []).filter((c) => !c.mate && !c.need);
       const rolls = cs.filter((c) => c.stat || c.fight);
       const free = cs.filter((c) => !c.stat && !c.fight);
+      for (const c of st.choices || []) if (c.need) { needs++; if (!c.need.item || !D0.ITEMS[c.need.item]) F(`${s}: 持っていく物 ${JSON.stringify(c.need)} が無い`); }
       if (rolls.length < 2 || rolls.length > 3) F(`${s}: 解き方（判定・戦い）が ${rolls.length}（2〜3）`);
       if (!free.length) F(`${s}: 判定なしの道が無い`);
       (st.choices || []).forEach((c, ci) => {
@@ -87,7 +89,9 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
         if (!c.fight && !c.ok) F(`${cw}: 結果（ok）が無い`);
         for (const [k, o] of [["ok", c.ok], ["ng", c.ng], ["win", c.win]]) {
           if (!o) continue;
-          add(`${cw}.${k}`, [o.text, o.memo], QFILL);
+          add(`${cw}.${k}`, [o.text, o.memo, o.hint], QFILL);
+          if (o.hint) { hints++; if (last && o.end) hinted.add(o.end); }
+          if ((o.hp || 0) <= -6) hurts++;
           for (const it of Object.keys(typeof o.item === "string" ? { [o.item]: 1 } : o.item || {})) if (!D0.ITEMS[it]) F(`${cw}.${k}: 物 ${it} が無い`);
           if (o.fight) F(`${cw}.${k}: 結果の中で戦わない（戦いは選択肢の fight に）`);
           if (last) { if (!o.end || !ends.includes(o.end)) F(`${cw}.${k}: 最後の段の結果に結末（end）が無いか、知らない結末 ${o.end}`); else reach.add(o.end); }
@@ -96,6 +100,11 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
       });
     });
     if (!mates) F(w(": ほかの仲間が絡む段が無い"));
+    for (const [k, e] of Object.entries(q.ends || {})) if (e.hint) { hints++; hinted.add(k); add(w(`.ends.${k}.hint`), e.hint, QFILL); }
+    for (const k of ends) if (!hinted.has(k)) F(w(`: 結末 ${k} への覚え書きの元（hint）が無い`));
+    if (hints < 4) F(w(`: 覚え書きの元（hint）が ${hints}（4 以上）`));
+    if (!needs) F(w(": 持っていく物で開く選択肢（need）が無い"));
+    if (!hurts) F(w(": 痛い失敗（hp −6 以下）が無い"));
     for (const k of ends) if (!reach.has(k)) F(w(`: 結末 ${k} に届く選択肢が無い`));
     for (const [k, e] of Object.entries(q.ends || {})) {
       const ew = w(`.ends.${k}`);
@@ -182,6 +191,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
           G.act("ev:" + mi);
           if (S.event !== "tk_topic") { F(`${id}[${i + 1}]: 頼みごとの話題が開かない`); return; }
           G.act("ev:0");
+          if (ki > 0 && G.q9.notes(id, i).length && !S.memos.some((m) => m.startsWith("前の冒険の覚え書き："))) F(`${id}[${i + 1}]: 二度目の冒険で、前の冒険の覚え書きが出ない`);
           if (S.mode === "event") { const e = G.actions()[0].list.findIndex((a) => a.label === "話を切り上げる"); if (e >= 0) G.act("ev:" + e); }
           if (S.mode === "event") { S.mode = "explore"; S.event = null; S.tk.cur = null; }
           // 行き先で、行動の欄に出る
@@ -206,7 +216,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
               for (const o of [chs[xi].ok, chs[xi].ng, chs[xi].win]) if (o && o.q9 && o.q9.end === k) { out = o; pick = xi; break; }
             }
             if (!out) { F(`${id}: 結末 ${k} に届かない`); return; }
-          } else if (pick < 0) pick = chs.findIndex((x, xi) => !x.stat && !x.fight && !x.mate && avail.includes(xi));
+          } else if (pick < 0) pick = chs.findIndex((x, xi) => !x.stat && !x.fight && !x.mate && !x.need && avail.includes(xi));
           const rel0 = withMate ? G.tk.rel(id, mateOf, S) : 0;
           const ch = chs[pick];
           if (!out && (ch.stat || ch.fight)) out = ch.fight ? ch.win : ch.ok;
@@ -222,6 +232,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
         const e = q.ends[k];
         if (G.q9End(id, S) !== k) { F(`${id}: 結末が ${G.q9End(id, S)}（${k} のはず）`); return; }
         if (!((G.P.q9 || {})[id] || {})[k]) F(`${id}.${k}: 図鑑に結末が残らない`);
+        if (!G.q9.notes(id).length) F(`${id}.${k}: 覚え書きが冒険をまたいで残らない`);
         if (!G.codexPersonLines(id).some((t) => t.includes(e.name))) F(`${id}.${k}: 図鑑の人物の頁に結末が出ない`);
         if (JSON.stringify(G.m2Trait(c).talk) !== JSON.stringify(e.talk)) F(`${id}.${k}: ひとことが結末のものにならない`);
         if (JSON.stringify(G.tk.data(c).greet.warm) !== JSON.stringify(e.greet)) F(`${id}.${k}: 声のかけ方が結末のものにならない`);
