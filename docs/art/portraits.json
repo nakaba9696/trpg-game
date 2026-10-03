@@ -1268,7 +1268,7 @@
    "kin": "moulin",
    "type": "brute",
    "file": "assets/portraits/barnabe.webp",
-   "identity": "1boy, male focus, adult, man, 34 years old, huge man, burly, muscular, big hands, tan skin, freckles, dark blonde hair, short hair, round eyes, green eyes, thick eyebrows, flour dust on face, white kerchief on head, rolled-up sleeves, flour-stained cream shirt, brown miller apron, wooden name tag on cord around neck",
+   "identity": "1boy, male focus, adult, man, 34 years old, huge man, burly, muscular, big hands, tan skin, freckles, dark blonde hair, short hair, round eyes, green eyes, thick eyebrows, flour dust on face, white kerchief on head, rolled-up sleeves, flour-stained cream shirt, brown miller apron, plain wooden pendant on cord around neck",
    "tags": "carrying a large sack of flour on shoulder",
    "face": "big grin, open mouth",
    "variants": {
@@ -1516,7 +1516,7 @@
    "type": "elder",
    "file": "assets/portraits/sylvestre.webp",
    "identity": "1boy, male focus, old man, 74 years old, thin, pale skin, grey hair, long hair, long white beard, sleepy eyes, brown eyes, raised eyebrows, deep wrinkles, round spectacles, crimson long robe, silver chain of office, soot on sleeves, wooden staff",
-   "tags": "turning pages of a book beside a bonfire",
+   "tags": "holding a closed old book under arm, standing beside a small bonfire",
    "face": "mischievous smile",
    "variants": {
     "joy": "gentle smile, closed eyes",
@@ -1576,8 +1576,8 @@
    "type": "brute",
    "file": "assets/portraits/hartmut.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 47 years old, huge man, burly, very muscular, big belly, tan skin, dark brown hair, medium hair, curly hair, green eyes, small eyes, thick eyebrows, full beard, coal dust on face, scar on forehead, worn leather miner apron over grey shirt, rolled-up sleeves, leather gloves, pickaxe on shoulder",
-   "tags": "holding a crumpled sheet of paper, reading aloud",
-   "face": "embarrassed, frown, blush",
+   "tags": "holding a crumpled sheet of paper",
+   "face": "embarrassed, frown, blush, reading aloud",
    "variants": {
     "joy": "shy smile, looking away",
     "anger": "angry, shouting, teeth",
@@ -1659,7 +1659,7 @@
    "name": "イングリット",
    "file": "assets/portraits/ingrid.webp",
    "identity": "1girl, adult, woman, 33 years old, slender, pale skin, black hair, jet black hair, short hair, hime cut, red eyes, half-closed eyes, eye bags, thin eyebrows, round glasses, white doctor coat over dark dress, rolled sleeves, leather gloves, small bag of scalpels",
-   "tags": "pinching someone's sleeve, holding a honey cake",
+   "tags": "holding a honey cake on a plate",
    "face": "expressionless",
    "variants": {
     "joy": "tiny smile, faint blush",
@@ -1678,9 +1678,9 @@
    "group": "c2",
    "name": "ルミア",
    "file": "assets/portraits/lumia.webp",
-   "identity": "1girl, child, 11 years old, small, petite, pointy ears, elf, pale skin, white hair, pale blue-tinged white hair, very long hair, green eyes, sleepy eyes, thin eyebrows, silver circlet, oversized pale green robe, long sleeves, blanket over shoulders, small wooden staff",
-   "tags": "yawning, sitting under a tree",
-   "face": "sleepy, smug",
+   "identity": "1girl, child, 11 years old, small, petite, pointy ears, elf, pale skin, white hair, pale blue-tinged white hair, very long hair, green eyes, thin eyebrows, silver circlet, oversized pale green robe, long sleeves, blanket over shoulders, small wooden staff",
+   "tags": "sitting under a tree",
+   "face": "sleepy, smug, sleepy eyes, yawning",
    "variants": {
     "joy": "gentle motherly smile, closed eyes",
     "anger": "stern, scolding, pointing finger",
@@ -2125,7 +2125,7 @@
    "type": "classic",
    "file": "assets/portraits/jonas.webp",
    "identity": "1boy, male focus, young man, teenage boy, 17 years old, slim, platinum blonde hair, curly hair, short hair, blue eyes, round eyes, freckles, steel helmet, grey gambeson, spear",
-   "tags": "holding a travel pass with both hands, standing at attention",
+   "tags": "holding a spear upright, standing at attention",
    "face": "nervous, blush",
    "variants": {
     "joy": "smile, happy, relieved",
@@ -2513,8 +2513,8 @@
    "name": "ボードワン",
    "type": "ojisan",
    "file": "assets/portraits/baudouin.webp",
-   "identity": "1boy, male focus, old man, 61 years old, slim, gaunt, weathered skin, white hair, grey hair, messy hair, medium hair, grey eyes, narrow eyes, stubble, scar on lip, deep wrinkles, grey hooded cloak covered in ash, many wooden name tags hanging from belt, shovel",
-   "tags": "writing on a wooden tag with charcoal",
+   "identity": "1boy, male focus, old man, 61 years old, slim, gaunt, weathered skin, white hair, grey hair, messy hair, medium hair, grey eyes, narrow eyes, stubble, scar on lip, deep wrinkles, grey hooded cloak covered in ash, small blank wooden markers hanging from belt, shovel",
+   "tags": "leaning on a shovel",
    "face": "grumpy frown",
    "memo": "C5・町。灰の荒野の手前の墓守。行き倒れの懐を漁る口の悪い老人。遺品に名前の札を付けて家族を待つ。灰をかぶった頭巾の外套、腰の名札の束、炭",
    "variants": {
