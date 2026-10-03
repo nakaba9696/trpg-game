@@ -494,6 +494,772 @@
    "human": true,
    "tags": "1boy, man, hooded, scarf, smirk, ragged cloak, holding dagger",
    "memo": "裏切った仲間"
+  },
+  {
+   "id": "e4k_squire",
+   "file": "assets/monsters/e4k_squire.webp",
+   "name": "黒鎧の従騎士",
+   "tags": "small black knight, black full plate armor, helmet with glowing red eyes, sword and shield, cape",
+   "memo": "黒い鎧の主の従騎士"
+  },
+  {
+   "id": "e4k_chainhound",
+   "file": "assets/monsters/e4k_chainhound.webp",
+   "name": "鎖の黒犬",
+   "tags": "black hound, huge dark dog, broken chain collar, glowing red eyes, lava-like cracks, spiked tail",
+   "memo": "鎖を引きずる黒い大犬"
+  },
+  {
+   "id": "e4k_taster",
+   "file": "assets/monsters/e4k_taster.webp",
+   "name": "毒見の小鬼",
+   "tags": "goblin, poison taster, green spotted skin, cook cap, drooling, sick, holding spoon and dagger",
+   "memo": "毒見をさせられる小鬼"
+  },
+  {
+   "id": "e4k_cauldron",
+   "file": "assets/monsters/e4k_cauldron.webp",
+   "name": "歩く大鍋",
+   "tags": "living cauldron, big iron pot monster, bubbling stew, steam, fangs on rim, glowing eyes",
+   "memo": "煮え立つまま歩く大鍋"
+  },
+  {
+   "id": "e4k_mossdog",
+   "file": "assets/monsters/e4k_mossdog.webp",
+   "name": "苔むした番犬",
+   "tags": "guard dog covered in moss, green mossy fur, small plants growing on back, glowing eyes",
+   "memo": "苔むした庭の番犬"
+  },
+  {
+   "id": "e4k_pruner",
+   "file": "assets/monsters/e4k_pruner.webp",
+   "name": "枝打ち人形",
+   "tags": "wooden puppet gardener, lanky wooden body, shear-shaped blade hands, single lens eye, cracked wood",
+   "memo": "庭師が作った枝打ち人形"
+  },
+  {
+   "id": "e4k_inkling",
+   "file": "assets/monsters/e4k_inkling.webp",
+   "name": "滲み文字",
+   "tags": "swarm of living ink letters, floating dark blue ink characters, runes, dripping ink",
+   "memo": "水に溶けた本の文字の群れ"
+  },
+  {
+   "id": "e4k_drowned",
+   "file": "assets/monsters/e4k_drowned.webp",
+   "name": "書庫の溺れ人",
+   "tags": "drowned man, pale waterlogged skin, wet dark long hair, holding soaked book, hollow eyes, dripping water",
+   "memo": "名前を失った書庫の溺れ人"
+  },
+  {
+   "id": "e4k_puppet",
+   "file": "assets/monsters/e4k_puppet.webp",
+   "name": "糸吊りの踊り手",
+   "tags": "dancing marionette people, strings from above, crying faces, closed eyes, tattered clothes, floating",
+   "memo": "糸で吊られて踊る旅人"
+  },
+  {
+   "id": "e4k_smiler",
+   "file": "assets/monsters/e4k_smiler.webp",
+   "name": "笑い面の侍従",
+   "tags": "masked servant, smiling white mask, elegant purple robe, holding parasol staff, bowing",
+   "memo": "笑い面の侍従"
+  },
+  {
+   "id": "e4k_fogscribe",
+   "file": "assets/monsters/e4k_fogscribe.webp",
+   "name": "霧の書記",
+   "tags": "hooded scribe, grey robe, glowing eyes in hood, holding open book, quill, mist, floating",
+   "memo": "霧の中で先を書く書記"
+  },
+  {
+   "id": "e4k_fogowl",
+   "file": "assets/monsters/e4k_fogowl.webp",
+   "name": "霧梟",
+   "tags": "owl, pale grey feathers, big round eyes, carrying torn paper page, mist",
+   "memo": "紙を盗む霧梟"
+  },
+  {
+   "id": "e4k_sandimp",
+   "file": "assets/monsters/e4k_sandimp.webp",
+   "name": "砂の小僧",
+   "tags": "small imp made of sand, crumbling sandy body, cracked, grinning, stolen coin pouch, sand trailing",
+   "memo": "砂でできたすりの小僧"
+  },
+  {
+   "id": "e4k_hourglass",
+   "file": "assets/monsters/e4k_hourglass.webp",
+   "name": "砂時計の番人",
+   "tags": "sand golem with large hourglass in chest, cracked sandstone body, single lens eye, runes",
+   "memo": "胸に砂時計を抱えた人形"
+  },
+  {
+   "id": "e4k_whiteacolyte",
+   "file": "assets/monsters/e4k_whiteacolyte.webp",
+   "name": "白目の侍祭",
+   "tags": "acolyte, white robes, long white hair, cloudy white blind eyes, serene smile, holding staff",
+   "memo": "目が白く濁った侍祭"
+  },
+  {
+   "id": "e4k_haloshade",
+   "file": "assets/monsters/e4k_haloshade.webp",
+   "name": "後光の影",
+   "tags": "small winged shadow spirit, pale pink glow, moth wings covered in eye patterns, three glowing eyes",
+   "memo": "後光から剥がれた羽の影"
+  },
+  {
+   "id": "e4k_smokecat",
+   "file": "assets/monsters/e4k_smokecat.webp",
+   "name": "煙の猫",
+   "tags": "cat made of smoke, lavender grey fur dissolving into incense smoke, slit eyes, smirk",
+   "memo": "香の煙の猫"
+  },
+  {
+   "id": "e4k_bouncer",
+   "file": "assets/monsters/e4k_bouncer.webp",
+   "name": "賭場の用心棒",
+   "human": true,
+   "tags": "1boy, burly man, gambling den bouncer, black hair, scars, stubble, purple kimono-like outfit, scarf, holding club",
+   "memo": "賭場の用心棒"
+  },
+  {
+   "id": "e4k_maskguard",
+   "file": "assets/monsters/e4k_maskguard.webp",
+   "name": "銀面の衛士",
+   "tags": "guard with silver mask, expressionless silver face mask, armor, spear and shield, cape",
+   "memo": "銀の面の衛士"
+  },
+  {
+   "id": "e4k_nailer",
+   "file": "assets/monsters/e4k_nailer.webp",
+   "name": "釘打ち人形",
+   "tags": "stubby wooden puppet, hammer in hand, goggle eyes, nail pouch, cracked wood",
+   "memo": "面を打ちつける釘打ち人形"
+  },
+  {
+   "id": "e4k_dreamsheep",
+   "file": "assets/monsters/e4k_dreamsheep.webp",
+   "name": "逆さ羊",
+   "tags": "dream sheep, fluffy white wool, curled ram horns, closed eyes, peaceful smile, floating upside down",
+   "memo": "逆さに歩く夢の羊"
+  },
+  {
+   "id": "e4k_sleepwalkers",
+   "file": "assets/monsters/e4k_sleepwalkers.webp",
+   "name": "夢遊びの子ら",
+   "tags": "group of sleepwalking children, eyes closed, holding hands, pale nightclothes, arms forward, floating",
+   "memo": "目を閉じて歩く子どもたち"
+  },
+  {
+   "id": "e4k_bladechick",
+   "file": "assets/monsters/e4k_bladechick.webp",
+   "name": "刃羽の雛",
+   "tags": "chick of giant bird, feathers made of soft metal blades, big round eyes, fluffy",
+   "memo": "刃の羽の雛"
+  },
+  {
+   "id": "e4k_cliffwatch",
+   "file": "assets/monsters/e4k_cliffwatch.webp",
+   "name": "崖の羽番",
+   "tags": "bird-headed guard, beak, armor made of blade feathers, spear, feathered wings, plume",
+   "memo": "抜け羽を鎧にした番人"
+  },
+  {
+   "id": "e4k_bellfish",
+   "file": "assets/monsters/e4k_bellfish.webp",
+   "name": "鐘鳴り魚",
+   "tags": "big round fish, blue spotted scales, googly eyes, small bell visible inside belly, bubbles",
+   "memo": "腹で鐘が鳴る魚"
+  },
+  {
+   "id": "e4k_drownedsailor",
+   "file": "assets/monsters/e4k_drownedsailor.webp",
+   "name": "沈んだ水夫",
+   "tags": "drowned sailor, undead, waterlogged pale skin, bandana, tattered sailor clothes, visible ribs, reaching",
+   "memo": "沖の歌に呑まれた水夫"
+  },
+  {
+   "id": "e4k_unsaid",
+   "file": "assets/monsters/e4k_unsaid.webp",
+   "name": "言いかけの影",
+   "tags": "shadow figure, black silhouette, glowing eyes, open mouth as if speaking, smoky edges, floating",
+   "memo": "言いかけの影"
+  },
+  {
+   "id": "e4k_blackmite",
+   "file": "assets/monsters/e4k_blackmite.webp",
+   "name": "黒い羽虫",
+   "tags": "swarm of black insects, black feather-like wings, red glowing eyes, stingers",
+   "memo": "黒い羽のかけらの虫"
+  },
+  {
+   "id": "e4k_moonhare",
+   "file": "assets/monsters/e4k_moonhare.webp",
+   "name": "二つ月の兎",
+   "tags": "white hare, glowing eyes, long ears, moonlight, two moons, floating",
+   "memo": "二つ月の夜の兎"
+  },
+  {
+   "id": "e4k_moonarcher",
+   "file": "assets/monsters/e4k_moonarcher.webp",
+   "name": "月を射る亡者",
+   "tags": "skeleton archer, tattered cloak, longbow aimed upward, hollow eyes, moonlight",
+   "memo": "月を射ろうとした亡者"
+  },
+  {
+   "id": "e4k_rustgnaw",
+   "file": "assets/monsters/e4k_rustgnaw.webp",
+   "name": "錆かじり",
+   "tags": "small rust-colored rodent, gnawing on iron, sharp teeth, round ears, spotted",
+   "memo": "鉄をかじる小さな獣"
+  },
+  {
+   "id": "e4k_ironmite",
+   "file": "assets/monsters/e4k_ironmite.webp",
+   "name": "鉄虫",
+   "tags": "armored beetle, iron grey carapace, metal shell, glowing eyes, mandibles",
+   "memo": "鎧をかじる鉄虫"
+  },
+  {
+   "id": "e4k_bellsinner",
+   "file": "assets/monsters/e4k_bellsinner.webp",
+   "name": "鈴振りの罪人",
+   "tags": "undead sinner, hooded rags, bell hanging from neck, scarred, hollow eyes, chained",
+   "memo": "鈴を下げた罪人の亡者"
+  },
+  {
+   "id": "e4k_guiltdog",
+   "file": "assets/monsters/e4k_guiltdog.webp",
+   "name": "咎の犬",
+   "tags": "black hound, scarred dark fur, glowing red eyes, sniffing, spiked tail, menacing",
+   "memo": "咎人を追う犬"
+  },
+  {
+   "id": "e4k_scarecrow",
+   "file": "assets/monsters/e4k_scarecrow.webp",
+   "name": "動く案山子",
+   "tags": "living scarecrow, straw body, burlap face with stitched grin, straw hat, ragged clothes, scarf",
+   "memo": "畑から歩き出した案山子"
+  },
+  {
+   "id": "e4k_furrowmole",
+   "file": "assets/monsters/e4k_furrowmole.webp",
+   "name": "畝走りの土竜",
+   "tags": "giant mole, brown fur, digging claws, pink nose, seeds in paws, farm field",
+   "memo": "畝の下を走る大土竜"
+  },
+  {
+   "id": "e4k_acidbud",
+   "file": "assets/monsters/e4k_acidbud.webp",
+   "name": "酸の芽",
+   "tags": "acid slime sprout, bright green bubbling blob, three eyes, dripping acid",
+   "memo": "酸の溜まりの芽"
+  },
+  {
+   "id": "e4k_greenwatch",
+   "file": "assets/monsters/e4k_greenwatch.webp",
+   "name": "緑の見張り",
+   "tags": "mossy stone sentinel, green stone golem, single lens eye, spear, empty socket in chest, runes",
+   "memo": "溜まりを囲む石の見張り"
+  },
+  {
+   "id": "e4k_rootling",
+   "file": "assets/monsters/e4k_rootling.webp",
+   "name": "根の子",
+   "tags": "small root creature, body of twisted tree roots, dot eyes, claw-like rootlets",
+   "memo": "大樹の根から芽吹いた子"
+  },
+  {
+   "id": "e4k_ember",
+   "file": "assets/monsters/e4k_ember.webp",
+   "name": "燠喰い虫",
+   "tags": "beetle, dark shell with glowing orange cracks, eating embers, smoke, mandibles",
+   "memo": "火の粉を食べる甲虫"
+  },
+  {
+   "id": "e4_mosswisp",
+   "file": "assets/monsters/e4_mosswisp.webp",
+   "name": "苔灯り",
+   "tags": "glowing moss ball, floating orb of moss, small round body, bioluminescent green moss, tiny dot eyes, spores drifting, night forest glow",
+   "memo": "夜の森の光る苔の玉。眠りの胞子。ふわふわでかわいい"
+  },
+  {
+   "id": "e4_satchelrat",
+   "file": "assets/monsters/e4_satchelrat.webp",
+   "name": "鞄ネズミ",
+   "tags": "giant rat, brown fur, round ears, big nose, carrying stolen leather pouch, thin tail, sneaky, standing on hind legs",
+   "memo": "鞄を狙うネズミ。小ずるくてまぬけ"
+  },
+  {
+   "id": "e4_thornboar",
+   "file": "assets/monsters/e4_thornboar.webp",
+   "name": "棘猪",
+   "tags": "wild boar, thorny brambles growing from back, dark brown bristly fur, tusks, angry, thorn spikes",
+   "memo": "背に茨の棘が生えた猪"
+  },
+  {
+   "id": "e4_relicmole",
+   "file": "assets/monsters/e4_relicmole.webp",
+   "name": "遺構モグラ",
+   "tags": "giant mole, dark fur, huge digging claws, pink nose, small eyes, holding shiny old gold coin, dirt",
+   "memo": "光り物好きの大モグラ。とぼけた顔"
+  },
+  {
+   "id": "e4_lampghost",
+   "file": "assets/monsters/e4_lampghost.webp",
+   "name": "灯し番の亡霊",
+   "tags": "ghost lamplighter, hooded robe, pale translucent body, holding lantern pole, glowing yellow eyes, floating, wisps of smoke",
+   "memo": "消えた灯りを点けて回る亡霊。人の温もりを吸う"
+  },
+  {
+   "id": "e4_rustwatch",
+   "file": "assets/monsters/e4_rustwatch.webp",
+   "name": "錆びた見張り",
+   "tags": "rusted iron automaton, stubby body, single round lens eye, holding spear, cracked rusty armor plates, ancient guardian",
+   "memo": "錆びた鉄の見張り人形"
+  },
+  {
+   "id": "e4_cropcrow",
+   "file": "assets/monsters/e4_cropcrow.webp",
+   "name": "麦畑の大烏",
+   "tags": "giant crow, black feathers, sharp beak, flock, wheat field, mischievous",
+   "memo": "麦畑を荒らす大烏の群れ"
+  },
+  {
+   "id": "e4_poacher",
+   "file": "assets/monsters/e4_poacher.webp",
+   "name": "密猟者",
+   "human": true,
+   "tags": "1boy, man, poacher, lean, stubble, leather cap, green hunting cloak, holding longbow, quiver, wary expression",
+   "memo": "領主の森の密猟者。追い詰められた男"
+  },
+  {
+   "id": "e4_mudhound",
+   "file": "assets/monsters/e4_mudhound.webp",
+   "name": "泥浴び犬",
+   "tags": "feral dog, mud-caked fur, muddy, tongue out, scruffy, spotted coat, pack dog",
+   "memo": "泥まみれの野良犬"
+  },
+  {
+   "id": "e4_rainslug",
+   "file": "assets/monsters/e4_rainslug.webp",
+   "name": "雨の大なめくじ",
+   "tags": "giant slug, slimy grey-brown body, eye stalks, glistening mucus, dripping slime, rain",
+   "memo": "雨の日の牛ほどのなめくじ"
+  },
+  {
+   "id": "e4_brokenknight",
+   "file": "assets/monsters/e4_brokenknight.webp",
+   "name": "落ちぶれ騎士",
+   "human": true,
+   "tags": "1boy, man, fallen knight, middle-aged, greying hair, stubble, battered dented armor, tattered cape, chipped sword, proud but weary",
+   "memo": "落ちぶれた元騎士。誇りだけは高い"
+  },
+  {
+   "id": "e4_lordhound",
+   "file": "assets/monsters/e4_lordhound.webp",
+   "name": "領主の猟犬",
+   "tags": "hunting hound, sleek tan coat, red scarf collar, bared fangs, lean muscular dog",
+   "memo": "逃げ出した領主の猟犬"
+  },
+  {
+   "id": "e4_penitent",
+   "file": "assets/monsters/e4_penitent.webp",
+   "name": "鞭打ちの巡礼",
+   "human": true,
+   "tags": "1boy, flagellant pilgrim, hooded brown robe, bloody whip marks, scarred back, holding whip, gaunt, fervent eyes",
+   "memo": "自分を鞭打つ巡礼"
+  },
+  {
+   "id": "e4_bellbat",
+   "file": "assets/monsters/e4_bellbat.webp",
+   "name": "鐘楼の蝙蝠",
+   "tags": "giant bat, dark purple membrane wings, pointy ears, red glowing eyes, fangs, bell tower",
+   "memo": "鐘楼の蝙蝠の群れ"
+  },
+  {
+   "id": "e4_relicthief",
+   "file": "assets/monsters/e4_relicthief.webp",
+   "name": "聖遺物盗り",
+   "human": true,
+   "tags": "1boy, man, grave robber, thin, black hair, sly smirk, dark hood and scarf, dagger, sack of bones",
+   "memo": "聖遺物盗りの男。小ずるい"
+  },
+  {
+   "id": "e4_waxsaint",
+   "file": "assets/monsters/e4_waxsaint.webp",
+   "name": "蝋の聖人像",
+   "tags": "wax statue of a saint, melted candle wax body, closed eyes, serene face, dripping wax, robe of wax, lit candles on shoulders",
+   "memo": "蝋燭が溶け重なった聖人の像"
+  },
+  {
+   "id": "e4_ossuaryhound",
+   "file": "assets/monsters/e4_ossuaryhound.webp",
+   "name": "骨堂の番犬",
+   "tags": "skeletal dog, undead hound, bones, empty eye sockets, green ghostly glow, ossuary",
+   "memo": "骨だけの番犬"
+  },
+  {
+   "id": "e4_candlewidow",
+   "file": "assets/monsters/e4_candlewidow.webp",
+   "name": "蝋燭売りの寡婦",
+   "tags": "ghost woman, widow, black hooded mourning dress, pale grey skin, long hair, holding candle staff, hollow eyes, floating",
+   "memo": "夜の参道で蝋燭を売る寡婦の亡霊"
+  },
+  {
+   "id": "e4_tidecrab",
+   "file": "assets/monsters/e4_tidecrab.webp",
+   "name": "磯の大蟹",
+   "tags": "giant crab, red shell, huge pincers, googly eye stalks, barnacles, rocky shore",
+   "memo": "荷車ほどの磯の大蟹"
+  },
+  {
+   "id": "e4_reedimp",
+   "file": "assets/monsters/e4_reedimp.webp",
+   "name": "葦の小鬼",
+   "tags": "small green water imp, plate-like flat head, beak mouth, webbed hands, spotted skin, mischievous, reeds",
+   "memo": "葦の中の皿頭の小鬼"
+  },
+  {
+   "id": "e4_seafog",
+   "file": "assets/monsters/e4_seafog.webp",
+   "name": "沖の黒坊主",
+   "tags": "giant dark sea spirit, huge bald black figure, faceless except glowing eyes, emerging from fog, wet, looming",
+   "memo": "霧の浜に立つ黒い坊主"
+  },
+  {
+   "id": "e4_drumbadger",
+   "file": "assets/monsters/e4_drumbadger.webp",
+   "name": "腹鼓の狸",
+   "tags": "fat raccoon dog, round belly, drumming on belly, striped tail, blushing cheeks, sake gourd, cheerful",
+   "memo": "腹鼓を打つ狸。のんき"
+  },
+  {
+   "id": "e4_islepirate",
+   "file": "assets/monsters/e4_islepirate.webp",
+   "name": "島荒らしの海賊",
+   "human": true,
+   "tags": "1boy, man, pirate, tanned, bandana, eyepatch, stubble, cutlass, ragged red coat, grinning",
+   "memo": "島荒らしの海賊"
+  },
+  {
+   "id": "e4_shellwitch",
+   "file": "assets/monsters/e4_shellwitch.webp",
+   "name": "海女の亡霊",
+   "tags": "ghost woman, drowned pearl diver, white diving clothes, long wet black hair, pale bluish skin, hollow eyes, reaching hands",
+   "memo": "嵐で戻らなかった海女の亡霊"
+  },
+  {
+   "id": "e4_snowwolf",
+   "file": "assets/monsters/e4_snowwolf.webp",
+   "name": "雪狼",
+   "tags": "white wolf, snow wolf, thick white fur, glowing pale blue eyes, fangs, snow",
+   "memo": "雪の日の白い狼"
+  },
+  {
+   "id": "e4_iciclewraith",
+   "file": "assets/monsters/e4_iciclewraith.webp",
+   "name": "氷柱の霊",
+   "tags": "ice wraith, spirit made of icicles, translucent blue ice body, hollow eyes, frost mist, floating",
+   "memo": "氷柱に宿った霊"
+  },
+  {
+   "id": "e4_pressgang",
+   "file": "assets/monsters/e4_pressgang.webp",
+   "name": "徴兵隊",
+   "human": true,
+   "tags": "1boy, imperial soldier, helmet, grey uniform, steel armor, spear, stern face",
+   "memo": "旅人を捕まえる帝国の徴兵隊"
+  },
+  {
+   "id": "e4_minerghost",
+   "file": "assets/monsters/e4_minerghost.webp",
+   "name": "坑夫の亡者",
+   "tags": "undead miner, skeleton, mining helmet, pickaxe, ragged clothes, hollow eyes, ore pouch",
+   "memo": "落盤で死んだ坑夫の亡者"
+  },
+  {
+   "id": "e4_frostbear",
+   "file": "assets/monsters/e4_frostbear.webp",
+   "name": "霜熊",
+   "tags": "giant bear, frost-covered pale fur, icy breath, huge claws, snarling",
+   "memo": "霜をまとった大熊"
+  },
+  {
+   "id": "e4_warcrow",
+   "file": "assets/monsters/e4_warcrow.webp",
+   "name": "戦場鴉",
+   "tags": "crow, black feathers, red glowing eyes, battlefield, ominous, flock",
+   "memo": "戦場を渡る鴉の群れ"
+  },
+  {
+   "id": "e4_bogleech",
+   "file": "assets/monsters/e4_bogleech.webp",
+   "name": "大蛭",
+   "tags": "giant leech, slimy dark segmented body, circular toothed mouth, swamp",
+   "memo": "腕ほどもある大蛭"
+  },
+  {
+   "id": "e4_bogwitch",
+   "file": "assets/monsters/e4_bogwitch.webp",
+   "name": "沼の魔女見習い",
+   "human": true,
+   "tags": "1girl, young witch apprentice, green hood, small, holding staff, smug smile, rune charms, swamp hut",
+   "memo": "学院を追われた沼の魔女見習い。生意気"
+  },
+  {
+   "id": "e4_brokenspirit",
+   "file": "assets/monsters/e4_brokenspirit.webp",
+   "name": "契約を破られた精霊",
+   "tags": "small angry fairy spirit, translucent teal body, moth wings, pointed ears, glowing eyes, floating runes",
+   "memo": "契約を破られた小さな精霊"
+  },
+  {
+   "id": "e4_mudcroc",
+   "file": "assets/monsters/e4_mudcroc.webp",
+   "name": "泥鰐",
+   "tags": "crocodile, muddy green scales, wide jaws full of teeth, swamp water, spiked tail",
+   "memo": "泥に沈んで待つ鰐"
+  },
+  {
+   "id": "e4_poisonfrog",
+   "file": "assets/monsters/e4_poisonfrog.webp",
+   "name": "毒蛙",
+   "tags": "poison dart frog, bright orange and yellow spots, small, googly eyes, glossy skin",
+   "memo": "派手な色の毒蛙の群れ"
+  },
+  {
+   "id": "e4_dustmoth",
+   "file": "assets/monsters/e4_dustmoth.webp",
+   "name": "鱗粉蛾",
+   "tags": "giant moth, dusty brown wings with eye spots, fuzzy body, scattering scales, night",
+   "memo": "皿ほどの鱗粉蛾"
+  },
+  {
+   "id": "e4_rockeater",
+   "file": "assets/monsters/e4_rockeater.webp",
+   "name": "岩喰い鳥",
+   "tags": "giant bird, grey stone-like feathers, heavy beak, cracked rocky texture, mountain cliff",
+   "memo": "岩を食べる大きな鳥"
+  },
+  {
+   "id": "e4_hillorc",
+   "file": "assets/monsters/e4_hillorc.webp",
+   "name": "境の山オーク",
+   "tags": "orc, pig face, tusks, green-grey skin, fur mantle, shoulder armor, battle axe, war horn",
+   "memo": "山の洞穴のオーク"
+  },
+  {
+   "id": "e4_gravejackal",
+   "file": "assets/monsters/e4_gravejackal.webp",
+   "name": "墓荒らし山犬",
+   "tags": "jackal, scrawny wild dog, spotted tan fur, pointy ears, bone in mouth, graveyard",
+   "memo": "竜の墓場の山犬の群れ"
+  },
+  {
+   "id": "e4_oldlegion",
+   "file": "assets/monsters/e4_oldlegion.webp",
+   "name": "古戦場の亡兵",
+   "tags": "skeleton soldiers, undead legion, rusty helmets and armor, spears, marching in formation, green glow",
+   "memo": "隊列を組んだ古戦場の亡兵"
+  },
+  {
+   "id": "e4_stonetroll",
+   "file": "assets/monsters/e4_stonetroll.webp",
+   "name": "石肌の巨人",
+   "tags": "stone giant, rocky grey skin, cracked boulder texture, tusks, huge stone club, hulking",
+   "memo": "岩肌の巨人"
+  },
+  {
+   "id": "e4_cliffharpy",
+   "file": "assets/monsters/e4_cliffharpy.webp",
+   "name": "崖の鳥女",
+   "tags": "harpy, woman with feathered wings for arms, talons, wild red-brown long hair, ragged clothes, mischievous grin",
+   "memo": "光り物好きの崖の鳥女"
+  },
+  {
+   "id": "e4_ladderGob",
+   "file": "assets/monsters/e4_ladderGob.webp",
+   "name": "梯子担ぎのゴブリン隊",
+   "tags": "goblin soldiers, carrying siege ladder, helmets, spears, crude armor, war cry",
+   "memo": "攻め梯子を担いだゴブリン隊"
+  },
+  {
+   "id": "e4_ashogre",
+   "file": "assets/monsters/e4_ashogre.webp",
+   "name": "灰被りのオーガ",
+   "tags": "ogre, covered in white ash, grey skin, tusks, wild hair, huge club, smoke",
+   "memo": "灰を浴びて白くなったオーガ"
+  },
+  {
+   "id": "e4_scoutbird",
+   "file": "assets/monsters/e4_scoutbird.webp",
+   "name": "魔物の斥候鳥",
+   "tags": "monstrous bird, dark red feathers, three glowing eyes, sharp beak, scout, flying",
+   "memo": "使徒領の斥候鳥"
+  },
+  {
+   "id": "e4_deadsentry",
+   "file": "assets/monsters/e4_deadsentry.webp",
+   "name": "砦の亡霊兵",
+   "tags": "ghost soldier, translucent green armor, helmet, spear and shield, tattered cape, hollow eyes, floating",
+   "memo": "砦の外の亡霊兵"
+  },
+  {
+   "id": "e4_warbeast",
+   "file": "assets/monsters/e4_warbeast.webp",
+   "name": "鎖付きの魔獣",
+   "tags": "war beast, lion-like monster, dark fur, broken chain collar, scars, spiked tail, glowing red eyes",
+   "memo": "鎖を引きずる魔獣"
+  },
+  {
+   "id": "e4_ashwyrm",
+   "file": "assets/monsters/e4_ashwyrm.webp",
+   "name": "灰の地竜",
+   "tags": "wingless dragon, ash-grey scales, glowing lava cracks, long horns, crawling through ash",
+   "memo": "翼の無い灰の地竜"
+  },
+  {
+   "id": "e4_bonecarter",
+   "file": "assets/monsters/e4_bonecarter.webp",
+   "name": "骨車引き",
+   "tags": "hulking hooded figure, pulling cart piled with bones, ragged cloak, glowing eyes under hood, huge club",
+   "memo": "骨の荷車を引く大男"
+  },
+  {
+   "id": "e4_shadewalker",
+   "file": "assets/monsters/e4_shadewalker.webp",
+   "name": "影歩き",
+   "tags": "shadow assassin, black mask, dark wrappings, glowing purple eyes, dagger, dissolving into shadow smoke",
+   "memo": "影から影へ渡る者"
+  },
+  {
+   "id": "e4_redscorpion",
+   "file": "assets/monsters/e4_redscorpion.webp",
+   "name": "赤砂の蠍",
+   "tags": "giant scorpion, red carapace, stinger tail, four glowing eyes, red sand",
+   "memo": "赤砂の大蠍"
+  },
+  {
+   "id": "e4_hollowknight",
+   "file": "assets/monsters/e4_hollowknight.webp",
+   "name": "抜け殻の騎士",
+   "tags": "empty suit of armor, animated armor, no body inside, glowing red eyes in helmet, sword and shield, plume, smoke",
+   "memo": "中身の無い騎士の鎧"
+  },
+  {
+   "id": "e4_vulture",
+   "file": "assets/monsters/e4_vulture.webp",
+   "name": "屍食い禿鷲",
+   "tags": "vulture, bald pink head, dark brown feathers, hooked beak, scarred, wasteland",
+   "memo": "屍を待つ禿鷲"
+  },
+  {
+   "id": "e4_satchelrat_x",
+   "file": "assets/monsters/e4_satchelrat_x.webp",
+   "name": "鞄ネズミの頭目",
+   "tags": "giant rat, brown fur, round ears, big nose, carrying stolen leather pouch, thin tail, sneaky, standing on hind legs, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "鞄ネズミの強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_thornboar_x",
+   "file": "assets/monsters/e4_thornboar_x.webp",
+   "name": "年経た棘猪",
+   "tags": "wild boar, thorny brambles growing from back, dark brown bristly fur, tusks, angry, thorn spikes, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "棘猪の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_poacher_x",
+   "file": "assets/monsters/e4_poacher_x.webp",
+   "name": "密猟者の頭目",
+   "human": true,
+   "tags": "1boy, man, poacher, lean, stubble, leather cap, green hunting cloak, holding longbow, quiver, wary expression, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "密猟者の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_mudhound_x",
+   "file": "assets/monsters/e4_mudhound_x.webp",
+   "name": "泥浴び犬の頭目",
+   "tags": "feral dog, mud-caked fur, muddy, tongue out, scruffy, spotted coat, pack dog, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "泥浴び犬の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_tidecrab_x",
+   "file": "assets/monsters/e4_tidecrab_x.webp",
+   "name": "年経た大蟹",
+   "tags": "giant crab, red shell, huge pincers, googly eye stalks, barnacles, rocky shore, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "磯の大蟹の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_islepirate_x",
+   "file": "assets/monsters/e4_islepirate_x.webp",
+   "name": "海賊の頭目",
+   "human": true,
+   "tags": "1boy, man, pirate, tanned, bandana, eyepatch, stubble, cutlass, ragged red coat, grinning, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "島荒らしの海賊の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_snowwolf_x",
+   "file": "assets/monsters/e4_snowwolf_x.webp",
+   "name": "雪狼の頭目",
+   "tags": "white wolf, snow wolf, thick white fur, glowing pale blue eyes, fangs, snow, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "雪狼の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_frostbear_x",
+   "file": "assets/monsters/e4_frostbear_x.webp",
+   "name": "年経た霜熊",
+   "tags": "giant bear, frost-covered pale fur, icy breath, huge claws, snarling, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "霜熊の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_mudcroc_x",
+   "file": "assets/monsters/e4_mudcroc_x.webp",
+   "name": "年経た泥鰐",
+   "tags": "crocodile, muddy green scales, wide jaws full of teeth, swamp water, spiked tail, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "泥鰐の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_rockeater_x",
+   "file": "assets/monsters/e4_rockeater_x.webp",
+   "name": "年経た岩喰い鳥",
+   "tags": "giant bird, grey stone-like feathers, heavy beak, cracked rocky texture, mountain cliff, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "岩喰い鳥の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_hillorc_x",
+   "file": "assets/monsters/e4_hillorc_x.webp",
+   "name": "山オークの頭目",
+   "tags": "orc, pig face, tusks, green-grey skin, fur mantle, shoulder armor, battle axe, war horn, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "境の山オークの強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_stonetroll_x",
+   "file": "assets/monsters/e4_stonetroll_x.webp",
+   "name": "年経た石肌の巨人",
+   "tags": "stone giant, rocky grey skin, cracked boulder texture, tusks, huge stone club, hulking, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "石肌の巨人の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_ladderGob_x",
+   "file": "assets/monsters/e4_ladderGob_x.webp",
+   "name": "ゴブリン隊の頭目",
+   "tags": "goblin soldiers, carrying siege ladder, helmets, spears, crude armor, war cry, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "梯子担ぎのゴブリン隊の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_ashwyrm_x",
+   "file": "assets/monsters/e4_ashwyrm_x.webp",
+   "name": "年経た灰の地竜",
+   "tags": "wingless dragon, ash-grey scales, glowing lava cracks, long horns, crawling through ash, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "灰の地竜の強い個体。ひと回り大きく、古傷だらけ"
+  },
+  {
+   "id": "e4_redscorpion_x",
+   "file": "assets/monsters/e4_redscorpion_x.webp",
+   "name": "赤砂の女王蠍",
+   "tags": "giant scorpion, red carapace, stinger tail, four glowing eyes, red sand, much larger, old, grizzled, many battle scars, imposing",
+   "memo": "赤砂の蠍の強い個体。ひと回り大きく、古傷だらけ"
   }
  ]
 }

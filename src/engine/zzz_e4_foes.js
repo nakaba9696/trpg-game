@@ -1,0 +1,391 @@
+// E4：地域の魔物・強い個体・群れ・眷属・戦いの手ざわり（data/enemies_e4_regions.js・data/enemies_e4_kin.js）。
+// combat.js・explore.js は書き換えず、包む：
+//   1. 出現表：rg（地域）・also・where を、読み込みのあとで場所の pool に入れる（W3・W4 の新しい場所も地域名で当たる）
+//   2. 出会い（G.startCombat）：出現表から引いた敵だけ、when（昼夜・季節・天候）に合わなければ引き直す。眷属は半分見送る。
+//      強い個体（elder）にまれに入れ替わる。群れ（pack）は数をそろえる
+//   3. 手番（G.combatAct）：眠り・武器を落とした・仲間が押さえ込まれた分を先に済ませ、庇う（guard）を当て、
+//      手番のあとに弱点（weak）の上乗せと、敵ごとの行動（acts）を出す。倒した眷属は手がかりと縄張りの数に、強い個体はトロフィーに
+//   4. 図鑑：性能の表に行動・弱点・印・出る時を足し、強い個体の出現場所を元の種から引く
+// 古いセーブ（S.e4kin・C.e4* が無い）でも動く。乱数は G.rand だけ。レーン E＋B
+(function (G) {
+  const D = G.data;
+  const E4 = (D.E4 = D.E4 || {});
+  const E = () => D.ENEMIES;
+  const isE4 = (id) => /^e4k?_/.test(id);
+  const kinOf = (id) => (E()[id] || {}).kinOf;
+
+  // ---------------------------------------------------------------- 1. 出現表
+  const RG = Object.fromEntries(Object.entries(E4.RG || {}).map(([k, v]) => [k, new RegExp(v)]));
+  E4.fitTier = (tier, danger) => danger >= 1 && tier <= danger && tier >= Math.max(1, danger - 1);
+  E4.placeOf = (id, lid) => {
+    const e = E()[id], L = D.LOCS[lid];
+    if (!e || !L || !(L.pool || []).length || e.boss || e.elderOf) return false;
+    if ((e.where || []).includes(lid) || (e.also || []).includes(lid)) return true;
+    return !e.kinOf && !!e.rg && !!RG[e.rg] && RG[e.rg].test(L.region || "") && E4.fitTier(e.tier, L.danger || 0);
+  };
+  E4.spread = () => {
+    const ids = Object.keys(E()).filter(isE4);
+    Object.keys(D.LOCS).forEach((lid) => {
+      const L = D.LOCS[lid];
+      ids.forEach((id) => { if (E4.placeOf(id, lid) && !L.pool.includes(id)) L.pool.push(id); });
+    });
+  };
+  E4.spread();
+
+  // ---------------------------------------------------------------- 2. 出会い
+  const P = { elder: 0.05, elderNight: 0.08, kinSkip: 0.5 };
+  E4.P = P;
+  E4.whenOk = (e, S) => {
+    const w = e && e.when;
+    if (!w || !S) return true;
+    const L = D.LOCS[S.loc] || {};
+    if (L.type === "dungeon") return true; // 迷宮の中は昼夜も空も見えない
+    if (w.night && S.phase !== 3) return false;
+    if (w.day && S.phase === 3) return false;
+    const sky = (w.season || w.weather) && G.skyAt ? G.skyAt(S.loc, S.day) : null;
+    if (w.season && sky && !w.season.includes(sky.season)) return false;
+    if (w.weather && sky && !w.weather.includes(sky.weather)) return false;
+    return true;
+  };
+  // 出現表から引いた出会いか（出来事の「その場の敵」も含む）。決めて呼ばれた敵（ボス・中ボス・出来事の名指し）は触らない
+  const poolNow = (S) => {
+    const out = new Set((D.LOCS[S.loc] || {}).pool || []);
+    if (S.travel) ((D.LOCS[S.travel] || {}).pool || []).forEach((x) => out.add(x));
+    return out;
+  };
+  E4.shape = (ids) => {
+    const S = G.S;
+    if (!S || !ids.length) return ids;
+    const pool = poolNow(S);
+    if (!ids.every((id) => pool.has(id) && E()[id] && !E()[id].boss)) return ids;
+    if (!ids.some((id) => isE4(id))) return ids; // 前からの敵だけなら乱数も使わない
+    const okFor = (id) => E4.whenOk(E()[id], S);
+    const plain = [...pool].filter((id) => E()[id] && !E()[id].boss && !kinOf(id) && okFor(id));
+    let out = ids.map((id) => {
+      const e = E()[id];
+      if (!isE4(id)) return id;
+      if (!okFor(id) || (e.kinOf && G.rand() < P.kinSkip)) return plain.length ? G.pick(plain) : id;
+      return id;
+    });
+    // 強い個体（まれ。夜は少し多い）
+    out = out.map((id) => {
+      const x = (E4.ELDER_OF || {})[id];
+      return x && E()[x] && G.rand() < (S.phase === 3 ? P.elderNight : P.elder) ? x : id;
+    });
+    // 群れ：数をそろえる（全体で 4 体まで）
+    const head = out.find((id) => E()[id].pack);
+    if (head) {
+      const [lo, hi] = E()[head].pack;
+      const n = lo + Math.floor(G.rand() * (hi - lo + 1));
+      while (out.filter((x) => x === head).length < n && out.length < 4) out.push(head);
+    }
+    return out;
+  };
+  const baseStart = G.startCombat;
+  G.startCombat = (ids, opt) => {
+    const o = opt || {};
+    const list = !o.win && !o.e4raw && Array.isArray(ids) ? E4.shape(ids.slice()) : ids;
+    baseStart(list, opt);
+    const C = G.S && G.S.combat;
+    if (!C) return;
+    C.e4start = C.foes.map((f) => f.id);
+    C.foes.forEach((f) => { const a = G.e3Of && G.e3Of(f.id); if (a && E4.CORE && E4.CORE[a.id] && E4.coreMet(a.id)) G.say(E4.CORE[a.id]); });
+  };
+
+  // 縄張りの眷属を退けた使徒は弱る：まだ満たしていない条件の 1/4 ぶん、満たしたことにする（すべて満たせば同じ）
+  E4.coreMet = (ap, S) => ((((S || G.S || {}).e4kin) || {})[ap] || 0) >= (E4.CORE_NEED || 2);
+  if (G.e3Mods && D.E3) {
+    const baseMods = G.e3Mods;
+    G.e3Mods = (id, S) => {
+      const m = baseMods(id, S);
+      const a = D.E3.LIST[id];
+      if (!a || !E4.CORE || !E4.CORE[id] || !E4.coreMet(id, S) || m.frac >= 1) return m;
+      const frac = m.frac + (1 - m.frac) * 0.25;
+      const W = D.E3.WEAK[a.rank];
+      const mul = (x) => 1 - frac * (1 - x);
+      return Object.assign({}, m, { frac, e4core: true, hp: mul(W.hp), dmg: mul(W.dmg), hit: Math.round(frac * W.hit), def: Math.round(frac * W.def), agi: Math.round(frac * W.agi) });
+    };
+  }
+
+  // ---------------------------------------------------------------- 3. 手番
+  const ELEM = { blade: "刃", fire: "炎", ice: "冷気", bolt: "雷", holy: "聖水" };
+  const kindElem = (kind, itemId) => ({ attack: "blade", vital: "blade", fire: "fire", ice: "ice", bolt: "bolt", item: itemId === "holywater" ? "holy" : null })[kind] || null;
+  const acts = (f) => (E()[f.id] || {}).acts || [];
+  const has = (f, a) => acts(f).includes(a);
+
+  // 倒れた敵の後始末（combat.js の onFoeDown と同じこと。弱点の上乗せで倒したとき）
+  function downed(f) {
+    const S = G.S;
+    G.log("nar", `${f.name}を倒した！`, { fx: "down", foe: f.name, boss: !!E()[f.id].boss });
+    S.counters.kills++;
+    S.quests.forEach((q) => {
+      if (q.type === "hunt" && !q.done && q.target === f.id && q.loc === S.loc) {
+        q.progress++;
+        if (q.progress >= q.need) { q.done = true; G.note(`依頼「${q.title}」を達成した。ギルドに報告しよう。`); }
+      }
+    });
+    if (G.codexKill) G.codexKill(f.id);
+  }
+  // 敵を増やす（呼ばれた仲間）。名前に記号を付けて区別する
+  function addFoe(id, how) {
+    const C = G.S.combat;
+    const e = E()[id];
+    if (!C || !e || G.alive().length >= 4) return null;
+    const same = C.foes.filter((f) => f.id === id).length;
+    const f = { id, name: e.name + (same ? "ABCDEFGH"[same] || "" : ""), hp: e.hp, max: e.hp };
+    C.foes.push(f);
+    G.say(how.replace("{n}", f.name));
+    if (G.codexMeet) G.codexMeet(id);
+    return f;
+  }
+  // 行動ひとつずつ（手番のあと、凍っていない敵が、決まった見込みで）
+  const ACT = {
+    poison: (f, e) => {
+      const S = G.S;
+      if (S.conds.includes("毒") || G.rand() >= 0.28) return;
+      if (G.d(100) > G.clamp(e.hit - Math.floor(G.statEff("敏捷") / 5), 5, 90)) { G.note(`${f.name}の毒をかわした。`); return; }
+      S.conds.push("毒");
+      G.say(`${f.name}の毒が傷口から回った。体が重い。`);
+      G.note("状態：毒（筋力・体力が落ちる。宿屋か教会で治る）");
+    },
+    sleep: (f) => {
+      const C = G.S.combat;
+      if (C.e4sleep || G.rand() >= 0.2) return;
+      const r = G.check("知力", 10, "眠気をこらえる");
+      if (G.S.over) return;
+      if (r.ok) { G.note(`${f.name}の眠りの誘いを、頭を振って払った。`); return; }
+      C.e4sleep = 1;
+      G.say(`${f.name}に誘われて、まぶたが落ちた。`);
+    },
+    disarm: (f) => {
+      const C = G.S.combat;
+      if (C.e4disarm || G.S.weapon === "fists" || !G.S.weapon || G.rand() >= 0.18) return;
+      const r = G.check("筋力", 0, "武器を握りしめる");
+      if (G.S.over) return;
+      if (r.ok) { G.note(`${f.name}が武器を払おうとしたが、握りしめて離さなかった。`); return; }
+      C.e4disarm = 1;
+      G.say(`${f.name}に${G.weapon().name}を払い落とされた。拾わなければ。`);
+    },
+    steal: (f, e) => {
+      const S = G.S;
+      const C = S.combat;
+      if (G.rand() >= 0.16) return;
+      const r = G.check("敏捷", 0, "懐を守る");
+      if (S.over) return;
+      if (r.ok) { G.note(`${f.name}の手が懐に伸びたが、払いのけた。`); return; }
+      const goods = Object.keys(S.inv).filter((id) => { const it = D.ITEMS[id]; return it && it.type === "use"; });
+      if (goods.length && G.rand() < 0.5) {
+        const id = G.pick(goods);
+        G.take(id);
+        G.say(`${f.name}が${D.ITEMS[id].name}をひったくって逃げた。`);
+      } else {
+        const n = Math.min(S.gold, G.d(10) + 4 * e.tier);
+        if (!n) return;
+        S.gold -= n;
+        G.say(`${f.name}が財布から ${n}G をすり取って逃げた。`);
+      }
+      C.foes.splice(C.foes.indexOf(f), 1);
+    },
+    pin: (f) => {
+      const S = G.S;
+      if (!S.companions.length || S.combat.e4pin || G.rand() >= 0.3) return;
+      const c = G.pick(S.companions);
+      S.combat.e4pin = c.name;
+      G.say(`${f.name}が${c.name}に飛びかかり、押さえ込んだ。`);
+    },
+    call: (f, e) => {
+      const C = G.S.combat;
+      if ((C.e4calls || 0) >= 2 || G.rand() >= 0.18) return;
+      C.e4calls = (C.e4calls || 0) + 1;
+      if (!addFoe(e.call || f.id, `${f.name}の呼び声に応えて、{n}が駆けつけた。`)) C.e4calls--;
+    },
+    fleecall: (f, e) => {
+      const C = G.S.combat;
+      if (f.hp > f.max * 0.4 || f.e4fled || G.rand() >= 0.5) return;
+      C.foes.splice(C.foes.indexOf(f), 1);
+      G.say(`${f.name}は身をひるがえして逃げていった。……遠くで、何かを呼ぶ声がする。`);
+      if ((C.e4calls || 0) < 2) { C.e4calls = (C.e4calls || 0) + 1; addFoe(e.call || f.id, "{n}が、逃げた者に連れられて現れた。"); }
+    },
+    regen: (f) => {
+      if (f.hp >= f.max) return;
+      const n = Math.max(1, Math.floor(f.max / 10));
+      f.hp = Math.min(f.max, f.hp + n);
+      G.note(`${f.name}の傷が、みるみるふさがっていく（+${n}）。`);
+    },
+    enrage: (f) => {
+      if (f.e4rage || f.hp > f.max / 3) return;
+      f.e4rage = true;
+      G.say(`深手を負った${f.name}が、猛り狂った。`);
+    },
+    drain: (f, e) => {
+      if (G.rand() >= 0.22) return;
+      if (G.d(100) > G.clamp(e.hit - Math.floor(G.statEff("敏捷") / 5), 5, 90)) return;
+      const n = G.d(3) + Math.ceil(e.tier / 2);
+      G.log("nar", `${f.name}が生気を吸った。${n} のダメージ。`, { fx: "hurt", n, heavy: false });
+      G.hurt(n, `${f.name}に生気を吸い尽くされた`);
+      f.hp = Math.min(f.max, f.hp + n);
+    },
+    corrode: (f) => {
+      const C = G.S.combat;
+      if (!G.armor() || G.rand() >= 0.25) return;
+      C.exposed = true;
+      G.note(`${f.name}の一撃で、鎧の継ぎ目が緩んだ。次は当たりやすい。`);
+    },
+    rout: () => {}, // 群れの崩れは下でまとめて見る
+    guard: () => {}, // 庇うのは、こちらの手番の前に見る
+  };
+  E4.ACT_NAME = { poison: "毒", sleep: "眠り", disarm: "武器を払い落とす", steal: "盗んで逃げる", pin: "仲間を押さえ込む", call: "仲間を呼ぶ", fleecall: "逃げて仲間を呼ぶ", guard: "仲間を庇う", regen: "傷がふさがる", enrage: "深手で猛る", drain: "生気を吸う", corrode: "鎧を緩める", rout: "群れが崩れると逃げる" };
+
+  // 猛った敵は強く当たる（G.foeData を包む。E3 の使徒と同じやり方）
+  const baseFoeData = G.foeData;
+  G.foeData = (f) => {
+    const e = baseFoeData(f);
+    if (!f || !f.e4rage || !e) return e;
+    return Object.assign({}, e, { hit: e.hit + 10, dmg: [e.dmg[0], e.dmg[1], e.dmg[2] + 2] });
+  };
+
+  // 倒した敵：眷属の手がかりと縄張りの数・強い個体のトロフィー
+  function onKilled(f) {
+    const S = G.S;
+    const e = E()[f.id];
+    if (!e) return;
+    if (e.kinOf) {
+      const k = (S.e4kin = S.e4kin || {});
+      k[e.kinOf] = (k[e.kinOf] || 0) + 1;
+      if (e.clue && !S.flags["e4clue:" + f.id]) {
+        S.flags["e4clue:" + f.id] = 1;
+        G.say(e.clue.text);
+        G.memo("手がかり：" + e.clue.memo);
+      }
+      if (k[e.kinOf] === (E4.CORE_NEED || 2)) {
+        G.note("この縄張りの主は、手下を失って少し弱ったはずだ。");
+        G.award("e4_core");
+      }
+    }
+    if (e.elderOf) {
+      G.award("e4_elder");
+      const P0 = G.P || (G.P = { trophies: {}, graves: [] });
+      const seen = (P0.e4elders = P0.e4elders || {});
+      seen[f.id] = (seen[f.id] || 0) + 1;
+      if (Object.keys(seen).length >= 5) G.award("e4_elder5");
+    }
+  }
+
+  const baseAct = G.combatAct;
+  G.combatAct = (arg) => {
+    const S = G.S;
+    const C = S && S.combat;
+    if (!C || S.over) return baseAct(arg);
+    arg = String(arg);
+    // 眠っている・武器を落とした：その手番は動けない
+    if (C.e4sleep > 0) { C.e4sleep--; G.log("you", "まどろみの中で、体が動かない"); arg = "e4idle"; }
+    else if (C.e4disarm && /^(attack|vital)$/.test(arg)) { C.e4disarm = 0; G.log("you", `落とした${G.weapon().name}を拾い直す`); arg = "e4idle"; }
+    // 押さえ込まれた仲間は、この手番は動けない
+    let held = null;
+    if (C.e4pin) {
+      const i = S.companions.findIndex((c) => c.name === C.e4pin);
+      if (i >= 0) { held = [i, S.companions[i]]; S.companions.splice(i, 1); G.note(`${held[1].name}は押さえ込まれて動けない。`); }
+      C.e4pin = null;
+    }
+    const [kind, itemId] = arg.split(":");
+    // 庇う：狙った敵の前に、仲間を庇う敵が飛び込む
+    let aimBack = null;
+    const t0 = G.target();
+    if (t0 && ["attack", "vital", "fire", "ice", "curse"].includes(kind)) {
+      const g = G.alive().find((f) => f !== t0 && has(f, "guard") && !(f.frozen > 0));
+      if (g && G.rand() < 0.4) {
+        aimBack = t0;
+        C.aim = C.foes.indexOf(g);
+        G.say(`${g.name}が${t0.name}の前に飛び込んで、庇った。`);
+      }
+    }
+    const before = new Map(C.foes.map((f) => [f, f.hp]));
+    const mark = S.log[S.log.length - 1];
+    try { baseAct(arg); } finally { if (held) S.companions.splice(Math.min(held[0], S.companions.length), 0, held[1]); }
+    if (aimBack && S.combat === C) { const i = C.foes.indexOf(aimBack); if (i >= 0) C.aim = i; }
+    // 弱点の上乗せ：こちらの一撃（その手番の最初のダメージ）だけ
+    const elem = kindElem(kind, itemId);
+    if (elem && !S.over) {
+      const from = S.log.lastIndexOf(mark) + 1;
+      const fresh = S.log.slice(from);
+      const hitOnce = new Set();
+      fresh.forEach((l) => {
+        if (l.fx !== "hit" || hitOnce.has(l.foe)) return;
+        hitOnce.add(l.foe);
+        const f = C.foes.find((x) => x.name === l.foe);
+        if (!f || !String(l.text).startsWith(f.name + "に ")) return;
+        const e = E()[f.id];
+        if (!e || e.weak !== elem || before.get(f) <= 0) return;
+        const add = Math.max(1, Math.ceil(l.n / 2));
+        const wasUp = f.hp > 0;
+        f.hp = Math.max(0, f.hp - add);
+        if (wasUp) {
+          G.log("sys", `${f.name}は${ELEM[elem]}に弱い。さらに ${add} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: add });
+          if (f.hp <= 0) downed(f);
+        }
+      });
+    }
+    // 倒した敵（この手番で HP が 0 になった）
+    C.foes.forEach((f) => { if ((before.get(f) || 0) > 0 && f.hp <= 0) onKilled(f); });
+    if (S.over) return;
+    if (S.combat === C && S.mode === "combat" && !G.alive().length) { G._endCombat("win"); return; }
+    if (S.combat !== C || S.mode !== "combat") return;
+    // 敵ごとの行動
+    G.alive().slice().forEach((f) => {
+      if (S.over || S.combat !== C || f.hp <= 0 || f.frozen > 0 || !C.foes.includes(f)) return;
+      const e = E()[f.id];
+      acts(f).forEach((a) => { if (!S.over && S.combat === C && C.foes.includes(f) && ACT[a]) ACT[a](f, e); });
+    });
+    if (S.over || S.combat !== C) return;
+    // 群れが崩れる：同じ種が並んで始まり、ひとりだけ残ったら逃げ出すことがある
+    const start = C.e4start || [];
+    G.alive().filter((f) => has(f, "rout")).forEach((f) => {
+      const was = start.filter((id) => id === f.id).length;
+      const now = G.alive().filter((x) => x.id === f.id).length;
+      if (was >= 2 && now === 1 && !f.e4stay) {
+        f.e4stay = true;
+        if (G.rand() < 0.5) { G.say(`仲間を失った${f.name}は、背を向けて逃げ出した。`); C.foes.splice(C.foes.indexOf(f), 1); }
+      }
+    });
+    if (S.mode === "combat" && S.combat === C && !G.alive().length) G._endCombat("win");
+  };
+
+  // ---------------------------------------------------------------- 4. 図鑑
+  if (G.codexFoeStats) {
+    const baseStats = G.codexFoeStats;
+    G.codexFoeStats = (id) => {
+      const rows = baseStats(id);
+      const e = E()[id];
+      if (!e || !rows.length || !(isE4(id) || e.elderOf)) return rows;
+      const killed = G.f2 && G.f2.killed ? G.f2.killed(id) : false;
+      if (!killed) return rows;
+      const set = (k, add) => { const r = rows.find((x) => x[0] === k); if (!r || !add.length) return; r[1] = [r[1] === "なし" ? "" : r[1], ...add].filter(Boolean).join("・"); };
+      set("特技", (e.acts || []).map((a) => E4.ACT_NAME[a]).filter(Boolean));
+      if (e.weak) set("弱点", [ELEM[e.weak]]);
+      const mark = [];
+      if (e.elderOf) mark.push(`強い個体（${(E()[e.elderOf] || {}).name || ""}の中にまれに）`);
+      if (e.pack) mark.push(`群れ（${e.pack[0]}〜${e.pack[1]}体）`);
+      if (e.kinOf) mark.push("使徒の眷属");
+      if (mark.length) rows.push(["印", mark.join("・")]);
+      const w = e.when;
+      if (w) rows.push(["出る時", [w.night ? "夜" : "", w.day ? "昼" : "", (w.season || []).join("・"), (w.weather || []).join("・")].filter(Boolean).join("の、") + "だけ"]);
+      return rows;
+    };
+  }
+  // 強い個体の出現場所：元の種の出現場所を「まれに」で
+  if (G.f2 && G.f2.index) {
+    const F2 = G.f2;
+    const baseIndex = F2.index;
+    let done = null;
+    F2.index = () => {
+      const ix = baseIndex();
+      if (done === ix) return ix;
+      done = ix;
+      Object.entries(E4.ELDER_OF || {}).forEach(([base, x]) => {
+        if (ix.foe[x]) return;
+        ix.foe[x] = (ix.foe[base] || []).map((r, n) => ({ rank: r.rank, text: `${r.text}（まれに）`, region: r.region, n }));
+      });
+      return ix;
+    };
+  }
+})(globalThis.G = globalThis.G || {});
