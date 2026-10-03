@@ -28,13 +28,13 @@
           hint: "ノエリスの先輩の帳面の、最後の白い頁の話（noeris_p6）を聞いている。そのうえ、先輩が潜ったエル・ナフ遺構（ruins）に寄っている",
         },
         7: {
-          test: (S) => !!(S.visited && S.visited.zephara) && (raceOf(S) === "elf" || relOf("lumia", "noeris", S) >= BLESS),
+          test: (S) => !!(S.visited && S.visited.zephara) && (raceOf(S) === "elf" || relOf("lumia", "noeris", S) >= BLESS || (G.affOf ? G.affOf("noeris", S) : 0) >= 90),
           meet: (S) => {
             S.visited = S.visited || {}; S.visited.zephara = true;
             const need = BLESS - relOf("lumia", "noeris", S);
             if (need > 0 && G.tk && G.tk.relAdd) G.tk.relAdd("lumia", "noeris", need, S);
           },
-          hint: "首都エルメシア（zephara。学院と、名を刻む湖のほとりの木）に寄っている。そのうえ、湖の大婆さま（ルミア）とノエリスの間柄が 60 以上（大婆さまの言葉をもらう）。主人公がエルフなら、首都に寄るだけでよい",
+          hint: "首都エルメシア（zephara。学院と、名を刻む湖のほとりの木）に寄っている。そのうえ、湖の大婆さま（ルミア）とノエリスの間柄が 60 以上（大婆さまの言葉をもらう）か、ノエリスの好感度が 90 以上（大婆さまの言葉なしで、自分で決める）。主人公がエルフなら、首都に寄るだけでよい",
         },
       },
     },
