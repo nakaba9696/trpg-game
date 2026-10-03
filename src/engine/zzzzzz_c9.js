@@ -129,7 +129,7 @@
     Object.entries(Q()).forEach(([id, q]) => Object.entries(q.ends || {}).forEach(([k, e]) => lines(e.banter).forEach((b, j) => {
       const bid = `bt_q9_${id}_${k}${j ? "_" + j : ""}`;
       if (B.some((x) => x.id === bid)) return;
-      B.push(Object.assign({ where: ["road", "camp", "inn", "town"] }, b, { id: bid, a: id, when: (S) => C9.end(id, S) === k && (!b.when || b.when(S)) }));
+      B.push(Object.assign({ where: ["any", "road", "camp", "inn"] }, b, { id: bid, a: id, when: (S) => C9.end(id, S) === k && (!b.when || b.when(S)) }));
     })));
   };
 
