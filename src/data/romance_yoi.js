@@ -122,6 +122,7 @@
   D.R2.AP_MEET = Object.assign(D.R2.AP_MEET || {}, {
     yoi: (S) => { S.flags.r2_yoi_0 = true; S.flags.r2_yoi_rift = true; S.flags.r2_yoi_year = true; },
   });
+  D.EVENT_NOBODY = (D.EVENT_NOBODY || []).concat(["r2_yoi_mend"]); // 流れ着いた提灯だけで、人は出ない
   // 人物図鑑（会うと記録する出来事）
   const P = D.F2_PEOPLE && D.F2_PEOPLE.yoihime;
   if (P && P.events) P.events.push("r2_yoi_rift", "r2_yoi_toll", "r2_yoi_life", "r2_yoi_future");
