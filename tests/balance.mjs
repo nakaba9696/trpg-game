@@ -18,22 +18,32 @@ import { makeSmartBot } from "./bot.mjs";
 
 const TOP_CAUSES = 3;
 
-export function measureBalance(opts = {}) {
-  if (process.env.BALANCE === "0") return null;
+// 測る回の組（遊び方ごとの回数・行動の上限・種）。tests/run.mjs はこれを職業ごとに分けて並べて遊ばせ、opts.played で渡す
+export function balancePlan(opts = {}) {
   const GAMES = opts.games ?? Number(process.env.BALANCE_GAMES || 400);
   const SMART_GAMES = opts.smartGames ?? Number(process.env.BALANCE_SMART_GAMES || Math.max(1, Math.round(GAMES / 8)));
   const STEPS = opts.steps ?? Number(process.env.STEPS || 500);
   const SMART_STEPS = opts.smartSteps ?? Number(process.env.SMART_STEPS || 1500);
   const SEED = opts.seed ?? Number(process.env.BALANCE_SEED || 0);
+  return [["random", GAMES, STEPS], ["smart", SMART_GAMES, SMART_STEPS]]
+    .filter(([mode]) => !opts.modes || opts.modes.includes(mode))
+    .map(([mode, games, steps]) => ({ mode, games, steps, seed: SEED }));
+}
+
+// opts.played = { random: { rows, ms }, smart: { rows, ms } } があれば、遊ばずにその結果で表を出す（ms は職業ごとにかかった時間の合計）
+export function measureBalance(opts = {}) {
+  if (process.env.BALANCE === "0") return null;
   const quiet = !!opts.quiet;
+  const D = loadEngine().data;
+  Object.keys(D.CLASSES).forEach((k) => { CLASS_NAME[k] = D.CLASSES[k].name; });
   const out = {};
   const md = [];
-  for (const [mode, games, steps] of [["random", GAMES, STEPS], ["smart", SMART_GAMES, SMART_STEPS]]) {
-    if (opts.modes && !opts.modes.includes(mode)) continue;
+  for (const { mode, games, steps, seed: SEED } of balancePlan(opts)) {
     const t0 = Date.now();
-    const rows = playGames({ mode, games, steps, seed: SEED, classes: opts.classes });
+    const pre = opts.played && opts.played[mode];
+    const rows = pre ? pre.rows : playGames({ mode, games, steps, seed: SEED, classes: opts.classes });
     out[mode] = rows;
-    md.push(...report(loadEngine().data, rows, { mode, GAMES: games, STEPS: steps, SEED, ms: Date.now() - t0 }));
+    md.push(...report(D, rows, { mode, GAMES: games, STEPS: steps, SEED, ms: pre ? pre.ms : Date.now() - t0 }));
   }
   md.push(...ratioLines(out));
   if (!quiet) console.log(md.map((l, i) => (l.startsWith("|") ? alignRow(md, i) : l)).join("\n"));
@@ -61,7 +71,27 @@ const MODE_NAME = { random: "ランダム", smart: "筋のよい遊び方" };
 const CLASS_NAME = {};
 
 // 職業ごとに games 回遊ばせて集計する。mode は random（できる行動から等確率）か smart（tests/bot.mjs）
-export function playGames({ mode = "random", games = 400, steps = 500, seed = 0, classes: only } = {}) {
+// start を渡すと、その回から遊ぶ（前の回は別に遊んで mergeRows で足す。種は回ごとに決まっているので、分けても数字は同じ）
+// globalThis.__played が配列なら、遊んだ結果をそこにも残す（tests/run.mjs が、q2 の遊んだ回を釣り合いの測定に使い回す）
+export function playGames({ mode = "random", games = 400, steps = 500, seed = 0, classes: only, start = 0 } = {}) {
+  const rows = playGames0({ mode, games, steps, seed, only, start });
+  if (Array.isArray(globalThis.__played)) globalThis.__played.push({ mode, games, steps, seed, start, rows });
+  return rows;
+}
+
+// 同じ職業の、続きの回の集計を足す（a の回が先。並びも一度に遊んだときと同じになる）
+export function mergeRows(a, b) {
+  const r = { ...a };
+  for (const k of ["games", "deaths", "errors", "days", "places", "bossKills", "bossRuns", "bossMet", "kills"]) r[k] = a[k] + b[k];
+  for (const k of ["turns", "deathTurns"]) r[k] = [...a[k], ...b[k]];
+  for (const k of ["causes", "visited", "diedAt", "bossNames", "bossDown", "milestones"]) {
+    r[k] = { ...a[k] };
+    for (const [x, n] of Object.entries(b[k])) r[k][x] = (r[k][x] || 0) + n;
+  }
+  return r;
+}
+
+function playGames0({ mode, games, steps, seed, only, start }) {
   const G = loadEngine();
   const D = G.data;
   const classes = Object.keys(D.CLASSES);
@@ -70,7 +100,7 @@ export function playGames({ mode = "random", games = 400, steps = 500, seed = 0,
   return classes.map((cls, ci) => {
     const r = { cls, games: 0, deaths: 0, errors: 0, turns: [], deathTurns: [], days: 0, places: 0, bossKills: 0, bossRuns: 0, bossMet: 0, kills: 0, causes: {}, visited: {}, diedAt: {}, bossNames: {}, bossDown: {}, milestones: {} };
     if (only && !only.includes(cls)) return r;
-    for (let i = 0; i < games; i++) {
+    for (let i = start; i < games; i++) {
       // 職業ごとに別の範囲の種を使う（職業を足しても他の職業の数字が変わらないように）
       G.rand = seeded(100000 + seed * 1000000 + ci * 10000 + i);
       G.P = { trophies: {}, graves: [] };
