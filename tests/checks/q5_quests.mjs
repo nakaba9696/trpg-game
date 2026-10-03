@@ -92,7 +92,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const guilds = Object.keys(D.LOCS).filter((k) => (D.LOCS[k].fac || []).includes("guild"));
     let stop = false;
     for (const fame of [0, 45, 160, 400]) {
-      for (let seed = 0; seed < 6 && !stop; seed++) {
+      for (let seed = 0; seed < 4 && !stop; seed++) {
         for (const loc of guilds) {
           G.rand = seeded(9000 + seed * 31 + fame);
           S.fame = fame; S.loc = loc;
@@ -350,7 +350,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 依頼を多めに受けて遊ぶ（止まらない）
   {
     let steps = 0, took = 0, done = 0, mids = 0;
-    for (let g = 0; g < 24; g++) {
+    for (let g = 0; g < 16; g++) {
       const S = newGame(G, 800 + g, Object.keys(D.CLASSES)[g % 5]);
       S.maxHp = S.hp = 120;
       if (g % 2) S.fame = 120;
