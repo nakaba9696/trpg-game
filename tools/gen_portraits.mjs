@@ -10,6 +10,7 @@
 //
 // node tools/gen_portraits.mjs                    … まだ画像の無い人をすべて作る
 //   --only <id>[,<id>…]  その人だけ        --force  あっても作り直す        --dry  送らずに、最終的なプロンプトと設定だけ表示
+//   --redo               一覧で redo（作り直しの印。multi＝2人以上写っていた）が付いた人も作り直す（--new-seed と使う）
 //   --new-seed           一覧の seed を使わずに作る（別の見た目を探す）       --style <file>  上書きの設定ファイル（既定は style.local.json）
 // node tools/gen_portraits.mjs --keep <id>[,<id>…]   … 最後に作ったときの seed を一覧（portraits.json・md）に書き戻す。<id>=<seed> で直に書ける
 // --monsters  魔物の絵（V6）：一覧は docs/art/monsters.json、設定は docs/art/style_monsters.json（＋ style_monsters.local.json）、
@@ -26,6 +27,8 @@
 // 男の型（A5）：男の人物は style_male.json を重ね、一覧の type（無ければ default_type）の型で顔立ちを替える。
 //   プロンプト ＝ 共通の prefix ＋ 型の prefix ＋ 特徴のタグ ＋ suffix（同じタグは一度だけ）。ネガティブ ＝ 共通の negative − 型の negative_remove ＋ negative_add
 //   --type <型>[,<型>…]  その型の男だけ（例：--type ojisan --force で渋いおっさんを作り直す。--only と重ねられる。--variants でも使える）
+// 絵の版（A9）：style.json の art が今の版。基本の絵を作ると一覧のその人に art（今の版）を書き、redo（作り直しの印）を消す。
+//   差分は、その人の基本の絵の版（一覧の art。無ければ 1）にそろえ、style.json の art_drop[版] の語（1 なら ikezawa shin）を prefix から外して作る
 // 外部のライブラリは使わない（Node 18 以上の fetch）。
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -51,7 +54,7 @@ const seedsPath = path.join(art, KIND.seeds);
 const flag = (n) => argv.includes(n);
 const opt = (n) => { const i = argv.indexOf(n); return i >= 0 ? argv[i + 1] : undefined; };
 const ids = (v) => (v ? v.split(",").map((s) => s.trim()).filter(Boolean) : null);
-const force = flag("--force"), dry = flag("--dry"), newSeed = flag("--new-seed");
+const force = flag("--force"), dry = flag("--dry"), newSeed = flag("--new-seed"), redo = flag("--redo");
 const only = ids(opt("--only")) && new Set(ids(opt("--only")));
 const onlyType = ids(opt("--type")) && new Set(ids(opt("--type")));
 const stylePath = opt("--style") || path.join(art, `${KIND.style}.local.json`);
@@ -131,7 +134,9 @@ const dropOf = (p) => new Set(isMale(p) ? (maleBase().drop_tags || []).map((x) =
 // タグに耳の語（elf・pointy ears など）がある人は、ネガティブの pointy ears・elf ears を外す（男の絵のネガティブにある）
 const EARS = /\b(elf|elven|half-elf|pointy ears|long pointy ears|elf ears)\b/i;
 const negOf = (p, neg) => (EARS.test(P.featureOf(p)) ? splitTags(neg).filter((t) => !/^(pointy ears|elf ears)$/i.test(t)).join(", ") : neg);
-const promptOf = (p, face) => { const d = dropOf(p); return uniqTags(splitTags(join(baseOf(p).prefix, P.featureOf(p, face), styleOf(p).suffix)).filter((t) => !d.has(t.toLowerCase())).join(", ")); };
+// 絵の版（A9）：基本の絵は今の版（style.json の art）の prefix で、差分（face を渡す）はその人の基本の絵の版（一覧の art）にそろえた prefix で
+const prefixOf = (p, face) => (MON ? baseOf(p).prefix : P.artPrefix(baseOf(p).prefix, baseOf(p), p, face !== undefined));
+const promptOf = (p, face) => { const d = dropOf(p); return uniqTags(splitTags(join(prefixOf(p, face), P.featureOf(p, face), styleOf(p).suffix)).filter((t) => !d.has(t.toLowerCase())).join(", ")); };
 const seedOf = (p) => (!newSeed && Number.isInteger(p.seed) ? p.seed : baseOf(p).seed ?? -1);
 
 const exists = (id) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(outDir, `${id}.${e}`)));
@@ -141,7 +146,7 @@ const onlyMood = ids(opt("--mood")) && new Set(ids(opt("--mood")));
 if (onlyMood) { if (!VARIANTS) { console.error("--mood は --variants と一緒に使う"); process.exit(1); } for (const m of onlyMood) if (!P.MOODS.includes(m)) console.warn(`docs/art/moods.json に表情 ${m} が無い（${P.MOODS.join("・")}）`); }
 const ofType = (p) => !onlyType || onlyType.has(typeOf(p));
 if (onlyType) { if (MON) { console.error("--type は人物の男の型（--monsters では使えない）"); process.exit(1); } const known = Object.keys(maleBase().types || {}).filter((k) => !k.startsWith("_")); for (const t of onlyType) if (!known.includes(t)) console.warn(`style_male.json の types に ${t} が無い（${known.join("・")}）`); }
-const todo = list.filter((p) => !p.same_as && (!only || only.has(p.id)) && ofType(p) && (force || !exists(p.id)));
+const todo = list.filter((p) => !p.same_as && (!only || only.has(p.id)) && ofType(p) && (force || !exists(p.id) || (redo && p.redo)));
 todo.sort((a, b) => isEld(a) - isEld(b)); // 異形を後にまとめる（並びは安定）
 const lastEld = todo.filter(isEld).pop();
 if (only && !VARIANTS) for (const id of only) if (!list.some((p) => p.id === id)) console.warn(`一覧に ${id} がいない`);
@@ -251,6 +256,8 @@ for (const p of todo) {
     const small = await shrink(p.id, png);
     const out = save(p.id, small);
     if (Number.isInteger(seed)) { seeds[p.id] = { seed, at: new Date().toISOString() }; writeFileSync(seedsPath, JSON.stringify(seeds, null, 1) + "\n"); }
+    // 絵の版（A9）：新しく描いた基本の絵の版を一覧に残す（差分をこの版の prefix で作るため）。作り直しの印（redo）も消す
+    if (!MON && (p.art !== P.artNow(style) || p.redo)) { p.art = P.artNow(style); delete p.redo; writeFileSync(JSON_PATH, JSON.stringify(data, null, 1) + "\n"); writeFileSync(MD_PATH, KIND.render(data)); }
     console.log(`${path.relative(root, out)}  ${(small.buf.length / 1024).toFixed(0)}KB  seed ${seed ?? "?"}${small.buf.length > (size.maxKB || 80) * 1024 ? `（${size.maxKB || 80}KB を超えた。webpQuality を下げる）` : ""}`);
     made++;
   } catch (e) {
@@ -300,7 +307,7 @@ async function runVariants() {
   for (const j of jobs) {
     const b = bodyOfVariant(j);
     if (b.seed < 0 && !warned.has(j.p.id)) { warned.add(j.p.id); console.warn(`${j.p.id}：基本の絵の seed が分からない（一覧にも seeds.local.json にも無い）。seed -1 で作る（元の絵から作るので顔はおおむね保たれる）`); }
-    if (dry) { console.log(`\n[${j.id}] ${j.p.name}  seed ${b.seed}  元：${path.relative(root, j.base)}\n  + ${b.prompt}`); continue; }
+    if (dry) { console.log(`\n[${j.id}] ${j.p.name}  seed ${b.seed}  元：${path.relative(root, j.base)}（絵の版 ${P.artOf(j.p)}）\n  + ${b.prompt}`); continue; }
     process.stdout.write(`${j.id}（${j.p.name}）… `);
     try {
       const res = await fetch(api("/sdapi/v1/img2img"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b) });

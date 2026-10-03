@@ -33,7 +33,7 @@ const HAIR = [
   ["red", /^(red|crimson|dark red|wine red) hair$/],
   ["blue", /^(blue|light blue|silver blue) hair$/],
   ["orange", /^(orange|ginger) hair$/],
-  ["lilac", /^(lilac|purple|violet|dark purple|pink) hair$/],
+  ["lilac", /^(lilac|purple|violet|dark purple|pink|pale pink) hair$/],
 ];
 const HAIR_NEAR = [["silver", "grey"], ["silver", "pale"], ["pale", "blonde"], ["black", "brown"], ["grey", "pale"]];
 const EYE = [
@@ -47,6 +47,7 @@ const EYE = [
   ["violet", /^violet eyes$/],
   ["red", /^red eyes$/],
   ["odd", /^heterochromia$/],
+  ["covered", /^(mask covering eyes|blindfold|blindfolded)$/], // 目が見えない人（A9。色の代わり）
 ];
 const EYE_NEAR = [["dark", "brown"], ["brown", "gold"], ["blue", "navy"], ["blue", "grey"], ["navy", "grey"]];
 const EYE_SHAPE = [
@@ -80,7 +81,7 @@ const MARK = [
   ["glasses", /glasses|pince-nez/], ["monocle", /monocle|loupe/], ["eyepatch", /eyepatch|steel mask|mask covering/],
   ["scar", /\bscars?\b/], ["mole", /mole/], ["freckles", /freckles|dirt on|soot on|coal dust|ink stains|paint stains|charcoal/],
   ["beast", /(dog|wolf|cat|fox|rat|bear|rabbit) (ears|girl|boy)|bear ears/], ["elf", /pointy ears|^elf$/],
-  ["beard", /beard|mustache/], ["stubble", /stubble/], ["hat", /\bhat\b|\bcap\b|headband|bandana(?! around neck)|kerchief/],
+  ["beard", /beard|mustache/], ["stubble", /stubble/], ["hat", /\bhat\b|\bcap\b|\bhood up\b|headband|bandana(?! around neck)|kerchief/],
   ["crown", /crown|circlet/], ["earring", /earring/], ["streak", /streak|grey streaked/], ["flower", /flower|feather in|wheat ear|ribbon|hair clip|hair ornament/],
   ["glow", /glowing|glow\b/], ["veil", /veil|cloth mask|beak mask/], ["goggles", /goggles/], ["wings", /\bwings?\b/],
 ];

@@ -94,7 +94,7 @@
    "kin": "leonest",
    "name": "シェイラ",
    "file": "assets/portraits/sheila.webp",
-   "identity": "1girl, princess, 18 years old, petite, slim, pale skin, white hair, silver-white hair, long hair, straight hair, long bangs, hair between eyes, blue eyes, light blue eyes, half-closed eyes, sleepy eyes, thin eyebrows, silver hair clip, blue hooded cloak, white dress, blue gem pendant",
+   "identity": "1girl, princess, 18 years old, petite, slim, pale skin, white hair, silver-white hair, long hair, straight hair, long bangs, hair between eyes, blue eyes, light blue eyes, half-closed eyes, sleepy eyes, thin eyebrows, silver hair clip, blue hooded cloak, hood up, white dress, blue gem pendant",
    "tags": "holding book against chest",
    "face": "expressionless",
    "variants": {
@@ -719,7 +719,8 @@
    "name": "オスヴィン（帝国の宰相）",
    "type": "ojisan",
    "file": "assets/portraits/chancellor.webp",
-   "tags": "1boy, male focus, adult, old man, 64 years old, grey hair, slicked back hair, narrow eyes, wrinkles, eye bags, black formal clothes, chain of office, hands behind back, holding a scroll",
+   "identity": "1boy, male focus, adult, old man, 64 years old, fair skin, grey hair, short hair, slicked back hair, grey eyes, narrow eyes, goatee, wrinkles, eye bags, black formal clothes, chain of office",
+   "tags": "hands behind back, holding a scroll",
    "face": "expressionless",
    "memo": "帝都の王城の玉座の脇。北の陣にいることの多い皇帝に代わって謁見を仕切る宰相。表情を出さない"
   },
@@ -729,7 +730,8 @@
    "name": "茹で騎士ガストン",
    "type": "brute",
    "file": "assets/portraits/gaston.webp",
-   "tags": "1boy, male focus, adult, knight, 34 years old, black hair, flushed face, red face, sweat, stubble, plate armor, no helmet, hand on back of head",
+   "identity": "1boy, male focus, adult, 34 years old, big belly, fair skin, black hair, short hair, messy hair, blue eyes, thick eyebrows, big nose, stubble, grey plate armor, no helmet, orange belt",
+   "tags": "knight, flushed face, red face, sweat, hand on back of head",
    "face": "worried eyebrows, open mouth",
    "memo": "テルグリスの大鍋で茹でられかけた騎士。真っ赤で情けない顔"
   },
@@ -739,7 +741,8 @@
    "name": "脱走兵ヨアヒム",
    "type": "ojisan",
    "file": "assets/portraits/joachim.webp",
-   "tags": "1boy, male focus, adult, soldier, 35 years old, dark brown hair, stubble, eye bags, imperial military uniform, snow on shoulders, hugging self, shivering, worn scarf",
+   "identity": "1boy, male focus, adult, 35 years old, pale skin, dark brown hair, short hair, crew cut, brown eyes, stubble, eye bags, imperial military uniform, worn scarf",
+   "tags": "soldier, snow on shoulders, hugging self, shivering",
    "face": "tired, worried eyebrows",
    "memo": "凍えた帝国の脱走兵。もう人を殺したくない"
   },
@@ -789,7 +792,8 @@
    "name": "取り立て屋ボルグ",
    "type": "brute",
    "file": "assets/portraits/borg.webp",
-   "tags": "1boy, male focus, adult, man, 40 years old, huge man, messy hair, scar, stubble, grin, missing fingers, ragged clothes, debt collector",
+   "identity": "1boy, male focus, adult, man, 40 years old, huge man, black hair, long hair, messy hair, black eyes, round eyes, scar, stubble, missing fingers, ragged clothes",
+   "tags": "grin, debt collector",
    "memo": "ドレイゼの眷属。熊のような大男"
   },
   {
@@ -835,7 +839,8 @@
    "group": "named",
    "name": "香炉番のシオン",
    "file": "assets/portraits/konoha.webp",
-   "tags": "1girl, 15 years old, long hair, mischievous smile, purple robe, small censer on a chain, dice cup, smoke",
+   "identity": "1girl, 15 years old, white hair, long hair, blunt bangs, violet eyes, purple robe, dice charm",
+   "tags": "mischievous smile, small censer on a chain, dice cup, smoke",
    "memo": "ベリエラの眷属。賭場の壺振りの少女。いかさまが上手（id はもとの名のまま）"
   },
   {
@@ -863,7 +868,8 @@
    "group": "named",
    "name": "疫医ベルナ",
    "file": "assets/portraits/berna.webp",
-   "tags": "1girl, plague doctor, beak mask, black hooded coat, gloves, medicine bottles",
+   "identity": "1girl, white hair, medium hair, beak mask, mask covering eyes, black hooded coat, gloves",
+   "tags": "plague doctor, medicine bottles",
    "memo": "セグリトスの眷属の医者。嘴の仮面で顔は見せない。声は若い女"
   },
   {
@@ -912,7 +918,7 @@
    "name": "逆夢の使徒ベルファス",
    "file": "assets/portraits/yura.webp",
    "identity": "toddler, androgynous, 3 years old, silver hair, long hair, messy hair, floating hair, grey eyes, pajamas, faint glow",
-   "tags": "holding a pillow, floating upside down, crescent moon",
+   "tags": "holding a plain pillow, floating upside down, crescent moon",
    "face": "eyes closed, sleeping",
    "variants": {
     "joy": "smile, eyes closed, sleeping",
@@ -923,7 +929,8 @@
     "surprise": "eyes open, wide-eyed, blank stare",
     "faint_smile": "faint smile, eyes closed, sleeping"
    },
-   "memo": "眠り続ける幼子の姿の使徒（使徒リスト 2）。いつも目を閉じて眠っている。逆さの夢に出る。子どもらしく"
+   "memo": "眠り続ける幼子の姿の使徒（使徒リスト 2）。いつも目を閉じて眠っている。逆さの夢に出る。子どもらしく",
+   "redo": "multi"
   },
   {
    "id": "walker",
@@ -931,7 +938,8 @@
    "name": "灰色の外套の旅人（三度目に会うとノエと名乗る）",
    "type": "ojisan",
    "file": "assets/portraits/walker.webp",
-   "tags": "1boy, male focus, adult, man, ageless, dark blonde hair, medium hair, messy hair, half-closed eyes, gentle smile, stubble, old grey cloak, traveler",
+   "identity": "1boy, male focus, adult, man, ageless, fair skin, dark brown hair, medium hair, messy hair, grey eyes, half-closed eyes, stubble, old grey cloak",
+   "tags": "gentle smile, traveler",
    "memo": "年の分からない旅人。何でも珍しそうに喜ぶ"
   },
   {
@@ -940,7 +948,8 @@
    "name": "コルサーノ（東へ出る船の船長）",
    "type": "ojisan",
    "file": "assets/portraits/captain_east.webp",
-   "tags": "1boy, male focus, adult, old man, 52 years old, eyepatch, beard, sea captain, captain hat, navy coat, hand on belt, smoking pipe",
+   "identity": "1boy, male focus, adult, old man, 52 years old, stocky, fair skin, white hair, short hair, white beard, black eyes, eyepatch, captain hat, navy coat",
+   "tags": "sea captain, hand on belt, smoking pipe",
    "face": "slight smile",
    "memo": "東の果てへ出る片目の船長"
   },
@@ -950,7 +959,8 @@
    "name": "宿の主人ハンス",
    "type": "ojisan",
    "file": "assets/portraits/hans.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 58 years old, bald, apron, innkeeper, holding a ledger, quill pen behind ear",
+   "identity": "1boy, male focus, adult, middle-aged man, 58 years old, muscular, bald, black eyes, thick eyebrows, stubble, black shirt, apron",
+   "tags": "innkeeper, holding a ledger, quill pen behind ear",
    "face": "kind smile, blush",
    "memo": "宿の主人。宿帳の年齢の欄で筆を止める"
   },
@@ -959,7 +969,8 @@
    "group": "named",
    "name": "宿の女将グレタ",
    "file": "assets/portraits/greta.webp",
-   "tags": "1girl, middle-aged woman, 50 years old, hair bun, kerchief, apron, innkeeper, hands on hips, holding a ladle",
+   "identity": "1girl, middle-aged woman, 50 years old, ash blonde hair, hair bun, blunt bangs, brown eyes, blue kerchief, white blouse, orange apron",
+   "tags": "innkeeper, hands on hips, holding a ladle",
    "face": "smile",
    "memo": "宿の女将。世話焼き"
   },
@@ -969,7 +980,8 @@
    "name": "パン屋の老人ゲルト",
    "type": "elder",
    "file": "assets/portraits/gert.webp",
-   "tags": "1boy, male focus, adult, old man, 80 years old, white hair, wrinkles, flour on face, baker, apron, holding a loaf of bread",
+   "identity": "1boy, male focus, adult, old man, 80 years old, white hair, short hair, wavy hair, black eyes, wrinkles, flour on face, beige shirt, brown apron",
+   "tags": "baker, holding a loaf of bread",
    "face": "gentle smile",
    "memo": "粉だらけのパン屋の老人"
   },
@@ -979,7 +991,8 @@
    "name": "司祭アルベルト",
    "type": "classic",
    "file": "assets/portraits/albert.webp",
-   "tags": "1boy, male focus, adult, priest, 36 years old, grey hair, long hair, pince-nez, white priest vestment, sun emblem, pushing up pince-nez",
+   "identity": "1boy, male focus, adult, 36 years old, grey hair, long hair, brown eyes, sharp eyes, round pince-nez, white priest vestment, blue cape, sun emblem",
+   "tags": "priest, pushing up pince-nez",
    "face": "calm",
    "memo": "鼻眼鏡の司祭。眼鏡を押し上げる癖"
   },
@@ -989,7 +1002,8 @@
    "name": "串焼き屋のドミニク",
    "type": "brute",
    "file": "assets/portraits/dominik.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 40 years old, mustache, headband, apron, grilling skewers, towel around neck",
+   "identity": "1boy, male focus, adult, middle-aged man, 40 years old, fat, fair skin, black hair, short hair, crew cut, black eyes, round eyes, thick black mustache, big nose, white headband, black t-shirt, white apron, towel around neck",
+   "tags": "grilling skewers",
    "face": "grin",
    "memo": "串焼き屋の親父"
   },
@@ -999,7 +1013,8 @@
    "name": "古道具屋のノイマン",
    "type": "ojisan",
    "file": "assets/portraits/neumann.webp",
-   "tags": "1boy, male focus, adult, old man, 57 years old, grey hair, narrow eyes, glasses, vest, antique dealer, holding a silver ring, jeweler's loupe on cord",
+   "identity": "1boy, male focus, adult, old man, 57 years old, fair skin, grey hair, short hair, brown eyes, glasses, white shirt, black necktie, brown vest, jeweler's loupe on cord",
+   "tags": "antique dealer, holding a silver ring",
    "face": "small smile",
    "memo": "古道具屋。品物をじっと見せる"
   },
@@ -2533,7 +2548,8 @@
    "name": "町の人（男）",
    "type": "ojisan",
    "file": "assets/portraits/kind_villager_m.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 45 years old, townsperson, simple tunic",
+   "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, dark brown eyes",
+   "tags": "townsperson, simple tunic",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2541,7 +2557,8 @@
    "group": "people",
    "name": "町の人（女）",
    "file": "assets/portraits/kind_villager_f.webp",
-   "tags": "1girl, woman, 30 years old, townsperson, simple tunic",
+   "identity": "1girl, woman, 30 years old, light brown hair, short hair, low twintails, amber eyes",
+   "tags": "townsperson, simple tunic",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2550,7 +2567,8 @@
    "name": "商人（男）",
    "type": "ojisan",
    "file": "assets/portraits/kind_merchant_m.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 45 years old, merchant, vest, coin pouch",
+   "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes",
+   "tags": "merchant, vest, coin pouch",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2558,7 +2576,8 @@
    "group": "people",
    "name": "商人（女）",
    "file": "assets/portraits/kind_merchant_f.webp",
-   "tags": "1girl, woman, 30 years old, merchant, vest, coin pouch",
+   "identity": "1girl, woman, 30 years old, white hair, bob cut, blunt bangs, violet eyes",
+   "tags": "merchant, vest, coin pouch",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2567,7 +2586,8 @@
    "name": "衛兵（男）",
    "type": "ojisan",
    "file": "assets/portraits/kind_guard_m.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 45 years old, town guard, helmet, tabard, spear",
+   "identity": "1boy, male focus, adult, middle-aged man, 45 years old, brown hair, short hair, brown eyes",
+   "tags": "town guard, helmet, tabard, spear",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2575,7 +2595,8 @@
    "group": "people",
    "name": "衛兵（女）",
    "file": "assets/portraits/kind_guard_f.webp",
-   "tags": "1girl, woman, 30 years old, town guard, helmet, tabard, spear",
+   "identity": "1girl, woman, 30 years old, white hair, long hair, blunt bangs, blue eyes",
+   "tags": "town guard, helmet, tabard, spear",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2584,7 +2605,8 @@
    "name": "神官・修道女（男）",
    "type": "bishonen",
    "file": "assets/portraits/kind_priest_m.webp",
-   "tags": "1boy, male focus, adult, young man, 24 years old, priest, white vestment, sun emblem",
+   "identity": "1boy, male focus, adult, young man, 24 years old, ash blonde hair, short hair, brown eyes",
+   "tags": "priest, white vestment, sun emblem",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2592,7 +2614,8 @@
    "group": "people",
    "name": "神官・修道女（女）",
    "file": "assets/portraits/kind_priest_f.webp",
-   "tags": "1girl, woman, 30 years old, priest, white vestment, sun emblem",
+   "identity": "1girl, woman, 30 years old, white hair, long hair, blunt bangs, green eyes",
+   "tags": "priest, white vestment, sun emblem",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2601,7 +2624,8 @@
    "name": "貴族（男）",
    "type": "classic",
    "file": "assets/portraits/kind_noble_m.webp",
-   "tags": "1boy, male focus, adult, man, 30 years old, noble, elegant clothes, jewelry",
+   "identity": "1boy, male focus, adult, man, 30 years old, black hair, short hair, spiky hair, black eyes",
+   "tags": "noble, elegant clothes, jewelry",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2609,7 +2633,8 @@
    "group": "people",
    "name": "貴族（女）",
    "file": "assets/portraits/kind_noble_f.webp",
-   "tags": "1girl, woman, 30 years old, noble, elegant clothes, jewelry",
+   "identity": "1girl, woman, 30 years old, white hair, long hair, crown braid, blunt bangs, amber eyes",
+   "tags": "noble, elegant clothes, jewelry",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2618,7 +2643,8 @@
    "name": "ならず者・盗賊（男）",
    "type": "ojisan",
    "file": "assets/portraits/kind_rogue_m.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 45 years old, rogue, bandana, dark leather clothes, dagger, scar",
+   "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes",
+   "tags": "rogue, bandana, dark leather clothes, dagger, scar",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2626,7 +2652,8 @@
    "group": "people",
    "name": "ならず者・盗賊（女）",
    "file": "assets/portraits/kind_rogue_f.webp",
-   "tags": "1girl, woman, 30 years old, rogue, bandana, dark leather clothes, dagger, scar",
+   "identity": "1girl, woman, 30 years old, white hair, long hair, blunt bangs, amber eyes",
+   "tags": "rogue, bandana, dark leather clothes, dagger, scar",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2635,7 +2662,8 @@
    "name": "兵士・傭兵団の兵（男）",
    "type": "ojisan",
    "file": "assets/portraits/kind_soldier_m.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 45 years old, soldier, armor, spear",
+   "identity": "1boy, male focus, adult, middle-aged man, 45 years old, dark brown hair, short hair, brown eyes",
+   "tags": "soldier, armor, spear",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2643,7 +2671,8 @@
    "group": "people",
    "name": "兵士・傭兵団の兵（女）",
    "file": "assets/portraits/kind_soldier_f.webp",
-   "tags": "1girl, woman, 30 years old, soldier, armor, spear",
+   "identity": "1girl, woman, 30 years old, red hair, short hair, green eyes",
+   "tags": "soldier, armor, spear",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2652,7 +2681,8 @@
    "name": "騎士（男）",
    "type": "classic",
    "file": "assets/portraits/kind_knight_m.webp",
-   "tags": "1boy, male focus, adult, man, 30 years old, knight, plate armor, crest, sword",
+   "identity": "1boy, male focus, adult, man, 30 years old, dark brown hair, short hair, slicked back hair, brown eyes",
+   "tags": "knight, plate armor, crest, sword",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2660,7 +2690,8 @@
    "group": "people",
    "name": "騎士（女）",
    "file": "assets/portraits/kind_knight_f.webp",
-   "tags": "1girl, woman, 30 years old, knight, plate armor, crest, sword",
+   "identity": "1girl, woman, 30 years old, blonde hair, long hair, blue eyes",
+   "tags": "knight, plate armor, crest, sword",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2669,7 +2700,8 @@
    "name": "船乗り（男）",
    "type": "brute",
    "file": "assets/portraits/kind_sailor_m.webp",
-   "tags": "1boy, male focus, adult, man, 38 years old, sailor, striped shirt, bandana, earring",
+   "identity": "1boy, male focus, adult, man, 38 years old, orange hair, short hair, black eyes",
+   "tags": "sailor, striped shirt, bandana, earring",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2677,7 +2709,8 @@
    "group": "people",
    "name": "船乗り（女）",
    "file": "assets/portraits/kind_sailor_f.webp",
-   "tags": "1girl, woman, 30 years old, sailor, striped shirt, bandana, earring",
+   "identity": "1girl, woman, 30 years old, white hair, medium hair, light blue eyes",
+   "tags": "sailor, striped shirt, bandana, earring",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2686,7 +2719,8 @@
    "name": "魔法使い（男）",
    "type": "bishonen",
    "file": "assets/portraits/kind_mage_m.webp",
-   "tags": "1boy, male focus, adult, young man, 24 years old, mage, dark blue robe, staff",
+   "identity": "1boy, male focus, adult, young man, 24 years old, black hair, short hair, hair between eyes, grey eyes",
+   "tags": "mage, dark blue robe, staff",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2694,7 +2728,8 @@
    "group": "people",
    "name": "魔法使い（女）",
    "file": "assets/portraits/kind_mage_f.webp",
-   "tags": "1girl, woman, 30 years old, mage, dark blue robe, staff",
+   "identity": "1girl, woman, 30 years old, orange hair, medium hair, amber eyes",
+   "tags": "mage, dark blue robe, staff",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2703,7 +2738,8 @@
    "name": "八雲の人（侍・巫女）（男）",
    "type": "ojisan",
    "file": "assets/portraits/kind_ronin_m.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 45 years old, samurai, kimono, katana",
+   "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, receding hairline, brown eyes",
+   "tags": "samurai, kimono, katana",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2711,7 +2747,8 @@
    "group": "people",
    "name": "八雲の人（侍・巫女）（女）",
    "file": "assets/portraits/kind_ronin_f.webp",
-   "tags": "1girl, woman, 30 years old, samurai, kimono, katana",
+   "identity": "1girl, woman, 30 years old, black hair, medium hair, blunt bangs, amber eyes",
+   "tags": "samurai, kimono, katana",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2720,7 +2757,8 @@
    "name": "宿や酒場の主（男）",
    "type": "brute",
    "file": "assets/portraits/kind_host_m.webp",
-   "tags": "1boy, male focus, adult, man, 38 years old, innkeeper, apron, friendly smile",
+   "identity": "1boy, male focus, adult, man, 38 years old, black hair, short hair, black eyes",
+   "tags": "innkeeper, apron, friendly smile",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2728,7 +2766,8 @@
    "group": "people",
    "name": "宿や酒場の主（女）",
    "file": "assets/portraits/kind_host_f.webp",
-   "tags": "1girl, woman, 30 years old, innkeeper, apron, friendly smile",
+   "identity": "1girl, woman, 30 years old, ash grey hair, medium hair, brown eyes",
+   "tags": "innkeeper, apron, friendly smile",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2737,7 +2776,8 @@
    "name": "物乞い・囚人（男）",
    "type": "ojisan",
    "file": "assets/portraits/kind_beggar_m.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 45 years old, ragged clothes, dirty, tired",
+   "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, black eyes",
+   "tags": "ragged clothes, dirty, tired",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2745,7 +2785,8 @@
    "group": "people",
    "name": "物乞い・囚人（女）",
    "file": "assets/portraits/kind_beggar_f.webp",
-   "tags": "1girl, woman, 30 years old, ragged clothes, dirty, tired",
+   "identity": "1girl, woman, 30 years old, white hair, long hair, amber eyes",
+   "tags": "ragged clothes, dirty, tired",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2754,7 +2795,8 @@
    "name": "弓使い・狩人（男）",
    "type": "ojisan",
    "file": "assets/portraits/kind_archer_m.webp",
-   "tags": "1boy, male focus, adult, middle-aged man, 45 years old, hunter, archer, green hooded cloak, bow",
+   "identity": "1boy, male focus, adult, middle-aged man, 45 years old, grey hair, short hair, brown eyes",
+   "tags": "hunter, archer, green hooded cloak, bow",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2762,7 +2804,8 @@
    "group": "people",
    "name": "弓使い・狩人（女）",
    "file": "assets/portraits/kind_archer_f.webp",
-   "tags": "1girl, woman, 30 years old, hunter, archer, green hooded cloak, bow",
+   "identity": "1girl, woman, 30 years old, white hair, medium hair, amber eyes",
+   "tags": "hunter, archer, green hooded cloak, bow",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2771,7 +2814,8 @@
    "name": "冒険者（男）",
    "type": "classic",
    "file": "assets/portraits/kind_adventurer_m.webp",
-   "tags": "1boy, male focus, adult, man, 30 years old, adventurer, leather armor, sword",
+   "identity": "1boy, male focus, adult, man, 30 years old, black hair, short hair, spiky hair, grey eyes",
+   "tags": "adventurer, leather armor, sword",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2779,7 +2823,8 @@
    "group": "people",
    "name": "冒険者（女）",
    "file": "assets/portraits/kind_adventurer_f.webp",
-   "tags": "1girl, woman, 30 years old, adventurer, leather armor, sword",
+   "identity": "1girl, woman, 30 years old, white hair, medium hair, blunt bangs, violet eyes",
+   "tags": "adventurer, leather armor, sword",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2788,7 +2833,8 @@
    "name": "老人（男）",
    "type": "elder",
    "file": "assets/portraits/kind_elder_m.webp",
-   "tags": "1boy, male focus, adult, old man, old, wrinkles, grey hair, 70 years old, simple robe",
+   "identity": "1boy, male focus, adult, old man, old, 70 years old, grey hair, short hair, black eyes",
+   "tags": "wrinkles, simple robe",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2796,7 +2842,8 @@
    "group": "people",
    "name": "老人（女）",
    "file": "assets/portraits/kind_elder_f.webp",
-   "tags": "1girl, old woman, old, wrinkles, grey hair, 70 years old, simple robe",
+   "identity": "1girl, old woman, old, 70 years old, grey hair, hair bun, brown eyes",
+   "tags": "wrinkles, simple robe",
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
@@ -2805,7 +2852,8 @@
    "name": "子ども（男）",
    "type": "boy",
    "file": "assets/portraits/kind_child_m.webp",
-   "tags": "1boy, male focus, boy, child, 10 years old, simple clothes, small",
+   "identity": "1boy, male focus, boy, child, 10 years old, white hair, short hair, grey eyes",
+   "tags": "simple clothes, small",
    "memo": "名もない子ども。子どもらしく"
   },
   {
@@ -2813,7 +2861,8 @@
    "group": "people",
    "name": "子ども（女）",
    "file": "assets/portraits/kind_child_f.webp",
-   "tags": "1girl, girl, child, 10 years old, simple clothes, small",
+   "identity": "1girl, girl, child, 10 years old, black hair, long hair, low twintails, blunt bangs, amber eyes",
+   "tags": "simple clothes, small",
    "memo": "名もない子ども。子どもらしく"
   },
   {
@@ -2822,7 +2871,8 @@
    "name": "主人公：傭兵・男",
    "type": "classic",
    "file": "assets/portraits/hero_merc_m.webp",
-   "tags": "1boy, male focus, adult, young man, 20 years old, mercenary, leather armor, sword",
+   "identity": "1boy, male focus, adult, young man, 20 years old, black hair, short hair, grey eyes",
+   "tags": "mercenary, leather armor, sword",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2830,7 +2880,8 @@
    "group": "hero",
    "name": "主人公：傭兵・女",
    "file": "assets/portraits/hero_merc_f.webp",
-   "tags": "1girl, young woman, 20 years old, mercenary, leather armor, sword",
+   "identity": "1girl, young woman, 20 years old, black hair, medium hair, bob cut, amber eyes",
+   "tags": "mercenary, leather armor, sword",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2839,7 +2890,8 @@
    "name": "主人公：盗賊・男",
    "type": "bishonen",
    "file": "assets/portraits/hero_thief_m.webp",
-   "tags": "1boy, male focus, adult, young man, 20 years old, thief, dark hooded cloak, daggers",
+   "identity": "1boy, male focus, adult, young man, 20 years old, white hair, short hair, messy hair, amber eyes",
+   "tags": "thief, dark hooded cloak, daggers",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2847,7 +2899,8 @@
    "group": "hero",
    "name": "主人公：盗賊・女",
    "file": "assets/portraits/hero_thief_f.webp",
-   "tags": "1girl, young woman, 20 years old, thief, dark hooded cloak, daggers",
+   "identity": "1girl, young woman, 20 years old, white hair, long hair, blunt bangs, red eyes",
+   "tags": "thief, dark hooded cloak, daggers",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2856,7 +2909,8 @@
    "name": "主人公：魔法使い・男",
    "type": "bishonen",
    "file": "assets/portraits/hero_mage_m.webp",
-   "tags": "1boy, male focus, adult, young man, 20 years old, mage, robe, wizard hat, staff",
+   "identity": "1boy, male focus, adult, young man, 20 years old, white hair, medium hair, messy hair, amber eyes",
+   "tags": "mage, robe, wizard hat, staff",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2864,7 +2918,8 @@
    "group": "hero",
    "name": "主人公：魔法使い・女",
    "file": "assets/portraits/hero_mage_f.webp",
-   "tags": "1girl, young woman, 20 years old, mage, robe, wizard hat, staff",
+   "identity": "1girl, young woman, 20 years old, orange hair, medium hair, amber eyes",
+   "tags": "mage, robe, wizard hat, staff",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2873,7 +2928,8 @@
    "name": "主人公：破戒神官・男",
    "type": "classic",
    "file": "assets/portraits/hero_priest_m.webp",
-   "tags": "1boy, male focus, adult, young man, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
+   "identity": "1boy, male focus, adult, young man, 20 years old, black hair, short hair, spiky hair, brown eyes",
+   "tags": "priest, white vestment, sun emblem, mace, disheveled",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2881,7 +2937,8 @@
    "group": "hero",
    "name": "主人公：破戒神官・女",
    "file": "assets/portraits/hero_priest_f.webp",
-   "tags": "1girl, young woman, 20 years old, priest, white vestment, sun emblem, mace, disheveled",
+   "identity": "1girl, young woman, 20 years old, white hair, medium hair, bob cut, red eyes",
+   "tags": "priest, white vestment, sun emblem, mace, disheveled",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2890,7 +2947,8 @@
    "name": "主人公：侍・男",
    "type": "classic",
    "file": "assets/portraits/hero_samurai_m.webp",
-   "tags": "1boy, male focus, adult, young man, 20 years old, samurai, kimono, light armor, katana, topknot",
+   "identity": "1boy, male focus, adult, young man, 20 years old, black hair, topknot, black eyes",
+   "tags": "samurai, kimono, light armor, katana",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   },
   {
@@ -2898,7 +2956,8 @@
    "group": "hero",
    "name": "主人公：侍・女",
    "file": "assets/portraits/hero_samurai_f.webp",
-   "tags": "1girl, young woman, 20 years old, samurai, kimono, light armor, katana, ponytail",
+   "identity": "1girl, young woman, 20 years old, black hair, long hair, ponytail, amber eyes",
+   "tags": "samurai, kimono, light armor, katana",
    "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   }
  ]
