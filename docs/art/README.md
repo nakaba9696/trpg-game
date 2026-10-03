@@ -16,12 +16,18 @@
    - cwebp が無ければ WebUI の機能（`/sdapi/v1/extra-single-image`）で縮める。それもできないときは、大きいまま保存せずに止まる。
 3. WebUI を `--api` を付けて起動する（例：`webui-user.bat` の `COMMANDLINE_ARGS` に `--api`）。
 4. このフォルダで `node tools/gen_portraits.mjs --dry` を動かし、送るプロンプトと設定を確かめる。よければ `node tools/gen_portraits.mjs` で、まだ画像の無い人をすべて作る（`--only dil,nora` でその人だけ）。
-5. 絵を見る（`assets/portraits/`）。
+5. 絵を**1枚ごとに見る**（`assets/portraits/`）。
+   - **2人以上写っていたら作り直す**（背景の小さな人影・持ち物や服の柄の中の顔・鏡や水に映った姿も数える）。`node tools/gen_portraits.mjs --only <id> --force --new-seed` で seed を変える。すぐ作り直せないときは一覧（[portraits.json](portraits.json)）のその人に `"redo": "multi"` を付けておき、あとで `node tools/gen_portraits.mjs --redo --new-seed` でまとめて作り直す（作り直すと印は消える）。差分（img2img）も元の絵の人数を引き継ぐので、差分を作る前に基本の絵を見ること。
    - 気に入った名のある人物は `node tools/gen_portraits.mjs --keep dil,nora` で、そのときの seed を一覧に残す（作り直しても同じ見た目を保ちやすくなる）。
    - 気に入らない人は `node tools/gen_portraits.mjs --only <id> --force --new-seed` で作り直す。
 6. できた `assets/portraits/` と、`--keep` したなら `docs/art/portraits.json`・`portraits.md` を、配り役（Claude）に渡すか、コミットする。`node tools/build.mjs && node tests/run.mjs` で大きさを確かめられる。
 
-**男の人物**（identity・tags に 1boy / male などがある人）は `style_male.json` を style.json の上に重ねて作る（持ち主の絵柄は可愛い女の子向けなので、男は絵師名を外す）。手元で変えるときは `style_male.local.json`。
+**男の人物**（identity・tags に 1boy / male などがある人）は `style_male.json` を style.json の上に重ねて作る（男の絵柄は BOLF。持ち主の絵師タグに織音・lack と AI っぽさを消す語を足す）。手元で変えるときは `style_male.local.json`。
+
+**絵師タグ ikezawa shin と絵の版（A9）**：人物の prefix（`style.json`・`style_male.json`）には持ち主の指定で `ikezawa shin` が入っている（10/1 に一度外し、10/3 に戻した。魔物の設定には入れない）。露出を抑えるタグ（suffix の `fully clothed`・ネガティブの `nsfw, nude, topless…`）と複数人を避けるタグ（suffix の `solo`・ネガティブの `multiple girls, 2girls, multiple boys, group, crowd, background characters, other characters…`）はそのまま。
+- 絵師タグに髪の色を引っ張られないよう、[portraits.json](portraits.json) の**全員**（モブの型 `kind_*`・主人公の型 `hero_*` も）の `identity` に**髪の色**（禿げ・剃髪なら `bald`）・**髪型**（長さか形）・**目の色**（閉じた目・覆われた目ならそれ）を書く。絵がある人は今の絵と同じ色を書く（`tests/checks/a9_hair.mjs` が見る）。
+- **絵の版**：`style.json` の `art`（今は 2）が今の版。基本の絵（txt2img）は今の版の prefix で作り、作ると一覧のその人に `"art": 2` が書かれる。`art` の無い人（版 1）の基本の絵は ikezawa shin なしで描いたので、その人の**差分**（`--variants`）は `art_drop["1"]`（`ikezawa shin`）を prefix から外して作る（同じ画風にそろえる）。版 1 の人の基本の絵を作り直したら（版 2 になる）、差分も `--variants --only <id> --force` で作り直す。`--dry` で差分の行に「絵の版」が出る。
+- また prefix の絵師タグを足すときは、`art` を 3 にし、`art_drop` の版 1・版 2 それぞれに「その版の絵を描いたときに無かった語」を書く（差分はその語を外して作る）。
 
 **男の型（A5）**：男が全員同じ美形にならないよう、顔立ちを型で分ける。型は `style_male.json` の `types` にあり、[portraits.json](portraits.json) の男の人に `type` で割り振る（無ければ `default_type` の `classic`）。`ojisan`（渋い中年〜初老。劇画寄りの濃い顔・ほうれい線・こけた頬・角ばった顎。いちばん多い）・`classic`（正統派の美形）・`bishonen`（線の細い美形）・`brute`（少しブサイクで愛嬌のある巨漢。この型だけネガティブの `ugly face` を外す）・`elder`（老人）・`boy`（子ども）。プロンプトは共通の前置きの後ろに型の `prefix` が付き（同じタグは一度だけ）、ネガティブは型の `negative_remove` を外して `negative_add` を足す。型の語は特徴だけで、作家名・作品名は書かない（テストが見る）。`node tools/gen_portraits.mjs --dry --type ojisan` でその型の男だけのプロンプトを確かめ、`--type ojisan --force` でその型だけ作り直せる（`--only`・`--variants` と重ねられる）。
 

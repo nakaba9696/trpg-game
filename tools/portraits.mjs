@@ -12,7 +12,7 @@ export const MD_PATH = path.join(here, "..", "docs", "art", "portraits.md");
 const GROUPS = [
   ["c2", "名のある人物：キャラメモ", "持ち主のスプレッドシート「キャラメモ」の人（`src/data/c2_people.js`。id はデータの id）。時間軸は同じなので、どの冒険で会っても同じ一人＝一枚。出来事でも仲間になってからも同じ絵。"],
   ["named", "名のある人物：出来事・施設", "出来事や施設に出る、名前の決まった人（使徒の人の姿・眷属・宰相・店や宿の主など。使徒は `D.MAJIN` の id）。どの出来事に出るかは `src/ui/v4_assets.js` の `NAMED`。どの出来事でも同じ顔に固定してある。"],
-  ["hero", "型：主人公", "冒険ごとに作られる主人公は一人ずつ作れないので、職業 × 性別の型に当てる（人間・若者が基本。エルフ・獣人・年齢は下の「型の足し方」）。外見の文で変わる髪や目の色は入れていない。"],
+  ["hero", "型：主人公", "冒険ごとに作られる主人公は一人ずつ作れないので、職業 × 性別の型に当てる（人間・若者が基本。エルフ・獣人・年齢は下の「型の足し方」）。髪と目の色は今の絵に合わせて書いてある（絵師タグに引っ張られないため。A9）。"],
   ["people", "型：名もない人", "名もない仲間・出来事の町の人など。人物の種類 × 性別。13 歳未満は子ども、60 歳以上は老人の型を使う。"],
 ];
 const cell = (s) => String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
@@ -27,11 +27,21 @@ const MOOD_NAME = Object.fromEntries(MOODS.map((m) => [m, MOOD_DATA.moods[m].nam
 // 喜怒哀楽の差分も同じ identity と tags を一字一句そのまま使い、表情（face）だけ差し替える（tools/gen_portraits.mjs も使う）
 export const joinTags = (...a) => a.map((s) => String(s || "").trim().replace(/^,|,$/g, "").trim()).filter(Boolean).join(", ");
 export const featureOf = (p, face) => joinTags(p.identity, p.tags, face === undefined ? p.face : face);
+// 絵の版（A9）：style.json の art が今の版。一覧の人の art はその人の基本の絵を描いた版（無ければ 1＝ikezawa shin を prefix から外していたころ）。
+// 基本の絵（txt2img）は今の版で作り、差分（img2img。variant が true）はその人の基本の絵の版にそろえて、style.art_drop[版] の語を prefix から外す
+export const artNow = (style) => (style && style.art) || 1;
+export const artOf = (p) => (p && p.art) || 1;
+export function artPrefix(prefix, style, p, variant) {
+  const v = variant ? artOf(p) : artNow(style);
+  if (v === artNow(style)) return prefix;
+  const drop = new Set((((style && style.art_drop) || {})[v] || []).map((t) => t.trim().toLowerCase()));
+  return String(prefix || "").split(",").map((t) => t.trim()).filter((t) => t && !drop.has(t.toLowerCase())).join(", ");
+}
 // 男の人物（identity・tags に 1boy / male / old man / boy がある人）。tools/gen_portraits.mjs が style_male.json を重ね、type（男の型）で顔立ちを替える
 const MALE_RE = /(^|,\s*)(\d*boys?|male|male focus|old man|man|young man)(\s*,|$)/i;
 export const isMale = (p) => MALE_RE.test([p.identity, p.tags].flat().filter(Boolean).join(", "));
 const tagsCell = (p) => {
-  let t = (p.type ? `型：\`${p.type}\`<br>` : "") + (p.identity ? `見た目（固定）：${cell(p.identity)}<br>` : "") + cell(p.tags);
+  let t = (p.redo ? `**作り直す**（\`redo: ${p.redo}\`${p.redo === "multi" ? "：2人以上写っている" : ""}）<br>` : "") + (p.art ? `絵の版：${p.art}<br>` : "") + (p.type ? `型：\`${p.type}\`<br>` : "") + (p.identity ? `見た目（固定）：${cell(p.identity)}<br>` : "") + cell(p.tags);
   if (p.face) t += `<br>表情：${cell(p.face)}`;
   if (p.variants) t += Object.keys(p.variants).map((m) => `<br>${MOOD_NAME[m] || m}（\`_${m}\`）：${cell(p.variants[m])}`).join("");
   return t;
@@ -45,6 +55,8 @@ export function renderPortraitsMd(data) {
   L.push("## 作り方", "");
   L.push(`- 大きさ：**${size.width}×${size.height}**（${size.framing}）。形式：**${size.format}**、1枚 **${size.maxKB}KB 以下**。`);
   L.push("- 名のある人物は**見た目（固定）**（`identity`：髪の色・長さ・髪型、目の色と形、肌、眉、印、服の色と形、いつも身につけている物、年齢と体格）を持つ。プロンプトはその後ろに、ポーズ・手に持つ物のタグ、表情の順に付く。差分も見た目とポーズは同じで、表情だけ替える。");
+  L.push("- **髪の色・髪型・目の色**は全員の見た目（`identity`）に書く（絵師タグに髪色を引っ張られないため。A9）。絵がある人は今の絵と同じ色。");
+  L.push("- **絵の版**：基本の絵を ikezawa shin 入りの prefix（`style.json` の `art`＝2）で描いた人には「絵の版：2」と出る。出ていない人の基本の絵は ikezawa shin なしで描いたので、差分もなしで作る（[README.md](README.md)）。**作り直す**（`redo`）と出ている人は、今の絵を作り直す（`multi`＝2人以上写っている）。");
   L.push("- 男の人は**型**（`type`：`ojisan`・`classic`・`bishonen`・`brute`・`elder`・`boy`）で顔立ちを替える。型の語は `style_male.json` の `types` にあり、生成のときに前に足される（[README.md](README.md)）。");
   L.push("- タグはその人の**特徴だけ**。画風・品質（masterpiece・anime style など）・構図・ネガティブは持ち主の側で足す。");
   L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は今の canvas の絵のまま。");
