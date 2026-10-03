@@ -191,8 +191,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
           const avail = G.eventChoices().map((x) => x.i);
           let pick = -1, out = null;
           const last = i === q.steps.length - 1;
-          if (withMate && st.mate) { pick = chs.findIndex((x, xi) => x.mate && avail.includes(xi)); if (pick < 0) F(`${id}[${i + 1}]: ほかの仲間がいるのに、その選択肢が出ない`); }
-          if (!withMate && st.mate && chs.some((x, xi) => x.mate && avail.includes(xi))) F(`${id}[${i + 1}]: ほかの仲間がいないのに、その選択肢が出る`);
+          if (withMate && st.mate === mateOf) { pick = chs.findIndex((x, xi) => x.mate && avail.includes(xi)); if (pick < 0) F(`${id}[${i + 1}]: ほかの仲間がいるのに、その選択肢が出ない`); }
+          if (!(withMate && st.mate === mateOf) && st.mate && !S.companions.some((x) => x.c2 === st.mate) && chs.some((x, xi) => x.mate && avail.includes(xi))) F(`${id}[${i + 1}]: ほかの仲間がいないのに、その選択肢が出る`);
           if (last) {
             // 結末 k に届く結果を当てはめる（判定と戦いは結果だけ）
             for (let xi = 0; xi < chs.length && !out; xi++) {
@@ -208,8 +208,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
           else G.act("ev:" + pick);
           if (S.combat) { F(`${id}[${i + 1}]: 判定なしの道で戦いになった`); return; }
           if (S.q9[id].n !== i + 1) { F(`${id}[${i + 1}]: 段が済まない`); return; }
-          if (withMate && st.mate && ch.mate && G.tk.rel(id, mateOf, S) > rel0) relMoved++;
-          else if (withMate && st.mate && ch.mate) F(`${id}[${i + 1}]: ほかの仲間の選択肢で、二人の間柄が動かない`);
+          if (withMate && st.mate === mateOf && ch.mate && G.tk.rel(id, mateOf, S) > rel0) relMoved++;
+          else if (withMate && st.mate === mateOf && ch.mate) F(`${id}[${i + 1}]: ほかの仲間の選択肢で、二人の間柄が動かない`);
           // 同じ日のうちには次の段を頼まれない
           if (i < q.steps.length - 1 && G.tkTopics && G.q9.canAsk(id, i + 1, S)) F(`${id}[${i + 1}]: 段を済ませた日に、次の段が頼まれる`);
         }
