@@ -351,7 +351,7 @@
     detail.append(h("p", "fine c3role", F2.personRole ? F2.personRole(id) : q.title || ""), h("h3", "f2title", F2.personName(id)));
     const rels = Object.keys(rec.rels || {});
     detail.append(affinity(id));
-    detail.append(kv([["仲間", rec.joined ? "なったことがある" : "まだ"], ["間柄", rels.filter((r) => r !== "仲間").join("・") || "—"]].filter(([, v]) => v)));
+    detail.append(kv([["仲間", G.S && (G.S.companions || []).some((c) => c.c2 === id) ? "いま連れている" : rec.joined ? "なったことがある" : "まだ"], ["間柄", rels.filter((r) => r !== "仲間").join("・") || "—"]].filter(([, v]) => v)));
     detail.append(where("主に会える場所", G.codexPersonWhere(id)));
     if (F2.personMore) F2.personMore(detail, id); // F4：会ったことのある場所・仲間にする方法・狙う
     G.codexPersonLines(id).forEach((t) => detail.append(flavor(t, "person", id)));
@@ -385,6 +385,8 @@
     list.textContent = "";
     detail.textContent = "";
     detail.append(h("p", "fine", "一覧から選ぶと、詳しい説明が出る。"));
+    // U9：？の人の見つけ方（まだ会っていない人は押せないので、ここに書く）
+    if (key === "person") detail.append(h("p", "fine", "？の人には、まだ会っていない。酒場の噂やギルドの尋ね人の貼り紙で、居る場所と時期が分かることがある。"));
     ({ item: drawItems, foe: drawFoes, person: drawPeople, lore: drawLore })[key]();
   }
   F2.open = (key) => {
