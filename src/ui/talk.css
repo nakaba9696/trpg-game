@@ -1,2 +1,4 @@
 /* 仲間との会話：シートの仲間の札の「話す」（src/ui/talk.js） */
 .comp .tkTalk { margin-left: auto; flex: none; }
+/* 仲間どうしの間柄（src/ui/talk_rel.js） */
+.comp .tkRel { display: block; opacity: 0.85; }
