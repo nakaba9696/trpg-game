@@ -283,7 +283,7 @@
       if (G.d(100) <= chance) {
         const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
         f.hp = Math.max(0, f.hp - dmg);
-        G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg}`, { fx: "hit", foe: f.name, n: dmg });
+        G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
         if (f.hp <= 0) onFoeDown(f);
       } else G.note(`${c.name}の攻撃は外れた。`);
     });
