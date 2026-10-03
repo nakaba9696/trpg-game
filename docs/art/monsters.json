@@ -494,6 +494,66 @@
    "human": true,
    "tags": "1boy, man, hooded, scarf, smirk, ragged cloak, holding dagger",
    "memo": "裏切った仲間"
+  },
+  {
+   "id": "w3_smuggler",
+   "file": "assets/monsters/w3_smuggler.webp",
+   "name": "港の用心棒",
+   "human": true,
+   "tags": "thug, burly man, thick neck, bandana, stubble, grin, holding wooden club, small bell on belt, dock worker clothes",
+   "memo": "密輸の荷の見張り。腰に鈴"
+  },
+  {
+   "id": "w3_hermit",
+   "file": "assets/monsters/w3_hermit.webp",
+   "name": "舟殻ヤドカリ",
+   "tags": "giant hermit crab, wearing small wooden rowboat as shell, red legs, big claws, googly eyes, name plate on boat, bubbles",
+   "memo": "小舟を背負ったヤドカリ。まぬけ"
+  },
+  {
+   "id": "w3_cinder",
+   "file": "assets/monsters/w3_cinder.webp",
+   "name": "火の粉小僧",
+   "tags": "small fire spirit, ember blob, glowing orange, sparks, grin, googly eyes, floating, smoke",
+   "memo": "火山の火の粉の小鬼。まぬけ"
+  },
+  {
+   "id": "w3_drowned",
+   "file": "assets/monsters/w3_drowned.webp",
+   "name": "溺れ船乗り",
+   "tags": "drowned sailor, undead, pale green skin, wet ragged clothes, rope around waist, hollow eyes, open mouth, seaweed, rowing motion",
+   "memo": "海から上がった死者"
+  },
+  {
+   "id": "w3_silentmonk",
+   "file": "assets/monsters/w3_silentmonk.webp",
+   "name": "口縫いの修道士",
+   "human": true,
+   "tags": "monk, grey hooded robe, lips sewn shut with thick thread, finger on lips, holding wooden staff, gaunt",
+   "memo": "唇を縫った修道士"
+  },
+  {
+   "id": "w3_ashmoth",
+   "file": "assets/monsters/w3_ashmoth.webp",
+   "name": "灰喰い蛾",
+   "tags": "giant moth, grey ash colored wings, dusty scales, glowing eyes, fluttering, paper scraps",
+   "memo": "書庫の灰と紙を食う蛾"
+  },
+  {
+   "id": "w3_ashscribe",
+   "file": "assets/monsters/w3_ashscribe.webp",
+   "name": "灰の書記",
+   "boss": true,
+   "tags": "ash covered scribe, robed figure made of ash, hood, glowing eyes, dry cracked face, holding quill pen, crumbling, smoke",
+   "memo": "ボス。灰をかぶって書き続ける者"
+  },
+  {
+   "id": "w3_tidemaw",
+   "file": "assets/monsters/w3_tidemaw.webp",
+   "name": "潮呑み",
+   "boss": true,
+   "tags": "giant sea blob, huge mouth with fangs, one big eye, teal water body, bubbles, drooling, anchor and sandal inside",
+   "memo": "ボス。洞の奥の口だけのもの"
   }
  ]
 }
