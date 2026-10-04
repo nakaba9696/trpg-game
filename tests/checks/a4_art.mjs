@@ -1,11 +1,11 @@
 // A4：絵がすべての場面で出るか。足りない物を一覧にして、あれば失敗にする
 // - 場所：背景の絵がある（屋外の絵に無い名前で、汎用の丘陵に落ちていない）。迷宮の中が石の通路（汎用）のままでない。同じ絵を二つの場所で使い回していない
 // - 施設：室内の絵がある。王城には玉座の主の絵（G.facWho）がある
-// - 敵：見た目（art_monsters.js の PRESET か敵のデータの look）が決めてある
+// - 敵：生成画像がある（assets/monsters/<id>.webp。色違いは same_as、人の姿の敵は人物の絵。A10 で canvas の魔物の絵はやめた）
 // - 出来事：人物の絵（who）があるか、人が出ない出来事として D.EVENT_NOBODY（src/data/events_who_a4.js）に並んでいる。who の種類・敵が実在する
 // - 仲間：出来事で仲間になる魔物は魔物の絵、人は人物の絵になる
 // - すべての絵（場所の外と中・施設・敵・人物）を、G.rand を使わずに例外なく描ける
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import vm from "node:vm";
 
 export default ({ G, fail, ok, seeded }) => {
@@ -34,7 +34,13 @@ export default ({ G, fail, ok, seeded }) => {
   if (G.facWho({ mode: "fac", fac: "castle", loc: "leavel", flags: { throne: true } })) fail("王位を奪ったあとも、王城に前の主の絵が出る");
 
   // ---------------------------------------------------------------- 敵
-  for (const id of Object.keys(D.ENEMIES)) if (!G.monsterHasLook(id)) miss.foe.push(id);
+  const mon = JSON.parse(readFileSync(new URL("../../docs/art/monsters.json", import.meta.url), "utf8"));
+  const img = (dir, id) => existsSync(new URL(`../../assets/${dir}/${id}.webp`, import.meta.url));
+  for (const id of Object.keys(D.ENEMIES)) {
+    const m = (mon.monsters || []).find((x) => x.id === id);
+    const ok = m ? img("monsters", m.same_as || id) : mon.people && mon.people[id] ? img("portraits", mon.people[id]) : false;
+    if (!ok) miss.foe.push(id);
+  }
 
   // ---------------------------------------------------------------- 出来事の人物
   const nobody = new Set(D.EVENT_NOBODY || []);
@@ -101,7 +107,7 @@ export default ({ G, fail, ok, seeded }) => {
     inside: "迷宮の中が石の通路（汎用）のまま（scene.js の IN に「<場所の絵>_in」を足す）",
     fac: "室内の絵が無い施設（scene.js の IN に足す）",
     castle: "王城の主の絵が無い（art_people.js の FAC_WHO に足す）",
-    foe: "見た目の決まっていない敵（敵のデータに look を書く。art_monsters.js）",
+    foe: "生成画像の無い敵（docs/art/monsters.json に足して絵を作る。A10）",
     event: "人物の絵（who）が無く、人が出ない出来事（D.EVENT_NOBODY）にも並んでいない出来事（who を書くか、src/data/events_who_a4.js の EVENT_NOBODY に足す）",
     comp: "魔物なのに人の絵、人なのに魔物の絵になる仲間（art_people.js の COMP_NAMED か COMP_FOE）",
   };

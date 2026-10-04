@@ -27,17 +27,9 @@
   let page = 0;      // 導入のページ
   let rolledNow = false;
 
-  // 人物の絵（art_people.js）
-  function face(cls, cw, ch) {
-    const cv = h("canvas", cls);
-    cv.width = cw * 2; cv.height = ch * 2;
-    cv.setAttribute("aria-hidden", "true");
-    return cv;
-  }
-  const heroWho = () => G.heroWho(Object.assign({}, draft.profile, { sex: draft.sex, ageBand: draft.ageBand, race: draft.race, beast: draft.beast }), draft.cls);
+  // 主人公の絵は出さない（A10。持ち主の決定）
   // 種族の呼び名（R1。無ければ出さない）
   const raceName = (d) => (G.r1Name ? G.r1Name({ profile: { race: d.race, beast: d.beast } }) : "");
-  const paint = (cv) => { if (cv && G.drawPortrait) G.drawPortrait(cv, heroWho()); };
 
   const go = (s) => { step = s; setup.show(); window.scrollTo({ top: 0 }); };
 
@@ -79,10 +71,9 @@
       c.append(h("small", "", `${G.S.clsName} ${G.S.profile.name}・${G.dateOf ? G.dateOf(G.S.day) : G.S.day + "日目"}`));
       menu.append(c);
     }
-    menu.append(btn("記録（墓碑・トロフィー）", "", () => G.ui.openTrophies(), "t-rec"));
+    // 墓碑・トロフィー（記録）は右上から開ける（U10）。タイトルは「はじめる」と、保存があるときの「つづきから」だけ
     root.append(menu);
     if (live) root.append(h("p", "fine center", "「はじめる」で新しい者が旅立つと、つづきの冒険は消える。"));
-    root.append(h("p", "fine center", `これまでの冒険者 ${G.P.graves.length} 人 ／ トロフィー ${Object.keys(G.P.trophies).length} 個`));
   }
 
   // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
@@ -96,11 +87,9 @@
     const lay = h("div", "cre2");
     // 姿と短い説明（スマホでは上）
     const card = h("aside", "whoCard");
-    const cv = face("heroFace", 112, 140);
     const txt = h("div", "whoTxt");
-    card.append(cv, txt);
+    card.append(txt);
     function refresh() {
-      paint(cv);
       const c = D.CLASSES[draft.cls], a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
       txt.textContent = "";
       txt.append(h("b", "whoName", draft.profile.name || "（名無し）"));
@@ -205,8 +194,10 @@
     t3.append(btn("特徴をおまかせ", "small", () => { cre.randomTraits(draft, R); cre.TRAITS.forEach(setVal); refresh(); }, "p-traits"));
     s5.append(t3);
     const grid = h("div", "grid2");
-    [["look", "外見", "input"], ["personality", "性格", "input"], ["history", "生い立ち", "textarea"], ["quote", "口癖", "input"], ["like", "好きなもの", "input"], ["dislike", "苦手なもの", "input"]]
+    [["look", "外見", "input"], ["history", "生い立ち", "textarea"]]
       .forEach(([k, label, type]) => grid.append(fieldEl(k, label, type, refresh)));
+    const hi = grid.querySelector("#pf-history");
+    if (hi) hi.placeholder = "空けておいてもよい（「振る」でおまかせ）";
     s5.append(grid);
     form.append(s5);
 
@@ -312,12 +303,11 @@
 
     const bar = h("div", "rollBar");
     const who = h("div", "rollWho");
-    const cv = face("miniFace", 48, 60);
     const c = D.CLASSES[draft.cls];
     const st = cre.final(draft);
     const wt = h("div");
     wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", `${[c.name, raceName(draft), D.AGES[draft.ageBand].name].filter(Boolean).join("・")}・${D.ORIGINS[draft.origin].short}生まれ`));
-    who.append(cv, wt);
+    who.append(wt);
     const tray = h("div", "tray");
     tray.setAttribute("aria-hidden", "true");
     const dice = [die(1 + Math.floor(R() * 6)), die(1 + Math.floor(R() * 6)), die(1 + Math.floor(R() * 6))];
@@ -339,6 +329,8 @@
     bh.append(bn, h("span", "bonusTier" + tierCls, tier === "大当たり" ? "大当たり！" : tier === "当たり" ? "当たり" : "ふつう"));
     const left = cre.bonusLeft(draft);
     bh.append(h("span", "bonusLeft num" + (left ? " has" : ""), `残り ${left} 点`));
+    const tb = cre.trophyBonus ? cre.trophyBonus() : 0;
+    if (tb) bh.append(h("span", "trophyBonus num", `トロフィーで +${tb}`));
     bh.append(h("span", "fine", "好きな能力値に足す。才能限界（赤い線）までしか足せない。ふつうは 5〜10 点、1 割ほどで 15〜20 点、まれに 25 点を超える"));
     box.append(bh);
     const list = h("div", "statlist creStats num");
@@ -383,8 +375,6 @@
     nav.append(btn("人物に戻る", "", () => go("person")), next);
     if (left > 0) nav.append(h("span", "fine", `ボーナスが ${left} 点残っている`));
     root.append(nav);
-
-    paint(cv);
     // 振った瞬間の小さな演出
     if (rolledNow) {
       rolledNow = false;
@@ -417,11 +407,10 @@
     const p = o.profile, c = D.CLASSES[o.cls];
     const paper = h("article", "charSheet");
     const top = h("header", "csTop");
-    const cv = face("csFace", 96, 120);
     const nm = h("div");
     nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, raceName(draft), p.sex].filter(Boolean).join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）・${D.ORIGINS[p.origin].name}生まれ`));
     nm.append(h("span", "csLine", `目的：${o.goalText}`));
-    top.append(cv, nm);
+    top.append(nm);
     paper.append(top);
 
     const cols = h("div", "csCols");
@@ -440,7 +429,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", p.quote ? `「${p.quote}」` : ""], ["好きなもの", p.like], ["苦手なもの", p.dislike]]
+    [["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);
@@ -453,7 +442,6 @@
       btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); }, "c-go"));
     root.append(nav);
     root.append(h("p", "fine", "普段の行動は Claude を使わない（利用量はかからない）。自由入力で「GM に任せる」を選んだときだけ使う。"));
-    paint(cv);
   }
 
   // ---------------------------------------------------------------- 5. 導入（ページをめくる）

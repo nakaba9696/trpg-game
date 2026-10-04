@@ -19,15 +19,13 @@
       case "name": return pickR(rnd, P.names[culture(dr)][dr.sex]);
       case "age": { const [a, b] = D.AGES[dr.ageBand].range; return String(a + Math.floor(rnd() * (b - a + 1))); }
       case "look": return `${pickR(rnd, P.hair)}、${pickR(rnd, P.eyes)}、${pickR(rnd, P.build)}`;
-      case "personality": return pickR(rnd, P.personality);
       case "history": return pickR(rnd, P.history[dr.cls]);
-      case "quote": return pickR(rnd, P.quote);
-      case "like": return pickR(rnd, P.like);
-      case "dislike": return pickR(rnd, P.dislike);
     }
     return "";
   };
-  cre.TRAITS = ["look", "personality", "history", "quote", "like", "dislike"];
+  // おまかせで埋めるのは外見だけ。生い立ちは空けておき、欲しい人だけ「振る」で作る（U10：プレイヤーが思い描く余地を残す）。
+  // 性格・口癖・好きなもの・苦手なものは作らない（持ち主の決定）。古いセーブの profile に残っていても表示しない
+  cre.TRAITS = ["look"];
 
   // 生い立ち・特徴だけをおまかせで作り直す
   cre.randomTraits = (dr, rnd) => { cre.TRAITS.forEach((k) => { dr.profile[k] = cre.gen(dr, k, rnd); }); };
@@ -57,7 +55,7 @@
     if (dr.origin === D.CLASS_ORIGIN[dr.cls]) dr.origin = D.CLASS_ORIGIN[cls];
     dr.cls = cls;
     if (culture(dr) !== oldCul) dr.profile.name = cre.gen(dr, "name", rnd);
-    dr.profile.history = cre.gen(dr, "history", rnd);
+    if (dr.profile.history) dr.profile.history = cre.gen(dr, "history", rnd);
     dr.locks = {};
     cre.roll(dr, rnd);
   };
@@ -193,6 +191,7 @@
   // G.newGame に渡す形
   cre.options = (dr, rnd) => {
     const p = { ...dr.profile };
+    delete p.personality; delete p.quote; delete p.like; delete p.dislike;
     p.name = String(p.name || "").trim() || cre.gen(dr, "name", rnd);
     p.age = String(p.age || "").trim() || cre.gen(dr, "age", rnd);
     p.sex = dr.sex;

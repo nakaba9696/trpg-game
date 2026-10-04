@@ -1,6 +1,6 @@
 // V6：持ち主が作った魔物の絵（docs/art/monsters.json・style_monsters.json・tools/gen_portraits.mjs --monsters・src/ui/v6_monsters.js）
 // - 一覧の id がすべて敵に当たり、敵はすべて一覧か「人物の側」に載っている。md が json と合っている。タグに画風・性的な言葉が無い
-// - 画像が無くても今の canvas の絵で描ける。画像があれば（読み込んだら）画像を描く。出来事の胸から上の絵は今の絵のまま
+// - 画像が無ければ何も描かない（A10：canvas の魔物の絵はやめた）。画像があれば（読み込んだら）画像を描く。人の姿の敵（people）は人物の絵で描く
 // - 埋め込み（予備の --embed）の上限（12MB）は人物と魔物を合わせて数える
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -68,23 +68,25 @@ export default ({ G, fail, ok }) => {
   };
   const drew = () => calls.filter(([k]) => k === "drawImage");
 
-  // 画像が無いとき：今の絵
+  // 画像が無いとき：何も描かない
   let g = load(undefined);
+  for (const [e, p] of Object.entries(people)) if (g.V6_PEOPLE[e] !== p) fail(`v6_monsters.js の PEOPLE の ${e} が一覧の people（${p}）と違う`);
+  for (const e of Object.keys(g.V6_PEOPLE)) if (!people[e]) fail(`v6_monsters.js の PEOPLE の ${e} が一覧の people に無い`);
   for (const m of list) if ((g.V6_SAME[m.id] || undefined) !== m.same_as) fail(`v6_monsters.js の SAME の ${m.id} が一覧の same_as と違う`);
   for (const id of Object.keys(g.V6_SAME)) if (!list.some((m) => m.id === id && m.same_as)) fail(`v6_monsters.js の SAME の ${id} が一覧に無い`);
   calls.length = 0;
   try { for (const id of Object.keys(E)) g.paintMonster(ctx, 200, 300, 160, { id, shape: E[id].shape, eye: E[id].eye, boss: !!E[id].boss }); } catch (e) { fail("画像が無いとき敵を描けない：" + e.message); }
-  if (!calls.length || drew().length) fail("画像が無いとき、今の canvas の絵で描いていない");
+  if (calls.length) fail("画像が無いとき、canvas に絵を描いた（A10：何も描かない）");
   if (g.v6MonsterKey({ id: "goblin" }) !== null) fail("画像が無いのに画像の鍵を返す");
 
-  // 画像があるとき：先に読み始め、読み込むまでは今の絵、読み込んだら画像
+  // 画像があるとき：先に読み始め、読み込むまでは何も描かず、読み込んだら画像
   loaded.length = 0;
   g = load({ "monsters/goblin": "data:image/webp;base64,AAAA", "portraits/dil": "data:image/webp;base64,BBBB" });
   if (loaded.length !== 1 || loaded[0].src !== "data:image/webp;base64,AAAA") fail("埋め込まれた魔物の絵を先に読み始めていない");
   if (g.v6MonsterKey({ id: "goblin" }) !== "goblin" || g.v6MonsterKey({ id: "slime" }) !== null) fail("魔物の絵の鍵の選び方が違う");
   calls.length = 0;
   g.paintMonster(ctx, 200, 300, 160, { id: "goblin", shape: "small" });
-  if (drew().length) fail("読み込みの前に画像を描いた");
+  if (calls.length) fail("読み込みの前に何かを描いた");
   loaded[0].fire();
   calls.length = 0;
   g.paintMonster(ctx, 200, 300, 160, { id: "goblin", shape: "small" });
@@ -99,17 +101,23 @@ export default ({ G, fail, ok }) => {
   g.paintMonster(ctx, 200, 300, 400, { id: "goblin", boss: true });
   const big = drew()[0];
   if (!big || big[1][2] < -0.1 * big[1][4]) fail("大きな敵の画像が上にはみ出す");
-  // 出来事・仲間の胸から上の絵（look を付けて呼ぶ）は今の絵
+  // 人の姿の敵：人物の絵（portraits/<id>）を立たせる
+  g = load({ "portraits/konoha": "data:image/webp;base64,DDDD" });
+  if (g.v6ArtKey("w1_konoha") !== "portraits/konoha" || g.v6MonsterKey({ id: "w1_konoha" }) !== null) fail("人の姿の敵（コノハ）に人物の絵を当てていない");
+  g.paintMonster(ctx, 200, 300, 160, { id: "w1_konoha" }); // 読み始める
+  loaded[loaded.length - 1].fire();
+  loaded[loaded.length - 1].naturalHeight = 640;
   calls.length = 0;
-  g.paintMonster(ctx, 200, 300, 160, { id: "goblin", look: undefined });
-  if (drew().length) fail("出来事の胸から上の絵に、魔物の画像を使った");
-  // 読めない画像は今の絵
+  g.paintMonster(ctx, 200, 300, 160, { id: "w1_konoha" });
+  const pd = drew()[0];
+  if (!pd || Math.abs(pd[1][3] / pd[1][4] - 0.8) > 0.01) fail("人の姿の敵を、胸から上の絵（4:5）で描いていない");
+  // 読めない画像は何も描かない
   g = load({ "monsters/slime": "data:image/webp;base64,CCCC" });
   const bad = loaded[loaded.length - 1];
   (bad.ls.error || []).forEach((f) => f());
   calls.length = 0;
   g.paintMonster(ctx, 200, 300, 160, { id: "slime", shape: "blob" });
-  if (drew().length || !calls.length) fail("読めない画像のとき、今の絵に戻していない");
+  if (calls.length) fail("読めない画像のとき、何かを描いた（A10：何も描かない）");
 
   // ---------------------------------------------------------------- 埋め込み：人物と魔物を合わせて数える
   const dir = mkdtempSync(path.join(tmpdir(), "v6-"));
