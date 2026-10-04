@@ -24,27 +24,29 @@ export function makeSmartBot(G) {
     const w = G.weapon();
     const pierceBlock = e.majin && !w.pierce;
     const out = [];
-    const statBonus = w.stat === "筋力" ? Math.floor(s.stats.筋力 / 15) : Math.floor(s.stats.敏捷 / 20);
-    out.push({ id: "cb:attack", mp: 0, dmg: pierceBlock ? 0 : (G.chance(w.stat, 0, (w.hit || 0) - e.def) / 100) * (avg(w.dmg) + statBonus) });
-    out.push({ id: "cb:vital", mp: 0, dmg: pierceBlock ? 0 : (G.chance("敏捷", -15, (w.vital || 0) - e.def) / 100) * 2 * (avg(w.dmg) + Math.floor(s.stats.敏捷 / 15)) });
+    // 成功率は敵の強さとの差（S5。G.foeVs）、ダメージの上乗せは体の目盛り（G.s5Pow）
+    const pw = (k, n) => Math.floor(G.s5Pow(s.stats[k]) / n);
+    const statBonus = w.stat === "筋力" ? pw("筋力", 15) : pw("敏捷", 20);
+    out.push({ id: "cb:attack", mp: 0, dmg: pierceBlock ? 0 : (G.chance(w.stat, { vs: G.foeVs.eva(e) }, w.hit || 0) / 100) * (avg(w.dmg) + statBonus) });
+    out.push({ id: "cb:vital", mp: 0, dmg: pierceBlock ? 0 : (G.chance("敏捷", { vs: G.foeVs.vital(e) }, w.vital || 0) / 100) * 2 * (avg(w.dmg) + pw("敏捷", 15)) });
     const mb = G.magicBonus();
-    out.push({ id: "cb:fire", mp: 3, dmg: pierceBlock ? 0 : (G.chance("魔力", 0, G.gearBonus("fire") + mb - e.mres) / 100) * (7 + Math.floor(s.stats.魔力 / 8)) });
+    out.push({ id: "cb:fire", mp: 3, dmg: pierceBlock ? 0 : (G.chance("魔力", { vs: G.foeVs.mres(e) }, G.gearBonus("fire") + mb) / 100) * (7 + pw("魔力", 8)) });
     if (G.knows && G.knows("ice") && D.SPELLS.ice) {
-      const p = G.chance("魔力", D.SPELLS.ice.diff || 0, G.gearBonus("ice") + mb - e.mres) / 100;
-      out.push({ id: "cb:ice", mp: D.SPELLS.ice.mp, dmg: pierceBlock ? 0 : p * (3.5 + Math.floor(s.stats.魔力 / 10) + avg(e.dmg) * 0.6) });
+      const p = G.chance("魔力", { vs: G.foeVs.mres(e) - G.s5Mod(D.SPELLS.ice.diff || 0) }, G.gearBonus("ice") + mb) / 100;
+      out.push({ id: "cb:ice", mp: D.SPELLS.ice.mp, dmg: pierceBlock ? 0 : p * (3.5 + pw("魔力", 10) + avg(e.dmg) * 0.6) });
     }
     if (G.knows && G.knows("bolt") && D.SPELLS.bolt) {
-      const p = G.chance("魔力", D.SPELLS.bolt.diff, G.gearBonus("bolt") + mb - e.mres) / 100;
-      out.push({ id: "cb:bolt", mp: D.SPELLS.bolt.mp, dmg: pierceBlock ? 0 : p * (5 + Math.floor(s.stats.魔力 / 12)) * nFoes });
+      const p = G.chance("魔力", { vs: G.foeVs.mres(e) - G.s5Mod(D.SPELLS.bolt.diff || 0) }, G.gearBonus("bolt") + mb) / 100;
+      out.push({ id: "cb:bolt", mp: D.SPELLS.bolt.mp, dmg: pierceBlock ? 0 : p * (5 + pw("魔力", 12)) * nFoes });
     }
     return out;
   }
   function companionDpr(e) {
-    return (S().companions || []).reduce((a, c) => a + (clamp(c.power - (c.fire ? e.mres : e.def), 5, 95) / 100) * ((c.fire ? 7 : 3.5) + (c.dmg || 0)), 0);
+    return (S().companions || []).reduce((a, c) => a + (G.allyHitChance(c, e) / 100) * ((c.fire ? 7 : 3.5) + (c.dmg || 0)), 0);
   }
   function foeDpr(e) {
     const armor = G.armor();
-    const hit = clamp(e.hit - Math.floor(G.statEff("敏捷") / 5), 5, 95) / 100;
+    const hit = G.foeHitChance(e) / 100;
     return hit * Math.max(1, avg(e.dmg) - (e.magic ? 0 : armor ? armor.def : 0));
   }
   // この敵の組と最後まで戦ったときの、見込みの被ダメージ（mpCap を渡すと、MP はそれまでしか無いものとして見る）
@@ -178,7 +180,7 @@ export function makeSmartBot(G) {
     // 武器：見込みダメージ（仮の敵 def 10）が上がるもの
     const probe = { def: 10, mres: 10, dmg: [1, 6, 1], hit: 60 };
     const w0 = G.weapon();
-    const wScore = (w) => (G.chance(w.stat, 0, (w.hit || 0) - 10) / 100) * (avg(w.dmg) + (w.stat === "筋力" ? Math.floor(s.stats.筋力 / 15) : Math.floor(s.stats.敏捷 / 20))) + (w.magic || 0) * (s.stats.魔力 >= 40 ? 0.12 : 0);
+    const wScore = (w) => (G.chance(w.stat, 0, (w.hit || 0) - 10) / 100) * (avg(w.dmg) + Math.floor(G.s5Pow(s.stats[w.stat === "筋力" ? "筋力" : "敏捷"]) / (w.stat === "筋力" ? 15 : 20))) + (w.magic || 0) * (s.stats.魔力 >= 10 ? 0.12 : 0);
     let bestW = null;
     for (const id of stock) {
       const it = D.ITEMS[id];
@@ -187,7 +189,7 @@ export function makeSmartBot(G) {
     }
     if (bestW) out.push(bestW);
     const a0 = G.armor();
-    const aScore = (a) => (a ? a.def * 2 + (a.agi || 0) / 5 + (a.magic || 0) * (s.stats.魔力 >= 40 ? 0.15 : 0) : 0);
+    const aScore = (a) => (a ? a.def * 2 + (a.agi || 0) / 5 + (a.magic || 0) * (s.stats.魔力 >= 10 ? 0.15 : 0) : 0);
     let bestA = null;
     for (const id of stock) {
       const it = D.ITEMS[id];
@@ -209,10 +211,10 @@ export function makeSmartBot(G) {
   function trainStat() {
     const s = S();
     const w = G.weapon();
-    const caster = s.stats.魔力 >= 40 && s.stats.魔力 > s.stats[w.stat];
+    const caster = s.stats.魔力 >= 10 && s.stats.魔力 > s.stats[w.stat];
     const pri = [caster ? "魔力" : w.stat, "体力", "敏捷"];
     let best = null;
-    for (const k of pri) if (s.stats[k] < s.caps[k] && (!best || 100 - s.stats[k] > 100 - s.stats[best] + 5)) best = k;
+    for (const k of pri) if (!best || s.stats[k] < s.stats[best] - 1) best = k;   // 点（S5）。低いものから
     return best;
   }
 
@@ -413,7 +415,7 @@ export function makeSmartBot(G) {
       let v;
       if (c.fight) v = -fightPenalty(G.resolveFoes(c.fight)) + (c.win ? outcomeValue(c.win) : 4);
       else if (c.stat) {
-        const p = G.chance(c.stat, c.diff || "普通", c.bonus ? G.gearBonus(c.bonus) : 0) / 100;
+        const p = G.chance(c.stat, G.s5EventDiff(c.diff), c.bonus ? G.gearBonus(c.bonus) : 0) / 100;
         v = p * outcomeValue(c.ok) + (1 - p) * outcomeValue(c.ng) + 0.5;
       } else v = c.next ? 1 : outcomeValue(c.ok);
       if (c.cost) v -= c.cost / 8;

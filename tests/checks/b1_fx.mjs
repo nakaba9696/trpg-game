@@ -23,13 +23,14 @@ export default ({ G, fail: failTo, ok, seeded }) => {
   G.rand = seeded(16);
   G.P = { trophies: {}, graves: [] };
   const stats = {}, caps = {};
-  D.STATS.forEach((k) => { stats[k] = 60; caps[k] = 70; });
+  D.STATS.forEach((k) => { stats[k] = 15; caps[k] = 70; });   // 点（S5）
   const fresh = () => G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
   const fxOf = (from) => G.S.log.slice(from).filter((e) => e.fx);
 
   // ボス戦の始まりに前口上。使徒には絶界の fx
   fresh();
   G.S.maxHp = G.S.hp = 9999;
+  G.S.stats.筋力 = 70;   // 使徒に刃が届く点（S5）
   let mark = G.S.log.length;
   G.startCombat(["graw"], {});
   const intro = fxOf(mark).find((e) => e.fx === "boss");

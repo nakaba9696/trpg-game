@@ -16,6 +16,33 @@
   G.target = () => G.alive()[0];
   G.foeData = (f) => D.ENEMIES[f.id];
 
+  // ---------------------------------------------------------------- 敵の強さ（S5。点）
+  // 敵の点 lv（データに無ければ段 tier から。D.S5.TIER_LV、ボスは +BOSS）。こちらの判定の相手の点は、lv に今までの欄（％）を 3 で割って足す。
+  // ゴブリン（段 1・防御 0）は 13 点：筋力 12 の攻撃が 50％（今までの 48％とほぼ同じ）。段が上がるほど、同じ点でも当たりにくく、当てられやすくなる
+  G.foeLv = (e) => {
+    if (e.lv != null) return e.lv;
+    const T = (D.S5 && D.S5.TIER_LV) || {};
+    const t = e.tier || 1;
+    return (T[t] != null ? T[t] : 12 + (t - 1) * 8) + (e.boss ? (D.S5 && D.S5.BOSS) || 0 : 0);
+  };
+  G.foeVs = {
+    eva: (e) => G.foeLv(e) + 1 + G.s5Mod(e.def || 0),               // こちらの攻撃（武器の能力値と比べる）
+    vital: (e) => G.foeVs.eva(e) + 5,                                 // 急所（敏捷）
+    mres: (e) => G.foeLv(e) + 1 + G.s5Mod(e.mres || 0),             // 魔法（魔力）
+    will: (e) => G.foeLv(e) + 1 + G.s5Mod((e.will || 0) - 30),      // 威圧（魅力）
+    flee: (e) => G.foeLv(e) + 1 + G.s5Mod((e.agi || 0) - 10),       // 逃げる（敏捷）
+    acc: (e) => G.foeLv(e) - 4 + G.s5Mod((e.hit || 0) - 50),        // 敵の命中（あなたの敏捷と比べる）
+  };
+  // 敵の攻撃があなたに当たる見込み（％）。extra は今までの命中に足す％（身を守る −20 など）
+  G.foeHitChance = (e, extra) => G.clamp(Math.round(G.s5p(G.foeVs.acc(e) + G.s5Mod(extra) - G.statEff("敏捷"))), 5, 95);
+  // 仲間の腕前（power。今までの％）を点に。一緒に勝った戦い（b5wins）4 回ごとに 1 点伸びる（30 点まで）
+  G.allyLv = (c) => (c.power || 30) / 3 - 4 + Math.min(30, Math.floor((c.b5wins || 0) / 4));
+  G.allyHitChance = (c, e) => G.clamp(Math.round(G.s5p(G.allyLv(c) - (c.fire ? G.foeVs.mres(e) : G.foeVs.eva(e)))), 5, 95);
+  G.foeHitAlly = (e, c, extra) => G.clamp(Math.round(G.s5p(G.foeVs.acc(e) + G.s5Mod(extra) - G.allyLv(c))), 5, 95);
+  // 体の目盛りで割った能力値（ダメージ・威力の上乗せ。20 点までは今までと同じ）
+  const pow = (k, n) => Math.floor(G.s5Pow(G.S.stats[k]) / n);
+  G.s5PowOf = pow;
+
   G.startCombat = (ids, opt) => {
     const S = G.S;
     opt = opt || {};
@@ -50,22 +77,24 @@
 
   // ---------------------------------------------------------------- 成功率
   G.cb = {
-    attack: () => { const w = G.weapon(); const t = G.target(); return G.chance(w.stat, 0, (w.hit || 0) - G.foeData(t).def); },
-    vital: () => { const w = G.weapon(); const t = G.target(); return G.chance("敏捷", -15, (w.vital || 0) - G.foeData(t).def); },
-    fire: () => { const t = G.target(); return G.chance("魔力", 0, G.gearBonus("fire") + G.magicBonus() - G.foeData(t).mres); },
-    heal: () => G.chance("魔力", "易しい", G.gearBonus("heal") + G.magicBonus()),
+    attack: () => { const w = G.weapon(); const t = G.target(); return G.chance(w.stat, { vs: G.foeVs.eva(G.foeData(t)) }, w.hit || 0); },
+    vital: () => { const w = G.weapon(); const t = G.target(); return G.chance("敏捷", { vs: G.foeVs.vital(G.foeData(t)) }, w.vital || 0); },
+    fire: () => { const t = G.target(); return G.chance("魔力", { vs: G.foeVs.mres(G.foeData(t)) }, G.gearBonus("fire") + G.magicBonus()); },
+    heal: () => G.chance("魔力", "易しい", G.gearBonus("heal") + G.magicBonus()),   // 場所の上乗せは無い（S5）
     // M1 の術（D.SPELLS）。雷は敵すべてを打つので、いちばん魔法に強い敵で測る
-    ice: () => spellChance("ice", G.foeData(G.target()).mres),
-    bolt: () => spellChance("bolt", Math.max(...G.alive().map((f) => G.foeData(f).mres))),
-    curse: () => spellChance("curse", G.foeData(G.target()).mres),
-    ward: () => spellChance("ward", 0),
-    talk: () => { const worst = Math.max(...G.alive().map((f) => G.foeData(f).will)); return G.chance("魅力", 30 - worst, G.gearBonus("talk")); },
-    flee: () => { const fast = Math.max(...G.alive().map((f) => G.foeData(f).agi)); return G.chance("敏捷", 10 - fast); },
+    ice: () => spellChance("ice", G.foeVs.mres(G.foeData(G.target()))),
+    bolt: () => spellChance("bolt", Math.max(...G.alive().map((f) => G.foeVs.mres(G.foeData(f))))),
+    curse: () => spellChance("curse", G.foeVs.mres(G.foeData(G.target()))),
+    ward: () => spellChance("ward", null),
+    talk: () => G.chance("魅力", { vs: Math.max(...G.alive().map((f) => G.foeVs.will(G.foeData(f)))) }, G.gearBonus("talk")),
+    flee: () => G.chance("敏捷", { vs: Math.max(...G.alive().map((f) => G.foeVs.flee(G.foeData(f)))) }),
   };
 
-  function spellChance(id, res) {
+  // 術の相手の点（vs。null なら敵と比べない術で、普通の難しさ）に、術の難しさ（sp.diff。今までの％）を足す
+  const spellVs = (sp, vs) => ({ vs: (vs == null ? G.s5Target(0) : vs) - G.s5Mod(sp.diff || 0) });
+  function spellChance(id, vs) {
     const sp = D.SPELLS[id];
-    return G.chance("魔力", sp.diff || 0, G.gearBonus(sp.bonus) + G.magicBonus() - res);
+    return G.chance("魔力", spellVs(sp, vs), G.gearBonus(sp.bonus) + G.magicBonus());
   }
 
   G.combatActions = () => {
@@ -143,18 +172,18 @@
     const ally = (id) => (id && id !== "you" ? S.companions.find((c) => c.id === id) || null : null);
     if (kind === "attack") {
       G.log("you", `${w.name}で${t.name}に斬りかかる`);
-      const r = G.check(w.stat, 0, "攻撃", (w.hit || 0) - G.foeData(t).def);
+      const r = G.check(w.stat, { vs: G.foeVs.eva(G.foeData(t)) }, "攻撃", w.hit || 0);
       if (r.ok) {
-        let dmg = G.dice(w.dmg) + (w.stat === "筋力" ? Math.floor(S.stats.筋力 / 15) : Math.floor(S.stats.敏捷 / 20));
+        let dmg = G.dice(w.dmg) + (w.stat === "筋力" ? pow("筋力", 15) : pow("敏捷", 20));
         if (r.crit) { dmg *= 2; G.log("nar", "会心の一撃！", { fx: "crit" }); }
         damageFoe(t, dmg, "blade");
       } else G.say(r.fumble ? "足を滑らせ、大きな隙をさらした。" : "攻撃は空を切った。");
       if (r.fumble) C.exposed = true;
     } else if (kind === "vital") {
       G.log("you", `${t.name}の急所を狙う`);
-      const r = G.check("敏捷", -15, "急所狙い", (w.vital || 0) - G.foeData(t).def);
+      const r = G.check("敏捷", { vs: G.foeVs.vital(G.foeData(t)) }, "急所狙い", w.vital || 0);
       if (r.ok) {
-        const dmg = (G.dice(w.dmg) + Math.floor(S.stats.敏捷 / 15)) * (r.crit ? 3 : 2);
+        const dmg = (G.dice(w.dmg) + pow("敏捷", 15)) * (r.crit ? 3 : 2);
         G.log("nar", "刃が急所を捉えた！", { fx: "crit" });
         damageFoe(t, dmg, "blade");
       } else G.say("急所を外した。");
@@ -162,9 +191,9 @@
     } else if (kind === "fire") {
       S.mp -= 3;
       G.log("you", `${t.name}に炎の魔法を放つ`);
-      const r = G.check("魔力", 0, "炎の魔法", G.gearBonus("fire") + G.magicBonus() - G.foeData(t).mres);
+      const r = G.check("魔力", { vs: G.foeVs.mres(G.foeData(t)) }, "炎の魔法", G.gearBonus("fire") + G.magicBonus());
       if (r.ok) {
-        let dmg = G.dice([2, 6, 0]) + Math.floor(S.stats.魔力 / 8);
+        let dmg = G.dice([2, 6, 0]) + pow("魔力", 8);
         if (r.crit) dmg = Math.floor(dmg * 1.5);
         G.say("炎が渦を巻いて敵を包んだ。");
         damageFoe(t, dmg, "fire");
@@ -175,14 +204,14 @@
       const c = ally(itemId);
       G.log("you", c ? `${G.m2Short(c)}に癒しの奇跡を祈る` : "癒しの奇跡を祈る");
       const r = G.check("魔力", "易しい", "癒しの奇跡", G.gearBonus("heal") + G.magicBonus());
-      if (r.ok) { const n = G.dice([2, 6, 2]) + Math.floor(S.stats.魔力 / 10); if (c) G.b5Heal(c, n); else { G.heal(n); G.note(`HP +${n}`); } }
+      if (r.ok) { const n = G.dice([2, 6, 2]) + pow("魔力", 10); if (c) G.b5Heal(c, n); else { G.heal(n); G.note(`HP +${n}`); } }
       else G.say("祈りは届かなかった。");
     } else if (D.SPELLS && D.SPELLS[kind] && !D.SPELLS[kind].base) {
       castSpell(kind, t);
     } else if (kind === "talk") {
       G.log("you", "敵を威圧する");
-      const worst = Math.max(...G.alive().map((f) => G.foeData(f).will));
-      const r = G.check("魅力", 30 - worst, "威圧", G.gearBonus("talk"));
+      const worst = Math.max(...G.alive().map((f) => G.foeVs.will(G.foeData(f))));
+      const r = G.check("魅力", { vs: worst }, "威圧", G.gearBonus("talk"));
       if (r.ok) { G.say("あなたの気迫に、敵は武器を捨てて逃げ出した。"); G.addFame(1); return endCombat("scared"); }
       G.say("敵は鼻で笑った。");
     } else if (kind === "bribe") {
@@ -196,8 +225,8 @@
       C.guard = true;
     } else if (kind === "flee") {
       G.log("you", "逃げる");
-      const fast = Math.max(...G.alive().map((f) => G.foeData(f).agi));
-      const r = G.check("敏捷", 10 - fast, "逃走");
+      const fast = Math.max(...G.alive().map((f) => G.foeVs.flee(G.foeData(f))));
+      const r = G.check("敏捷", { vs: fast }, "逃走");
       if (r.ok) { G.say(G.voiceLine ? G.voiceLine("fled", null, "うまく逃げ切った。") : "うまく逃げ切った。"); return endCombat("fled"); }
       G.say("回り込まれた！");
     } else if (kind === "item") {
@@ -234,9 +263,9 @@
     const bonus = G.gearBonus(sp.bonus) + G.magicBonus();
     if (id === "ice") {
       G.log("you", `${t.name}に氷の魔法を放つ`);
-      const r = G.check("魔力", sp.diff, sp.name, bonus - G.foeData(t).mres);
+      const r = G.check("魔力", spellVs(sp, G.foeVs.mres(G.foeData(t))), sp.name, bonus);
       if (r.ok) {
-        const dmg = G.dice([1, 6, 0]) + Math.floor(S.stats.魔力 / 10);
+        const dmg = G.dice([1, 6, 0]) + pow("魔力", 10);
         G.say("白い霜が敵の足元から這い上がった。");
         damageFoe(t, dmg, "ice");
         if (t.hp > 0 && !(G.foeData(t).majin && !G.weapon().pierce)) { t.frozen = r.crit ? 2 : 1; G.note(`${t.name}は凍りついて動けない。`); }
@@ -244,16 +273,16 @@
       if (r.fumble) { G.hurt(2, "自分の氷で凍え死んだ"); G.payDebt(sp.debt); }
     } else if (id === "bolt") {
       G.log("you", "雷の魔法を呼ぶ");
-      const res = Math.max(...G.alive().map((f) => G.foeData(f).mres));
-      const r = G.check("魔力", sp.diff, sp.name, bonus - res);
+      const res = Math.max(...G.alive().map((f) => G.foeVs.mres(G.foeData(f))));
+      const r = G.check("魔力", spellVs(sp, res), sp.name, bonus);
       if (r.ok) {
         G.say("空が裂け、稲妻が敵の頭上に次々と落ちた。");
-        G.alive().forEach((f) => { const dmg = G.dice([2, 4, 0]) + Math.floor(S.stats.魔力 / 12); damageFoe(f, r.crit ? dmg * 2 : dmg, "bolt"); });
+        G.alive().forEach((f) => { const dmg = G.dice([2, 4, 0]) + pow("魔力", 12); damageFoe(f, r.crit ? dmg * 2 : dmg, "bolt"); });
       } else G.say(r.fumble ? "稲妻は、呼んだ者の頭に落ちた。" : "遠くで雷が鳴っただけだった。");
       if (r.fumble) { G.hurt(4, "自分の雷に打たれた"); G.payDebt(sp.debt); }
     } else if (id === "curse") {
       G.log("you", `${t.name}に呪いの言葉を吐く`);
-      const r = G.check("魔力", sp.diff, sp.name, bonus - G.foeData(t).mres);
+      const r = G.check("魔力", spellVs(sp, G.foeVs.mres(G.foeData(t))), sp.name, bonus);
       if (r.ok) {
         if (G.foeData(t).majin && !G.weapon().pierce) G.say(`呪いの言葉は、${t.name}の手前で霧のように散った。絶界だ。`);
         else { t.hex = r.crit ? 5 : 3; G.say(`${t.name}の影が、ぐにゃりと歪んだ。`); G.note(`${t.name}は呪われた（${t.hex}手番・命中が落ち、少しずつ蝕まれる）`); }
@@ -261,13 +290,13 @@
       if (r.fumble) { if (!S.conds.includes("呪い")) { S.conds.push("呪い"); G.note("状態：呪い"); } G.payDebt(sp.debt); }
     } else if (id === "ward") {
       G.log("you", "加護を祈る");
-      const r = G.check("魔力", sp.diff, sp.name, bonus);
+      const r = G.check("魔力", spellVs(sp, null), sp.name, bonus);
       if (r.ok) { C.ward = r.crit ? 5 : 3; G.say("淡い光の垣根が、あなたの周りに立ち上がった。"); G.note(`加護（${C.ward}手番・受けるダメージ -${wardCut()}）`); }
       else G.say(r.fumble ? "垣根は立ち上がりかけて、あなたの上に崩れ落ちた。" : "祈りは、どこにも届かなかった。");
       if (r.fumble) G.payDebt(sp.debt);
     }
   }
-  const wardCut = () => 2 + Math.floor(G.S.stats.魔力 / 20);
+  const wardCut = () => 2 + pow("魔力", 20);
 
   // ---------------------------------------------------------------- 仲間と敵の番
   // B5：戦闘不能（HP 0）の仲間は動かない。回復役は、いちばん減っている味方（戦闘不能を先に）を治す
@@ -286,7 +315,7 @@
       const f = G.pick(foes);
       const e = G.foeData(f);
       if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
-      const chance = G.clamp(c.power - (c.fire ? e.mres : e.def), 5, 95);
+      const chance = G.allyHitChance(c, e);
       if (G.d(100) <= chance) {
         const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
         f.hp = Math.max(0, f.hp - dmg);
@@ -309,7 +338,7 @@
   }
   function hitAlly(f, e, c, hexed) {
     const C = G.S.combat;
-    const chance = G.clamp(e.hit - G.b5Dodge(c) - (hexed ? 20 : 0), 5, 95);
+    const chance = G.foeHitAlly(e, c, hexed ? -20 : 0);
     if (G.d(100) > chance) { G.note(`${c.name}は${f.name}の攻撃をかわした。`); return; }
     let dmg = G.dice(e.dmg) - (e.magic ? 0 : G.b5Def(c));
     if (C.ward > 0) dmg -= wardCut();
@@ -323,7 +352,7 @@
   function sweep(f, e) {
     G.say(`${f.name}の一撃の余波が、一行をなぎ払った！`);
     G.b5Standing(G.S).forEach((c) => {
-      if (G.d(100) > G.clamp(e.hit - G.b5Dodge(c), 5, 95)) { G.note(`${c.name}は身を伏せて、余波をかわした。`); return; }
+      if (G.d(100) > G.foeHitAlly(e, c)) { G.note(`${c.name}は身を伏せて、余波をかわした。`); return; }
       const dmg = Math.max(1, Math.ceil(G.dice(e.dmg) * 0.6) - G.b5Def(c));
       c.hp = Math.max(0, c.hp - dmg);
       G.log("nar", `${c.name}に ${dmg} のダメージ（残り ${c.hp}/${G.b5Max(c)}）`, { fx: "ally", who: c.name, n: dmg });
@@ -342,7 +371,7 @@
       if (hexed) {
         f.hex--;
         G.note(`呪いが${f.name}を蝕む。`);
-        damageFoe(f, G.d(4) + Math.floor(S.stats.魔力 / 20), "curse");
+        damageFoe(f, G.d(4) + pow("魔力", 20), "curse");
         if (f.hp <= 0) return;
       }
       if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は凍りついたまま動けない。`); return; }
@@ -352,8 +381,7 @@
       const ally = apostle ? null : aimOf();
       if (ally) { hitAlly(f, e, ally, hexed); return; }
       if (apostle && G.b5Standing(S).length && G.rand() < 0.35) sweep(f, e);
-      let chance = e.hit - Math.floor(G.statEff("敏捷") / 5) - (C.guard ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0);
-      chance = G.clamp(chance, 5, 95);
+      const chance = G.foeHitChance(e, -(C.guard ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0));
       if (G.d(100) <= chance) {
         let dmg = G.dice(e.dmg) - (e.magic ? 0 : (armor ? armor.def : 0));
         if (C.guard) dmg = Math.floor(dmg / 2);
