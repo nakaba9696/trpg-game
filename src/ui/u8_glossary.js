@@ -119,6 +119,9 @@
     if (sig !== wordsSig) { wordsSig = sig; words = gl.words(G.S); }
     return words;
   };
+  // 言葉の表が変わるなら、記録の行を作り直してもらう（強調し終えた行も、新しい表で強調し直す。T）
+  let logWordsSig = null;
+  const checkWords = () => { const sig = G.S ? gl.sig(G.S) : null; if (sig !== logWordsSig) { logWordsSig = sig; if (ui.logInvalidate) ui.logInvalidate(); } };
 
   // 一つの語の印。passive：ボタンの中など（押すとボタンが動くので、説明だけ出して飛ばない）
   function termEl(x, opt) {
@@ -176,10 +179,17 @@
     const log = $("#log");
     if (log && list.length) {
       // 場面ごと（「あなた」の行で区切る）に、同じ語は一度だけ。新しく載った語の ✦ は、今回増えた記録の中だけ
+      // 記録の行は使い回される（ui.js。T）。強調し終えた行（data-u8）は触らずに、その中の語を「この場面で使った」に数えるだけ
+      // （言葉の表が変わったときは、ui.js が行を作り直すので、全部を強調し直す）
       let used = new Set();
       Array.from(log.children).forEach((el) => {
         if (el.classList.contains("l-you")) { used = new Set(); return; }
         const isNew = el.classList.contains("new");
+        if (el.dataset.u8) {
+          el.querySelectorAll(".u8term").forEach((t) => { if (t.dataset.id) used.add(t.dataset.id); if (!isNew) t.classList.remove("u8new"); });
+          return;
+        }
+        el.dataset.u8 = "1";
         const fresh = isNew ? freshNow : null;
         const t = gl.noteTitle(el.textContent);
         if (t) { noteEl(el, t, used, fresh); return; }
@@ -300,6 +310,7 @@
 
   const base = ui.render;
   ui.render = (...a) => {
+    checkWords();
     const r = base(...a);
     hideTip();
     markAll();

@@ -159,15 +159,19 @@
   const $ = (s) => document.querySelector(s);
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
   const calm = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  // 画面の幅（読むと配置の計算が走るので、同じコマのあいだは覚えておく。大きさが変わればすぐ読み直す。T）
+  // 画面の幅。読むたびに配置の計算が走らないよう、配置が決まったあとに知らせてくれる ResizeObserver で覚えておく（スクロールバーの出入りも拾う）。
+  // 窓の大きさが変わったときは、その場で読み直す（ほかの resize の処理より先に）。ResizeObserver が無ければ、1 コマのあいだ覚える（T）
+  const readVw = () => document.documentElement.clientWidth || window.innerWidth;
   let vwMemo = 0;
+  const RO = typeof ResizeObserver === "function";
+  if (RO) { vwMemo = readVw(); new ResizeObserver(() => { vwMemo = readVw(); }).observe(document.documentElement); }
   const vw = () => {
     if (vwMemo) return vwMemo;
-    vwMemo = document.documentElement.clientWidth || window.innerWidth;
-    if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => { vwMemo = 0; }); else vwMemo = 0;
+    vwMemo = readVw();
+    if (!RO) { if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => { vwMemo = 0; }); else vwMemo = 0; }
     return vwMemo;
   };
-  window.addEventListener("resize", () => { vwMemo = 0; }, true);
+  window.addEventListener("resize", () => { vwMemo = RO ? readVw() : 0; }, true);
   const vh = () => window.innerHeight;
   const playing = () => { const p = $("#play"); return !!(p && !p.hidden && G.S); };
   const on = () => v9.isPC(vw(), vh()) && playing();
