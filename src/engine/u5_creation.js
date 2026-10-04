@@ -187,24 +187,33 @@
     return { cls: dr.cls, stats: cre.final(dr), caps: cre.caps(dr), profile: p, goal: dr.goal, goalText: cre.goalText(dr) };
   };
 
-  // 始まりの導入。ページ（段落の並び）の配列を返す。状況の概要だけの 1 頁（D.PROLOGUE）。古いセーブの人物（生まれが無い）でも作れる
+  // 始まりの導入。ページ（段落の並び）の配列を返す。状況の概要の 3 頁（D.PROLOGUE）：世界の今・あなたは誰か・今どこにいて何を目指すか
+  // 部品は乱数を使わず名前で選ぶ（同じ人物なら同じ文）。古いセーブの人物（生まれ・年齢の区分が無い）でも作れる
   cre.prologue = (o) => {
     const P = D.PROLOGUE;
     const p = o.profile || {};
     const org = D.ORIGINS[p.origin];
     const c = D.CLASSES[o.cls];
-    const start = D.LOCS[c.start];
+    const startId = c.start;
+    const start = D.LOCS[startId];
     // 作成画面の形（goal: id, goalText）とセーブの形（goal: { id, text }）のどちらでもよい
     const g = o.goal && typeof o.goal === "object" ? o.goal : { id: o.goal, text: o.goalText };
     const text = String(g.text || o.goalText || "").trim().replace(/[。．.]+$/, "");
-    const fill = (t) => t.replace("{name}", p.name).replace("{age}", p.age).replace("{cls}", c.name).replace("{origin}", org ? org.name : "")
-      .replace("{place}", start.name).replace("{text}", text);
-    // 自分で書いた生い立ちは、誰かの一文のあとに一言だけ添える
     const history = String(p.history || "").trim().replace(/[。．.]+$/, "");
-    return [[
-      fill(org ? P.who : P.whoNoOrigin) + (history ? `${history}。` : ""),
-      fill(org && org.name === start.name ? P.arriveHome : P.arrive),
-      fill(g.id !== "custom" && D.GOALS[g.id] ? P.goal : P.custom),
-    ]];
+    const fill = (t) => t.replace("{name}", p.name).replace("{age}", p.age).replace("{cls}", c.name).replace("{origin}", org ? org.name : "")
+      .replace("{place}", start.name).replace("{text}", text).replace("{history}", history);
+    // 名前から決まる数（同じ人物なら同じ部品）
+    const seed = [...String(p.name || "")].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
+    const pick = (arr) => (Array.isArray(arr) ? arr[seed % arr.length] : arr);
+    // 年齢の区分は、書いた歳の数から（区分と歳が食い違うときは歳を信じる）。歳が読めなければ区分、それも無ければ壮年
+    const byAge = Object.keys(D.AGES).find((k) => { const [lo, hi] = D.AGES[k].range; const n = Number(p.age); return n >= lo && n <= hi; });
+    const band = byAge || (D.AGES[p.ageBand] ? p.ageBand : "prime");
+    const past = (P.past[o.cls] || {})[band] || P.pastNone;
+    const home = org && org.name === start.name;
+    return [
+      P.world.slice(),
+      [fill(org ? P.who : P.whoNoOrigin), org ? pick(P.life[p.origin]) : "", past, history ? fill(P.history) : ""].filter(Boolean),
+      [fill(home ? P.arriveHome : P.arrive) + (P.place[startId] ? P.place[startId] : ""), fill(g.id !== "custom" && D.GOALS[g.id] ? P.goal : P.custom), P.close],
+    ];
   };
 })(globalThis.G = globalThis.G || {});
