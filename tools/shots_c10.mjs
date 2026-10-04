@@ -48,4 +48,6 @@ await shoot(PHONE, "carriage_locked_phone", () => { G.S.fame = 40; G.S.sin = 0; 
 await shoot(PC, "slaver_titled", new Function(`G.S.sin = 30; G.S.title = "騎士"; G.S.mode = "event"; G.S.event = "slaver"; G.say(G.data.EVENTS.find((e) => e.id === "slaver").text); G.ui.render();`));
 // 酒場の「あなたなら」
 await shoot(PC, "tavern", () => { G.S.sin = 30; G.S.fame = 200; G.S.companions = [{ name: "剣士のハンス", cls: "剣士", power: 50, dmg: 1, desc: "無口" }]; G.S.mode = "fac"; G.S.fac = "tavern"; G.ui.render(); });
+// 設定の窓（Q7）の「選べない選択肢を見せる」
+await shoot(PC, "settings", () => { const b = [...document.querySelectorAll(".top .tools button")].find((x) => /設定/.test(x.textContent)); if (b) b.click(); });
 await browser.close();
