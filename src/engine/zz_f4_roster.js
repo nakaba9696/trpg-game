@@ -418,7 +418,7 @@
       G.log("you", "尋ね人の貼り紙を見る");
       G.pass(1);
       const r = F4.rumor(S);
-      if (r) { G.say(`貼り紙の隅に、走り書きが足されている。「${r.text}」`); G.memo("貼り紙：" + r.text); }
+      if (r) { G.say(`貼り紙の隅に、走り書きが足されている。「${r.text}」`); G.memo("貼り紙：" + r.text, { person: r.id }); }
       else G.say(G.pick((D.F4_RUMORS || {}).none || ["目ぼしい貼り紙はなかった。"]));
       return;
     }
@@ -428,7 +428,7 @@
         S.gold -= 2;
         G.log("you", "噂を聞く");
         G.say(`酔った傭兵が声をひそめた。「${r.text}」`);
-        G.memo("噂：" + r.text);
+        G.memo("噂：" + r.text, { person: r.id });
         G.pass(1);
         return;
       }
