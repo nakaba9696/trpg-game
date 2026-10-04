@@ -37,14 +37,12 @@
   function showPlay() {
     $("#setup").hidden = true;
     $("#play").hidden = false;
-    $("#newGame").hidden = false;
     G.ui.render();
   }
   function showSetup(o) {
     G.ui.setSheetOpen(false);
     G.ui.setLogExpanded(false);
     $("#play").hidden = true;
-    $("#newGame").hidden = true;
     $("#setup").hidden = false;
     G.setup.show(o);
     window.scrollTo({ top: 0 });
@@ -71,18 +69,7 @@
   G.onFinish = () => main.saveProfile();
   G.onProfile = () => main.saveProfile(); // 冒険の途中で G.P が変わったとき（E3：倒した使徒・挑んだ回数）
 
-  let armed = 0;
-  $("#newGame").onclick = () => {
-    const b = $("#newGame");
-    if (G.S && !G.S.over && Date.now() - armed > 3000) {
-      armed = Date.now();
-      b.textContent = "もう一度押すと今の冒険を捨てる";
-      setTimeout(() => { b.textContent = "新しい冒険"; }, 3000);
-      return;
-    }
-    b.textContent = "新しい冒険";
-    main.toSetup();
-  };
+  // 新しい冒険は、タイトル画面（と終わった冒険の画面の「新しい冒険を始める」）からだけ始める（持ち主の決定。冒険中の右上のボタンは外した）
 
   // 読み込んだ冒険を今の冒険にする。冒険の画面を開いていれば描き直す（タイトルや作成の途中なら、そのまま）
   function adopt(sv) {

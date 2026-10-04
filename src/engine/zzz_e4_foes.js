@@ -265,6 +265,7 @@
         S.flags["e4clue:" + f.id] = 1;
         G.say(e.clue.text);
         G.memo("手がかり：" + e.clue.memo);
+        if (G.heard) G.heard("手がかり：" + e.clue.memo, (D.LORE || {})[e.kinOf] ? { lore: e.kinOf } : { foe: "e3_" + e.kinOf }); // 主の用語（人ならざる者）に
       }
       if (k[e.kinOf] === (E4.CORE_NEED || 2)) {
         G.note("この縄張りの主は、手下を失って少し弱ったはずだ。");

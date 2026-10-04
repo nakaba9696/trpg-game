@@ -247,6 +247,7 @@
     G.log("you", "噂を聞く");
     G.say(`${G.pick(M.SPEAKERS)}「${text}」`);
     G.memo("噂：" + text);
+    if (G.heard) G.heard("噂：" + text);
     hear(h, "rumor");
     G.pass(1);
     return true;
