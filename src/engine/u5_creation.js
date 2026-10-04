@@ -73,10 +73,11 @@
   cre.setSex = (dr, sex, rnd) => { dr.sex = sex; dr.profile.name = cre.gen(dr, "name", rnd); };
 
   // ---------------------------------------------------------------- 能力値（点。S2）
-  // 作成はすべて点で数える（src/data/zs2_points.js）。冒険に渡すときに成功率の尺度（点×4）にする（cre.final・cre.caps）。
-  // 振るたびに変わるのは、ボーナス点の数（ふつう 5〜10・当たり 15〜20・大当たり 25〜）と才能限界（と M8 の才）。素の値は職業で決まる。
-  // 鍵：鍵をかけた能力値は、振り直しても才能限界（と才）が残る
-  const S2 = () => D.S2 || { PCT: 4, MAX: 25, CAP_ADD: [5, 3, 3], BONUS: [[1, 6, 6, "ふつう"]], BONUS_EXTRA: 0 };
+  // 作成はすべて点で数える（src/data/zs2_points.js）。冒険に渡すときに成功率の尺度（点×4）にする（cre.final）。
+  // 振るたびに変わるのは、ボーナス点の数（ふつう 5〜10・当たり 15〜20・大当たり 25〜）。素の値は職業で決まる。
+  // 上限は全員共通の D.S2.MAX（24 点）だけ。ボーナス点はそこまで好きに足せる。
+  // 鍵：鍵をかけた能力値は、振り直しても、そこに足したボーナス点が残る（鍵の無い能力値のボーナスは振るたびに 0 に戻る）
+  const S2 = () => D.S2 || { PCT: 4, MAX: 24, BONUS: [[1, 6, 6, "ふつう"]], BONUS_EXTRA: 0 };
   cre.MAX_PT = S2().MAX;
   cre.ptOfPct = (n) => Math.round((n || 0) / S2().PCT);   // 割合で書かれた補正（才の限界など）を点に
 
@@ -93,16 +94,13 @@
 
   cre.roll = (dr, rnd) => {
     const c = D.CLASSES[dr.cls];
-    const [add, a1, a2] = S2().CAP_ADD;
     dr.rolled = dr.rolled || {};
-    dr.caps = dr.caps || {};
     dr.bonus = dr.bonus || {};
     dr.locks = dr.locks || {};
+    delete dr.caps;
     D.STATS.forEach((k) => {
-      if (dr.bonus[k] === undefined) dr.bonus[k] = 0;
+      if (dr.bonus[k] === undefined || !dr.locks[k]) dr.bonus[k] = 0;
       dr.rolled[k] = c.pt[k];
-      if (dr.locks[k] && dr.caps[k] !== undefined) return;
-      dr.caps[k] = Math.min(S2().MAX, c.pt[k] + add + dn(rnd, a1) + dn(rnd, a2));
     });
     const b = cre.rollBonus(rnd);
     dr.bonusRoll = b.n;
@@ -120,26 +118,30 @@
   cre.mod = (dr, k) => { const m = cre.modParts(dr, k); return m.age + m.origin; };
   // ボーナスを足す前の値
   cre.base = (dr, k) => clamp(dr.rolled[k] + cre.mod(dr, k), 1, S2().MAX);
-  // 才能限界（年齢で上下する。今の値より 2 は上）
-  cre.cap = (dr, k) => clamp(dr.caps[k] + ((D.AGES[dr.ageBand] || {}).cap || 0), cre.base(dr, k) + 2, S2().MAX);
+  // 上限（全員共通）
+  cre.cap = () => S2().MAX;
   cre.value = (dr, k) => cre.base(dr, k) + (dr.bonus[k] || 0);
   // 冒険に渡す形（成功率の尺度）
   cre.final = (dr) => Object.fromEntries(D.STATS.map((k) => [k, cre.value(dr, k) * S2().PCT]));
-  cre.caps = (dr) => Object.fromEntries(D.STATS.map((k) => [k, cre.cap(dr, k) * S2().PCT]));
+  cre.caps = () => Object.fromEntries(D.STATS.map((k) => [k, S2().MAX * S2().PCT]));   // 古い形（newGame の caps）のため
   cre.bonusUsed = (dr) => D.STATS.reduce((a, k) => a + (dr.bonus[k] || 0), 0);
   // 振ったボーナス点（＋ほかの仕組みが足す分。cre.extraBonus）
   cre.bonusPoints = (dr) => (dr.bonusRoll === undefined ? D.BONUS_POINTS : dr.bonusRoll) + (cre.extraBonus ? cre.extraBonus(dr) || 0 : 0);
   cre.bonusLeft = (dr) => cre.bonusPoints(dr) - cre.bonusUsed(dr);
   cre.total = (dr) => D.STATS.reduce((a, k) => a + cre.value(dr, k), 0);
 
-  // 限界を超えたボーナスを戻す（年齢や生まれを変えたあと・振り直してボーナス点が減ったあと）
+  // 上限を超えたボーナスを戻す（年齢や生まれを変えたあと）。点が足りなければ、鍵の無い能力値から戻す（振り直してボーナス点が減ったあと）
   cre.fit = (dr) => {
     if (!dr.rolled) return;
     D.STATS.forEach((k) => {
       dr.bonus[k] = Math.max(0, dr.bonus[k] || 0);
       while (dr.bonus[k] > 0 && cre.value(dr, k) > cre.cap(dr, k)) dr.bonus[k]--;
     });
-    while (cre.bonusLeft(dr) < 0) { const k = [...D.STATS].reverse().find((s) => dr.bonus[s] > 0); dr.bonus[k]--; }
+    while (cre.bonusLeft(dr) < 0) {
+      const back = [...D.STATS].reverse();
+      const k = back.find((s) => dr.bonus[s] > 0 && !dr.locks[s]) || back.find((s) => dr.bonus[s] > 0);
+      dr.bonus[k]--;
+    }
   };
 
   // 残りのボーナス点を、職業の得意な能力値と体力へ順に配る（even なら 6 つに均等に。テスト・ボット）

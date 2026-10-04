@@ -38,7 +38,7 @@ export default ({ G, fail, seeded }) => {
       G.P.trophies = Object.fromEntries(keys.slice(0, n).map((k) => [k, { name: k }]));
       if (cre.bonusPoints(dr0) !== rolled + n) fail(`トロフィー ${n} 個でボーナス点が ${rolled + n} にならない（${cre.bonusPoints(dr0)}）`);
     }
-    // 全部取ったとき：上限で止まり、才能限界まで使え、才能限界を超えない
+    // 全部取ったとき：上限で止まり、能力値の上限（24 点）まで使え、上限を超えない
     G.P.trophies = Object.fromEntries(keys.map((k) => [k, { name: k }]));
     if (cre.trophyBonus() !== Math.min(keys.length, D.TROPHY_BONUS_MAX)) fail(`全部取ったときのトロフィーの分が合わない（${cre.trophyBonus()}）`);
     const rnd = seeded(1010);
@@ -50,7 +50,7 @@ export default ({ G, fail, seeded }) => {
       const room = D.STATS.reduce((a, k) => a + cre.cap(dr, k) - cre.base(dr, k), 0);
       if (cre.bonusUsed(dr) !== Math.min(all, room)) fail(`作成 ${i}: 使った点が ${Math.min(all, room)} にならない（${cre.bonusUsed(dr)}）`);
       const o = cre.options(dr, rnd);
-      for (const k of D.STATS) if (o.stats[k] > o.caps[k]) fail(`作成 ${i}: ${k} が才能限界を超えた`);
+      for (const k of D.STATS) if (o.stats[k] > o.caps[k]) fail(`作成 ${i}: ${k} が上限を超えた`);
     }
   } finally { G.P = P0; }
 

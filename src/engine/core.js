@@ -136,11 +136,13 @@
   };
 
   // ---------------------------------------------------------------- 能力値・判定・成長
-  // S2：画面に出す能力値は点（割合 ÷ 4 の切り捨て）。S.stats・S.caps・判定は成功率の尺度（0〜99）のまま。
+  // S2：画面に出す能力値は点（割合 ÷ 4 の切り捨て）。S.stats・判定は成功率の尺度（0〜99）のまま。
+  // 上限は全員共通の G.statCap()（24 点＝96％）。S.caps は古いセーブに残っていても使わない
   // 端数（0〜3）は経験で、4 たまると 1 点伸びる。古いセーブもそのまま点で見える。docs/s2_stats.md
   G.PT = () => (D.S2 && D.S2.PCT) || 4;
   G.pt = (v) => Math.floor(Math.max(0, v || 0) / G.PT());
   G.ptExp = (v) => Math.max(0, v || 0) % G.PT();
+  G.statCap = () => ((D.S2 && D.S2.MAX) || 24) * G.PT();
   G.ptStats = (st) => Object.fromEntries(D.STATS.map((k) => [k, G.pt((st || {})[k])]));
   // 装備などの能力値の補正（判定に足す％）の書き方
   G.statModText = (k, n) => `${k}${G.sign(n)}%`;
@@ -182,7 +184,7 @@
   G.grow = (k, n) => {
     const S = G.S;
     const a = S.stats[k];
-    const b = Math.min(S.caps[k], a + n);
+    const b = Math.max(a, Math.min(G.statCap(), a + n));
     if (b > a) {
       S.stats[k] = b;
       if (k === "体力") { const m = G.maxHpOf(S.stats); S.hp += m - S.maxHp; S.maxHp = m; }
@@ -514,7 +516,7 @@
       v: 1, id: "r" + Date.now().toString(36) + Math.floor(G.rand() * 1e6).toString(36),
       profile: { ...opt.profile }, cls: opt.cls, clsName: c.name,
       goal: { id: opt.goal, text: opt.goalText || D.GOALS[opt.goal].text },
-      stats, caps: { ...opt.caps }, startStats: { ...stats },
+      stats, caps: Object.fromEntries(D.STATS.map((k) => [k, G.statCap()])), startStats: { ...stats },   // caps は古い形のために置くだけ（S2）
       maxHp: G.maxHpOf(stats), hp: G.maxHpOf(stats), maxMp: G.maxMpOf(stats), mp: G.maxMpOf(stats),
       gold: c.gold, fame: 0, title: "", inv: { ...c.items }, weapon: c.weapon, armor: c.armor, ring: "",
       companions: [], loc: c.start, visited: {}, day: 1, phase: 0, turn: 0,

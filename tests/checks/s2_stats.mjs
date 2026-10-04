@@ -1,8 +1,8 @@
 // S2：能力値を小さな数（点）で見せる・ボーナス点を振る（docs/s2_stats.md）
-// - 初期値の範囲：職業の素の値は 4〜14 点、補正を足しても 1〜18 点。ボーナス点を足しても才能限界（24 点まで）を超えない
+// - 初期値の範囲：職業の素の値は 4〜14 点、補正を足しても 1〜18 点。ボーナス点を足しても共通の上限（24 点）を超えない。能力値ごとの上限（旧・才能限界）は無い
 // - ボーナス点の分かれ方：ふつう 5〜10・当たり 15〜20（1 割ほど）・大当たり 25 以上（1〜2％）
 // - 換算：1 点 ＝ 成功率 4％。冒険に渡す値は点×4。判定の成功率は今までの式のまま
-// - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。才能限界で止まる
+// - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。共通の上限（24 点）で止まり、古いセーブの caps は効かない
 // - 古いセーブ：0〜99 の尺度のまま読め、点で見える。読み直しても値が変わらない（二度換算しない）
 // - 作成画面：ボーナス点の数と当たりの印、点で出す
 import { readFileSync } from "node:fs";
@@ -31,10 +31,10 @@ export default ({ G, fail: fail0, ok, seeded }) => {
       const b = cre.base(dr, k), v = cre.value(dr, k), cap = cre.cap(dr, k);
       lo = Math.min(lo, b); hi = Math.max(hi, b);
       if (!(b >= 1 && b <= 18)) fail(`作成 ${i}: ${k} の素の値＋補正 ${b} が範囲の外`);
-      if (!(v <= cap && cap <= MAX && cap >= b + 2)) fail(`作成 ${i}: ${k} ${v}／限界 ${cap} が合わない`);
+      if (!(v <= cap && cap === MAX)) fail(`作成 ${i}: ${k} ${v}／上限 ${cap} が合わない`);
     }
     const o = cre.options(dr, rnd);
-    for (const k of D.STATS) if (o.stats[k] !== cre.value(dr, k) * PCT || o.caps[k] !== cre.cap(dr, k) * PCT) fail(`作成 ${i}: 冒険に渡す値が点×${PCT}でない`);
+    for (const k of D.STATS) if (o.stats[k] !== cre.value(dr, k) * PCT || o.caps[k] !== MAX * PCT) fail(`作成 ${i}: 冒険に渡す値が点×${PCT}でない`);
     made++;
   }
 
@@ -85,13 +85,15 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   if (!/%$/.test(G.statModText("筋力", 5))) fail("装備の能力値の補正が％で書かれていない");
 
   // ---------------------------------------------------------------- 成長
-  S.stats.筋力 = 12 * PCT; S.caps.筋力 = 14 * PCT;
+  S.stats.筋力 = 12 * PCT; S.caps.筋力 = 14 * PCT;   // 古いセーブの caps：効かない
   let g = G.grow("筋力", 1);
   if (g[0] !== 12 || g[1] !== 12 || g[2] !== 1) fail(`1 だけの成長で点が上がった（${g}）`);
   g = G.grow("筋力", 3);
   if (g[0] !== 12 || g[1] !== 13) fail(`経験が 4 たまっても点が上がらない（${g}）`);
   g = G.grow("筋力", 40);
-  if (g[1] !== 14 || S.stats.筋力 !== 14 * PCT) fail(`才能限界で止まらない（${g}・${S.stats.筋力}）`);
+  if (g[1] !== 23 || S.stats.筋力 !== 92) fail(`古い caps で止まった・40 伸ばして 92 にならない（${g}・${S.stats.筋力}）`);
+  g = G.grow("筋力", 40);
+  if (g[1] !== MAX || S.stats.筋力 !== MAX * PCT) fail(`共通の上限で止まらない（${g}・${S.stats.筋力}）`);
   const logN = S.log.length;
   S.stats.魅力 = 10 * PCT; S.caps.魅力 = 20 * PCT;
   G.apply({ grow: { 魅力: 1 } });
@@ -105,7 +107,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   G.rand = seeded(2203);
   for (let i = 0; i < 200; i++) {
     const r = G.check("敏捷", "易しい", "テスト");
-    if (r.growth && !(r.growth[1] > r.growth[0] && r.growth[1] <= 20)) { fail(`判定の成長が点でない（${r.growth}）`); break; }
+    if (r.growth && !(r.growth[1] > r.growth[0] && r.growth[1] <= MAX)) { fail(`判定の成長が点でない（${r.growth}）`); break; }
   }
   // 訓練場の表示は点
   const fac = S.mode; S.mode = "fac"; S.fac = "train";
