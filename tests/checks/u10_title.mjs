@@ -1,6 +1,6 @@
 // U10：手引きと画面の手直し（持ち主の声）
 // - 消した文（仲間の居場所の決まり・「歩いて確かめるしかない」・暦と鐘の説明）が、どこにも残っていない
-// - トロフィーの格の点（銅 1・銀 2・金 4）10 点ごとに、キャラクター作成のボーナス点が 1 増える（古い記録・トロフィー無しでも動く）
+// - トロフィーの格の点（銅 1・銀 2・金 5）10 点ごとに、キャラクター作成のボーナス点が 1 増える（古い記録・トロフィー無しでも動く）
 // - タイトルのメニューは「はじめる」（と、保存があるときの「つづきから」）だけ
 // - 主人公の性格・口癖・好きなもの・苦手なものは作らない・見せない。生い立ちはおまかせで埋めない（空けておける）
 // - 恋の相性は主人公の性格に頼らない（魅力で決まる）
@@ -26,7 +26,7 @@ export default ({ G, fail, seeded }) => {
   // トロフィーとボーナス点
   const P0 = G.P;
   try {
-    // ボーナス点は、決まりの 5 点（D.BONUS_POINTS）＋トロフィーの格の点（銅 1・銀 2・金 4）10 点ごとに 1（cre.extraBonus。S2）
+    // ボーナス点は、決まりの 5 点（D.BONUS_POINTS）＋トロフィーの格の点（銅 1・銀 2・金 5）10 点ごとに 1（cre.extraBonus。S2）
     const dr0 = cre.fresh(seeded(1009));
     G.P = { graves: [] }; // 古い記録（trophies が無い）
     if (cre.trophyBonus() !== 0 || cre.bonusPoints(dr0) !== D.BONUS_POINTS) fail("トロフィーの無い記録でボーナス点が基本の値にならない");
@@ -36,13 +36,13 @@ export default ({ G, fail, seeded }) => {
     const bronze = D.TROPHIES.filter((t) => t.tier === "銅").slice(0, 10).map((t) => t.key);
     G.P.trophies = Object.fromEntries(bronze.map((k) => [k, { name: k }]));
     if (cre.trophyScore() !== 10 || cre.bonusPoints(dr0) !== D.BONUS_POINTS + 1) fail(`格の書いていない銅 10 個で +1 にならない（${cre.trophyScore()}）`);
-    // 全部取ったとき：銅 1・銀 2・金 4 の合計 ÷ 10
-    const pts = { 銅: 1, 銀: 2, 金: 4 };
+    // 全部取ったとき：銅 1・銀 2・金 5 の合計 ÷ 10
+    const pts = { 銅: 1, 銀: 2, 金: 5 };
     G.P.trophies = Object.fromEntries(D.TROPHIES.map((t) => [t.key, { name: t.name, tier: t.tier }]));
     const want = Math.floor(D.TROPHIES.reduce((a, t) => a + (pts[t.tier] || 1), 0) / 10);
     if (cre.trophyBonus() !== want) fail(`全部取ったときのトロフィーの分が ${want} にならない（${cre.trophyBonus()}）`);
     const all73 = D.TROPHIES.length === 73 && D.TROPHIES.filter((t) => t.tier === "金").length === 16 && D.TROPHIES.filter((t) => t.tier === "銀").length === 30;
-    if (all73 && want !== 15) fail(`今の 73 個を全部取って +15 にならない（${want}）`);
+    if (all73 && want !== 16) fail(`今の 73 個を全部取って +16 にならない（${want}）`);
     const rnd = seeded(1010);
     for (let i = 0; i < 20; i++) {
       const dr = cre.fresh(rnd);

@@ -1,6 +1,6 @@
 // S2：能力値を小さな数（点）で見せる・初期値をダイスで振る（docs/s2_stats.md）
 // - 初期値：能力値ごとに 3D6（8％で +1D6）＋職業・種族・年齢・生まれの補正。だいたい 5〜18、1 人のうちどれか 1 つが 20 以上になるのが約 5％
-// - ボーナス点：5 点で決まり＋トロフィーの格の点（銅 1・銀 2・金 4）10 点ごとに +1（合計の上限なし）。どの能力値にも好きなだけ
+// - ボーナス点：5 点で決まり＋トロフィーの格の点（銅 1・銀 2・金 5）10 点ごとに +1（合計の上限なし）。どの能力値にも好きなだけ
 // - 鍵は無い。振り直しは初期値を振り直す（何度でも）
 // - 換算：1 点 ＝ 成功率 4％。冒険に渡す値は点×4。判定の成功率は今までの式のまま
 // - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。上限は無い（99 を超えても壊れない。古いセーブの caps は効かない）
@@ -69,8 +69,8 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (cre.bonusPoints(dr) !== 5 || cre.trophyNext() !== 1) fail(`銅 9 個（9 点）で +1 になった・次まで 1 点でない（${cre.bonusPoints(dr)}）`);
     G.P.trophies = tr(Array(10).fill("銅"));
     if (cre.bonusPoints(dr) !== 6) fail(`銅だけ 10 個で +1 にならない（${cre.bonusPoints(dr)}）`);
-    G.P.trophies = tr(Array(3).fill("金"));
-    if (cre.trophyScore() !== 12 || cre.bonusPoints(dr) !== 6) fail(`金 3 個（12 点）で +1 にならない（${cre.trophyScore()}・${cre.bonusPoints(dr)}）`);
+    G.P.trophies = tr(Array(2).fill("金"));
+    if (cre.trophyScore() !== 10 || cre.bonusPoints(dr) !== 6) fail(`金 2 個（10 点）で +1 にならない（${cre.trophyScore()}・${cre.bonusPoints(dr)}）`);
     G.P.trophies = tr(Array(5).fill("銀"));
     if (cre.bonusPoints(dr) !== 6) fail(`銀 5 個（10 点）で +1 にならない`);
     // 1 つの能力値にいくらでも足せる（トロフィーの分の 1 能力 10 点までの決まりは外した）
