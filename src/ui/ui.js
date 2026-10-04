@@ -307,7 +307,7 @@
     nm.setAttribute("role", "button");
     nm.onclick = () => ui.openProfile();
     nm.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); ui.openProfile(); } };
-    hd.append(nm, h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）${G.reputeLabel ? G.reputeLabel() : ""}`));
+    hd.append(nm, h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}${G.reputeLabel ? G.reputeLabel() : ""}`));
     const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
     head.append(hd, close);
     return head;
@@ -331,28 +331,32 @@
       row.title = `${D.STAT_HINT[k] || k}。成功率の基準 ${S.stats[k]}％・経験 ${G.ptExp(S.stats[k])}／${G.PT()}`;
       list.append(row);
     });
-    return sheetSection("stats", "能力値（1点＝成功率4％）", list);
+    return sheetSection("stats", "能力値", list);
   }
-  // 目的・日付・装備などの表（装備の枠を足すときはここの行に足す）
+  // 「能力」のタブの表：目的と、体の状態（日付・場所は場面の絵の下、所持金は帯、仲間は「仲間」のタブにあるので出さない。Q7）
+  function sheetSelfRows() {
+    const S = G.S;
+    return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")],
+      ...(G.r1Rows ? G.r1Rows(S) : []), ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ...(G.m10Rows ? G.m10Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`]];
+  }
+  // 装備の表（装備の枠を足すときはここの行に足す）
   function sheetGearRows() {
     const S = G.S;
     const w = G.weapon(), ar = G.armor(), rg = G.ring();
-    return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")], ["日付", `${G.date()}・${G.PHASES[S.phase]}`], ["場所", G.loc().name], ["所持金", `${S.gold} G`],
-      ["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
-      ["装飾品", rg ? `${rg.name}（${G.ringEffect(rg)}）` : "なし", rg ? S.ring : null],
-      ...(G.r1Rows ? G.r1Rows(S) : []), ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ...(G.m10Rows ? G.m10Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`], ["仲間", S.companions.length ? S.companions.map((c) => c.name).join("、") : "なし"]];
+    return [["武器", `${w.name}（${w.dmg[0]}D${w.dmg[1]}+${w.dmg[2]}${w.pierce ? "・絶界を破る" : ""}）`], ["防具", ar ? `${ar.name}（防御${ar.def}）` : "なし"],
+      ["装飾品", rg ? `${rg.name}（${G.ringEffect(rg)}）` : "なし", rg ? S.ring : null]];
   }
-  function sheetGear() {
+  function sheetKv(rows) {
     const kv = h("dl", "kv");
     // 3つ目があれば、その装備を外すボタンを付ける
-    sheetGearRows().forEach(([k, v, id]) => { const dd = h("dd", "", v); if (id) itemButtons(id, G.itemInfo(id), dd, true); kv.append(h("dt", "", k), dd); });
+    rows.forEach(([k, v, id]) => { const dd = h("dd", "", v); if (id) itemButtons(id, G.itemInfo(id), dd, true); kv.append(h("dt", "", k), dd); });
     return kv;
   }
   // 仲間の顔
   function sheetCompanions() {
     const S = G.S;
-    if (!S.companions.length || !G.companionWho) return null;
     const box = h("div", "comps");
+    if (!S.companions.length || !G.companionWho) { box.append(h("p", "fine", "仲間はいない。酒場や町で声をかけてみるとよい。")); return box; }
     S.companions.forEach((c) => {
       const el = h("div", "comp");
       el.append(face("cface", G.companionWho(c), 44, 55));
@@ -364,19 +368,6 @@
       box.append(el);
     });
     return box;
-  }
-  function sheetQuests() {
-    const S = G.S;
-    if (!S.quests.length) return null;
-    const ul = h("ul", "inv");
-    const ways = G.questWays ? G.questWays(S) : [];
-    S.quests.forEach((x) => {
-      const li = h("li", "", `${x.done ? "✔ " : ""}${x.title}${x.type === "hunt" ? `（${x.progress}/${x.need}）` : ""}`);
-      const w = ways.find((y) => y.q === x);
-      if (w) li.append(h("span", "way fine", w.next ? `${w.why}：${D.LOCS[w.to].name}（${w.path.length > 2 ? w.path.slice(1).map((id) => D.LOCS[id].name).join(" → ") + "・" : ""}${w.days}日）` : `${w.why}：ここ`));
-      ul.append(li);
-    });
-    return sheetSection("quests", `受けている依頼（${S.quests.length}）`, ul);
   }
   // 持ち物1行のボタン（装備できる種類を増やすときはここ）
   function itemButtons(id, it, li, worn) {
@@ -414,7 +405,6 @@
     const acts = h("div", "sheet-actions");
     const mk = (label, fn) => { const b = h("button", "btn", label); b.type = "button"; b.onclick = fn; acts.append(b); return b; };
     mk("人物", () => ui.openProfile());
-    mk("地図", () => ui.openMap());
     mk("年表", () => { ui.setSheetOpen(false); ui.openChronicle(S, false); });
     mk("ログをコピー", copyLog);
     mk("タイトルへ", () => G.main.toTitle());
@@ -429,7 +419,6 @@
       });
       rb.disabled = busy || S.mode === "combat" || !can;
     }
-    acts.append(h("p", "fine saved", "冒険は行動のたびに自動で保存される。タイトルの「つづきから」で戻れる。"));
     return acts;
   }
   // スマホの上部バー（名前・HP・MP・所持金）
@@ -443,11 +432,61 @@
     $("#mGold").textContent = `${S.gold}G`;
     $("#mbar").classList.toggle("danger", !!(G.hpDanger && G.hpDanger(S)));
   }
+  // ステータスはタブで分ける（Q7。持ち主の声「ステータスに内容が入りすぎてる」）。はじめは「能力」。前に開いていたタブは、ページを開いているあいだ覚えておく（セーブには残さない）
+  // ほかに入口があるもの（受けている依頼・地図・セーブとロード・所持金）はステータスに置かない。どのタブの中身も描いておき、見せないものは hidden にする
+  // （ほかのファイルが描いたあとに書き足す：持ち物の .ssec・装備の dl.kv・仲間の .comps .comp。名前と形は変えない）
+  const SHEET_TABS = [["self", "能力"], ["gear", "装備と持ち物"], ["party", "仲間"], ["more", "その他"]];
+  let sheetTab = "self";
+  ui.sheetTab = () => sheetTab;
+  function sheetTabs(panes) {
+    const S = G.S;
+    const bar = h("div", "stabs");
+    bar.setAttribute("role", "tablist");
+    const btns = SHEET_TABS.map(([key, label]) => {
+      const b = h("button", "btn stab", key === "party" && S.companions.length ? `${label}（${S.companions.length}）` : label);
+      b.type = "button";
+      b.id = "stab-" + key;
+      b.dataset.tab = key;
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-controls", "spane-" + key);
+      return b;
+    });
+    const show = (key, focus) => {
+      sheetTab = key;
+      btns.forEach((b) => { const on = b.dataset.tab === key; b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
+      Object.entries(panes).forEach(([k, el]) => { el.hidden = k !== key; });
+    };
+    btns.forEach((b, i) => {
+      b.onclick = () => show(b.dataset.tab, false);
+      b.onkeydown = (ev) => {
+        if (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft") return;
+        ev.preventDefault();
+        show(btns[(i + (ev.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length].dataset.tab, true);
+      };
+      bar.append(b);
+    });
+    show(panes[sheetTab] ? sheetTab : "self", false);
+    return bar;
+  }
+  function sheetPane(key, parts) {
+    const el = h("div", "spane");
+    el.id = "spane-" + key;
+    el.setAttribute("role", "tabpanel");
+    el.setAttribute("aria-labelledby", "stab-" + key);
+    parts.forEach((x) => { if (x) el.append(x); });
+    return el;
+  }
   function renderSheet(ups) {
     const sh = $("#sheet");
     const keep = sh.scrollTop;
     sh.textContent = "";
-    [sheetHead(), sheetPools(), sheetStats(ups), sheetGear(), sheetCompanions(), sheetQuests(), sheetInventory(), sheetMemos(), sheetButtons()].forEach((el) => { if (el) sh.append(el); });
+    const panes = {
+      self: sheetPane("self", [sheetPools(), sheetStats(ups), sheetKv(sheetSelfRows())]),
+      gear: sheetPane("gear", [sheetKv(sheetGearRows()), sheetInventory()]),
+      party: sheetPane("party", [sheetCompanions()]),
+      more: sheetPane("more", [sheetMemos(), sheetButtons()]),
+    };
+    sh.append(sheetHead(), sheetTabs(panes), ...Object.values(panes));
     sh.scrollTop = keep;
     renderMobileBar();
     drawFaces();

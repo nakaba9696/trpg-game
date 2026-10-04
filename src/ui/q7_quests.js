@@ -1,5 +1,5 @@
 // Q7：受けている依頼の一覧の窓。中身はエンジン（src/engine/q7_quests.js の G.q7.list・G.q7.finished）、ここは描くだけ。
-// 入口：帯の下の段（U11 の [ステータス][図鑑][地図]）に「依頼」、ステータスの下のボタン、キーの近道 Q（同じキーで閉じる）。
+// 入口：帯の下の段（U11 の [ステータス][図鑑][地図]）に「依頼」、キーの近道 Q（同じキーで閉じる）。ステータスの中には置かない（Q7 のステータスの整理）。
 // 帯の段は zu11_quick.js（このファイルより後に読まれる）が作るので、はじめて描くときに足す。ui.js は書き換えず G.ui.render を包む。
 // 見た目は ui/q7_quests.css。レーン U
 (function (G) {
@@ -84,7 +84,7 @@
     if (f) f.focus({ preventScroll: true });
   };
 
-  // ---------------------------------------------------------------- 入口：帯の段・ステータス
+  // ---------------------------------------------------------------- 入口：帯の段
   const qbtn = h("button", "btn u11qb q7qbtn");
   qbtn.id = "q7Quests";
   qbtn.type = "button";
@@ -112,11 +112,6 @@
       qmark.hidden = !ready;
       qmark.textContent = ready ? "！" : "";
       qbtn.setAttribute("aria-label", `依頼 ${n}件${ready ? `（報告待ち ${ready}件）` : ""}`);
-      const acts = $("#sheet .sheet-actions");
-      if (acts && !acts.querySelector(".q7qsheet")) {
-        const b = button(`依頼の一覧（${n}）`, "q7qsheet", () => { ui.setSheetOpen(false); ui.openQuests(); });
-        acts.prepend(b);
-      }
       if (dlg.open) paint();
     } catch { /* 入口が付かなくても画面は止めない */ }
     return r;
