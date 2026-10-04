@@ -134,7 +134,7 @@
   // ---------------------------------------------------------------- 主人公・仲間・出来事から who を作る
   G.heroWho = (p, cls) => {
     p = p || {};
-    return { kind: "hero", cls: cls || "merc", seed: `${cls}:${p.name || ""}`, sex: p.sex, age: parseInt(p.age, 10) || 24, text: [p.look, p.personality].filter(Boolean).join("、") };
+    return { kind: "hero", cls: cls || "merc", seed: `${cls}:${p.name || ""}`, sex: p.sex, age: parseInt(p.age, 10) || 24, text: p.look || "" };
   };
   // 仲間の職業の名前 → 人物の種類
   const COMP_KIND = { 傭兵: "adventurer", 弓使い: "archer", 僧侶: "priest", 魔法使い: "mage", ならず者: "rogue", 剣士: "adventurer", 槍兵: "soldier", 元帝国兵: "soldier", 侍: "ronin", 浪人: "ronin", 島の剣士: "ronin", 騎士: "knight", 神官: "priest", 盗賊: "rogue", 船乗り: "sailor", 商人: "merchant", 子ども: "child" };

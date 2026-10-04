@@ -29,9 +29,10 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   for (const m of Object.values(D.MAJIN || {})) for (const w of [m.name, m.title && `${m.title}の使徒`]) if (w && told.includes(w)) fail(`導入: 使徒の名「${w}」を出している`);
   if (/神(様|々)?は(良い|よい|善い|優しい)/.test(told)) fail("導入: 神を説明する文がある");
 
-  // おまかせで作って、そのまま冒険を始められる
+  // おまかせで作って、そのまま冒険を始められる（トロフィーの無い新しい記録で。トロフィーの分は u10_title.mjs）
   let made = 0;
   for (let i = 0; i < 60; i++) {
+    G.P = { trophies: {}, graves: [] }; // 前の周で始めた冒険のトロフィーを持ち越さない
     const dr = cre.fresh(rnd);
     // ボーナス点を好きに振る（足せる所へ、足せなくなるまで）
     for (let n = 0; n < 40; n++) cre.addBonus(dr, D.STATS[Math.floor(rnd() * D.STATS.length)], rnd() < 0.8 ? 1 : -1);
