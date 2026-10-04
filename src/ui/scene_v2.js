@@ -1354,7 +1354,9 @@
     if (fn.phase != null) opt = Object.assign({}, opt, { phase: fn.phase });
     const foes = opt.foes || [];
     const at = !inside && !V.RED_KEYS[key] ? (opt.sky || (G.skyAt && G.S && G.S.loc ? G.skyAt(G.S.loc) : null)) : null;
-    const sig = [key, opt.phase | 0, opt.seed || key, at ? at.season + at.weather : "", w, h, dpr, opt.redMoon ? 1 : 0].join("|");
+    // 持ち主が作った背景の画像（A11。scene_v3_photo.js）があり、読み終わっていれば、静止の層をその画像＋色味にする（無い・読めない・読み込み中は canvas の絵）
+    const photo = V.photo ? V.photo(key, opt, canvas) : null;
+    const sig = [key, opt.phase | 0, opt.seed || key, at ? at.season + at.weather : "", w, h, dpr, opt.redMoon ? 1 : 0, photo ? photo.id : ""].join("|");
     let st = canvas.__sv2;
     if (!st) { st = canvas.__sv2 = { cv: canvas, z: 1 }; }
     let hit = mk && CACHE.get(sig);
@@ -1366,7 +1368,7 @@
       bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       P = makeP(bctx, w, h, Object.assign({}, opt, { sky: at || opt.sky }), key, inside);
       P.cv = base; P.dpr = dpr; P.mk = mk;
-      paintBase(P, key);
+      if (photo) V.paintPhoto(P, photo); else paintBase(P, key);
       P.ctx = null; // 取っておく絵は描き終わったら道具箱から外す
       hit = { base, P };
       if (base) { CACHE.set(sig, hit); while (CACHE.size > 4) CACHE.delete(CACHE.keys().next().value); }
@@ -1386,6 +1388,7 @@
     compose(st, typeof performance !== "undefined" && performance.now ? performance.now() / 1000 : 0);
     if (mk) { LIVE.add(st); startLoop(); }
   };
+  V.paint = G.paintScene; // この絵の入口（画像が読み終わったとき、scene_v3_photo.js が描き直すのに使う）
   V.RED_KEYS = RED;
   V.makeWeather = makeWeather;
 })(globalThis.G = globalThis.G || {});

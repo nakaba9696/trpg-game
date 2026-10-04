@@ -2,12 +2,12 @@
 // - 差分の見分け方（V11 の表情の表も。faint_smile のような名前も）
 // - まとめ方：差分が 2 枚以上の人だけ portraits/<id>.moods.svg に。基本の絵は 1 枚のまま。元の画像の中身をそのまま入れる。大きさが揃わなければまとめない
 // - 描き方：スプライトを一度だけ読み、その人の升目だけを切り出して描く
-// - 数：dist/site/files.json（＋ページ）が 1 つの版の上限 511 の 9 割を超えたら NOTE、超えたら失敗。仲間 50 人・表情 700 枚の見込みでも収まる
+// - 数：dist/site/files.json（＋ページ）が 1 つの版の上限 511 の 9 割を超えたら NOTE、超えたら失敗。仲間 50 人・表情 700 枚・背景の一覧の全部（A11）の見込みでも収まる
 import { readFileSync, existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import vm from "node:vm";
 import path from "node:path";
-import { siteAssets, variantOf, isVariant, imageSize, MOODS } from "../../tools/assets.mjs";
+import { siteAssets, variantOf, isVariant, imageSize, MOODS, sceneChunks } from "../../tools/assets.mjs";
 import { planSite, SITE_LIMITS } from "../../tools/site.mjs";
 
 // 縦横だけを持つ webp（VP8）の頭。中身は読まないので、それらしい頭と埋め草でよい
@@ -123,17 +123,20 @@ export default ({ G, fail, ok }) => {
     else if (n > limit * 0.9) console.log(`NOTE A8：dist/site/ が ${n} ファイル（1 つの版の上限 ${limit} の 9 割を超えた）`);
     now = `今 ${n} ファイル・`;
   }
-  // 見込み：基本の立ち絵 250 枚（名のある人・型・主人公）、表情のある人 60 人で差分 700 枚、魔物 120 枚
+  // 見込み：基本の立ち絵 250 枚（名のある人・型・主人公）、表情のある人 60 人で差分 700 枚、魔物 120 枚、背景（A11）を一覧の全部（組ごとのスプライト）
+  const scenes = sceneChunks(JSON.parse(readFileSync(path.join(root, "docs/art/scenes.json"), "utf8")).scenes.map((x) => ({ key: "scenes/" + x.id })));
   const est = (sprites) => {
     const files = [];
     for (let i = 0; i < 250; i++) files.push({ pub: `portraits/p${i}.webp`, local: "", bytes: 40000 });
     if (sprites) for (let i = 0; i < 60; i++) files.push({ pub: `portraits/p${i}.moods.svg`, local: "", bytes: Math.round((700 / 60) * 40000 * 1.34) });
     else for (let i = 0; i < 700; i++) files.push({ pub: `portraits/v${i}.webp`, local: "", bytes: 40000 });
     for (let i = 0; i < 120; i++) files.push({ pub: `monsters/m${i}.webp`, local: "", bytes: 40000 });
+    if (sprites) scenes.forEach((c) => files.push({ pub: `scenes/${c.name}.svg`, local: "", bytes: Math.round(c.list.length * 150000 * 1.34) }));
+    else scenes.forEach((c) => c.list.forEach((x) => files.push({ pub: x.key + ".webp", local: "", bytes: 150000 })));
     return planSite({ pageBytes: 4e6, files });
   };
   const withS = est(true), without = est(false);
-  if (withS.errors.length || withS.count > limit * 0.9) F(`見込み（差分 700 枚）でもスプライトにまとめれば収まるはずが、${withS.count} ファイル：${withS.errors.join("／")}`);
+  if (withS.errors.length || withS.count > limit * 0.9) F(`見込み（差分 700 枚・背景 ${scenes.length} 組）でもスプライトにまとめれば収まるはずが、${withS.count} ファイル：${withS.errors.join("／")}`);
   if (!without.errors.length) F("見込み（差分 700 枚）をまとめないと上限を超えるはず");
-  if (!errs.length) ok(`A8 差分のスプライト：${now}見込み（基本 250・差分 700 枚を 60 人・魔物 120）でまとめて ${withS.count} ファイル（まとめないと ${without.count}）・上限 ${limit}`);
+  if (!errs.length) ok(`A8 差分のスプライト：${now}見込み（基本 250・差分 700 枚を 60 人・魔物 120・背景 ${scenes.reduce((n, c) => n + c.list.length, 0)} 枚を ${scenes.length} 組）でまとめて ${withS.count} ファイル（まとめないと ${without.count}）・上限 ${limit}`);
 };

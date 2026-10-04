@@ -1,6 +1,6 @@
 // src/ を HTML にまとめる。形は二つ（どちらもコードと CSS は 1 枚の HTML に入れる）：
 //   node tools/build.mjs          … 既定。dist/site/index.html ＋ 画像の別ファイル（dist/site/portraits/<id>.webp・monsters/<id>.webp）。
-//                                   表情の差分は 1 人 1 枚（dist/site/portraits/<id>.moods.svg）にまとめる（1 つの版は 511 ファイルまでのため）
+//                                   表情の差分は 1 人 1 枚（dist/site/portraits/<id>.moods.svg）、背景は組ごとに 1 枚（dist/site/scenes/<組>.svg。A11）にまとめる（1 つの版は 511 ファイルまでのため）
 //                                   HTML には画像の一覧（鍵 → 相対パス・バイト数）だけを入れ、無い画像は読みに行かない。
 //                                   Artifact に載せるファイルの一覧（公開パス → ローカルパス）を dist/site/files.json に書く（載せ方は docs/publish.md）
 //   node tools/build.mjs --embed  … 予備。今まで通り画像を埋め込んだ 1 枚の dist/morsveld.html（上限を超えるなら差分を省く）
@@ -59,5 +59,6 @@ if (embed) {
   if (plan.batches.length > 1) plan.batches.forEach((b, i) => writeFileSync(path.join(site, `files-${i + 1}.json`), JSON.stringify(b.files, null, 1) + "\n"));
   console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル）＋ 画像 ${list.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル／1 つの版の上限 ${SITE_LIMITS.versionFiles}）`);
   if (assets.sprites) console.log(`  表情の差分 ${assets.merged} 枚を ${assets.sprites} 人分のスプライト（portraits/<id>.moods.svg）にまとめた`);
+  if (assets.scenePacks) console.log(`  背景 ${assets.sceneMerged} 枚を ${assets.scenePacks} 組のスプライト（scenes/<組>.svg）にまとめた`);
   if (plan.batches.length > 1) console.log(`  1 回の公開（${SITE_LIMITS.batchFiles} ファイル・${SITE_LIMITS.batchBytes / MB}MB まで）に収まらないので ${plan.batches.length} 回に分けて載せる：dist/site/files-1.json 〜 files-${plan.batches.length}.json（docs/publish.md）`);
 }

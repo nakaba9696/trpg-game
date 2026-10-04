@@ -1,4 +1,6 @@
-# 人物の絵（docs/art）
+# 人物・魔物・背景の絵（docs/art）
+
+背景の絵（A11）は下の「背景の絵（A11）」。
 
 - [portraits.md](portraits.md)：描く人の一覧と、Stable Diffusion に入れる**特徴だけ**のタグ（元は [portraits.json](portraits.json)。md は `node tools/portraits.mjs` で作る）。名のある人物が先、乱数で作られる人の「型」が後。
 - [style.json](style.json)：持ち主の絵柄の設定（モデル・画風のタグ・ネガティブ・sampler など）。**もう入っている。**
@@ -65,3 +67,24 @@
 - 魔物は基本 [style_monsters.json](style_monsters.json)（人物と同じモデル）。ゴブリン・スライム・獣・亜人・まぬけな魔物はこれでよい。
 - **異形の設定（style_eldritch.json・dreamshaperXL_lightningDPMSDE）は使わない**（持ち主の決定：絵柄が浮く）。人の形を持たない格上の存在も、一般の魔物と同じ style_monsters.json で作り、異様さは魔物の一覧のタグ（形・色・質感）で出す。monsters.json に `"style": "eldritch"` を書かない（`tests/checks/a7_no_eldritch.mjs` が見る）。
 - **人の姿の使徒**（[portraits.json](portraits.json) のカルマトス・ドレイゼ・ユヴァリエ・ベリエラ・セグリトス・ヴァルグレア・ディエラン・ベルファス）は、モデルを替えずに**特徴のタグで異質さ**を出す（人ではない目・輪郭の歪み・まとう気配・ずれた意匠・表情）。一人ずつ伝承に合わせて選んでいる。`no halo` と衝突する `halo` は使わない。
+
+## 背景の絵（A11）
+
+- 一覧は [scenes.md](scenes.md)（元は [scenes.json](scenes.json)。場所の名前・地方はデータから取るので、場所が増えたり名前が変わったら `node tools/scenes.mjs`）。場所ごと（町・荒野・迷宮の外。46）＋施設の中（宿屋・酒場・商店・ギルド・教会・訓練場・裏路地・王城・学院と町ごとの施設。14）＋迷宮の中（汎用の通路と洞窟、迷宮ごと。12）の 72 枚。タグは建物・地形など**季節・天候・時間帯に依らない見た目だけ**。
+- 設定は人物と別の [style_scenes.json](style_scenes.json)。モデルは人物と同じ waiIllustriousSDXL（dreamshaperXL は使わない）。後置きは `scenery, no humans, landscape, wide shot, detailed background`（室内は `indoors`）、ネガティブに `1girl, 1boy, people, person, character, text, watermark` など。屋外は昼・晴れで作る（一覧の `sky` が night・red の場所だけ、その空で作る）。1344×768 で作り、1232×704 の webp に縮めて `assets/scenes/<id>.webp` に置く（1 枚 150KB 以下。超えたら道具が質を下げて縮め直す）。手元だけで変えるなら `docs/art/style_scenes.local.json`。
+- **2 案**：`variants` の `plain`（絵師タグなし。背景らしさを優先）と `artist`（立ち絵の絵師タグを使い回す。立ち絵と並べて浮かない）。`variant` が使う案（最初は plain）。案に足してよいのは人物の設定にある語だけ（作家名・作品名を新しく書き足さない。`tests/checks/a11_scenes.mjs` が見る）。
+- ゲームは画像があれば canvas の背景の代わりに出し（`src/ui/scene_v3_photo.js`）、時間帯・季節・天候は画像の上に色味（朝の暖色・夕方の赤み・夜の暗さ・冬の白さ・雨の灰色・霧）と、今の雨・雪・霧・花びらの粒を重ねる。画像が無い・読めない・読み込み中は今の canvas の背景。
+- 1 つの版は 511 ファイルまでなので、ビルドは背景を一覧の `pack`（組）ごとに 8 枚までずつ 1 つのスプライト（`scenes/<組>.svg`）にまとめる（全部作っても 11 ファイル）。画像セッションは 1 枚 1 ファイル（`assets/scenes/<id>.webp`）で作ればよい。
+
+### 持ち主のパソコンで作る（人物と同じ決まり）
+
+**音量ミキサー・音声デバイス・ほかのアプリには触らない**（人物と同じ。止めてよいのは画像生成のために自分で立ち上げた WebUI と自分の node だけ）。WebUI を `--api` で起動し、cwebp を入れておくのも人物と同じ。
+
+1. **試しの 5 枚**：`node tools/gen_scenes.mjs --trial --dry` でプロンプトを確かめ、`node tools/gen_scenes.mjs --trial` で作る。5 枚（町 `karna`・港 `nerva`・森 `forest`・酒場の中 `in_tavern`・遺構の中 `in_ruins`）を **2 案の両方**で作り、`docs/art/scenes_trial/<id>.<案>.webp` に並べる（ゲームには出ない）。設定の `variant` の案の絵は `assets/scenes/<id>.webp` にも置く（ゲームで見られる）。push して、持ち主に絵柄と案を選んでもらう。
+2. 持ち主が案を選んだら `style_scenes.json` の `variant` をその案にする（plain のままなら変えない）。選んだ案が今の `variant` と違えば `node tools/gen_scenes.mjs --trial --variant <案>` で試しの 5 枚を置き直す。
+3. **残り**：`node tools/gen_scenes.mjs` で、まだ画像の無い背景をすべて作る（`--only karna,nerva` でその背景だけ）。
+4. 絵を**1 枚ずつ見る**（`assets/scenes/`）。
+   - **人が写っていたら作り直す**（遠くの小さな人影・窓の中の人・像や絵の中の顔に見える物も数える）。`node tools/gen_scenes.mjs --only <id> --force --new-seed`。
+   - 文字・看板の読める字・透かしが入っていたら作り直す。
+   - 気に入った絵は `node tools/gen_scenes.mjs --keep <id>` で seed を一覧に残す。
+5. **30〜50 枚ごとに push**（`assets/scenes/` と、`--keep` したなら `docs/art/scenes.json`・`scenes.md`）。`node tools/build.mjs && node tests/run.mjs` で大きさと数を確かめられる。

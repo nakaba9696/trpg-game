@@ -6,7 +6,8 @@
 // どちらでもゲームからは G.ASSETS["portraits/<id>"]・G.ASSETS["monsters/<id>"]（V6）で引け、値はそのまま Image の src に使える。
 // ただし外のファイルの形では、差分（<id>_<表情>）は 1 人 1 枚のスプライト（portraits/<id>.moods.svg）にまとめ、値は「公開パス#xywh=x,y,w,h」（切り出す場所）になる。
 // 鍵は assets/ からの道筋から拡張子を除いたもの（assets/portraits/dil.webp → "portraits/dil"）。同じ鍵が二つあれば webp を使う。
-// 何を描くかの一覧は docs/art/portraits.md（人物）・docs/art/monsters.md（魔物）。レーン A（絵）の V4・V6 が管理
+// 背景の絵（A11。assets/scenes/<id>.webp）は、外のファイルの形では組ごとのスプライト（scenes/<組>.svg）にまとめ、値は同じく「公開パス#xywh=…」。
+// 何を描くかの一覧は docs/art/portraits.md（人物）・docs/art/monsters.md（魔物）・docs/art/scenes.md（背景）。レーン A（絵）の V4・V6・A11 が管理
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import path from "node:path";
 
@@ -72,10 +73,11 @@ export function imageSize(buf) {
 
 // 一人の差分をまとめた 1 枚の絵（スプライト）。中身は SVG で、元の webp・png を data URI のまま升目に並べる（描き直さないので画質は変わらない。
 // Node だけで作れる）。cells：[{ key, ext, buf, w, h }]（同じ大きさ）→ { svg（Buffer）, rects: { 鍵: [x, y, w, h] } }
-// 升目は正方形に近い格子（例：4 枚なら 2×2、22 枚なら 5×5）。並びは渡した順
-export function moodSprite(cells) {
+// 升目は正方形に近い格子（例：4 枚なら 2×2、22 枚なら 5×5）か、cols を渡せばその列の数（背景は 2 列）。並びは渡した順
+export function moodSprite(cells, cols) {
   const { w, h } = cells[0];
-  const cols = Math.ceil(Math.sqrt(cells.length)), rows = Math.ceil(cells.length / cols);
+  cols = Math.min(cells.length, cols || Math.ceil(Math.sqrt(cells.length)));
+  const rows = Math.ceil(cells.length / cols);
   const rects = {};
   const body = cells.map((c, i) => {
     const x = (i % cols) * w, y = Math.floor(i / cols) * h;
@@ -86,6 +88,30 @@ export function moodSprite(cells) {
   return { svg: Buffer.from(svg), rects };
 }
 export const SPRITE_MIN = 2; // 差分がこの枚数以上ある人だけまとめる（1 枚ならまとめても数は減らない）
+
+// 背景の絵（A11。assets/scenes/<id>.webp）も、docs/art/scenes.json の pack（組）ごとに SCENE_PACK 枚までずつ 1 つのスプライト（scenes/<組>[-<番号>].svg）にまとめる。
+// 1 枚 1232×704 なので 2 列（8 枚で 2464×2816。表情のスプライトの 5×5 と同じくらいの画素）。一覧に無い背景は組「misc」
+export const SCENE_PACK = 8;
+export const SCENE_COLS = 2;
+export function scenePacks() {
+  try {
+    const j = JSON.parse(readFileSync(new URL("../docs/art/scenes.json", import.meta.url), "utf8"));
+    return Object.fromEntries((j.scenes || []).map((s) => [s.id, s.pack || "misc"]));
+  } catch { return {}; }
+}
+// 組ごとに SCENE_PACK 枚ずつに分ける：[{ name（公開パスの名前）, list }]。並びは組の名前 → 一覧（scenes.json）の順
+export function sceneChunks(files, packs = scenePacks(), size = SCENE_PACK) {
+  const order = Object.keys(packs);
+  const by = {};
+  for (const f of files) { const id = f.key.slice("scenes/".length), p = packs[id] || "misc"; (by[p] = by[p] || []).push(Object.assign({ id }, f)); }
+  const out = [];
+  for (const p of Object.keys(by).sort()) {
+    const list = by[p].sort((a, b) => ((order.indexOf(a.id) + 1 || 1e9) - (order.indexOf(b.id) + 1 || 1e9)) || (a.id < b.id ? -1 : 1));
+    const n = Math.ceil(list.length / size);
+    for (let i = 0; i < n; i++) out.push({ name: n > 1 ? `${p}-${i + 1}` : p, list: list.slice(i * size, (i + 1) * size) });
+  }
+  return out;
+}
 
 // 外のファイルの形：{ map: { 鍵: 公開パス（ページからの相対パス） }, bytes: { 鍵: バイト数 }, files: [{ key, abs, file, ext, bytes, pub, data? }], total（バイト数の合計）, notes, sprites（まとめた人の数）, merged（まとめた差分の枚数） }
 // 公開パスは assets/ からの道筋のまま（assets/portraits/dil.webp → portraits/dil.webp）。
@@ -117,6 +143,22 @@ export function siteAssets(dir, { sprites = true } = {}) {
     out.sprites++;
     out.merged += cells.length;
   }
+  // 背景の絵（A11）：組ごとにまとめる。1 枚だけの組はそのまま
+  const scenes = sprites ? s.files.filter((f) => /^scenes\/[^/]+$/.test(f.key) && (f.ext === ".webp" || f.ext === ".png")) : [];
+  for (const { name, list } of sceneChunks(scenes)) {
+    if (list.length < SPRITE_MIN) continue;
+    const cells = list.map((f) => { const buf = readFileSync(f.abs); return Object.assign({ buf }, f, imageSize(buf) || {}); });
+    const { w, h } = cells[0];
+    if (!w || cells.some((c) => c.w !== w || c.h !== h)) { out.notes.push(`背景の組 ${name} は大きさが揃っていないので、まとめずに 1 枚ずつ載せる`); continue; }
+    const sp = moodSprite(cells, SCENE_COLS);
+    const pub = `scenes/${name}.svg`;
+    for (const c of cells) { out.map[c.key] = `${pub}#xywh=${sp.rects[c.key].join(",")}`; inSprite.add(c.key); }
+    out.bytes["scenes/" + name + ".pack"] = sp.svg.length;
+    out.files.push({ key: "scenes/" + name + ".pack", abs: null, data: sp.svg, file: pub, ext: ".svg", bytes: sp.svg.length, pub, cells: cells.length });
+    out.total += sp.svg.length;
+    out.scenePacks = (out.scenePacks || 0) + 1;
+    out.sceneMerged = (out.sceneMerged || 0) + cells.length;
+  }
   for (const f of s.files) {
     if (inSprite.has(f.key)) continue;
     const pub = f.file;
@@ -144,13 +186,19 @@ export function collectAssets(dir, { limit = LIMIT, shrink = false } = {}) {
     return out;
   };
   let out = make(s.files);
-  if (out.total > limit && shrink) {
-    const keep = s.files.filter((f) => !isVariant(f.key));
-    const dropped = s.files.filter((f) => isVariant(f.key)).map((f) => f.key);
+  // 省く順：表情の差分 → 背景の絵（A11。省いた背景は canvas の絵になる）
+  for (const [what, drop] of [["差分", isVariant], ["背景", (k) => k.startsWith("scenes/")]]) {
+    if (!(out.total > limit && shrink)) break;
+    const gone = new Set(out.dropped);
+    const keep = s.files.filter((f) => !gone.has(f.key) && !drop(f.key));
+    const dropped = s.files.filter((f) => !gone.has(f.key) && drop(f.key)).map((f) => f.key);
+    if (!dropped.length) continue;
     const was = out.total;
+    const notes = out.notes;
     out = make(keep);
-    out.dropped = dropped;
-    out.notes.push(`埋め込みが ${(was / 1048576).toFixed(1)}MB で上限の ${(limit / 1048576).toFixed(0)}MB を超えるので、差分 ${dropped.length} 枚を省いた（${(out.total / 1048576).toFixed(1)}MB）`);
+    out.dropped = [...gone, ...dropped];
+    out.notes = notes;
+    out.notes.push(`埋め込みが ${(was / 1048576).toFixed(1)}MB で上限の ${(limit / 1048576).toFixed(0)}MB を超えるので、${what} ${dropped.length} 枚を省いた（${(out.total / 1048576).toFixed(1)}MB）`);
   }
   if (out.total > limit) {
     const big = out.files.slice().sort((a, b) => b.size - a.size).slice(0, 5).map((f) => `${f.file} ${(f.bytes / 1024).toFixed(0)}KB`).join("、");
