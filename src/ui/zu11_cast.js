@@ -96,6 +96,7 @@
       const tag = G.compTag ? G.compTag(c) : null;
       const chip = h("span", "u11pc" + (talk.includes(c.id) ? " talking" : ""), (tag && tag.name) || c.name);
       chip.title = (tag && tag.label) || `${c.name}（${c.cls || ""}）`;
+      if (G.b5Chip) G.b5Chip(chip, c); // B5：細い HP の棒（ui/b5_party.js）
       party.append(chip);
     });
   }
