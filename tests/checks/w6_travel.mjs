@@ -93,12 +93,13 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const journey = (H, act, pickChoice) => {
     const S = H.S;
     const before = S.loc;
-    let events = 0, guard = 0;
+    let events = 0, guard = 0, last = null;
     H.act(act);
     const isW6 = (id) => !!(H.data.EVENTS.find((e) => e.id === id) || {}).w6;
     while (!S.over && guard++ < 200 && (S.travel || S.combat || (S.mode === "event" && isW6(S.event)))) {
       if (S.mode === "event") {
-        if (isW6(S.event)) events++;
+        if (isW6(S.event) && S.event !== last) events++;   // 振り直し（M7）の画面でも同じ出来事のまま
+        last = S.event;
         const list = H.actions()[0].list.filter((a) => !a.disabled);
         if (!list.length) { F(`${S.event}: 選べる選択肢が無い`); break; }
         H.act((pickChoice ? pickChoice(list) : H.pick(list)).id);
