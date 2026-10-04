@@ -16,7 +16,7 @@ const site = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "dist
 if (!existsSync(path.join(site, "index.html"))) throw new Error("dist/site/index.html が無い（先に node tools/build.mjs）");
 const shots = process.argv[2] || "";
 if (shots) mkdirSync(shots, { recursive: true });
-const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg", ".json": "application/json" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml", ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg", ".json": "application/json" };
 const server = createServer((req, res) => {
   const p = path.join(site, decodeURIComponent(new URL(req.url, "http://x").pathname).replace(/\/$/, "/index.html"));
   if (!p.startsWith(site) || !existsSync(p) || !statSync(p).isFile()) { res.writeHead(404); return res.end(); }
@@ -157,7 +157,7 @@ if (existsSync(one)) {
 // 読めない画像：絵を出さない（canvas の絵に戻らない。A10）。nora の基本の絵のファイル（スプライトなら、そのスプライト。A12）を読めなくする
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 }, reducedMotion: "reduce" });
-  const html = readFileSync(path.join(site, "index.html"), "utf8");
+  const html = readFileSync(path.join(site, "index.html"), "utf8") + (existsSync(path.join(site, "game.js")) ? readFileSync(path.join(site, "game.js"), "utf8") : ""); // コードは game.js に分けてある（T）
   const noraFile = String((JSON.parse((/G\.ASSETS = (\{[^\n]*\});/.exec(html) || [, "{}"])[1])["portraits/nora"]) || "portraits/nora.webp").replace(/#.*$/, "");
   await page.route("**/" + noraFile, (r) => r.abort());
   await page.goto(base);

@@ -94,6 +94,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 遊ぶ
   const game = (seed, prof) => {
     const G = loadEngine();
+    G.data.Q8B.off = G.data.Q8L.off = true; // Q8 の上がり方・恋人の条件は tests/checks/q8_love.mjs で確かめる。ここは仕組みだけ
     const D = G.data;
     G.rand = seeded(seed);
     const stats = Object.fromEntries(D.STATS.map((k) => [k, 50]));

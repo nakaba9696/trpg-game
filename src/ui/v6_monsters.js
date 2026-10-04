@@ -119,6 +119,24 @@
     return null;
   };
 
+  // 図鑑の一覧など、たくさん並べるとき用（T）：まだ背景を消していない絵なら、その画像（読み込み中も）を返す。消してあれば・絵が無ければ null
+  G.v6Pending = (id) => {
+    const key = G.v6ArtKey(id);
+    if (!key || typeof Image !== "function" || !hasDoc() || sprites[key]) return null;
+    const img = image(key);
+    return img.v6bad ? null : img;
+  };
+  // 背景を消して覚えておく（読み終わっていなければ何もしない）
+  G.v6Build = (id) => {
+    const key = G.v6ArtKey(id);
+    if (!key || typeof Image !== "function") return;
+    const img = image(key);
+    if (ready(img)) sprite(key, img);
+  };
+  G.v6ImgReady = (img) => !!ready(img);
+  // その魔物の絵が読み終わっているか（描き直しが要るかを見るため。T）
+  G.v6ArtReady = (id) => { const key = G.v6ArtKey(id); return !!(key && typeof Image === "function" && ready(image(key))); };
+
   // 魔物の絵は、最初に読み始めておく（戦闘が始まったときに間に合うように）。外のファイルの形では、起動の読み込みと取り合わないよう少し後で
   const preload = () => { for (const k of Object.keys(A())) if (k.startsWith("monsters/")) image(k); };
   if (typeof Image === "function") {

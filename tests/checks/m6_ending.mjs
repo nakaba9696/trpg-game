@@ -87,26 +87,47 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (S.story.death?.trophy && !G.P.trophies[S.story.death.trophy]) fail(`${goal}: 最期のトロフィー ${S.story.death.trophy} が無い`);
   }
 
-  // ---- 続けたら、尋ねるのは消えるが、あとで終えられる。一度に着いたら一番大きい節目だけ尋ねる
+  // ---- 目的の終点でない節目は尋ねない（記録に一行だけ）。あとで「物語を終える」から終えられる。一度に着いたら一番大きい節目で終える
   {
     const S = start("rich", 201);
     S.title = "騎士"; S.gold = 3500;
     G.endTurn();
-    if (S.m6.pending !== "knight") fail(`騎士と小金が同時：尋ねるのが ${S.m6.pending}（knight のはず）`);
+    if (S.m6.pending) fail(`騎士と小金（目的は大富豪）で、その場で尋ねた（${S.m6.pending}）`);
+    if (!S.log.some((l) => l.text === M6.QUIET.replace("{title}", "肩に剣の腹"))) fail("目的でない節目に着いたのに、記録に一行が出ない");
+    if (!G.m6CanEnd()) fail("目的でない節目に着いたのに、物語を終えられない");
+    // 目的の終点では尋ねる
+    S.gold = 10000;
+    G.endTurn();
+    if (S.m6.pending !== "rich") fail(`大富豪の目的で 10000G に届いても尋ねない（${S.m6.pending}）`);
     G.endTurn();
     if (S.m6.pending) fail("次の手番になっても、節目の問いが残る");
     G.endTurn();
     if (S.over) fail("続けたのに終わった");
     if (!G.m6CanEnd()) fail("続けたあと、終えられない");
     G.retire();
-    if (S.over !== "end" || S.ending.id !== "knight") fail(`あとで終えると、節目 ${S.ending?.id} で終わる（knight のはず）`);
+    if (S.over !== "end" || S.ending.id !== "rich") fail(`あとで終えると、節目 ${S.ending?.id} で終わる（rich のはず）`);
     checkStory("あとで終える", S.story, false);
     // 旅を続ける（画面のボタン）
     const S2 = start("king", 202);
-    S2.title = "騎士";
+    S2.title = "国王";
     G.endTurn();
+    if (S2.m6.pending !== "king") fail(`王の目的で国王になっても尋ねない（${S2.m6.pending}）`);
     G.m6GoOn();
     if (S2.m6.pending || S2.over) fail("「旅を続ける」で問いが消えない");
+  }
+
+  // ---- 仲間との終わり（bond）は、好感度が高いだけでは着かない。結ばれた（M10 の wed）ら着く。尋ねずに一行
+  {
+    const S = start("rich", 203);
+    S.companions = [{ id: "q8a", name: "槍兵のテス", bond: 100 }];
+    G.endTurn();
+    if (G.m6Reached(S).some((m) => m.id === "bond")) fail("好感度が高いだけで、仲間との終わりの節目に着いた");
+    S.companions[0].m10 = { st: "wed" };
+    G.endTurn();
+    if (!G.m6Reached(S).some((m) => m.id === "bond")) fail("結ばれたのに、仲間との終わりの節目に着かない");
+    if (S.m6.pending) fail(`結ばれた節目で、その場で尋ねた（${S.m6.pending}）`);
+    G.endStory("bond");
+    if (!S.log.some((l) => (l.text || "").includes("槍兵のテス"))) fail("仲間との終わりの文に、連れ合いの名前が出ない");
   }
 
   // ---- 死でも物語が出る。死因・場所。正気 0・獣（M5 の S.fate）
