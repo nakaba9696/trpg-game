@@ -304,7 +304,7 @@
       if (e.fire) c.fire = true;
       if (e.desc) c.desc = e.desc;
       if (G.affAdd) G.affAdd(id, e.aff !== undefined ? e.aff : C9.END_AFF);
-      const ch = [e.power ? `力 ${G.sign ? G.sign(e.power) : e.power}` : "", e.dmg ? "一撃が重くなった" : "", e.heal ? "手当てを覚えた" : ""].filter(Boolean);
+      const ch = [e.power ? `力 ${G.sign(Math.sign(e.power) * Math.max(1, Math.round(Math.abs(e.power) / 3)))}` : "", e.dmg ? "一撃が重くなった" : "", e.heal ? "手当てを覚えた" : ""].filter(Boolean);
       if (ch.length) G.note(`${short(c)}が変わった（${ch.join("・")}）`);
     }
     if (e.memo) G.memo(C9.fill(e.memo, id, 0, S));

@@ -15,6 +15,7 @@ const BANNED = /見世物|観客|客席|舞台|台本|神々|魔王|魔人|正�
 const TAGS = new Set(["any", "town", "wild", "dungeon", "capital", "port", "snow", "realm"]);
 
 export default ({ G, fail, ok, loadEngine, seeded }) => {
+  G.data.Q8P.off = true; // Q8 の恋の相手の一覧（人間の見た目の名のある人だけ）と組み合わせは tests/checks/q8_pairs.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   let n = 0;
   const F = (m) => { n++; fail("C2: " + m); };
@@ -247,6 +248,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- ランダムに遊ぶ（tests/run.mjs と同じ遊ばせ方）
   const R = loadEngine();
+  R.data.Q8P.off = true;
   const RD = R.data;
   const GAMES = 150;
   const met = {}, joined = {}, talks = {};

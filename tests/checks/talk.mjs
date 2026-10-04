@@ -106,7 +106,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 遊ぶ
   const game = (seed, opt) => {
     const G = loadEngine();
-    G.data.Q8B.off = G.data.Q8L.off = true; // Q8 の上がり方・恋人の条件は tests/checks/q8_love.mjs で確かめる。ここは仕組みだけ
+    G.data.Q8B.off = G.data.Q8L.off = G.data.Q8P.off = true; // Q8 の上がり方・恋人の条件・恋の相手の一覧と組み合わせは tests/checks/q8_love.mjs・q8_pairs.mjs で確かめる。ここは仕組みだけ
     const D = G.data;
     G.rand = seeded(seed);
     const stats = Object.fromEntries(D.STATS.map((k) => [k, 50]));
@@ -357,7 +357,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     if (S.event !== "tk_menu") F("古いセーブで話題の一覧にならない");
     const saved = JSON.stringify(S);
     const G2 = loadEngine();
-    G2.data.Q8B.off = G2.data.Q8L.off = true;
+    G2.data.Q8B.off = G2.data.Q8L.off = G2.data.Q8P.off = true;
     G2.rand = seeded(1);
     G2.S = JSON.parse(saved);
     const l1 = G.actions()[0].list.map((a) => a.label).join("|"), l2 = G2.actions()[0].list.map((a) => a.label).join("|");

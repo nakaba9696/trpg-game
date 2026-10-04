@@ -556,7 +556,7 @@
     G.pass(2);
     const bonus = Q5.jobBonus(j, S);
     const r = G.check(j.stat, j.diff || "普通", j.name, bonus);
-    const pay = r.ok ? j.pay[1] + Math.floor((S.stats[j.stat] || 0) / 25) + (bonus ? 1 : 0) + (r.crit ? 3 : 0) : j.pay[0];
+    const pay = r.ok ? j.pay[1] + Math.floor(G.s5Pow(S.stats[j.stat] || 0) / 25) + (bonus ? 1 : 0) + (r.crit ? 3 : 0) : j.pay[0];
     S.gold += pay;
     G.say(G.pick(r.ok ? j.ok : j.ng));
     G.note(`給金 +${pay}G`);

@@ -67,7 +67,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 冒険の中で
   const stats = {}, caps = {};
-  D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 70; });
+  D.STATS.forEach((k) => { stats[k] = 12; caps[k] = 70; });   // 点（S5）
   const start = (g) => g.newGame({ cls: "merc", stats, caps, goal: Object.keys(g.data.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
   G.rand = seeded(17);
   G.P = { trophies: {}, graves: [] };
@@ -81,7 +81,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   G.equip(cursedU);
   const real = A.identify(cursedU);
   if (S.weapon !== real || S.inv[cursedU] || !G.weapon().cursed) fail(`I3: 着けても正体が分からない ${S.weapon}`);
-  if (!(G.statEff("魅力") <= 40)) fail("I3: 呪いの魅力の減りが効かない");
+  if (!(G.statEff("魅力") < 12)) fail("I3: 呪いの魅力の減りが効かない");
   S.hp = S.maxHp;
   G.give("longsword");
   G.equip("longsword");

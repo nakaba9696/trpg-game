@@ -10,6 +10,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const F = (m) => { n++; fail("q8 恋と好感度: " + m); };
   const start = (seed, ids) => {
     const G = loadEngine();
+    G.data.Q8P.off = true; // 恋の相手の一覧と組み合わせは tests/checks/q8_pairs.mjs（ここは恋人の条件だけ）
     G.rand = seeded(seed);
     G.P = { trophies: {}, graves: [] };
     const { stats, caps } = G.cre.quickStats("merc", G.rand);

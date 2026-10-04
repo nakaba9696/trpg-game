@@ -676,7 +676,7 @@
         <p class="fine">設定はこのブラウザに保存されます。音は画面を一度押してから鳴ります。</p>
       </div>`;
     document.body.append(dlg);
-    const $ = (id) => dlg.querySelector("#" + id);
+    const $ = (id) => document.getElementById(id); // 行は設定の窓（ui/zz_q7_topbar.js）へ移ることがあるので、窓の中に限らず探す
     const sync = () => {
       const st = snd.settings;
       $("sndMute").checked = st.mute;
