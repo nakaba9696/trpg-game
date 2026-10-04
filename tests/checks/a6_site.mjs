@@ -121,7 +121,8 @@ export default ({ G, fail, ok }) => {
   // ---------------------------------------------------------------- 本物の assets/ の大きさ
   const real = siteAssets(path.join(root, "assets"));
   const page = path.join(root, "dist/site/index.html");
-  const pageBytes = existsSync(page) ? statSync(page).size : 4 * MB; // ビルドしていなければ大きめに見積もる
+  const gameJs = path.join(root, "dist/site/game.js"); // コード（T）。最初の回にページと一緒に載るので、ページの分に足して見積もる
+  const pageBytes = existsSync(page) ? statSync(page).size + (existsSync(gameJs) ? statSync(gameJs).size : 0) : 4 * MB; // ビルドしていなければ大きめに見積もる
   const list = real.files.map((f) => ({ pub: f.pub, local: "dist/site/" + f.pub, bytes: f.bytes }));
   const plan = planSite({ pageBytes, files: list });
   plan.errors.forEach((e) => F("Artifact に載らない：" + e));
@@ -131,7 +132,12 @@ export default ({ G, fail, ok }) => {
   // ---------------------------------------------------------------- ビルドしてあれば、その中身
   let built = "";
   if (existsSync(page)) {
-    const html = readFileSync(page, "utf8");
+    // コードは dist/site/game.js に分けてある（T。node tools/build.mjs --inline なら HTML の中）
+    const html0 = readFileSync(page, "utf8");
+    const tag = /<script src="game\.js(\?v=[0-9a-f]+)?"><\/script>/.exec(html0);
+    const gjs = gameJs;
+    if (tag && !existsSync(gjs)) F("index.html が game.js を読むのに、dist/site/game.js が無い");
+    const html = tag && existsSync(gjs) ? html0 + "\n" + readFileSync(gjs, "utf8") : html0;
     if (/data:image\/(webp|png|jpeg);base64/.test(html)) F("dist/site/index.html に画像が埋め込まれている（外のファイルにする）");
     const m = /G\.ASSETS = (\{[^\n]*\});/.exec(html);
     const map = m ? JSON.parse(m[1]) : {};
@@ -144,11 +150,13 @@ export default ({ G, fail, ok }) => {
         if (!existsSync(path.join(root, local))) F(`files.json の ${local} が無い`);
         if (local !== "dist/site/" + pub) F(`files.json の ${pub} のローカルパスが違う：${local}`);
       }
-      const want = [...new Set(Object.values(map).map((v) => v.replace(/#.*$/, "")))].sort().join(), have = Object.keys(files).sort().join(); // 差分はスプライトの「#xywh=」（A8）
+      if (tag && files["game.js"] !== "dist/site/game.js") F("files.json に game.js（コード）が無い");
+      if (tag && plan.batches.length > 1 && existsSync(path.join(root, "dist/site/files-1.json")) && !JSON.parse(readFileSync(path.join(root, "dist/site/files-1.json"), "utf8"))["game.js"]) F("最初の回の公開（files-1.json）に game.js が無い（ページだけ載って動かない）");
+      const want = [...new Set(Object.values(map).map((v) => v.replace(/#.*$/, "")))].sort().join(), have = Object.keys(files).filter((k) => k !== "game.js").sort().join(); // 差分はスプライトの「#xywh=」（A8）
       if (want !== have) F("files.json と HTML の画像の一覧が合わない（ビルドし直す）");
     }
     if (plan.batches.length > 1) for (let i = 1; i <= plan.batches.length; i++) if (!existsSync(path.join(root, `dist/site/files-${i}.json`))) F(`分けて載せる一覧 files-${i}.json が無い`);
-    built = `・index.html ${(pageBytes / MB).toFixed(1)}MB`;
+    built = `・${tag ? "index.html＋game.js" : "index.html"} ${(pageBytes / MB).toFixed(1)}MB`;
   }
   if (!before.length) ok(`A6 外のファイルの形：画像 ${real.files.length} 枚 ${(real.total / MB).toFixed(1)}MB${built}・合計 ${plan.count} ファイル・${plan.batches.length} 回で載る${plan.batches.length > 1 ? "（dist/site/files-N.json を順に。docs/publish.md）" : ""}`);
 };
