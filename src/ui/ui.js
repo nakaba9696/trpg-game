@@ -326,12 +326,12 @@
     const list = h("div", "statlist num");
     D.STATS.forEach((k) => {
       const row = h("div", "stat" + (ups && ups[k] ? " up" : ""));
-      const bar = h("span", "bar"); const i = h("i"); i.style.width = S.stats[k] + "%"; const u = h("u"); u.style.left = `calc(${S.caps[k]}% - 1px)`; bar.append(i, u);
-      row.append(h("span", "nm", k), h("span", "v", String(G.pt(S.stats[k]))), bar, h("span", "cap", `限界 ${G.pt(S.caps[k])}`));
+      const bar = h("span", "bar"); const i = h("i"); i.style.width = Math.min(100, S.stats[k]) + "%"; bar.append(i);
+      row.append(h("span", "nm", k), h("span", "v", String(G.pt(S.stats[k]))), bar, h("span", "cap", `${Math.min(95, S.stats[k])}%`));
       row.title = `${D.STAT_HINT[k] || k}。成功率の基準 ${S.stats[k]}％・経験 ${G.ptExp(S.stats[k])}／${G.PT()}`;
       list.append(row);
     });
-    return sheetSection("stats", "能力値（1点＝成功率4％・赤線は才能限界）", list);
+    return sheetSection("stats", "能力値（1点＝成功率4％）", list);
   }
   // 目的・日付・装備などの表（装備の枠を足すときはここの行に足す）
   function sheetGearRows() {

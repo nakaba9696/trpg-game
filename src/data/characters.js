@@ -14,7 +14,7 @@
   // 能力値は画面では点（5〜25）。セーブと判定は成功率の尺度（点×4、0〜99）。G.pt・src/data/zs2_points.js・docs/s2_stats.md
   D.DIFF = { 易しい: 20, 普通: 0, 難しい: -20, 至難: -40 };
   D.REROLLS = 5;       // （使っていない。振り直しは何度でもできる）
-  D.BONUS_POINTS = 6;  // ボーナス点を振っていない古い下書きの点。S2 からは振るたびに変わる（src/data/zs2_points.js の D.S2.BONUS）
+  D.BONUS_POINTS = 5;  // 作成で好きに足せるボーナス点（決まり。トロフィー 1 つにつき +1：src/engine/zz_u10_trophy_bonus.js）
 
   D.CLASSES = {
     merc: {
