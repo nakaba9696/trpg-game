@@ -80,6 +80,15 @@
     return null;
   };
 
+  // 画像があって、まだ読み込み中か（scene_v2.js が、重い canvas の絵を描かずに待つのに使う。T）
+  V.photoPending = (key, opt) => {
+    if (opt && opt.canvasOnly) return false;
+    const id = G.sceneImageId(key);
+    if (!id) return false;
+    const img = imgs[where(id).src];
+    return !!(img && !img.a11bad && !ready(img));
+  };
+
   // 今いる場所の施設・迷宮の中・道の先の背景を、暇なときに先読みする（場所が変わったときに一度）
   let nearLoc = null;
   function nearby() {

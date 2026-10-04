@@ -138,13 +138,34 @@
       }
     } catch {}
   };
-  const foeCanvas = (id, size, shadow) => {
+  // 一覧の小さな絵（T）：背景を消す処理（A13）がまだの絵は、見えているものから 1 枚ずつ（G.a13.queue）片づけて、済んだら描く。
+  // 一度に全部を処理すると、魔物が二百近いと何秒も固まるため。済んでいる絵はすぐ描く
+  const io = typeof IntersectionObserver === "function" ? new IntersectionObserver((es) => es.forEach((e) => {
+    const cv = e.target;
+    cv.f2seen = e.isIntersecting;
+    if (e.isIntersecting && cv.f2enqueue) cv.f2enqueue();
+  })) : null;
+  const lazy = (cv, pending, build, paint) => {
+    if (!pending || !G.a13 || !G.a13.queue) return paint();
+    let queued = false, done = false;
+    // 並んでいるあいだに窓を閉じた・見えなくなったら飛ばす（また見えたら並び直す）
+    const alive = () => { const ok = cv.isConnected && (!io || cv.f2seen); if (!ok) queued = false; return ok; };
+    const run = () => { done = true; if (io) io.unobserve(cv); build(); paint(); };
+    cv.f2enqueue = () => { if (queued || done) return; queued = true; G.a13.queue(run, alive); };
+    const loaded = () => { if (io) io.observe(cv); else cv.f2enqueue(); };
+    if (pending.complete && (pending.naturalWidth || pending.width)) loaded();
+    else { pending.addEventListener("load", loaded, { once: true }); pending.addEventListener("error", paint, { once: true }); }
+  };
+  const foeCanvas = (id, size, shadow, small) => {
     const cv = h("canvas", "f2pic");
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     cv.width = Math.round(size * dpr); cv.height = Math.round(size * dpr);
     cv.style.width = cv.style.height = size + "px";
     cv.setAttribute("aria-hidden", "true");
+    const pending = small && G.v6Pending ? G.v6Pending(id) : null;
+    if (pending) { lazy(cv, pending, () => G.v6Build(id), () => paintFoe(cv, id, shadow)); return cv; }
     paintFoe(cv, id, shadow);
+    if (small && G.v6Pending) return cv; // 一覧：絵は済んでいる（か無い）ので、描き直さない（T）
     // V6 の画像は読み込みに少しかかる。読めたころにもう一度描く
     setTimeout(() => paintFoe(cv, id, shadow), 600);
     setTimeout(() => paintFoe(cv, id, shadow), 1800);
@@ -204,7 +225,7 @@
         const e = F2.foe(id);
         const rec = c.foes[id];
         const b = cell(rec ? e.name : "？？？", !!rec, G.codexIsFresh("foe", id), () => showFoe(id));
-        b.prepend(foeCanvas(id, 56, !rec));
+        b.prepend(foeCanvas(id, 56, !rec, true));
         if (rec) b.append(h("span", "f2tier", `格${e.tier}${rec.kills ? `・${rec.kills}体` : ""}`));
         b.dataset.id = id;
         grid.append(b);
@@ -221,7 +242,7 @@
     const base = e && typeof e.who === "object" ? e.who : { kind: (e && e.who) || "villager" };
     return Object.assign({}, base, { seed: "v4:" + id, name: F2.personName(id) });
   };
-  const personCanvas = (id, w, hh, shadow) => {
+  const personCanvas = (id, w, hh, shadow, small) => {
     const cv = h("canvas", "f2pic face");
     cv.width = w * 2; cv.height = hh * 2;
     cv.style.width = w + "px"; cv.style.height = hh + "px";
@@ -242,6 +263,13 @@
         }
       } catch {}
     };
+    // 一覧：背景を消す処理（A13）がまだなら、見えているものから 1 枚ずつ。済んでいれば一度だけ描く（T）
+    const key = small && G.v4PortraitKey && G.a13 && G.a13.has ? G.v4PortraitKey(whoOf(id)) : null;
+    if (key) {
+      const img = G.v4Image(key);
+      if (img && !G.a13.has(key)) { lazy(cv, img, () => { const w = G.v4Where(key); if (G.v4Ready(key)) G.a13.cutout(key, img, w && w.rect); }, paint); return cv; }
+      if (img && G.v4Ready(key)) { requestAnimationFrame(paint); return cv; }
+    }
     requestAnimationFrame(paint);
     setTimeout(paint, 900);
     return cv;
@@ -260,7 +288,7 @@
         const rec = c.people[id];
         const b = cell(rec ? F2.personName(id) : "？？？", !!rec, G.codexIsFresh("person", id), () => showPerson(id));
         // 肖像は背景まで塗られているので、会っていない人は影ではなく「？」の札にする
-        b.prepend(rec ? personCanvas(id, 48, 60, false) : h("span", "f2glyph f2who", "？"));
+        b.prepend(rec ? personCanvas(id, 48, 60, false, true) : h("span", "f2glyph f2who", "？"));
         if (rec && rec.joined) b.append(h("span", "f2tier", "仲間"));
         if (F2.personCell) F2.personCell(b, id); // F4：狙う印
         b.dataset.id = id;
