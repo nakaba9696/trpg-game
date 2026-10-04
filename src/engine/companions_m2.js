@@ -221,7 +221,7 @@
       case "wound":
         c.wounds = (c.wounds || 0) + 1;
         c.power = Math.max(20, (c.power || 30) - 8);
-        G.note(`${G.m2Short(c)}は深手を負った。（腕前 ${c.power}）`);
+        G.note(`${G.m2Short(c)}は深手を負った。（腕前 ${G.allyPt(c)}）`);
         if (c.wounds >= 2) G.m2Doom(c, "古傷が開いた");
         break;
       case "saved":
@@ -233,7 +233,7 @@
       case "confide":
         c.confided = true;
         c.power = Math.min(95, (c.power || 30) + 8);
-        G.note(`${G.m2Short(c)}の腕前が上がった。（${c.power}）`);
+        G.note(`${G.m2Short(c)}の腕前が上がった。（${G.allyPt(c)}）`);
         G.chron(`${c.name}と、固い絆を結ぶ`, "comp");
         break;
       case "slain": {

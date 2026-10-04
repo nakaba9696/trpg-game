@@ -10,7 +10,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     G.rand = seeded(seed);
     G.P = { trophies: {}, graves: [] };
     const stats = {}, caps = {};
-    D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 70; });
+    D.STATS.forEach((k) => { stats[k] = 12; caps[k] = 70; });   // 点（S5）
     G.newGame({ cls: cls || Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" }, ...(extra || {}) });
     G.S.maxHp = G.S.hp = 999;
     return G.S;
@@ -64,7 +64,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   G.addSanity(-35);
   if (!D.M5.SANITY_DOWN[1].some((t) => texts(S).includes(t))) f("動揺の段に入った文が出ない");
   if (!S.chronicle.some((c) => c.kind === "sanity")) f("正気の段が年表に残らない");
-  if (G.chance("魅力", 0) !== G.clamp(S.stats.魅力 - 5, 5, 95)) f("動揺で魅力の判定が下がらない");
+  const pc = (k, n) => G.clamp(Math.round(G.s5p(S.stats[k] + G.s5Mod(n) - G.s5Target(0))), 5, 95);   // 補正は％で、3 で 1 点（S5）
+  if (G.chance("魅力", 0) !== pc("魅力", -5)) f("動揺で魅力の判定が下がらない");
   G.addSanity(-30); // 35：狂気の縁
   if (G.sanityStage(S.sanity) !== 2) f(`狂気の縁の段にならない ${S.sanity}`);
   // 地の文が歪む・判定が揺れる
@@ -152,7 +153,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   // 日が経つと進む
   for (let d = 0; d < D.M5.DAYS_PER_STAGE; d++) { G.passDays(1); G.endTurn(); }
   if (S.beast !== 2) f(`日が経っても病が進まない（${S.beast}）`);
-  if (G.chance("筋力", 0) !== G.clamp(S.stats.筋力 + 5, 5, 95)) f("爪の段で筋力の判定が上がらない");
+  if (G.chance("筋力", 0) !== G.clamp(Math.round(G.s5p(S.stats.筋力 + G.s5Mod(5) - G.s5Target(0))), 5, 95)) f("爪の段で筋力の判定が上がらない");
   // 1〜2 段は教会で祓える
   S.gold = 500; S.loc = "karna"; S.mode = "explore";
   G.act("fac:church");
@@ -202,7 +203,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 代償つきの品
   S = start("merc", 511);
   G.give("m5_namecrown"); G.equip("m5_namecrown");
-  if (G.statEff("知力") !== 60) f("忘れ名の冠で知力が上がらない");
+  if (G.statEff("知力") !== S.stats.知力 + G.s5Mod(10)) f("忘れ名の冠で知力が上がらない");
   for (let d = 0; d < 6; d++) { G.passDays(1); G.endTurn(); }
   if (S.profile.name !== "名も知れぬ者" || S.m5.trueName !== "テスト") f(`冠で名前を忘れない（${S.profile.name}）`);
   S = start("merc", 512);
@@ -240,7 +241,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     start(Object.keys(D.CLASSES)[g % 5], 2000 + g);
     const S = G.S;
     const c = D.CLASSES[S.cls];
-    D.STATS.forEach((k) => { S.stats[k] = c.base[k] + 5; S.caps[k] = S.stats[k] + 30; });
+    D.STATS.forEach((k) => { S.stats[k] = Math.round((c.base[k] + 5) / 4); S.caps[k] = S.stats[k] + 30; });   // 点（S5）
     S.maxHp = S.hp = G.maxHpOf(S.stats);
     try {
       for (let step = 0; step < STEPS && !S.over; step++) {
