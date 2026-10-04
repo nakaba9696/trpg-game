@@ -1,5 +1,5 @@
 // A9：絵師タグ（ikezawa shin）を戻すかわりに、髪と目の色を全員に書く（持ち主「髪色とか引っ張られるかもだから、キャラの個性としてちゃんと指定して。2人以上いる画像が出来たら作り直しで」）
-// - 人物の一覧（docs/art/portraits.json）の全員（名のある人・使徒の人の姿・モブの型 kind_*・主人公の型 hero_*）の identity に、髪の色（か bald）・髪型（長さか形）・目の色（か閉じた目・覆われた目）がある
+// - 人物の一覧（docs/art/portraits.json）の全員（名のある人・使徒の人の姿・モブの型 kind_*。主人公の型は A10 で無くした）の identity に、髪の色（か bald）・髪型（長さか形）・目の色（か閉じた目・覆われた目）がある
 // - 人物の設定（style.json・style_male.json）の prefix に ikezawa shin があり、魔物の設定（style_monsters.json・style_eldritch.json）には無い
 // - 複数人を避けるタグ（suffix の solo、ネガティブの multiple girls・2girls・multiple boys・group・crowd・background characters・other characters）と、露出を抑えるタグが残っている
 // - 絵の版（style.json の art・art_drop、一覧の art）：基本の絵は今の版の prefix、差分は印の無い人（版 1）なら ikezawa shin を外した prefix、印のある人（版 2）なら入れた prefix で作る
@@ -33,7 +33,7 @@ export default ({ fail, ok }) => {
     if (!t.some((x) => EYE_COLOR.test(x) || EYE_HIDDEN.test(x))) F(`${p.id} の identity に目の色が無い（amber eyes など。閉じた目・目隠しならそれ）`);
     n++;
   }
-  for (const g of ["hero", "people"]) if (!list.some((p) => p.group === g && p.identity)) F(`型（${g}）に identity が無い`);
+  for (const g of ["people"]) if (!list.some((p) => p.group === g && p.identity)) F(`型（${g}）に identity が無い`);
 
   // ---------------------------------------------------------------- 絵師タグ・複数人・露出
   const style = read("style.json");

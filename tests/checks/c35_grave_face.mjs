@@ -1,4 +1,4 @@
-// #35：墓碑に主人公の絵（src/engine/zzzzzz_c35_grave_face.js・src/ui/ui.js の墓碑一覧と年表）
+// #35：墓碑に主人公の人物設定（src/engine/zzzzzz_c35_grave_face.js）。A10 で主人公の絵は出さなくなったので、墓碑一覧と年表にも絵は無い
 // - 新しい墓碑に hero（職業 id と人物設定）が残り、生きていたときと同じ絵の who になる
 // - 保存して読み直しても（JSON を通しても）同じ who になる。古い墓碑（hero 無し）は絵なしで落ちない
 import { readFileSync } from "node:fs";
@@ -46,8 +46,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const g of [null, {}, { hero: {} }, { hero: { cls: "merc" } }]) {
     try { if (G.graveWho(g) !== null) f(`項目の足りない墓碑に絵を出している：${JSON.stringify(g)}`); } catch (e) { f("項目の足りない墓碑で落ちる：" + e.message); }
   }
-  // UI：墓碑一覧と年表が graveWho を使う
+  // UI：主人公の絵は出さない（A10。持ち主の決定）ので、墓碑一覧・年表も絵を描かない（墓碑の hero は残しておく）
   const ui = readFileSync(new URL("../../src/ui/ui.js", import.meta.url), "utf8");
-  if (!/G\.graveWho\(g\)/.test(ui) || !/G\.graveWho\(run\)/.test(ui)) f("墓碑一覧・年表で墓碑の絵を描いていない");
-  if (!bad) ok("C35: 墓碑に主人公の絵（新しい墓碑に人物設定と職業 id、古い墓碑は絵なし）");
+  if (/G\.graveWho\(g\)/.test(ui) || /G\.graveWho\(run\)/.test(ui)) f("墓碑一覧・年表で主人公の絵を描いている（A10：主人公は絵なし）");
+  if (!bad) ok("C35: 墓碑に人物設定と職業 id が残る（古い墓碑も落ちない）。主人公の絵は出さない（A10）");
 };
