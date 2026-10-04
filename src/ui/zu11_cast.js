@@ -1,26 +1,17 @@
 // U11：仲間の立ち絵は、その仲間が話しているときだけ出す（持ち主：「常に出てるとうるさいかも」）。レーン U（画面）
 // （名前の頭の zu は v9_pc.js より後に読ませて、v9.castOf を包むため）
-// - 話している：今の手番の記録（最後の「あなた」の行より後）に、その仲間の名前と台詞（「」）の入った行がある。
-//   または、その仲間と話している（会話・掛け合いの出来事。S.tk.cur）。掛け合いでは、最後に話した方を前に、もう一人は後ろに控えめに
+// - 話している：今の手番の記録（最後の「あなた」の行より後）に、その仲間の話し手の印（e.speaker = "comp:<id>"。
+//   エンジンの engine/zzzzzzz_u11_speaker.js が台詞に付ける）のある行がある。掛け合いでは、最後に話した方を前に、もう一人は後ろに控えめに
 // - 話し終えたら（次の手番で台詞が無ければ）立ち絵は静かに消える（v9_pc.js の出入りのフェード）
 // - 主人公は出さない・画像の無い人は出さない、は v9 のまま
 // - 仲間が誰かは、PC の左上の札（#mbar）の下に名前だけの小さな欄で分かる（話している仲間は明るく）。ステータスの仲間の欄・図鑑の人物では今まで通り絵を見られる
-// - 町の人・依頼主・名のある人（出来事の who・王城の主）も、その人の台詞が今の手番の記録にあるときだけ（G.u11.whoSpeaks。V5 の G.stand.whoOf と ui.js の小さな額を包む）
+// - 町の人・依頼主・名のある人（出来事の who・王城の主）も、その人の話し手の印のある台詞が今の手番にあるときだけ（G.u11.whoSpeaks。
+//   V5 の G.stand.whoOf と ui.js の小さな額を包む）。名前の照合はしない（話し手を決めるのはエンジンの印だけ）
 // 画素の処理（v4_assets・v6_monsters）には触らない。出す/出さないだけ。見た目は ui/zu11_cast.css
 (function (G) {
   const u11 = (G.u11 = G.u11 || {});
 
   // ---------------------------------------------------------------- 決まり（DOM なし。テストからも呼べる）
-  // 仲間の呼び名の候補（「ナタリア」「ガルム・ハイド」なら「ガルム」も）
-  u11.compNames = (c) => {
-    const out = new Set();
-    const add = (n) => { n = String(n || "").trim(); if (n.length >= 2) out.add(n); };
-    add(c && c.name);
-    add(c && c.name && String(c.name).split(/[・ 　（(]/)[0]);
-    const tag = c && G.compTag ? G.compTag(c) : null;
-    if (tag) add(tag.name);
-    return [...out];
-  };
   // 今の手番の記録（最後の「あなた」の行より後）
   u11.turnLines = (S) => {
     const log = (S && S.log) || [];
@@ -28,71 +19,32 @@
     while (i >= 0 && log[i].k !== "you") i--;
     return log.slice(i + 1);
   };
-  // 話している仲間の id（最後に話した順。同じ人は一度だけ）
+  // 今の手番の台詞の話し手（エンジンが記録に付けた印。engine/zzzzzzz_u11_speaker.js）。古い順
+  const SPK = (e) => (G.u11sp && G.u11sp.of ? G.u11sp.of(e) : e && e.speaker ? [e.speaker] : []);
+  u11.turnSpeakers = (S) => u11.turnLines(S).flatMap(SPK);
+  // 話している仲間の id（最後に話した順。同じ人は一度だけ）。印 "comp:<id>" のある台詞があるときだけ
   u11.speakingComps = (S) => {
     const comps = (S && S.companions) || [];
     if (!comps.length) return [];
     const order = [];
-    const push = (id) => { const k = order.indexOf(id); if (k >= 0) order.splice(k, 1); order.unshift(id); };
-    // 会話・掛け合いの出来事の最中は、話している相手
-    const cur = S.tk && S.tk.cur;
-    if (cur && cur.cid && S.mode === "event" && String(S.event || "").startsWith("tk")) push(cur.cid);
-    u11.turnLines(S).forEach((e) => {
-      const t = String((e && e.text) || "");
-      if (e.k === "you" || e.k === "sys" || !/[「『]/.test(t)) return; // 台詞の無い行（攻撃の記録など）は数えない
-      comps.forEach((c) => { if (u11.compNames(c).some((n) => u11.outside(t).includes(n))) push(c.id); }); // 台詞の中で名前を呼ばれただけでは話していない
+    u11.turnSpeakers(S).forEach((k) => {
+      const id = /^comp:(.+)$/.exec(k);
+      if (!id) return;
+      const j = order.indexOf(id[1]);
+      if (j >= 0) order.splice(j, 1);
+      order.unshift(id[1]);
     });
     return order.filter((id) => comps.some((c) => c.id === id));
   };
-
-  // ---------------------------------------------------------------- 町の人・依頼主・名のある人も、話しているときだけ（持ち主：「しゃべってないのにパン屋のグスタフが出てきた」）
-  // 人の呼び名の候補：名前そのもの・「パン屋のグスタフ」の「グスタフ」・「国王ヴァレオン」の「ヴァレオン」・札の名前（C3）
-  u11.whoNames = (who, S) => {
-    const out = new Set();
-    const add = (n) => { n = String(n || "").trim(); if (n.length >= 2) out.add(n); };
-    if (!who) return [];
-    const nm = String(who.name || "");
-    add(nm);
-    add(nm.split("の").pop());
-    add(nm.split(/[・ 　（(]/)[0]);
-    add(nm.replace(/^(国王|皇帝|宰相|女王|王女|王子|騎士|司祭|助祭|将軍|隊長)/, ""));
-    const tag = G.whoTag ? (() => { try { return G.whoTag(who, S); } catch (e) { return null; } })() : null;
-    if (tag) { add(tag.name); add(String(tag.name || "").split(/[・ 　]/)[0]); }
-    return [...out];
-  };
-  // ほかの、名のある人の呼び名（名の無い人の台詞か、別の人の台詞かを見分ける）
-  let knownNames = null;
-  u11.knownNames = () => {
-    if (knownNames) return knownNames;
-    const D = G.data || {}, out = new Set();
-    const add = (n) => { n = String(n || "").trim(); if (n.length >= 2) out.add(n); };
-    Object.values(D.C2_PEOPLE || {}).forEach((p) => { add(p.name); add(String(p.full || "").split(/[・ 　]/)[0]); });
-    Object.values(D.F2_PEOPLE || {}).forEach((p) => add(p.name));
-    return (knownNames = [...out]);
-  };
-  const quoted = (e) => e && e.k !== "you" && e.k !== "sys" && /[「『]/.test(String(e.text || ""));
-  // 「」『』の外（地の文。話し手が書かれる所）と中（台詞）
-  u11.outside = (t) => String(t || "").replace(/「[^」]*」?|『[^』]*』?/g, "　");
-  u11.inside = (t) => (String(t || "").match(/「[^」]*」?|『[^』]*』?/g) || []).join("　");
-  // その人が今の手番に話したか（迷うなら話していない）
-  //   ・台詞（「」）の行の地の文に、その人の名前がある（「……なに」ナタリアは杯から目を上げなかった）
-  //   ・名前を書いていない人（出来事の who に name が無い。名前は C3 の札だけで、本文では「娘」などと呼ばれる）は、
-  //     台詞の行の地の文に名のある人も仲間も出てこず、台詞の中でもその人の名前が呼ばれていなければ、その人の台詞とみなす
-  //   ・名前の付いた人（依頼人「パン屋のグスタフ」・王城の主など）は、地の文に名前があるときだけ。台詞の中で名前を呼ばれただけ・
-  //     名前が地の文に出ただけ（台詞の無い行）・依頼主として紐づいているだけ、では出さない
+  // 今の出来事の人・王城の主が、今の手番に話したか（印 "ev:<出来事>"・"fac:<施設>"、その人の "p:<id>" のある台詞があるときだけ。迷うなら出さない）
   u11.whoSpeaks = (who, S) => {
     if (!who || !S) return false;
-    // 同じ手番に町の描写と出来事が続くときは、出来事の見出し（"title" の行）より後だけを、その人の場面とみなす
-    let turn = u11.turnLines(S);
-    const t0 = turn.map((e) => e.k).lastIndexOf("title");
-    if (t0 >= 0) turn = turn.slice(t0 + 1);
-    const lines = turn.filter(quoted).map((e) => String(e.text));
-    if (!lines.length) return false;
-    const names = u11.whoNames(who, S);
-    if (lines.some((t) => names.some((n) => u11.outside(t).includes(n)))) return true;
-    if (who.name) return false;
-    const others = [...u11.knownNames(), ...((S.companions || []).flatMap((c) => u11.compNames(c)))];
-    return lines.some((t) => !others.some((n) => u11.outside(t).includes(n)) && !names.some((n) => u11.inside(t).includes(n)));
+    const keys = new Set();
+    if (S.mode === "event" && S.event) keys.add("ev:" + S.event);
+    if (S.mode === "fac" && S.fac) keys.add("fac:" + S.fac);
+    const m = /^(?:c2|v4):(.+)$/.exec(String(who.seed || ""));
+    if (m) keys.add("p:" + m[1]);
+    return u11.turnSpeakers(S).some((k) => keys.has(k));
   };
   // 話している相手を決める所（V5 の G.stand.whoOf。V5 の大きな立ち絵・V9 の並び・V4 の先読みが使う）を包む
   const st0 = G.stand;
@@ -154,6 +106,7 @@
       const tag = G.compTag ? G.compTag(c) : null;
       const chip = h("span", "u11pc" + (talk.includes(c.id) ? " talking" : ""), (tag && tag.name) || c.name);
       chip.title = (tag && tag.label) || `${c.name}（${c.cls || ""}）`;
+      if (G.b5Chip) G.b5Chip(chip, c); // B5：細い HP の棒（ui/b5_party.js）
       party.append(chip);
     });
   }

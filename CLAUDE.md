@@ -1,6 +1,6 @@
 # Morsveld 開発メモ
 
-ブラウザで遊ぶ一人用の TRPG 風ゲーム。HTML・CSS・素の JavaScript だけで作り、`tools/build.mjs` で1枚の HTML（`dist/site/index.html`）にまとめ、画像はその隣の別ファイル（`dist/site/portraits/` など）にする（`--embed` なら画像を埋め込んだ 1 枚の `dist/morsveld.html`）。
+ブラウザで遊ぶ一人用の TRPG 風ゲーム。HTML・CSS・素の JavaScript だけで作り、`tools/build.mjs` でページ（`dist/site/index.html`）とコード（`dist/site/game.js`。分けると起動が軽い）にまとめ、画像はその隣の別ファイル（`dist/site/portraits/` など）にする（`--embed` なら画像を埋め込んだ 1 枚の `dist/morsveld.html`）。
 遊ぶ場所は claude.ai の Artifact（持ち主が `dist/site/` を「ページ＋画像の別ファイル」で公開する。[docs/publish.md](docs/publish.md)）。ゲームの方向性は [docs/VISION.md](docs/VISION.md)、並行作業の分け方は [docs/ROADMAP.md](docs/ROADMAP.md)。
 
 ## 検証（PR の前に必ず）

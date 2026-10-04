@@ -1267,6 +1267,12 @@
     paperFinish(P);
   }
   V.paintBase = paintBase;
+  // 背景の画像を読み込んでいるあいだの仮の絵：屋外は空、室内は暗い色だけ（canvas の絵を描かない。T）
+  function paintWait(P) {
+    if (P.inside) { P.ctx.fillStyle = "#14110e"; P.ctx.fillRect(0, 0, P.w, P.h); }
+    else paintSky(P);
+  }
+  V.paintWait = paintWait;
 
   // 室内か（施設の絵・迷宮の中）
   const isInside = (key) => !!V.IN[key] && !V.OUT[key] && !V.IN[key].outdoor;
@@ -1315,6 +1321,9 @@
     drawWeather(ctx, st.weather, w, h, t, P.night);
     vignette(ctx, w, h, 0.5 + 0.2 * k);
   }
+  // 舞台（v1_stage.js）の裏に回った層の canvas か（.bgLayer に on が無い）。見えるようになれば（on が付けば）また動かす
+  const hiddenLayer = (cv) => { const p = cv.parentNode; return !!(p && p.classList && p.classList.contains("bgLayer") && !p.classList.contains("on")); };
+  V.hiddenLayer = hiddenLayer;
   let looping = false, lastT = 0;
   function tick(now) {
     if (!LIVE.size) { looping = false; return; }
@@ -1323,6 +1332,7 @@
     lastT = now;
     for (const st of LIVE) {
       if (!st.cv.isConnected) { LIVE.delete(st); continue; }
+      if (hiddenLayer(st.cv)) continue; // 見えていない層（舞台の切り替えで裏に回った層）は動かさない（T）
       const target = focusNow(st) ? ZOOM : 1;
       const still = calm();
       let moved = false;
@@ -1368,10 +1378,13 @@
       bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       P = makeP(bctx, w, h, Object.assign({}, opt, { sky: at || opt.sky }), key, inside);
       P.cv = base; P.dpr = dpr; P.mk = mk;
-      if (photo) V.paintPhoto(P, photo); else paintBase(P, key);
+      // 背景の画像（A11）を読み込み中なら、canvas の絵（重い）は描かずに空の色だけを敷いて待つ。読み終われば scene_v3_photo.js が描き直す。
+      // 読めなかったときは、ふつうに canvas の絵を描く（この仮の絵は取っておかない）（T）
+      const pending = !photo && V.photoPending && V.photoPending(key, opt);
+      if (photo) V.paintPhoto(P, photo); else if (pending) paintWait(P); else paintBase(P, key);
       P.ctx = null; // 取っておく絵は描き終わったら道具箱から外す
       hit = { base, P };
-      if (base) { CACHE.set(sig, hit); while (CACHE.size > 4) CACHE.delete(CACHE.keys().next().value); }
+      if (base && !pending) { CACHE.set(sig, hit); while (CACHE.size > 4) CACHE.delete(CACHE.keys().next().value); }
     }
     Object.assign(st, { w, h, dpr, P, base: hit.base, opt, foes, weather: makeWeather(P), moving: !calm() && (P.anim.length > 0 || P.lights.some((L) => L.flick) || !!P.weather || P.season === "spring" || P.season === "autumn" || !!P.ash || !!P.embers || !!P.fireflies) });
     // 敵は別の層に一度だけ描く

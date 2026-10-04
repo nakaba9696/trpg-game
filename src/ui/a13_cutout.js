@@ -45,7 +45,14 @@
     if (!refs.length) return 0;
     // 背景の色からの差（いちばん近い候補との、色ごとの差の最大）と、その候補
     const dist = new Uint8Array(n), near = new Uint8Array(n);
-    for (let i = 0; i < n; i++) {
+    if (refs.length === 1) { // たいていは真っ白が一つ（速い道。結果は下と同じ）
+      const R = refs[0], r0 = R[0], r1 = R[1], r2 = R[2];
+      for (let i = 0, k = 0; i < n; i++, k += 4) {
+        const a = Math.abs(p[k] - r0), b = Math.abs(p[k + 1] - r1), c = Math.abs(p[k + 2] - r2);
+        const d = a > b ? (a > c ? a : c) : (b > c ? b : c);
+        dist[i] = d < 255 ? d : 255;
+      }
+    } else for (let i = 0; i < n; i++) {
       let best = 999, bi = 0;
       for (let r = 0; r < refs.length; r++) {
         const R = refs[r];
@@ -77,24 +84,35 @@
     }
     for (let d = 2; d <= BAND; d++) {
       const next = [];
+      const visit = (j) => { if (!bg[j] && !depth[j]) { depth[j] = d; next.push(j); } };
       for (const i of front) {
         const x = i % W;
-        for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i >= W ? i - W : -1, i < n - W ? i + W : -1]) if (j >= 0 && !bg[j] && !depth[j]) { depth[j] = d; next.push(j); }
+        if (x > 0) visit(i - 1);
+        if (x < W - 1) visit(i + 1);
+        if (i >= W) visit(i - W);
+        if (i < n - W) visit(i + W);
       }
       front = next;
     }
     // すぐ内側の絵の色（境目より内側。半径 BAND+2 のうち、背景の色からいちばん離れていて近い画素。線画があれば線画の色になる）
+    const R = BAND + 2, SIDE = 2 * R + 1;
+    const NEAR = new Float64Array(SIDE * SIDE); // 中心からの距離×12（毎回 sqrt しない）
+    for (let dy = -R; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) NEAR[(dy + R) * SIDE + dx + R] = Math.sqrt(dx * dx + dy * dy) * 12;
     const inner = (i) => {
-      const x0 = i % W, y0 = (i - x0) / W;
+      const x0 = i % W, y0 = (i - x0) / W, di = depth[i];
       let best = -1, bd = 1e9;
-      const R = BAND + 2;
-      for (let dy = -R; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) {
-        const x = x0 + dx, y = y0 + dy;
-        if (x < 0 || x >= W || y < 0 || y >= H) continue;
-        const j = y * W + x;
-        if (bg[j] || (depth[j] && depth[j] <= depth[i])) continue; // 自分より内側（深い）の画素だけ
-        const score = Math.sqrt(dx * dx + dy * dy) * 12 - dist[j]; // 近くて、背景の色から離れているほどよい
-        if (score < bd) { bd = score; best = j; }
+      for (let dy = -R; dy <= R; dy++) {
+        const y = y0 + dy;
+        if (y < 0 || y >= H) continue;
+        const row = y * W, nrow = (dy + R) * SIDE + R;
+        for (let dx = -R; dx <= R; dx++) {
+          const x = x0 + dx;
+          if (x < 0 || x >= W) continue;
+          const j = row + x;
+          if (bg[j] || (depth[j] && depth[j] <= di)) continue; // 自分より内側（深い）の画素だけ
+          const score = NEAR[nrow + dx] - dist[j]; // 近くて、背景の色から離れているほどよい
+          if (score < bd) { bd = score; best = j; }
+        }
       }
       return best;
     };
@@ -124,7 +142,10 @@
       let a = alphaOf(i);
       if (d > 1) {
         const x = i % W;
-        for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i >= W ? i - W : -1, i < n - W ? i + W : -1]) if (j >= 0 && depth[j] === d - 1) a = Math.max(a, alpha[j]);
+        if (x > 0 && depth[i - 1] === d - 1 && alpha[i - 1] > a) a = alpha[i - 1];
+        if (x < W - 1 && depth[i + 1] === d - 1 && alpha[i + 1] > a) a = alpha[i + 1];
+        if (i >= W && depth[i - W] === d - 1 && alpha[i - W] > a) a = alpha[i - W];
+        if (i < n - W && depth[i + W] === d - 1 && alpha[i + W] > a) a = alpha[i + W];
       }
       alpha[i] = a;
     }
@@ -163,6 +184,27 @@
     return (cache[key] = out);
   };
   A13.forget = () => { for (const k of Object.keys(cache)) delete cache[k]; };
+  A13.has = (key) => key in cache; // もう処理してあるか（T）
+
+  // 少しずつ処理する（T）：白抜きは 1 枚で数十 ms かかる。図鑑の一覧のように何十枚も要るときは、1 回に 1 枚ずつ、間で画面を動かしながら片づける。
+  // job は真を返す（または返り値なし）と済み。alive() が偽になった仕事（窓を閉じた・見えなくなった）は飛ばす
+  const jobs = [];
+  let running = false;
+  const tick = () => {
+    running = false;
+    while (jobs.length) {
+      const j = jobs.shift();
+      if (j.alive && !j.alive()) continue;
+      try { j.run(); } catch (e) { /* 一枚が失敗しても続ける */ }
+      break;
+    }
+    if (jobs.length) { running = true; setTimeout(tick, 0); }
+  };
+  A13.queue = (run, alive) => {
+    jobs.push({ run, alive });
+    if (!running && typeof setTimeout === "function") { running = true; setTimeout(tick, 0); }
+  };
+  A13.queued = () => jobs.length;
 
   // なめらかに縮めて描く（A14）：半分より小さく縮めるときは、半分ずつ段階的に縮めてから描く（一度に縮めるとギザギザになる）。
   // 縮めた途中の絵は、元の絵と大きさごとに覚えておく（同じ大きさを何度も描くので）
