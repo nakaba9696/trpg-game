@@ -26,24 +26,29 @@ export default ({ G, fail, seeded }) => {
   // トロフィーとボーナス点
   const P0 = G.P;
   try {
+    // ボーナス点は、振った点（S2）＋トロフィーの数（cre.extraBonus）
+    const dr0 = cre.fresh(seeded(1009));
+    const rolled = dr0.bonusRoll;
     G.P = { graves: [] }; // 古い記録（trophies が無い）
-    if (cre.trophyBonus() !== 0 || cre.bonusPoints() !== D.BONUS_POINTS) fail("トロフィーの無い記録でボーナス点が基本の値にならない");
+    if (cre.trophyBonus() !== 0 || cre.bonusPoints(dr0) !== rolled) fail("トロフィーの無い記録でボーナス点が振った点にならない");
     G.P = { trophies: {}, graves: [] };
-    if (cre.bonusPoints() !== D.BONUS_POINTS) fail("トロフィー 0 個でボーナス点が基本の値にならない");
+    if (cre.bonusPoints(dr0) !== rolled) fail("トロフィー 0 個でボーナス点が振った点にならない");
     const keys = D.TROPHIES.map((t) => t.key);
     for (const n of [1, 3, 10]) {
       G.P.trophies = Object.fromEntries(keys.slice(0, n).map((k) => [k, { name: k }]));
-      if (cre.bonusPoints() !== D.BONUS_POINTS + n) fail(`トロフィー ${n} 個でボーナス点が ${D.BONUS_POINTS + n} にならない（${cre.bonusPoints()}）`);
+      if (cre.bonusPoints(dr0) !== rolled + n) fail(`トロフィー ${n} 個でボーナス点が ${rolled + n} にならない（${cre.bonusPoints(dr0)}）`);
     }
-    // 全部取ったとき：上限で止まり、どう振っても使い切れ、才能限界を超えない
+    // 全部取ったとき：上限で止まり、才能限界まで使え、才能限界を超えない
     G.P.trophies = Object.fromEntries(keys.map((k) => [k, { name: k }]));
-    const all = cre.bonusPoints();
-    if (all !== Math.min(D.BONUS_POINTS + keys.length, D.STATS.length * 5)) fail(`全部取ったときのボーナス点が合わない（${all}）`);
+    if (cre.trophyBonus() !== Math.min(keys.length, D.TROPHY_BONUS_MAX)) fail(`全部取ったときのトロフィーの分が合わない（${cre.trophyBonus()}）`);
     const rnd = seeded(1010);
     for (let i = 0; i < 40; i++) {
       const dr = cre.fresh(rnd);
-      while (cre.bonusLeft(dr) > 0) { const k = D.STATS.find((s) => cre.canAdd(dr, s)); if (!k) { fail(`作成 ${i}: トロフィーのボーナスを使い切れない`); break; } cre.addBonus(dr, k, 1); }
-      if (cre.bonusUsed(dr) !== all) fail(`作成 ${i}: 使った点が ${all} にならない`);
+      const all = cre.bonusPoints(dr);
+      if (all !== dr.bonusRoll + cre.trophyBonus()) fail(`作成 ${i}: ボーナス点が振った点＋トロフィーにならない`);
+      while (cre.bonusLeft(dr) > 0) { const k = D.STATS.find((s) => cre.canAdd(dr, s)); if (!k) break; cre.addBonus(dr, k, 1); }
+      const room = D.STATS.reduce((a, k) => a + cre.cap(dr, k) - cre.base(dr, k), 0);
+      if (cre.bonusUsed(dr) !== Math.min(all, room)) fail(`作成 ${i}: 使った点が ${Math.min(all, room)} にならない（${cre.bonusUsed(dr)}）`);
       const o = cre.options(dr, rnd);
       for (const k of D.STATS) if (o.stats[k] > o.caps[k]) fail(`作成 ${i}: ${k} が才能限界を超えた`);
     }

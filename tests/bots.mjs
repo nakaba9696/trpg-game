@@ -765,15 +765,8 @@ export function startRun(G, { goal, cls, seed, seeded, strong }) {
   const D = G.data;
   G.rand = seeded(seed);
   G.P = { trophies: {}, graves: [] };
-  const c = D.CLASSES[cls];
-  const stats = {}, caps = {};
-  D.STATS.forEach((k) => {
-    stats[k] = Math.min(90, Math.max(5, c.base[k] + G.d(6) + G.d(6) + G.d(6) - 3));
-    caps[k] = Math.min(99, Math.max(stats[k] + 10, stats[k] + 20 + G.d(10) + G.d(10) + G.d(10)));
-  });
-  const main = (TRAIN_OF[cls] || ["筋力"])[0];
-  let bonus = D.BONUS_POINTS;
-  for (const k of [main, "体力"]) { const n = Math.min(bonus, caps[k] - stats[k], 3); stats[k] += n; bonus -= n; }
+  // 作成画面と同じ振り方（G.cre.quickStats。S2）。ボーナス点は均等に配る
+  const { stats, caps } = G.cre.quickStats(cls, G.rand);
   G.newGame({ cls, stats, caps, goal, goalText: goal === "custom" ? "自分の店を持つ" : undefined,
     profile: { name: "ボット", sex: "女", age: 24, history: "借金のかたに傭兵団へ売られ、腕一本で抜け出した", personality: "無口だが義理堅い" } });
   if (strong) {
