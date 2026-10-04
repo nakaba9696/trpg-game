@@ -2,6 +2,7 @@
 // - 消した文（仲間の居場所の決まり・「歩いて確かめるしかない」・暦と鐘の説明）が、どこにも残っていない
 // - トロフィーの数だけキャラクター作成のボーナス点が増える（上限つき。古い記録・トロフィー無しでも動く）
 // - タイトルのメニューは「はじめる」（と、保存があるときの「つづきから」）だけ
+// - 主人公の口癖・好きなもの・苦手なものは作らない・見せない。生い立ちはおまかせで埋めない（空けておける）
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -46,6 +47,26 @@ export default ({ G, fail, seeded }) => {
       for (const k of D.STATS) if (o.stats[k] > o.caps[k]) fail(`作成 ${i}: ${k} が才能限界を超えた`);
     }
   } finally { G.P = P0; }
+
+  // 口癖・好きなもの・苦手なもの（主人公だけ。仲間の好き嫌いは別物）
+  {
+    const rnd = seeded(1011);
+    for (let i = 0; i < 20; i++) {
+      const dr = cre.fresh(rnd);
+      for (const k of ["quote", "like", "dislike"]) if (dr.profile[k]) fail(`作成 ${i}: おまかせで ${k} が入った`);
+      if (dr.profile.history) fail(`作成 ${i}: おまかせで生い立ちが埋まった`);
+      if (!dr.profile.look || !dr.profile.personality) fail(`作成 ${i}: 外見・性格が空`);
+      dr.profile.quote = "古い口癖"; dr.profile.like = "酒"; dr.profile.dislike = "虫";
+      const o = cre.options(dr, rnd);
+      for (const k of ["quote", "like", "dislike"]) if (k in o.profile) fail(`作成 ${i}: 旅立つ人物に ${k} が残る`);
+      if (!cre.prologue(o).every((pg) => pg.every((t) => typeof t === "string" && t && !t.includes("undefined")))) fail(`作成 ${i}: 生い立ちが空だと導入が崩れる`);
+    }
+    if (D.PROFILE.quote || D.PROFILE.like || D.PROFILE.dislike) fail("口癖・好きなもの・苦手なものの表が残っている");
+    for (const f of ["ui/setup.js", "ui/ui.js"]) {
+      const t = readFileSync(path.join(root, f), "utf8");
+      if (/"口癖"|"好きなもの"|"苦手なもの"|p\.quote|p\.like|p\.dislike/.test(t)) fail(`${f}: 主人公の口癖・好き嫌いを出している`);
+    }
+  }
 
   // タイトルのメニュー（画面のソースで確かめる）
   const setup = readFileSync(path.join(root, "ui/setup.js"), "utf8");
