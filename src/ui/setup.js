@@ -92,8 +92,7 @@
       txt.textContent = "";
       txt.append(h("b", "whoName", draft.profile.name || "（名無し）"));
       txt.append(h("span", "whoLine", `${c.name}・${draft.sex}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ`));
-      txt.append(h("span", "", c.blurb));
-      txt.append(h("span", "fine", `得意：${cre.strengths(draft.cls).join("・")} ／ 出発地：${D.LOCS[c.start].name}`));
+      // 職業の紹介と得意な能力値・はじめの町は札に出さない（職業のカードと、最後のシートに出る。持ち主の決定）
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
       if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
     }
@@ -369,7 +368,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
+    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);

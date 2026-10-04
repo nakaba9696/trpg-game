@@ -197,6 +197,13 @@ export default ({ G, fail: fail0, ok, seeded }) => {
       const base = D.STATS.reduce((a, k) => a + cre.base(dr, k), 0), all = D.STATS.reduce((a, k) => a + cre.value(dr, k), 0);
       if (cre.baseTotal(dr) !== base || cre.total(dr) !== all || all !== base + cre.bonusUsed(dr)) fail(`能力値の合計が和と合わない（${cre.baseTotal(dr)}/${base}・${cre.total(dr)}/${all}）`);
     }
+    // 人物の札（あなたは何者か）には、職業の説明・得意・出発地を出さない。最後のシートに出す
+    {
+      const f = src.slice(src.indexOf("function refresh()"), src.indexOf("lay.append(card)"));
+      if (/c\.blurb|得意：|出発地/.test(f)) fail("作成画面の人物の札に、職業の説明・得意・出発地が残っている");
+      const sh = src.slice(src.indexOf("function sheet("));
+      if (!/\["職業", c\.blurb\]/.test(sh) || !/\["得意", cre\.strengths/.test(sh) || !/\["出発地"/.test(sh)) fail("最後のシートに、職業の説明・得意・出発地が出ない");
+    }
     // 主人公は人間だけ：作成画面で種族を選べない
     if (/raceSec|cre\.setRace|cre\.randomRace|radios\("race"/.test(src)) fail("作成画面に種族を選ぶ所が残っている");
     const o = cre.options(cre.fresh(rnd), rnd);
