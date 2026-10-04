@@ -40,5 +40,10 @@ export default ({ G, fail: fail0, ok }) => {
     const withStat = list.filter((a) => /\d+%/.test(a.sub || ""));
     if (G.S.mode === "event" && ev.choices.some((c, i) => c.stat && list.some((a) => a.id === "ev:" + i)) && !withStat.length) fail("U12: 出来事の選択肢の補足に成功率が出ない");
   }
-  if (!bad) ok("U12: 選択肢は一行に一つ（本文は左・補足は右）。多いときは選択肢の欄だけ流れる");
+  // 冒険中の右上に「新しい冒険」は置かない（タイトル画面と、終わった冒険の「新しい冒険を始める」からだけ。持ち主の決定）
+  const html = readFileSync(fileURLToPath(new URL("../../src/index.html", import.meta.url)), "utf8");
+  const main = readFileSync(fileURLToPath(new URL("../../src/main.js", import.meta.url)), "utf8");
+  if (/id="newGame"|>新しい冒険</.test(html) || /#newGame/.test(main)) fail("U12: 冒険中の右上に「新しい冒険」のボタンが残っている");
+  if (!/新しい冒険を始める/.test(ui) || !/toSetup\(\)/.test(ui)) fail("U12: 終わった冒険の画面から新しい冒険を始められない");
+  if (!bad) ok("U12: 選択肢は一行に一つ（本文は左・補足は右）。多いときは選択肢の欄だけ流れる。冒険中の「新しい冒険」は無い");
 };
