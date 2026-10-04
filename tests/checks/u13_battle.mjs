@@ -64,8 +64,10 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const before = u.snap(S);
   S.gold += 37;
   S.inv.herb = (S.inv.herb || 0) + 2;
-  S.stats["筋力"] += 4;          // 表示の点が 1 つ増える
-  S.stats["知力"] += 1;          // 経験だけ（点は増えない）なら、伸びたとはしない
+  // 表示の点がちょうど 1 つ増えるまで筋力を上げる（点の目盛りは S5 で変わりうるので、G.pt で数える）
+  while (G.pt(S.stats["筋力"]) === before.pts["筋力"]) S.stats["筋力"] += 1;
+  // 経験だけ（点は増えない）なら、伸びたとはしない（目盛りが 1 点 = 1 なら、この確かめは無い）
+  S.stats["知力"] += 1;
   if (G.pt(S.stats["知力"]) !== before.pts["知力"]) S.stats["知力"] -= 1;
   const res = u.result(before, S, "win");
   if (res.title !== "勝利") fail(`U13: 勝ったときの見出しが「${res.title}」`);
