@@ -1,5 +1,5 @@
 // Q7：セーブ・ロードの画面。枠の読み書きはエンジン（src/engine/q7_slots.js）、ここは選ぶ画面だけ。
-// 入口：冒険中の画面の右上（上の道具の列の右端）の「セーブ」「ロード」、ステータスの下のボタン、タイトルの「ロード」、キーの近道 S・L。ui.js・setup.js は書き換えず、G.ui.render と G.setup.show を包む。レーン U
+// 入口：冒険中の画面の右上（上の道具の列の右端）の「セーブ」「ロード」、タイトルの「ロード」、倒れたあとの年表、キーの近道 S・L。ui.js・setup.js は書き換えず、G.ui.render と G.setup.show を包む。レーン U
 (function (G) {
   if (typeof document === "undefined" || !G.ui || !G.ui.render || !G.setup) return;
   const ui = G.ui;
@@ -190,25 +190,11 @@
     else ui.openSlots("load");
   });
 
-  // ---------------------------------------------------------------- 入口：ステータスの下
+  // 描くたびに右上のボタンの押せる・押せないを合わせる（ステータスの中の入口は、右上にあるので置かない。Q7 のステータスの整理）
   const base = ui.render;
   ui.render = (...a) => {
     const r = base(...a);
     try { syncTop(); } catch {}
-    try {
-      const acts = document.querySelector("#sheet .sheet-actions");
-      if (acts && !acts.querySelector(".q7save")) {
-        const can = G.canSave(G.S);
-        const sv = button("セーブ", "q7save", () => ui.openSlots("save"));
-        sv.disabled = !can.ok;
-        if (!can.ok) sv.title = can.why;
-        const ld = button("ロード", "q7load", () => ui.openSlots("load"));
-        acts.prepend(sv, ld);
-        const note = acts.querySelector(".saved");
-        const why = can.ok ? "" : `いまは手動で保存できない（${can.why.replace(/。$/, "")}）。`;
-        if (note) note.textContent = `冒険は行動のたびに自動でも保存される。「セーブ」で枠に残せば、あとでその時点へ戻れる。${why}`;
-      }
-    } catch { /* 入口が付かなくても画面は止めない */ }
     return r;
   };
 

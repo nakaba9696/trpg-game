@@ -322,11 +322,11 @@
 
   function tavern(arg) {
     const S = G.S;
-    if (arg === "rumor") { S.gold -= 2; G.log("you", "噂を聞く"); const r = G.pick(D.RUMORS); G.say(`酔った傭兵が声をひそめた。「${r}」`); G.memo("噂：" + r); G.pass(1); }
+    if (arg === "rumor") { S.gold -= 2; G.log("you", "噂を聞く"); const r = G.pick(D.RUMORS); G.say(`酔った傭兵が声をひそめた。「${r}」`); G.memo("噂：" + r); if (G.heard) G.heard("噂：" + r); G.pass(1); }
     else if (arg === "drink") {
       S.gold -= 5; G.log("you", "客と飲み交わす"); G.pass(1);
       const r = G.check("魅力", 0, "飲み交わす", G.gearBonus("talk"));
-      if (r.ok) { G.say("すっかり打ち解けた。帰りがけに、とっておきの話を聞かせてくれた。"); const rr = G.pick(D.RUMORS); G.say(`「${rr}」`); G.memo("噂：" + rr); G.addFame(1); }
+      if (r.ok) { G.say("すっかり打ち解けた。帰りがけに、とっておきの話を聞かせてくれた。"); const rr = G.pick(D.RUMORS); G.say(`「${rr}」`); G.memo("噂：" + rr); if (G.heard) G.heard("噂：" + rr); G.addFame(1); }
       else { G.say("酒癖の悪い男に絡まれ、殴り合いになった。"); G.hurt(3, "酒場の喧嘩で打ちどころが悪かった"); }
     } else if (arg === "gamble") {
       G.log("you", "骰子博打に10G賭ける"); G.pass(1);

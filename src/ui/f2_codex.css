@@ -55,3 +55,7 @@ button.f2cell:hover, .f2cell.on { background: var(--item-hover); border-color: v
 .f3afffill { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: var(--ok); }
 .f3aff.neg .f3afffill { background: var(--ng); }
 .f3affnote { margin: 2px 0 0; font-size: 12px; }
+/* V12：聞いた話（覚え書きを項目ごとに） */
+.f2heard ul { list-style: none; padding-left: 0; }
+.f2heard li { padding: 6px 0; border-top: 1px solid var(--rule); line-height: 1.7; }
+.f2heard li:first-child { border-top: 0; }
