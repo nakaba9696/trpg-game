@@ -1,0 +1,16 @@
+/* U13：行動の分類の札（u13_menu.js）。札を選ぶと、その分類の選択肢だけが出る */
+.u13tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 2px 0 4px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+.u13tab { position: relative; display: inline-flex; align-items: baseline; gap: 6px; min-height: 36px; padding: 6px 14px; border: 1px solid var(--rule); border-radius: 3px;
+  background: transparent; color: var(--muted); font: inherit; font-size: 14px; letter-spacing: .08em; cursor: pointer; }
+.u13tab .u13n { font-size: 11.5px; opacity: .75; letter-spacing: 0; }
+.u13tab:hover { color: var(--ink); border-color: var(--accent); background: var(--item-hover); }
+.u13tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.u13tab.on { color: var(--head); border-color: var(--accent); background: var(--accent-soft, var(--item-hover)); box-shadow: inset 0 -2px 0 var(--accent); font-weight: 700; cursor: default; }
+/* 新しい項目がある分類の印 */
+.u13dot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--win-solid, var(--sheet)); }
+/* 分類の下の最初の見出しは、札とくっつきすぎないように */
+#panel.u13on .u13tabs + .agroup { margin-top: 2px; }
+/* スマホ：札は幅いっぱいに並べ、入らなければ折り返す（文字は折らない）。指で押しやすい高さ */
+@media (max-width: 600px) {
+  .u13tab { flex: 1 1 auto; justify-content: center; white-space: nowrap; padding: 8px 10px; min-height: 44px; font-size: 14px; letter-spacing: .04em; }
+}
