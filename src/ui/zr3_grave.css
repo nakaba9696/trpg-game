@@ -1,0 +1,5 @@
+/* R3：墓碑の「倒れたわけ」 */
+.r3clue { border-left: 3px solid var(--ng); padding: 8px 14px; margin-top: 8px; background: var(--paper); font-size: 14px; }
+.r3clue h3 { margin: 0 0 4px; font-family: var(--f-display); font-size: 15px; font-weight: 400; }
+.r3clue p { margin: 0; line-height: 1.8; }
+.r3clue .r3hint { color: var(--muted); font-style: italic; margin-top: 4px; }
