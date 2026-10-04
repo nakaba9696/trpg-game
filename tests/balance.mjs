@@ -104,15 +104,8 @@ function playGames0({ mode, games, steps, seed, only, start }) {
       // 職業ごとに別の範囲の種を使う（職業を足しても他の職業の数字が変わらないように）
       G.rand = seeded(100000 + seed * 1000000 + ci * 10000 + i);
       G.P = { trophies: {}, graves: [] };
-      const c = D.CLASSES[cls];
-      // 作成画面（src/ui/setup.js）と同じ振り方。ボーナス点は均等に配る
-      const stats = {}, caps = {};
-      D.STATS.forEach((k, j) => {
-        stats[k] = Math.min(90, Math.max(5, c.base[k] + G.d(6) + G.d(6) + G.d(6) - 3));
-        caps[k] = Math.min(99, Math.max(stats[k] + 10, stats[k] + 20 + G.d(10) + G.d(10) + G.d(10)));
-        const bonus = Math.floor(D.BONUS_POINTS / D.STATS.length) + (j < D.BONUS_POINTS % D.STATS.length ? 1 : 0);
-        stats[k] = Math.min(caps[k], stats[k] + bonus);
-      });
+      // 作成画面（src/ui/setup.js）と同じ振り方（G.cre.quickStats。S2）。ボーナス点は均等に配る
+      const { stats, caps } = G.cre.quickStats(cls, G.rand);
       G.newGame({ cls, stats, caps, goal: goals[i % goals.length], profile: { name: "測定", sex: "男", age: 20, history: "測定用", personality: "無口" } });
       const bot = mode === "smart" ? makeSmartBot(G) : null;
       let met = false;

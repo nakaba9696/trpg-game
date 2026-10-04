@@ -66,7 +66,7 @@ export default ({ G, fail, ok, seeded }) => {
       // 伸びしろ：剣と槍斧が Lv3 なら筋力の限界が上がる
       const base = cre.cap(Object.assign({}, dr, { talents: flat(1) }), "筋力");
       const up = cre.cap(Object.assign({}, dr, { talents: Object.assign(flat(1), { sword: 3 }) }), "筋力");
-      if (!(up > base || base === 99)) f(`才が限界を押し上げない（${base} → ${up}）`);
+      if (!(up > base || base === (cre.MAX_PT || 99))) f(`才が限界を押し上げない（${base} → ${up}）`);
       const o = cre.options(dr, rr);
       if (!o.talents || JSON.stringify(o.talents) !== JSON.stringify(dr.talents)) f("cre.options が才を渡さない");
       G.rand = seeded(5);

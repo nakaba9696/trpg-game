@@ -80,7 +80,7 @@
   // 装飾品の効き目を短い文にする（画面と店の説明用）
   G.ringEffect = (it) => {
     const KIND = { fire: "炎の魔法", heal: "癒し", steal: "盗み", trap: "罠", talk: "話術" };
-    const out = Object.entries(it.stats || {}).map(([k, n]) => k + G.sign(n));
+    const out = Object.entries(it.stats || {}).map(([k, n]) => G.statModText(k, n));
     Object.entries(it.bonus || {}).forEach(([k, n]) => out.push((KIND[k] || k) + G.sign(n)));
     if (it.magic) out.push("魔法" + G.sign(it.magic));
     return out.join("・") + (it.cursed ? "・呪い" : "");
@@ -136,6 +136,14 @@
   };
 
   // ---------------------------------------------------------------- 能力値・判定・成長
+  // S2：画面に出す能力値は点（割合 ÷ 4 の切り捨て）。S.stats・S.caps・判定は成功率の尺度（0〜99）のまま。
+  // 端数（0〜3）は経験で、4 たまると 1 点伸びる。古いセーブもそのまま点で見える。docs/s2_stats.md
+  G.PT = () => (D.S2 && D.S2.PCT) || 4;
+  G.pt = (v) => Math.floor(Math.max(0, v || 0) / G.PT());
+  G.ptExp = (v) => Math.max(0, v || 0) % G.PT();
+  G.ptStats = (st) => Object.fromEntries(D.STATS.map((k) => [k, G.pt((st || {})[k])]));
+  // 装備などの能力値の補正（判定に足す％）の書き方
+  G.statModText = (k, n) => `${k}${G.sign(n)}%`;
   G.statEff = (k) => {
     const S = G.S;
     let v = S.stats[k];
@@ -165,11 +173,12 @@
     let g = 0;
     if (ok && G.d(100) > cur) g = G.d(4);
     else if (!ok && !fumble && G.rand() < 0.2) g = 1;
-    if (g) { const [a, b] = G.grow(stat, g); if (b > a) r.growth = [a, b]; }
+    if (g) { const [a, b] = G.grow(stat, g); if (b > a) r.growth = [a, b]; }   // 点が上がったときだけ見せる
     G.log("dice", "", r);
     return r;
   };
 
+  // n は成功率の尺度で足す。返すのは [前の点, 後の点, 実際に増えた割合]
   G.grow = (k, n) => {
     const S = G.S;
     const a = S.stats[k];
@@ -179,7 +188,7 @@
       if (k === "体力") { const m = G.maxHpOf(S.stats); S.hp += m - S.maxHp; S.maxHp = m; }
       if (k === "魔力") { const m = G.maxMpOf(S.stats); S.mp += m - S.maxMp; S.maxMp = m; }
     }
-    return [a, b];
+    return [G.pt(a), G.pt(Math.max(a, b)), Math.max(0, b - a)];
   };
 
   // ---------------------------------------------------------------- HP と死
@@ -410,8 +419,9 @@
     if (o.grow) {
       Object.entries(o.grow).forEach(([k, n]) => {
         if (!D.STATS.includes(k)) return;
-        const [a, b] = G.grow(k, n);
+        const [a, b, got] = G.grow(k, n);
         if (b > a) G.log("grow", `${k}が伸びた ${a}→${b}`);
+        else if (got) G.note(`${k}が少し鍛えられた。`);
       });
     }
     if (o.cond && !S.conds.includes(o.cond)) { S.conds.push(o.cond); G.note(`状態：${o.cond}`); }

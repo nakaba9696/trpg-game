@@ -1,6 +1,6 @@
 // U5：キャラクター作成（engine/u5_creation.js の G.cre を DOM なしで）
 // - おまかせで作って、そのまま冒険を始められる
-// - ボーナス点の合計が合う・鍵が効く（何度振り直しても変わらない、LOCK_MAX まで）
+// - ボーナス点の合計が合う（振るたびに変わる。S2）・鍵が効く（何度振り直しても才能限界が変わらない、LOCK_MAX まで）
 // - 古いセーブ（年齢の区分・生まれが無い）でも導入が作れる
 // - 導入と作成画面の文に、明かさない言葉が入っていない（#1 の持ち主の方針）
 export default ({ G, fail: fail0, ok, seeded }) => {
@@ -35,12 +35,14 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     const dr = cre.fresh(rnd);
     // ボーナス点を好きに振る（足せる所へ、足せなくなるまで）
     for (let n = 0; n < 40; n++) cre.addBonus(dr, D.STATS[Math.floor(rnd() * D.STATS.length)], rnd() < 0.8 ? 1 : -1);
-    if (cre.bonusUsed(dr) > D.BONUS_POINTS || cre.bonusLeft(dr) < 0) fail(`作成 ${i}: ボーナス点の合計が合わない（${cre.bonusUsed(dr)}）`);
-    // 全部使い切れる（限界の手前が必ずある）
-    while (cre.bonusLeft(dr) > 0) { const k = D.STATS.find((s) => cre.canAdd(dr, s)); if (!k) { fail(`作成 ${i}: ボーナスを使い切れない`); break; } cre.addBonus(dr, k, 1); }
-    if (cre.bonusUsed(dr) !== D.BONUS_POINTS) fail(`作成 ${i}: ボーナス点の合計が ${D.BONUS_POINTS} にならない`);
+    const pts = cre.bonusPoints(dr);
+    if (cre.bonusUsed(dr) > pts || cre.bonusLeft(dr) < 0) fail(`作成 ${i}: ボーナス点の合計が合わない（${cre.bonusUsed(dr)}／${pts}）`);
+    // 才能限界まで足せば使い切れる（限界までの余地がボーナス点より少ないときは、余地を全部埋める）
+    while (cre.bonusLeft(dr) > 0) { const k = D.STATS.find((s) => cre.canAdd(dr, s)); if (!k) break; cre.addBonus(dr, k, 1); }
+    const room = D.STATS.reduce((a, k) => a + cre.cap(dr, k) - cre.base(dr, k), 0);
+    if (cre.bonusUsed(dr) !== Math.min(pts, room)) fail(`作成 ${i}: ボーナス点 ${pts} を使い切れない（${cre.bonusUsed(dr)}・余地 ${room}）`);
     const sumBase = D.STATS.reduce((a, k) => a + cre.base(dr, k), 0);
-    if (cre.total(dr) !== sumBase + D.BONUS_POINTS) fail(`作成 ${i}: 合計が振った値＋補正＋ボーナスと合わない`);
+    if (cre.total(dr) !== sumBase + cre.bonusUsed(dr)) fail(`作成 ${i}: 合計が素の値＋補正＋ボーナスと合わない`);
     const o = cre.options(dr, rnd);
     for (const k of D.STATS) {
       if (!(o.stats[k] >= 5 && o.stats[k] <= o.caps[k] && o.caps[k] <= 99)) fail(`作成 ${i}: ${k} ${o.stats[k]}／限界 ${o.caps[k]} が範囲の外`);
@@ -63,7 +65,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (G.S.profile.origin !== o.profile.origin || G.S.profile.ageBand !== o.profile.ageBand) fail(`作成 ${i}: 生まれ・年齢の区分がセーブに残らない`);
   }
 
-  // 鍵：鍵をかけた能力値は、何度振り直しても変わらない。鍵は LOCK_MAX まで
+  // 鍵：鍵をかけた能力値は、何度振り直しても（才能限界が）変わらない。鍵は LOCK_MAX まで
   {
     const dr = cre.fresh(rnd);
     const [a, b, c, d4] = D.STATS;
@@ -74,9 +76,9 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     for (let n = 0; n < 200; n++) {
       cre.roll(dr, rnd);
       for (const k of [a, b, c]) if (dr.rolled[k] !== keep[k][0] || dr.caps[k] !== keep[k][1]) { fail(`鍵: ${k} が振り直しで変わった`); n = 999; break; }
-      seen.add(dr.rolled[d4]);
+      seen.add(dr.caps[d4]);
     }
-    if (seen.size < 5) fail("鍵: 鍵の無い能力値が振り直しで変わらない");
+    if (seen.size < 4) fail("鍵: 鍵の無い能力値の才能限界が振り直しで変わらない");
     if (dr.rolls < 200) fail("鍵: 振り直しの回数に上限がある");
     cre.toggleLock(dr, a);
     if (!cre.toggleLock(dr, d4)) fail("鍵: 外したあと、別の能力値にかけられない");

@@ -173,7 +173,7 @@
     if (it.vital) out.push("急所" + G.sign(it.vital));
     if (it.first) out.push("先手" + G.sign(it.first));
     if (it.drain) out.push(`吸う${Math.round(it.drain * 100)}%`);
-    Object.entries(it.stats || {}).forEach(([k, n]) => out.push(k + G.sign(n)));
+    Object.entries(it.stats || {}).forEach(([k, n]) => out.push(G.statModText(k, n)));
     Object.entries(it.bonus || {}).forEach(([k, n]) => out.push((KIND[k] || k) + G.sign(n)));
     if (it.magic) out.push("魔法" + G.sign(it.magic));
     if (it.cursed && !(it.i3g && it.i3g.unk)) out.push("呪い");
@@ -776,7 +776,7 @@
       const e = [];
       if (it.first) e.push("先手" + G.sign(it.first));
       if (it.drain) e.push(`吸う${Math.round(it.drain * 100)}%`);
-      Object.entries(it.stats || {}).forEach(([k, n]) => e.push(k + G.sign(n)));
+      Object.entries(it.stats || {}).forEach(([k, n]) => e.push(G.statModText(k, n)));
       Object.entries(it.bonus || {}).forEach(([k, n]) => e.push((KIND[k] || k) + G.sign(n)));
       if (e.length) rows.splice(Math.max(0, rows.length - 2), 0, ["効果", e.join("・")]);
       if (it.i3 && it.i3.k) rows.unshift(["型", `${it.i3.k}${it.type === "weapon" ? (it.i3.h === 2 ? "・両手" : "・片手") : ""}`]);
