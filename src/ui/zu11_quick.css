@@ -28,14 +28,17 @@ body.v9pc #mbar .u11quick .btn.u11qb { min-height: 32px; font-size: 13.5px; }
 #u11Codex.fresh::after { position: absolute; top: -7px; right: -6px; margin: 0; }
 .f2cell.fresh::after { position: absolute; top: -6px; right: -6px; width: auto; }
 .f2bang { margin-left: 6px; }
-.f2world dt.f2fresh { color: var(--u11-bang); }
-:root[data-theme="dark"] .f2world dt.f2fresh { color: #f08a72; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .f2world dt.f2fresh { color: #f08a72; } }
 .tabs .btn.fresh { border-color: var(--u11-bang); }
 
-/* 用語のタブ：世界の手引き */
-.f2world { display: grid; gap: 8px; margin-top: 8px; }
-.f2world:focus { outline: none; }
+/* 用語のタブ：名前で探す欄・何も選んでいないときの説明 */
+.f2find { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 8px; }
+.f2find[hidden] { display: none; }
+.f2findin { flex: 1 1 220px; max-width: 360px; min-width: 0; min-height: 36px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 2px;
+  background: var(--field); color: var(--ink); font: inherit; font-size: 14px; }
+.f2findin:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.f2findnote { margin: 0; }
+.f2sub { margin: 12px 0 2px; font-size: 13px; color: var(--muted); font-weight: 400; }
+.f2rules { font-size: 14px; }
 
 /* ---------------------------------------------------------------- 保存の印：帯の右上に一瞬 */
 #mbar .u11saved { position: absolute; top: 5px; right: 10px; font-family: var(--f-ui); font-size: 11px; color: var(--ok); opacity: 0; pointer-events: none; white-space: nowrap; padding: 0 4px; border-radius: 2px; background: var(--bar-bg); }
