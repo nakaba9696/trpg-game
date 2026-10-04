@@ -78,7 +78,7 @@ export default ({ G, fail, ok, seeded }) => {
   const shown = (id) => {
     const S = G.S;
     S.mode = "event"; S.event = id; S.combat = null;
-    return G.actions().flatMap((g) => g.list).filter((a) => /^ev:/.test(a.id) && a.c10).map((a) => ({ key: a.c10, label: a.label, sub: a.sub }));
+    return G.actions().flatMap((g) => g.list).filter((a) => /^ev:/.test(a.id) && a.c10 && !a.locked).map((a) => ({ key: a.c10, label: a.label, sub: a.sub }));
   };
 
   // ---------------------------------------------------------------- 足した数
@@ -130,6 +130,45 @@ export default ({ G, fail, ok, seeded }) => {
   { const S = start(); S.virtue = 10; S.sin = 30; if (C.pure(S) || !C.sinful(S)) fail("罪が濃いのに清いと見なす"); }
   // 手配中に「評判」「悪名」の選択肢は出さない
   { const S = prepare("wanted"); if (C.trusted(S) || C.infamous(S)) fail("手配中なのに、評判・悪名の選択肢も出る"); }
+
+  // ---------------------------------------------------------------- まだ選べない選択肢は、うっすら（押せない）見せて条件を添える
+  {
+    const S = start("merc");
+    S.mode = "event"; S.event = "carriage";
+    const list = () => G.actions().flatMap((g) => g.list);
+    const locked = list().filter((a) => a.locked);
+    const lk = locked.filter((a) => /^c10lock:/.test(a.id));
+    if (!lk.length) fail("馬車の出来事で、まだ選べない選択肢がうっすら見えない");
+    if (lk.length > C.LOCKED_MAX) fail(`うっすら見せる選択肢が多すぎる（${lk.length}）`);
+    if (locked.some((a) => !a.disabled)) fail("まだ選べない選択肢が押せる");
+    for (const a of lk) {
+      if (!a.sub || /\d/.test(a.sub)) fail(`まだ選べない「${a.label}」に、条件の言葉が無いか数が出ている（${a.sub}）`);
+      if (/\{n\}/.test(a.label)) fail(`まだ選べない「${a.label}」に差し込み記号が残っている`);
+    }
+    // 選べる選択肢の後ろに並ぶ
+    const ids = list().map((a) => a.id);
+    const lastReal = Math.max(...ids.map((id, k) => (/^ev:/.test(id) ? k : -1)));
+    if (lk.some((a) => ids.indexOf(a.id) < lastReal)) fail("まだ選べない選択肢が、選べる選択肢の前に並ぶ");
+    // 押しても何も起きない
+    const log0 = S.log.length;
+    G.act(lk[0].id);
+    if (S.mode !== "event" || S.log.length !== log0) fail("まだ選べない選択肢を押すと、何かが起きる");
+    // 条件を満たすと、普通の選択肢になる
+    S.title = "騎士";
+    if (list().some((a) => a.locked && a.c10 === "titled")) fail("位を得ても、位の選択肢がうっすらのまま");
+    if (!list().some((a) => /^ev:/.test(a.id) && a.c10 === "titled" && !a.disabled)) fail("位を得ても、位の選択肢が選べない");
+    // ほかの職業・手配・悪名・無名（名が知られたあと）の条件は見せない
+    for (const e of evs) {
+      S.event = e.id; S.mode = "event";
+      const bad = list().find((a) => a.locked && /^(cls:|wanted|infamous|unknown)/.test(a.c10 || ""));
+      if (bad) { fail(`出来事 ${e.id} で、届かない条件の「${bad.label}」がうっすら見える`); break; }
+    }
+    // 見せない設定
+    C.showLocked = false;
+    S.event = "carriage";
+    if (list().some((a) => a.locked)) fail("見せない設定でも、うっすらの選択肢が出る");
+    C.showLocked = true;
+  }
 
   // ---------------------------------------------------------------- すべての足した選択肢が壊れていない
   const NUM = /名声|悪名|罪の匂い|成功率|善行|\d+\s*[%％]/;

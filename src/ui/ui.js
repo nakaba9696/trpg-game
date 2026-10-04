@@ -214,12 +214,13 @@
     const b = h("button", "act");
     b.type = "button";
     b.disabled = !!a.disabled || busy;
+    if (a.locked) b.classList.add("locked");   // C10：まだ選べない、状態で現れる選択肢（うっすら見せる）
     b.append(h("b", "", a.label));
     if (a.sub) b.append(h("span", "", a.sub));
     // U4：依頼への道の印・押せない理由
     const mark = /^(travel|sail):/.test(a.id || "") ? travelMarks[a.id.split(":")[1]] : "";
     if (mark) { b.classList.add("marked"); b.append(h("em", "mark", "◆ " + mark)); }
-    const why = a.disabled && G.lockReason ? G.lockReason(a, G.S) : "";
+    const why = a.disabled && !a.locked && G.lockReason ? G.lockReason(a, G.S) : "";
     if (why) { b.append(h("em", "why", why)); b.title = why; }
     b.onclick = () => { if (!busy) { G.act(a.id); after(); } };
     return b;

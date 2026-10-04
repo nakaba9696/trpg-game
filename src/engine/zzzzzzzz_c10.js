@@ -174,7 +174,51 @@
     return r;
   };
 
-  // ---------------------------------------------------------------- 画面の添え書き（どの状態で現れた選択肢か）
+  // ---------------------------------------------------------------- 画面の添え書き（どの状態で現れた選択肢か）と、まだ選べない選択肢
+  // 条件を満たしていない選択肢も、うっすら（押せない）見せて、条件を世界の言葉で添える（持ち主の訂正）。うるさくならないように：
+  //   一つの場面で 2 個まで（残りは「ほかにも道がありそうだ」の一行）・選べる選択肢の後ろ・もともと選択肢が 6 つ以上の場面では見せない。
+  //   この人物にはもう届かない条件（ほかの職業・名が知られたあとの無名）と、悪い噂の条件（手配・悪名）は見せない。C.showLocked = false で見せない
+  C.showLocked = true;
+  C.LOCKED_MAX = 2;
+  C.CROWDED = 6;
+  C.HINT = {
+    sinful: "手を汚した者なら", pure: "施しを重ねた者なら", famous: "名が知られていれば", hero: "英雄と呼ばれる者なら",
+    unknown: "まだ名の無い者なら", trusted: "この国で慕われていれば", titled: "騎士の位があれば",
+  };
+  C.hint = (key) => {
+    if (C.HINT[key]) return C.HINT[key];
+    let m = /^cls:(.+)$/.exec(key || "");
+    if (m && D.CLASSES[m[1]]) return `${D.CLASSES[m[1]].name}なら`;
+    m = /^comp:(.+)$/.exec(key || "");
+    if (m && C.KIND_NAMES[m[1]]) return `${C.KIND_NAMES[m[1]]}が一緒なら`;
+    m = /^item:(.+)$/.exec(key || "");
+    if (m && D.ITEMS[m[1]]) return `${D.ITEMS[m[1]].name}を持っていれば`;
+    return "";
+  };
+  // この人物に見せてよい「まだ選べない」条件か
+  C.reachable = (key, S) => {
+    S = st(S);
+    if (/^cls:/.test(key)) return false;                       // 職業は替えられない
+    if (key === "unknown") return false;                       // 一度名が知られたら、無名には戻れない
+    if (["wanted", "infamous"].includes(key)) return false;    // 悪い噂を目指させない
+    if (key === "trusted" && !C.nation(S)) return false;
+    return !!C.hint(key);
+  };
+  C.lockedFor = (e, S) => {
+    S = st(S);
+    if (!e || !C.showLocked) return [];
+    const out = [];
+    const seenLabel = new Set();
+    e.choices.forEach((c, i) => {
+      if (!c.c10 || c.hide || !C.reachable(c.c10, S)) return;
+      if (c.cond && c.cond(S)) return;
+      const label = String(c.label).replace(/\{n\}/g, "仲間");   // 仲間がいないときは「仲間」と書く
+      if (seenLabel.has(label)) return;
+      seenLabel.add(label);
+      out.push({ i, c, label });
+    });
+    return out;
+  };
   const actions0 = G.actions;
   G.actions = () => {
     const g = actions0();
@@ -182,11 +226,19 @@
     if (!S || S.mode !== "event") return g;
     const e = D.EVENTS.find((x) => x.id === S.event);
     if (!e) return g;
+    let grp0 = null;
     g.forEach((grp) => (grp.list || []).forEach((a) => {
       const m = /^ev:(\d+)$/.exec(a.id || "");
       const c = m && e.choices[+m[1]];
+      if (m && !grp0) grp0 = grp;
       if (c && c.c10tag && !a.c10) { a.c10 = c.c10; a.sub = a.sub ? `${c.c10tag}・${a.sub}` : c.c10tag; }
     }));
+    if (grp0) {
+      const shown = g.reduce((n, grp) => n + (grp.list || []).length, 0);
+      const locked = shown < C.CROWDED ? C.lockedFor(e, S) : [];
+      locked.slice(0, C.LOCKED_MAX).forEach(({ i, c, label }) => grp0.list.push({ id: "c10lock:" + i, label, sub: C.hint(c.c10), disabled: true, locked: true, c10: c.c10 }));
+      if (locked.length > C.LOCKED_MAX) grp0.list.push({ id: "c10more", label: "ほかにも道がありそうだ", sub: "", disabled: true, locked: true });
+    }
     return g;
   };
 

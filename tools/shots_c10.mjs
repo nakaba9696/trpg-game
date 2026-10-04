@@ -26,6 +26,8 @@ const shoot = async (vp, name, setup) => {
   }
   await page.evaluate(setup);
   await page.waitForTimeout(500);
+  if (vp.width < 500) await page.evaluate(() => document.querySelector("#panel").scrollIntoView({ block: "end" }));   // スマホは選択肢の欄まで送る
+  await page.waitForTimeout(200);
   await page.screenshot({ path: dir + name + ".jpg", type: "jpeg", quality: 82 });
   console.log("wrote", dir + name + ".jpg");
   await page.close();
@@ -39,6 +41,9 @@ const ev = (fn) => `(${fn})(); G.S.mode = "event"; G.S.event = "toll"; G.S.log.p
 await shoot(PC, "toll_flat", new Function(ev(() => { G.S.fame = 40; G.S.sin = 0; G.S.virtue = 0; G.S.companions = []; })));
 await shoot(PC, "toll_state", new Function(ev(() => { G.S.fame = 200; G.S.companions = [{ name: "剣士のハンス", cls: "剣士", power: 50, dmg: 1, desc: "無口" }]; })));
 await shoot(PC, "toll_sinful", new Function(ev(() => { G.S.fame = 0; G.S.sin = 30; })));
+// まだ選べない選択肢（うっすら・条件つき）：馬車の出来事を、位も名も仲間も無い者で
+await shoot(PC, "carriage_locked", () => { G.S.fame = 40; G.S.sin = 0; G.S.virtue = 0; G.S.companions = []; G.S.title = ""; G.S.mode = "event"; G.S.event = "carriage"; G.say(G.data.EVENTS.find((e) => e.id === "carriage").text); G.ui.render(); });
+await shoot(PHONE, "carriage_locked_phone", () => { G.S.fame = 40; G.S.sin = 0; G.S.virtue = 0; G.S.companions = []; G.S.title = ""; G.S.mode = "event"; G.S.event = "carriage"; G.say(G.data.EVENTS.find((e) => e.id === "carriage").text); G.ui.render(); });
 // 奴隷商人：罪が濃く、位がある
 await shoot(PC, "slaver_titled", new Function(`G.S.sin = 30; G.S.title = "騎士"; G.S.mode = "event"; G.S.event = "slaver"; G.say(G.data.EVENTS.find((e) => e.id === "slaver").text); G.ui.render();`));
 // 酒場の「あなたなら」
