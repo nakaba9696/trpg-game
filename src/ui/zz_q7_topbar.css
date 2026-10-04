@@ -1,0 +1,52 @@
+/* Q7：右上の道具の列（ui/zz_q7_topbar.js）と設定の窓 */
+.top .tools { align-items: center; }
+.top .tools > .btn, .top .tools .q7more > .btn, .top .tools .q7top .btn { white-space: nowrap; position: relative; flex-shrink: 0; }
+/* 帯の下の段（U11）を外したので、帯の列を戻す */
+#mbar.q7norow { row-gap: 2px; }
+/* U11 が冒険中のスマホで隠していた上の図鑑・地図を、ここでは出す（帯の方を外したので） */
+body.q7play .top .tools #openCodex, body.q7play .top .tools #openMap { display: inline-flex; align-items: center; }
+/* 冒険の外では、ステータス・依頼は出さない */
+body:not(.q7play) .top .tools #openSheet, body:not(.q7play) .top .tools #q7Quests, body:not(.q7play) #q7ToTitle { display: none; }
+.top .tools #openSheet, .top .tools #q7Quests { display: inline-flex; align-items: center; gap: 4px; }
+.top .tools .u11key { margin-left: 2px; }
+/* 図鑑の赤い「！」：右上のボタンの右肩に */
+.top .tools #openCodex.fresh::after { position: absolute; top: -7px; right: -7px; margin: 0; }
+/* 「…」の中身：広い画面ではそのまま並べ、「…」は出さない */
+.q7more { display: contents; }
+.q7morebtn { display: none; }
+.q7setbtn { display: inline-flex; align-items: center; gap: 4px; }
+.q7gear { font-size: 1.05em; line-height: 1; }
+
+/* 幅が足りない画面（PC の 1280px 前後を含む）：トロフィーと墓碑・ログ・タイトルへは「…」の中 */
+@media (max-width: 1360px) {
+  .top .tools { position: relative; }
+  .q7morebtn { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; font-weight: 700; }
+  .q7more { display: none; position: absolute; right: 0; top: calc(100% + 4px); z-index: 30; flex-direction: column; align-items: stretch; gap: 4px;
+    padding: 6px; background: var(--win-solid, var(--sheet)); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); min-width: 10em; }
+  .q7more.open { display: flex; }
+  .q7more > .btn { justify-content: flex-start; text-align: left; min-height: 40px; }
+}
+/* 狭い画面：二段に折り返して右に寄せる。設定は歯車だけ */
+@media (max-width: 760px) {
+  .top .tools { flex-wrap: wrap; justify-content: flex-end; row-gap: 4px; }
+  .q7setword { display: none; }
+  .q7setbtn { min-width: 36px; justify-content: center; }
+}
+
+/* ---------------------------------------------------------------- 設定の窓 */
+.q7set { width: min(560px, calc(100vw - 32px)); }
+.q7setsec { display: grid; gap: 8px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--rule); }
+.q7setsec h3 { margin: 0; font-size: 14px; letter-spacing: .1em; color: var(--muted); font-weight: 400; }
+.q7setrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.q7setlab { min-width: 6em; }
+.q7seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.q7opt { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--rule); border-radius: 3px; padding: 4px 10px; min-height: 36px; cursor: pointer; }
+.q7opt:has(input:checked) { border-color: var(--accent); font-weight: 700; }
+.q7sethint { flex-basis: 100%; margin: 0; }
+.q7setsec .dbody.sound { padding: 0; }
+
+/* タイトルへの確かめ */
+.q7ask { width: min(420px, calc(100vw - 32px)); }
+.q7ask .dbody p { margin: 0 0 12px; line-height: 1.7; }
+.q7askrow { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.q7askrow .btn { min-height: 40px; }
