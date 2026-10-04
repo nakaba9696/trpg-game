@@ -173,4 +173,16 @@ export default ({ G, fail, seeded }) => {
   const other = start(12);
   other.over = "dead";
   if (G.keepLastBreath(st, other)) fail("別の冒険が倒れたのに倒れる前の写しを書き換えた");
+
+  // 9. 右上のセーブ・ロードのキーの近道（S・L。文字を打っている所・ほかの窓の上では効かない。同じキーで閉じる）
+  const ka = G.slotKeyAction;
+  const k = (key, o = {}) => ({ key, ...o });
+  if (ka(k("s"), false, null, true) !== "save" || ka(k("S"), false, null, true) !== "save") fail("S でセーブが開かない");
+  if (ka(k("l"), false, null, true) !== "load") fail("L でロードが開かない");
+  if (ka(k("s"), true, null, true) || ka(k("l"), true, null, true)) fail("文字を打っている所で S・L が効く");
+  if (ka(k("s"), false, "dlgCodex", true)) fail("ほかの窓の上で S が効く");
+  if (ka(k("s"), false, "dlgSlots", true, "save") !== "close") fail("セーブの窓で S を押しても閉じない");
+  if (ka(k("l"), false, "dlgSlots", true, "save")) fail("セーブの窓で L が効く");
+  if (ka(k("s"), false, null, false)) fail("冒険の外で S が効く");
+  if (ka(k("s", { ctrlKey: true }), false, null, true)) fail("Ctrl+S でセーブが開く（ブラウザの保存とぶつかる）");
 };

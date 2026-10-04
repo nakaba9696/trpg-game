@@ -19,3 +19,13 @@
   .q7slot { flex-direction: column; align-items: stretch; }
   .q7side { justify-content: flex-start; }
 }
+
+/* 画面の右上の [セーブ][ロード]（上の道具の列の右端。冒険中だけ） */
+.q7top { display: inline-flex; gap: 0; margin-left: auto; } /* 狭い画面で次の段に回っても右端に寄せる */
+.q7top[hidden] { display: none; }
+.top .tools .q7top .btn { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; }
+.top .tools .q7top .q7topSave { border-top-right-radius: 0; border-bottom-right-radius: 0; background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.top .tools .q7top .q7topLoad { border-top-left-radius: 0; border-bottom-left-radius: 0; border-left-width: 0; }
+.top .tools .q7top .q7topSave.q7off { background: var(--sheet); color: var(--muted); border-color: var(--rule); font-weight: 400; cursor: not-allowed; }
+.q7top .q7ico { font-size: .8em; line-height: 1; }
+.top .tools .q7top .q7topSave:not(.q7off) .u11key { color: var(--paper); border-color: currentColor; opacity: .85; }
