@@ -10,6 +10,10 @@
     db: null, uid: null, chains: {},
     write(name, data) {
       lset(LKEY[name], data);
+      this.remote(name, data);
+    },
+    // claude.ai のデータにだけ書く（Q7 の手動の枠は、ブラウザ側を engine/q7_slots.js が書く）
+    remote(name, data) {
       if (!this.db || !this.uid) return;
       const ref = this.db.doc(`data/users/${this.uid}/${name}`);
       const body = data ? JSON.parse(JSON.stringify(data)) : null;
@@ -22,8 +26,10 @@
   };
 
   const main = (G.main = { sample: null });
+  main.store = store;
   main.save = () => {
     if (G.S) G.S.savedAt = Date.now();
+    try { if (G.keepLastBreath) G.keepLastBreath(localStorage, G.S); } catch {} // Q7：倒れる前の自動の枠を残す
     store.write("save", G.S || null);
   };
   main.saveProfile = () => { G.P.updatedAt = Date.now(); store.write("profile", G.P); };
@@ -120,6 +126,7 @@
     const local = G.S;
     if (rs && (!local || (rs.savedAt || 0) > (local.savedAt || 0))) adopt(rs);
     else if (local) main.save();
+    if (main.onRemote) await Promise.resolve().then(() => main.onRemote(store)).catch(() => {}); // Q7：手動の枠を claude.ai のデータとそろえる
     if (!$("#setup").hidden) G.setup.show();
   })();
 })(globalThis.G = globalThis.G || {});
