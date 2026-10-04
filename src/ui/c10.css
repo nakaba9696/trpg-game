@@ -1,0 +1,4 @@
+/* C10：まだ選べない、状態で現れる選択肢。うっすら・押せない・条件を小さく添える */
+#panel .act.locked { opacity: .38; cursor: default; border-style: dashed; }
+#panel .act.locked b { font-weight: 400; }
+#panel .act.locked span { font-style: italic; }

@@ -88,5 +88,4 @@
     return r;
   };
   after("act");
-  after("gmApply");
 })(globalThis.G = globalThis.G || {});

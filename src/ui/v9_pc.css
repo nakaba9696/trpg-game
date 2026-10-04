@@ -49,8 +49,6 @@ body.v9pc #log .l-you { font-size: 13.5px; opacity: .85; }
 @keyframes v9in { from { opacity: 0; transform: translateY(6px); filter: blur(1px); } }
 body.v9pc #panel { max-height: 46vh; overflow-y: auto; scrollbar-width: thin; gap: 8px; padding: 10px 2px 2px; border-top: 1px solid var(--rule); }
 body.v9pc .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; }
-body.v9pc #act { margin-inline: -28px; padding-inline: 28px; padding-block: 8px 12px; position: static; }
-body.v9pc #act .freeRow input { padding: 6px 10px; }
 
 /* 選択肢の番号（1〜9 のキー） */
 body.v9pc .v9key { display: grid; place-items: center; position: absolute; left: 0; top: 9px; width: 18px; height: 18px; font: 700 11px/1 var(--f-ui); color: var(--accent);
@@ -110,7 +108,6 @@ body.v9pc.v9combat .scene::before { content: ""; position: fixed; inset: 0; z-in
 body.v9pc.v9combat .tome { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); grid-template-rows: minmax(0, 1fr) auto; column-gap: 26px; padding-top: 18px; }
 body.v9pc.v9combat #log { grid-row: 1 / span 2; font-size: 15px; line-height: 1.8; border-right: 1px solid var(--rule); padding-right: 14px; }
 body.v9pc.v9combat #panel { grid-column: 2; max-height: none; border-top: 0; padding-top: 0; }
-body.v9pc.v9combat #act { grid-column: 2; margin-inline: 0 -28px; padding-inline: 0 28px; }
 body.v9pc.v9combat .alist { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 body.v9pc.v9combat .v9fig .v9name { font-size: 13px; bottom: 6%; }
 /* 敵の札は魔物の上に並べる（下の帯は文章と行動だけ）。文章の窓は backdrop-filter で fixed の基準になるので、窓からの位置で置く */

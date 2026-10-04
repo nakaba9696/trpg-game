@@ -1,4 +1,4 @@
-// 冒険の画面：背景、記録、行動のボタン、自由入力、キャラクターシート、地図・年表・トロフィー・手引き。
+// 冒険の画面：背景、記録、行動のボタン、キャラクターシート、地図・年表・トロフィー・手引き。
 // エンジン（G.S）を読んで描くだけ。行動は G.act を呼ぶ。レーン U（UI）が管理
 (function (G) {
   const D = G.data;
@@ -214,12 +214,13 @@
     const b = h("button", "act");
     b.type = "button";
     b.disabled = !!a.disabled || busy;
+    if (a.locked) b.classList.add("locked");   // C10：まだ選べない、状態で現れる選択肢（うっすら見せる）
     b.append(h("b", "", a.label));
     if (a.sub) b.append(h("span", "", a.sub));
     // U4：依頼への道の印・押せない理由
     const mark = /^(travel|sail):/.test(a.id || "") ? travelMarks[a.id.split(":")[1]] : "";
     if (mark) { b.classList.add("marked"); b.append(h("em", "mark", "◆ " + mark)); }
-    const why = a.disabled && G.lockReason ? G.lockReason(a, G.S) : "";
+    const why = a.disabled && !a.locked && G.lockReason ? G.lockReason(a, G.S) : "";
     if (why) { b.append(h("em", "why", why)); b.title = why; }
     b.onclick = () => { if (!busy) { G.act(a.id); after(); } };
     return b;
@@ -266,57 +267,6 @@
     renderGuide(panel);
     if (S.combat) renderFoes(panel);
     renderActions(panel);
-  }
-
-  // ---------------------------------------------------------------- 自由入力
-  $("#act").addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    const S = G.S;
-    const text = $("#free").value.trim();
-    const hint = $("#freeHint");
-    if (!text || !S || S.over || busy) return;
-    const a = G.parse(text);
-    hint.hidden = false;
-    hint.textContent = "";
-    if (a) {
-      hint.append(h("span", "", `「${text}」→ ${a.label}`));
-      $("#free").value = "";
-      G.act(a.id);
-      after();
-      return;
-    }
-    hint.append(h("span", "", `「${text}」は、今できる行動に当てはまりませんでした。`));
-    if (G.main.sample) {
-      const b = h("button", "btn", "GM に任せる（Claude の利用量を使う）");
-      b.type = "button";
-      b.onclick = () => askGM(text);
-      hint.append(b);
-    } else hint.append(h("span", "", "（GM に任せる機能は claude.ai で開いたときだけ使えます）"));
-  });
-
-  async function askGM(text) {
-    const hint = $("#freeHint");
-    busy = true;
-    renderPanel();
-    hint.textContent = "GM が考えています…";
-    try {
-      const res = await G.main.sample.json(G.gmPrompt(text), { modelTier: "quick", cache: false });
-      G.gmApply(text, res);
-      $("#free").value = "";
-      hint.hidden = true;
-    } catch (e) {
-      const msg = {
-        not_granted: "Claude の利用が許可されなかったので、GM を呼べません。",
-        rate_limited: "Claude の利用が混み合っているか、上限に達しました。少し待ってから試してください。",
-        refused: "GM がこの行動には応じませんでした。言い回しを変えてください。",
-        invalid_json: "GM の答えを読み取れませんでした。もう一度試してください。",
-      }[e && e.code] || "GM との通信が途切れました。もう一度試してください。";
-      hint.textContent = msg;
-      if (e && e.code === "not_granted") G.main.sample = null;
-    } finally {
-      busy = false;
-      after();
-    }
   }
 
   // ---------------------------------------------------------------- キャラクターシート
