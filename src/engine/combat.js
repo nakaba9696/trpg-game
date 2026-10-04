@@ -1,7 +1,7 @@
 // 戦闘。1手番ずつ：あなた → 仲間 → 敵。成功率はすべて能力値から決まる。レーン B（戦闘）が管理
 // 演出（B1）：画面が描けるよう、記録に fx を添える。DOM には触らない。
 //   { fx: "hit", foe: 名前, n } 敵にダメージ / { fx: "down", foe, boss } 敵が倒れた / { fx: "wall", foe } 絶界に弾かれた
-//   { fx: "hurt", n, heavy } あなたがダメージ / { fx: "crit" } 会心・急所 / { fx: "boss", foe: id, name } ボスの前口上（D.BOSS_LINES）
+//   { fx: "hurt", n, heavy } あなたがダメージ / { fx: "ally", who: 仲間の名前, n } 仲間がダメージ / { fx: "allydown", who } 仲間が戦闘不能（B5）/ { fx: "crit" } 会心・急所 / { fx: "boss", foe: id, name } ボスの前口上（D.BOSS_LINES）
 (function (G) {
   const D = G.data;
 
@@ -138,7 +138,9 @@
     if (!C || !t) return;
     C.guard = false;
     const w = G.weapon();
-    const [kind, itemId] = arg.split(":");
+    const [kind, itemId, tgt] = arg.split(":");
+    // B5：回復を仲間に使う（"heal:<仲間の id>"・"item:<品>:<仲間の id>"）
+    const ally = (id) => (id && id !== "you" ? S.companions.find((c) => c.id === id) || null : null);
     if (kind === "attack") {
       G.log("you", `${w.name}で${t.name}に斬りかかる`);
       const r = G.check(w.stat, 0, "攻撃", (w.hit || 0) - G.foeData(t).def);
@@ -170,9 +172,10 @@
       if (r.fumble) G.hurt(3, "自分の魔法で焼け死んだ");
     } else if (kind === "heal") {
       S.mp -= 3;
-      G.log("you", "癒しの奇跡を祈る");
+      const c = ally(itemId);
+      G.log("you", c ? `${G.m2Short(c)}に癒しの奇跡を祈る` : "癒しの奇跡を祈る");
       const r = G.check("魔力", "易しい", "癒しの奇跡", G.gearBonus("heal") + G.magicBonus());
-      if (r.ok) { const n = G.dice([2, 6, 2]) + Math.floor(S.stats.魔力 / 10); G.heal(n); G.note(`HP +${n}`); }
+      if (r.ok) { const n = G.dice([2, 6, 2]) + Math.floor(S.stats.魔力 / 10); if (c) G.b5Heal(c, n); else { G.heal(n); G.note(`HP +${n}`); } }
       else G.say("祈りは届かなかった。");
     } else if (D.SPELLS && D.SPELLS[kind] && !D.SPELLS[kind].base) {
       castSpell(kind, t);
@@ -199,14 +202,16 @@
       G.say("回り込まれた！");
     } else if (kind === "item") {
       const it = D.ITEMS[itemId];
+      const c = it && it.hp ? ally(tgt) : null;
       if (!it || !G.take(itemId)) return;
-      G.log("you", `${it.name}を使う`);
+      G.log("you", c ? `${G.m2Short(c)}に${it.name}を使う` : `${it.name}を使う`);
       if (it.escape) { G.say("煙が立ちこめ、その隙に逃げ出した。"); return endCombat("fled"); }
       if (it.holy) {
         if (G.foeData(t).undead) { G.say("聖水が不浄の肉を焼いた！"); damageFoe(t, G.dice([3, 6, 2]), "holy"); }
         else G.say("聖水をかけたが、ただ濡れただけだった。");
       }
-      if (it.hp) { G.heal(it.hp); G.note(it.hp > 100 ? "HP が全快した。" : `HP +${it.hp}`); }
+      if (it.hp && c) G.b5Heal(c, it.hp);
+      else if (it.hp) { G.heal(it.hp); G.note(it.hp > 100 ? "HP が全快した。" : `HP +${it.hp}`); }
       if (it.mp) { S.mp = Math.min(S.maxMp, S.mp + it.mp); G.note(it.mp > 100 ? "MP が全快した。" : `MP +${it.mp}`); }
     }
     if (S.over) return;
@@ -265,15 +270,17 @@
   const wardCut = () => 2 + Math.floor(G.S.stats.魔力 / 20);
 
   // ---------------------------------------------------------------- 仲間と敵の番
+  // B5：戦闘不能（HP 0）の仲間は動かない。回復役は、いちばん減っている味方（戦闘不能を先に）を治す
   function companionsTurn() {
     const S = G.S;
     S.companions.forEach((c) => {
       const foes = G.alive();
-      if (!foes.length) return;
-      if (c.heal && S.hp < S.maxHp / 2) {
+      if (!foes.length || G.b5Down(c)) return;
+      const need = c.heal ? G.b5Neediest() : null;
+      if (need && need.ratio < 0.5) {
         const n = G.d(6) + 2;
-        G.heal(n);
-        G.note(`${c.name}の治療 HP +${n}`);
+        if (need.who === "you") { G.heal(n); G.note(`${c.name}の治療 HP +${n}`); }
+        else G.b5Heal(need.who, n, need.who === c ? `${c.name}の手当て` : `${c.name}の治療`);
         return;
       }
       const f = G.pick(foes);
@@ -286,6 +293,41 @@
         G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
         if (f.hp <= 0) onFoeDown(f);
       } else G.note(`${c.name}の攻撃は外れた。`);
+    });
+  }
+
+  // B5：敵は主人公と立っている仲間から狙いを選ぶ（重み：主人公 3・前に立つ者 3・ほか 2・術師 1.2。G.b5）
+  function aimOf() {
+    const S = G.S;
+    const list = G.b5Standing(S);
+    if (!list.length) return null;
+    const w = list.map((c) => G.b5.KIND[G.b5.kind(c)].aim);
+    let r = G.rand() * (G.b5.HERO_AIM + w.reduce((a, b) => a + b, 0)) - G.b5.HERO_AIM;
+    if (r < 0) return null;
+    for (let i = 0; i < list.length; i++) { r -= w[i]; if (r < 0) return list[i]; }
+    return list[list.length - 1];
+  }
+  function hitAlly(f, e, c, hexed) {
+    const C = G.S.combat;
+    const chance = G.clamp(e.hit - G.b5Dodge(c) - (hexed ? 20 : 0), 5, 95);
+    if (G.d(100) > chance) { G.note(`${c.name}は${f.name}の攻撃をかわした。`); return; }
+    let dmg = G.dice(e.dmg) - (e.magic ? 0 : G.b5Def(c));
+    if (C.ward > 0) dmg -= wardCut();
+    dmg = Math.max(1, dmg);
+    c.hp = Math.max(0, c.hp - dmg);
+    G.log("nar", `${f.name}の${e.magic ? "呪い" : "攻撃"}！ ${c.name}に ${dmg} のダメージ（残り ${c.hp}/${G.b5Max(c)}）`, { fx: "ally", who: c.name, n: dmg });
+    if (c.hp <= 0) G.b5Fall(c, f);
+  }
+
+  // 一行をなぎ払う（使徒の余波）：立っている仲間それぞれに、少し弱い一撃
+  function sweep(f, e) {
+    G.say(`${f.name}の一撃の余波が、一行をなぎ払った！`);
+    G.b5Standing(G.S).forEach((c) => {
+      if (G.d(100) > G.clamp(e.hit - G.b5Dodge(c), 5, 95)) { G.note(`${c.name}は身を伏せて、余波をかわした。`); return; }
+      const dmg = Math.max(1, Math.ceil(G.dice(e.dmg) * 0.6) - G.b5Def(c));
+      c.hp = Math.max(0, c.hp - dmg);
+      G.log("nar", `${c.name}に ${dmg} のダメージ（残り ${c.hp}/${G.b5Max(c)}）`, { fx: "ally", who: c.name, n: dmg });
+      if (c.hp <= 0) G.b5Fall(c, f);
     });
   }
 
@@ -304,6 +346,12 @@
         if (f.hp <= 0) return;
       }
       if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は凍りついたまま動けない。`); return; }
+      // 使徒（絶界を持つ者）は、あなただけを狙う。仲間は余波でなぎ払われる（下の sweep）
+      //（絶界を破る剣を持つと e.majin は消えるので、もとのデータと E3 の印で見る）
+      const apostle = !!(f.e3 || (D.ENEMIES[f.id] && D.ENEMIES[f.id].majin));
+      const ally = apostle ? null : aimOf();
+      if (ally) { hitAlly(f, e, ally, hexed); return; }
+      if (apostle && G.b5Standing(S).length && G.rand() < 0.35) sweep(f, e);
       let chance = e.hit - Math.floor(G.statEff("敏捷") / 5) - (C.guard ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0);
       chance = G.clamp(chance, 5, 95);
       if (G.d(100) <= chance) {
@@ -325,6 +373,7 @@
     const C = S.combat;
     S.combat = null;
     S.mode = "explore";
+    if (G.b5AfterCombat) G.b5AfterCombat(how);
     if (how === "win") {
       const after = G.voiceLine && G.voiceLine("win", null, ""); // 語り（D7）
       if (after) G.say(after);

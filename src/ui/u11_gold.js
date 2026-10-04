@@ -69,14 +69,20 @@
     box.classList.add(dl.up ? "u11up" : "u11down");
     const dEl = el("span", "u11d " + (dl.up ? "up" : "down") + (fresh ? "" : " kept"), dl.text);
     box.append(dEl);
-    // 札の右に出す。右に場所が無ければ（スマホで札が行の終わりにあるとき）札の上に（u11_gold.css の .above）
-    try {
-      const bar = box.closest("#mbar") || document.body;
-      if (dEl.getBoundingClientRect().right > Math.min(bar.getBoundingClientRect().right, document.documentElement.clientWidth) - 4) dEl.classList.add("above");
-    } catch (e) { /* 測れなくても出す */ }
+    // 札の右に出す。右に場所が無ければ（スマホで札が行の終わりにあるとき）札の上に（u11_gold.css の .above）。
+    // 測るのと光らせ直すのは次のコマの頭で（描き直しの途中で配置の計算を走らせない。描かれる前なので見た目は同じ。T）
+    const flash = fresh && !still();
+    if (flash) box.classList.remove("u11flash");
+    requestAnimationFrame(() => {
+      if (!dEl.isConnected) return;
+      try {
+        const bar = box.closest("#mbar") || document.body;
+        if (dEl.getBoundingClientRect().right > Math.min(bar.getBoundingClientRect().right, document.documentElement.clientWidth) - 4) dEl.classList.add("above");
+      } catch (e) { /* 測れなくても出す */ }
+      if (flash) { void box.offsetWidth; box.classList.add("u11flash"); }
+    });
     if (!fresh) return;
     showing = dl;
-    if (!still()) { box.classList.remove("u11flash"); void box.offsetWidth; box.classList.add("u11flash"); }
     clearTimeout(flashT);
     flashT = setTimeout(() => {
       showing = null;
