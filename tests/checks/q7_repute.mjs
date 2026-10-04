@@ -59,12 +59,17 @@ export default ({ G, fail, seeded }) => {
   // 懸賞金は G.bounty と同じ
   if (w.bounty !== S.repute[other].inf * 10) F("懸賞金の計算が G.bounty と違う");
 
-  // 本物の罪で悪名が上がる → 段階が変わる
+  // 知られた悪名が上がる → 段階が変わる。罪（G.crime）は Q8 で、人に知られたときだけ悪名になる（隠れた罪は S.q8hid）。出すのは知られた分だけ
   S = start(3);
   if (G.nationOf()) {
-    G.crime("theft");
-    const n0 = G.q7.repute(S).nations[0];
-    if (!n0.inf || n0.infLabel === "知られていない") F("罪を犯しても悪名の段階が変わらない");
+    const here3 = G.nationOf();
+    G.addInfamy(5, here3);
+    let n0 = G.q7.repute(S).nations[0];
+    if (n0.inf !== 5 || n0.infLabel === "知られていない") F("知られた悪名が上がっても段階が変わらない");
+    for (let k = 0; k < 6; k++) G.crime("theft");
+    n0 = G.q7.repute(S).nations[0];
+    const known = (S.repute[here3] || {}).inf || 0;
+    if (n0.inf !== known) F(`出している悪名が、知られた悪名と違う：${n0.inf}／${known}（隠れた罪 ${(S.q8hid || []).length} 件）`);
   }
 
   // 隠れた罪・罪の匂いは見せない
