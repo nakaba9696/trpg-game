@@ -55,8 +55,10 @@ export default ({ G, fail, ok, seeded }) => {
 
   // 会話の出来事の最中は、その相手
   S.mode = "event"; S.event = "tk_topic"; S.tk = Object.assign(S.tk || {}, { cur: { cid: a.id } });
+  turn(["nar", `「……なに」${a.name}は杯から目を上げなかった。`]);
+  if (!G.u11.speakingComps(S).includes(a.id)) no("会話の台詞（「……なに」〇〇は…）で、その仲間が話していることにならない");
   turn(["nar", "（話題を選ぶ）"]);
-  if (!G.u11.speakingComps(S).includes(a.id)) no("会話の最中なのに、その仲間が話していることにならない");
+  if (G.u11.speakingComps(S).includes(a.id)) no("会話の最中でも、台詞の無い手番に仲間が話していることになる");
   S.mode = "explore"; S.event = null; S.tk.cur = null;
 
   // 町の人（話している相手）は今まで通り。主人公は出さない
