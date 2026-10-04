@@ -48,7 +48,7 @@ export default ({ G, fail, ok }) => {
       if (!n) fail(`一覧の ${p.id} が v4_assets.js の NAMED にいない`);
       else for (const e of n.events || []) if (!D.EVENTS.some((x) => x.id === e)) fail(`NAMED の ${p.id} の出来事 ${e} が無い`);
     } else if (p.group === "people") {
-      m = /^kind_([a-z]+)_([mf])$/.exec(p.id);
+      m = /^kind_([a-z]+)_([mf])(_b)?$/.exec(p.id);
       if (!m || !G.PEOPLE[m[1]]) fail(`一覧の ${p.id} が人物の種類（G.PEOPLE）に当たらない`);
     } else fail(`一覧の ${p.id} の group が分からない：${p.group}`);
   }

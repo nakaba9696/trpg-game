@@ -43,7 +43,7 @@ claude.ai/code のセッションで、このリポジトリを開いて「`dist
 
 公開で渡さなかったファイルは前のまま残る。`assets/` から消した画像を Artifact からも消すなら、その公開パスを `null` にして渡す（例：`{ "portraits/old.webp": null }`）。残っていても遊びには響かない（ページの一覧に無い画像は読みに行かない）が、下の「1 つの版で 511 ファイル」に数えられる。
 
-A10 で主人公の型の絵（10 枚）を消した。前に載せた Artifact を新しくするときは、次も `null` にして渡すと 10 ファイル減る：`portraits/hero_merc_m.webp`・`portraits/hero_merc_f.webp`・`portraits/hero_thief_m.webp`・`portraits/hero_thief_f.webp`・`portraits/hero_mage_m.webp`・`portraits/hero_mage_f.webp`・`portraits/hero_priest_m.webp`・`portraits/hero_priest_f.webp`・`portraits/hero_samurai_m.webp`・`portraits/hero_samurai_f.webp`。
+A10 で主人公の型の絵（10 枚）は、名もない人の二枚目の型 `portraits/kind_<種類>_<m|f>_b.webp` に名前を替えた（表は [art/a10_map.md](art/a10_map.md)）。前に載せた Artifact を新しくするときは、古い名前の次の 10 個を `null` にして渡すと、ファイル数が増えない：`portraits/hero_merc_m.webp`・`portraits/hero_merc_f.webp`・`portraits/hero_thief_m.webp`・`portraits/hero_thief_f.webp`・`portraits/hero_mage_m.webp`・`portraits/hero_mage_f.webp`・`portraits/hero_priest_m.webp`・`portraits/hero_priest_f.webp`・`portraits/hero_samurai_m.webp`・`portraits/hero_samurai_f.webp`。
 
 ## 大きさの決まり
 

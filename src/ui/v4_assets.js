@@ -8,7 +8,8 @@
 //   主人公 → 立ち絵なし（A10。持ち主の決定）
 //   名のある人＝どの冒険でも同じ一人＝一枚。キャラメモの人（who.seed "c2:<id>"）→ portraits/<id>、
 //     出来事・施設の人（下の NAMED。出来事の id・seed・仲間の名前で当てる）→ portraits/<id>。画像が無ければ絵なし（型の絵は使わない）
-//   型（冒険ごとに乱数で作られる人）→ portraits/kind_<種類>_<m|f>[_elf|_beast[_<獣>]]。種族の型が無ければ人間の型（耳が合わなくてもよい）。
+//   型（冒険ごとに乱数で作られる人）→ portraits/kind_<種類>_<m|f>[_elf|_beast[_<獣>]][_b]。種族の型が無ければ人間の型（耳が合わなくてもよい）。
+//     _b は二枚目の型（もとは主人公の型。冒険者・ならず者・魔法使い・神官・シェルアークの人）。seed で人ごとに半分ほどが二枚目になる。
 //     13 歳未満は child、60 歳以上は elder の型。人の姿の使徒（majin）など、合う型が無ければ絵なし
 //   魔物（who.kind "foe"。仲間の魔物・出来事の魔物）→ 魔物の絵（G.v6Sprite。v6_monsters.js）を胸から上に切り取る。無ければ絵なし
 // 名のある人は、どの出来事でも同じ顔になるよう、who を一つに固定する（最初の出来事の who。キャラメモの人はそのデータの who）
@@ -75,7 +76,16 @@
     const id = named(who);
     if (id) return has(id) ? id : null; // 名のある人に型の絵は使わない
     const kind = G.v4KindOf(who);
-    return kind ? first(raceOf(who).map((r) => `kind_${kind}_${sexOf(who)}${r}`)) : null;
+    if (!kind) return null;
+    // 二枚目の型（kind_<種類>_<m|f>_b。もとは主人公の型）があれば、人ごとに（seed で）半分ほどをそちらにする
+    const alt = altOf(who) ? ["_b", ""] : [""];
+    return first(raceOf(who).flatMap((r) => alt.map((x) => `kind_${kind}_${sexOf(who)}${r}${x}`)));
+  };
+  const altOf = (who) => {
+    const t = String(who.seed || "") + "|" + String(who.name || "");
+    let h = 0;
+    for (let i = 0; i < t.length; i++) h = (Math.imul(h, 31) + t.charCodeAt(i)) | 0;
+    return ((h >>> 0) % 2) === 1;
   };
   // 名もない人の型の種類（無ければ null）。年頃で子ども・老人の型に寄せる
   G.v4KindOf = (who) => {

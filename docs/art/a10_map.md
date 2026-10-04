@@ -53,6 +53,23 @@
 | majin（使徒（人の姿）） | 男 | 絵なし | 絵なし | 絵なし | 絵なし |
 | majin（使徒（人の姿）） | 女 | 絵なし | 絵なし | 絵なし | 絵なし |
 
+上の表は一人の例。二枚目の型（`_b`）がある種類・性別は、人ごと（seed）に半分ほどが二枚目になる：`kind_adventurer_f_b`・`kind_adventurer_m_b`・`kind_mage_f_b`・`kind_mage_m_b`・`kind_priest_f_b`・`kind_priest_m_b`・`kind_rogue_f_b`・`kind_rogue_m_b`・`kind_ronin_f_b`・`kind_ronin_m_b`
+
+### 二枚目の型（もとは主人公の型。主人公の立ち絵をやめたので回した）
+
+| もとの絵 | 今の id | 当てる人 |
+|---|---|---|
+| `hero_merc_f` | `kind_adventurer_f_b` | 冒険者（女）の名もない人の半分ほど |
+| `hero_merc_m` | `kind_adventurer_m_b` | 冒険者（男）の名もない人の半分ほど |
+| `hero_mage_f` | `kind_mage_f_b` | 魔法使い（女）の名もない人の半分ほど |
+| `hero_mage_m` | `kind_mage_m_b` | 魔法使い（男）の名もない人の半分ほど |
+| `hero_priest_f` | `kind_priest_f_b` | 神官（女）の名もない人の半分ほど |
+| `hero_priest_m` | `kind_priest_m_b` | 神官（男）の名もない人の半分ほど |
+| `hero_thief_f` | `kind_rogue_f_b` | ならず者（女）の名もない人の半分ほど |
+| `hero_thief_m` | `kind_rogue_m_b` | ならず者（男）の名もない人の半分ほど |
+| `hero_samurai_f` | `kind_ronin_f_b` | シェルアークの人（女）の名もない人の半分ほど |
+| `hero_samurai_m` | `kind_ronin_m_b` | シェルアークの人（男）の名もない人の半分ほど |
+
 ## 種族（例：25 歳の女の神官）
 
 | 種族 | 当てる絵 |

@@ -105,6 +105,18 @@ export default ({ fail: failTo, ok, note, loadEngine, seeded }) => {
     tryWho(`型 ${kind}・${sex}・${age || "年齢なし"}・${look ? look.beast || "エルフ" : "人間"}`, w);
     if (kind !== "majin" && !G2.portraitArt(w)) fail(`型 ${kind}・${sex}・${age}・${look ? look.beast || "エルフ" : "人間"} に合う型の絵が無い`);
   }
+  // 二枚目の型（もとは主人公の型）：ある種類・性別では、人ごとに一枚目と二枚目に分かれ、同じ人はいつも同じ絵
+  for (const k of Object.keys(assets).filter((k) => /^portraits\/kind_[a-z]+_[mf]_b$/.test(k))) {
+    const [, kind, sx] = /^portraits\/kind_([a-z]+)_([mf])_b$/.exec(k);
+    const got = new Set();
+    for (let i = 0; i < 40; i++) {
+      const w = { kind, sex: sx === "m" ? "男" : "女", age: 30, seed: "a10:alt:" + i };
+      const key = G2.v4PortraitKey(w);
+      if (key !== G2.v4PortraitKey(Object.assign({}, w))) fail(`${k}：同じ人なのに絵が変わる`);
+      got.add(key);
+    }
+    if (!got.has(k.slice(10)) || !got.has(`kind_${kind}_${sx}`)) fail(`${k}：二枚目の型が使われていないか、一枚目が出なくなった（${[...got].join("・")}）`);
+  }
   // 名のある人
   for (const [id, p] of Object.entries(D.C2_PEOPLE || {})) tryWho(`キャラメモ ${p.name}`, p.who);
   for (const id of Object.keys(G2.V4_NAMED)) { const w = G2.v4Canon(id); if (w) tryWho(`名のある人 ${id}`, w); }

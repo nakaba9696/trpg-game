@@ -104,6 +104,11 @@ export function renderA10Md(s, G) {
   L.push("## 名もない人の型（人間）", "");
   L.push(`| 種類 | 性別 | ${AGES.map(([l]) => l).join(" | ")} |`, `|---|---|${AGES.map(() => "---").join("|")}|`);
   for (const t of s.types) L.push(`| ${t.kind}（${(G.PEOPLE[t.kind] || {}).name || ""}） | ${SEX[t.sex]} | ${t.cells.map(cell).join(" | ")} |`);
+  const alts = Object.keys(G.ASSETS || {}).filter((k) => /^portraits\/kind_[a-z]+_[mf]_b$/.test(k)).map((k) => k.slice(10));
+  L.push("", "上の表は一人の例。二枚目の型（`_b`）がある種類・性別は、人ごと（seed）に半分ほどが二枚目になる：" + (alts.length ? alts.map((k) => `\`${k}\``).join("・") : "なし"));
+  L.push("", "### 二枚目の型（もとは主人公の型。主人公の立ち絵をやめたので回した）", "", "| もとの絵 | 今の id | 当てる人 |", "|---|---|---|");
+  const FROM = { adventurer: "merc", rogue: "thief", mage: "mage", priest: "priest", ronin: "samurai" };
+  for (const k of alts) { const [, kind, sx] = /^kind_([a-z]+)_([mf])_b$/.exec(k); L.push(`| \`hero_${FROM[kind] || "?"}_${sx}\` | \`${k}\` | ${(G.PEOPLE[kind] || {}).name || kind}（${SEX[sx]}）の名もない人の半分ほど |`); }
   L.push("", "## 種族（例：25 歳の女の神官）", "", "| 種族 | 当てる絵 |", "|---|---|");
   for (const r of s.races) L.push(`| ${r.label} | ${cell(r.key)} |`);
   const noNamed = s.named.filter((n) => !n.key);

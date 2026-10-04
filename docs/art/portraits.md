@@ -160,7 +160,7 @@
 | `assets/portraits/dominik.webp` | 串焼き屋のドミニク | 型：`brute`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 40 years old, fat, fair skin, black hair, short hair, crew cut, black eyes, round eyes, thick black mustache, big nose, white headband, black t-shirt, white apron, towel around neck<br>grilling skewers<br>表情：grin | 串焼き屋の親父 |
 | `assets/portraits/neumann.webp` | 古道具屋のノイマン | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, old man, 57 years old, fair skin, grey hair, short hair, brown eyes, glasses, white shirt, black necktie, brown vest, jeweler's loupe on cord<br>antique dealer, holding a silver ring<br>表情：small smile | 古道具屋。品物をじっと見せる |
 
-## 型：名もない人（34）
+## 型：名もない人（44）
 
 名もない仲間・出来事の町の人など。人物の種類 × 性別。13 歳未満は子ども、60 歳以上は老人の型を使う。
 
@@ -173,11 +173,15 @@
 | `assets/portraits/kind_guard_m.webp` | 衛兵（男） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, brown hair, short hair, brown eyes<br>town guard, helmet, tabard, spear | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_guard_f.webp` | 衛兵（女） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, auburn hair, long hair, blunt bangs, blue eyes<br>town guard, helmet, tabard, spear | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_priest_m.webp` | 神官・修道女（男） | 型：`bishonen`<br>見た目（固定）：1boy, male focus, adult, young man, 24 years old, ash blonde hair, short hair, brown eyes<br>priest, white vestment, sun emblem | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_priest_m_b.webp` | 神官・修道女（男・二） | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, young man, 20 years old, black hair, short hair, spiky hair, brown eyes<br>priest, white vestment, sun emblem, mace, disheveled | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_priest_f.webp` | 神官・修道女（女） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, dark brown hair, long hair, blunt bangs, green eyes<br>priest, white vestment, sun emblem | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_priest_f_b.webp` | 神官・修道女（女・二） | 見た目（固定）：1girl, young woman, 20 years old, white hair, medium hair, bob cut, red eyes<br>priest, white vestment, sun emblem, mace, disheveled | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_noble_m.webp` | 貴族（男） | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, man, 30 years old, black hair, short hair, spiky hair, black eyes<br>noble, elegant clothes, jewelry | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_noble_f.webp` | 貴族（女） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, lavender hair, long hair, crown braid, blunt bangs, amber eyes<br>noble, elegant clothes, jewelry | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_rogue_m.webp` | ならず者・盗賊（男） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes<br>rogue, bandana, dark leather clothes, dagger, scar | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_rogue_m_b.webp` | ならず者・盗賊（男・二） | 型：`bishonen`<br>見た目（固定）：1boy, male focus, adult, young man, 20 years old, white hair, short hair, messy hair, amber eyes<br>thief, dark hooded cloak, daggers | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_rogue_f.webp` | ならず者・盗賊（女） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, dark blue hair, long hair, blunt bangs, amber eyes<br>rogue, bandana, dark leather clothes, dagger, scar | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_rogue_f_b.webp` | ならず者・盗賊（女・二） | 見た目（固定）：1girl, young woman, 20 years old, white hair, long hair, blunt bangs, red eyes<br>thief, dark hooded cloak, daggers | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_soldier_m.webp` | 兵士・傭兵団の兵（男） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, dark brown hair, short hair, brown eyes<br>soldier, armor, spear | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_soldier_f.webp` | 兵士・傭兵団の兵（女） | 見た目（固定）：1girl, woman, 30 years old, red hair, short hair, green eyes<br>soldier, armor, spear | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_knight_m.webp` | 騎士（男） | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, man, 30 years old, dark brown hair, short hair, slicked back hair, brown eyes<br>knight, plate armor, crest, sword | 名もない人の型（仲間・出来事の人） |
@@ -185,9 +189,13 @@
 | `assets/portraits/kind_sailor_m.webp` | 船乗り（男） | 型：`brute`<br>見た目（固定）：1boy, male focus, adult, man, 38 years old, orange hair, short hair, black eyes<br>sailor, striped shirt, bandana, earring | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_sailor_f.webp` | 船乗り（女） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, teal hair, medium hair, light blue eyes<br>sailor, striped shirt, bandana, earring | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_mage_m.webp` | 魔法使い（男） | 型：`bishonen`<br>見た目（固定）：1boy, male focus, adult, young man, 24 years old, black hair, short hair, hair between eyes, grey eyes<br>mage, dark blue robe, staff | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_mage_m_b.webp` | 魔法使い（男・二） | 型：`bishonen`<br>見た目（固定）：1boy, male focus, adult, young man, 20 years old, white hair, medium hair, messy hair, amber eyes<br>mage, robe, wizard hat, staff | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_mage_f.webp` | 魔法使い（女） | 見た目（固定）：1girl, woman, 30 years old, orange hair, medium hair, amber eyes<br>mage, dark blue robe, staff | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_mage_f_b.webp` | 魔法使い（女・二） | 見た目（固定）：1girl, young woman, 20 years old, orange hair, medium hair, amber eyes<br>mage, robe, wizard hat, staff | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_ronin_m.webp` | 八雲の人（侍・巫女）（男） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, receding hairline, brown eyes<br>samurai, kimono, katana | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_ronin_m_b.webp` | 八雲の人（侍・巫女・二）（男・二） | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, young man, 20 years old, black hair, topknot, black eyes<br>samurai, kimono, light armor, katana | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_ronin_f.webp` | 八雲の人（侍・巫女）（女） | 見た目（固定）：1girl, woman, 30 years old, black hair, medium hair, blunt bangs, amber eyes<br>samurai, kimono, katana | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_ronin_f_b.webp` | 八雲の人（侍・巫女・二）（女・二） | 見た目（固定）：1girl, young woman, 20 years old, black hair, long hair, ponytail, amber eyes<br>samurai, kimono, light armor, katana | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_host_m.webp` | 宿や酒場の主（男） | 型：`brute`<br>見た目（固定）：1boy, male focus, adult, man, 38 years old, black hair, short hair, black eyes<br>innkeeper, apron, friendly smile | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_host_f.webp` | 宿や酒場の主（女） | 見た目（固定）：1girl, woman, 30 years old, ash grey hair, medium hair, brown eyes<br>innkeeper, apron, friendly smile | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_beggar_m.webp` | 物乞い・囚人（男） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, black eyes<br>ragged clothes, dirty, tired | 名もない人の型（仲間・出来事の人） |
@@ -195,7 +203,9 @@
 | `assets/portraits/kind_archer_m.webp` | 弓使い・狩人（男） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, grey hair, short hair, brown eyes<br>hunter, archer, green hooded cloak, bow | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_archer_f.webp` | 弓使い・狩人（女） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, dark green hair, medium hair, amber eyes<br>hunter, archer, green hooded cloak, bow | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_adventurer_m.webp` | 冒険者（男） | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, man, 30 years old, black hair, short hair, spiky hair, grey eyes<br>adventurer, leather armor, sword | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_adventurer_m_b.webp` | 冒険者（男・二） | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, young man, 20 years old, black hair, short hair, grey eyes<br>mercenary, leather armor, sword | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_adventurer_f.webp` | 冒険者（女） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, pink hair, medium hair, blunt bangs, violet eyes<br>adventurer, leather armor, sword | 名もない人の型（仲間・出来事の人） |
+| `assets/portraits/kind_adventurer_f_b.webp` | 冒険者（女・二） | 見た目（固定）：1girl, young woman, 20 years old, black hair, medium hair, bob cut, amber eyes<br>mercenary, leather armor, sword | 名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる） |
 | `assets/portraits/kind_elder_m.webp` | 老人（男） | 型：`elder`<br>見た目（固定）：1boy, male focus, adult, old man, old, 70 years old, grey hair, short hair, black eyes<br>wrinkles, simple robe | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_elder_f.webp` | 老人（女） | 見た目（固定）：1girl, old woman, old, 70 years old, grey hair, hair bun, brown eyes<br>wrinkles, simple robe | 名もない人の型（仲間・出来事の人） |
 | `assets/portraits/kind_child_m.webp` | 子ども（男） | 型：`boy`<br>見た目（固定）：1boy, male focus, boy, child, 10 years old, white hair, short hair, grey eyes<br>simple clothes, small | 名もない子ども。子どもらしく |
