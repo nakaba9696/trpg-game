@@ -1,5 +1,5 @@
 // U7：世界の手引き（用語集）は、物語で出てきたものだけ載せる
-// - 新しく始めた直後に載るのは、出発の町・冒険者ギルド・金貨と暦（と判定のしくみ）だけ。intro は短い
+// - 新しく始めた直後に載るのは、出発の町・冒険者ギルド・金貨（と判定のしくみ）だけ。intro は短い
 // - 町に着く・戦闘・教会・遺跡の品・術などのきっかけで、項目が増える（「手引きに書き足された」と出る）
 // - GM に渡す世界の説明は今までどおり全部
 // - 古いセーブ（S.u7lore が無い）は、訪れた場所から静かに開き直す
@@ -30,8 +30,8 @@ export default ({ fail, loadEngine, seeded }) => {
       const r = rows(G);
       const home = D.LOCS[D.CLASSES[cls].start].name;
       if (!r.includes(home)) fail(`${cls}: 出発の町「${home}」の一行が無い`);
-      if (!r.includes("冒険者ギルド") || !r.includes("金貨と暦")) fail(`${cls}: 冒険者ギルド・金貨と暦が無い`);
-      const extra = r.filter((k) => ![home, "冒険者ギルド", "金貨と暦"].includes(k));
+      if (!r.includes("冒険者ギルド") || !r.includes("金貨")) fail(`${cls}: 冒険者ギルド・金貨が無い`);
+      const extra = r.filter((k) => ![home, "冒険者ギルド", "金貨"].includes(k));
       if (extra.length > 1) fail(`${cls}: はじめから手引きに載る項目が多い：${extra.join("・")}`);
       const moved = r.filter((k) => MOVED.includes(k));
       if (moved.length) fail(`${cls}: はじめから物語で開くはずの項目が見える：${moved.join("・")}`);

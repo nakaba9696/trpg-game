@@ -42,7 +42,7 @@
       if (gl.titleOk(e.title)) add(e.title, id, e.title, rows[0][1]);
       rows.forEach(([, text, opt]) => ((opt && opt.hint) || []).forEach((w) => { if (gl.aliasOk(w) && w !== e.title) add(w, id, e.title, text); }));
     });
-    // 手引きに最初から載る行（冒険者ギルド・金貨と暦・出発の町）
+    // 手引きに最初から載る行（冒険者ギルド・金貨・出発の町）
     const secs = (D.WORLD && S ? D.WORLD.sections : []) || [];
     secs.forEach(([, rows]) => (rows || []).forEach((r) => {
       if (!r || !gl.titleOk(r[0]) || titles.has(r[0]) || !r[1] || secret(r[1])) return;

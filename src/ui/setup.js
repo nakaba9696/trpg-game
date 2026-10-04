@@ -79,10 +79,9 @@
       c.append(h("small", "", `${G.S.clsName} ${G.S.profile.name}・${G.dateOf ? G.dateOf(G.S.day) : G.S.day + "日目"}`));
       menu.append(c);
     }
-    menu.append(btn("記録（墓碑・トロフィー）", "", () => G.ui.openTrophies(), "t-rec"));
+    // 墓碑・トロフィー（記録）は右上から開ける（U10）。タイトルは「はじめる」と、保存があるときの「つづきから」だけ
     root.append(menu);
     if (live) root.append(h("p", "fine center", "「はじめる」で新しい者が旅立つと、つづきの冒険は消える。"));
-    root.append(h("p", "fine center", `これまでの冒険者 ${G.P.graves.length} 人 ／ トロフィー ${Object.keys(G.P.trophies).length} 個`));
   }
 
   // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
@@ -333,6 +332,8 @@
     bh.append(h("b", "", "ボーナス点"));
     const left = cre.bonusLeft(draft);
     bh.append(h("span", "bonusLeft num" + (left ? " has" : ""), `残り ${left} 点`));
+    const tb = cre.trophyBonus ? cre.trophyBonus() : 0;
+    if (tb) bh.append(h("span", "trophyBonus num", `トロフィーで +${tb}`));
     bh.append(h("span", "fine", "振り終えたら、好きな能力値に足す。才能限界（赤い線）までしか足せない"));
     box.append(bh);
     const list = h("div", "statlist creStats num");
