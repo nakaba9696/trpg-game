@@ -11,7 +11,7 @@
 - 「**異形**」と書いた魔物（一覧の `style: "eldritch"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。
 - 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。
 
-## 使徒・ボス（16）
+## 使徒・ボス（26）
 
 使徒の魔物の姿と、ボス。特にていねいに。気に入った絵は `--keep <id>` で seed を残す。
 
@@ -33,6 +33,16 @@
 | `assets/monsters/w4_gatekeeper.webp` | 関守の石人 | stone giant guardian, ancient stone armor, helmet with single glowing eye, holding stone spear, carved runes, height measuring marks on chest, cracks | 関守の石人。古い関所の門番 |
 | `assets/monsters/w3_ashscribe.webp` | 灰の書記 | ash covered scribe, robed figure made of ash, hood, glowing eyes, dry cracked face, holding quill pen, crumbling, smoke | ボス。灰をかぶって書き続ける者 |
 | `assets/monsters/w3_tidemaw.webp` | 潮呑み | giant sea blob, huge mouth with fangs, one big eye, teal water body, bubbles, drooling, anchor and sandal inside | ボス。洞の奥の口だけのもの |
+| `assets/monsters/e3_levian.webp` | 忘れ水の使徒ルアマリス | 1girl, mature female, otherworldly woman, upper body rising out of dark water, long dark teal hair flowing like waterweed, pale blue skin, glowing cyan eyes, faint smile, dark teal robe, holding a wet book, floating pages, sunken library shelves in water | 使徒（人の姿でない）。水から上半身だけを出した女。触れると思い出が抜ける |
+| `assets/monsters/e3_lugu.webp` | 海嘯の使徒ガルメド | giant sea serpent dragon, only huge head and neck rising from the ocean, dark teal scales with pale spots, long horns, glowing eyes, fangs, fin crest, towering wave behind, sea spray | 使徒。海の底から首だけを出した蛇竜。首だけで船より大きい |
+| `assets/monsters/e3_notari.webp` | 白霧の使徒オルネグス | 1boy, old man, hooded white robe, long white beard, glowing white eyes, no visible mouth, holding a wooden staff, wrapped in thick white mist, floating, calm | 使徒。白い霧をまとった老人。避ける先がいつも正しい |
+| `assets/monsters/e3_kurobane.webp` | 黒翼 | tall slender winged humanoid, jet black feathered wings, pitch black skin, hollow empty eyes, no mouth, black robe, floating high in the sky, dark smoke trailing, ominous | 使徒。漆黒の羽の翼人。こちらを見もしない |
+| `assets/monsters/e3_tojizuki.webp` | 閉じ月 | (giant full moon:1.4), the moon itself is one huge closed eye, eyelid and long eyelashes on the moon surface, pale yellow cratered moon, eerie, floating in a dark night sky, stars | 使徒。夜空の二つ目の月。まぶたを閉じた大きな目 |
+| `assets/monsters/e3_tetsukui.webp` | 鉄喰い | (rust-colored:1.3) iron beast, lion-like head, cracked rusty metal hide like corroded iron, glowing orange eyes, huge fangs biting a broken sword, drooling, spiked tail, four legs | 使徒。土から出てきた錆色の獣。剣を噛む |
+| `assets/monsters/e3_togaoi.webp` | 咎追い | tall thin executioner figure, iron mask covering the whole face, glowing eyes behind the mask, black executioner robe, black cape, holding a huge axe with a small bell on the handle | 使徒。鉄の仮面と黒い処刑衣。鈴で何かを数える |
+| `assets/monsters/e3_midori.webp` | 緑の御方 | (huge:1.3) four-legged creature like a giant elk, body covered in thick moss and young trees growing on its back, antlers made of branches, small dot eyes, no mouth, white flowers blooming on its body, wheat sprouting at its feet, gentle | 使徒。苔と若木に覆われた大きなもの。足跡から麦が芽吹く |
+| `assets/monsters/e3_sanno.webp` | 酸の溜まり | glowing green acid slime pool rising into a vague humanlike shape, two glowing eyes, wide grin, bubbles, half-dissolved bones and a helmet inside the slime, dripping | 使徒。谷の底の緑に光る液。ときどき人の形に立ち上がる |
+| `assets/monsters/e3_sekaiju.webp` | 根の王 | (colossal tree roots:1.4) bursting out of the ground, gnarled brown roots twisting like giant serpents, cracked bark, five glowing eyes in the bark of the roots, no animals | 使徒。東の空の大樹の根。根の一本が町より太い |
 
 ## 魔物（150）
 

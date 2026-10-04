@@ -11,6 +11,8 @@ import { JSON_PATH, MD_PATH, renderMonstersMd } from "../../tools/monsters.mjs";
 
 export default ({ G, fail, ok }) => {
   const E = G.data.ENEMIES;
+  // 使徒（D.E3.FOES）は戦いが始まるまで D.ENEMIES にいない。人の姿の無い使徒の絵は一覧に載る
+  const FOES = (G.data.E3 && G.data.E3.FOES) || {};
   // ---------------------------------------------------------------- 一覧
   const data = JSON.parse(readFileSync(JSON_PATH, "utf8"));
   const list = data.monsters || [];
@@ -22,7 +24,7 @@ export default ({ G, fail, ok }) => {
   for (const m of list) {
     if (seen.has(m.id)) fail(`魔物の一覧に同じ id が二つ：${m.id}`);
     seen.add(m.id);
-    if (!E[m.id]) fail(`魔物の一覧の ${m.id} が敵にいない`);
+    if (!E[m.id] && !FOES[m.id]) fail(`魔物の一覧の ${m.id} が敵にいない`);
     if (people[m.id]) fail(`${m.id} が魔物の一覧と人物の側の両方にある`);
     if (m.file !== `assets/monsters/${m.id}.webp`) fail(`魔物の一覧の ${m.id} のファイル名が違う：${m.file}`);
     if (!m.name || !m.memo || (!m.tags && !m.same_as)) fail(`魔物の一覧の ${m.id} に名前・タグ・メモのどれかが無い`);
