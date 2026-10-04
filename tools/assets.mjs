@@ -5,6 +5,7 @@
 //     差分（<id>_joy など）を省いて基本の絵だけにする。
 // どちらでもゲームからは G.ASSETS["portraits/<id>"]・G.ASSETS["monsters/<id>"]（V6）で引け、値はそのまま Image の src に使える。
 // ただし外のファイルの形では、差分（<id>_<表情>）は 1 人 1 枚のスプライト（portraits/<id>.moods.svg）にまとめ、値は「公開パス#xywh=x,y,w,h」（切り出す場所）になる。
+// 基本の立ち絵・魔物の絵（A12）も 25 枚ずつのスプライト（portraits/packs/*.svg・monsters/packs/*.svg）にまとめ、値は同じく「公開パス#xywh=…」。
 // 鍵は assets/ からの道筋から拡張子を除いたもの（assets/portraits/dil.webp → "portraits/dil"）。同じ鍵が二つあれば webp を使う。
 // 背景の絵（A11。assets/scenes/<id>.webp）は、外のファイルの形では組ごとのスプライト（scenes/<組>.svg）にまとめ、値は同じく「公開パス#xywh=…」。
 // 何を描くかの一覧は docs/art/portraits.md（人物）・docs/art/monsters.md（魔物）・docs/art/scenes.md（背景）。レーン A（絵）の V4・V6・A11 が管理
@@ -118,14 +119,45 @@ export function sceneChunks(files, packs = scenePacks(), size = SCENE_PACK) {
   return out;
 }
 
+// 基本の立ち絵（portraits/<id>）と魔物の絵（monsters/<id>）も、ART_PACK 枚までずつスプライトにまとめる（A12。1 つの版は 511 ファイルまでのため）。
+// 升目は 5 列（512×640 が 25 枚で 2560×3200、512×512 が 25 枚で 2560×2560。表情のスプライトの 5×5 と同じくらい）。
+// 公開パスは portraits/packs/people-<n>.svg（名のある人。docs/art/portraits.json の順＝同じ組の人が近く）・portraits/packs/kinds-<n>.svg（型 kind_*。名前順＝同じ種類が近く）・
+// monsters/packs/monsters-<n>.svg（docs/art/monsters.json の順）。packs/ の下なので、人の id（<id>.moods.svg など）とぶつからない
+export const ART_PACK = 25;
+export const ART_COLS = 5;
+export function artOrder() {
+  const ids = (u, k) => { try { return (JSON.parse(readFileSync(new URL(u, import.meta.url), "utf8"))[k] || []).map((x) => x.id); } catch { return []; } };
+  return { portraits: ids("../docs/art/portraits.json", "portraits"), monsters: ids("../docs/art/monsters.json", "monsters") };
+}
+// files：[{ key }]（portraits/<id>・monsters/<id>）→ [{ name（公開パス）, list }]。表情の差分（まとめ残り）は、その人の基本の絵のすぐ後ろに並べる
+export function artChunks(files, order = artOrder(), size = ART_PACK) {
+  const by = {};
+  for (const f of files) {
+    const [dir, id] = f.key.split("/");
+    const v = variantOf(f.key);
+    const base = v ? v.base.slice(dir.length + 1) : id;
+    const group = dir === "monsters" ? "monsters/packs/monsters" : base.startsWith("kind_") ? "portraits/packs/kinds" : "portraits/packs/people";
+    const idx = group === "portraits/packs/kinds" ? -1 : (order[dir] || []).indexOf(base);
+    (by[group] = by[group] || []).push(Object.assign({ sort: [idx < 0 ? 1e9 : idx, base, v ? 1 : 0, id] }, f));
+  }
+  const cmp = (a, b) => { for (let i = 0; i < a.sort.length; i++) if (a.sort[i] !== b.sort[i]) return a.sort[i] < b.sort[i] ? -1 : 1; return 0; };
+  const out = [];
+  for (const g of Object.keys(by).sort()) {
+    const list = by[g].sort(cmp);
+    for (let i = 0; i * size < list.length; i++) out.push({ name: `${g}-${i + 1}.svg`, list: list.slice(i * size, (i + 1) * size) });
+  }
+  return out;
+}
+
 // 外のファイルの形：{ map: { 鍵: 公開パス（ページからの相対パス） }, bytes: { 鍵: バイト数 }, files: [{ key, abs, file, ext, bytes, pub, data? }], total（バイト数の合計）, notes, sprites（まとめた人の数）, merged（まとめた差分の枚数） }
 // 公開パスは assets/ からの道筋のまま（assets/portraits/dil.webp → portraits/dil.webp）。
 // 差分（<id>_<表情>）が SPRITE_MIN 枚以上ある人は、差分を 1 人 1 枚（portraits/<id>.moods.svg。data に中身）にまとめる（Artifact の 1 つの版は 511 ファイルまでのため）。
-// そのときの差分の鍵の値は「スプライトの公開パス#xywh=x,y,w,h」（src/ui/v4_assets.js が切り出して描く）。基本の絵（<id>）は今まで通り 1 枚のファイル。
-// sprites: false ならまとめない（今まで通り 1 表情 1 ファイル）
-export function siteAssets(dir, { sprites = true } = {}) {
+// そのときの差分の鍵の値は「スプライトの公開パス#xywh=x,y,w,h」（src/ui/v4_assets.js が切り出して描く）。
+// 基本の立ち絵と魔物の絵も ART_PACK 枚までずつまとめる（A12。下の artChunks）。gone：まとめたので 1 枚ずつは載せなくなった公開パス（A12 より前の Artifact から消す。docs/publish.md）。
+// sprites: false ならまとめない（今まで通り 1 枚 1 ファイル）。packs: false なら基本の立ち絵と魔物の絵だけまとめない（A8 までの形）
+export function siteAssets(dir, { sprites = true, packs = true } = {}) {
   const s = scanAssets(dir);
-  const out = { map: {}, bytes: {}, files: [], total: 0, notes: s.notes, sprites: 0, merged: 0 };
+  const out = { map: {}, bytes: {}, files: [], total: 0, notes: s.notes, sprites: 0, merged: 0, gone: [] };
   const groups = {};
   if (sprites) for (const f of s.files) {
     const v = variantOf(f.key);
@@ -163,6 +195,28 @@ export function siteAssets(dir, { sprites = true } = {}) {
     out.total += sp.svg.length;
     out.scenePacks = (out.scenePacks || 0) + 1;
     out.sceneMerged = (out.sceneMerged || 0) + cells.length;
+  }
+  // 基本の立ち絵・魔物の絵（A12）：ART_PACK 枚までずつまとめる。大きさがほかと違う絵（いちばん多い大きさと違う）は 1 枚のまま
+  const arts = (sprites && packs) ? s.files.filter((f) => /^(portraits|monsters)\/[^/]+$/.test(f.key) && !inSprite.has(f.key) && (f.ext === ".webp" || f.ext === ".png")) : [];
+  const read = arts.map((f) => { const buf = readFileSync(f.abs); return Object.assign({ buf }, f, imageSize(buf) || {}); });
+  const common = {};
+  for (const dir of ["portraits", "monsters"]) {
+    const n = {};
+    for (const c of read) if (c.key.startsWith(dir + "/") && c.w) n[c.w + "x" + c.h] = (n[c.w + "x" + c.h] || 0) + 1;
+    common[dir] = Object.keys(n).sort((a, b) => n[b] - n[a])[0];
+  }
+  const fits = read.filter((c) => c.w && common[c.key.split("/")[0]] === c.w + "x" + c.h);
+  if (fits.length < read.length) out.notes.push(`大きさがほかと違う絵（${read.filter((c) => !fits.includes(c)).map((c) => c.key).join("、")}）は、まとめずに 1 枚ずつ載せる`);
+  for (const { name, list } of artChunks(fits)) {
+    if (list.length < SPRITE_MIN) continue;
+    const sp = moodSprite(list, ART_COLS);
+    for (const c of list) { out.map[c.key] = `${name}#xywh=${sp.rects[c.key].join(",")}`; inSprite.add(c.key); out.gone.push(c.file); }
+    const key = name.replace(/\.svg$/, ".pack");
+    out.bytes[key] = sp.svg.length;
+    out.files.push({ key, abs: null, data: sp.svg, file: name, ext: ".svg", bytes: sp.svg.length, pub: name, cells: list.length });
+    out.total += sp.svg.length;
+    out.artPacks = (out.artPacks || 0) + 1;
+    out.artMerged = (out.artMerged || 0) + list.length;
   }
   for (const f of s.files) {
     if (inSprite.has(f.key)) continue;

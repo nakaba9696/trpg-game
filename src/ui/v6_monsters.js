@@ -1,5 +1,6 @@
 // V6：持ち主が作った魔物の絵（assets/monsters/<id>.webp。tools/assets.mjs）を戦闘で描く。G.ASSETS["monsters/<id>"] は外のファイルの形（既定）なら
-// HTML の隣の monsters/<id>.webp への相対パス、埋め込み（--embed）なら data URI。どちらも Image の src にそのまま使う。
+// 25 枚ずつのスプライト（monsters/packs/monsters-<n>.svg）の「#xywh=x,y,w,h」（切り出す場所。A12）、埋め込み（--embed）なら data URI。
+// スプライトは一つのファイルにつき一度だけ読み、その升目を切り出して使う。人物の絵（portraits/<id>）も同じ形（portraits/packs/*.svg）。
 // art_monsters.js の入口 G.paintMonster を置き換える。画像があればそれを描き、無ければ（読み込み前・読めないときも）何も描かない（A10：canvas の魔物の絵はやめた）。
 // 読み込み前に描けなかった魔物は、読み終わったら画面を描き直す（G.ui.repaint）。
 // 人の姿の敵（docs/art/monsters.json の people。コノハ・ベルナなど）と、人の姿の絵がある使徒（APOSTLE）は、人物の生成画像（portraits/<id>）を立たせて描く。
@@ -25,12 +26,20 @@
     if (A()[k]) return k;
     const pid = PEOPLE[id] || APOSTLE[id];
     const p = pid && "portraits/" + pid;
-    return p && A()[p] && !/#xywh=/.test(A()[p]) ? p : null;
+    return p && A()[p] ? p : null;
   };
   G.v6MonsterKey = (f) => { const k = f && G.v6ArtKey(f.id); return k && k.startsWith("monsters/") ? k.slice(9) : null; };
 
   // ---------------------------------------------------------------- 読む・なじませる
-  const imgs = {}, sprites = {};
+  const imgs = {}, sprites = {}; // imgs：ファイル（src）→ Image（同じスプライトの魔物みなで一つ）。sprites：鍵 → なじませた絵
+  // 鍵の値 → { src, rect }。スプライトの升目なら rect（x, y, w, h）、1 枚の絵なら null（絵の全体）
+  const SPRITE = /#xywh=(\d+),(\d+),(\d+),(\d+)$/;
+  const where = (key) => {
+    const v = String(A()[key] || "");
+    const m = SPRITE.exec(v);
+    return m ? { src: v.slice(0, m.index), rect: m.slice(1, 5).map(Number) } : { src: v, rect: null };
+  };
+  G.v6Where = (key) => (key && A()[key] ? where(key) : null);
   const hasDoc = () => typeof document !== "undefined" && !!document.createElement;
   const ready = (img) => img && !img.v6bad && img.complete && (img.naturalWidth || img.width) > 0;
   let again = 0; // 読み込み前に描けなかった魔物があれば、読み終わったときに画面を描き直す
@@ -39,13 +48,14 @@
     again = setTimeout(() => { again = 0; try { if (G.ui && G.ui.repaint && G.S && G.S.combat) G.ui.repaint(); } catch (e) { /* 描き直しに失敗しても止めない */ } }, 30);
   };
   const image = (key) => {
-    if (imgs[key]) return imgs[key];
+    const src = where(key).src;
+    if (imgs[src]) return imgs[src];
     const img = new Image();
     img.v6bad = false;
     img.addEventListener("error", () => { img.v6bad = true; });
     img.addEventListener("load", () => { if (img.v6want) repaint(); });
-    img.src = A()[key];
-    return (imgs[key] = img);
+    img.src = src;
+    return (imgs[src] = img);
   };
   // 縁から続く白っぽい所（背景）を消す。魔物の中の白（目・牙）は縁と繋がっていないので残る
   function keyOut(g, W, H) {
@@ -91,11 +101,14 @@
   function sprite(id, img) {
     if (sprites[id]) return sprites[id];
     if (!hasDoc()) return img; // テスト（DOM なし）はそのまま
-    const W = img.naturalWidth || img.width, H = img.naturalHeight || img.height;
+    // スプライトの升目なら、その升目だけを切り出す（なじませるのも升目ごと）
+    const rect = where(id).rect;
+    const W = rect ? rect[2] : img.naturalWidth || img.width, H = rect ? rect[3] : img.naturalHeight || img.height;
     const c = document.createElement("canvas");
     c.width = W; c.height = H;
     const g = c.getContext("2d");
-    g.drawImage(img, 0, 0);
+    if (rect) g.drawImage(img, rect[0], rect[1], W, H, 0, 0, W, H);
+    else g.drawImage(img, 0, 0);
     if (id.startsWith("portraits/")) return (sprites[id] = person(c, g, W, H));
     try { keyOut(g, W, H); } catch (e) { /* 読めない画像は消さずに、ぼかしだけ */ }
     // 周りをぼかす（丸く）・足元を消す

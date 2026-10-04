@@ -1,6 +1,7 @@
 // V4：持ち主が作った人物の絵（assets/portraits/<id>.webp。tools/assets.mjs）を描く。G.ASSETS["portraits/<id>"] は、
 // 外のファイルの形（既定。G.ASSET_MODE "files"）なら HTML の隣の portraits/<id>.webp への相対パス、埋め込み（--embed）なら data URI。どちらも Image の src にそのまま使う。
 // 外のファイルの形の表情の差分（<id>_<表情>）は、1 人 1 枚のスプライト（portraits/<id>.moods.svg）の「#xywh=x,y,w,h」の升目を切り出して描く（G.v4Where）。
+// 基本の絵も 25 枚ずつのスプライト（portraits/packs/people-<n>.svg・kinds-<n>.svg。A12）の升目で、同じく切り出す（同じファイルは一度だけ読む）。
 // 主人公・仲間・話している人と差分は先読みし、名のある人の基本の絵は暇なときに少しずつ読んでおく（v4Preload）。
 // art_people.js の入口 G.drawPortrait を包むだけ。画像があればそれを描き、無ければ（読めなければ）絵を出さない（A10：canvas の人物の絵はやめた）。
 // 絵を出さない canvas には noart の印が付く（CSS で隠す）。画面の側は G.portraitArt(who) で、絵が出る人かを先に確かめられる。

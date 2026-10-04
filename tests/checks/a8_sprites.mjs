@@ -49,7 +49,7 @@ export default ({ G, fail, ok }) => {
     put("portraits/odd_joy.webp", webp(512, 640, 4));
     put("portraits/odd_anger.webp", webp(256, 320, 5)); // 大きさが違う → まとめない
     put("monsters/goblin.webp", webp(300, 300, 6));
-    const s = siteAssets(dir);
+    const s = siteAssets(dir, { packs: false }); // 基本の絵と魔物の絵のまとめ方（A12）は tests/checks/a12_sprites.mjs
     const sp = s.files.find((f) => f.pub === "portraits/nora.moods.svg");
     if (!sp || !sp.data) F("差分 4 枚の人のスプライトができない");
     else {
