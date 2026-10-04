@@ -57,8 +57,13 @@ if (embed) {
   // 載せるファイルの一覧（公開パス → リポジトリの根からのローカルパス）。1 回で載らないときは回ごとの一覧も書く
   writeFileSync(path.join(site, "files.json"), JSON.stringify(Object.fromEntries(list.map((f) => [f.pub, f.local])), null, 1) + "\n");
   if (plan.batches.length > 1) plan.batches.forEach((b, i) => writeFileSync(path.join(site, `files-${i + 1}.json`), JSON.stringify(b.files, null, 1) + "\n"));
+  // A12 より前に載せた Artifact を新しくするとき、1 枚ずつ載せていた基本の立ち絵・魔物の絵を消す一覧（公開パス → null）。1 回 250 個までずつ（docs/publish.md）
+  const gone = assets.gone || [];
+  for (let i = 0; i * SITE_LIMITS.batchFiles < gone.length; i++) writeFileSync(path.join(site, `gone-${i + 1}.json`), JSON.stringify(Object.fromEntries(gone.slice(i * SITE_LIMITS.batchFiles, (i + 1) * SITE_LIMITS.batchFiles).map((p) => [p, null])), null, 1) + "\n");
   console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル）＋ 画像 ${list.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル／1 つの版の上限 ${SITE_LIMITS.versionFiles}）`);
   if (assets.sprites) console.log(`  表情の差分 ${assets.merged} 枚を ${assets.sprites} 人分のスプライト（portraits/<id>.moods.svg）にまとめた`);
+  if (assets.artPacks) console.log(`  基本の立ち絵と魔物の絵 ${assets.artMerged} 枚を ${assets.artPacks} 枚のスプライト（portraits/packs/・monsters/packs/）にまとめた`);
   if (assets.scenePacks) console.log(`  背景 ${assets.sceneMerged} 枚を ${assets.scenePacks} 組のスプライト（scenes/<組>.svg）にまとめた`);
+  if (gone.length) console.log(`  前に 1 枚ずつ載せた Artifact を新しくするなら、先に dist/site/gone-1.json 〜 gone-${Math.ceil(gone.length / SITE_LIMITS.batchFiles)}.json で ${gone.length} 個を消す（docs/publish.md）`);
   if (plan.batches.length > 1) console.log(`  1 回の公開（${SITE_LIMITS.batchFiles} ファイル・${SITE_LIMITS.batchBytes / MB}MB まで）に収まらないので ${plan.batches.length} 回に分けて載せる：dist/site/files-1.json 〜 files-${plan.batches.length}.json（docs/publish.md）`);
 }
