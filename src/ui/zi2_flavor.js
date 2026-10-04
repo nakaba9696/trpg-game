@@ -167,8 +167,16 @@
   }
 
   // ---------------------------------------------------------------- 描くたびに
+  // 記録の行は使い回される（ui.js。T）。品名の印は持ち物で決まるので、持ち物が変わったら行を作り直してもらう（今までと同じ印になる）
+  let heldSig = null;
+  const checkHeld = () => {
+    const S = G.S;
+    const sig = S ? [...Object.keys(S.inv || {}), S.weapon, S.armor, S.ring].filter((id) => id && D.ITEMS[id] && G.itemFlavor(id)).sort().join(",") : null;
+    if (sig !== heldSig) { heldSig = sig; if (ui.logInvalidate) ui.logInvalidate(); }
+  };
   const base = ui.render;
   ui.render = (...a) => {
+    try { checkHeld(); } catch (e) { /* 印が付かなくても遊べる */ }
     const r = base(...a);
     if (shownFor && !document.contains(shownFor)) hide();
     try { markSheet(); markActs(); markLog(); } catch (e) { /* 説明が出なくても遊べる */ }

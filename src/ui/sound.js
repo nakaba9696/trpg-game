@@ -6,6 +6,10 @@
 (function (G) {
   const snd = (G.sound = { names: [], play() {}, ambient() {}, settings: null });
   const AC = globalThis.AudioContext || globalThis.webkitAudioContext;
+  // 音の卓は 32kHz で作る（T）：BGM と効果音はすべてその場で合成するので、計算の量は 1 秒あたりの標本の数にほぼ比例する。48kHz より 3 割ほど軽く、
+  // 失うのは 16kHz より上（ほとんど聞こえない高さ）だけ。指定できないブラウザは、いつもの作り方
+  snd.RATE = 32000;
+  snd.newContext = () => { try { return new AC({ sampleRate: snd.RATE }); } catch (e) { return new AC(); } };
 
   // ---------------------------------------------------------------- 設定（このブラウザに保存）
   const SKEY = "morsveld-sound";
@@ -573,7 +577,7 @@
   };
   function wake() {
     if (E) { if (E.ctx.state === "suspended") E.ctx.resume().catch(() => {}); return; }
-    try { E = makeDesk(new AC()); } catch { E = null; return; }
+    try { E = makeDesk(snd.newContext()); } catch { E = null; return; }
     E.sfx.gain.value = 0; E.amb.gain.value = 0;
     vol();
     if (G.S) snd.ambient(snd.ambFor(G.S));

@@ -178,7 +178,7 @@
   const prep = (key) => {
     const img = image(key);
     if (!G.a13 || !G.a13.cutout || typeof document === "undefined") return;
-    const go = () => later(() => { if (ready(img)) G.a13.cutout(key, img, where(key).rect); });
+    const go = () => later(() => { if (!ready(img)) return; if (G.a13.prepare) G.a13.prepare(key, img, where(key).rect); else G.a13.cutout(key, img, where(key).rect); });
     if (ready(img)) go();
     else img.addEventListener("load", go, { once: true });
   };
@@ -250,13 +250,20 @@
     if (!img || img.v4bad) return blank(cv); // 画像の無い人・読めない画像：絵を出さない
     const rect = where(key).rect;
     art(cv);
-    if (ready(img) && paint(cv, img, rect, key)) return;
+    // 白い背景をまだ消していない絵は、裏（Worker）で消し終わってから描く（画面を止めない。T）。読み終わるまでと同じく、そのあいだ枠は空けておく
+    const viaPrep = () => {
+      if (!G.a13 || !G.a13.prepare || G.a13.has(key)) return false;
+      if (cv.getContext) { const ctx = cv.getContext("2d"); if (ctx && ctx.clearRect) { ctx.setTransform && ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); } }
+      G.a13.prepare(key, img, rect, undefined, () => { if (mine() && paint(cv, img, rect, key)) tok.done = true; });
+      return true;
+    };
+    if (ready(img) && (viaPrep() || paint(cv, img, rect, key))) return;
     // 読み込みが終わるまでは枠を空けておく（前の人の絵を残さない）。終わったとき、まだ同じ人を描くことになっていれば描く
     if (cv.getContext) {
       const ctx = cv.getContext("2d");
       if (ctx && ctx.clearRect) { ctx.setTransform && ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); }
     }
-    img.addEventListener("load", () => { if (mine() && paint(cv, img, rect, key)) tok.done = true; }, { once: true });
+    img.addEventListener("load", () => { if (mine() && (viaPrep() || paint(cv, img, rect, key))) tok.done = true; }, { once: true });
     img.addEventListener("error", () => { if (mine() && !tok.done) { tok.done = true; blank(cv); } }, { once: true });
   };
 

@@ -49,6 +49,25 @@ export default ({ loadEngine, fail, ok }) => {
     if (!/hiddenLayer\(st\.cv\)\) continue/.test(src("scene_v2.js"))) F("毎コマの描き直し（tick）が裏に回った層を飛ばしていない");
   }
 
+  // ---------------------------------------------------------------- 遅い端末では背景の動きのコマ数を下げる
+  if (typeof V.paceStep !== "function") F("scene_v2.js に V.paceStep（遅い端末で背景の動きを間引く）が無い");
+  else {
+    const P = V.pace;
+    const run = (ms, every) => { let t = (P.prev || 1000); const end = t + ms; let g = 0; while (t < end) { t += every; g = V.paceStep(t); } return g; };
+    Object.assign(P, { gap: 42, ema: 16, prev: 0, n: 0, since: 0 });
+    if (run(10000, 16.7) !== 42) F("速い端末で背景の動きを間引いた");
+    if (run(6000, 70) !== 84) F("遅い端末（毎コマ 70ms）で背景の動きを間引かない");
+    if (run(5000, 16.7) !== 84) F("間引いてすぐに戻した（20 秒はそのまま）");
+    if (run(20000, 16.7) !== 42) F("速くなっても間引いたまま");
+  }
+
+  // ---------------------------------------------------------------- 音の卓は 32kHz・同じ揺れは一つの発振器で
+  {
+    const snd = src("sound.js"), bgm = src("sound_bgm.js");
+    if (!/snd\.RATE = 32000/.test(snd) || !/makeDesk\(snd\.newContext\(\)\)/.test(snd) || !/snd\.newContext \?/.test(bgm)) F("音の卓を 32kHz で作っていない（効果音・BGM とも snd.newContext）");
+    if (/vibr\(B, a, t, end, 5\.6, 18, 0\.25\); vibr\(B, b/.test(bgm) || /vibr\(B, a, t, end, 5\.2, 14, 0\.35\); vibr\(B, b/.test(bgm)) F("同じ揺れを二つの発振器で作っている（一つで済む）");
+  }
+
   // ---------------------------------------------------------------- 画像を読み込み中は、canvas の絵を描かない
   const opt = { key, phase: 1, seed: loc, sky: { season: "春", weather: "晴" } };
   const full = () => { ops = 0; G.paintScene(canvas(800, 450), { ...opt, canvasOnly: true }); return ops; };
@@ -126,7 +145,48 @@ export default ({ loadEngine, fail, ok }) => {
     A13.cutout("t_perf2", pic2, null);
     if (!A13.has("t_perf2")) F("処理した鍵を覚えていない");
   }
-  const f2 = src("f2_codex.js"), v6 = src("v6_monsters.js");
+  // ---------------------------------------------------------------- 白抜きを Worker で（画面を止めない）
+  // Worker で動かすのは A13.core の文字列。外の名前を使わず、それだけで同じ結果になること
+  {
+    const core = vm.runInNewContext(`(${A13.core.toString()})()`, {});
+    const mk = () => { const W = 40, H = 50, p = new Uint8ClampedArray(W * H * 4).fill(255); for (let y = 12; y < 44; y++) for (let x = 10; x < 30; x++) { const i = (y * W + x) * 4; p[i] = 60; p[i + 1] = 40; p[i + 2] = 30; } return { p, W, H }; };
+    const a = mk(), b = mk();
+    const ra = A13.keyOut(a.p, a.W, a.H, { bottom: true }), rb = core(b.p, b.W, b.H, { bottom: true });
+    if (ra !== rb || a.p.some((v, i) => v !== b.p[i])) F("Worker で動かす白抜き（A13.core）が、画面の側と同じ結果にならない（外の名前を使っている？）");
+  }
+  {
+    // Worker の無い所では、暇なとき（setTimeout）にこの場で。同じ鍵を続けて頼んでも一度だけ処理し、済んだら知らせる
+    const timers = [];
+    class ID { constructor(data, width, height) { this.data = data; this.width = width; this.height = height; } }
+    const canvas = () => ({ width: 0, height: 0, getContext() { const c = this; return { drawImage() {}, putImageData() {}, getImageData: (x, y, w, h) => new ID(new Uint8ClampedArray(w * h * 4).fill(255), w, h) }; } });
+    const cw = vm.createContext({ console, setTimeout: (f) => timers.push(f), ImageData: ID, document: { createElement: canvas } });
+    vm.runInContext(src("a13_cutout.js"), cw, { filename: "ui/a13_cutout.js" });
+    const W2 = cw.G.a13;
+    let runs = 0;
+    const k0 = W2.keyOut;
+    W2.keyOut = (...a) => { runs++; return k0(...a); };
+    const got = [];
+    const pic = { naturalWidth: 12, naturalHeight: 12 };
+    W2.prepare("w1", pic, null, undefined, (c) => got.push(c ? "cut" : "none"));
+    W2.prepare("w1", pic, null, undefined, (c) => got.push(c ? "cut" : "none"));
+    if (W2.worker()) F("Worker の無い所で Worker を使うことになっている");
+    if (got.length) F("白抜きを頼んだその場で処理した（暇なときにするはず）");
+    for (let n = 0; timers.length && n < 20; n++) timers.shift()();
+    if (runs !== 1) F(`同じ鍵を続けて頼んだら ${runs} 回処理した（一度だけのはず）`);
+    if (got.join() !== "cut,cut") F(`済んだ知らせが違う（${got.join()}）`);
+    if (!W2.has("w1")) F("暇なときに処理した白抜きを覚えていない");
+    W2.prepare("w1", pic, null, undefined, (c) => got.push("again"));
+    if (got[2] !== "again" || runs !== 1) F("処理済みの鍵を頼んだら、すぐ知らせずにもう一度処理した");
+  }
+  const f2 = src("f2_codex.js"), v6 = src("v6_monsters.js"), v4 = src("v4_assets.js");
+  if (!/G\.a13\.prepare\(key, img, rect/.test(v4)) F("立ち絵を描くとき、白抜きをその場でしている（裏で済ませてから描く）");
+  if (!/spriteLater\(key, img, repaint\)/.test(v6)) F("戦闘の魔物の白抜きを、その場でしている（裏で済ませてから描く）");
+  if (!/const warm = /.test(v6)) F("今いる場所の魔物の白抜きを、先に済ませていない");
+
+  // ---------------------------------------------------------------- 記録の行は使い回す（ui.js）
+  const uiSrc = src("ui.js");
+  if (!/logEls\.get\(e\)/.test(uiSrc) || /log\.textContent = "";\n    const shown/.test(uiSrc)) F("記録を手番ごとに全部作り直している（増えた行だけ足す）");
+  if (!/ui\.logInvalidate\(\)/.test(src("u8_glossary.js")) || !/ui\.logInvalidate\(\)/.test(src("zi2_flavor.js"))) F("用語・品名の書き足しの決まりが変わったとき、記録を作り直していない");
   if (!/G\.v6Pending = /.test(v6) || !/G\.v6Build = /.test(v6)) F("v6_monsters.js に、図鑑の一覧用の G.v6Pending・v6Build が無い");
   if (!/foeCanvas\(id, 56, !rec, true\)/.test(f2) || !/personCanvas\(id, 48, 60, false, true\)/.test(f2)) F("図鑑の一覧の絵が、まとめて白抜きをしている（見えているものから 1 枚ずつにする）");
   if (!/IntersectionObserver/.test(f2)) F("図鑑の一覧の絵が、見えていないものまで処理する");
@@ -148,5 +208,5 @@ export default ({ loadEngine, fail, ok }) => {
   if (!/ec\.filter = /.test(st) || !/echo\.style\.filter = "none"/.test(st)) F("にじみのぼかしを CSS の filter で毎コマかけている（canvas に焼き込む）");
 
   if (!existsSync(new URL("../../tools/perf.mjs", import.meta.url))) F("測る道具 tools/perf.mjs が無い");
-  if (!bad) ok(`T 速さ（裏の層は止める・画像の読み込み中は canvas の絵を描かない（${waitOps}/${heavy} 命令）・白抜きは一度だけ・図鑑の一覧は見えている絵から 1 枚ずつ・閉じたシートは描き込まない・配置はコマの頭で測る）`);
+  if (!bad) ok(`T 速さ（裏の層は止める・画像の読み込み中は canvas の絵を描かない（${waitOps}/${heavy} 命令）・白抜きは一度だけ・図鑑の一覧は見えている絵から 1 枚ずつ・閉じたシートは描き込まない・配置はコマの頭で測る・白抜きは裏で・記録の行は使い回す・遅い端末は背景の動きを間引く・音は 32kHz）`);
 };

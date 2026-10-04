@@ -45,7 +45,15 @@
   let again = 0; // 読み込み前に描けなかった魔物があれば、読み終わったときに画面を描き直す
   const repaint = () => {
     if (again || typeof setTimeout !== "function") return;
-    again = setTimeout(() => { again = 0; try { if (G.ui && G.ui.repaint && G.S && G.S.combat) G.ui.repaint(); } catch (e) { /* 描き直しに失敗しても止めない */ } }, 30);
+    again = setTimeout(() => {
+      again = 0;
+      try {
+        if (!(G.ui && G.ui.repaint && G.S && G.S.combat)) return;
+        G.ui.repaint();
+        // 背景の舞台（v1_stage.js）は同じ絵なら描き直さないので、魔物が背景に描かれる形（狭い画面）では舞台ごと描き直す
+        if (G.stage && G.stage.show && G.stage.current && G.stage.current()) G.stage.show(G.stage.current(), true);
+      } catch (e) { /* 描き直しに失敗しても止めない */ }
+    }, 30);
   };
   const image = (key) => {
     const src = where(key).src;
@@ -80,6 +88,10 @@
     else g.drawImage(img, 0, 0);
     if (id.startsWith("portraits/")) return (sprites[id] = person(c, g, W, H));
     try { keyOut(g, W, H); } catch (e) { /* 読めない画像は消さずに、ぼかしだけ */ }
+    return (sprites[id] = finish(c, g, W, H));
+  }
+  // 背景を消したあとの仕上げ（周りのぼかし・足元・色）
+  function finish(c, g, W, H) {
     // 周りをぼかす（丸く）・足元を消す
     g.globalCompositeOperation = "destination-in";
     const r = g.createRadialGradient(W / 2, H * 0.54, Math.min(W, H) * 0.34, W / 2, H * 0.54, Math.min(W, H) * 0.58);
@@ -95,7 +107,31 @@
     k.addColorStop(0, "rgba(10,6,10,0)"); k.addColorStop(1, "rgba(10,6,10,.55)");
     g.fillStyle = k; g.fillRect(0, H * 0.55, W, H * 0.45);
     g.globalCompositeOperation = "source-over";
-    return (sprites[id] = c);
+    return c;
+  }
+  // 画面を止めずに作る（T）：背景を消す計算は Worker で（a13_cutout.js の G.a13.run・prepare）。済んだら done()。もう作ってあれば、すぐ done()
+  const building = {};
+  function spriteLater(id, img, done) {
+    if (sprites[id] || !hasDoc() || !G.a13 || !G.a13.run) { sprite(id, img); return done && done(); }
+    if (building[id]) { if (done) building[id].push(done); return; }
+    building[id] = done ? [done] : [];
+    const end = () => { const fs = building[id] || []; delete building[id]; fs.forEach((f) => f()); };
+    const rect = where(id).rect;
+    // 人の姿の敵：立ち絵と同じ鍵で白い背景を消してから、いつもの作り方（覚えた絵を使うので速い）
+    if (id.startsWith("portraits/")) { G.a13.prepare(id.slice(10), img, rect, undefined, () => { sprite(id, img); end(); }); return; }
+    const W = rect ? rect[2] : img.naturalWidth || img.width, H = rect ? rect[3] : img.naturalHeight || img.height;
+    const c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    const g = c.getContext("2d");
+    if (rect) g.drawImage(img, rect[0], rect[1], W, H, 0, 0, W, H);
+    else g.drawImage(img, 0, 0);
+    let d = null;
+    try { d = g.getImageData(0, 0, W, H); } catch (e) { d = null; } // 読めない画像は消さずに、ぼかしだけ
+    if (!d) { sprites[id] = sprites[id] || finish(c, g, W, H); return end(); }
+    G.a13.run(d, { bottom: true }, (r, dd) => {
+      if (!sprites[id]) { if (r > 0) g.putImageData(dd, 0, 0); sprites[id] = finish(c, g, W, H); }
+      end();
+    });
   }
   // 人の姿の敵：胸から上の絵（背景つき）の縁と下をぼかして、戦闘の背景の上に立たせる
   function person(c, g, W, H) {
@@ -114,10 +150,16 @@
     const key = G.v6ArtKey(id);
     if (!key || typeof Image !== "function") return null;
     const img = image(key);
-    if (ready(img)) return sprite(key, img);
+    if (ready(img)) {
+      if (sprites[key] || !later()) return sprite(key, img);
+      spriteLater(key, img, then); // 背景を消し終わったら then（画面を止めない。T）
+      return null;
+    }
     if (then && !img.v6bad) img.addEventListener("load", then, { once: true });
     return null;
   };
+  // 画面を止めずに作れるか（Worker か、暇なときの処理）
+  const later = () => hasDoc() && !!(G.a13 && G.a13.run) && typeof ImageData === "function";
 
   // 図鑑の一覧など、たくさん並べるとき用（T）：まだ背景を消していない絵なら、その画像（読み込み中も）を返す。消してあれば・絵が無ければ null
   G.v6Pending = (id) => {
@@ -133,15 +175,47 @@
     const img = image(key);
     if (ready(img)) sprite(key, img);
   };
+  // 同じことを、画面を止めずに（T）。済んだら done()
+  G.v6BuildLater = (id, done) => {
+    const key = G.v6ArtKey(id);
+    if (!key || typeof Image !== "function") return done && done();
+    const img = image(key);
+    if (!ready(img)) return done && done();
+    if (later()) spriteLater(key, img, done); else { sprite(key, img); if (done) done(); }
+  };
   G.v6ImgReady = (img) => !!ready(img);
   // その魔物の絵が読み終わっているか（描き直しが要るかを見るため。T）
-  G.v6ArtReady = (id) => { const key = G.v6ArtKey(id); return !!(key && typeof Image === "function" && ready(image(key))); };
+  G.v6ArtReady = (id) => { const key = G.v6ArtKey(id); return !!(key && sprites[key]); };
 
   // 魔物の絵は、最初に読み始めておく（戦闘が始まったときに間に合うように）。外のファイルの形では、起動の読み込みと取り合わないよう少し後で
   const preload = () => { for (const k of Object.keys(A())) if (k.startsWith("monsters/")) image(k); };
   if (typeof Image === "function") {
     if (G.ASSET_MODE === "files" && typeof setTimeout === "function") setTimeout(preload, 1500);
     else preload();
+  }
+
+  // 今いる場所に出る魔物は、着いたら暇なときに背景を消しておく（戦闘が始まってから待たないように。T）
+  let warmLoc = null;
+  const warm = () => {
+    const S = G.S, L = S && G.data && G.data.LOCS && G.data.LOCS[S.loc];
+    if (!L || S.loc === warmLoc || !later()) return;
+    warmLoc = S.loc;
+    const ids = [...new Set([...(L.pool || []), L.boss].filter(Boolean))];
+    const next = () => {
+      if (G.S && G.S.loc !== warmLoc) return; // もう別の場所
+      const id = ids.shift();
+      if (!id) return;
+      const key = G.v6ArtKey(id);
+      const img = key && image(key);
+      if (!img || img.v6bad || sprites[key]) return next();
+      if (!ready(img)) { img.addEventListener("load", () => setTimeout(next, 0), { once: true }); return; }
+      spriteLater(key, img, () => setTimeout(next, 50));
+    };
+    setTimeout(next, 2500);
+  };
+  if (hasDoc() && G.ui && G.ui.render) {
+    const base = G.ui.render;
+    G.ui.render = (...a) => { const r = base(...a); try { warm(); } catch (e) { /* 先に消せなくても、戦闘のときに消す */ } return r; };
   }
 
   // なめらかに縮めて描く（A14。a13_cutout.js の G.a13.draw。無ければそのまま）
@@ -156,6 +230,8 @@
     const key = typeof Image === "function" ? G.v6ArtKey(f.id) : null;
     const img = key && image(key);
     if (!ready(img)) { if (img && !img.v6bad) img.v6want = true; return; } // 読み終わるまで（読めなければずっと）何も描かない
+    // 背景をまだ消していなければ、裏で消し終わってから描き直す（そのあいだは描かない。読み込み中と同じ。T）
+    if (!sprites[key] && later()) { spriteLater(key, img, repaint); return; }
     const sp = sprite(key, img);
     const D = Math.min(s * 1.3, base * 1.03);
     ctx.save();
