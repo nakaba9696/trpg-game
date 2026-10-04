@@ -170,8 +170,17 @@
     if (!who || typeof Image !== "function") return;
     const base = G.v4PortraitKey(who.mood ? Object.assign({}, who, { mood: undefined }) : who);
     if (!base) return;
-    image(base);
-    moods().forEach((m) => { if (has(base + "_" + m)) image(base + "_" + m); });
+    prep(base);
+    moods().forEach((m) => { if (has(base + "_" + m)) prep(base + "_" + m); });
+  };
+  // 読んで、読み終わったら暇なときに白い背景を消しておく（A13。描くときに待たないように。同じ鍵は一度だけ）
+  const later = (f) => (typeof requestIdleCallback === "function" ? requestIdleCallback(f, { timeout: 1500 }) : typeof setTimeout === "function" ? setTimeout(f, 50) : f());
+  const prep = (key) => {
+    const img = image(key);
+    if (!G.a13 || !G.a13.cutout || typeof document === "undefined") return;
+    const go = () => later(() => { if (ready(img)) G.a13.cutout(key, img, where(key).rect); });
+    if (ready(img)) go();
+    else img.addEventListener("load", go, { once: true });
   };
 
   // ---------------------------------------------------------------- 描く
@@ -185,7 +194,12 @@
     }
   };
   // 枠いっぱいに切り取って描く（横は真ん中、縦は顔が切れないように上寄せ）。rect があればスプライトのその升目だけを絵の全体とみなす
-  const paint = (cv, img, rect) => {
+  // A13：白い背景を消した絵（a13_cutout.js。同じ鍵は一度だけ処理）があればそれを描き、canvas に cut の印を付ける（CSS が覆いを替える）。
+  // 画素を読めない（file:// など）ときは元の絵のまま
+  const paint = (cv, img, rect, key) => {
+    const cut = key && G.a13 && G.a13.cutout ? G.a13.cutout(key, img, rect) : null;
+    if (cv.classList && cv.classList.toggle) cv.classList.toggle("cut", !!cut);
+    if (cut) { img = cut; rect = null; }
     fit(cv);
     const w = cv.width, h = cv.height;
     const [ox, oy, iw, ih] = rect || [0, 0, img.naturalWidth || img.width, img.naturalHeight || img.height];
@@ -233,13 +247,13 @@
     if (!img || img.v4bad) return blank(cv); // 画像の無い人・読めない画像：絵を出さない
     const rect = where(key).rect;
     art(cv);
-    if (ready(img) && paint(cv, img, rect)) return;
+    if (ready(img) && paint(cv, img, rect, key)) return;
     // 読み込みが終わるまでは枠を空けておく（前の人の絵を残さない）。終わったとき、まだ同じ人を描くことになっていれば描く
     if (cv.getContext) {
       const ctx = cv.getContext("2d");
       if (ctx && ctx.clearRect) { ctx.setTransform && ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); }
     }
-    img.addEventListener("load", () => { if (mine() && paint(cv, img, rect)) tok.done = true; }, { once: true });
+    img.addEventListener("load", () => { if (mine() && paint(cv, img, rect, key)) tok.done = true; }, { once: true });
     img.addEventListener("error", () => { if (mine() && !tok.done) { tok.done = true; blank(cv); } }, { once: true });
   };
 

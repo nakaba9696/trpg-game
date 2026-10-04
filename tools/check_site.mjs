@@ -63,9 +63,13 @@ async function play(url, label, { breakKey } = {}) {
     await page.waitForFunction(() => G.v4Ready && G.v4Ready("nora"), null, { timeout: 5000 });
     await page.waitForTimeout(300);
     const k = await standKey(), ink = await inked();
+    // A13：白い背景を消せた（cut の印）なら、背景の分だけ透明になる。http では消え、file:// では元の絵のまま
+    const cut = await page.evaluate(() => { const c = [...document.querySelectorAll("#stand canvas.standFace")].pop(); return !!(c && c.classList.contains("cut")); });
     if (k !== "nora") fail(`${label}: 立ち絵の鍵が ${k}`);
-    else if (ink !== -2 && ink < 0.5) fail(`${label}: 立ち絵の canvas がほとんど空（${ink}）`);
-    else ok(`${label}: 立ち絵（nora）を画像で描いた${ink === -2 ? "（file:// なので画素は読めない）" : `（埋まり ${(ink * 100).toFixed(0)}%）`}`);
+    else if (ink !== -2 && ink < (cut ? 0.2 : 0.5)) fail(`${label}: 立ち絵の canvas がほとんど空（${ink}）`);
+    else if (ink !== -2 && cut && ink > 0.9) fail(`${label}: 白い背景を消したはずが、canvas が埋まったまま（${ink}）`);
+    else if (cut !== (ink !== -2)) fail(`${label}: 白い背景を消す（A13）が ${cut ? "画素を読めないのに効いた" : "画素を読めるのに効かない"}`);
+    else ok(`${label}: 立ち絵（nora）を画像で描いた${ink === -2 ? "（file:// なので画素は読めない・背景は元の絵のまま）" : `（埋まり ${(ink * 100).toFixed(0)}%・白い背景を消した）`}`);
   } catch { fail(`${label}: 立ち絵 ${await page.evaluate(() => G.ASSETS["portraits/nora"])} が読めない`); }
   if (shots) await page.screenshot({ path: path.join(shots, `${label}_stand.jpg`), type: "jpeg", quality: 75 });
   // 差分：表情が変わると、読み終わってから顔が入れ替わる

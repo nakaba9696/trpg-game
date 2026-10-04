@@ -107,7 +107,10 @@
     const c = document.createElement("canvas");
     c.width = W; c.height = H;
     const g = c.getContext("2d");
-    if (rect) g.drawImage(img, rect[0], rect[1], W, H, 0, 0, W, H);
+    // 人の姿の敵：白い背景を消せれば、消した絵を立たせる（A13。a13_cutout.js。立ち絵と同じ鍵で覚える）
+    const cut = id.startsWith("portraits/") && G.a13 && G.a13.cutout ? G.a13.cutout(id.slice(10), img, rect) : null;
+    if (cut) g.drawImage(cut, 0, 0, W, H);
+    else if (rect) g.drawImage(img, rect[0], rect[1], W, H, 0, 0, W, H);
     else g.drawImage(img, 0, 0);
     if (id.startsWith("portraits/")) return (sprites[id] = person(c, g, W, H));
     try { keyOut(g, W, H); } catch (e) { /* 読めない画像は消さずに、ぼかしだけ */ }
