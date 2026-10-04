@@ -40,11 +40,9 @@
     { key: "t2_know", name: "手帳の一行目", tier: "銅", desc: "覚え書きを、初めて手帳に残した", test: () => n(P().know) >= 1 },
     { key: "t2_codex30", name: "図鑑の頁", tier: "銅", desc: "冒険をまたいで、図鑑に魔物が三十種載った", test: () => n(codexFoes()) >= 30 },
     { key: "t2_runs3", name: "三つ目の墓碑", tier: "銅", desc: "冒険を三度終えた", test: (S) => T2.runs(S).length >= 3 },
-    { key: "t2_boss1", name: "大物食い", tier: "銅", desc: "迷宮の主か、名のある強敵を倒した", test: (S) => S.counters.bosses >= 1 },
 
     // ---------------------------------------------------------------- 銀：狙って遊べば取れる・何度か遊ぶうちに取れる
     { key: "t2_quests30", name: "ギルドの古株", tier: "銀", desc: "一度の冒険で、依頼を三十件こなした", test: (S) => S.counters.quests >= 30 },
-    { key: "t2_regions", name: "九つの国境", tier: "銀", desc: "一度の冒険で、すべての地方に足を踏み入れた", test: (S) => T2.regions().every((r) => regionsOf(S).has(r)) },
     { key: "t2_year", name: "一年の旅", tier: "銀", desc: "旅立って一年を生き延びた", test: (S) => S.day >= 361 && alive(S) },
     { key: "t2_custom", name: "自分で決めた道", tier: "銀", desc: "自分で決めた目的で、旅の区切りに着いた",
       test: (S) => S.goal.id === "custom" && S.day >= 30 && (S.fame >= 20 || S.counters.quests >= 3 || S.counters.bosses >= 1) },
@@ -54,8 +52,12 @@
     { key: "t2_allcls", name: "五つの生き方", tier: "銀", desc: "すべての職業で、冒険を終えた",
       test: (S) => { const done = new Set(T2.runs(S).map((g) => g.cls)); return Object.values(D.CLASSES).every((c) => done.has(c.name)); } },
     { key: "t2_dead5", name: "死んで覚える", tier: "銀", desc: "冒険をまたいで、五度死んだ", test: (S) => T2.runs(S).filter((g) => g.end === "dead").length >= 5 },
+    { key: "t2_boss1", name: "大物食い", tier: "銀", desc: "迷宮の主か、名のある強敵を倒した", test: (S) => S.counters.bosses >= 1 },
+    { key: "t2_endings3", name: "三つの物語", tier: "銀", desc: "冒険をまたいで、三通りの結末で物語を閉じた",
+      test: (S) => new Set(T2.runs(S).filter((g) => g.end === "end" && g.ending).map((g) => g.ending)).size >= 3 },
 
     // ---------------------------------------------------------------- 金：やりこみ・まれな結末・高難度
+    { key: "t2_regions", name: "九つの国境", tier: "金", desc: "一度の冒険で、すべての地方に足を踏み入れた", test: (S) => T2.regions().every((r) => regionsOf(S).has(r)) },
     { key: "t2_kills200", name: "屍の山", tier: "金", desc: "一度の冒険で、敵を二百体倒した", test: (S) => S.counters.kills >= 200 },
     { key: "t2_spells", name: "六つの術", tier: "金", desc: "一度の冒険で、すべての術を覚えた", test: (S) => Object.keys(D.SPELLS || {}).every((id) => D.SPELLS[id].base || (S.spells || []).includes(id)) },
     { key: "t2_lairs", name: "迷宮の主の名簿", tier: "金", desc: "冒険をまたいで、すべての迷宮の主を倒したことがある",
@@ -64,7 +66,5 @@
       test: () => !!G.codexCount && (({ foes, foesAll }) => foesAll > 0 && foes * 2 >= foesAll)(G.codexCount()) },
     { key: "t2_traps", name: "罠の地図", tier: "金", desc: "冒険をまたいで、迷宮の罠の覚え書きをすべて集めた",
       test: () => { const K = G.l1 && G.l1.build ? G.l1.build() : D.KNOW || {}; const ids = Object.keys(K).filter((id) => K[id].kind === "trap"); const k = P().know || {}; return ids.length > 0 && ids.every((id) => k[id]); } },
-    { key: "t2_endings3", name: "三つの物語", tier: "金", desc: "冒険をまたいで、三通りの結末で物語を閉じた",
-      test: (S) => new Set(T2.runs(S).filter((g) => g.end === "end" && g.ending).map((g) => g.ending)).size >= 3 },
   );
 })(globalThis.G = globalThis.G || {});
