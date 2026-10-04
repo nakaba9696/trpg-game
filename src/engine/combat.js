@@ -37,6 +37,7 @@
   G.foeHitChance = (e, extra) => G.clamp(Math.round(G.s5p(G.foeVs.acc(e) + G.s5Mod(extra) - G.statEff("敏捷"))), 5, 95);
   // 仲間の腕前（power。今までの％）を点に。一緒に勝った戦い（b5wins）4 回ごとに 1 点伸びる（30 点まで）
   G.allyLv = (c) => (c.power || 30) / 3 - 4 + Math.min(30, Math.floor((c.b5wins || 0) / 4));
+  G.allyPt = (c) => Math.max(1, Math.round(G.allyLv(c)));   // 画面に出す腕前（点）
   G.allyHitChance = (c, e) => G.clamp(Math.round(G.s5p(G.allyLv(c) - (c.fire ? G.foeVs.mres(e) : G.foeVs.eva(e)))), 5, 95);
   G.foeHitAlly = (e, c, extra) => G.clamp(Math.round(G.s5p(G.foeVs.acc(e) + G.s5Mod(extra) - G.allyLv(c))), 5, 95);
   // 体の目盛りで割った能力値（ダメージ・威力の上乗せ。20 点までは今までと同じ）

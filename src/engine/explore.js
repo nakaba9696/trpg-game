@@ -244,7 +244,7 @@
       ];
       (S.recruits ? S.recruits.list : []).forEach((c, i) => {
         if (c.hired) return;
-        list.push({ id: "tavern:hire:" + i, label: `${c.name}を雇う`, sub: `${c.fee}G・腕前 ${c.power}`, disabled: S.gold < c.fee || S.companions.length >= 3, kw: ["雇", "仲間", c.name] });
+        list.push({ id: "tavern:hire:" + i, label: `${c.name}を雇う`, sub: `${c.fee}G・腕前 ${G.allyPt(c)}`, disabled: S.gold < c.fee || S.companions.length >= 3, kw: ["雇", "仲間", c.name] });
       });
       g.push({ title: "酒場", list });
     } else if (f === "shop") {
