@@ -14,6 +14,7 @@ node tools/build.mjs && node tests/run.mjs
 | `dist/site/index.html` | ページ（コード・CSS・画像の一覧（鍵 → 相対パス・バイト数）。画像そのものは入っていない） |
 | `dist/site/portraits/<id>.webp`・`dist/site/monsters/<id>.webp` | 画像（`assets/` の写し） |
 | `dist/site/portraits/<id>.moods.svg` | 表情の差分のスプライト（その人の `assets/portraits/<id>_<表情>.webp` を 1 枚にまとめたもの。下の「差分のまとめ方」） |
+| `dist/site/sounds/<名前>_<何か>.ogg`（webm・mp3） | 録音した効果音（`assets/sounds/` の写し。置いたときだけ。下の「音のファイル」） |
 | `dist/site/files.json` | 載せる画像の一覧（公開パス → リポジトリの根からのローカルパス）。Artifact の `files` にそのまま渡す |
 | `dist/site/files-1.json`・`files-2.json`… | 1 回の公開に収まらないときだけ。回ごとの一覧（下の「分けて載せる」） |
 
@@ -65,4 +66,5 @@ MB は余裕を見て 1000×1000 バイトで数える。予備の埋め込み�
   数の目安：今は差分 76 枚 → 19 枚で、合計 248 → 191 ファイル。仲間 50 人を足して主要な 60 人に差分 700 枚を作っても、基本の絵 250・魔物 120 とで 431 ファイル（まとめないと 1071）。
 - `src/ui/v4_assets.js`：人物の絵。外のファイルは少し（160 ミリ秒）待ってから canvas の絵を出し、読めたら画像に替える（すぐ読めればちらつかない）。主人公・仲間・話している人とその差分は描く前に先読みし、名のある人の基本の絵は暇なときに少しずつ読む（`G.v4Preload`）。
 - `src/ui/v8_moods.js`：表情の差分は、読み終わってから顔を入れ替える（それまでは前の顔のまま）。PC の配置（V9）では、話している人の顔に表情を付ける。
+- 音のファイル（S3）：効果音は Web Audio でその場で合成するが、`assets/sounds/<名前>.ogg`・`<名前>_1.ogg`…（webm・mp3 も可。同じ名前なら mp3）を置くと、画像と同じく別ファイルで載り、`G.ASSETS["sounds/<名前>_1"]` に相対パスが入る。`src/ui/sound.js` が最初のタップのあとに読み、いくつかあれば毎回一つ選んで鳴らす（高さと強さを少し揺らす）。無い・読めない（file:// など）ときは合成に戻る。今は 1 つも置いていない（ページの音は合成。`docs/sound/page_before.wav`・`page_after.wav` で聞き比べられる）。置くなら 1 つの版の 511 ファイルに数えられるので、1 つの音に 3〜4 個まで。音量は `G.sound.FILE_GAIN` で揃える。
 - `src/ui/v6_monsters.js`：魔物の絵は起動の少しあとにまとめて先読みする。
