@@ -193,9 +193,9 @@
 
   // ---------------------------------------------------------------- トロフィー
   (D.TROPHIES = D.TROPHIES || []).push(
-    { key: "m10_love", name: "焚き火の向こう側", tier: "銅", desc: "仲間と恋仲になった" },
+    { key: "m10_love", name: "焚き火の向こう側", tier: "銀", desc: "仲間と恋仲になった" },
     { key: "m10_wed", name: "二人の名前", tier: "銀", desc: "仲間と結ばれた" },
-    { key: "m10_home", name: "窓のある家", tier: "銅", desc: "連れ合いと帰る家を持った" },
-    { key: "m10_child", name: "小さな靴", tier: "銀", desc: "家に、小さな靴が増えた" },
+    { key: "m10_home", name: "窓のある家", tier: "銀", desc: "連れ合いと帰る家を持った" },
+    { key: "m10_child", name: "小さな靴", tier: "金", desc: "家に、小さな靴が増えた" },
   );
 })(globalThis.G = globalThis.G || {});
