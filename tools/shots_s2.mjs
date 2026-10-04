@@ -1,6 +1,6 @@
 // S2：作成画面の能力値（ふつうのとき・初期値が上振れ（20 以上）したとき）を撮る（Playwright。Chromium は PLAYWRIGHT_BROWSERS_PATH のもの）
 // node tools/build.mjs && node tools/shots_s2.mjs
-// docs/shots/s2/<normal|lucky>.jpg と、旅立つ前のシート sheet.jpg を書く
+// docs/shots/s2/<normal|lucky|dark>.jpg・人物の画面 person.jpg・旅立つ前のシート sheet.jpg を書く
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
@@ -9,11 +9,12 @@ let pw;
 try { pw = require("playwright"); } catch { pw = require(execSync("npm root -g").toString().trim() + "/playwright"); }
 const browser = await pw.chromium.launch();
 const out = (n) => new URL(`../docs/shots/s2/${n}.jpg`, import.meta.url).pathname;
-for (const name of ["normal", "lucky"]) {
-  const page = await browser.newPage({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1, colorScheme: "light", reducedMotion: "reduce" });
+for (const name of ["normal", "lucky", "dark"]) {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1, colorScheme: name === "dark" ? "dark" : "light", reducedMotion: "reduce" });
   await page.goto(pathToFileURL(new URL("../dist/site/index.html", import.meta.url).pathname).href);
   await page.waitForFunction(() => window.G && G.setup && G.cre);
   await page.click('[data-fid="t-start"]');
+  if (name === "normal") { await page.waitForTimeout(300); await page.screenshot({ path: out("person"), type: "jpeg", quality: 82, fullPage: true }); console.log("wrote", out("person")); }
   await page.click('[data-fid="p-next"]');
   await page.waitForSelector('[data-fid="s-roll"]');
   // 上振れ（20 以上）が出るまで振る（normal は 1 回目のまま）

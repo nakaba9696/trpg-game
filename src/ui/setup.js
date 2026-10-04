@@ -28,8 +28,6 @@
   let rolledNow = false;
 
   // 主人公の絵は出さない（A10。持ち主の決定）
-  // 種族の呼び名（R1。無ければ出さない）
-  const raceName = (d) => (G.r1Name ? G.r1Name({ profile: { race: d.race, beast: d.beast } }) : "");
 
   const go = (s) => { step = s; setup.show(); window.scrollTo({ top: 0 }); };
 
@@ -81,7 +79,7 @@
     steps(root, 0);
     const top = h("div", "creHead");
     head(top, "あなたは何者か", "選ぶと、その場で姿が変わる");
-    top.append(btn("全部おまかせ", "primary", () => { const s = draft.customGoal; draft = cre.fresh(R); if (cre.randomRace) cre.randomRace(draft, R); draft.customGoal = s; sfx("dice", "coin"); setup.show(); }, "p-all"));
+    top.append(btn("全部おまかせ", "primary", () => { const s = draft.customGoal; draft = cre.fresh(R); draft.customGoal = s; sfx("dice", "coin"); setup.show(); }, "p-all"));
     root.append(top);
 
     const lay = h("div", "cre2");
@@ -93,7 +91,7 @@
       const c = D.CLASSES[draft.cls], a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
       txt.textContent = "";
       txt.append(h("b", "whoName", draft.profile.name || "（名無し）"));
-      txt.append(h("span", "whoLine", `${c.name}・${[raceName(draft), draft.sex].filter(Boolean).join("・")}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ`));
+      txt.append(h("span", "whoLine", `${c.name}・${draft.sex}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ`));
       txt.append(h("span", "", c.blurb));
       txt.append(h("span", "fine", `得意：${cre.strengths(draft.cls).join("・")} ／ 出発地：${D.LOCS[c.start].name}`));
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
@@ -123,8 +121,6 @@
     s1.append(aBlurb);
     form.append(s1);
 
-    // 種族（R1）。獣人なら元の獣も選ぶ
-    if (D.RACES && cre.setRace) form.append(raceSec());
 
     // 生まれ
     const s2 = h("section", "creSec");
@@ -175,7 +171,7 @@
       const l = h("label", "card");
       const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
       inp.onchange = () => { draft.goal = id; cg.hidden = id !== "custom"; };
-      l.append(inp, h("b", "", g.name), h("span", "", g.hint));
+      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text));   // 行き先・手順は出さない（目指すことだけ）
       gcards.append(l);
     });
     s4.append(gcards);
@@ -210,45 +206,7 @@
     refresh();
   }
 
-  // 種族の欄：人間・エルフ・獣人。獣人なら元の獣（おまかせ可）。選ぶと名前と歳が種族に合わせて変わる
-  function raceSec() {
-    const sec = h("section", "creSec raceSec");
-    sec.append(h("h3", "", "種族"));
-    const radios = (name, label, list, cur, fn) => {
-      const box = h("div", "chips");
-      box.setAttribute("role", "radiogroup");
-      box.setAttribute("aria-label", label);
-      list.forEach(([id, text]) => {
-        const l = h("label", "chip");
-        const inp = h("input"); inp.type = "radio"; inp.name = name; inp.value = id; inp.checked = cur === id;
-        inp.onchange = () => { fn(id); setup.show(); };
-        l.append(inp, document.createTextNode(text));
-        box.append(l);
-      });
-      return box;
-    };
-    const race = draft.race || "human";
-    sec.append(radios("race", "種族", Object.entries(D.RACES).map(([id, r]) => [id, r.name]), race, (id) => cre.setRace(draft, id, R)));
-    const sp = G.r1Spec({ race, beast: draft.beast });
-    if (race === "beast") {
-      const bl = h("div", "field beastPick");
-      bl.append(h("span", "flabel", "元になった獣"));
-      bl.append(radios("beast", "元になった獣", [["auto", "おまかせ"], ...D.BEAST_KEYS.map((k) => [k, D.BEASTS[k].name])], draft.beast, (id) => cre.setBeast(draft, id, R)));
-      sec.append(bl);
-    }
-    const B = race === "beast" ? D.BEASTS[draft.beast] : null;
-    const tr = G.r1Traits({ race, beast: draft.beast });
-    const lines = [
-      D.RACES[race].blurb + (B ? `${B.name}の獣人は、${B.blurb}` : ""),
-      `能力値：${modText(sp.mod)}${sp.ages ? ` ／ 年齢 ${sp.ages.young[0]}〜${sp.ages.old[1]}歳` : ""}`,
-    ];
-    if (B) lines.push(`気性：${B.temper}`);
-    if (tr.length) lines.push(`特性：${tr.map((x) => `${x.name}（${x.hint}）`).join("・")}`);
-    const gr = G.r1Greet({ race, beast: draft.beast });
-    if (gr.length) lines.push(`人の目：${gr.map(([n, v]) => `${n} 魅力${signed(v)}`).join("・")}`);
-    lines.forEach((t, i) => sec.append(h("p", i ? "fine" : "fine raceBlurb", t)));
-    return sec;
-  }
+
 
   const modText = (m) => { const s = Object.entries(m || {}).filter(([, v]) => v).map(([k, v]) => `${k}${signed(v)}`); return s.length ? s.join(" ") : "補正なし"; };
 
@@ -298,14 +256,14 @@
 
   function stats(root) {
     steps(root, 1);
-    head(root, "能力値", "何度でも振り直せる。初期値はダイス（3D6）で決まり、運が良ければ 20 を超える。ボーナス点は 5 点（トロフィー 1 つにつき +1）");
+    head(root, "能力値", "何度でも振り直せる。初期値はダイス（3D6）で決まり、運が良ければ 20 を超える。ボーナス点は 5 点（トロフィーで増える）");
 
     const bar = h("div", "rollBar");
     const who = h("div", "rollWho");
     const c = D.CLASSES[draft.cls];
     const st = cre.final(draft);
     const wt = h("div");
-    wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", `${[c.name, raceName(draft), D.AGES[draft.ageBand].name].filter(Boolean).join("・")}・${D.ORIGINS[draft.origin].short}生まれ`));
+    wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", `${[c.name, D.AGES[draft.ageBand].name].join("・")}・${D.ORIGINS[draft.origin].short}生まれ`));
     who.append(wt);
     const tray = h("div", "tray");
     tray.setAttribute("aria-hidden", "true");
@@ -313,7 +271,7 @@
     tray.append(...dice);
     const rb = btn("振る", "primary rollBtn", () => { cre.roll(draft, R); rolledNow = true; sfx("dice", "coin"); setup.show(); }, "s-roll");
     const info = h("div", "rollInfo num");
-    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `振った中で最高の合計 ${draft.best || cre.total(draft)}`), h("span", "", `合計 ${cre.total(draft)}`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
+    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `振った中で最高の合計 ${draft.best || cre.total(draft)}`), h("span", "statTotal", `合計 ${cre.baseTotal(draft)}（ボーナス込み ${cre.total(draft)}）`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
     bar.append(who, tray, rb, info);
     root.append(bar);
 
@@ -326,8 +284,9 @@
     const left = cre.bonusLeft(draft);
     bh.append(h("span", "bonusLeft num" + (left ? " has" : ""), `残り ${left} 点`));
     const tb = cre.trophyBonus ? cre.trophyBonus() : 0;
-    if (tb) bh.append(h("span", "trophyBonus num", `トロフィーで +${tb}`));
-    bh.append(h("span", "fine", `好きな能力値に足す。決まりの ${cre.basePoints(draft)} 点はどこへでも、トロフィーの分は 1 つの能力値に ${D.S2.TROPHY_PER_STAT} 点まで`));
+    const ts = cre.trophyScore ? cre.trophyScore() : 0;
+    if (ts) bh.append(h("span", "trophyBonus num", `トロフィー ${ts} 点で +${tb}（次の +1 まであと ${cre.trophyNext()} 点）`));
+    bh.append(h("span", "fine", "好きな能力値に足す。トロフィーは銅 1・銀 2・金 5 点で数え、10 点ごとにボーナス点 +1"));
     box.append(bh);
     const list = h("div", "statlist creStats num");
     D.STATS.forEach((k) => {
@@ -352,13 +311,16 @@
       if (cm) det.append(h("span", cm > 0 ? "plus" : "minus", `職業 ${signed(cm)}`));
       if (m.age) det.append(h("span", m.age > 0 ? "plus" : "minus", `年齢 ${signed(m.age)}`));
       if (m.origin) det.append(h("span", m.origin > 0 ? "plus" : "minus", `生まれ ${signed(m.origin)}`));
-      if (m.race) det.append(h("span", m.race > 0 ? "plus" : "minus", `種族 ${signed(m.race)}`));
       if (draft.bonus[k]) det.append(h("span", "plus", `ボーナス +${draft.bonus[k]}`));
       det.append(h("span", "", `成功率 ${Math.min(95, v * PCT)}%`));   // 判定は 95％で止まる
       row.append(h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
       list.append(row);
     });
     box.append(list);
+    // 能力値の合計（初期値＋補正、ボーナス込み）。振り直しで良い目を探すときの目安
+    const sum = h("div", "statSum num");
+    sum.append(h("span", "", "合計"), h("b", "", String(cre.baseTotal(draft))), h("span", "fine", `ボーナス込み ${cre.total(draft)}`));
+    box.append(sum);
     box.append(h("p", "fine", `1 点が成功率の基準 ${G.PT()}％（12 点なら ${12 * G.PT()}％）。使った能力値は、冒険の中で伸びていく。能力の名前に触れると説明が出る。`));
     root.append(box);
 
@@ -387,7 +349,7 @@
     const paper = h("article", "charSheet");
     const top = h("header", "csTop");
     const nm = h("div");
-    nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, raceName(draft), p.sex].filter(Boolean).join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）・${D.ORIGINS[p.origin].name}生まれ`));
+    nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, p.sex].join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）・${D.ORIGINS[p.origin].name}生まれ`));
     nm.append(h("span", "csLine", `目的：${o.goalText}`));
     top.append(nm);
     paper.append(top);
