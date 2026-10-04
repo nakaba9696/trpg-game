@@ -29,3 +29,9 @@
 .top .tools .q7top .q7topSave.q7off { background: var(--sheet); color: var(--muted); border-color: var(--rule); font-weight: 400; cursor: not-allowed; }
 .q7top .q7ico { font-size: .8em; line-height: 1; }
 .top .tools .q7top .q7topSave:not(.q7off) .u11key { color: var(--paper); border-color: currentColor; opacity: .85; }
+
+/* オートセーブ（町に着いたとき）の枠と、枠の種類の説明 */
+.q7slot.q7k-town { border-left: 3px solid var(--accent); }
+.q7slot.q7k-auto, .q7slot.q7k-last { border-left: 3px solid var(--rule); }
+.q7legend { margin: 10px 0 0; }
+.u11saved.q7town { font-weight: 700; }

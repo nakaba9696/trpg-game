@@ -8,6 +8,7 @@
   G.SLOT_COUNT = 5;
   G.slotKey = (i) => "morsveld-slot-" + i;
   G.LAST_BREATH_KEY = "morsveld-save-last"; // 自動の枠の、倒れる前の写し
+  G.TOWN_SAVE_KEY = "morsveld-save-town"; // オートセーブ（町に着いたとき）。手動では上書きできない
 
   // 冒険として読める形か（main.js が自動の枠を読むときと同じ見かた）
   G.validSave = (sv) => !!(sv && typeof sv === "object" && sv.v === 1 && sv.stats && Array.isArray(sv.log) && sv.profile && D.LOCS[sv.loc]);
@@ -57,8 +58,10 @@
   G.clearSlot = (storage, i) => { try { storage.removeItem(G.slotKey(i)); return true; } catch { return false; } };
 
   // 枠を読む。null：空き／{ broken: true }：読めない／{ meta, S }
-  G.readSlot = (storage, i) => {
-    const raw = read(storage, G.slotKey(i));
+  G.readSlot = (storage, i) => readBox(storage, G.slotKey(i));
+  // 枠の形（{ v, meta, S }）の鍵を読む。手動の枠とオートセーブの枠
+  const readBox = (storage, key) => {
+    const raw = read(storage, key);
     if (raw === null || raw === undefined) return null;
     const j = parse(raw);
     if (!j || !G.validSave(j.S)) return { broken: true };
@@ -76,11 +79,12 @@
     try { return { meta: G.slotMeta(S), S }; } catch { return { broken: true }; }
   };
 
-  // ロードの一覧：自動（今）→ 自動（倒れる前）→ 手動の枠 1〜N。
-  // { id, kind: "auto"|"last"|"slot", i?, empty, broken, meta }（S は載せない。読むのは G.loadEntry）
+  // ロードの一覧：オートセーブ（町に着いたとき）→ 中断（最後の行動）→ 中断（倒れる前）→ 手動の枠 1〜N。
+  // { id, kind: "town"|"auto"|"last"|"slot", i?, empty, broken, meta }（S は載せない。読むのは G.loadEntry）。オートセーブの枠は空でも並べる
   G.listSlots = (storage) => {
     const out = [];
     const put = (id, kind, i, r) => out.push({ id, kind, i, empty: !r, broken: !!(r && r.broken), meta: r && !r.broken ? r.meta : null });
+    put("town", "town", 0, readBox(storage, G.TOWN_SAVE_KEY));
     const auto = readAuto(storage, G.SAVE_KEYS.save);
     if (auto) put("auto", "auto", 0, auto);
     const last = readAuto(storage, G.LAST_BREATH_KEY);
@@ -92,7 +96,8 @@
   // 一覧の 1 つを読んで、遊べる冒険（写し）を返す。読めない・終わった冒険なら null
   G.loadEntry = (storage, id) => {
     let r = null;
-    if (id === "auto") r = readAuto(storage, G.SAVE_KEYS.save);
+    if (id === "town") r = readBox(storage, G.TOWN_SAVE_KEY);
+    else if (id === "auto") r = readAuto(storage, G.SAVE_KEYS.save);
     else if (id === "last") r = readAuto(storage, G.LAST_BREATH_KEY);
     else { const m = /^slot(\d+)$/.exec(String(id)); if (m) r = G.readSlot(storage, +m[1]); }
     if (!r || r.broken || !r.S || r.S.over) return null;
@@ -118,6 +123,26 @@
     if (!want) return null;
     if (openDlg) return openDlg === "dlgSlots" && mode === want ? "close" : null;
     return playing ? want : null;
+  };
+
+  // ---------------------------------------------------------------- オートセーブ（町に着いたとき）
+  // 自動で保存するたび（G.main.save）に呼ぶ。前に見た場所（S.q7seen）と違う町にいれば「着いた」として印（S.q7tp）を付け、
+  // 保存できる場面（戦闘・出来事の途中でない）になったら、オートセーブの枠へ書く。冒険の始め（はじめの町）も着いたうちに数える。
+  // 倒れた冒険・終えた冒険は書かない（枠は消さないので、ロードでやり直せる）。書いたら true
+  const isTown = (loc) => !!(D.LOCS[loc] && D.LOCS[loc].type === "town");
+  G.townAutoSave = (storage, S) => {
+    S = S === undefined ? G.S : S;
+    if (!S || !S.profile || S.over) return false;
+    if (S.q7seen !== S.loc) { S.q7seen = S.loc; if (isTown(S.loc)) S.q7tp = S.loc; }
+    if (!S.q7tp) return false;
+    if (S.q7tp !== S.loc) { delete S.q7tp; return false; } // 保存できる場面になる前に町を出た
+    if (!G.canSave(S).ok || !storage) return false;
+    delete S.q7tp;
+    const at = Date.now();
+    let body;
+    try { body = JSON.stringify({ v: 1, meta: Object.assign(G.slotMeta(S, at), { town: 1 }), S: { ...S, savedAt: at } }); } catch { return false; }
+    try { storage.setItem(G.TOWN_SAVE_KEY, body); } catch { return false; }
+    return true;
   };
 
   // 自動の枠へ書く直前に呼ぶ。倒れた冒険を書こうとしていて、自動の枠にまだ同じ冒険の生きている姿があれば、それを「倒れる前」として残す

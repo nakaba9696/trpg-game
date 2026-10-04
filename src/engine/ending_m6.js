@@ -1,4 +1,5 @@
-// M6：物語の終わり方。基本は死ぬまで。節目（D.M6.MILESTONES）に着くと「ここで物語を終える／旅を続ける」を選べる。
+// M6：物語の終わり方。基本は死ぬまで。節目（D.M6.MILESTONES）に着くと物語を終えられる。その場で「ここで物語を終える／旅を続ける」を
+// 尋ねるのは、その冒険の目的の終点だけ（ほかは記録に一行。人物の表の「物語を終える」から）。
 // 死んでも終えても、年表とは別に「人生の物語」（語り手の目線・4〜8 段落）を、年表と状態から表で組み立てる（Claude は呼ばない）。
 // 終えたときは、続けて「その後」のダイジェスト（数年後・十年後・晩年・最期・残ったもの）。最期の一行は墓碑と年表に残る。
 // core.js は書き換えず、G.endTurn・G.apply・G.retire・G.finishRun を包む。文の表は src/data/epilogue_m6.js。
@@ -51,12 +52,18 @@
       // 一度にいくつ着いても、見せるのは一番大きな節目だけ（残りも見せたことにする）
       fresh.forEach((m) => { s.offered[m.id] = true; });
       const m = fresh[0];
-      s.pending = m.id;
-      s.pendingSeen = false;
-      G.log("title", "節目：" + m.title);
-      G.say(m.text);
-      G.note(M6().ASK);
       G.chron(`節目に着く：${m.title}`, "milestone");
+      if (m.goal && m.goal === goal) {
+        // その冒険の目的の終点だけ、その場で「ここで物語を終える／旅を続ける」を尋ねる
+        s.pending = m.id;
+        s.pendingSeen = false;
+        G.log("title", "節目：" + m.title);
+        G.say(m.text);
+        G.note(M6().ASK);
+      } else {
+        // ほかの節目（騎士・小金・仲間との暮らし・一年など）は尋ねない。一行だけ残し、人物の表の「物語を終える」から選べる
+        G.note(M6().QUIET.replace("{title}", m.title));
+      }
     }
     if (s.pending && S.mode === "explore") s.pendingSeen = true;
   };
@@ -96,7 +103,7 @@
     S.combat = null;
     S.fac = null;
     S.ending = { id: m.id, day: S.day, loc: S.loc };
-    const comp = (S.companions || []).find((c) => (c.bond || 0) >= 90) || (S.companions || [])[0];
+    const comp = (G.m10Spouse && G.m10Spouse(S)) || (S.companions || []).find((c) => (c.bond || 0) >= 90) || (S.companions || [])[0];
     G.log("title", "物語の終わり");
     G.say(fillSimple(m.line, { name: S.profile.name, comp: comp ? comp.name : "連れ" }));
     G.chron(m.end, "end");

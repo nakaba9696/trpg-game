@@ -30,10 +30,11 @@
   let asking = null; // 確かめている枠の id
   let msg = null;    // { text, bad }
 
-  const entryTitle = (e) => (e.kind === "auto" ? "自動" : e.kind === "last" ? "自動（倒れる前）" : `枠 ${e.i}`);
+  // 枠の名前。オートセーブ（町に着いたとき）・中断（最後の行動。タイトルの「つづきから」）・手動 1〜5 の違いが分かるように
+  const entryTitle = (e) => ({ town: "オートセーブ（町に着いたとき）", auto: "中断（最後の行動）", last: "中断（倒れる前の行動）" })[e.kind] || `手動 ${e.i}`;
   function entryInfo(e, row) {
     if (e.broken) { row.append(h("span", "q7who", "読めない（壊れている）")); return; }
-    if (e.empty) { row.append(h("span", "q7who q7empty", "空き")); return; }
+    if (e.empty) { row.append(h("span", "q7who q7empty", e.kind === "town" ? "まだ無い（町に着くと自動で入る）" : "空き")); return; }
     const m = e.meta;
     row.append(h("span", "q7who", `${m.cls} ${m.name}`));
     row.append(h("span", "q7where", `${m.date}・${m.loc}${m.depth ? `・地下${m.depth}階` : ""}`));
@@ -46,9 +47,9 @@
       const r = G.writeSlot(store, e.i, G.S);
       asking = null;
       if (r.ok) {
-        msg = { text: `枠 ${e.i} に保存した。` };
+        msg = { text: `手動 ${e.i} に保存した。` };
         sfx("page");
-        mirror(e.i);
+        mirror("slot" + e.i, G.slotKey(e.i));
       } else msg = { text: r.why, bad: true };
       paint();
       return;
@@ -68,6 +69,7 @@
   // 枠が押せるか・確かめが要るか
   function rule(e) {
     if (mode === "save") {
+      if (e.kind === "town") return { off: true, note: "町に着くと自動で入る" }; // 手動では上書きできない
       const can = G.canSave(G.S);
       if (!can.ok) return { off: true };
       return { confirm: !e.empty ? "上書きする" : null, label: e.empty ? "ここに保存" : "上書き" };
@@ -88,11 +90,11 @@
     else body.append(h("p", "fine q7lead", "戻る冒険を選ぶ。トロフィー・図鑑・墓碑はロードしても減らない。"));
     if (!store) body.append(h("p", "fine q7bad", "このブラウザでは保存の場所が使えない。枠は読み書きできない。"));
     if (msg) { const p = h("p", "q7msg" + (msg.bad ? " q7bad" : ""), msg.text); p.setAttribute("role", "status"); body.append(p); }
-    const list = G.listSlots(store).filter((e) => mode === "load" || e.kind === "slot");
+    const list = G.listSlots(store).filter((e) => mode === "load" || e.kind === "slot" || e.kind === "town");
     const ul = h("ul", "q7slots");
     list.forEach((e) => {
       const r = rule(e);
-      const li = h("li", "q7slot" + (e.empty ? " empty" : "") + (e.broken ? " broken" : ""));
+      const li = h("li", "q7slot q7k-" + e.kind + (e.empty ? " empty" : "") + (e.broken ? " broken" : ""));
       li.dataset.slot = e.id;
       const info = h("div", "q7info");
       info.append(h("b", "q7name", entryTitle(e)));
@@ -114,6 +116,7 @@
     });
     body.append(ul);
     if (mode === "load" && !list.some((e) => !e.empty)) body.append(h("p", "fine", "まだ保存された冒険が無い。"));
+    if (mode === "load") body.append(h("p", "fine q7legend", "オートセーブ：町に着いたときに自動で残る。中断：最後の行動のあと（タイトルの「つづきから」）。手動：「セーブ」で残した枠。どれも死んでも消えない。"));
   }
 
   ui.slotMode = () => (dlg.open ? mode : null);
@@ -126,23 +129,36 @@
   };
 
   // ---------------------------------------------------------------- claude.ai のデータとそろえる（使えるときだけ）
-  function mirror(i) {
+  // name：claude.ai のデータでの名前（slot1〜・town）、key：ブラウザの鍵
+  function mirror(name, key) {
     const st = G.main && G.main.store;
     if (!st || !st.remote) return;
-    try { const raw = store.getItem(G.slotKey(i)); st.remote("slot" + i, raw ? { raw } : null); } catch {}
+    try { const raw = store.getItem(key); st.remote(name, raw ? { raw } : null); } catch {}
   }
+  const boxes = () => [...Array.from({ length: G.SLOT_COUNT }, (_, j) => ["slot" + (j + 1), G.slotKey(j + 1)]), ["town", G.TOWN_SAVE_KEY]];
+  const atOf = (raw) => { try { return (JSON.parse(raw).meta || {}).at || 0; } catch { return 0; } };
   const ready = () => {
     if (!G.main) return;
     G.main.onRemote = async (st) => {
-      for (let i = 1; i <= G.SLOT_COUNT; i++) {
-        const r = await st.read("slot" + i);
-        const mine = G.readSlot(store, i);
+      for (const [name, key] of boxes()) {
+        const r = await st.read(name);
+        let mineRaw = null;
+        try { mineRaw = store.getItem(key); } catch {}
         const theirs = r && typeof r.raw === "string" ? r.raw : null;
-        let at = 0;
-        try { at = theirs ? (JSON.parse(theirs).meta || {}).at || 0 : 0; } catch {}
-        if (theirs && (!mine || mine.broken || at > ((mine.meta && mine.meta.at) || 0))) { try { store.setItem(G.slotKey(i), theirs); } catch {} }
-        else if (mine && !mine.broken) mirror(i);
+        if (theirs && (!mineRaw || atOf(theirs) > atOf(mineRaw))) { try { store.setItem(key, theirs); } catch {} }
+        else if (mineRaw) mirror(name, key);
       }
+    };
+    // 町に着いてオートセーブの枠に書いたとき（main.save から）。claude.ai のデータにも写し、「保存済み」の印を「オートセーブしました」にする
+    let townT = 0;
+    G.main.onTownSave = () => {
+      mirror("town", G.TOWN_SAVE_KEY);
+      const mark = document.querySelector(".u11saved");
+      if (!mark) return;
+      mark.textContent = "✓ オートセーブしました";
+      mark.classList.add("q7town");
+      clearTimeout(townT);
+      townT = setTimeout(() => { mark.textContent = "✓ 保存済み"; mark.classList.remove("q7town"); }, 2200);
     };
   };
   // main.js はこのあとに読まれる
