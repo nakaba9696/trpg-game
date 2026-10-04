@@ -120,19 +120,6 @@
       delete o.profile.beast;
       return o;
     };
-    // 導入の 2 ページ目に、種族の一行を添える（名前から決まる）
-    const prologue0 = cre.prologue;
-    cre.prologue = (o) => {
-      const pages = prologue0(o);
-      const p = (o && o.profile) || {};
-      const r = G.r1Of({ profile: p });
-      const T = D.R1_TEXT.prologue[r.race];
-      if (T && pages[1]) {
-        const t = T[hash(`${p.name}:${r.race}`) % T.length].replace(/\{beast\}/g, r.beast ? D.BEASTS[r.beast].name : "");
-        pages[1].splice(Math.min(1, pages[1].length), 0, t);
-      }
-      return pages;
-    };
   }
 
   // ---------------------------------------------------------------- 既存の出来事に足す選択肢（D.R1_EXTRA。末尾に足すので番号は変わらない）
