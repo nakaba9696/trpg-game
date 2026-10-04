@@ -89,10 +89,14 @@
   u11.showSaved = () => {
     if (!G.S || (play && play.hidden)) return;
     saved.classList.remove("on");
-    void saved.offsetWidth;
-    saved.classList.add("on");
     clearTimeout(savedT);
-    savedT = setTimeout(() => saved.classList.remove("on"), still() ? 1600 : 1500);
+    // 掛け直しは次のコマの頭で（保存のたびに配置の計算を走らせない。T）
+    requestAnimationFrame(() => {
+      void saved.offsetWidth;
+      saved.classList.add("on");
+      clearTimeout(savedT);
+      savedT = setTimeout(() => saved.classList.remove("on"), still() ? 1600 : 1500);
+    });
   };
   // G.main は main.js（いちばん最後）が作るので、はじめて描くときに包む
   const wrapSave = () => {
