@@ -11,13 +11,8 @@
   const D = (G.data = G.data || {});
 
   D.M10 = {
-    // 相性（あなたの性格 × 仲間の性格。鍵は D.M2_TRAITS）。good は +1、bad は -1、同じ性格は +1（selfish は除く）。惚れっぽい相手は +1
-    COMPAT: {
-      good: [["soft", "just"], ["soft", "coward"], ["soft", "lazy"], ["just", "loyal"], ["greedy", "drunk"], ["cold", "loyal"], ["braggart", "amorous"],
-        ["distrust", "loyal"], ["proud", "coward"], ["lazy", "drunk"], ["coward", "loyal"], ["braggart", "drunk"]],
-      bad: [["just", "cold"], ["just", "greedy"], ["distrust", "braggart"], ["proud", "proud"], ["cold", "coward"], ["proud", "just"], ["distrust", "amorous"]],
-      selfish: ["cold", "distrust", "proud"],
-    },
+    // 相性：あなたの魅力が charmHi 以上なら +1、charmLo 未満なら −1。惚れっぽい相手は +1（U10：主人公の性格は使わない）
+    COMPAT: { charmHi: 55, charmLo: 30 },
     // あなたの歳に合わせた言い回し（{age_you}）
     AGE_YOU: {
       young: ["", "若さに任せて、", "考えるより先に、"],

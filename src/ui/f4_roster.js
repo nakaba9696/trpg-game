@@ -117,7 +117,6 @@
     detail.append(h("span", "f2glyph f2who", "？"), h("p", "fine c3role", F4.titleOf(id)), h("h3", "f2title", "噂の人"));
     const s = section("噂で聞いた居場所");
     s.append(seasonTable(id, false));
-    s.append(h("p", "fine", "その時期にそこへ行けば、「訪ねる」で会いに行ける。会えば、名前が分かる。"));
     detail.append(s);
     const draw = () => { detail.querySelectorAll(".f4wantbox").forEach((x) => x.remove()); const n = wantBox(id, draw); if (n) detail.append(n); };
     draw();
@@ -150,7 +149,8 @@
       if (c) { row("アイテム", c.items, c.itemsAll); row("魔物", c.foes, c.foesAll); row("用語", c.lore, c.loreAll); }
       box.append(dl);
       const S = G.S;
-      box.append(h("p", "fine", `仲間になりうる人は、時期ごとに居る場所がだいたい決まっている。その時期にそこへ行けば会える。居場所は、酒場の噂やギルドの尋ね人の貼り紙で少しずつ分かり、図鑑に残る。${n.want ? `狙っている人：${Object.keys(F4.profile().want).map((id) => F4.nameKnown(id)).join("・")}` : ""}`));
+      // 居場所の決まり（時期と場所・噂・貼り紙）は書かない。遊んで気づくこと（U10・持ち主の声）
+      if (n.want) box.append(h("p", "fine", `狙っている人：${Object.keys(F4.profile().want).map((id) => F4.nameKnown(id)).join("・")}`));
       const heard = S && S.f4 ? Object.keys(S.f4.heard || {}) : [];
       if (heard.length) {
         const ul = h("ul", "f4heardlist");
