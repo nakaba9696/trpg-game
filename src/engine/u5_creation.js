@@ -125,6 +125,7 @@
   cre.bonusPoints = (dr) => cre.basePoints(dr) + cre.trophyPoints(dr);
   cre.bonusLeft = (dr) => cre.bonusPoints(dr) - cre.bonusUsed(dr);
   cre.total = (dr) => D.STATS.reduce((a, k) => a + cre.value(dr, k), 0);
+  cre.baseTotal = (dr) => D.STATS.reduce((a, k) => a + cre.base(dr, k), 0);   // ボーナスを足す前（初期値と補正）の合計
   // トロフィーの分が 1 つの能力値に 10 点までに収まるか。決まりの 5 点を、10 点を超えた分に当てられれば収まる
   cre.trophyOk = (dr, b) => {
     b = b || dr.bonus;

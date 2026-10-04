@@ -171,7 +171,7 @@
       const l = h("label", "card");
       const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
       inp.onchange = () => { draft.goal = id; cg.hidden = id !== "custom"; };
-      l.append(inp, h("b", "", g.name), h("span", "", g.hint));
+      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text));   // 行き先・手順は出さない（目指すことだけ）
       gcards.append(l);
     });
     s4.append(gcards);
@@ -271,7 +271,7 @@
     tray.append(...dice);
     const rb = btn("振る", "primary rollBtn", () => { cre.roll(draft, R); rolledNow = true; sfx("dice", "coin"); setup.show(); }, "s-roll");
     const info = h("div", "rollInfo num");
-    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `振った中で最高の合計 ${draft.best || cre.total(draft)}`), h("span", "", `合計 ${cre.total(draft)}`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
+    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `振った中で最高の合計 ${draft.best || cre.total(draft)}`), h("span", "statTotal", `合計 ${cre.baseTotal(draft)}（ボーナス込み ${cre.total(draft)}）`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
     bar.append(who, tray, rb, info);
     root.append(bar);
 
@@ -316,6 +316,10 @@
       list.append(row);
     });
     box.append(list);
+    // 能力値の合計（初期値＋補正、ボーナス込み）。振り直しで良い目を探すときの目安
+    const sum = h("div", "statSum num");
+    sum.append(h("span", "", "合計"), h("b", "", String(cre.baseTotal(draft))), h("span", "fine", `ボーナス込み ${cre.total(draft)}`));
+    box.append(sum);
     box.append(h("p", "fine", `1 点が成功率の基準 ${G.PT()}％（12 点なら ${12 * G.PT()}％）。使った能力値は、冒険の中で伸びていく。能力の名前に触れると説明が出る。`));
     root.append(box);
 

@@ -6,7 +6,7 @@
 // - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。上限は無い（99 を超えても壊れない。古いセーブの caps は効かない）
 // - 古いセーブ：0〜99 の尺度のまま読め、点で見える。読み直しても値が変わらない（二度換算しない）
 // - 才（M8）は無い：判定は能力値だけ。古いセーブの S.m8・仲間の c.m8 は効かない
-// - 作成画面：ボーナス点・上振れの印、点で出す。種族は選べない（主人公は人間だけ）。マイナスの補正は太字・濃い色
+// - 作成画面：ボーナス点・上振れの印、点で出す。能力値の合計（ボーナス込みも）。目的は行き先を出さない。種族は選べない（主人公は人間だけ）。マイナスの補正は太字・濃い色
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -179,6 +179,21 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (!/TROPHY_PER_STAT/.test(src)) fail("作成画面に、トロフィーの分は 1 つの能力値に 10 点まで、が出ない");
     if (/才能限界|鍵をかけ|大当たり|m8ui|才の付きやすい/.test(src)) fail("作成画面に、なくした仕組みの言葉が残っている");
     if (/String\(o\.stats\[k\]\)/.test(src)) fail("作成画面のシートが割合のまま出している");
+    // 目的は行き先・手順を出さない（名前と目指すことだけ。「自分で決める」の遊び方の説明は残す）
+    const WHERE = /竜の墓場|鬼ヶ島|最奥|エンバルダ|絶界|10000|騎士、領主|ヴォルグリム|白夜/;
+    for (const [id, g] of Object.entries(D.GOALS)) {
+      if (id !== "custom" && g.hint) fail(`目的 ${id} に行き先の説明（hint）が残っている`);
+      if (WHERE.test(g.text || "") || WHERE.test(g.name || "")) fail(`目的 ${id} の文に行き先・手順がある（${g.text}）`);
+    }
+    if (!/g\.hint \|\| g\.text/.test(src)) fail("作成画面の目的の説明が、名前と目指すことだけになっていない");
+    // 能力値の合計：初期値（補正込み）の合計と、ボーナス込みの合計が出て、能力値の和と合う
+    if (!/statSum/.test(src) || !/cre\.baseTotal\(draft\)/.test(src)) fail("作成画面に能力値の合計が出ない");
+    {
+      const dr = cre.fresh(rnd);
+      cre.autoBonus(dr);
+      const base = D.STATS.reduce((a, k) => a + cre.base(dr, k), 0), all = D.STATS.reduce((a, k) => a + cre.value(dr, k), 0);
+      if (cre.baseTotal(dr) !== base || cre.total(dr) !== all || all !== base + cre.bonusUsed(dr)) fail(`能力値の合計が和と合わない（${cre.baseTotal(dr)}/${base}・${cre.total(dr)}/${all}）`);
+    }
     // 主人公は人間だけ：作成画面で種族を選べない
     if (/raceSec|cre\.setRace|cre\.randomRace|radios\("race"/.test(src)) fail("作成画面に種族を選ぶ所が残っている");
     const o = cre.options(cre.fresh(rnd), rnd);

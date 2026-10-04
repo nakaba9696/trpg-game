@@ -8,3 +8,7 @@
 :root[data-theme="dark"] { --minus: #f4a593; }
 .creStats .det .plus, .creStats .det .minus { font-weight: 700; }
 .creStats .det .minus { color: var(--minus); }
+/* 能力値の合計（作成画面） */
+.statSum { display: flex; align-items: baseline; justify-content: flex-end; gap: 8px; padding: 6px 0 2px; border-top: 1px solid var(--rule); font-size: 13.5px; }
+.statSum b { font-size: 20px; }
+.rollInfo .statTotal { color: var(--ink); font-weight: 700; }
