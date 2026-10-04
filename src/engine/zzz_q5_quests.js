@@ -573,6 +573,7 @@
       const rr = G.pick(D.RUMORS);
       G.say(`${G.pick(Q.COWORKERS)}が、手を休めずに言った。「${rr}」`);
       G.memo("噂：" + rr);
+      if (G.heard) G.heard("噂：" + rr);
     }
   };
 

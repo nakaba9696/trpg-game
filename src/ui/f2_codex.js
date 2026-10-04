@@ -1,10 +1,11 @@
-// F2：図鑑の窓（アイテム／魔物／人物／用語をタブで切り替え。一覧の格子 → 押すと詳しい説明）。上の道具の列に「図鑑」ボタンを足す。
+// F2：図鑑の窓（アイテム／魔物／人物／用語／噂をタブで切り替え。一覧の格子 → 押すと詳しい説明）。上の道具の列に「図鑑」ボタンを足す。
 // 用語のタブは「世界の手引き」（U11。手引きの別の窓は無くした）。ほかのタブと同じく、節ごとの一覧（知らない用語は「？？？」）→ 選んだ用語の行だけ詳しく。
 //   一覧の上に名前で探す欄。はじめから載る行（出発の町・冒険者ギルド・金貨。D.WORLD.start）も「w:見出し」の項目として並べる。
 //   何も選んでいないときは、手引きのはじめの文と判定のしくみ。本文の強調（U8）からは G.ui.openWorld(見出し) で、その用語を選んだ状態で開く。
 // 新しく載った項目（G.codexFresh）は、入口のボタン（[data-codex-open]）・タブ・見出し・格子に赤い「！」。項目を詳しく開くと消える。
 // 記録と性能・入手場所・説明はエンジン（engine/zz_f2_codex.js）が引く。ここは描くだけ。
 // 新しく埋まった項目は、格子に印・ボタンに印・画面の左下に「図鑑に追加：〇〇」（U8 の「用語集に追加」と同じ箱に縦に並べるので重ならない）。
+// V12：項目について聞いた噂は、魔物・人物・用語の詳しい説明の下に「聞いた話」。場所の話・まだ載っていない相手の話は「噂」のタブ。
 // 説明の文は F2.paintText の一か所で描く（アイテムは I2 の G.i2.paintFlavor を通す。U8 の G.gloss.mark で用語を強調。過去の冒険の行は強調しない）。
 // index.html・ui.js・v9_pc は書き換えない（窓とボタンはここで作る）。見た目は ui/f2_codex.css。レーン F（F2）
 (function (G) {
@@ -38,7 +39,7 @@
   const tabs = h("div", "tabs");
   tabs.setAttribute("role", "tablist");
   const tab = (key, label) => { const b = h("button", "btn", label); b.type = "button"; b.setAttribute("role", "tab"); b.dataset.tab = key; b.onclick = () => show(key); return b; };
-  const TABS = [tab("item", "アイテム"), tab("foe", "魔物"), tab("person", "人物"), tab("lore", "用語")];
+  const TABS = [tab("item", "アイテム"), tab("foe", "魔物"), tab("person", "人物"), tab("lore", "用語"), tab("heard", "噂")];
   tabs.append(...TABS);
   const sum = h("p", "fine f2sum");
   const panes = h("div", "f2panes");
@@ -70,7 +71,7 @@
   if (tro) tro.after(btn); else { const t = $(".top .tools"); if (t) t.append(btn); }
 
   // 新しい印の数え方：種類ごと（タブ）と全体（入口）
-  const TAB_KIND = { item: "item", foe: "foe", person: "person", lore: "lore" };
+  const TAB_KIND = { item: "item", foe: "foe", person: "person", lore: "lore", heard: "heard" };
   const freshOf = (kind) => (G.codexFresh ? G.codexFresh(kind) : []);
   const bang = (n) => { const b = h("span", "f2bang", "！"); b.setAttribute("aria-label", `新しく載った ${n}`); b.title = `新しく載った項目 ${n}`; return b; };
   const markTabs = () => TABS.forEach((b) => {
@@ -338,6 +339,29 @@
     return s;
   };
   const flavor = (text, kind, id) => { const p = h("p", "f2flavor"); F2.paintText(p, text, kind, id); return p; };
+  // V12：聞いた話（覚え書きを項目ごとに振り分けたもの。engine/zzzz_v12_heard.js）。新しいものから
+  const heardList = (items, title) => {
+    const s = h("div", "f2where f2heard");
+    s.append(h("h4", "", title || "聞いた話"));
+    const ul = h("ul");
+    [...items].reverse().forEach((x) => {
+      const li = h("li", "");
+      const p = h("span", "");
+      F2.paintText(p, x.t, "lore", "");
+      li.append(p);
+      if (x.date) li.append(h("small", "f2ago", x.date));
+      ul.append(li);
+    });
+    s.append(ul);
+    return s;
+  };
+  const heardOf = (kind, id) => {
+    const V = G.v12;
+    if (!V) return null;
+    V.seenKey(kind + ":" + id);
+    const items = V.list(kind + ":" + id);
+    return items.length ? heardList(items) : null;
+  };
   const seen = (kind, id) => {
     if (!G.codexSeen(kind, id)) return;
     const b = list.querySelector(`.f2cell[data-id="${CSS.escape(id)}"]`);
@@ -395,6 +419,8 @@
       if (rec.kills) first.push(`倒した数：${rec.kills}体（初めて倒した：${[rec.kby, rec.kdate].filter(Boolean).join("・") || "—"}）`);
       first.forEach((t) => detail.append(h("p", "fine f2first", t)));
     }
+    const hf = heardOf("foe", id);
+    if (hf) detail.append(hf);
     seen("foe", id);
     reveal();
   }
@@ -436,6 +462,8 @@
     if (F2.personMore) F2.personMore(detail, id); // F4：会ったことのある場所・仲間にする方法・狙う
     G.codexPersonLines(id).forEach((t) => detail.append(flavor(t, "person", id)));
     if ((q.lines || []).length > G.codexPersonLines(id).length) detail.append(h("p", "fine", "深く関われば、もっと分かる。"));
+    const hp = heardOf("person", id);
+    if (hp) detail.append(hp);
     detail.append(h("p", "fine f2first", `初めて会った：${[rec.by, rec.date].filter(Boolean).join("・") || "—"}`));
     seen("person", id);
     reveal();
@@ -452,9 +480,43 @@
       detail.append(p);
     });
     if (e.rest) detail.append(h("p", "fine", `まだ知らない行が ${e.rest} つある。`));
+    const hl = heardOf("lore", id);
+    if (hl) detail.append(hl);
     seen("lore", id);
     reveal();
   }
+  // V12：噂のタブ。場所ごとの話・まだ図鑑に載っていない相手の話（魔物・人物・用語の話は、その項目の「聞いた話」）
+  function drawHeard() {
+    const V = G.v12;
+    const boxes = V ? V.boxes() : [];
+    sum.textContent = boxes.length ? "魔物・人・用語の話は、それぞれの項目の「聞いた話」にある。" : "土地や、まだ会っていない相手の噂を聞くと、ここに残る。魔物・人・用語の話は、それぞれの項目の「聞いた話」に。";
+    const groups = [["土地の話", (b) => b.id.startsWith("loc:")], ["まだ図鑑に無い相手の話", (b) => b.id.startsWith("un:")]];
+    groups.forEach(([name, test]) => {
+      const mine = boxes.filter(test);
+      if (!mine.length) return;
+      const grid = group(name, mine.length, mine.length, mine.filter((b) => V.boxFresh(b)).length);
+      grid.classList.add("f2words");
+      mine.forEach((b) => {
+        const c = cell(b.name, true, V.boxFresh(b), () => showHeard(b.id));
+        c.dataset.id = b.id;
+        grid.append(c);
+      });
+    });
+  }
+  function showHeard(bid) {
+    const V = G.v12;
+    const b = V && V.boxes().find((x) => x.id === bid);
+    if (!b) return showUnknown();
+    detail.textContent = "";
+    detail.append(h("h3", "f2title", b.name), heardList(b.items, `聞いた話（${b.items.length}）`));
+    if (V.boxSeen(b)) {
+      const el = list.querySelector(`.f2cell[data-id="${CSS.escape(bid)}"]`);
+      if (el) el.classList.remove("fresh");
+      markTabs();
+    }
+    reveal();
+  }
+
   // ---------------------------------------------------------------- 切り替えと開く
   function show(key) {
     cur = key;
@@ -466,11 +528,12 @@
     if (key === "lore") loreIntro();
     // U9：？の人の見つけ方（まだ会っていない人は押せないので、ここに書く）
     if (key === "person") detail.append(h("p", "fine", "？の人には、まだ会っていない。"));
-    ({ item: drawItems, foe: drawFoes, person: drawPeople, lore: drawLore })[key]();
+    ({ item: drawItems, foe: drawFoes, person: drawPeople, lore: drawLore, heard: drawHeard })[key]();
     markTabs();
   }
   F2.open = (key) => {
     if (G.S && G.codexSeed) G.codexSeed(G.S);
+    if (G.S && G.v12) G.v12.seed(G.S);
     if (F2.syncSlain) F2.syncSlain();
     // 何も指定が無ければ、新しい印のあるタブから
     if (!key) key = freshOf(cur).length ? cur : (TABS.map((b) => b.dataset.tab).find((k) => freshOf(k).length) || cur);
