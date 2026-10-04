@@ -1,7 +1,7 @@
 // Q7：右上の道具の列を一か所にまとめる・設定を一つの窓に（持ち主の声「図鑑も地図も 2 つ表示されてる。右上にまとめていい」「音とかの設定系は一個にまとめて開く感じ」）
-// - 図鑑・地図・依頼・ステータス・セーブ／ロード・トロフィーと墓碑・ログ・設定 を、右上の .top .tools に決まった順で並べる。
+// - 図鑑・地図・依頼・ステータス・セーブ／ロード・トロフィーと墓碑・ログ・タイトルへ・設定 を、右上の .top .tools に決まった順で並べる。
 //   帯（#mbar）の下の段（U11 の [ステータス][図鑑][地図][依頼]）は外す。図鑑の赤い「！」は右上の図鑑（data-codex-open）に付く
-// - 狭い画面では、トロフィーと墓碑・ログを「…」の中に畳む（横にはみ出さない）
+// - 狭い画面では、トロフィーと墓碑・ログ・タイトルへを「…」の中に畳む（横にはみ出さない）。タイトルへは確かめてから、中断の枠に残して戻る
 // - 「明暗」「音」のボタンは「設定」の窓にまとめる。音の行は音の窓（sound.js・sound_bgm.js が作る #dlgSound）の中身をそのまま移す
 // - 設定の窓に項目を足す口：G.ui.addSetting({ id, section, label, kind: "toggle" | "range" | "select" | "custom", get, set, options, min, max, step, hint, render })
 // ほかのファイルは書き換えず、作られたボタンを並べ直すだけ（名前の頭の zz は、zu11_quick.js・zu12・q7_quests.js より後に読ませるため）。見た目は ui/zz_q7_topbar.css。レーン U
@@ -138,7 +138,7 @@
   const moreBtn = h("button", "btn q7morebtn", "…");
   moreBtn.id = "q7More";
   moreBtn.type = "button";
-  moreBtn.title = "ほかの道具（トロフィーと墓碑・ログ）";
+  moreBtn.title = "ほかの道具（トロフィーと墓碑・ログ・タイトルへ）";
   moreBtn.setAttribute("aria-label", "ほかの道具");
   moreBtn.setAttribute("aria-expanded", "false");
   const more = h("span", "q7more");
@@ -149,9 +149,42 @@
   more.addEventListener("click", (ev) => { if (ev.target.closest("button")) setMore(false); });
   document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && more.classList.contains("open")) { setMore(false); moreBtn.focus(); } });
 
+  // ---------------------------------------------------------------- タイトルへ（持ち主の声「タイトルに戻るも追加して」）
+  // 確かめてから戻る。戻る前に今の冒険を中断の枠（G.main.save）に残すので、タイトルの「つづきから」やロードの「中断」で戻れる。戦闘中も押せる
+  const toTitle = h("button", "btn q7totitle", "タイトルへ");
+  toTitle.id = "q7ToTitle";
+  toTitle.type = "button";
+  toTitle.title = "タイトルに戻る（最後の行動までは中断として残る）";
+  const ask = h("dialog", "q7ask");
+  ask.id = "dlgToTitle";
+  ask.setAttribute("aria-labelledby", "q7askTitle");
+  const askH = h("div", "dhead");
+  const askT = h("h2", "", "タイトルに戻りますか？");
+  askT.id = "q7askTitle";
+  askH.append(askT);
+  const askB = h("div", "dbody");
+  askB.append(h("p", "", "最後の行動までは「中断」として残ります。タイトルの「つづきから」か、ロードの「中断（最後の行動）」で戻れます。"));
+  const askRow = h("div", "q7askrow");
+  const yes = h("button", "btn primary", "タイトルへ戻る"); yes.type = "button"; yes.id = "q7ToTitleYes";
+  const no = h("button", "btn", "やめる"); no.type = "button";
+  askRow.append(yes, no);
+  askB.append(askRow);
+  ask.append(askH, askB);
+  ask.addEventListener("click", (ev) => { if (ev.target === ask) ask.close(); });
+  document.body.append(ask);
+  no.onclick = () => ask.close();
+  yes.onclick = () => {
+    ask.close();
+    try { if (G.S && !G.S.over) G.main.save(); } catch {}
+    if (ui.setSheetOpen) ui.setSheetOpen(false);
+    G.main.toTitle();
+  };
+  toTitle.onclick = () => { try { ask.showModal(); } catch { ask.setAttribute("open", ""); } yes.focus(); };
+  tools.append(toTitle);
+
   // 並べる順（無い物は飛ばす）。main：いつも見える。more：狭い画面では「…」の中
   const MAIN = ["#openCodex", "#openMap", "#q7Quests", "#openSheet", ".q7top"];
-  const MORE = ["#openTrophy", "#openLog"];
+  const MORE = ["#openTrophy", "#openLog", "#q7ToTitle"];
   const HIDE = ["#themeBtn", "#openSound"]; // 設定の窓にまとめた
   function arrange() {
     // 帯の下の段（U11）は外す。そこにあったステータスと依頼は右上へ

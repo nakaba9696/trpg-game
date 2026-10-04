@@ -43,7 +43,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   const r = await probe("play");
   if (r.codex !== 1 || r.map !== 1 || r.quest !== 1 || r.sheet !== 1) { bad++; console.log("  ^ 図鑑・地図・依頼・ステータスが 1 つずつでない"); }
   await shot("play");
-  if (vn !== "pc") { await page.click("#q7More"); await probe("more"); await shot("more"); await page.keyboard.press("Escape"); }
+  if (await page.isVisible("#q7More")) { await page.click("#q7More"); await probe("more"); await shot("more"); await page.keyboard.press("Escape"); }
   // 設定の窓（U13 などが足す項目の口も試す）
   await page.evaluate(() => {
     let fast = false;
@@ -56,7 +56,20 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   if (!s.sound || !s.demo || s.soundOpen) { bad++; console.log("  ^ 設定の窓の中身が足りない"); }
   // 音の消音を設定の窓で切り替えられる
   const muted = await page.evaluate(() => { const m = document.querySelector("#dlgSettings #sndMute"); m.checked = !m.checked; m.dispatchEvent(new Event("input")); return G.sound && G.sound.settings && G.sound.settings.mute; });
-  console.log(vn, "mute toggled:", muted, "errors:", errs.length ? errs : "none");
+  console.log(vn, "mute toggled:", muted);
+  await page.evaluate(() => document.querySelector("#dlgSettings").close());
+  // タイトルへ：戦闘中に押す → 確かめ → タイトル。中断から戦闘に戻れる
+  await page.evaluate(() => { G.startCombat(["goblin"], {}); G.ui.render(); });
+  if (await page.isVisible("#q7More")) await page.click("#q7More");
+  await page.click("#q7ToTitle");
+  await shot("totitle");
+  await page.click("#q7ToTitleYes");
+  const t = await page.evaluate(() => ({ title: !document.querySelector("#setup").hidden, cont: !!document.querySelector("[data-fid=t-cont]"), saved: (() => { try { const j = JSON.parse(localStorage.getItem(G.SAVE_KEYS.save)); return j && j.mode; } catch { return null; } })() }));
+  await page.click("[data-fid=t-cont]");
+  const back = await page.evaluate(() => ({ play: !document.querySelector("#play").hidden, mode: G.S && G.S.mode }));
+  console.log(vn, "to title:", JSON.stringify(t), "back:", JSON.stringify(back));
+  if (!t.title || !t.cont || t.saved !== "combat" || !back.play || back.mode !== "combat") { bad++; console.log("  ^ タイトルへ／中断から戻るがおかしい"); }
+  console.log(vn, "errors:", errs.length ? errs : "none");
   if (errs.length) bad++;
   await ctx.close();
 }
