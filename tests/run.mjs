@@ -427,48 +427,33 @@ timed("1d. 魔法の種類と習得");
 }
 timed("2. ランダムに遊ぶ");
 
-// ---------------------------------------------------------------- 2b. モンスターの絵（DOM なしの偽の canvas で描く）
+// ---------------------------------------------------------------- 2b. モンスターの絵（A10：canvas では描かない。画像が無ければ何も描かない）
 {
   const G = loadEngine();
   const before = failures;
-  vm.runInContext(readFileSync(new URL("../src/ui/art_monsters.js", import.meta.url), "utf8"), vm.createContext({ G }));
-  // 何を呼んでも受け流す偽の 2D 文脈
-  const noop = () => {};
-  const grad = { addColorStop: noop };
-  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : k === "createRadialGradient" || k === "createLinearGradient" ? () => grad : noop), set: (t, k, v) => ((t[k] = v), true) });
-  const seen = new Map();
-  G.rand = () => { throw new Error("絵が G.rand を使った"); };
+  const vmc = vm.createContext({ G });
+  for (const f of ["art_monsters.js", "v6_monsters.js"]) vm.runInContext(readFileSync(new URL("../src/ui/" + f, import.meta.url), "utf8"), vmc);
+  const calls = [];
+  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : (...a) => calls.push(k)), set: (t, k, v) => ((t[k] = v), true) });
   for (const [id, e] of Object.entries(G.data.ENEMIES)) {
-    const a = G.monsterLook(id, e), b = G.monsterLook(id, e);
-    const sig = JSON.stringify(Object.assign({}, a, { seed: 0 }));
-    if (sig !== JSON.stringify(Object.assign({}, b, { seed: 0 }))) fail(`絵 ${id}: 同じ敵なのに見た目が変わる`);
-    if (seen.has(sig)) fail(`絵 ${id}: ${seen.get(sig)} と見た目がまったく同じ`);
-    seen.set(sig, id);
-    if (e.boss && !a.aura) fail(`絵 ${id}: ボスなのにオーラが無い`);
-    if (e.majin && !a.barrier) fail(`絵 ${id}: 使徒なのに絶界が無い`);
     try { G.paintMonster(ctx, 200, 240, 120, { id, shape: e.shape, eye: e.eye, boss: !!e.boss }); } catch (err) { fail(`絵 ${id}: 描くと例外 ${err.message}`); }
   }
-  // look の指定が優先され、書いていない部品は無しになる
-  const custom = G.monsterLook("zz_test", { shape: "humanoid", tier: 3, look: { body: "blob", skin: "#123456" } });
-  if (custom.body !== "blob" || custom.skin !== "#123456" || custom.tail !== "none") fail("絵: look の指定が効かない");
   try { G.paintMonster(ctx, 200, 240, 120, { id: "zz_unknown", shape: "dragon" }); } catch (err) { fail(`絵: データに無い敵で例外 ${err.message}`); }
-  if (failures === before) ok(`モンスターの絵（${seen.size} 種が別々の見た目・ボスはオーラ・使徒は絶界）`);
+  if (calls.length) fail(`絵: 画像が無いのに canvas に描いた（${[...new Set(calls)].join(",")}）`);
+  if (failures === before) ok(`モンスターの絵（${Object.keys(G.data.ENEMIES).length} 種。画像が無ければ何も描かない）`);
 }
 timed("2b. モンスターの絵");
 
-// ---------------------------------------------------------------- 2c. 人物の絵（DOM なしの偽の canvas で描く）
+// ---------------------------------------------------------------- 2c. 人物（誰を描くか。A10：canvas では描かない）
 {
   const G = loadEngine();
   const before = failures;
   const vmc = vm.createContext({ G });
   for (const f of ["art_monsters.js", "art_people.js"]) vm.runInContext(readFileSync(new URL("../src/ui/" + f, import.meta.url), "utf8"), vmc);
-  const noop = () => {};
-  const grad = { addColorStop: noop };
-  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : k === "createRadialGradient" || k === "createLinearGradient" ? () => grad : noop), set: (t, k, v) => ((t[k] = v), true) });
   G.rand = () => { throw new Error("絵が G.rand を使った"); };
   const kinds = Object.keys(G.PEOPLE);
   if (kinds.length < 8) fail(`人物の絵: 種類が ${kinds.length} しかない（8 以上）`);
-  const draw = (who, label) => { try { G.paintPerson(ctx, 0, 0, 96, 120, who); } catch (err) { fail(`人物の絵 ${label}: 描くと例外 ${err.message}`); } };
+  const draw = (who, label) => { try { G.personLook(who); } catch (err) { fail(`人物の絵 ${label}: 見た目を決めると例外 ${err.message}`); } };
   const sig = (who) => JSON.stringify(Object.assign({}, G.personLook(who), { seed: 0 }));
   // 種類ごとに、同じ種は同じ見た目・種が違えば違う見た目
   for (const k of kinds) {
@@ -477,19 +462,8 @@ timed("2b. モンスターの絵");
     if (sig({ kind: k, seed: "a" }) !== sig({ kind: k, seed: "a" })) fail(`人物の絵 ${k}: 同じ種なのに見た目が変わる`);
     if (sig({ kind: k, seed: "a" }) === sig({ kind: k, seed: "b" })) fail(`人物の絵 ${k}: 種が違っても同じ見た目`);
   }
-  // 主人公：職業ごとに違う見た目（同じ人物設定でも）
-  const prof = { name: "テスト", sex: "男", age: "24", look: "黒髪、鋭い目つき、大柄な体" };
-  const heroes = new Map();
-  for (const cls of Object.keys(G.data.CLASSES)) {
-    const who = G.heroWho(prof, cls);
-    draw(who, `主人公 ${cls}`);
-    for (const age of ["8", "70"]) draw(G.heroWho({ ...prof, age }, cls), `主人公 ${cls} ${age}歳`);
-    const L = G.personLook(who);
-    const key = [L.outfit, L.gear].join("/");
-    if (heroes.has(key)) fail(`人物の絵: 主人公 ${cls} と ${heroes.get(key)} の服と装備が同じ`);
-    heroes.set(key, cls);
-    if (L.hair !== "#1c1a1e" || L.eyes !== "sharp" || L.build !== "broad") fail(`人物の絵: 主人公 ${cls} に外見の文（黒髪・鋭い・大柄）が効かない`);
-  }
+  // 主人公は絵を出さない（A10）。who は作れる
+  for (const cls of Object.keys(G.data.CLASSES)) if (G.heroWho({ name: "テスト" }, cls).kind !== "hero") fail(`人物: 主人公 ${cls} の who が作れない`);
   // 出来事の who は、ある種類（か、ある敵）を指す
   let withWho = 0;
   const evIds = new Set(G.data.EVENTS.map((e) => e.id));
@@ -509,7 +483,7 @@ timed("2b. モンスターの絵");
     if (w.kind === "foe") { if (!G.data.ENEMIES[w.foe]) fail(`仲間 ${c.name}: 敵 ${w.foe} が無い`); } else draw(w, `仲間 ${c.name}`);
   }
   if (G.companionWho({ name: "僧侶のセラ", cls: "僧侶" }).sex !== "女") fail("人物の絵: 仲間の名前から性別を拾えない");
-  if (failures === before) ok(`人物の絵（${kinds.length} 種・職業 ${heroes.size} つが別々の姿・who のある出来事 ${withWho} 件）`);
+  if (failures === before) ok(`人物（${kinds.length} 種・who のある出来事 ${withWho} 件）`);
 }
 timed("2c. 人物の絵");
 

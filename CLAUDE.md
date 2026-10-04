@@ -27,7 +27,7 @@ node tools/build.mjs && node tests/run.mjs
 | `src/engine/parser.js` | 自由入力の読み取り（トークンを使わない） | C |
 | `src/engine/gm.js` | GM（Claude）に任せる自由行動（任意） | C |
 | `src/ui/scene.js` | 背景の絵（canvas） | A |
-| `src/ui/art_monsters.js` | モンスターの絵（部品の組み合わせ。敵のデータの `look` で指定できる） | A |
+| `src/ui/art_monsters.js`・`src/ui/art_people.js` | 魔物・人物の入口（canvas では描かない。人物の「誰か」を決める表。A10） | A |
 | `assets/`・`src/ui/v4_assets.js` | 持ち主が作った画像（ビルドで `dist/site/` に別ファイルとして置き、HTML から相対パスで読む。`tools/assets.mjs`・`tools/site.mjs`・[docs/publish.md](docs/publish.md)。描く物の一覧は `docs/art/portraits.md`） | A |
 | `src/ui/ui.js`, `src/ui/setup.js`, `src/main.js`, `src/style.css`, `src/index.html` | 画面（`src/ui/*.css` は style.css のあとに名前順で足される。PC 向けの配置は `src/ui/v9_pc.*`） | U |
 | `src/manifest.json` | 読み込む順番（順番を決めたいファイルだけ。無いものは `tools/files.mjs` が自動で足す） | 追記だけ |
@@ -37,7 +37,7 @@ node tools/build.mjs && node tests/run.mjs
 - エンジン（`src/data`・`src/engine`）は DOM に触らない。画面は `G.S` を読んで描く。テストは DOM なしでエンジンを動かす。
 - 乱数は必ず `G.rand` / `G.d` / `G.dice` / `G.pick` を使う（テストで固定できるように）。`src/ui/setup.js` の作成画面だけは例外。
 - **新しい内容は、なるべく新しいファイルに書く。`src/data/`・`src/engine/`・`src/ui/` に置けば自動で読まれるので、`src/manifest.json` は編集しない。** manifest に書いたファイルを順に読んだあと、書いていない `.js` を data → engine → ui、名前順で足し、`main.js` は必ず最後（`tools/files.mjs`）。順番がどうしても効くときだけ manifest に書く（書いても二重には読まない）。例：出来事を足すなら `src/data/events_<名前>.js` を作り、中で `G.data.EVENTS.push(...)`。敵なら `Object.assign(G.data.ENEMIES, {...})`。既存の大きなファイルを並行して書き換えると衝突する。
-- 外から読み込まない（Artifact の制約。フォントだけ Google Fonts）。絵は canvas で描く。持ち主が作った画像は `assets/` に置けば、同じ Artifact の別ファイルとして載り、HTML から相対パスで読まれる（`docs/art/`・`docs/publish.md`）。画像が読めないときは canvas の絵に戻す。
+- 外から読み込まない（Artifact の制約。フォントだけ Google Fonts）。背景の絵は canvas で描く。人物と魔物は持ち主が作った画像だけ（`assets/` に置けば、同じ Artifact の別ファイルとして載り、HTML から相対パスで読まれる。`docs/art/`・`docs/publish.md`）。画像が無い・読めないときは絵を出さない（canvas の人物・魔物の絵に戻さない。A10）。主人公は立ち絵を出さない。
 - 性的な描写は直接書かない。残酷さ・下品な笑いはよいが、ほのめかしと場面転換で済ませる。
 - 文章は日本語。地の文は二人称（あなた）か三人称。ゲームの用語は `docs/VISION.md` の用語集に合わせる。
 - セーブの形（`G.S`）に項目を足すときは、古いセーブで項目が無くても動くように書く（`S.foo || 既定値`）。

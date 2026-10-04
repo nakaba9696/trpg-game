@@ -1,7 +1,7 @@
 // V9：PC 向けの画面（src/ui/v9_pc.js・src/ui/v9_pc.css）。DOM なしで確かめられる範囲
 // - PC の配置にする大きさ（1280×800・1920×1080 は PC、スマホは今のまま）
 // - 文章の窓の 1 行が 35〜40 字。窓・立ち絵・戦闘の魔物の場所が画面に収まり、重ならない
-// - 立ち絵：話している人が前で明るく、仲間は後ろで暗い。最大 3 人。同じ人は一度だけ。戦闘は主人公と仲間
+// - 立ち絵：話している人が前で明るく、仲間は後ろで暗い。最大 3 人。同じ人は一度だけ。戦闘は仲間だけ（主人公は出さない。A10）。絵の無い人は並べない
 // - 立ち絵は V5 の入口（G.stand.whoOf・sig・big・nameOf）で人を決め、G.drawPortrait で描く（V8 の表情の差し替えがそのまま効く）
 // - キー 1〜9・用語の切り出し・演出の決まり・魔物の並べ方（fx.js と同じ）
 // - 見た目（v9_pc.css）がビルドに入り、明暗・動きを減らす設定がある
@@ -46,7 +46,7 @@ export default ({ fail: failTo, ok, loadEngine }) => {
   // ---- 立ち絵の顔ぶれ
   const ev = (id) => D.EVENTS.find((e) => e.id === id);
   if (!ev("c2_nora")) return fail("確かめに使う出来事 c2_nora が無い");
-  G.ASSETS = { "portraits/nora": "data:image/webp;base64,AA==", "portraits/sheila": "data:image/webp;base64,AA==" };
+  G.ASSETS = { "portraits/nora": "data:image/webp;base64,AA==", "portraits/sheila": "data:image/webp;base64,AA==", "portraits/kind_adventurer_m": "data:image/webp;base64,AA==", "portraits/kind_adventurer_f": "data:image/webp;base64,AA==", "portraits/kind_priest_m": "data:image/webp;base64,AA==", "portraits/kind_priest_f": "data:image/webp;base64,AA==" };
   const sheila = { name: "シェイラ", who: D.C2_PEOPLE.sheila.who, desc: "" };
   const S = { mode: "event", event: "c2_nora", flags: {}, profile: { name: "テスト", sex: "男", age: 24 }, cls: "merc", companions: [sheila, { name: "傭兵のロタール", desc: "" }, { name: "僧侶のアンナ", desc: "" }, { name: "盗賊のカイ", desc: "" }] };
   const list = v9.castOf(S);
@@ -58,7 +58,8 @@ export default ({ fail: failTo, ok, loadEngine }) => {
   const twice = v9.castOf({ ...S, companions: [{ name: "ノラミ", who: G.stand.whoOf(S) }, sheila] });
   if (twice.length !== 2) fail("話している人が仲間でもあるとき、二度並ぶ");
   const fight = v9.castOf({ ...S, mode: "combat", combat: { foes: [] } });
-  if (!fight[0] || fight[0].role !== "hero" || fight.some((c) => c.role === "speaker")) fail("戦闘で主人公が先頭にいないか、話している人を出している");
+  if (!fight[0] || fight.some((c) => c.role === "hero" || c.role === "speaker")) fail("戦闘で主人公か、話している人を出している（A10：戦闘は仲間だけ）");
+  if (v9.castOf({ ...S, companions: [{ name: "盗賊のカイ", desc: "" }] }).some((c) => c.role === "ally")) fail("絵の無い仲間（型の絵が無い）を並べている");
   if (v9.castOf({ mode: "explore", flags: {}, companions: [] }).length) fail("誰もいないのに立ち絵を出している");
   if (v9.castOf(null).length) fail("状態が無いのに立ち絵を出している");
   G.ASSETS = {};
@@ -68,7 +69,7 @@ export default ({ fail: failTo, ok, loadEngine }) => {
     const L = v9.layout(1280, 800, combat);
     const ps = v9.placeCast(L, combat ? fight : list);
     const f = ps[0], back = ps.slice(1);
-    if (!f || !f.front || f.dim !== 0) fail(`${combat ? "戦闘の主人公" : "話している人"}が前に出て明るくなっていない`);
+    if (!f || !f.front || f.dim !== 0) fail(`${combat ? "戦闘の先頭の仲間" : "話している人"}が前に出て明るくなっていない`);
     if (back.some((p) => p.front || !(p.dim > 0) || p.h > f.h || p.z >= f.z)) fail(`${combat ? "戦闘の仲間" : "仲間"}が後ろで暗く小さくなっていない`);
     if (ps.some((p) => p.x < 0 || p.x > L.cast.w || p.h > L.cast.h || p.h * 0.8 > L.cast.w)) fail(`${combat ? "戦闘" : "出来事"}の立ち絵が場所からはみ出す`);
     if (combat && f.h > L.cast.h) fail("戦闘の味方が大きすぎる");

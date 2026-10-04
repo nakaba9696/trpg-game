@@ -47,22 +47,23 @@
     return out;
   };
 
-  // 立ち絵に並べる人：話している人（戦闘では主人公）と仲間。最大 3 人。同じ人は一度だけ
+  // 立ち絵に並べる人：話している人（戦闘では出さない）と仲間。最大 3 人。同じ人は一度だけ
+  // 主人公は出さない（A10。持ち主の決定）。生成画像の無い人（G.portraitArt が null）も並べない（canvas の絵はやめた）
   v9.MAX_CAST = 3;
   v9.castOf = (S) => {
     if (!S) return [];
     const out = [], seen = new Set();
     const st = G.stand || {};
     const add = (who, role, tag) => {
-      if (!who || out.length >= v9.MAX_CAST) return;
+      if (!who || out.length >= v9.MAX_CAST || who.kind === "hero") return;
+      if (G.portraitArt && !G.portraitArt(who)) return;
       const key = (st.sig && st.sig(who)) || JSON.stringify([who.seed || "", who.kind || "", who.name || ""]);
       if (seen.has(key)) return;
       seen.add(key);
       tag = tag || (G.whoTag ? G.whoTag(who, S) : null); // C3：名前＋役職の札
       out.push({ who, role, key, big: !!(st.big && st.big(who)), name: tag ? tag.label : st.nameOf ? st.nameOf(who) : who.name || "", tag });
     };
-    if (S.combat) { if (G.heroWho && S.profile) add(G.heroWho(S.profile, S.cls), "hero", { name: S.profile.name || "", role: S.clsName || "", label: G.c3Label ? G.c3Label(S.profile.name, S.clsName) : S.profile.name || "" }); }
-    else if (st.whoOf) add(st.whoOf(S), "speaker");
+    if (!S.combat && st.whoOf) add(st.whoOf(S), "speaker");
     (S.companions || []).forEach((c) => add(G.companionWho ? G.companionWho(c) : null, "ally", G.compTag ? G.compTag(c) : null));
     return out;
   };
@@ -73,7 +74,7 @@
     if (!n || C.w <= 0) return [];
     const maxH = (k) => Math.min(C.h * k, (C.w * 0.95) / 0.8);
     if (L.combat) {
-      // 戦闘：主人公を前に、仲間を後ろに小さく
+      // 戦闘：仲間を並べる（前の一人を大きく、ほかは後ろに小さく）
       const H = Math.min(C.h * 0.92, (C.w * 0.82) / 0.8);
       const xs = n === 1 ? [0.52] : n === 2 ? [0.6, 0.3] : [0.56, 0.24, 0.84];
       return list.map((c, i) => ({ x: Math.round(C.w * xs[i]), h: Math.round(i ? H * 0.8 : H), front: i === 0, dim: i ? 0.35 : 0, z: i ? 1 : 3 }));

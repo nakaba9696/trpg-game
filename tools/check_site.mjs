@@ -1,6 +1,6 @@
 // A6：外のファイルの形（dist/site/）で遊べるかを Playwright で確かめる（Chromium は PLAYWRIGHT_BROWSERS_PATH のもの。CI では動かさない）
 // node tools/build.mjs && node tools/check_site.mjs [写真を書くフォルダ]（node tools/build.mjs --embed もしてあれば、1 枚の HTML の表情の入れ替えも見る）
-// dist/site/ を簡単なローカルサーバで開き（と file:// でも）、立ち絵・差分・魔物の絵が画像で出るか、無い画像を読みに行かないか、読めない画像で canvas の絵に戻るかを見る
+// dist/site/ を簡単なローカルサーバで開き（と file:// でも）、立ち絵・差分・魔物の絵が画像で出るか、無い画像を読みに行かないか、読めない画像で絵を出さない（canvas の絵に戻らない。A10）かを見る
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
 import { execSync } from "node:child_process";
@@ -148,7 +148,7 @@ if (existsSync(one)) {
   bad.forEach((b) => fail("embed: " + b));
   await page.close();
 }
-// 読めない画像：canvas の絵に戻る（立ち絵は空にならない）
+// 読めない画像：絵を出さない（canvas の絵に戻らない。A10）
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 }, reducedMotion: "reduce" });
   await page.route("**/portraits/nora.webp", (r) => r.abort());
@@ -162,12 +162,13 @@ if (existsSync(one)) {
   });
   await page.waitForTimeout(800);
   const ink = await page.evaluate(() => {
-    const c = [...document.querySelectorAll("#stand canvas.standFace")].pop();
-    if (!c) return -1;
-    const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 40) if (d[i] > 0) n++; return n / (d.length / 40);
+    const cs = [...document.querySelectorAll("#stand canvas.standFace, .v9fig canvas.v9face")];
+    let n = 0, all = 0;
+    for (const c of cs) { if (c.classList.contains("noart")) continue; const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < d.length; i += 40) { all++; if (d[i] > 0) n++; } }
+    return all ? n / all : 0;
   });
-  if (ink > 0.05) ok("読めない画像：canvas の絵に戻った");
-  else fail(`読めない画像のとき、立ち絵が空のまま（${ink}）`);
+  if (ink < 0.01) ok("読めない画像：絵を出さない（canvas の絵に戻らない）");
+  else fail(`読めない画像のとき、何かを描いた（${ink}）`);
   if (shots) await page.screenshot({ path: path.join(shots, `broken_stand.jpg`), type: "jpeg", quality: 75 });
   await page.close();
 }
