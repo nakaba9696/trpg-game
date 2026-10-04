@@ -8,6 +8,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   let n = 0;
   const F = (m) => { n++; fail("恋の線：" + m); };
   const G = loadEngine();
+  G.data.Q8P.off = true; // Q8 の恋の相手の一覧（人間の見た目の名のある人だけ）と組み合わせは tests/checks/q8_pairs.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   if (!G.loveMinor || !G.loveHeroMinor) return F("G.loveMinor・G.loveHeroMinor が無い");
   const start = (age) => {
