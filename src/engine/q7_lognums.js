@@ -14,7 +14,7 @@
     const t = e.text;
     const out = [];
     const put = (kind, s) => { if (s && t.includes(s) && !out.some((x) => x.s === s)) out.push({ t: kind, s, num: numOf(s) }); };
-    if ((e.fx === "hit" || e.fx === "hurt") && typeof e.n === "number") put(e.fx === "hit" ? "dmg" : "hurt", `${e.n} のダメージ`);
+    if ((e.fx === "hit" || e.fx === "hurt" || e.fx === "ally") && typeof e.n === "number") put(e.fx === "hit" ? "dmg" : "hurt", `${e.n} のダメージ`); // ally：仲間が受けた（B5）
     HURT.forEach((re) => (t.match(re) || []).forEach((s) => put("hurt", s)));
     HEAL.forEach((re) => (t.match(re) || []).forEach((s) => put("heal", s)));
     return out;
