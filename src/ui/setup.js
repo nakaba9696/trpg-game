@@ -92,8 +92,7 @@
       txt.textContent = "";
       txt.append(h("b", "whoName", draft.profile.name || "（名無し）"));
       txt.append(h("span", "whoLine", `${c.name}・${draft.sex}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ`));
-      txt.append(h("span", "", c.blurb));
-      txt.append(h("span", "fine", `得意：${cre.strengths(draft.cls).join("・")} ／ 出発地：${D.LOCS[c.start].name}`));
+      // 職業の紹介と得意な能力値・はじめの町は札に出さない（職業のカードと、最後のシートに出る。持ち主の決定）
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
       if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
     }
@@ -101,7 +100,7 @@
 
     const form = h("div", "creForm");
     let oBlurb = null, aBlurb = null;
-    const setVal = (k) => { const el = form.querySelector("#pf-" + k); if (el) el.value = draft.profile[k] || ""; };
+    const setVal = (k) => { const el = form.querySelector("#pf-" + k); if (el) { el.value = draft.profile[k] || ""; if (el.tagName === "TEXTAREA") fitArea(el); } };
 
     // 名前・性別・年齢
     const s1 = h("section", "creSec");
@@ -194,6 +193,7 @@
       .forEach(([k, label, type]) => grid.append(fieldEl(k, label, type, refresh)));
     const hi = grid.querySelector("#pf-history");
     if (hi) hi.placeholder = "空けておいてもよい（「振る」でおまかせ）";
+    grid.querySelectorAll("textarea.fit").forEach(fitArea);
     s5.append(grid);
     form.append(s5);
 
@@ -227,18 +227,30 @@
     return f;
   }
 
+  // textarea の高さを中身に合わせる（まだ画面に無いときは次の描画で）
+  function fitArea(el) {
+    if (!el.isConnected || !el.offsetWidth) { requestAnimationFrame(() => { if (el.isConnected && el.offsetWidth) fitArea(el); }); return; }
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight + (el.offsetHeight - el.clientHeight)}px`;
+  }
+  addEventListener("resize", () => document.querySelectorAll("#setup textarea.fit").forEach(fitArea));
+
   function fieldEl(key, label, type, after) {
     const f = h("div", "field");
     const lab = h("label", "", label);
     lab.htmlFor = "pf-" + key;
     f.append(lab);
     const row = h("div", "row");
-    const inp = h(type === "textarea" ? "textarea" : "input");
+    // 外見も生い立ちも textarea にして、文の長さに合わせて高さを伸ばす（おまかせの長い文も全部見える。持ち主の要望）
+    const inp = h("textarea", "fit");
     inp.id = "pf-" + key;
+    inp.rows = 1;
     inp.maxLength = type === "textarea" ? 160 : 60;
     inp.value = draft.profile[key] || "";
-    inp.oninput = () => { draft.profile[key] = inp.value; after(); };
-    const b = btn("振る", "small", () => { inp.value = draft.profile[key] = cre.gen(draft, key, R); after(); });
+    // 外見は一行の文（改行させない。日本語の変換を確定する Enter は止めない）
+    if (type !== "textarea") inp.onkeydown = (e) => { if (e.key === "Enter" && !e.isComposing && e.keyCode !== 229) e.preventDefault(); };
+    inp.oninput = () => { if (type !== "textarea" && inp.value.includes("\n")) inp.value = inp.value.replace(/\n/g, " "); draft.profile[key] = inp.value; fitArea(inp); after(); };
+    const b = btn("振る", "small", () => { inp.value = draft.profile[key] = cre.gen(draft, key, R); fitArea(inp); after(); });
     b.setAttribute("aria-label", `${label}をおまかせで作り直す`);
     row.append(inp, b);
     f.append(row);
@@ -369,7 +381,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
+    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);
@@ -393,7 +405,8 @@
     book.setAttribute("aria-live", "polite");
     const pg = h("div", "bookPage" + (reduced() ? "" : " turn"));
     pages[page].forEach((t) => pg.append(h("p", "", t)));
-    book.append(pg, h("div", "folio", `── ${KANJI[page]} ──`));
+    book.append(pg);
+    if (pages.length > 1) book.append(h("div", "folio", `── ${KANJI[page]} ──`));  // 導入は今 1 頁（状況の概要だけ）
     root.append(book);
     const last = page === pages.length - 1;
     const nav = h("div", "creNav bookNav");
