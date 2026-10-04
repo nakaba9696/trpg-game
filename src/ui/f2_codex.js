@@ -386,7 +386,7 @@
     detail.textContent = "";
     detail.append(h("p", "fine", "一覧から選ぶと、詳しい説明が出る。"));
     // U9：？の人の見つけ方（まだ会っていない人は押せないので、ここに書く）
-    if (key === "person") detail.append(h("p", "fine", "？の人には、まだ会っていない。酒場の噂やギルドの尋ね人の貼り紙で、居る場所と時期が分かることがある。"));
+    if (key === "person") detail.append(h("p", "fine", "？の人には、まだ会っていない。"));
     ({ item: drawItems, foe: drawFoes, person: drawPeople, lore: drawLore })[key]();
   }
   F2.open = (key) => {

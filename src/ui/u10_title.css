@@ -1,0 +1,2 @@
+/* U10：作成画面の「トロフィーで +N」（ボーナス点の横） */
+.trophyBonus { font-weight: 700; color: var(--gold, var(--ink)); font-size: 13px; }
