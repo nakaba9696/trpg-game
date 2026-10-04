@@ -47,10 +47,10 @@ export function makeSmartBot(G) {
     const hit = clamp(e.hit - Math.floor(G.statEff("敏捷") / 5), 5, 95) / 100;
     return hit * Math.max(1, avg(e.dmg) - (e.magic ? 0 : armor ? armor.def : 0));
   }
-  // この敵の組と最後まで戦ったときの、見込みの被ダメージ
-  function fightCost(ids, hpLeft) {
+  // この敵の組と最後まで戦ったときの、見込みの被ダメージ（mpCap を渡すと、MP はそれまでしか無いものとして見る）
+  function fightCost(ids, hpLeft, mpCap) {
     const s = S();
-    let mp = s.mp;
+    let mp = mpCap == null ? s.mp : Math.min(s.mp, mpCap);
     const foes = ids.map((id) => ({ e: D.ENEMIES[id], hp: hpLeft ? hpLeft[ids.indexOf(id)] : D.ENEMIES[id].hp })).sort((a, b) => a.hp - b.hp);
     let taken = 0;
     let rounds = 0;
@@ -79,10 +79,12 @@ export function makeSmartBot(G) {
   const healStock = () => Object.entries(S().inv).reduce((a, [id, n]) => a + ((D.ITEMS[id] && D.ITEMS[id].type === "use" && D.ITEMS[id].hp) ? Math.min(D.ITEMS[id].hp, S().maxHp) * n : 0), 0);
 
   // その場所の敵と戦って大丈夫か（2 体組みの、強い方の敵で見る）
+  // 稼ぎ場では休まずに何度も戦うので、MP は最大の半分しか残っていないものとして見る（Q6。満タンで見ると、術に頼る魔法使いだけ
+  // 二戦目からの杖の殴り合いで死にやすく、筋のよい遊び方の職業の差が 1.4 倍前後になっていた。人なら MP が尽きるのを見越して選ぶ）
   function areaRisk(L) {
     const pool = (L.pool || []).filter((id) => D.ENEMIES[id] && !D.ENEMIES[id].boss);
     if (!pool.length) return 0;
-    const costs = pool.map((id) => fightCost([id, id])).sort((a, b) => a - b);
+    const costs = pool.map((id) => fightCost([id, id], null, Math.floor(S().maxMp / 2))).sort((a, b) => a - b);
     return costs[Math.floor(costs.length * 0.75)] || costs[costs.length - 1];
   }
   function fightReady(ids) {
