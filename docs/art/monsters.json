@@ -1427,8 +1427,9 @@
    "file": "assets/monsters/e3_tojizuki.webp",
    "name": "閉じ月",
    "boss": true,
-   "tags": "(giant full moon:1.4), the moon itself is one huge closed eye, eyelid and long eyelashes on the moon surface, pale yellow cratered moon, eerie, floating in a dark night sky, stars",
-   "memo": "使徒。夜空の二つ目の月。まぶたを閉じた大きな目"
+   "tags": "(colossal full moon:1.4), the moon itself is a single gigantic closed eye, heavy eyelid and long silver eyelashes across the moon, pale cratered surface, cold divine light, majestic, ominous, awe-inspiring, solemn, ancient, from below, dramatic lighting",
+   "memo": "使徒。夜空の二つ目の月。まぶたを閉じた大きな目",
+   "seed": 740210223
   },
   {
    "id": "e3_tetsukui",
@@ -1444,8 +1445,9 @@
    "name": "咎追い",
    "boss": true,
    "human": true,
-   "tags": "tall thin executioner figure, iron mask covering the whole face, glowing eyes behind the mask, black executioner robe, black cape, holding a huge axe with a small bell on the handle",
-   "memo": "使徒。鉄の仮面と黒い処刑衣。鈴で何かを数える"
+   "tags": "towering inhumanly tall executioner, (faceless:1.2), smooth iron mask with no features, two faint glowing eyes in the slits, black executioner robe, long black cape, floating slightly above the ground, holding a huge executioner axe with a small bell on the handle, imposing, ominous, solemn, from below, dramatic lighting",
+   "memo": "使徒。鉄の仮面と黒い処刑衣。鈴で何かを数える",
+   "seed": 3369119256
   },
   {
    "id": "e3_midori",
@@ -1468,8 +1470,9 @@
    "file": "assets/monsters/e3_sekaiju.webp",
    "name": "根の王",
    "boss": true,
-   "tags": "(colossal tree roots:1.4) bursting out of the ground, gnarled brown roots twisting like giant serpents, cracked bark, five glowing eyes in the bark of the roots, no animals",
-   "memo": "使徒。東の空の大樹の根。根の一本が町より太い"
+   "tags": "(colossal ancient world tree roots:1.4) rising like mountains, gnarled roots coiling like giant serpents, cracked bark, five glowing eyes deep in the bark, divine, majestic, awe-inspiring, ancient, towering, from below, dramatic lighting",
+   "memo": "使徒。東の空の大樹の根。根の一本が町より太い",
+   "seed": 1110771545
   }
  ]
 }
