@@ -106,6 +106,36 @@ export default ({ loadEngine, fail, ok }) => {
   A13.cutout("t_perf", pic, null);
   if (runs !== 1) F(`同じ鍵の白抜きを ${runs} 回した（一度だけのはず）`);
 
+  // ---------------------------------------------------------------- 白抜きを少しずつ（図鑑の一覧）
+  if (typeof A13.queue !== "function" || typeof A13.has !== "function") F("a13_cutout.js に G.a13.queue・has が無い");
+  else {
+    const timers = [];
+    const cq = vm.createContext({ console, setTimeout: (f) => timers.push(f) });
+    vm.runInContext(src("a13_cutout.js"), cq, { filename: "ui/a13_cutout.js" });
+    const Q = cq.G.a13;
+    const did = [];
+    Q.queue(() => did.push(1));
+    Q.queue(() => did.push(2), () => false); // 窓を閉じた・見えなくなった仕事は飛ばす
+    Q.queue(() => did.push(3));
+    let turns = 0;
+    while (timers.length && turns < 10) { timers.shift()(); turns++; if (turns === 1 && did.join() !== "1") F(`1 回に 1 枚ずつではない（${did.join()}）`); }
+    if (did.join() !== "1,3") F(`少しずつ片づける順番か、飛ばし方が違う（${did.join()}）`);
+    if (Q.queued() !== 0) F("片づけ終わっても仕事が残る");
+    const pic2 = { naturalWidth: 8, naturalHeight: 8 };
+    if (A13.has("t_perf2")) F("まだ処理していない鍵を、処理済みとみなす");
+    A13.cutout("t_perf2", pic2, null);
+    if (!A13.has("t_perf2")) F("処理した鍵を覚えていない");
+  }
+  const f2 = src("f2_codex.js"), v6 = src("v6_monsters.js");
+  if (!/G\.v6Pending = /.test(v6) || !/G\.v6Build = /.test(v6)) F("v6_monsters.js に、図鑑の一覧用の G.v6Pending・v6Build が無い");
+  if (!/foeCanvas\(id, 56, !rec, true\)/.test(f2) || !/personCanvas\(id, 48, 60, false, true\)/.test(f2)) F("図鑑の一覧の絵が、まとめて白抜きをしている（見えているものから 1 枚ずつにする）");
+  if (!/IntersectionObserver/.test(f2)) F("図鑑の一覧の絵が、見えていないものまで処理する");
+
+  // ---------------------------------------------------------------- 描き直しの途中で配置を測らない
+  const log = src("ui.js");
+  if (!/requestAnimationFrame\(scrollLog\)/.test(log)) F("ログの位置合わせを描き直しの途中でしている（次のコマの頭で一度だけ）");
+  if (/void body\.offsetWidth;\n    body\.classList\.add/.test(src("v9_pc.js"))) F("暗転・光の掛け直しで、描き直しの途中に配置の計算を走らせている");
+
   // ---------------------------------------------------------------- 閉じているステータスの窓（ui.js。DOM が要るので書き方で見る）
   const ui = src("ui.js");
   const sheet = ui.slice(ui.indexOf("function renderSheet"), ui.indexOf("ui.setSheetOpen ="));
@@ -118,5 +148,5 @@ export default ({ loadEngine, fail, ok }) => {
   if (!/ec\.filter = /.test(st) || !/echo\.style\.filter = "none"/.test(st)) F("にじみのぼかしを CSS の filter で毎コマかけている（canvas に焼き込む）");
 
   if (!existsSync(new URL("../../tools/perf.mjs", import.meta.url))) F("測る道具 tools/perf.mjs が無い");
-  if (!bad) ok(`T 速さ（裏の層は止める・画像の読み込み中は canvas の絵を描かない（${waitOps}/${heavy} 命令）・白抜きは一度だけ・閉じたシートは描き込まない）`);
+  if (!bad) ok(`T 速さ（裏の層は止める・画像の読み込み中は canvas の絵を描かない（${waitOps}/${heavy} 命令）・白抜きは一度だけ・図鑑の一覧は見えている絵から 1 枚ずつ・閉じたシートは描き込まない・配置はコマの頭で測る）`);
 };

@@ -113,10 +113,21 @@
     logLast = S.log[S.log.length - 1] || null;
     logFresh = fresh ? shown.slice(-fresh) : [];
     shown.forEach((e, i) => { const el = logEntryEl(e); if (fresh && i >= shown.length - fresh) el.classList.add("new"); log.append(el); });
-    // 新しく増えた記録の頭から読めるようにする（増えていなければ末尾）
-    const first = fresh ? log.children[shown.length - fresh] : null;
+    // 新しく増えた記録の頭から読めるようにする（増えていなければ末尾）。位置を測るのは次のコマの頭で一度だけ
+    // （描き直しの途中で測ると、そのたびに画面全体の配置の計算が走って重い。T）
+    logScroll = { first: fresh ? log.children[shown.length - fresh] : null, fresh: !!fresh };
+    if (!logScrollAsked) { logScrollAsked = true; requestAnimationFrame(scrollLog); }
+  }
+  let logScroll = null, logScrollAsked = false;
+  function scrollLog() {
+    logScrollAsked = false;
+    const o = logScroll;
+    logScroll = null;
+    const log = $("#log");
+    if (!o || !log) return;
+    const first = o.first && o.first.isConnected ? o.first : null;
     log.scrollTop = first ? Math.max(0, first.offsetTop - log.offsetTop - 8) : log.scrollHeight;
-    if (fresh && narrow()) {
+    if (o.fresh && narrow()) {
       // スマホでは、画面が記録より下にあるときだけ記録まで戻す
       const top = log.getBoundingClientRect().top;
       if (top < mbarHeight()) log.scrollIntoView({ block: "start", behavior: "smooth" });

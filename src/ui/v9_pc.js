@@ -303,7 +303,15 @@
   let foesNow = [];
   let foeCv = null;
   let foeInk = false; // 魔物の層に何か描いてあるか（空のままなら、測り直しも消し直しもしない。T）
+  // 描くのは次のコマの頭で一度だけ（1 回の描き直しで何度も呼ばれる・描き直しの途中で配置を測らない）。
+  // 敵・大きさ・読み終わった絵が前と同じなら描き直さない（T）
+  let foeAsk = false, foeSig = "";
   function drawFoes() {
+    if (foeAsk) return;
+    foeAsk = true;
+    requestAnimationFrame(() => { foeAsk = false; drawFoesNow(); });
+  }
+  function drawFoesNow() {
     const scene = $(".scene");
     if (!scene) return;
     if (!foeCv || foeCv.parentNode !== scene) {
@@ -320,6 +328,9 @@
     const r = foeCv.getBoundingClientRect();
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const w = Math.max(1, Math.round(r.width)), hh = Math.max(1, Math.round(r.height));
+    const sig = want ? JSON.stringify(foesNow) + "|" + w + "x" + hh + "@" + dpr + "|" + foesNow.map((f) => (G.v6ArtReady && G.v6ArtReady(f.id) ? 1 : 0)).join("") : "";
+    if (sig && sig === foeSig && foeCv.width === w * dpr && foeCv.height === hh * dpr) return;
+    foeSig = sig;
     if (foeCv.width !== w * dpr || foeCv.height !== hh * dpr) { foeCv.width = w * dpr; foeCv.height = hh * dpr; }
     const ctx = foeCv.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -410,11 +421,14 @@
 
   // ---------------------------------------------------------------- 演出：暗転・光・揺れ
   let lastScene = null, lastEvent = null, lastEntry = null, lastRun = null;
+  // 掛け直しは次のコマの頭で（描き直しの途中で配置の計算を走らせない。T）
   function pulse(cls, ms) {
     body.classList.remove(cls);
-    void body.offsetWidth;
-    body.classList.add(cls);
-    setTimeout(() => body.classList.remove(cls), ms);
+    requestAnimationFrame(() => {
+      void body.offsetWidth;
+      body.classList.add(cls);
+      setTimeout(() => body.classList.remove(cls), ms);
+    });
   }
   function stageFx() {
     const S = G.S;
