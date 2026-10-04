@@ -293,8 +293,8 @@
     let v = baseStatEff(k);
     const S = G.S;
     if (!S) return v;
-    v += gearSum(S).stats[k] || 0;
-    if (k === "敏捷") { const l = API.load(S); if (l > CAP) v -= Math.min(25, (l - CAP) * 5); }
+    v += G.s5Mod(gearSum(S).stats[k] || 0);   // 補正は％で書いてある。点にする（S5）
+    if (k === "敏捷") { const l = API.load(S); if (l > CAP) v -= G.s5Mod(Math.min(25, (l - CAP) * 5)); }
     return v;
   };
   const baseGearBonus = G.gearBonus;
@@ -681,7 +681,7 @@
     if (!first || !t || G.rand() * 100 >= Math.min(60, first)) return;
     const e = G.foeData(t);
     if (e.majin && !w.pierce) return;
-    const dmg = Math.min(t.hp - 1, G.dice(w.dmg) + Math.floor(S.stats[w.stat === "敏捷" ? "敏捷" : "筋力"] / 20));
+    const dmg = Math.min(t.hp - 1, G.dice(w.dmg) + Math.floor(G.s5Pow(S.stats[w.stat === "敏捷" ? "敏捷" : "筋力"]) / 20));
     if (dmg <= 0) return;
     t.hp -= dmg;
     G.log("nar", `相手が構えるより先に、${w.name}が届いた。`);

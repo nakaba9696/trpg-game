@@ -110,7 +110,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const D = G.data;
     start(G, seed);
     const S = G.S;
-    Object.assign(S.stats, { 筋力: 80, 体力: 80, 敏捷: 70, 知力: 50, 魔力: 30, 魅力: 50 });
+    // 点（S5）。使徒は高い点が前提の強さ：鍛えた冒険者は、やりこんだ 70 点近く（20 点ほどでは条件をそろえても勝てない）
+    Object.assign(S.stats, { 筋力: 67, 体力: 67, 敏捷: 57, 知力: 42, 魔力: 30, 魅力: 42 });
     S.maxHp = S.hp = G.maxHpOf(S.stats);
     S.weapon = sword ? "volgrim" : "mithril"; S.armor = "dragonmail";
     S.inv = { potion: 6, elixir: 2 };

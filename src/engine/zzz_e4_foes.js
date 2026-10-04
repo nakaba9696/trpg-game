@@ -152,7 +152,7 @@
     poison: (f, e) => {
       const S = G.S;
       if (S.conds.includes("毒") || G.rand() >= 0.2) return;
-      if (G.d(100) > G.clamp(e.hit - Math.floor(G.statEff("敏捷") / 5), 5, 90)) { G.note(`${f.name}の毒をかわした。`); return; }
+      if (G.d(100) > Math.min(90, G.foeHitChance(e))) { G.note(`${f.name}の毒をかわした。`); return; }
       S.conds.push("毒");
       G.say(`${f.name}の毒が傷口から回った。体が重い。`);
       G.note("状態：毒（筋力・体力が落ちる。宿屋か教会で治る）");
@@ -228,7 +228,7 @@
     },
     drain: (f, e) => {
       if (G.rand() >= 0.22) return;
-      if (G.d(100) > G.clamp(e.hit - Math.floor(G.statEff("敏捷") / 5), 5, 90)) return;
+      if (G.d(100) > Math.min(90, G.foeHitChance(e))) return;
       const n = G.d(3) + Math.ceil(e.tier / 2);
       G.log("nar", `${f.name}が生気を吸った。${n} のダメージ。`, { fx: "hurt", n, heavy: false });
       G.hurt(n, `${f.name}に生気を吸い尽くされた`);
