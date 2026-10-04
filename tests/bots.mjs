@@ -82,9 +82,8 @@ export function makeBot(G, goal, opt = {}) {
     const w = D.ITEMS[id];
     if (!w || w.type !== "weapon") return 0;
     const S = G.S;
-    const stat = S.stats[w.stat] || 0;
-    const hit = Math.min(95, Math.max(5, stat + (w.hit || 0) - def)) / 100;
-    const avg = w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2] + (w.stat === "筋力" ? Math.floor(S.stats.筋力 / 15) : Math.floor(S.stats.敏捷 / 20));
+    const hit = G.chance(w.stat, 0, (w.hit || 0) - def) / 100;   // 点との差（S5）
+    const avg = w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2] + (w.stat === "筋力" ? Math.floor(G.s5Pow(S.stats.筋力) / 15) : Math.floor(G.s5Pow(S.stats.敏捷) / 20));
     return hit * avg + (w.pierce ? 100 : 0);
   };
   const armorValue = (id) => {
@@ -95,7 +94,7 @@ export function makeBot(G, goal, opt = {}) {
   // 腕前：1 撃の期待値 × 生き延びる手数。仲間の分も足す
   const power = () => {
     const S = G.S;
-    const atk = isMage() ? Math.max(weaponValue(S.weapon), (Math.min(95, S.stats.魔力 + 10) / 100) * (7 + S.stats.魔力 / 8)) : weaponValue(S.weapon);
+    const atk = isMage() ? Math.max(weaponValue(S.weapon), (G.chance("魔力", 10) / 100) * (7 + G.s5Pow(S.stats.魔力) / 8)) : weaponValue(S.weapon);
     const comp = (S.companions || []).reduce((a, c) => a + (c.power / 100) * (3.5 + (c.dmg || 0)), 0);
     const def = (G.armor() ? G.armor().def : 0);
     return (atk + comp) * (S.maxHp + def * 6);
@@ -187,19 +186,19 @@ export function makeBot(G, goal, opt = {}) {
     if (t && D.ENEMIES[t.id].undead && get("cb:item:holywater")) return "cb:item:holywater";
     // 魔法と武器の期待値を比べる
     const w = G.weapon();
-    const wAvg = w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2] + (w.stat === "筋力" ? Math.floor(S.stats.筋力 / 15) : Math.floor(S.stats.敏捷 / 20));
+    const wAvg = w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2] + (w.stat === "筋力" ? Math.floor(G.s5Pow(S.stats.筋力) / 15) : Math.floor(G.s5Pow(S.stats.敏捷) / 20));
     const cand = [];
     const atk = get("cb:attack");
     if (atk) cand.push(["cb:attack", (pct(atk) / 100) * wAvg]);
     const vit = get("cb:vital");
-    if (vit) cand.push(["cb:vital", (pct(vit) / 100) * (w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2] + Math.floor(S.stats.敏捷 / 15)) * 2]);
+    if (vit) cand.push(["cb:vital", (pct(vit) / 100) * (w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2] + Math.floor(G.s5Pow(S.stats.敏捷) / 15)) * 2]);
     const fire = get("cb:fire");
     const majinWall = t && D.ENEMIES[t.id].majin && !w.pierce;
-    if (fire && !majinWall && S.mp >= 3) cand.push(["cb:fire", (pct(fire) / 100) * (7 + Math.floor(S.stats.魔力 / 8)) * (S.mp >= 9 || boss ? 1 : 0.8)]);
+    if (fire && !majinWall && S.mp >= 3) cand.push(["cb:fire", (pct(fire) / 100) * (7 + Math.floor(G.s5Pow(S.stats.魔力) / 8)) * (S.mp >= 9 || boss ? 1 : 0.8)]);
     const bolt = get("cb:bolt");
-    if (bolt && !majinWall && G.alive().length > 1) cand.push(["cb:bolt", (pct(bolt) / 100) * (5 + Math.floor(S.stats.魔力 / 12)) * G.alive().length]);
+    if (bolt && !majinWall && G.alive().length > 1) cand.push(["cb:bolt", (pct(bolt) / 100) * (5 + Math.floor(G.s5Pow(S.stats.魔力) / 12)) * G.alive().length]);
     const ice = get("cb:ice");
-    if (ice && !majinWall && boss) cand.push(["cb:ice", (pct(ice) / 100) * (3.5 + Math.floor(S.stats.魔力 / 10)) * 1.8]);
+    if (ice && !majinWall && boss) cand.push(["cb:ice", (pct(ice) / 100) * (3.5 + Math.floor(G.s5Pow(S.stats.魔力) / 10)) * 1.8]);
     cand.sort((a, b) => b[1] - a[1]);
     if (cand.length) return cand[0][0];
     return list.find((a) => !a.disabled)?.id;
@@ -771,7 +770,7 @@ export function startRun(G, { goal, cls, seed, seeded, strong }) {
     profile: { name: "ボット", sex: "女", age: 24, history: "借金のかたに傭兵団へ売られ、腕一本で抜け出した", personality: "無口だが義理堅い" } });
   if (strong) {
     const S = G.S;
-    D.STATS.forEach((k) => { S.stats[k] = Math.max(S.stats[k], 70); S.caps[k] = 99; });
+    D.STATS.forEach((k) => { S.stats[k] = Math.max(S.stats[k], 40); S.caps[k] = 99; });   // 点（S5）。中盤の終わりくらい
     S.maxHp = S.hp = 999;
   }
   return G.S;

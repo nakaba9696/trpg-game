@@ -46,7 +46,7 @@
       const row = h("span", "b5hp num" + (c.hp <= 0 ? " down" : low(c.hp, m) ? " low" : ""));
       row.append(h("span", "", "HP"), bar(c.hp, m), h("span", "n", c.hp <= 0 ? "戦闘不能" : `${c.hp} / ${m}`));
       if (c.wounds > 0) row.append(h("span", "b5w", `深手 ${c.wounds}`));
-      row.title = `腕前 ${c.power || "?"}${G.b5 ? "・" + (G.b5.KIND[G.b5.kind(c)].name || "並び：中ほど") : ""}`;
+      row.title = `腕前 ${G.allyPt ? G.allyPt(c) : c.power || "?"}${G.b5 ? "・" + (G.b5.KIND[G.b5.kind(c)].name || "並び：中ほど") : ""}`;
       const t = el.querySelector("b") ? el.querySelector("b").parentNode : el;
       const b = t.querySelector("b");
       if (b && b.nextSibling) b.after(row); else t.append(row);

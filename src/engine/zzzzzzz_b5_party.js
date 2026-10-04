@@ -194,7 +194,7 @@
       S.mp -= 3;
       G.log("you", `${short(c)}に癒しの奇跡を祈る`);
       const r = G.check("魔力", "易しい", "癒しの奇跡", G.gearBonus("heal") + G.magicBonus());
-      if (r.ok) G.b5Heal(c, G.dice([2, 6, 2]) + Math.floor(S.stats.魔力 / 10));
+      if (r.ok) G.b5Heal(c, G.dice([2, 6, 2]) + Math.floor(G.s5Pow(S.stats.魔力) / 10));
       else G.say("祈りは届かなかった。");
       return true;
     }

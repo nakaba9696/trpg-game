@@ -33,8 +33,8 @@
   G.loc = (id) => D.LOCS[id || G.S.loc];
   G.itemInfo = (id) => D.ITEMS[id] || (String(id).startsWith("x:") ? { name: String(id).slice(2), type: "loot", price: 0 } : null);
   G.fameRank = (f) => { let r = D.FAME_RANKS[0][1]; D.FAME_RANKS.forEach(([n, name]) => { if (f >= n) r = name; }); return r; };
-  G.maxHpOf = (st) => 10 + Math.floor(st.体力 / 3);
-  G.maxMpOf = (st) => Math.floor(st.魔力 / 5);
+  G.maxHpOf = (st) => 10 + Math.floor(G.s5Pow(st.体力) / 3);   // 体の目盛り（S5）
+  G.maxMpOf = (st) => Math.floor(G.s5Pow(st.魔力) / 5);
   G.totalGrowth = (S) => D.STATS.reduce((a, k) => a + Math.max(0, S.stats[k] - S.startStats[k]), 0);
 
   // ---------------------------------------------------------------- 記録
@@ -136,28 +136,64 @@
   };
 
   // ---------------------------------------------------------------- 能力値・判定・成長
-  // S2：画面に出す能力値は点（割合 ÷ 4 の切り捨て）。S.stats・判定は成功率の尺度（0〜99）のまま。
-  // 能力値そのものに上限は無い（持ち主の決定。判定は 5〜95％で止まる）。S.caps は古いセーブに残っていても使わない
-  // 端数（0〜3）は経験で、4 たまると 1 点伸びる。古いセーブもそのまま点で見える。docs/s2_stats.md
-  G.PT = () => (D.S2 && D.S2.PCT) || 4;
+  // S5：能力値は「点」そのもの（S.stats。作成で 5〜18 ほど、やりこめば 99 まで。上限は無い）。docs/s2_stats.md
+  // 成功率は、自分の点と相手・難しさの点の差で決める（なめらかな曲線。G.s5p）。強い相手ほど、同じ点でも成功率が下がる。
+  //   差 0 で約 53％・+10 で約 81％・−10 で約 23％。5〜95％で止まる（G.chance）。
+  // 難しさ（D.DIFF）・敵の強さ（G.foeLv など。combat.js）も同じ目盛りの点。
+  // 補正（装備・種族・状態・武器の命中・道具の bonus など。データでは今までどおり「％」で書いてある）は 3 で割って点にする（G.s5Mod）。
+  // 成長は経験（S.s5exp）がたまって 1 点ずつ。高い点ほど次の 1 点に要る経験が多い（G.s5Need）。
+  // 古いセーブ（成功率の尺度 0〜99）は読み込むときに ÷4 して点にする（G.s5Upgrade。今までの見せ方 G.pt と同じ点）。
+  const S5 = () => D.S5 || { SCALE: 7.5, BIAS: 1, MOD: 3, NEED: 100, SLOPE: 30, BASE: 12 };
+  G.PT = () => (D.S2 && D.S2.PCT) || 1;
   G.pt = (v) => Math.floor(Math.max(0, v || 0) / G.PT());
   G.ptExp = (v) => Math.max(0, v || 0) % G.PT();
   G.ptStats = (st) => Object.fromEntries(D.STATS.map((k) => [k, G.pt((st || {})[k])]));
-  // 装備などの能力値の補正（判定に足す％）の書き方
-  G.statModText = (k, n) => `${k}${G.sign(n)}%`;
-  G.statEff = (k) => {
+  G.s5p = (delta) => 100 / (1 + Math.exp(-(delta + S5().BIAS) / S5().SCALE));   // 点の差 → 成功率（％。端数あり）
+  G.s5Mod = (n) => (n || 0) / S5().MOD;                                           // 補正（％で書いたもの）→ 点
+  // 体の目盛り：HP・MP・ダメージ・術の威力に効く量。20 点までは今までの割合と同じ（点×4）、その先は 1 点で 2 ずつ
+  G.s5Pow = (v) => { v = Math.max(0, v || 0); return v <= 20 ? v * 4 : 80 + (v - 20) * 2; };
+  // 次の 1 点に要る経験（100 が「今までの 4％ぶん」。12 点を超えると SLOPE 点ごとに 1 倍ずつ増える）
+  G.s5Need = (v) => S5().NEED * (1 + Math.max(0, (v || 0) - S5().BASE) / S5().SLOPE);
+  // 普通の判定（補正も場所の上乗せも無し）の成功率。画面の目安
+  G.s5Plain = (v) => G.clamp(Math.round(G.s5p((v || 0) - G.s5Target("普通"))), 5, 95);
+  // 能力値の棒の長さ（99 で満点。％）
+  G.s5Bar = (v) => G.clamp(Math.round(((v || 0) / 99) * 100), 0, 100);
+  // 次の点までの進み（0〜99％。画面用）
+  G.s5Progress = (k, S) => { S = S || G.S; const e = ((S && S.s5exp) || {})[k] || 0; return Math.min(99, Math.floor((100 * e) / G.s5Need(S.stats[k]))); };
+  // 装備などの能力値の補正の書き方（点）
+  G.statModText = (k, n) => `${k}${G.sign(Math.sign(n) * Math.max(1, Math.round(Math.abs(G.s5Mod(n)))))}`;
+  // 能力値への補正（％で書いたもの）。ほかの仕組みはこれではなく G.statEff を包んで点を足す
+  G.statModOf = (k) => {
     const S = G.S;
-    let v = S.stats[k];
+    let v = 0;
     if (k === "敏捷" && G.armor()) v += G.armor().agi || 0;
     if (G.ring() && G.ring().stats) v += G.ring().stats[k] || 0;
     if (S.conds.includes("毒") && (k === "筋力" || k === "体力")) v -= 10;
     if (S.conds.includes("呪い")) v -= 5;
     return v;
   };
-  G.diffMod = (diff) => (typeof diff === "number" ? diff : D.DIFF[diff] || 0);
-  G.chance = (stat, diff, extra) => G.clamp(G.statEff(stat) + G.diffMod(diff) + (extra || 0), 5, 95);
+  G.statEff = (k) => G.S.stats[k] + G.s5Mod(G.statModOf(k));
+  // 難しさ → 点。文字（易しい〜至難）は D.DIFF。数は今までの「成功率に足す％」（+20 で易しくなる）。{ vs: 点, name: 表示名 } はその点
+  // 出来事の判定だけは、その場所の危険の上乗せ（D.S5.ZONE。迷宮は深さも）を足す（G.s5EventDiff）
+  G.s5Zone = () => {
+    const S = G.S;
+    const L = S && G.loc();
+    if (!L) return 0;
+    const z = (S5().ZONE || [])[Math.min((S5().ZONE || []).length - 1, L.danger || 0)] || 0;
+    return z + (L.type === "dungeon" ? Math.min(10, S.depth || 0) * (S5().DEPTH || 0) : 0);
+  };
+  G.s5Target = (diff) => {
+    const base = (D.DIFF && D.DIFF.普通) || 13;
+    if (diff && typeof diff === "object") return diff.vs || 0;
+    if (typeof diff === "number") return base - G.s5Mod(diff);
+    if (typeof diff === "string" && D.DIFF[diff] !== undefined) return D.DIFF[diff];
+    return base;
+  };
+  G.s5EventDiff = (diff) => ({ vs: G.s5Target(diff || "普通") + G.s5Zone(), name: typeof diff === "string" ? diff : "普通" });
+  G.diffMod = (diff) => (typeof diff === "number" ? diff : 0);   // 古い呼び出しのため（使っていない）
+  G.chance = (stat, diff, extra) => G.clamp(Math.round(G.s5p(G.statEff(stat) + G.s5Mod(extra) - G.s5Target(diff))), 5, 95);
 
-  // 100面ダイスで判定。結果はログに残り、成功すると能力値が伸びることがある
+  // 100面ダイスで判定。結果はログに残り、成功すると経験がたまる（相手が自分より強いほど多く、弱いほど少なく）
   G.check = (stat, diff, reason, extra) => {
     const S = G.S;
     const chance = G.chance(stat, diff, extra);
@@ -169,28 +205,55 @@
     S.counters.checks++;
     if (crit) S.counters.crits++;
     if (fumble) S.counters.fumbles++;
-    const r = { stat, diff: typeof diff === "string" ? diff : "", reason: reason || "判定", chance, roll, ok, crit, fumble, label };
-    const cur = S.stats[stat];
+    const r = { stat, diff: typeof diff === "string" ? diff : (diff && diff.name) || "", reason: reason || "判定", chance, roll, ok, crit, fumble, label };
+    // 手ごわさ：相手の点が自分より高いほど伸びる（差 +15 で 2 倍、−11 で 4 分の 1）
+    const hard = G.clamp(1 + (G.s5Target(diff) - G.statEff(stat) - G.s5Mod(extra)) / 15, 0.25, 2);
     let g = 0;
-    if (ok && G.d(100) > cur) g = G.d(4);
-    else if (!ok && !fumble && G.rand() < 0.2) g = 1;
+    if (ok) g = G.d(4) * hard;
+    else if (!fumble && G.rand() < 0.2) g = hard;
     if (g) { const [a, b] = G.grow(stat, g); if (b > a) r.growth = [a, b]; }   // 点が上がったときだけ見せる
     G.log("dice", "", r);
     return r;
   };
 
-  // n は成功率の尺度で足す。返すのは [前の点, 後の点, 実際に増えた割合]
+  // n は経験（今までの「割合で +1〜4」と同じ数。12 点のとき 4 で 1 点）。返すのは [前の点, 後の点, 足した経験]
   G.grow = (k, n) => {
     const S = G.S;
+    n = Math.max(0, n || 0);
     const a = S.stats[k];
-    const b = a + Math.max(0, n);
+    if (!n) return [a, a, 0];
+    S.s5exp = S.s5exp || {};
+    let e = (S.s5exp[k] || 0) + n * (S5().NEED / 4);
+    let b = a;
+    while (e >= G.s5Need(b)) { e -= G.s5Need(b); b++; }
+    S.s5exp[k] = Math.round(e * 100) / 100;
     if (b > a) {
       S.stats[k] = b;
       if (k === "体力") { const m = G.maxHpOf(S.stats); S.hp += m - S.maxHp; S.maxHp = m; }
       if (k === "魔力") { const m = G.maxMpOf(S.stats); S.mp += m - S.maxMp; S.maxMp = m; }
     }
-    return [G.pt(a), G.pt(Math.max(a, b)), Math.max(0, b - a)];
+    return [a, b, n];
   };
+
+  // 古いセーブ（S.stats が成功率の尺度 0〜99）を点に読み替える。端数（0〜3）は経験にする。二度は換算しない（S.s5）
+  G.s5Upgrade = (S) => {
+    if (!S || S.s5 || !S.stats) return S;
+    const exp = {};
+    D.STATS.forEach((k) => {
+      const v = Math.max(0, S.stats[k] || 0);
+      S.stats[k] = Math.floor(v / 4);
+      exp[k] = (v % 4) * (S5().NEED / 4);
+      if (S.startStats) S.startStats[k] = Math.floor(Math.max(0, S.startStats[k] || 0) / 4);
+    });
+    S.s5exp = exp;
+    S.s5 = 1;
+    const hp = G.maxHpOf(S.stats), mp = G.maxMpOf(S.stats);
+    S.hp = Math.min(hp, Math.max(S.hp > 0 ? 1 : 0, S.hp + hp - (S.maxHp || hp))); S.maxHp = hp;
+    S.mp = Math.min(mp, Math.max(0, S.mp + mp - (S.maxMp || mp))); S.maxMp = mp;
+    return S;
+  };
+  // 墓碑の能力値（古いものは成功率の尺度）を点で
+  G.s5GraveStats = (g) => (g && g.s5 ? { ...(g.stats || {}) } : Object.fromEntries(D.STATS.map((k) => [k, Math.floor(((g && g.stats) || {})[k] / 4) || 0])));
 
   // ---------------------------------------------------------------- HP と死
   G.heal = (n) => { const S = G.S; S.hp = Math.min(S.maxHp, S.hp + n); };
@@ -234,7 +297,7 @@
     G.P.graves = [{
       id: S.id, name: S.profile.name, cls: S.clsName, goal: S.goal.text, end: S.over, cause: S.deathCause,
       date: G.date(), location: G.loc().name, turns: S.turn, fame: S.fame, title: S.title,
-      stats: { ...S.stats }, chronicle: S.chronicle.slice(-100), at: Date.now(),
+      stats: { ...S.stats }, s5: 1, chronicle: S.chronicle.slice(-100), at: Date.now(),
     }, ...G.P.graves.filter((g) => g.id !== S.id)].slice(0, 40);
     if (G.onFinish) G.onFinish();
   };
@@ -499,7 +562,7 @@
     if (c.next && !c.stat) { G.startEvent(c.next); return; }
     let o = c.ok;
     if (c.stat) {
-      const r = G.check(c.stat, c.diff || "普通", c.label, c.bonus ? G.gearBonus(c.bonus) : 0);
+      const r = G.check(c.stat, G.s5EventDiff(c.diff), c.label, c.bonus ? G.gearBonus(c.bonus) : 0);
       o = r.ok ? c.ok : c.ng;
     }
     G.apply(o);
@@ -516,6 +579,7 @@
       profile: { ...opt.profile }, cls: opt.cls, clsName: c.name,
       goal: { id: opt.goal, text: opt.goalText || D.GOALS[opt.goal].text },
       stats, caps: Object.fromEntries(D.STATS.map((k) => [k, 999])), startStats: { ...stats },   // caps は古い形のために置くだけ。上限としては使わない（S2）
+      s5: 1, s5exp: {},   // 能力値は点（S5）。s5exp は次の点までの経験
       maxHp: G.maxHpOf(stats), hp: G.maxHpOf(stats), maxMp: G.maxMpOf(stats), mp: G.maxMpOf(stats),
       gold: c.gold, fame: 0, title: "", inv: { ...c.items }, weapon: c.weapon, armor: c.armor, ring: "",
       companions: [], loc: c.start, visited: {}, day: 1, phase: 0, turn: 0,
@@ -543,7 +607,7 @@
     if (S.mode === "event") {
       return [{ title: "どうする？", list: G.eventChoices().map(({ c, i }) => {
         const sub = [];
-        if (c.stat) sub.push(`${c.stat}・${c.diff || "普通"} ${G.chance(c.stat, c.diff || "普通", c.bonus ? G.gearBonus(c.bonus) : 0)}%`);
+        if (c.stat) sub.push(`${c.stat}・${c.diff || "普通"} ${G.chance(c.stat, G.s5EventDiff(c.diff), c.bonus ? G.gearBonus(c.bonus) : 0)}%`);
         if (c.cost) sub.push(`${c.cost}G`);
         if (c.fight) sub.push("戦闘");
         return { id: "ev:" + i, label: c.label, sub: sub.join("・"), disabled: !!(c.cost && S.gold < c.cost) };

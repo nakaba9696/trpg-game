@@ -12,7 +12,7 @@
 
   D.M10 = {
     // 相性：あなたの魅力が charmHi 以上なら +1、charmLo 未満なら −1。惚れっぽい相手は +1（U10：主人公の性格は使わない）
-    COMPAT: { charmHi: 55, charmLo: 30 },
+    COMPAT: { charmHi: 14, charmLo: 8 },   // 点（S5）
     // あなたの歳に合わせた言い回し（{age_you}）
     AGE_YOU: {
       young: ["", "若さに任せて、", "考えるより先に、"],
