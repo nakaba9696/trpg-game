@@ -4,17 +4,21 @@
 //    出来事の結果に r3: "<id>" があると、D.R3_FOLLOW の場所に続きが出る（近場の頼みごと・噂の確かめ）。
 // 2. 死んだときの手がかり：何に・どんな様子で倒れたかと、次に試せそうなことを、世界の言葉で短く墓碑に残す（G.r3Clue）。
 //    弱点の名前・正解の選択肢は書かない。数も書かない。倒した敵の「聞いた話」（V12 の G.heard）に、分かったことを一つ足す。
-// セーブに足すもの：S.r3 = { hooks [id], seen { id: 1 }, follow { id: 1 }, cur }・S.r3fight（戦いに入ったときの傷の具合）・S.r3ev（最後に選んだ出来事）・S.r3clue。
+// 3. 目的への導線：出発地の冒険者ギルドに「掲示の隅の頼みごと」（src/data/r3_leads.js の D.R3_LEADS）。誰にでも同じ四つ。
+// セーブに足すもの：S.r3 = { hooks [id], seen { id: 1 }, follow { id: 1 か行き先の町 }, cur }・S.r3fight（戦いに入ったときの傷の具合）・S.r3ev（最後に選んだ出来事）・S.r3clue。
 // 墓碑に足すもの：g.r3 = { what, hint, foe }。古いセーブで無くても動く。DOM なし（画面は src/ui/zr3_grave.js）
 (function (G) {
   const D = G.data;
   const R3 = (G.r3 = G.r3 || {});
   R3.DAYS = 30;   // 出発地のきっかけが残る日数（それを過ぎると、町の人もそれぞれの用事に戻る）
+  R3.LEAD_DAYS = 60;   // ギルドの掲示の隅の頼みごとが残る日数
 
   const st = (S) => (S.r3 = S.r3 || { hooks: [], seen: {}, follow: {}, cur: "" });
 
   // ---------------------------------------------------------------- 1. 最初の一歩
   R3.hooksOf = (loc) => (D.R3_HOOKS || {})[loc] || [];
+  // 続きの行き先（受けた町で変わるものは、受けたときに決めて r.follow[id] に町の id を残す）
+  R3.followLoc = (r, id) => { const v = (r.follow || {})[id]; const f = (D.R3_FOLLOW || {})[id] || {}; return typeof v === "string" ? v : f.loc; };
   R3.open = (S) => {
     S = S || G.S;
     if (!S || !S.r3) return [];
@@ -24,9 +28,13 @@
     if (S.loc === r.home && (S.day || 1) <= R3.DAYS) {
       R3.hooksOf(r.home).filter((h) => r.hooks.includes(h.id) && !r.seen[h.id]).forEach((h) => out.push({ id: h.id, label: h.label, sub: h.sub, ev: h.ev }));
     }
+    // 目的への導線：出発地の町の冒険者ギルドの「掲示の隅の頼みごと」（誰にでも同じものが並ぶ）
+    if (S.mode === "fac" && S.fac === "guild" && (S.day || 1) <= R3.LEAD_DAYS) {
+      (D.R3_LEADS || []).filter((x) => x.towns.includes(S.loc) && !r.seen[x.id]).forEach((x) => out.push({ id: x.id, label: x.label, sub: x.sub, ev: x.ev, lead: true }));
+    }
     Object.keys(r.follow || {}).forEach((id) => {
       const f = (D.R3_FOLLOW || {})[id];
-      if (!f || f.loc !== S.loc) return;
+      if (!f || R3.followLoc(r, id) !== S.loc) return;
       if (L && L.type === "dungeon" && (S.depth || 0) < (f.depth || 0)) return;
       if (L && L.type === "dungeon" && !f.depth && S.depth) return;
       out.push({ id, label: f.label, sub: f.sub, ev: f.ev, follow: true });
@@ -61,6 +69,16 @@
     return groups;
   };
 
+  const baseFac = G.facActions;
+  G.facActions = () => {
+    const groups = baseFac();
+    const S = G.S;
+    if (!S || S.mode !== "fac" || S.fac !== "guild") return groups;
+    const list = R3.open(S).filter((x) => x.lead).map((x) => ({ id: "r3:" + x.id, label: x.label, sub: x.sub, kw: [] }));
+    if (list.length) groups.splice(Math.max(0, groups.length - 1), 0, { title: "掲示の隅の頼みごと", list });
+    return groups;
+  };
+
   const baseAct = G.exploreAct;
   G.exploreAct = (head, arg, a) => {
     if (head !== "r3") return baseAct(head, arg, a);
@@ -82,7 +100,13 @@
     if (!o || !o.r3 || !S || S.over) return;
     const r = st(S);
     if (r.cur) delete r.follow[r.cur];
-    if ((D.R3_FOLLOW || {})[o.r3]) r.follow[o.r3] = 1;
+    const f = (D.R3_FOLLOW || {})[o.r3];
+    if (f) {
+      const at = f.at ? f.at[S.loc] || f.at[r.home] || Object.values(f.at)[0] : "";
+      r.follow[o.r3] = at || 1;
+      const to = D.LOCS[at || f.loc];
+      if (to && (at || f.loc) !== S.loc) G.note(`「${f.sub}」の行き先：${to.name}`);
+    }
     r.cur = "";
     r3Set = true;
   };

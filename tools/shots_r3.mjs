@@ -1,6 +1,6 @@
-// R3：出発地に着いた直後（「気になること」）と、死の画面（墓碑の「倒れたわけ」）を撮る（Playwright。Chromium は PLAYWRIGHT_BROWSERS_PATH のもの）
+// R3：出発地に着いた直後（「気になること」）・ギルドの掲示の隅の頼みごと・死の画面（墓碑の「倒れたわけ」）を撮る（Playwright。Chromium は PLAYWRIGHT_BROWSERS_PATH のもの）
 // node tools/build.mjs && node tools/shots_r3.mjs
-// docs/shots/r3/<pc|phone>_<arrive|grave>.jpg を書く
+// docs/shots/r3/<pc|phone>_<arrive|guild|grave>.jpg を書く
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -30,6 +30,9 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
     const t = document.querySelector("#toast"); if (t) t.style.display = "none";
   });
   await shot("arrive");
+  await page.evaluate(() => { G.act("fac:guild"); G.ui.render(); const g = [...document.querySelectorAll("h3,h4,.gtitle,div")].find((e) => e.textContent.trim() === "掲示の隅の頼みごと"); if (g) g.scrollIntoView({ block: "center" }); });
+  await shot("guild");
+  await page.evaluate(() => { G.act("back"); G.ui.render(); });
   await page.evaluate(() => {
     const S = G.S;
     S.loc = "forest"; S.visited.forest = true;

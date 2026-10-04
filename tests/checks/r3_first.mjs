@@ -186,4 +186,65 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     all.forEach(([id, i, k, from, to]) => { if (/！/.test(to)) F(`${id}[${i}].${k}: 直した文に「！」`); if (to.length <= from.length) F(`${id}[${i}].${k}: 直した文が短くなった`); });
     ok(`R3 結果の文の直し ${D.R3_CLARITY_FIXED}/${all.length}`);
   }
+
+  // ---- 6. 目的への導線（ギルドの掲示の隅の頼みごと）：どの目的にも序盤の導線がある・誰にでも同じものが並ぶ・答えやメタな言葉が無い
+  {
+    const n0 = before.n;
+    const D0 = loadEngine().data;
+    const leads = D0.R3_LEADS || [];
+    const homes = [...new Set(Object.values(D0.CLASSES).map((c) => c.start))];
+    for (const goal of Object.keys(D0.GOALS)) {
+      if (goal !== "custom" && !leads.some((l) => l.dir === goal)) F(`目的 ${goal} への導線になる依頼が無い`);
+    }
+    // 出発地のギルドに入ると並ぶ（目的によらず同じ）
+    for (const home of homes) {
+      const seen = new Set();
+      for (const goal of Object.keys(D0.GOALS)) {
+        const G = loadEngine();
+        const cls = Object.keys(G.data.CLASSES).find((c) => G.data.CLASSES[c].start === home);
+        G.rand = seeded(7);
+        G.newGame({ cls, stats: Object.fromEntries(G.data.STATS.map((k) => [k, 14])), goal, goalText: goal === "custom" ? "海を見る" : undefined, profile: { name: "テスト", sex: "男", age: 30, history: "", personality: "" } });
+        G.act("fac:guild");
+        const g = G.actions().find((x) => x.title === "掲示の隅の頼みごと");
+        const ids = g ? g.list.map((a) => a.id).sort().join(",") : "";
+        if (!g) F(`${home}（${goal}）：ギルドに入っても掲示の隅の頼みごとが無い`);
+        seen.add(ids);
+        if (g && !G.actions().some((x) => x.list.some((a) => a.id === "back"))) F(`${home}：ギルドを出る行動が消えた`);
+      }
+      if (seen.size !== 1) F(`${home}：目的によって並ぶ頼みごとが変わる（誰でも受けられる形でない）`);
+    }
+    // 答え・目的の名前・メタな言葉を書かない
+    const BAN = /伝説の剣|ヴォルグリム|白夜|竜の墓場|鬼ヶ島|王になる|国王に|大富豪|大金持ち|使徒を討|目的|宿願|あなたの望み|！/;
+    const texts = [];
+    const out = (w, o) => { if (!o) return; ["text", "memo", "chron"].forEach((k) => o[k] && texts.push([w, o[k]])); out(w + ".win", o.win); };
+    leads.forEach((l) => texts.push([l.id, l.label + l.sub]));
+    D0.EVENTS.filter((e) => /^r3_/.test(e.id)).forEach((e) => { texts.push([e.id, e.title + e.text]); e.choices.forEach((c, i) => { texts.push([e.id, c.label]); out(`${e.id}[${i}].ok`, c.ok); out(`${e.id}[${i}].ng`, c.ng); out(`${e.id}[${i}]`, { win: c.win }); }); });
+    texts.forEach(([w, t]) => { if (BAN.test(t)) F(`${w}：答えか目的の名前・メタな言葉「${t.match(BAN)[0]}」`); if (DIGIT.test(t.replace(/[0-9]+G/g, ""))) F(`${w}：文に数がある`); });
+    // 通しで：受けて、行き先に続きが出て、終わる
+    let done = 0;
+    for (const home of homes) for (const l of leads) {
+      const G = loadEngine();
+      const D = G.data;
+      const cls = Object.keys(D.CLASSES).find((c) => D.CLASSES[c].start === home);
+      const S = start(G, cls, 31);
+      G.rand = () => 0.01;
+      G.act("fac:guild");
+      G.act("r3:" + l.id);
+      if (S.event !== l.ev) { F(`${home} ${l.id}: 出来事が始まらない`); continue; }
+      const acc = G.eventChoices().find(({ c }) => c.ok && c.ok.r3 && !c.stat) || G.eventChoices()[0];
+      G.act("ev:" + acc.i);
+      const fid = Object.keys(S.r3.follow)[0];
+      if (!fid) { done++; continue; }
+      const to = G.r3.followLoc(S.r3, fid);
+      if (!D.LOCS[to]) { F(`${l.id}: 行き先 ${to} が無い`); continue; }
+      if (to !== home && !(D.LOCS[home].links || {})[to]) F(`${home} ${l.id}: 行き先 ${to} が隣でない（近場でない）`);
+      S.loc = to; S.mode = "explore"; S.fac = null; S.depth = 0;
+      const a = (G.actions().find((x) => x.title === "気になること") || { list: [] }).list.find((x) => x.id === "r3:" + fid);
+      if (!a) { F(`${home} ${l.id}: ${to} で続きが出ない`); continue; }
+      G.act(a.id);
+      G.act("ev:" + G.eventChoices().find(({ c }) => c.stat).i);
+      if (S.r3.follow[fid]) F(`${home} ${l.id}: 続きが終わらない`); else done++;
+    }
+    if (before.n === n0) ok(`R3 目的への導線（${leads.map((l) => `${l.dir}:${l.id}`).join("・")}・通しで ${done} 件）`);
+  }
 };
