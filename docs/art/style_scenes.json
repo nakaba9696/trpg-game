@@ -1,0 +1,29 @@
+{
+ "_comment": "背景の絵の設定（A11。tools/gen_scenes.mjs が読む。人物の style.json とは別）。手元だけで変えたいときは docs/art/style_scenes.local.json（git に入れない）に同じ名前の項目を書く。プロンプト ＝ prefix ＋ 案（variants）の prefix_add ＋ 一覧の特徴のタグ ＋ suffix（屋外は suffix_place、室内・迷宮は suffix_inside）＋ 空（一覧に sky が無い屋外だけ daytime）",
+ "url": "http://127.0.0.1:7860",
+ "prefix": "masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest",
+ "variant": "plain",
+ "variants": {
+  "_comment": "2 案。試しの 5 枚（--trial）は両方で作って docs/art/scenes_trial/ に並べるので、持ち主が見比べて variant を決める。prefix_add に書いてよいのは人物の設定（style.json・style_monsters.json）の prefix にある語だけ（作家名・作品名を新しく足さない。tests/checks/a11_scenes.mjs が見る）",
+  "plain": { "label": "背景らしさを優先（絵師タグなし）", "prefix_add": "" },
+  "artist": { "label": "立ち絵の絵師タグを使い回す（立ち絵と並べて浮かない）", "prefix_add": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu" }
+ },
+ "suffix_place": "scenery, no humans, landscape, wide shot, detailed background, outdoors, fantasy, medieval",
+ "suffix_inside": "scenery, no humans, indoors, wide shot, detailed background, fantasy, medieval, empty room",
+ "daytime": "day, clear sky, natural daylight",
+ "negative": "1girl, 1boy, girl, boy, woman, man, people, person, character, human, multiple girls, multiple boys, crowd, group, solo, portrait, face, body, silhouette of a person, figure, child, animal ears, text, watermark, signature, username, logo, stamp, date, letters, speech bubble, frame, border, ui, worst quality, low quality, bad quality, displeasing, lowres, jpeg artifacts, blurry, chromatic aberration, scan, unfinished, artistic error, modern, car, power lines, skyscraper, nsfw",
+ "styles": [],
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "steps": 24,
+ "cfg_scale": 5.5,
+ "width": 1344,
+ "height": 768,
+ "seed": -1,
+ "enable_hr": false,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "webpQuality": 72,
+ "_comment_save": "保存は一覧の size.save（1232×704。縦横の比は 1344×768 と同じ）の webp。maxKB（150）を超えたら webpQuality を 8 ずつ下げて作り直す（50 まで）"
+}

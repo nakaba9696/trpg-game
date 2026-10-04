@@ -1,0 +1,691 @@
+{
+ "_comment": "背景の絵の一覧（A11）。tools/gen_scenes.mjs が読み、assets/scenes/<id>.webp を作る。md は node tools/scenes.mjs で作る。tags は季節・天候・時間帯に依らない見た目だけ（時間帯・季節・天候はゲームが色味と粒で重ねる）。sky：night・red はその場所の空が決まっている（朧島は夜、使徒領は赤い空）。pack：ビルドで何枚かずつ 1 つのスプライトにまとめる組（tools/assets.mjs）。trial：試しの 5 枚",
+ "size": {
+  "width": 1344,
+  "height": 768,
+  "save": {
+   "width": 1232,
+   "height": 704
+  },
+  "maxKB": 150
+ },
+ "scenes": [
+  {
+   "id": "karna",
+   "kind": "place",
+   "scene": "town",
+   "type": "town",
+   "region": "自由都市連合",
+   "name": "自由都市ブランデール",
+   "pack": "west",
+   "tags": "medieval fantasy town, cobblestone main street, half-timbered houses, money changer signboards, large guild hall with banners, stone town gate, grassy low hills beyond the town wall",
+   "trial": true
+  },
+  {
+   "id": "nerva",
+   "kind": "place",
+   "scene": "port",
+   "type": "town",
+   "region": "自由都市連合",
+   "name": "港町ヴァレンツァ",
+   "pack": "west",
+   "tags": "harbor town, wooden piers, moored sailing ships with heavy wet sails, fishing nets, warehouses, misty sea, lighthouse, seagulls",
+   "trial": true
+  },
+  {
+   "id": "forest",
+   "kind": "place",
+   "scene": "forest",
+   "type": "wild",
+   "region": "自由都市連合",
+   "name": "迷いの森",
+   "pack": "west",
+   "tags": "dense dark forest, branches interlocking overhead, thick moss on the ground, gnarled old trees, dim light through the canopy, narrow overgrown path, old barrel by the path",
+   "trial": true
+  },
+  {
+   "id": "ruins",
+   "kind": "place",
+   "scene": "ruins",
+   "type": "dungeon",
+   "region": "自由都市連合",
+   "name": "エル・ナフ遺構",
+   "pack": "west",
+   "tags": "ancient ruins, broken white stone pillars standing in tall grass like ribs, crumbling stone stairs leading underground, huge circular stone tablet carved with symbols, overgrown"
+  },
+  {
+   "id": "w3_bells",
+   "kind": "place",
+   "scene": "w3_bells",
+   "type": "wild",
+   "region": "自由都市連合",
+   "name": "鐘撞きの丘",
+   "pack": "west",
+   "tags": "low grassy hills, an old stone watchtower on each hilltop, bronze bell hanging in each tower, bell ropes, windy grassland"
+  },
+  {
+   "id": "w1_holy",
+   "kind": "place",
+   "scene": "w1_holy",
+   "type": "town",
+   "region": "光天教会領",
+   "name": "聖都エルヴィナ",
+   "pack": "west",
+   "tags": "holy city, white stone pavement, golden spires, grand cathedral, many bell towers, pilgrim road lined with candles and flowers"
+  },
+  {
+   "id": "w1_catacomb",
+   "kind": "place",
+   "scene": "w1_catacomb",
+   "type": "dungeon",
+   "region": "光天教会領",
+   "name": "エルヴィナの地下墓地",
+   "pack": "west",
+   "tags": "stone stairway descending to catacombs beneath a cathedral, archway lined with bones and skulls, rows of candles, iron gate"
+  },
+  {
+   "id": "w3_abbey",
+   "kind": "place",
+   "scene": "w3_abbey",
+   "type": "wild",
+   "region": "光天教会領",
+   "name": "沈黙の修道院",
+   "pack": "west",
+   "tags": "roofless ruined monastery on a hill of cypress trees, stone gate with carved inscription, courtyard with old well, loaf of bread on the well edge, quiet"
+  },
+  {
+   "id": "plains",
+   "kind": "place",
+   "scene": "plains",
+   "type": "wild",
+   "region": "レオネスト王国",
+   "name": "白銀の丘陵",
+   "pack": "leonest",
+   "tags": "rolling hills, white pampas grass waving in the wind, wide open view, dirt road, lone tree, distant hills"
+  },
+  {
+   "id": "leavel",
+   "kind": "place",
+   "scene": "castle",
+   "type": "town",
+   "region": "レオネスト王国",
+   "name": "王都レオネスト",
+   "pack": "leonest",
+   "tags": "royal capital, white castle walls, grand white castle with spires, main avenue decorated with flowers, noble mansions with heavy curtained windows, royal banners"
+  },
+  {
+   "id": "w2_granbel",
+   "kind": "place",
+   "scene": "w2_farm",
+   "type": "town",
+   "region": "レオネスト王国",
+   "name": "麦の都グランベール",
+   "pack": "leonest",
+   "tags": "endless golden wheat fields, many windmills, farming town, crooked field boundaries, young forest where old fields used to be"
+  },
+  {
+   "id": "w2_dranherz",
+   "kind": "place",
+   "scene": "w2_forge",
+   "type": "town",
+   "region": "レオネスト王国",
+   "name": "鍛冶の都ドランヘルツ",
+   "pack": "leonest",
+   "tags": "forge town clinging to a mountainside, countless chimneys, smoke, stone houses on steep slope, glowing furnaces, anvils"
+  },
+  {
+   "id": "w3_carmeland",
+   "kind": "place",
+   "scene": "w3_harbor",
+   "type": "town",
+   "region": "レオネスト王国",
+   "name": "港の商都カルメラント",
+   "pack": "leonest",
+   "tags": "merchant harbor city in a cove, crowded warehouses and counting houses, cargo cranes, crates and barrels on the quay, small brass bells hanging at doorways"
+  },
+  {
+   "id": "w3_lignoa",
+   "kind": "place",
+   "scene": "w3_lake",
+   "type": "town",
+   "region": "レオネスト王国",
+   "name": "森と湖の都リグノア",
+   "pack": "leonest",
+   "tags": "fortress city on a lake, surrounded by deep forest, raised drawbridge, stone walls, calm lake, flock of birds over the forest"
+  },
+  {
+   "id": "w3_frosleia",
+   "kind": "place",
+   "scene": "w3_volcano",
+   "type": "town",
+   "region": "レオネスト王国",
+   "name": "火山の都フロスレイア",
+   "pack": "leonest",
+   "tags": "volcano city, black ash slopes, white plaster houses in terraces, research observatory, brooms leaning on ash-covered roofs, smoking volcano behind"
+  },
+  {
+   "id": "w3_ashvault",
+   "kind": "place",
+   "scene": "w3_ashvault",
+   "type": "dungeon",
+   "region": "レオネスト王国",
+   "name": "灰の観測所",
+   "pack": "leonest",
+   "tags": "half-buried domed observatory in volcanic ash, on a volcano slope, door boarded up with planks, ash-covered ground"
+  },
+  {
+   "id": "frost",
+   "kind": "place",
+   "scene": "snow",
+   "type": "wild",
+   "region": "ノルディア帝国",
+   "name": "凍てつく街道",
+   "pack": "nordia",
+   "tags": "frozen highway across a snowfield, blizzard, snow-covered wooden signpost, dead trees, distant snowy mountains"
+  },
+  {
+   "id": "garmund",
+   "kind": "place",
+   "scene": "snowcity",
+   "type": "town",
+   "region": "ノルディア帝国",
+   "name": "帝都ノルディア",
+   "pack": "nordia",
+   "tags": "military capital of black stone, snow, fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets"
+  },
+  {
+   "id": "w2_zalgros",
+   "kind": "place",
+   "scene": "w2_arena",
+   "type": "town",
+   "region": "ノルディア帝国",
+   "name": "闘技の都ザルグロス",
+   "pack": "nordia",
+   "tags": "huge bowl-shaped stone colosseum in the snow, barracks, betting booths, bandage shop signs, snowy town, banners"
+  },
+  {
+   "id": "w4_kaesverg",
+   "kind": "place",
+   "scene": "w4_mine",
+   "type": "town",
+   "region": "ノルディア帝国",
+   "name": "鉱山の都カースヴェルグ",
+   "pack": "nordia",
+   "tags": "mining town in snowy mountains, mine entrances in the mountainside with smoke, old iron rails running through the town, rusted mine cart covered in snow"
+  },
+  {
+   "id": "w4_valmiria",
+   "kind": "place",
+   "scene": "w4_market",
+   "type": "town",
+   "region": "ノルディア帝国",
+   "name": "市の都ヴァルミリア",
+   "pack": "nordia",
+   "tags": "snowy town square where four roads meet, large market of colorful tents, tall stone pillar in the center, snow"
+  },
+  {
+   "id": "w4_oldrail",
+   "kind": "place",
+   "scene": "w4_rail",
+   "type": "dungeon",
+   "region": "ノルディア帝国",
+   "name": "古い鉄の道",
+   "pack": "nordia",
+   "tags": "abandoned mine entrance in a snowy mountain, ancient iron railway tracks leading inside, boarded wooden barricade, rusted machinery"
+  },
+  {
+   "id": "fort",
+   "kind": "place",
+   "scene": "fort",
+   "type": "town",
+   "region": "人類の最前線",
+   "name": "黒鉄の砦",
+   "pack": "border",
+   "tags": "black iron fortress wall blocking a narrow mountain pass, watchtowers with alarm bells, graveyard outside the wall, rugged mountains"
+  },
+  {
+   "id": "w4_watch",
+   "kind": "place",
+   "scene": "w4_watch",
+   "type": "wild",
+   "region": "人類の最前線",
+   "name": "鐘の見張り塔",
+   "pack": "border",
+   "tags": "line of stone watchtowers stretching to the horizon, alarm bell on top of each tower, barren plain, northeast road"
+  },
+  {
+   "id": "mountains",
+   "kind": "place",
+   "scene": "mountain",
+   "type": "wild",
+   "region": "人と魔の境",
+   "name": "断界山脈",
+   "pack": "border",
+   "tags": "towering jagged mountain peaks, sea of clouds below, narrow ridge trail, cold thin air, snowy summits"
+  },
+  {
+   "id": "graveyard",
+   "kind": "place",
+   "scene": "bones",
+   "type": "dungeon",
+   "region": "人と魔の境",
+   "name": "竜の墓場",
+   "pack": "border",
+   "tags": "valley of giant dragon skeletons, huge white ribcages taller than houses, piles of bones, wind-swept barren valley"
+  },
+  {
+   "id": "w4_pass",
+   "kind": "place",
+   "scene": "w4_pass",
+   "type": "dungeon",
+   "region": "人と魔の境",
+   "name": "断界の古関",
+   "pack": "border",
+   "tags": "ancient massive stone gatehouse sealing a mountain crevice, unreadable inscription above the gate, height notches carved on the gate, cliffs"
+  },
+  {
+   "id": "w2_echo",
+   "kind": "place",
+   "scene": "w2_echo",
+   "type": "wild",
+   "region": "ノルディア帝国",
+   "name": "懺悔の谷",
+   "pack": "border",
+   "tags": "valley with crumbled city walls, roofless houses half-buried in the valley floor, steep cliffs, desolate"
+  },
+  {
+   "id": "w2_shadow",
+   "kind": "place",
+   "scene": "w2_shadow",
+   "type": "wild",
+   "region": "ノルディア帝国",
+   "name": "影の谷",
+   "pack": "border",
+   "tags": "ruined empty town, black scorched shadow stains on walls and cobblestones, laundry lines, abandoned streets"
+  },
+  {
+   "id": "w2_acid",
+   "kind": "place",
+   "scene": "w2_acid",
+   "type": "dungeon",
+   "region": "ノルディア帝国",
+   "name": "酸の谷",
+   "pack": "border",
+   "tags": "melting valley, green acidic steam, rows of rusted giant iron robots kneeling, corroded metal, toxic pools"
+  },
+  {
+   "id": "zephara",
+   "kind": "place",
+   "scene": "magic",
+   "type": "town",
+   "region": "エルメシア共和国",
+   "name": "首都エルメシア",
+   "pack": "elmesia",
+   "tags": "floating crystal towers in the sky, elegant city of elves, council hall at the top of long stairs, gigantic world tree in the far distance, greenery"
+  },
+  {
+   "id": "swamp",
+   "kind": "place",
+   "scene": "swamp",
+   "type": "wild",
+   "region": "エルメシア共和国",
+   "name": "毒沼の湿地",
+   "pack": "elmesia",
+   "tags": "toxic swamp, murky green water, rotting dead trees, purple mist, bubbles, reeds"
+  },
+  {
+   "id": "e2_garden",
+   "kind": "place",
+   "scene": "e2_garden",
+   "type": "dungeon",
+   "region": "エルメシア共和国",
+   "name": "腐れ庭園",
+   "pack": "elmesia",
+   "tags": "beautiful flower garden in the middle of a swamp, perfectly trimmed flowerbeds, unnaturally vivid flowers, mist, eerie"
+  },
+  {
+   "id": "w2_amyrein",
+   "kind": "place",
+   "scene": "w2_spa",
+   "type": "town",
+   "region": "エルメシア共和国",
+   "name": "湯の町アミュレイン",
+   "pack": "elmesia",
+   "tags": "quiet hot spring town by a lake, steam rising, wooden bathhouses, stone baths, calm lake"
+  },
+  {
+   "id": "w2_nagris",
+   "kind": "place",
+   "scene": "w2_hunt",
+   "type": "town",
+   "region": "エルメシア共和国",
+   "name": "狩り場の町ナグリス",
+   "pack": "elmesia",
+   "tags": "town built on huge tree branches, treehouses, rope bridges, giant world tree silhouette filling the eastern sky, forest"
+  },
+  {
+   "id": "w4_tulier",
+   "kind": "place",
+   "scene": "w4_water",
+   "type": "town",
+   "region": "エルメシア共和国",
+   "name": "水の都トゥリエル",
+   "pack": "elmesia",
+   "tags": "water town on a lake, wooden boardwalks, houses and council hall on stilts, stargazing tower, small boats, reflection of a giant tree on the lake"
+  },
+  {
+   "id": "w4_silent",
+   "kind": "place",
+   "scene": "w4_silent",
+   "type": "wild",
+   "region": "エルメシア共和国",
+   "name": "沈黙の森",
+   "pack": "elmesia",
+   "tags": "silent forest, faded white paper talismans stuck on tree trunks, still air, pale light, birds perched on branches"
+  },
+  {
+   "id": "yakumo",
+   "kind": "place",
+   "scene": "yakumo",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "島の都シェルアーク",
+   "pack": "isles",
+   "tags": "sea city built across small islands, wooden walkway bridges between islands, fish drying racks, barrels, small boats, sailing ships offshore"
+  },
+  {
+   "id": "onigashima",
+   "kind": "place",
+   "scene": "onigashima",
+   "type": "dungeon",
+   "region": "シェルアーク",
+   "name": "鬼ヶ島の洞窟",
+   "pack": "isles",
+   "tags": "rocky island, huge cave mouth, rough sea, sake barrels, bonfire smoke from the cave"
+  },
+  {
+   "id": "w1_oboro",
+   "kind": "place",
+   "scene": "w1_oboro",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "シェルアーク・朧島",
+   "pack": "isles",
+   "tags": "night, island festival, paper lanterns hanging from the beach to a shrine on the cape, incense smoke drifting low, festival stalls, cherry trees",
+   "sky": "night"
+  },
+  {
+   "id": "w3_driftisle",
+   "kind": "place",
+   "scene": "w3_isles",
+   "type": "wild",
+   "region": "シェルアーク",
+   "name": "数の合わない島",
+   "pack": "isles",
+   "tags": "many scattered small islands in the sea, sandbars, small rowboat on a beach, calm sea"
+  },
+  {
+   "id": "w3_seacave",
+   "kind": "place",
+   "scene": "w3_seacave",
+   "type": "dungeon",
+   "region": "シェルアーク",
+   "name": "潮鳴りの洞",
+   "pack": "isles",
+   "tags": "sea cave on a rocky shore, cave mouth at low tide, tide pools, seaweed, waves"
+  },
+  {
+   "id": "wasteland",
+   "kind": "place",
+   "scene": "realm",
+   "type": "wild",
+   "region": "使徒領",
+   "name": "使徒領・灰の荒野",
+   "pack": "realm",
+   "tags": "red sky, ash falling like snow, ashen wasteland, barren grey dunes, distant dark spires, apocalyptic",
+   "sky": "red"
+  },
+  {
+   "id": "majincastle",
+   "kind": "place",
+   "scene": "majin",
+   "type": "dungeon",
+   "region": "使徒領",
+   "name": "黒鎧の使徒の居城",
+   "pack": "realm",
+   "tags": "castle made of bones and black iron, open gate, red sky, ominous fortress, ash in the air",
+   "sky": "red"
+  },
+  {
+   "id": "e2_kitchen",
+   "kind": "place",
+   "scene": "e2_kitchen",
+   "type": "dungeon",
+   "region": "使徒領",
+   "name": "肉の谷の大厨房",
+   "pack": "realm",
+   "tags": "gigantic castle-like kitchen building at the bottom of a valley, many chimneys with steam, red sky, giant cauldrons",
+   "sky": "red"
+  },
+  {
+   "id": "w4_canopy",
+   "kind": "place",
+   "scene": "w4_canopy",
+   "type": "wild",
+   "region": "使徒領",
+   "name": "使徒領・天蓋の原",
+   "pack": "realm",
+   "tags": "white salt flat, mirror-like ground reflecting the sky, blurred horizon, huge round shadow on the ground"
+  },
+  {
+   "id": "in_inn",
+   "kind": "facility",
+   "scene": "inn",
+   "name": "宿屋",
+   "pack": "town_in",
+   "tags": "cozy inn interior, wooden beams, fireplace, tables and chairs, staircase to guest rooms, lanterns, warm light"
+  },
+  {
+   "id": "in_tavern",
+   "kind": "facility",
+   "scene": "tavern",
+   "name": "酒場",
+   "pack": "town_in",
+   "tags": "medieval tavern interior, long wooden bar counter, ale barrels, mugs, round tables, candlelight, notice board",
+   "trial": true
+  },
+  {
+   "id": "in_shop",
+   "kind": "facility",
+   "scene": "shop",
+   "name": "商店",
+   "pack": "town_in",
+   "tags": "general store interior, shelves full of potions and goods, weapons on the wall, counter with scales"
+  },
+  {
+   "id": "in_guild",
+   "kind": "facility",
+   "scene": "guild",
+   "name": "冒険者ギルド",
+   "pack": "town_in",
+   "tags": "adventurers guild hall interior, reception counter, notice board covered in papers, wooden benches, banners"
+  },
+  {
+   "id": "in_church",
+   "kind": "facility",
+   "scene": "church",
+   "name": "教会",
+   "pack": "town_in",
+   "tags": "church interior, stained glass windows, rows of pews, altar with candles, stone pillars, light rays"
+  },
+  {
+   "id": "in_train",
+   "kind": "facility",
+   "scene": "train",
+   "name": "訓練場",
+   "pack": "town_in",
+   "tags": "training hall interior, wooden floor, practice dummies, weapon racks, sandbags"
+  },
+  {
+   "id": "in_alley",
+   "kind": "facility",
+   "scene": "alley",
+   "name": "裏路地",
+   "pack": "town_in",
+   "tags": "dark back alley, narrow street between buildings, crates, puddles, hanging laundry, dim lamp"
+  },
+  {
+   "id": "in_throne",
+   "kind": "facility",
+   "scene": "throne",
+   "name": "王城（玉座の間）",
+   "pack": "special_in",
+   "tags": "throne room, empty throne, red carpet, tall pillars, royal banners, high windows"
+  },
+  {
+   "id": "in_academy",
+   "kind": "facility",
+   "scene": "academy",
+   "name": "学院",
+   "pack": "special_in",
+   "tags": "magic academy library, tall bookshelves, floating books, astronomical instruments, magic circle on the floor"
+  },
+  {
+   "id": "in_forge",
+   "kind": "facility",
+   "scene": "forge",
+   "name": "鍛冶場（ドランヘルツ）",
+   "pack": "special_in",
+   "tags": "blacksmith forge interior, glowing furnace, anvil, hammers and tongs, hot iron, sparks"
+  },
+  {
+   "id": "in_arena",
+   "kind": "facility",
+   "scene": "arena",
+   "name": "闘技場（ザルグロス）",
+   "pack": "special_in",
+   "tags": "colosseum arena floor, sand, empty stone stands, iron gate, snow on the rim"
+  },
+  {
+   "id": "in_bath",
+   "kind": "facility",
+   "scene": "bath",
+   "name": "湯（アミュレイン）",
+   "pack": "special_in",
+   "tags": "hot spring bathhouse, stone bath, steam, wooden walls, lake view"
+  },
+  {
+   "id": "in_field",
+   "kind": "facility",
+   "scene": "field",
+   "name": "畑（グランベール）",
+   "pack": "special_in",
+   "tags": "wheat field next to a windmill, golden wheat, farm path, blue sky"
+  },
+  {
+   "id": "in_hunt",
+   "kind": "facility",
+   "scene": "hunt",
+   "name": "狩り場（ナグリス）",
+   "pack": "special_in",
+   "tags": "hunting ground in a deep forest, morning mist, animal tracks, hunting blind, giant trees"
+  },
+  {
+   "id": "in_dungeon",
+   "kind": "dungeon",
+   "scene": "dungeon",
+   "name": "石の通路（迷宮の中の汎用）",
+   "pack": "dungeon_a",
+   "tags": "dungeon corridor, stone brick walls, torches, dark depths, cobwebs"
+  },
+  {
+   "id": "in_cave",
+   "kind": "dungeon",
+   "scene": "cave",
+   "name": "洞窟（迷宮の中の汎用）",
+   "pack": "dungeon_a",
+   "tags": "natural cave, stalactites, damp rock, faint glow, underground"
+  },
+  {
+   "id": "in_ruins",
+   "kind": "dungeon",
+   "scene": "ruins_in",
+   "name": "エル・ナフ遺構の中",
+   "pack": "dungeon_a",
+   "tags": "inside ancient ruins, underground temple hall, broken pillars, carved glyphs, dust, light from cracks in the ceiling",
+   "trial": true
+  },
+  {
+   "id": "in_w1_catacomb",
+   "kind": "dungeon",
+   "scene": "w1_catacomb_in",
+   "name": "エルヴィナの地下墓地の中",
+   "pack": "dungeon_a",
+   "tags": "catacombs, walls and ceiling made of skulls and bones, skeletal hands folded in prayer, candles, endless tunnels"
+  },
+  {
+   "id": "in_w3_ashvault",
+   "kind": "dungeon",
+   "scene": "w3_ashvault_in",
+   "name": "灰の観測所の中",
+   "pack": "dungeon_a",
+   "tags": "inside an abandoned observatory, ash-covered telescope, broken instruments, boarded windows, dome ceiling"
+  },
+  {
+   "id": "in_w4_rail",
+   "kind": "dungeon",
+   "scene": "w4_rail_in",
+   "name": "古い鉄の道の中",
+   "pack": "dungeon_a",
+   "tags": "abandoned mine tunnel, ancient iron rails, rusted machinery, timber supports, darkness"
+  },
+  {
+   "id": "in_w4_pass",
+   "kind": "dungeon",
+   "scene": "w4_pass_in",
+   "name": "断界の古関の中",
+   "pack": "dungeon_b",
+   "tags": "inside an ancient gatehouse, massive stone corridors, giant doors, carved runes"
+  },
+  {
+   "id": "in_w2_acid",
+   "kind": "dungeon",
+   "scene": "w2_acid_in",
+   "name": "酸の谷の底",
+   "pack": "dungeon_b",
+   "tags": "bottom of an acid valley, green toxic pools, corroded giant iron wrecks, steam"
+  },
+  {
+   "id": "in_e2_garden",
+   "kind": "dungeon",
+   "scene": "e2_garden_in",
+   "name": "腐れ庭園の奥",
+   "pack": "dungeon_b",
+   "tags": "deep in a rotting garden, overgrown flower maze, giant flowers, mist, eerie"
+  },
+  {
+   "id": "in_e2_kitchen",
+   "kind": "dungeon",
+   "scene": "e2_kitchen_in",
+   "name": "大厨房の中",
+   "pack": "dungeon_b",
+   "tags": "giant kitchen interior, enormous cauldrons, stoves with fire, hanging meat hooks, steam, huge cleavers"
+  },
+  {
+   "id": "in_onigashima",
+   "kind": "dungeon",
+   "scene": "onigashima_in",
+   "name": "鬼ヶ島の洞窟の奥",
+   "pack": "dungeon_b",
+   "tags": "cave lair, warm wet rock walls, sake barrels, bonfire, feast remains, scattered bones"
+  },
+  {
+   "id": "in_w3_seacave",
+   "kind": "dungeon",
+   "scene": "w3_seacave_in",
+   "name": "潮鳴りの洞の中",
+   "pack": "dungeon_b",
+   "tags": "inside a sea cave, tide water, glowing algae, wet rocks"
+  }
+ ]
+}
