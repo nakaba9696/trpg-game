@@ -34,9 +34,9 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
       "噂：黒鉄の砦の見張りの坊や、ゴブリンにだけは矢が射てねえらしい。",
       "噂：ヴァレンツァの浜に、百年前に沈んだ船が打ち上がったらしい。",
       "噂：ブランデールの酒場の二階に、付けを三年溜めてる絵描きがいる。",
+      "噂：ヴァレンツァの港のいちばんの力持ちはな、蜘蛛が出ると倉の梁に登って降りてこない。",
       "噂：隣町の粉屋の娘、縁談を三つ断ったらしい。誰を待ってるんだかな。",
-      "噂：教会の蝋燭が、夜中にひとりでに灯るんだとさ。",
-    ].forEach((t) => G.memo(t));
+    ].forEach((t) => G.heard(t));
     G.ui.render();
     const t = document.querySelector("#toast"); if (t) t.style.display = "none";
     G.f2.open("foe");
@@ -45,7 +45,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   await page.evaluate(() => { const d = document.querySelector("#dlgCodex .f2heard"); if (d) d.scrollIntoView({ block: "center" }); });
   await shot("foe");
   await page.click('#dlgCodex [data-tab="heard"]');
-  await page.click('#dlgCodex .f2cell[data-id="misc"]');
+  await page.click('#dlgCodex .f2cell[data-id="loc:nerva"]');
   await shot("heard");
   console.log(vn, "errors:", errs.length ? errs : "none");
   await ctx.close();
