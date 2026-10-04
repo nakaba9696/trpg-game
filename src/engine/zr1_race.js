@@ -6,7 +6,7 @@
 //   仲間：c.race・c.beast（酒場で雇う者・「random」で加わる者は名前から決まる。乱数を進めない）。無ければ人間。
 //     ほかの子が名のある仲間を足すときは、仲間の欄に race・beast を書けば、その種族になる（例：{ name: "…", race: "beast", beast: "wolf" }）。
 // 効き目（どれも「ほどよく」）：
-//   作成 … 能力値の補正（生まれ・年齢と同じ扱い）、年齢の幅、名前の響き
+//   作成 … 主人公は人間だけ（持ち主の決定）。種族は仲間と登場人物のもの
 //   判定 … 特性（夜目・鳥目と遠目・冬毛・耳）と人の目（国ごとの魅力の補正）。成功率の見込み（画面の％）と判定は同じ
 //   出来事 … 種族・特性で起きる出来事（src/data/events_r1.js）と、既存の出来事に足す選択肢（D.R1_EXTRA）
 //   評判（M3）… 人の国（王国・帝国・教会領）でエルフ・獣人が罪を犯すと、悪名が 1 多く付く（覚えられやすい）
@@ -108,72 +108,16 @@
   };
 
   // ---------------------------------------------------------------- 作成（U5）
+  // 主人公は人間だけ（持ち主の決定）。作成では種族を選べず、種族の補正・名前・年齢の幅は人間のもの。
+  // エルフ・獣人の表は、仲間と登場人物のために残す。古いセーブの人間でない主人公は、そのまま遊べる
   const cre = G.cre;
   if (cre) {
-    const rOf = (dr) => G.r1Of({ profile: { race: dr.race, beast: dr.beast } });
-    // 能力値の補正：生まれ・年齢と並べて「種族」を出す
-    const parts0 = cre.modParts;
-    cre.modParts = (dr, k) => Object.assign(parts0(dr, k), { race: G.r1Spec(rOf(dr)).mod[k] || 0 });
-    const mod0 = cre.mod;
-    cre.mod = (dr, k) => mod0(dr, k) + (G.r1Spec(rOf(dr)).mod[k] || 0);
-    // 年齢の幅と名前の響き
-    cre.ageRange = (dr, band) => {
-      const sp = G.r1Spec(rOf(dr));
-      return (sp.ages && sp.ages[band || dr.ageBand]) || D.AGES[band || dr.ageBand].range;
-    };
-    const gen0 = cre.gen;
-    cre.gen = (dr, key, rnd) => {
-      const r = rOf(dr);
-      if (key === "age" && r.race !== "human") { const [a, b] = cre.ageRange(dr); return String(a + Math.floor(rnd() * (b - a + 1))); }
-      if (key === "name" && r.race !== "human") {
-        const R = D.RACES[r.race];
-        const pool = R.names && D.PROFILE.names[R.names] && D.PROFILE.names[R.names][dr.sex];
-        // シェルアークの生まれはシェルアークの名前のまま。ほかの生まれは、種族の響きと生まれの響きを混ぜる
-        const yakumo = (D.ORIGINS[dr.origin] || {}).culture === "yakumo";
-        if (pool && !yakumo && rnd() < (R.nameRate || 0)) return pool[Math.floor(rnd() * pool.length)];
-      }
-      return gen0(dr, key, rnd);
-    };
-    // 種族を変える：名前と年齢を作り直す。能力値は振り直さない（補正だけ変わる）
-    const reshape = (dr, rnd, before) => {
-      const after = rOf(dr);
-      if (before.race !== after.race) { dr.profile.name = cre.gen(dr, "name", rnd); }
-      if (before.race !== after.race || G.r1Spec(before).ages !== G.r1Spec(after).ages) dr.profile.age = cre.gen(dr, "age", rnd);
-      cre.fit(dr);
-    };
-    cre.setRace = (dr, race, rnd) => {
-      if (!D.RACES[race]) return;
-      const before = rOf(dr);
-      dr.race = race;
-      if (race === "beast" && !D.BEASTS[dr.beast]) dr.beast = D.BEAST_KEYS[Math.floor(rnd() * D.BEAST_KEYS.length)];
-      if (race !== "beast") delete dr.beast;
-      if (before.race === race && before.beast === rOf(dr).beast) return;
-      reshape(dr, rnd, before);
-    };
-    // 元の獣を選ぶ（"auto" はおまかせ）
-    cre.setBeast = (dr, beast, rnd) => {
-      const before = rOf(dr);
-      dr.race = "beast";
-      dr.beast = D.BEASTS[beast] ? beast : D.BEAST_KEYS[Math.floor(rnd() * D.BEAST_KEYS.length)];
-      if (before.race === "beast" && before.beast === dr.beast) return;
-      reshape(dr, rnd, before);
-    };
-    // おまかせで種族を選ぶ（人間が多い）
-    cre.randomRace = (dr, rnd) => {
-      const W = D.R1_RANDOM;
-      let x = rnd() * Object.values(W).reduce((a, b) => a + b, 0);
-      let race = "human";
-      for (const [k, w] of Object.entries(W)) { x -= w; if (x <= 0) { race = k; break; } }
-      if (race === "beast") cre.setBeast(dr, "auto", rnd); else cre.setRace(dr, race, rnd);
-      return dr;
-    };
-    // 年齢の区分を変えたとき：種族の幅で作り直す（cre.setAge は cre.gen を呼ぶので、そのままでよい）
+    cre.ageRange = (dr, band) => D.AGES[band || dr.ageBand].range;
     const opts0 = cre.options;
     cre.options = (dr, rnd) => {
       const o = opts0(dr, rnd);
-      const r = rOf(dr);
-      o.profile.race = r.race;
-      if (r.beast) o.profile.beast = r.beast;
+      o.profile.race = "human";
+      delete o.profile.beast;
       return o;
     };
     // 導入の 2 ページ目に、種族の一行を添える（名前から決まる）
