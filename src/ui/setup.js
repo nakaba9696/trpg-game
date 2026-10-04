@@ -28,8 +28,6 @@
   let rolledNow = false;
 
   // 主人公の絵は出さない（A10。持ち主の決定）
-  // 種族の呼び名（R1。無ければ出さない）
-  const raceName = (d) => (G.r1Name ? G.r1Name({ profile: { race: d.race, beast: d.beast } }) : "");
 
   const go = (s) => { step = s; setup.show(); window.scrollTo({ top: 0 }); };
 
@@ -81,7 +79,7 @@
     steps(root, 0);
     const top = h("div", "creHead");
     head(top, "あなたは何者か", "選ぶと、その場で姿が変わる");
-    top.append(btn("全部おまかせ", "primary", () => { const s = draft.customGoal; draft = cre.fresh(R); if (cre.randomRace) cre.randomRace(draft, R); draft.customGoal = s; sfx("dice", "coin"); setup.show(); }, "p-all"));
+    top.append(btn("全部おまかせ", "primary", () => { const s = draft.customGoal; draft = cre.fresh(R); draft.customGoal = s; sfx("dice", "coin"); setup.show(); }, "p-all"));
     root.append(top);
 
     const lay = h("div", "cre2");
@@ -93,7 +91,7 @@
       const c = D.CLASSES[draft.cls], a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
       txt.textContent = "";
       txt.append(h("b", "whoName", draft.profile.name || "（名無し）"));
-      txt.append(h("span", "whoLine", `${c.name}・${[raceName(draft), draft.sex].filter(Boolean).join("・")}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ`));
+      txt.append(h("span", "whoLine", `${c.name}・${draft.sex}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ`));
       txt.append(h("span", "", c.blurb));
       txt.append(h("span", "fine", `得意：${cre.strengths(draft.cls).join("・")} ／ 出発地：${D.LOCS[c.start].name}`));
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
@@ -123,8 +121,6 @@
     s1.append(aBlurb);
     form.append(s1);
 
-    // 種族（R1）。獣人なら元の獣も選ぶ
-    if (D.RACES && cre.setRace) form.append(raceSec());
 
     // 生まれ
     const s2 = h("section", "creSec");
@@ -210,45 +206,7 @@
     refresh();
   }
 
-  // 種族の欄：人間・エルフ・獣人。獣人なら元の獣（おまかせ可）。選ぶと名前と歳が種族に合わせて変わる
-  function raceSec() {
-    const sec = h("section", "creSec raceSec");
-    sec.append(h("h3", "", "種族"));
-    const radios = (name, label, list, cur, fn) => {
-      const box = h("div", "chips");
-      box.setAttribute("role", "radiogroup");
-      box.setAttribute("aria-label", label);
-      list.forEach(([id, text]) => {
-        const l = h("label", "chip");
-        const inp = h("input"); inp.type = "radio"; inp.name = name; inp.value = id; inp.checked = cur === id;
-        inp.onchange = () => { fn(id); setup.show(); };
-        l.append(inp, document.createTextNode(text));
-        box.append(l);
-      });
-      return box;
-    };
-    const race = draft.race || "human";
-    sec.append(radios("race", "種族", Object.entries(D.RACES).map(([id, r]) => [id, r.name]), race, (id) => cre.setRace(draft, id, R)));
-    const sp = G.r1Spec({ race, beast: draft.beast });
-    if (race === "beast") {
-      const bl = h("div", "field beastPick");
-      bl.append(h("span", "flabel", "元になった獣"));
-      bl.append(radios("beast", "元になった獣", [["auto", "おまかせ"], ...D.BEAST_KEYS.map((k) => [k, D.BEASTS[k].name])], draft.beast, (id) => cre.setBeast(draft, id, R)));
-      sec.append(bl);
-    }
-    const B = race === "beast" ? D.BEASTS[draft.beast] : null;
-    const tr = G.r1Traits({ race, beast: draft.beast });
-    const lines = [
-      D.RACES[race].blurb + (B ? `${B.name}の獣人は、${B.blurb}` : ""),
-      `能力値：${modText(sp.mod)}${sp.ages ? ` ／ 年齢 ${sp.ages.young[0]}〜${sp.ages.old[1]}歳` : ""}`,
-    ];
-    if (B) lines.push(`気性：${B.temper}`);
-    if (tr.length) lines.push(`特性：${tr.map((x) => `${x.name}（${x.hint}）`).join("・")}`);
-    const gr = G.r1Greet({ race, beast: draft.beast });
-    if (gr.length) lines.push(`人の目：${gr.map(([n, v]) => `${n} 魅力${signed(v)}`).join("・")}`);
-    lines.forEach((t, i) => sec.append(h("p", i ? "fine" : "fine raceBlurb", t)));
-    return sec;
-  }
+
 
   const modText = (m) => { const s = Object.entries(m || {}).filter(([, v]) => v).map(([k, v]) => `${k}${signed(v)}`); return s.length ? s.join(" ") : "補正なし"; };
 
@@ -305,7 +263,7 @@
     const c = D.CLASSES[draft.cls];
     const st = cre.final(draft);
     const wt = h("div");
-    wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", `${[c.name, raceName(draft), D.AGES[draft.ageBand].name].filter(Boolean).join("・")}・${D.ORIGINS[draft.origin].short}生まれ`));
+    wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", `${[c.name, D.AGES[draft.ageBand].name].join("・")}・${D.ORIGINS[draft.origin].short}生まれ`));
     who.append(wt);
     const tray = h("div", "tray");
     tray.setAttribute("aria-hidden", "true");
@@ -352,7 +310,6 @@
       if (cm) det.append(h("span", cm > 0 ? "plus" : "minus", `職業 ${signed(cm)}`));
       if (m.age) det.append(h("span", m.age > 0 ? "plus" : "minus", `年齢 ${signed(m.age)}`));
       if (m.origin) det.append(h("span", m.origin > 0 ? "plus" : "minus", `生まれ ${signed(m.origin)}`));
-      if (m.race) det.append(h("span", m.race > 0 ? "plus" : "minus", `種族 ${signed(m.race)}`));
       if (draft.bonus[k]) det.append(h("span", "plus", `ボーナス +${draft.bonus[k]}`));
       det.append(h("span", "", `成功率 ${Math.min(95, v * PCT)}%`));   // 判定は 95％で止まる
       row.append(h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
@@ -387,7 +344,7 @@
     const paper = h("article", "charSheet");
     const top = h("header", "csTop");
     const nm = h("div");
-    nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, raceName(draft), p.sex].filter(Boolean).join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）・${D.ORIGINS[p.origin].name}生まれ`));
+    nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, p.sex].join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）・${D.ORIGINS[p.origin].name}生まれ`));
     nm.append(h("span", "csLine", `目的：${o.goalText}`));
     top.append(nm);
     paper.append(top);

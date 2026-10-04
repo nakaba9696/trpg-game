@@ -6,7 +6,7 @@
 // - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。上限は無い（99 を超えても壊れない。古いセーブの caps は効かない）
 // - 古いセーブ：0〜99 の尺度のまま読め、点で見える。読み直しても値が変わらない（二度換算しない）
 // - 才（M8）は無い：判定は能力値だけ。古いセーブの S.m8・仲間の c.m8 は効かない
-// - 作成画面：ボーナス点・上振れの印、点で出す
+// - 作成画面：ボーナス点・上振れの印、点で出す。種族は選べない（主人公は人間だけ）。マイナスの補正は太字・濃い色
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -179,6 +179,13 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (!/TROPHY_PER_STAT/.test(src)) fail("作成画面に、トロフィーの分は 1 つの能力値に 10 点まで、が出ない");
     if (/才能限界|鍵をかけ|大当たり|m8ui|才の付きやすい/.test(src)) fail("作成画面に、なくした仕組みの言葉が残っている");
     if (/String\(o\.stats\[k\]\)/.test(src)) fail("作成画面のシートが割合のまま出している");
+    // 主人公は人間だけ：作成画面で種族を選べない
+    if (/raceSec|cre\.setRace|cre\.randomRace|radios\("race"/.test(src)) fail("作成画面に種族を選ぶ所が残っている");
+    const o = cre.options(cre.fresh(rnd), rnd);
+    if (o.profile.race !== "human") fail("作成した主人公が人間でない");
+    // マイナスの補正はプラスと同じくらい読める（太字・専用の濃い色）
+    const css = readFileSync(fileURLToPath(new URL("../../src/ui/s2_stats.css", import.meta.url)), "utf8");
+    if (!/\.det \.minus \{ color: var\(--minus\)/.test(css) || !/\.plus, \.creStats \.det \.minus \{ font-weight: 700/.test(css)) fail("マイナスの補正の色・太さが決まっていない");
     const ui = readFileSync(fileURLToPath(new URL("../../src/ui/ui.js", import.meta.url)), "utf8");
     if (/String\(S\.stats\[k\]\)/.test(ui) || /限界/.test(ui)) fail("ステータスの能力値が割合のまま／「限界」が残っている");
   }

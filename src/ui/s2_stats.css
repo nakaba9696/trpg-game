@@ -2,3 +2,9 @@
 .bonusRoll { font-size: 22px; font-weight: 800; line-height: 1; }
 .creStats .lucky .v { color: var(--blood); text-shadow: 0 0 8px rgba(212, 160, 23, .55); }
 .creStats .det .luckyTag { color: var(--blood); font-weight: 700; }
+/* 補正のプラスとマイナス（作成画面・シート）。マイナスはプラスと同じくらいの濃さ・太さで読めるように（コントラスト：明るい版 7.1:1・暗い版 8.8:1） */
+:root { --minus: #8a2817; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --minus: #f4a593; } }
+:root[data-theme="dark"] { --minus: #f4a593; }
+.creStats .det .plus, .creStats .det .minus { font-weight: 700; }
+.creStats .det .minus { color: var(--minus); }
