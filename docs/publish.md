@@ -38,11 +38,13 @@ claude.ai/code のセッションで、このリポジトリを開いて「`dist
 
 1. 1 回目：`file_path: "dist/site/index.html"` と `files` に `files-1.json` の中身で publish する（新しい Artifact なら、ここで `url` ができる）。
 2. 2 回目から：**同じ `url`** に、`file_path: "dist/site/index.html"` と `files` に `files-2.json` の中身で publish する。前の回のファイルは残り、新しいファイルが足される。
-3. 最後の回まで続ける。途中でやめると、まだ載っていない画像の人は canvas の絵のまま（読めない画像は canvas の絵に戻るので、壊れはしない）。
+3. 最後の回まで続ける。途中でやめると、まだ載っていない画像の人・魔物は絵が出ない（読めない画像は絵を出さないだけなので、壊れはしない。A10）。
 
 ### 消した画像
 
 公開で渡さなかったファイルは前のまま残る。`assets/` から消した画像を Artifact からも消すなら、その公開パスを `null` にして渡す（例：`{ "portraits/old.webp": null }`）。残っていても遊びには響かない（ページの一覧に無い画像は読みに行かない）が、下の「1 つの版で 511 ファイル」に数えられる。
+
+A10 で主人公の型の絵（10 枚）は、名もない人の二枚目の型 `portraits/kind_<種類>_<m|f>_b.webp` に名前を替えた（表は [art/a10_map.md](art/a10_map.md)）。前に載せた Artifact を新しくするときは、古い名前の次の 10 個を `null` にして渡すと、ファイル数が増えない：`portraits/hero_merc_m.webp`・`portraits/hero_merc_f.webp`・`portraits/hero_thief_m.webp`・`portraits/hero_thief_f.webp`・`portraits/hero_mage_m.webp`・`portraits/hero_mage_f.webp`・`portraits/hero_priest_m.webp`・`portraits/hero_priest_f.webp`・`portraits/hero_samurai_m.webp`・`portraits/hero_samurai_f.webp`。
 
 ## 大きさの決まり
 
@@ -64,7 +66,7 @@ MB は余裕を見て 1000×1000 バイトで数える。予備の埋め込み�
   HTML の一覧では差分の鍵の値が `portraits/<id>.moods.svg#xywh=x,y,w,h`（切り出す場所）になり、`src/ui/v4_assets.js` がスプライトを一度だけ読んで、その升目を切り出して描く。
   表情の名前は V8 の喜怒哀楽と `docs/art/moods.json`（V11）から取る。画像セッションは今まで通り 1 表情 1 ファイル（`assets/portraits/<id>_<表情>.webp`）で作ればよい。予備の埋め込み（`--embed`）はまとめない（data URI のまま）。
   数の目安：今は差分 76 枚 → 19 枚で、合計 248 → 191 ファイル。仲間 50 人を足して主要な 60 人に差分 700 枚を作っても、基本の絵 250・魔物 120 とで 431 ファイル（まとめないと 1071）。
-- `src/ui/v4_assets.js`：人物の絵。外のファイルは少し（160 ミリ秒）待ってから canvas の絵を出し、読めたら画像に替える（すぐ読めればちらつかない）。主人公・仲間・話している人とその差分は描く前に先読みし、名のある人の基本の絵は暇なときに少しずつ読む（`G.v4Preload`）。
+- `src/ui/v4_assets.js`：人物の絵。外のファイルは読み終わるまで枠を空けておき、読めたら画像を描く。無い人・読めない画像は絵を出さない（A10。canvas の人物の絵はやめた）。主人公は絵なし。仲間・話している人とその差分は描く前に先読みし、名のある人の基本の絵は暇なときに少しずつ読む（`G.v4Preload`）。
 - `src/ui/v8_moods.js`：表情の差分は、読み終わってから顔を入れ替える（それまでは前の顔のまま）。PC の配置（V9）では、話している人の顔に表情を付ける。
 - 音のファイル（S3）：効果音は Web Audio でその場で合成するが、`assets/sounds/<名前>.ogg`・`<名前>_1.ogg`…（webm・mp3 も可。同じ名前なら mp3）を置くと、画像と同じく別ファイルで載り、`G.ASSETS["sounds/<名前>_1"]` に相対パスが入る。`src/ui/sound.js` が最初のタップのあとに読み、いくつかあれば毎回一つ選んで鳴らす（高さと強さを少し揺らす）。無い・読めない（file:// など）ときは合成に戻る。今は 1 つも置いていない（ページの音は合成。`docs/sound/page_before.wav`・`page_after.wav` で聞き比べられる）。置くなら 1 つの版の 511 ファイルに数えられるので、1 つの音に 3〜4 個まで。音量は `G.sound.FILE_GAIN` で揃える。
 - `src/ui/v6_monsters.js`：魔物の絵は起動の少しあとにまとめて先読みする。

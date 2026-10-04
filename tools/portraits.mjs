@@ -12,7 +12,6 @@ export const MD_PATH = path.join(here, "..", "docs", "art", "portraits.md");
 const GROUPS = [
   ["c2", "名のある人物：キャラメモ", "持ち主のスプレッドシート「キャラメモ」の人（`src/data/c2_people.js`。id はデータの id）。時間軸は同じなので、どの冒険で会っても同じ一人＝一枚。出来事でも仲間になってからも同じ絵。"],
   ["named", "名のある人物：出来事・施設", "出来事や施設に出る、名前の決まった人（使徒の人の姿・眷属・宰相・店や宿の主など。使徒は `D.MAJIN` の id）。どの出来事に出るかは `src/ui/v4_assets.js` の `NAMED`。どの出来事でも同じ顔に固定してある。"],
-  ["hero", "型：主人公", "冒険ごとに作られる主人公は一人ずつ作れないので、職業 × 性別の型に当てる（人間・若者が基本。エルフ・獣人・年齢は下の「型の足し方」）。髪と目の色は今の絵に合わせて書いてある（絵師タグに引っ張られないため。A9）。"],
   ["people", "型：名もない人", "名もない仲間・出来事の町の人など。人物の種類 × 性別。13 歳未満は子ども、60 歳以上は老人の型を使う。"],
 ];
 const cell = (s) => String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
@@ -48,7 +47,7 @@ const tagsCell = (p) => {
 };
 
 export function renderPortraitsMd(data) {
-  const { size, heroAge, beasts, portraits } = data;
+  const { size, beasts, portraits } = data;
   const L = [];
   L.push("# 人物の絵（Stable Diffusion のプロンプト一覧）", "");
   L.push("このファイルは `node tools/portraits.mjs` で `docs/art/portraits.json` から作る。直すときは json を直してから作り直す。", "");
@@ -59,17 +58,17 @@ export function renderPortraitsMd(data) {
   L.push("- **絵の版**：基本の絵を ikezawa shin 入りの prefix（`style.json` の `art`＝2）で描いた人には「絵の版：2」と出る。出ていない人の基本の絵は ikezawa shin なしで描いたので、差分もなしで作る（[README.md](README.md)）。**作り直す**（`redo`）と出ている人は、今の絵を作り直す（`multi`＝2人以上写っている・`color`＝髪の色を変えたので描き直す）。");
   L.push("- 男の人は**型**（`type`：`ojisan`・`classic`・`bishonen`・`brute`・`elder`・`boy`）で顔立ちを替える。型の語は `style_male.json` の `types` にあり、生成のときに前に足される（[README.md](README.md)）。");
   L.push("- タグはその人の**特徴だけ**。画風・品質（masterpiece・anime style など）・構図・ネガティブは持ち主の側で足す。");
-  L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は今の canvas の絵のまま。");
+  L.push("- できた画像は表の「ファイル」の名前で置く（例：`assets/portraits/dil.webp`）。`node tools/build.mjs` で HTML に埋め込まれ、ゲームはその人をこの画像で描く。無い人は絵を出さない（canvas の人物の絵はやめた。A10）。");
   L.push("- 作るのは `node tools/gen_portraits.mjs`（AUTOMATIC1111 / Forge の API。手順は [README.md](README.md)）。名のある人物は、気に入った絵の seed を `--keep <id>` で一覧に残す（名前の下に出る）。作り直すときはその seed を使う。");
   L.push("- **表情**は基本の絵の顔（プロンプトでは特徴のタグの後ろに付く）。差分（**喜・怒・哀・楽**と、その人らしい表情。種類は [moods.md](moods.md)）がある人は、基本の絵から差分を作る（`node tools/gen_portraits.mjs --variants`。`--mood shy,surprise` でその表情だけ。img2img で表情のタグだけ差し替える）。ファイルは `<id>_joy.webp`・`_shy` など。無い表情は近い表情か、基本の絵のまま。");
   L.push("- png・jpg でもよい（同じ名前なら webp を使う）。埋め込みの合計が 12MB を超えるとビルドとテストが止まる（`tools/assets.mjs`）。");
   L.push("");
   const types = [];
   types.push("## 型の足し方（任意）", "");
-  types.push("型の画像は、性別・種族が合うもののうち、獣・年齢が一番近いものを使う。表の行は人間だけなので、エルフ・獣人は下の画像を足すまで今の canvas の絵のまま。足したいときは、ファイル名の後ろに付けて、タグを替える：", "");
-  types.push(`- エルフ：\`_elf\`（例：\`hero_mage_f_elf.webp\`・\`kind_villager_f_elf.webp\`）。\`${data.races.elf}\` を足す。`);
-  types.push(`- 獣人：\`_beast_<獣>\`（例：\`hero_thief_m_beast_cat.webp\`）か、獣を問わない \`_beast\`。下の表の耳と尻尾のタグを足す。`);
-  types.push(`- 主人公の中年：さらに後ろに \`_mid\`（例：\`hero_merc_m_mid.webp\`）。\`young man\` / \`young woman\`・\`20 years old\` を \`${heroAge.mid}\` に替える。老人は \`_old\` で \`${heroAge.old}\`。`);
+  types.push("型の画像は、性別・種族が合うもののうち、獣が一番近いものを使う。表の行は人間だけなので、エルフ・獣人は下の画像を足すまで人間の型を使う（耳は合わない）。足したいときは、ファイル名の後ろに付けて、タグを替える：", "");
+  types.push(`- エルフ：\`_elf\`（例：\`kind_villager_f_elf.webp\`）。\`${data.races.elf}\` を足す。`);
+  types.push(`- 獣人：\`_beast_<獣>\`（例：\`kind_priest_f_beast_cat.webp\`）か、獣を問わない \`_beast\`。下の表の耳と尻尾のタグを足す。`);
+  types.push("- 主人公は立ち絵を出さない（持ち主の決定。A10）ので、主人公の型（`hero_*`）は作らない。");
   types.push("");
   types.push("| 獣 | 耳と尻尾のタグ |", "|---|---|");
   for (const [k, t] of Object.entries(beasts)) types.push(`| \`${k}\` | ${cell(t)} |`);
