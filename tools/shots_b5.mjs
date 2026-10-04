@@ -39,7 +39,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   await shot("combat");
   await page.evaluate(() => { G.act("b5:pick:item:herb"); G.ui.render(); });
   await shot("pick");
-  await page.evaluate(() => { G.act("b5:cancel"); if (G.S.combat) G._endCombat("fled"); G.S.mode = "explore"; G.ui.render(); G.ui.setSheetOpen(true); const c = document.querySelector("#sheet .comps"); if (c) c.scrollIntoView(); });
+  await page.evaluate(() => { G.act("b5:cancel"); if (G.S.combat) G._endCombat("fled"); G.S.mode = "explore"; G.ui.render(); G.ui.setSheetOpen(true); const tb = document.querySelector("#stab-party"); if (tb) tb.click(); });
   await shot("sheet");
   if (errs.length) console.log("ERR", vn, errs);
   await ctx.close();
