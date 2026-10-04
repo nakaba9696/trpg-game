@@ -1,8 +1,8 @@
 // #35：墓碑に主人公の絵を残す。墓碑（G.P.graves）に、絵を描くのに要る人物設定と職業 id を hero として足す。
-// hero = { cls: 職業 id, profile: { name, sex, age, ageBand, look, personality, race, beast } }（G.heroWho(profile, cls) にそのまま渡せる形）
+// hero = { cls: 職業 id, profile: { name, sex, age, ageBand, look, race, beast } }（G.heroWho(profile, cls) にそのまま渡せる形）
 // 古い墓碑には hero が無いので、画面は今までどおり絵を出さない。core.js の G.finishRun を包むだけ。レーン C
 (function (G) {
-  const KEYS = ["name", "sex", "age", "ageBand", "look", "personality", "race", "beast"];
+  const KEYS = ["name", "sex", "age", "ageBand", "look", "race", "beast"];
   G.c35GraveHero = (S) => {
     if (!S || !S.profile || !S.cls) return null;
     const profile = {};

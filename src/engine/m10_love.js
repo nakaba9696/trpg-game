@@ -50,16 +50,16 @@
   G.m10Word = (sex) => (sex === "女" ? "妻" : "夫");
   // 恋の相手になれる仲間（人の言葉で暮らす者。魔物の子分は惚れても、それは別の話）
   G.m10Can = (c) => !!c && !MONSTER.test(`${c.name} ${c.cls}`);
-  // 相性（あなたの性格と仲間の性格）。-1〜2
+  // 相性。-1〜2。あなたの魅力（高いと +1、低いと −1）と、惚れっぽい相手の +1（種族は zr1_race.js が足す）。
+  // U10：主人公の性格は作らない（持ち主の決定）ので、前の「あなたの性格 × 仲間の性格」は使わない
   G.m10Compat = (c, S) => {
     S = S || G.S;
-    const you = G.m2TraitOf({ desc: (S.profile && S.profile.personality) || "", name: (S.profile && S.profile.name) || "" });
     const t = c.trait || G.m2TraitOf(c);
     const C = M().COMPAT;
+    const cha = (S.stats && S.stats["魅力"]) || 0;
     let n = 0;
-    if (C.good.some(([a, b]) => (a === you && b === t) || (a === t && b === you))) n += 1;
-    if (C.bad.some(([a, b]) => (a === you && b === t) || (a === t && b === you))) n -= 1;
-    if (you === t && !C.selfish.includes(t)) n += 1;
+    if (cha >= C.charmHi) n += 1;
+    else if (cha < C.charmLo) n -= 1;
     if (t === "amorous") n += 1;
     return G.clamp(n, -1, 2);
   };
