@@ -2,7 +2,8 @@
 // - 消した文（仲間の居場所の決まり・「歩いて確かめるしかない」・暦と鐘の説明）が、どこにも残っていない
 // - トロフィーの数だけキャラクター作成のボーナス点が増える（上限つき。古い記録・トロフィー無しでも動く）
 // - タイトルのメニューは「はじめる」（と、保存があるときの「つづきから」）だけ
-// - 主人公の口癖・好きなもの・苦手なものは作らない・見せない。生い立ちはおまかせで埋めない（空けておける）
+// - 主人公の性格・口癖・好きなもの・苦手なものは作らない・見せない。生い立ちはおまかせで埋めない（空けておける）
+// - 恋の相性は主人公の性格に頼らない（魅力で決まる）
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -48,23 +49,33 @@ export default ({ G, fail, seeded }) => {
     }
   } finally { G.P = P0; }
 
-  // 口癖・好きなもの・苦手なもの（主人公だけ。仲間の好き嫌いは別物）
+  // 性格・口癖・好きなもの・苦手なもの（主人公だけ。仲間の性格・好き嫌いは別物）
   {
     const rnd = seeded(1011);
     for (let i = 0; i < 20; i++) {
       const dr = cre.fresh(rnd);
-      for (const k of ["quote", "like", "dislike"]) if (dr.profile[k]) fail(`作成 ${i}: おまかせで ${k} が入った`);
+      for (const k of ["personality", "quote", "like", "dislike"]) if (dr.profile[k]) fail(`作成 ${i}: おまかせで ${k} が入った`);
       if (dr.profile.history) fail(`作成 ${i}: おまかせで生い立ちが埋まった`);
-      if (!dr.profile.look || !dr.profile.personality) fail(`作成 ${i}: 外見・性格が空`);
-      dr.profile.quote = "古い口癖"; dr.profile.like = "酒"; dr.profile.dislike = "虫";
+      if (!dr.profile.look) fail(`作成 ${i}: 外見が空`);
+      dr.profile.personality = "無口"; dr.profile.quote = "古い口癖"; dr.profile.like = "酒"; dr.profile.dislike = "虫";
       const o = cre.options(dr, rnd);
-      for (const k of ["quote", "like", "dislike"]) if (k in o.profile) fail(`作成 ${i}: 旅立つ人物に ${k} が残る`);
+      for (const k of ["personality", "quote", "like", "dislike"]) if (k in o.profile) fail(`作成 ${i}: 旅立つ人物に ${k} が残る`);
       if (!cre.prologue(o).every((pg) => pg.every((t) => typeof t === "string" && t && !t.includes("undefined")))) fail(`作成 ${i}: 生い立ちが空だと導入が崩れる`);
     }
     if (D.PROFILE.quote || D.PROFILE.like || D.PROFILE.dislike) fail("口癖・好きなもの・苦手なものの表が残っている");
     for (const f of ["ui/setup.js", "ui/ui.js"]) {
       const t = readFileSync(path.join(root, f), "utf8");
-      if (/"口癖"|"好きなもの"|"苦手なもの"|p\.quote|p\.like|p\.dislike/.test(t)) fail(`${f}: 主人公の口癖・好き嫌いを出している`);
+      if (/"性格"|"口癖"|"好きなもの"|"苦手なもの"|p\.personality|p\.quote|p\.like|p\.dislike/.test(t)) fail(`${f}: 主人公の性格・口癖・好き嫌いを出している`);
+    }
+    if (/profile\.personality/.test(readFileSync(path.join(root, "engine/gm.js"), "utf8"))) fail("GM への説明に主人公の性格が残っている");
+    // 恋の相性：同じ魅力なら、古いセーブの性格が何であっても同じ
+    if (G.m10Compat) {
+      const st = Object.fromEntries(D.STATS.map((k) => [k, 50]));
+      const c = { name: "誰か", trait: "loyal" };
+      const vals = ["無口だが義理堅い", "冷酷で、どこまでも合理的", "", undefined].map((pp) => G.m10Compat(c, { stats: st, profile: { name: "テスト", personality: pp } }));
+      if (new Set(vals).size !== 1) fail(`恋の相性が主人公の性格で変わる（${vals}）`);
+      const hi = G.m10Compat(c, { stats: { ...st, 魅力: 80 }, profile: {} }), lo = G.m10Compat(c, { stats: { ...st, 魅力: 10 }, profile: {} });
+      if (!(hi > lo)) fail(`恋の相性が魅力で変わらない（高 ${hi}・低 ${lo}）`);
     }
   }
 

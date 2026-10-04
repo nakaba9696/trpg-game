@@ -204,7 +204,7 @@
     t3.append(btn("特徴をおまかせ", "small", () => { cre.randomTraits(draft, R); cre.TRAITS.forEach(setVal); refresh(); }, "p-traits"));
     s5.append(t3);
     const grid = h("div", "grid2");
-    [["look", "外見", "input"], ["personality", "性格", "input"], ["history", "生い立ち", "textarea"]]
+    [["look", "外見", "input"], ["history", "生い立ち", "textarea"]]
       .forEach(([k, label, type]) => grid.append(fieldEl(k, label, type, refresh)));
     const hi = grid.querySelector("#pf-history");
     if (hi) hi.placeholder = "空けておいてもよい（「振る」でおまかせ）";
@@ -436,7 +436,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history]]
+    [["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);
