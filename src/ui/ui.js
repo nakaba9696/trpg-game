@@ -268,57 +268,6 @@
     renderActions(panel);
   }
 
-  // ---------------------------------------------------------------- 自由入力
-  $("#act").addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    const S = G.S;
-    const text = $("#free").value.trim();
-    const hint = $("#freeHint");
-    if (!text || !S || S.over || busy) return;
-    const a = G.parse(text);
-    hint.hidden = false;
-    hint.textContent = "";
-    if (a) {
-      hint.append(h("span", "", `「${text}」→ ${a.label}`));
-      $("#free").value = "";
-      G.act(a.id);
-      after();
-      return;
-    }
-    hint.append(h("span", "", `「${text}」は、今できる行動に当てはまりませんでした。`));
-    if (G.main.sample) {
-      const b = h("button", "btn", "GM に任せる（Claude の利用量を使う）");
-      b.type = "button";
-      b.onclick = () => askGM(text);
-      hint.append(b);
-    } else hint.append(h("span", "", "（GM に任せる機能は claude.ai で開いたときだけ使えます）"));
-  });
-
-  async function askGM(text) {
-    const hint = $("#freeHint");
-    busy = true;
-    renderPanel();
-    hint.textContent = "GM が考えています…";
-    try {
-      const res = await G.main.sample.json(G.gmPrompt(text), { modelTier: "quick", cache: false });
-      G.gmApply(text, res);
-      $("#free").value = "";
-      hint.hidden = true;
-    } catch (e) {
-      const msg = {
-        not_granted: "Claude の利用が許可されなかったので、GM を呼べません。",
-        rate_limited: "Claude の利用が混み合っているか、上限に達しました。少し待ってから試してください。",
-        refused: "GM がこの行動には応じませんでした。言い回しを変えてください。",
-        invalid_json: "GM の答えを読み取れませんでした。もう一度試してください。",
-      }[e && e.code] || "GM との通信が途切れました。もう一度試してください。";
-      hint.textContent = msg;
-      if (e && e.code === "not_granted") G.main.sample = null;
-    } finally {
-      busy = false;
-      after();
-    }
-  }
-
   // ---------------------------------------------------------------- キャラクターシート
   // シートは小さな部品の積み重ね。新しい欄（装飾品など）は該当する部品に足すか、部品を1つ足して renderSheet に並べる
   const sheetFold = { stats: true, quests: true, inv: true, memos: true }; // 開いている欄
