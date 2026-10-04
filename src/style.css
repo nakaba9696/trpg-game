@@ -521,24 +521,18 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
 .bonusLeft { font-weight: 700; }
 .bonusLeft.has { color: var(--blood); }
 .creStats { gap: 4px; }
-.creStats .srow { display: grid; grid-template-columns: 36px 3em 2.4em minmax(0, 1fr) auto; grid-template-areas: "lk nm v bar pm" "lk det det det det"; align-items: center; gap: 2px 8px; padding: 6px 0; border-bottom: 1px dashed var(--rule); font-size: 13.5px; }
+.creStats .srow { display: grid; grid-template-columns: 3em 2.4em minmax(0, 1fr) auto; grid-template-areas: "nm v bar pm" "det det det det"; align-items: center; gap: 2px 8px; padding: 6px 0; border-bottom: 1px dashed var(--rule); font-size: 13.5px; }
 .creStats .srow:last-child { border-bottom: 0; }
-.creStats .lock { grid-area: lk; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; color: var(--muted); }
-.creStats .lock { height: 40px; grid-auto-rows: auto; align-content: center; gap: 1px; }
-.creStats .lock small { font-size: 9.5px; line-height: 1; letter-spacing: 0; white-space: nowrap; }
-.creStats .locked .lock { color: var(--paper); background: var(--ink); border-color: var(--ink); }
 .creStats .nm { grid-area: nm; font-family: var(--f-body); }
 .creStats .v { grid-area: v; font-weight: 700; font-size: 18px; text-align: right; }
 .creStats .bar { grid-area: bar; position: relative; height: 8px; background: var(--paper); border: 1px solid var(--rule); }
 .creStats .bar i { position: absolute; inset: 0 auto 0 0; background: var(--ink); }
-.creStats .bar u { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ng); }
 .creStats .pm { grid-area: pm; display: flex; gap: 4px; align-items: center; }
 .creStats .pm .bn { min-width: 2em; text-align: center; font-size: 12.5px; color: var(--muted); }
 .creStats .det { grid-area: det; display: flex; flex-wrap: wrap; gap: 0 10px; font-size: 11.5px; color: var(--muted); }
 .creStats .det .plus { color: var(--ok); }
 .creStats .det .minus { color: var(--ng); }
 .creStats .rolled .v { animation: statFlash .5s ease-out; }
-.creStats .locked .v { color: var(--accent); }
 @keyframes statFlash { 0% { color: var(--blood); transform: scale(1.25); } 100% { transform: none; } }
 /* キャラクターシート（一枚の紙） */
 .charSheet { background: var(--sheet); border: 1px solid var(--ink); outline: 1px solid var(--ink); outline-offset: 3px; padding: 18px; margin: 4px; display: grid; gap: 16px; background-image: repeating-linear-gradient(0deg, transparent 0 27px, color-mix(in srgb, var(--rule) 35%, transparent) 27px 28px); }
@@ -569,7 +563,7 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
 }
 @media (max-width: 520px) {
   .rollBar { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who who" "tray roll" "info info"; }
-  .creStats .srow { grid-template-columns: 34px 2.6em 2.2em minmax(0, 1fr) auto; gap: 2px 6px; }
+  .creStats .srow { grid-template-columns: 2.6em 2.2em minmax(0, 1fr) auto; gap: 2px 6px; }
   .creStats .pm .btn.small { min-width: 34px; padding-inline: 6px; }
   .charSheet { padding: 14px 12px; }
   .csTop canvas { width: 72px; height: 90px; }

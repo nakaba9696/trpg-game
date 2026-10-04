@@ -1,10 +1,11 @@
-// S2：能力値を小さな数（点）で見せる・ボーナス点を振る（docs/s2_stats.md）
-// - 初期値の範囲：職業の素の値は 4〜14 点、補正を足しても 1〜18 点。ボーナス点を足しても才能限界（24 点まで）を超えない
-// - ボーナス点の分かれ方：ふつう 5〜10・当たり 15〜20（1 割ほど）・大当たり 25 以上（1〜2％）
+// S2：能力値を小さな数（点）で見せる・初期値をダイスで振る（docs/s2_stats.md）
+// - 初期値：能力値ごとに 3D6（まれに +1D6）＋職業・種族・年齢・生まれの補正。だいたい 5〜18、まれに 20 以上
+// - ボーナス点：5 点で決まり＋トロフィー 1 つにつき +1（合計の上限なし）。トロフィーの分は 1 つの能力値に 10 点まで
+// - 鍵は無い。振り直しは初期値を振り直す（何度でも）
 // - 換算：1 点 ＝ 成功率 4％。冒険に渡す値は点×4。判定の成功率は今までの式のまま
-// - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。才能限界で止まる
+// - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。上限は無い（99 を超えても壊れない。古いセーブの caps は効かない）
 // - 古いセーブ：0〜99 の尺度のまま読め、点で見える。読み直しても値が変わらない（二度換算しない）
-// - 作成画面：ボーナス点の数と当たりの印、点で出す
+// - 作成画面：ボーナス点・上振れの印、点で出す
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -13,62 +14,70 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   const cre = G.cre;
   let bad = 0;
   const fail = (m) => { bad++; fail0(m); };
-  const PCT = D.S2.PCT, MAX = D.S2.MAX;
+  const PCT = D.S2.PCT;
 
-  // ---------------------------------------------------------------- 初期値の範囲
-  for (const [id, c] of Object.entries(D.CLASSES)) {
-    for (const k of D.STATS) if (!(c.pt[k] >= 4 && c.pt[k] <= 14)) fail(`職業 ${id}: ${k} の素の値 ${c.pt[k]} が 4〜14 の外`);
-  }
+  // ---------------------------------------------------------------- 初期値
+  for (const [id, c] of Object.entries(D.CLASSES)) for (const k of D.STATS) if (!(Math.abs(c.mod2[k] || 0) <= 3)) fail(`職業 ${id}: ${k} の補正 ${c.mod2[k]} が大きすぎる`);
   for (const T of [D.AGES, D.ORIGINS, D.RACES, D.BEASTS]) for (const [id, o] of Object.entries(T)) {
     for (const [k, v] of Object.entries(o.mod || {})) if (!D.STATS.includes(k) || Math.abs(v) > 3) fail(`補正 ${id}: ${k} ${v} が点になっていない`);
   }
   const rnd = seeded(2200);
-  let lo = 99, hi = 0, made = 0;
-  for (let i = 0; i < 300; i++) {
+  let n = 0, mid = 0, hi20 = 0, chars20 = 0, lo = 99, top = 0, made = 0;
+  for (let i = 0; i < 5000; i++) {
     const dr = cre.fresh(rnd);
-    cre.autoBonus(dr);
+    let any = false;
     for (const k of D.STATS) {
-      const b = cre.base(dr, k), v = cre.value(dr, k), cap = cre.cap(dr, k);
-      lo = Math.min(lo, b); hi = Math.max(hi, b);
-      if (!(b >= 1 && b <= 18)) fail(`作成 ${i}: ${k} の素の値＋補正 ${b} が範囲の外`);
-      if (!(v <= cap && cap <= MAX && cap >= b + 2)) fail(`作成 ${i}: ${k} ${v}／限界 ${cap} が合わない`);
+      const b = cre.base(dr, k);
+      n++; if (b >= 5 && b <= 18) mid++; if (b >= 20) { hi20++; any = true; }
+      lo = Math.min(lo, b); top = Math.max(top, b);
+      if (b < D.S2.MIN) fail(`作成 ${i}: ${k} の初期値 ${b} が下限より低い`);
+      if (dr.dice[k] < 3 || dr.dice[k] > 24) fail(`作成 ${i}: ${k} のダイス ${dr.dice[k]} が 3D6（＋1D6）の外`);
     }
-    const o = cre.options(dr, rnd);
-    for (const k of D.STATS) if (o.stats[k] !== cre.value(dr, k) * PCT || o.caps[k] !== cre.cap(dr, k) * PCT) fail(`作成 ${i}: 冒険に渡す値が点×${PCT}でない`);
-    made++;
+    if (any) chars20++;
+    if (i < 300) {
+      cre.autoBonus(dr);
+      const o = cre.options(dr, rnd);
+      for (const k of D.STATS) if (o.stats[k] !== cre.value(dr, k) * PCT) fail(`作成 ${i}: 冒険に渡す値が点×${PCT}でない`);
+      made++;
+    }
   }
+  const midR = mid / n, hiR = hi20 / n;
+  if (!(midR >= 0.9)) fail(`初期値が 5〜18 に収まる割合 ${(midR * 100).toFixed(1)}% が低い`);
+  if (!(hiR >= 0.002 && hiR <= 0.02)) fail(`初期値が 20 以上の割合 ${(hiR * 100).toFixed(2)}% が「まれ」でない`);
 
-  // ---------------------------------------------------------------- ボーナス点の分かれ方
-  const N = 20000;
-  const r2 = seeded(2201);
-  const tiers = { ふつう: 0, 当たり: 0, 大当たり: 0 };
-  let sum = 0, top = 0;
-  for (let i = 0; i < N; i++) {
-    const b = cre.rollBonus(r2);
-    tiers[b.tier]++;
-    sum += b.n; top = Math.max(top, b.n);
-    const ok1 = b.tier === "ふつう" ? b.n >= 5 && b.n <= 10 : b.tier === "当たり" ? b.n >= 15 && b.n <= 20 : b.n >= 25 && b.n <= 35;
-    if (!ok1) { fail(`ボーナス点 ${b.n} が ${b.tier} の幅の外`); break; }
-  }
-  const rate = (k) => tiers[k] / N;
-  if (!(rate("当たり") >= 0.08 && rate("当たり") <= 0.12)) fail(`当たりの割合 ${(rate("当たり") * 100).toFixed(1)}% が 1 割ほどでない`);
-  if (!(rate("大当たり") >= 0.01 && rate("大当たり") <= 0.02)) fail(`大当たりの割合 ${(rate("大当たり") * 100).toFixed(2)}% が 1〜2％でない`);
-  if (top <= 30) fail("大当たりの上乗せ（31 点以上）が一度も出ない");
-  // 振り直しは何度でも。振るたびにボーナス点が変わる
+  // ---------------------------------------------------------------- 振り直し（鍵は無い）
   {
+    if (cre.toggleLock || cre.rollBonus || D.LOCK_MAX !== undefined || D.TROPHY_BONUS_MAX !== undefined) fail("鍵・振るボーナス点・トロフィーの合計の上限が残っている");
     const dr = cre.fresh(rnd);
     const seen = new Set();
-    for (let i = 0; i < 300; i++) { cre.roll(dr, rnd); seen.add(dr.bonusRoll); if (cre.bonusLeft(dr) < 0) fail("振り直したあと、ボーナス点の残りが負になる"); }
-    if (seen.size < 8) fail("振り直してもボーナス点が変わらない");
-    if (dr.best < Math.max(...seen)) fail("これまでの最高が覚えられていない");
+    for (let i = 0; i < 100; i++) { cre.roll(dr, rnd); seen.add(JSON.stringify(dr.dice)); if (cre.bonusUsed(dr) !== 0) fail("振り直したあとボーナスが残っている"); }
+    if (seen.size < 90) fail("振り直しても初期値が変わらない");
+    if (dr.best < cre.total(dr)) fail("これまでの最高（合計）が覚えられていない");
   }
-  // ほかの仕組みが足す分（トロフィーなど。cre.extraBonus）
+
+  // ---------------------------------------------------------------- ボーナス点（5 点＋トロフィー）
   {
+    const P0 = G.P;
     const dr = cre.fresh(rnd);
-    const before = cre.bonusPoints(dr);
-    cre.extraBonus = () => 3;
-    if (cre.bonusPoints(dr) !== before + 3) fail("cre.extraBonus がボーナス点に足されない");
-    delete cre.extraBonus;
+    G.P = { trophies: {}, graves: [] };
+    if (cre.bonusPoints(dr) !== 5) fail(`トロフィー 0 個でボーナス点が 5 にならない（${cre.bonusPoints(dr)}）`);
+    G.P.trophies = Object.fromEntries(Array.from({ length: 40 }, (_, i) => ["t" + i, { name: "t" }]));
+    if (cre.bonusPoints(dr) !== 45) fail(`トロフィー 40 個でボーナス点が 45 にならない（上限が残っている？ ${cre.bonusPoints(dr)}）`);
+    // 1 つの能力値には 5＋10＝15 点まで
+    const k0 = D.STATS[0];
+    while (cre.canAdd(dr, k0)) cre.addBonus(dr, k0, 1);
+    if (dr.bonus[k0] !== 5 + D.S2.TROPHY_PER_STAT) fail(`1 つの能力値に ${dr.bonus[k0]} 点足せた（5＋${D.S2.TROPHY_PER_STAT} まで）`);
+    // 決まりの 5 点を使い切ったあと、ほかの能力値には 10 点まで
+    const k1 = D.STATS[1];
+    while (cre.canAdd(dr, k1)) cre.addBonus(dr, k1, 1);
+    if (dr.bonus[k1] !== D.S2.TROPHY_PER_STAT) fail(`2 つめの能力値に ${dr.bonus[k1]} 点足せた（トロフィーの分 ${D.S2.TROPHY_PER_STAT} まで）`);
+    // 全部使い切れる（6 能力 × 10 ＋ 5 より少なければ）
+    while (cre.bonusLeft(dr) > 0) { const k = D.STATS.find((s) => cre.canAdd(dr, s)); if (!k) { fail("ボーナス点を使い切れない"); break; } cre.addBonus(dr, k, 1); }
+    // トロフィーが減ったら戻る
+    G.P.trophies = {};
+    cre.fit(dr);
+    if (cre.bonusLeft(dr) < 0 || !cre.trophyOk(dr)) fail("トロフィーが減ったあと、ボーナスが戻らない");
+    G.P = P0;
   }
 
   // ---------------------------------------------------------------- 換算
@@ -85,13 +94,17 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   if (!/%$/.test(G.statModText("筋力", 5))) fail("装備の能力値の補正が％で書かれていない");
 
   // ---------------------------------------------------------------- 成長
-  S.stats.筋力 = 12 * PCT; S.caps.筋力 = 14 * PCT;
+  S.stats.筋力 = 12 * PCT; S.caps.筋力 = 14 * PCT;   // 古いセーブの caps：効かない
   let g = G.grow("筋力", 1);
   if (g[0] !== 12 || g[1] !== 12 || g[2] !== 1) fail(`1 だけの成長で点が上がった（${g}）`);
   g = G.grow("筋力", 3);
   if (g[0] !== 12 || g[1] !== 13) fail(`経験が 4 たまっても点が上がらない（${g}）`);
   g = G.grow("筋力", 40);
-  if (g[1] !== 14 || S.stats.筋力 !== 14 * PCT) fail(`才能限界で止まらない（${g}・${S.stats.筋力}）`);
+  if (g[1] !== 23 || S.stats.筋力 !== 92) fail(`古い caps で止まった・40 伸ばして 92 にならない（${g}・${S.stats.筋力}）`);
+  g = G.grow("筋力", 40);
+  if (g[1] !== 33 || S.stats.筋力 !== 132) fail(`上限で止まった（上限は無いはず。${g}・${S.stats.筋力}）`);
+  if (G.chance("筋力", "普通") !== 95 || G.chance("筋力", "至難") !== 92) fail("99 を超えた能力値の成功率が 95％で止まらない");
+  if (G.pt(S.stats.筋力) !== 33) fail("99 を超えた能力値の点が出ない");
   const logN = S.log.length;
   S.stats.魅力 = 10 * PCT; S.caps.魅力 = 20 * PCT;
   G.apply({ grow: { 魅力: 1 } });
@@ -105,7 +118,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   G.rand = seeded(2203);
   for (let i = 0; i < 200; i++) {
     const r = G.check("敏捷", "易しい", "テスト");
-    if (r.growth && !(r.growth[1] > r.growth[0] && r.growth[1] <= 20)) { fail(`判定の成長が点でない（${r.growth}）`); break; }
+    if (r.growth && !(r.growth[1] > r.growth[0])) { fail(`判定の成長が点でない（${r.growth}）`); break; }
   }
   // 訓練場の表示は点
   const fac = S.mode; S.mode = "fac"; S.fac = "train";
@@ -141,13 +154,14 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   // ---------------------------------------------------------------- 作成画面（DOM なしなので、書き方を読む）
   {
     const src = readFileSync(fileURLToPath(new URL("../../src/ui/setup.js", import.meta.url)), "utf8");
-    if (!/bonusTier/.test(src) || !/大当たり/.test(src)) fail("作成画面に当たりの印が無い");
-    if (!/cre\.bonusPoints|draft\.bonusRoll/.test(src)) fail("作成画面に振ったボーナス点が出ない");
+    if (!/上振れ/.test(src) || !/lucky/.test(src)) fail("作成画面に上振れの印が無い");
+    if (!/cre\.bonusPoints\(draft\)/.test(src)) fail("作成画面にボーナス点が出ない");
+    if (!/TROPHY_PER_STAT/.test(src)) fail("作成画面に、トロフィーの分は 1 つの能力値に 10 点まで、が出ない");
+    if (/才能限界|鍵をかけ|大当たり/.test(src)) fail("作成画面に、なくした仕組みの言葉が残っている");
     if (/String\(o\.stats\[k\]\)/.test(src)) fail("作成画面のシートが割合のまま出している");
-    if (!/G\.pt\(o\.stats\[k\]\)/.test(src)) fail("作成画面のシートが点で出していない");
     const ui = readFileSync(fileURLToPath(new URL("../../src/ui/ui.js", import.meta.url)), "utf8");
-    if (/String\(S\.stats\[k\]\)/.test(ui)) fail("ステータスの能力値が割合のまま");
+    if (/String\(S\.stats\[k\]\)/.test(ui) || /限界/.test(ui)) fail("ステータスの能力値が割合のまま／「限界」が残っている");
   }
 
-  if (!bad) ok(`S2 能力値（作成 ${made} 人・素の値＋補正 ${lo}〜${hi} 点・ボーナス点 平均 ${(sum / N).toFixed(1)}：ふつう ${(rate("ふつう") * 100).toFixed(1)}%・当たり ${(rate("当たり") * 100).toFixed(1)}%・大当たり ${(rate("大当たり") * 100).toFixed(2)}%・最高 ${top}）`);
+  if (!bad) ok(`S2 能力値（作成 ${made} 人・初期値 ${lo}〜${top} 点・5〜18 に ${(midR * 100).toFixed(1)}%・20 以上 ${(hiR * 100).toFixed(2)}%（そういう能力値を持つ人 ${(chars20 / 50).toFixed(1)}%）・ボーナス点 5＋トロフィー）`);
 };

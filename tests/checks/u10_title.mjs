@@ -26,31 +26,29 @@ export default ({ G, fail, seeded }) => {
   // トロフィーとボーナス点
   const P0 = G.P;
   try {
-    // ボーナス点は、振った点（S2）＋トロフィーの数（cre.extraBonus）
+    // ボーナス点は、決まりの 5 点（D.BONUS_POINTS）＋トロフィーの数（cre.extraBonus。合計の上限は無い。S2）
     const dr0 = cre.fresh(seeded(1009));
-    const rolled = dr0.bonusRoll;
     G.P = { graves: [] }; // 古い記録（trophies が無い）
-    if (cre.trophyBonus() !== 0 || cre.bonusPoints(dr0) !== rolled) fail("トロフィーの無い記録でボーナス点が振った点にならない");
+    if (cre.trophyBonus() !== 0 || cre.bonusPoints(dr0) !== D.BONUS_POINTS) fail("トロフィーの無い記録でボーナス点が基本の値にならない");
     G.P = { trophies: {}, graves: [] };
-    if (cre.bonusPoints(dr0) !== rolled) fail("トロフィー 0 個でボーナス点が振った点にならない");
+    if (cre.bonusPoints(dr0) !== D.BONUS_POINTS) fail("トロフィー 0 個でボーナス点が基本の値にならない");
     const keys = D.TROPHIES.map((t) => t.key);
     for (const n of [1, 3, 10]) {
       G.P.trophies = Object.fromEntries(keys.slice(0, n).map((k) => [k, { name: k }]));
-      if (cre.bonusPoints(dr0) !== rolled + n) fail(`トロフィー ${n} 個でボーナス点が ${rolled + n} にならない（${cre.bonusPoints(dr0)}）`);
+      if (cre.bonusPoints(dr0) !== D.BONUS_POINTS + n) fail(`トロフィー ${n} 個でボーナス点が ${D.BONUS_POINTS + n} にならない（${cre.bonusPoints(dr0)}）`);
     }
-    // 全部取ったとき：上限で止まり、才能限界まで使え、才能限界を超えない
+    // 全部取ったとき：上限は無い。トロフィーの分は 1 つの能力値に 10 点までなので、使えるのは 5＋6×10 点まで
     G.P.trophies = Object.fromEntries(keys.map((k) => [k, { name: k }]));
-    if (cre.trophyBonus() !== Math.min(keys.length, D.TROPHY_BONUS_MAX)) fail(`全部取ったときのトロフィーの分が合わない（${cre.trophyBonus()}）`);
+    if (cre.trophyBonus() !== keys.length) fail(`全部取ったときのトロフィーの分が合わない（${cre.trophyBonus()}）`);
     const rnd = seeded(1010);
     for (let i = 0; i < 40; i++) {
       const dr = cre.fresh(rnd);
       const all = cre.bonusPoints(dr);
-      if (all !== dr.bonusRoll + cre.trophyBonus()) fail(`作成 ${i}: ボーナス点が振った点＋トロフィーにならない`);
+      if (all !== D.BONUS_POINTS + keys.length) fail(`作成 ${i}: ボーナス点が 5＋トロフィーにならない`);
       while (cre.bonusLeft(dr) > 0) { const k = D.STATS.find((s) => cre.canAdd(dr, s)); if (!k) break; cre.addBonus(dr, k, 1); }
-      const room = D.STATS.reduce((a, k) => a + cre.cap(dr, k) - cre.base(dr, k), 0);
-      if (cre.bonusUsed(dr) !== Math.min(all, room)) fail(`作成 ${i}: 使った点が ${Math.min(all, room)} にならない（${cre.bonusUsed(dr)}）`);
-      const o = cre.options(dr, rnd);
-      for (const k of D.STATS) if (o.stats[k] > o.caps[k]) fail(`作成 ${i}: ${k} が才能限界を超えた`);
+      const can = Math.min(all, D.BONUS_POINTS + D.STATS.length * D.S2.TROPHY_PER_STAT);
+      if (cre.bonusUsed(dr) !== can) fail(`作成 ${i}: 使った点が ${can} にならない（${cre.bonusUsed(dr)}）`);
+      if (!cre.trophyOk(dr)) fail(`作成 ${i}: トロフィーの分が 1 つの能力値に 10 点を超えた`);
     }
   } finally { G.P = P0; }
 

@@ -1,5 +1,5 @@
-// タイトルとキャラクター作成：タイトル → 人物（一画面でまとめて選ぶ）→ 能力値（何度でも振り直し・鍵・ボーナス点）→ キャラクターシート → 導入 → 冒険。
-// 決まり（おまかせ・振る・鍵・ボーナス点・導入の文）は engine/u5_creation.js の G.cre。ここは画面だけ。
+// タイトルとキャラクター作成：タイトル → 人物（一画面でまとめて選ぶ）→ 能力値（何度でも振り直し・ボーナス点）→ キャラクターシート → 導入 → 冒険。
+// 決まり（おまかせ・振る・ボーナス点・導入の文）は engine/u5_creation.js の G.cre。ここは画面だけ。
 // 作成画面の乱数は Math.random（CLAUDE.md の例外）。レーン U（画面）が管理
 (function (G) {
   const D = G.data;
@@ -97,7 +97,7 @@
       txt.append(h("span", "", c.blurb));
       txt.append(h("span", "fine", `得意：${cre.strengths(draft.cls).join("・")} ／ 出発地：${D.LOCS[c.start].name}`));
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
-      if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${a.cap ? `、才能限界 ${signed(a.cap)}` : ""}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
+      if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
     }
     lay.append(card);
 
@@ -299,7 +299,7 @@
 
   function stats(root) {
     steps(root, 1);
-    head(root, "能力値", "何度でも振り直せる。ボーナス点の数は振るたびに変わり、ときどき大当たりが出る。鍵をかけた能力値は才能限界が残る");
+    head(root, "能力値", "何度でも振り直せる。初期値はダイス（3D6）で決まり、運が良ければ 20 を超える。ボーナス点は 5 点（トロフィー 1 つにつき +1）");
 
     const bar = h("div", "rollBar");
     const who = h("div", "rollWho");
@@ -314,38 +314,30 @@
     tray.append(...dice);
     const rb = btn("振る", "primary rollBtn", () => { cre.roll(draft, R); rolledNow = true; sfx("dice", "coin"); setup.show(); }, "s-roll");
     const info = h("div", "rollInfo num");
-    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `これまでの最高 ${draft.best || cre.bonusPoints(draft)} 点`), h("span", "", `鍵 ${cre.lockCount(draft)}／${D.LOCK_MAX}`), h("span", "", `合計 ${cre.total(draft)}`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
+    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `振った中で最高の合計 ${draft.best || cre.total(draft)}`), h("span", "", `合計 ${cre.total(draft)}`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
     bar.append(who, tray, rb, info);
     root.append(bar);
 
     const box = h("section", "box");
     const bh = h("div", "boxhead");
     bh.append(h("b", "", "ボーナス点"));
-    // 振ったボーナス点（ふつう・当たり・大当たり）
-    const tier = draft.bonusTier || "ふつう";
-    const tierCls = { 大当たり: " jackpot", 当たり: " lucky" }[tier] || "";
-    const bn = h("span", "bonusRoll num" + tierCls, `${draft.bonusRoll === undefined ? cre.bonusPoints(draft) : draft.bonusRoll} 点`);
+    const bn = h("span", "bonusRoll num", `${cre.bonusPoints(draft)} 点`);
     bn.setAttribute("aria-live", "polite");
-    bh.append(bn, h("span", "bonusTier" + tierCls, tier === "大当たり" ? "大当たり！" : tier === "当たり" ? "当たり" : "ふつう"));
+    bh.append(bn);
     const left = cre.bonusLeft(draft);
     bh.append(h("span", "bonusLeft num" + (left ? " has" : ""), `残り ${left} 点`));
     const tb = cre.trophyBonus ? cre.trophyBonus() : 0;
     if (tb) bh.append(h("span", "trophyBonus num", `トロフィーで +${tb}`));
-    bh.append(h("span", "fine", "好きな能力値に足す。才能限界（赤い線）までしか足せない。ふつうは 5〜10 点、1 割ほどで 15〜20 点、まれに 25 点を超える"));
+    bh.append(h("span", "fine", `好きな能力値に足す。決まりの ${cre.basePoints(draft)} 点はどこへでも、トロフィーの分は 1 つの能力値に ${D.S2.TROPHY_PER_STAT} 点まで`));
     box.append(bh);
     const list = h("div", "statlist creStats num");
     D.STATS.forEach((k) => {
-      const row = h("div", "srow" + (rolledNow && !draft.locks[k] ? " rolled" : "") + (draft.locks[k] ? " locked" : ""));
+      const lucky = cre.base(draft, k) >= 20;   // 上振れ（20 以上）
+      const row = h("div", "srow" + (rolledNow ? " rolled" : "") + (lucky ? " lucky" : ""));
       row.title = D.STAT_HINT[k];
-      const lk = btn(draft.locks[k] ? "鍵" : "−", "lock", () => { if (!cre.toggleLock(draft, k)) { G.ui.toast && G.ui.toast("鍵は " + D.LOCK_MAX + " つまで", "どれかの鍵を外してから"); return; } setup.show(); }, "lk-" + k);
-      lk.setAttribute("aria-pressed", String(!!draft.locks[k]));
-      lk.setAttribute("aria-label", draft.locks[k] ? `${k}の鍵を外す（今は振り直しても才能限界が変わらない）` : `${k}に鍵をかける（振り直しても才能限界が変わらない）`);
-      lk.title = draft.locks[k] ? "鍵を外す" : "鍵をかける（振り直しても才能限界が変わらない）";
-      lk.textContent = "";
-      lk.append(lockIcon(!!draft.locks[k]), h("small", "", draft.locks[k] ? "鍵" : "鍵なし"));
-      const v = cre.value(draft, k), cap = cre.cap(draft, k);
+      const v = cre.value(draft, k);
       const PCT = G.PT();
-      const b = h("span", "bar"); const i = h("i"); i.style.width = v * PCT + "%"; const u = h("u"); u.style.left = `calc(${cap * PCT}% - 1px)`; b.append(i, u);
+      const b = h("span", "bar"); const i = h("i"); i.style.width = Math.min(100, v * PCT) + "%"; b.append(i);
       const pm = h("span", "pm");
       const minus = btn("−", "small", () => { cre.addBonus(draft, k, -1); setup.show(); }, "m-" + k);
       minus.setAttribute("aria-label", `${k}のボーナスを1戻す`);
@@ -356,17 +348,19 @@
       pm.append(minus, h("span", "bn", draft.bonus[k] ? "+" + draft.bonus[k] : "0"), plus);
       const m = cre.modParts(draft, k);
       const det = h("span", "det");
-      det.append(h("span", "", `職業 ${draft.rolled[k]}`));
+      det.append(h("span", lucky ? "luckyTag" : "", `ダイス ${draft.dice ? draft.dice[k] : draft.rolled[k]}${lucky ? "・上振れ！" : ""}`));
+      const cm = cre.classMod(draft.cls, k);
+      if (cm) det.append(h("span", cm > 0 ? "plus" : "minus", `職業 ${signed(cm)}`));
       if (m.age) det.append(h("span", m.age > 0 ? "plus" : "minus", `年齢 ${signed(m.age)}`));
       if (m.origin) det.append(h("span", m.origin > 0 ? "plus" : "minus", `生まれ ${signed(m.origin)}`));
       if (m.race) det.append(h("span", m.race > 0 ? "plus" : "minus", `種族 ${signed(m.race)}`));
       if (draft.bonus[k]) det.append(h("span", "plus", `ボーナス +${draft.bonus[k]}`));
-      det.append(h("span", "", `限界 ${cap}`), h("span", "", `成功率 ${v * PCT}%`));
-      row.append(lk, h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
+      det.append(h("span", "", `成功率 ${Math.min(95, v * PCT)}%`));   // 判定は 95％で止まる
+      row.append(h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
       list.append(row);
     });
     box.append(list);
-    box.append(h("p", "fine", `1 点が成功率の基準 ${G.PT()}％（12 点なら ${12 * G.PT()}％）。使った能力値は、冒険の中で才能限界まで伸びていく。能力の名前に触れると説明が出る。`));
+    box.append(h("p", "fine", `1 点が成功率の基準 ${G.PT()}％（12 点なら ${12 * G.PT()}％）。使った能力値は、冒険の中で伸びていく。能力の名前に触れると説明が出る。`));
     root.append(box);
     if (G.m8ui) root.append(G.m8ui.creBox(cre.talents(draft), cre.flavors && cre.flavors(draft)));
 
@@ -384,19 +378,6 @@
         const t = setInterval(() => { dice.forEach((d) => setDie(d, 1 + Math.floor(R() * 6))); if (++n >= 6) { clearInterval(t); tray.classList.remove("tumble"); } }, 60);
       }
     }
-  }
-  function lockIcon(on) {
-    const ns = "http://www.w3.org/2000/svg";
-    const s = document.createElementNS(ns, "svg");
-    s.setAttribute("viewBox", "0 0 16 16"); s.setAttribute("width", "16"); s.setAttribute("height", "16"); s.setAttribute("aria-hidden", "true");
-    const p = document.createElementNS(ns, "path");
-    p.setAttribute("d", on ? "M4 7V5a4 4 0 0 1 8 0v2" : "M4 7V5a4 4 0 0 1 7.5-2");
-    p.setAttribute("fill", "none"); p.setAttribute("stroke", "currentColor"); p.setAttribute("stroke-width", "1.6");
-    const r = document.createElementNS(ns, "rect");
-    r.setAttribute("x", "2.5"); r.setAttribute("y", "7"); r.setAttribute("width", "11"); r.setAttribute("height", "8"); r.setAttribute("rx", "1");
-    r.setAttribute("fill", on ? "currentColor" : "none"); r.setAttribute("stroke", "currentColor"); r.setAttribute("stroke-width", "1.6");
-    s.append(p, r);
-    return s;
   }
 
   // ---------------------------------------------------------------- 4. キャラクターシート（確認）
@@ -417,8 +398,8 @@
     const stl = h("div", "statlist num");
     D.STATS.forEach((k) => {
       const r = h("div", "stat");
-      const b = h("span", "bar"); const i = h("i"); i.style.width = o.stats[k] + "%"; const u = h("u"); u.style.left = `calc(${o.caps[k]}% - 1px)`; b.append(i, u);
-      r.append(h("span", "nm", k), h("span", "v", String(G.pt(o.stats[k]))), b, h("span", "cap", `限界 ${G.pt(o.caps[k])}`));
+      const b = h("span", "bar"); const i = h("i"); i.style.width = o.stats[k] + "%"; b.append(i);
+      r.append(h("span", "nm", k), h("span", "v", String(G.pt(o.stats[k]))), b, h("span", "cap", `${Math.min(95, o.stats[k])}%`));
       stl.append(r);
     });
     const sb = h("section");
