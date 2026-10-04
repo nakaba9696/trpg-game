@@ -631,16 +631,11 @@
   $("#tabT").onclick = () => setTab("T");
   $("#tabG").onclick = () => setTab("G");
 
-  // 手引きに書き足された行の数（増えたらボタンに印を付ける）
-  const loreCount = () => (G.S && G.S.lore ? Object.values(G.S.lore).reduce((a, x) => a + x.length, 0) : 0);
-  let loreSeenCount = -1;
-  function markWorld() {
-    const n = loreCount();
-    if (loreSeenCount < 0 || n < loreSeenCount) loreSeenCount = n;
-    $("#openWorld").classList.toggle("fresh", n > loreSeenCount);
-  }
+  // 世界の手引き：図鑑の「用語」のタブ（#worldBody は ui/f2_codex.js が図鑑の窓の中に作る。U11）。新しい印は図鑑の印（G.codexFresh）で出す
+  function markWorld() { if (G.f2 && G.f2.markBtn) G.f2.markBtn(); }
   ui.buildWorld = () => {
     const body = $("#worldBody");
+    if (!body) return;
     body.textContent = "";
     body.append(h("p", "", D.WORLD.intro));
     D.WORLD.sections.forEach(([t, rows]) => {
@@ -655,8 +650,6 @@
   document.querySelectorAll("[data-close]").forEach((b) => { b.onclick = () => b.closest("dialog").close(); });
   document.querySelectorAll("dialog").forEach((dl) => dl.addEventListener("click", (ev) => { if (ev.target === dl) dl.close(); }));
   $("#openTrophy").onclick = () => ui.openTrophies();
-  // 手引きは開くたびに作り直す（物語の中で書き足された用語説明を載せる）
-  $("#openWorld").onclick = () => { ui.buildWorld(); loreSeenCount = loreCount(); $("#openWorld").classList.remove("fresh"); $("#dlgWorld").showModal(); };
   $("#openSheet").onclick = () => ui.setSheetOpen(true);
   $("#sheetBox").addEventListener("click", (ev) => { if (ev.target.id === "sheetBox") ui.setSheetOpen(false); });
   document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && document.body.classList.contains("sheet-open")) ui.setSheetOpen(false); });

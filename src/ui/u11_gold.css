@@ -1,0 +1,53 @@
+/* U11：所持金をひと目で（ui/u11_gold.js）。上の帯の札・増減の一瞬の表示・店などの画面の中の札 */
+:root { --u11-ink: #6b4c06; --u11-edge: rgba(143, 106, 18, .55); --u11-bg: rgba(226, 193, 114, .22); --u11-up: #2f6b1f; --u11-down: #a3321f; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --u11-ink: #f0cf78; --u11-edge: rgba(226, 193, 114, .5); --u11-bg: rgba(226, 193, 114, .12); --u11-up: #a8d48f; --u11-down: #f08a72; }
+}
+:root[data-theme="dark"] { --u11-ink: #f0cf78; --u11-edge: rgba(226, 193, 114, .5); --u11-bg: rgba(226, 193, 114, .12); --u11-up: #a8d48f; --u11-down: #f08a72; }
+
+/* 金貨の印 */
+.u11coin { display: inline-block; flex: none; width: 14px; height: 14px; border-radius: 50%; vertical-align: -2px;
+  background: radial-gradient(circle at 35% 30%, #fff3c4 0 18%, #f0c95a 40%, #b8861c 78%, #7a5408 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(122, 84, 8, .7), 0 1px 1px rgba(0, 0, 0, .25); }
+
+/* 上の帯（スマホ・PC の左上の札とも） */
+#mGold.u11gold { position: relative; display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px 1px 5px; white-space: nowrap;
+  border: 1px solid var(--u11-edge); border-radius: 999px; background: var(--u11-bg); color: var(--u11-ink); line-height: 1.35; }
+#mGold .u11lab { font-size: 11px; letter-spacing: .04em; opacity: .9; }
+#mGold .u11n { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+#mGold .u11u { font-size: 12px; font-weight: 700; }
+body.v9pc #mbar #mGold .u11n { font-size: 14.5px; }
+/* 狭い画面では「所持金」の札を省いて、印と数字だけ */
+@media (max-width: 380px) { #mGold .u11lab { display: none; } }
+
+/* 増減：札の右に一瞬出る */
+#mGold .u11d { position: absolute; left: calc(100% + 6px); top: 50%; transform: translateY(-50%); padding: 0 5px; font-size: 12px; font-weight: 700; white-space: nowrap; pointer-events: none;
+  border-radius: 3px; background: var(--bar-bg, var(--sheet)); box-shadow: 0 1px 4px rgba(0, 0, 0, .25); }
+/* 右に場所が無いとき（u11_gold.js が測る）：はみ出さないよう札の上に右寄せで出す（そのあいだは帯の「保存済み」を引っ込める。zu11_quick.css） */
+#mGold .u11d.above { left: auto; right: 0; top: auto; bottom: 100%; transform: none; margin-bottom: 3px; }
+#mbar:has(.u11d.above) .u11saved { visibility: hidden; }
+#mGold .u11d.up { color: var(--u11-up); }
+#mGold .u11d.down { color: var(--u11-down); }
+#mGold.u11up { border-color: var(--u11-up); }
+#mGold.u11down { border-color: var(--u11-down); }
+#mGold.u11flash .u11n { animation: u11glow 1.1s ease-out; }
+#mGold.u11flash .u11d { animation: u11pop 1.7s ease-out forwards; }
+#mGold.u11flash .u11coin { animation: u11spin .7s ease-out; }
+@keyframes u11glow { 0% { text-shadow: 0 0 0 transparent; } 25% { text-shadow: 0 0 10px var(--u11-edge), 0 0 2px var(--u11-ink); } 100% { text-shadow: 0 0 0 transparent; } }
+@keyframes u11pop { 0% { opacity: 0; translate: 0 4px; } 15% { opacity: 1; translate: 0 0; } 75% { opacity: 1; } 100% { opacity: 0; translate: 0 -3px; } }
+@keyframes u11spin { 0% { transform: scaleX(1); } 50% { transform: scaleX(.2); } 100% { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) {
+  #mGold.u11flash .u11n, #mGold.u11flash .u11d, #mGold.u11flash .u11coin { animation: none; }
+}
+
+/* 店・宿・訓練場・依頼などの画面の中：行動の上の札 */
+.u11purse { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; width: fit-content; max-width: 100%; margin: 0 0 10px; padding: 4px 12px 4px 8px;
+  border: 1px solid var(--u11-edge); border-radius: 999px; background: var(--u11-bg); color: var(--u11-ink); font-family: var(--f-ui); }
+.u11purse .u11coin { width: 16px; height: 16px; }
+.u11purse .u11lab { font-size: 12.5px; }
+.u11purse .u11n { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.u11purse .u11u { font-size: 13px; font-weight: 700; }
+.u11purse .u11short { font-size: 12px; color: var(--muted); margin-left: 4px; }
+
+/* ステータスの表 */
+#sheet dd.u11sheet { color: var(--u11-ink); font-weight: 700; }
