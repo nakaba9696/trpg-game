@@ -359,7 +359,6 @@
       const t = h("div");
       t.append(h("b", "", c.name), h("span", "fine", c.desc || ""));
       if (G.r1CompLabel && G.r1CompLabel(c)) t.append(h("span", "fine", G.r1CompLabel(c)));
-      if (G.m8CompLabel) t.append(h("span", "fine", G.m8CompLabel(c)));
       if (G.m10Label && G.m10Label(c)) t.append(h("span", "fine", G.m10Label(c)));
       el.append(t);
       box.append(el);
@@ -448,7 +447,7 @@
     const sh = $("#sheet");
     const keep = sh.scrollTop;
     sh.textContent = "";
-    [sheetHead(), sheetPools(), sheetStats(ups), G.m8ui ? G.m8ui.sheet() : null, sheetGear(), sheetCompanions(), sheetQuests(), sheetInventory(), sheetMemos(), sheetButtons()].forEach((el) => { if (el) sh.append(el); });
+    [sheetHead(), sheetPools(), sheetStats(ups), sheetGear(), sheetCompanions(), sheetQuests(), sheetInventory(), sheetMemos(), sheetButtons()].forEach((el) => { if (el) sh.append(el); });
     sh.scrollTop = keep;
     renderMobileBar();
     drawFaces();
@@ -580,7 +579,6 @@
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
       ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${G.pt(run.stats[k])}`).join(" ")));
-      if (G.m8ui && G.m8ui.graveLine(run)) ep.append(h("span", "", G.m8ui.graveLine(run)));
     } else ep.hidden = true;
     const list = $("#chronList");
     list.textContent = "";

@@ -72,7 +72,7 @@
         talk: ["M2 のひとこと（戦いのあと・旅の途中に出る）"],
         topics: [{ title: "…", text: [...], replies: [...] }], // 結末のあとの話題（種類は身の上。好感度 10 以上）
         banter: [{ b: "zerina", title: "…", lines: [["a", "…"], ["b", "…"]] }], // 結末のあとの掛け合い（a はその人。where を書かなければ、どこでも起きる）
-        power: 4, dmg: 1, heal: true, fire: true, t: { talk: 1 }, // 能力（才は M8 の技能の鍵）
+        power: 4, dmg: 1, heal: true, fire: true, // 能力
         aff: 12,                            // 好感度（既定 12）
       },
       deal: { /* … */ },

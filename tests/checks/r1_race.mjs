@@ -1,7 +1,7 @@
 // R1：種族（人間・エルフ・獣人）。engine/zr1_race.js・data/r1_races.js・data/events_r1.js を DOM なしで確かめる
 // - 表の整合（能力値・技能・特性・年齢の幅・名前・国）
 // - 古いセーブ（種族が無い）は人間として動く。種族を書かない始まりでは乱数の並びが変わらない
-// - 作成：種族と元の獣を選ぶと、補正・年齢・名前・才・導入が変わる。能力値は振り直さない。そのまま冒険を始められる
+// - 作成：種族と元の獣を選ぶと、補正・年齢・名前・導入が変わる。能力値は振り直さない。そのまま冒険を始められる
 // - 判定：夜目・鳥目と遠目・冬毛・耳・人の目。見込みの％と判定の％が同じ
 // - 出来事：既存の出来事に足した選択肢・種族の出来事を最後まで通す。見せない言葉が無い
 // - 仲間・評判（M3）・恋（M10）・人生の物語（M6）・墓碑
@@ -16,7 +16,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const nations = new Set(Object.values(D.LOCS).map((L) => L.nation || L.region));
   const checkSpec = (where, x) => {
     for (const k of Object.keys(x.mod || {})) if (!D.STATS.includes(k)) fail(`${where}: 能力値 ${k} が無い`);
-    for (const k of x.talents || []) if (!D.TALENTS[k]) fail(`${where}: 技能 ${k} が無い`);
+    if (x.talents) fail(`${where}: 才（talents）が残っている`);
     for (const k of x.traits || []) if (!D.R1_TRAITS[k]) fail(`${where}: 特性 ${k} が無い`);
     for (const n of Object.keys(x.greet || {})) if (!nations.has(n)) fail(`${where}: 国 ${n} が場所に無い`);
     if (x.ages) {
@@ -64,7 +64,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   if (S.profile.race !== "human") fail("種族を書かない始まりが人間にならない");
   const afterHuman = G.rand();
   start({ race: "elf" });
-  if (G.rand() !== afterHuman) fail("種族を選ぶと、始まりの乱数の並びが変わる（才の付きやすさだけ変わるはず）");
+  if (G.rand() !== afterHuman) fail("種族を選ぶと、始まりの乱数の並びが変わる");
   S = start();
   delete S.profile.race; delete S.profile.beast;
   if (G.r1Of(S).race !== "human" || G.r1Mod("魅力") !== 0) fail("古いセーブが人間として読まれない");
@@ -119,12 +119,6 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     const n = { human: 0, elf: 0, beast: 0 };
     for (let i = 0; i < 300; i++) { const dr = cre.fresh(rnd); cre.randomRace(dr, rnd); n[dr.race || "human"]++; }
     if (!(n.human > n.beast && n.beast > n.elf && n.elf > 10)) fail(`おまかせの種族の割合がおかしい ${JSON.stringify(n)}`);
-  }
-  // 才：種族の得意の技能は付きやすい（傭兵のエルフは、人間の傭兵より術の才がよく付く）
-  {
-    const count = (race) => { let n = 0; for (let i = 0; i < 400; i++) { const dr = cre.fresh(rnd); dr.cls = "merc"; cre.setRace(dr, race, rnd); cre.roll(dr, rnd); if (dr.talents.magic >= 1) n++; } return n; };
-    const h = count("human"), e = count("elf");
-    if (!(e > h * 2)) fail(`エルフの術の才が付きやすくない（人間 ${h}・エルフ ${e} / 400）`);
   }
 
   // ---------------------------------------------------------------- 判定

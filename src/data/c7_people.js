@@ -182,7 +182,6 @@
       join: {
         cls: "退役将軍", desc: "伝説の拳。道に迷う", power: 68, dmg: 3, trait: "just", bond: 56, home: ["fort"],
         life: { home: "黒鉄の砦の炊き出し小屋の奥", kin: "山へ逃がした、名も知らぬ村の人たち", food: "炊き出しの麦粥（自分で煮る）", habit: "会った兵の名を、指を折って三回唱えて覚える", secret: "将軍を降りた理由を聞かれると、いつも違う話をする。どれも途中で道に迷う", keep: "先帝から下された、名の削られた勲章" },
-        t: { sword: 2, spear: 2, bow: 0, magic: 0, pray: 0, stealth: 0, talk: 2, lore: 0, wild: 1 }, f: { cook: 1, kids: 1, calm: 1 },
       },
     }),
     hartmut: P({
@@ -192,7 +191,6 @@
       join: {
         cls: "坑夫頭", desc: "大男。詩は下手", power: 64, dmg: 3, trait: "soft", bond: 52, home: ["garmund"],
         life: { home: "帝都の外れの坑夫長屋のいちばん奥", kin: "崩れの日に担ぎ出した十二人と、届かなかった一人", food: "坑夫酒場の黒ビールと茹で芋", habit: "考えごとをすると、つるはしの柄に爪で詩の頭を刻む", secret: "詩の頭に必ず書く番号は、あの日、手の届かなかった坑夫の札の番号", keep: "崩れた坑道から拾った、番号の欠けた坑夫の札" },
-        t: { sword: 0, spear: 1, bow: 0, magic: 0, pray: 1, stealth: 0, talk: 0, lore: 1, wild: 2 }, f: { letters: 1, carve: 2 },
       },
     }),
     gustav: P({
@@ -202,7 +200,6 @@
       join: {
         cls: "剣闘士", desc: "卑怯で、強い", power: 62, dmg: 3, trait: "greedy", bond: 44, home: ["w2_zalgros"],
         life: { home: "闘技場の裏の、子どもの剣闘士たちと同じ兵舎", kin: "買い戻した子どもたち（今は七人）", food: "闘技場の前の屋台の、揚げた川魚", habit: "どこへ行っても、まず出口と砂の落ちている場所を数える", secret: "自分を買い戻した証文を、肌身離さず持っている。値段の欄が二度書き直してある", keep: "折れた木剣（最初の試合のもの）" },
-        t: { sword: 3, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 2, talk: 2, lore: 0, wild: 0 }, f: { dice: 2, kids: 1 },
       },
     }),
     timo: P({
@@ -212,7 +209,6 @@
       join: {
         cls: "見習い狩人", desc: "阿呆。矢は外さない", power: 52, dmg: 2, trait: "amorous", bond: 60, home: ["w2_nagris"],
         life: { home: "ナグリスの大木の、いちばん高い枝の上の小屋", kin: "帰らなかった兄", food: "焼いた木の実（焦がす）", habit: "きれいな人を見るたびに、耳が勝手にそっちを向く", secret: "兄の弓の弦は、兄が最後に張ったまま。一度も張り替えていない", keep: "兄の弓" },
-        t: { sword: 0, spear: 1, bow: 3, magic: 0, pray: 0, stealth: 2, talk: 1, lore: 0, wild: 3 }, f: { beasts: 2, nose: 1 },
       },
     }),
     noeris: P({
@@ -222,7 +218,6 @@
       join: {
         cls: "賭場の胴元", desc: "騙すと言って騙す", power: 42, dmg: 1, fire: true, trait: "distrust", bond: 50, home: ["w2_amyrein"],
         life: { home: "湯の町の賭場の奥の、湯気のこもる小部屋", kin: "遺構から帰らなかった学院の先輩", food: "湯で蒸した卵（塩を三粒）", habit: "人と話しながら、指の上で骰子を一つ転がしつづけている", secret: "先輩の帳面の続きは、もう先輩の書いた分より厚い。最後の頁は、まだ白い", keep: "角の欠けた象牙の骰子" },
-        t: { sword: 0, spear: 0, bow: 0, magic: 3, pray: 0, stealth: 1, talk: 3, lore: 2, wild: 0 }, f: { dice: 2, letters: 1 },
       },
     }),
     ingrid: P({
@@ -232,7 +227,6 @@
       join: {
         cls: "検死官", desc: "無表情。袖を離さない", power: 40, dmg: 1, heal: true, trait: "cold", bond: 46, home: ["garmund"],
         life: { home: "帝都の検死小屋の二階（下の階の匂いには慣れた）", kin: "疫病の年に開いた、名前の無い人たち", food: "帝都の菓子屋の蜂蜜菓子（三つ）", habit: "隣に座った人の袖を、無言でつまむ", secret: "握り潰された報告書の写しを、一部だけ外套の裏に縫いこんでいる", keep: "刃こぼれの無い小さな刃物の包み" },
-        t: { sword: 0, spear: 0, bow: 0, magic: 1, pray: 1, stealth: 1, talk: 0, lore: 3, wild: 0 }, f: { herbs: 2, nose: 1 },
       },
     }),
     lumia: P({
@@ -242,7 +236,6 @@
       join: {
         cls: "湖の大婆さま", desc: "昼行灯。本気は湖を凍らす", power: 60, dmg: 2, fire: true, heal: true, trait: "lazy", bond: 55, home: ["zephara"],
         life: { home: "首都エルメシアの湖のほとり、名を刻んだ木の根もと", kin: "七百年のあいだに見送った人たち（木の幹に刻んである）", food: "湖の魚の干物（固いのが好き）", habit: "日なたを見つけると、どこでも丸くなって寝る", secret: "木の幹には、もう名を刻む場所が無い。次の名をどこに刻むか、決めていない", keep: "名を刻むための、柄のすり減った小刀" },
-        t: { sword: 0, spear: 0, bow: 0, magic: 3, pray: 2, stealth: 0, talk: 1, lore: 3, wild: 1 }, f: { sleep: 2, kids: 1, weather: 1 },
       },
     }),
     sieglinde: P({
@@ -255,7 +248,6 @@
       join: {
         cls: "中隊長", desc: "有能。運が無い", power: 58, dmg: 2, trait: "loyal", bond: 52, home: ["garmund"],
         life: { home: "帝都の兵舎の、隙間風の入る士官部屋", kin: "塔に残った部下九人", food: "兵舎の黒パンと塩漬け肉（自分では作らない）", habit: "寝る前に、部下の名を四十人分、帳面に書いてから消す", secret: "三十一人を捨て石にした命令書の写しを、捨てられずに持っている。署名は自分の字", keep: "折れた槍の穂先" },
-        t: { sword: 1, spear: 3, bow: 1, magic: 0, pray: 0, stealth: 0, talk: 1, lore: 2, wild: 1 }, f: { compass: 1, weather: 1 },
       },
     }),
     annelise: P({
@@ -265,7 +257,6 @@
       join: {
         cls: "鍛冶ギルドの首席", desc: "姉御。いつも文無し", power: 56, dmg: 2, trait: "braggart", bond: 54, home: ["w2_dranherz"],
         life: { home: "ドランヘルツの、煙突の傾いた借家", kin: "鍛冶屋を潰した父（今は山の村で炭を焼いている）", food: "腹持ちのいい黒パンと、炙った腸詰め", habit: "人の持っている刃物を、勝手に研いで返す", secret: "質屋の剣を請け出す金は、いつも計算を間違えて少しずつ足りない", keep: "父の銘の入った槌" },
-        t: { sword: 1, spear: 0, bow: 0, magic: 0, pray: 0, stealth: 0, talk: 1, lore: 1, wild: 1 }, f: { carve: 1, cook: 1 },
       },
     }),
     radmila: P({
@@ -278,7 +269,6 @@
       join: {
         cls: "谷の剣士", desc: "怖い美人。手当ては優しい", power: 68, dmg: 3, trait: "proud", bond: 40, home: ["garmund"],
         life: { home: "決まった家は無い。影の谷の、焼き付いた影の無い壁の陰", kin: "黒い城の台所で、一緒に働いていた子どもたち", food: "塩を振っただけの焼いた肉", habit: "子どもを見ると、まず膝と肘を見る", secret: "腰の剣は、山の向こうの黒い城から持ち出したもの。持ち主は、まだ取り返しに来ない", keep: "鞘も柄も黒い、刃こぼれしない剣" },
-        t: { sword: 3, spear: 0, bow: 0, magic: 0, pray: 0, stealth: 2, talk: 0, lore: 1, wild: 2 }, f: { herbs: 1, letters: 1 },
       },
     }),
 

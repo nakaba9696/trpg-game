@@ -1,18 +1,18 @@
 // R1：種族（人間・エルフ・獣人）。表は src/data/r1_races.js。DOM には触らない。
-// 名前の頭の z は、u5_creation.js（G.cre）・zm8_talent.js（才）・m10_love.js・ending_m6.js より後に読ませるため（manifest は触らない）。
+// 名前の頭の z は、u5_creation.js（G.cre）・m10_love.js・ending_m6.js より後に読ませるため（manifest は触らない）。
 //
 // 状態：S.profile.race（"human" / "elf" / "beast"）・S.profile.beast（獣人の元の獣。D.BEASTS の鍵）。
 //   古いセーブには無い → 人間として動く（G.r1Of が埋める。セーブは書き換えない）。墓碑にも g.race・g.beast を残す。
 //   仲間：c.race・c.beast（酒場で雇う者・「random」で加わる者は名前から決まる。乱数を進めない）。無ければ人間。
 //     ほかの子が名のある仲間を足すときは、仲間の欄に race・beast を書けば、その種族になる（例：{ name: "…", race: "beast", beast: "wolf" }）。
 // 効き目（どれも「ほどよく」）：
-//   作成 … 能力値の補正（生まれ・年齢と同じ扱い）、才の付きやすい技能（M8 の得意と同じ分布になる）、年齢の幅、名前の響き
+//   作成 … 能力値の補正（生まれ・年齢と同じ扱い）、年齢の幅、名前の響き
 //   判定 … 特性（夜目・鳥目と遠目・冬毛・耳）と人の目（国ごとの魅力の補正）。成功率の見込み（画面の％）と判定は同じ
 //   出来事 … 種族・特性で起きる出来事（src/data/events_r1.js）と、既存の出来事に足す選択肢（D.R1_EXTRA）
 //   評判（M3）… 人の国（王国・帝国・教会領）でエルフ・獣人が罪を犯すと、悪名が 1 多く付く（覚えられやすい）
 //   恋（M10）… 同じ獣の獣人どうし・エルフどうしは相性 +1。種族の違う恋人・連れ合いは、人生の物語に一文
 //   人生の物語（M6）… 最初の段落に種族の一文。エルフは「その後」も長い
-// core.js・combat.js・u5_creation.js・zm8_talent.js・m10_love.js・ending_m6.js は書き換えず、ここで包む。レーン C（R1）
+// core.js・combat.js・u5_creation.js・m10_love.js・ending_m6.js は書き換えず、ここで包む。レーン C（R1）
 (function (G) {
   const D = G.data;
   const hash = (s) => { let h = 0; for (const ch of String(s)) h = (Math.imul(31, h) + ch.codePointAt(0)) | 0; return Math.abs(h); };
@@ -29,7 +29,7 @@
     const beast = race === "beast" ? (D.BEASTS[p.beast] ? p.beast : D.BEAST_KEYS[0]) : "";
     return { race, beast };
   };
-  // 種族と元の獣を合わせた表（能力値の補正・才・年齢の幅・特性・人の目）
+  // 種族と元の獣を合わせた表（能力値の補正・年齢の幅・特性・人の目）
   G.r1Spec = (r) => {
     r = r && r.race ? r : G.r1Of(r);
     const R = D.RACES[r.race] || D.RACES.human;
@@ -38,7 +38,6 @@
     Object.entries(B.mod || {}).forEach(([k, v]) => { mod[k] = (mod[k] || 0) + v; });
     return {
       race: r.race, beast: r.beast, mod,
-      talents: uniq([...(R.talents || []), ...(B.talents || [])]),
       ages: B.ages || R.ages || null,
       traits: uniq([...(R.traits || []), ...(B.traits || [])]),
       greet: R.greet || {}, temper: B.temper || "",
@@ -98,23 +97,11 @@
   // 人の目の一覧（「レオネスト王国 −5」など）
   G.r1Greet = (r) => Object.entries(G.r1Spec(r).greet).filter(([, v]) => v);
 
-  // ---------------------------------------------------------------- 才（M8）：種族と獣の技能は、職業の得意と同じ付きやすさ
-  let raceNow = null;
-  if (G.m8Main) {
-    const main0 = G.m8Main;
-    G.m8Main = (cls) => {
-      const m = main0(cls);
-      if (!raceNow) return m;
-      return m.concat(G.r1Spec(raceNow).talents.filter((k) => !m.includes(k)));
-    };
-  }
-  const withRace = (r, fn) => { const p = raceNow; raceNow = r && r.race !== "human" ? r : null; try { return fn(); } finally { raceNow = p; } };
-
   // ---------------------------------------------------------------- 新しい冒険
   const newGame0 = G.newGame;
   G.newGame = (opt) => {
     const r = G.r1Of({ profile: (opt && opt.profile) || {} });
-    const S = withRace(r, () => newGame0(opt));
+    const S = newGame0(opt);
     S.profile.race = r.race;
     if (r.beast) S.profile.beast = r.beast; else delete S.profile.beast;
     return S;
@@ -147,22 +134,11 @@
       }
       return gen0(dr, key, rnd);
     };
-    // 振るとき・才を振るときに、種族の得意を混ぜる
-    const roll0 = cre.roll;
-    cre.roll = (dr, rnd) => withRace(rOf(dr), () => roll0(dr, rnd));
-    // 才だけ振り直す（鍵をかけた能力値の技能は残す。M8 と同じ）
-    const retalent = (dr, rnd) => {
-      if (!G.m8Roll || !dr.talents) return;
-      const keep = {};
-      D.TALENT_KEYS.forEach((k) => { if (dr.locks && dr.locks[D.TALENTS[k].stat] && dr.talents[k] !== undefined) keep[k] = dr.talents[k]; });
-      dr.talents = withRace(rOf(dr), () => G.m8Roll(dr.cls, rnd, keep));
-    };
-    // 種族を変える：名前と年齢を作り直し、才を振り直す。能力値は振り直さない（補正だけ変わる）
+    // 種族を変える：名前と年齢を作り直す。能力値は振り直さない（補正だけ変わる）
     const reshape = (dr, rnd, before) => {
       const after = rOf(dr);
       if (before.race !== after.race) { dr.profile.name = cre.gen(dr, "name", rnd); }
       if (before.race !== after.race || G.r1Spec(before).ages !== G.r1Spec(after).ages) dr.profile.age = cre.gen(dr, "age", rnd);
-      retalent(dr, rnd);
       cre.fit(dr);
     };
     cre.setRace = (dr, race, rnd) => {

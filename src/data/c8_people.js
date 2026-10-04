@@ -126,7 +126,6 @@
       join: {
         cls: "密造酒の親分", desc: "金の分だけ働く。たぶん", power: 50, dmg: 2, trait: "greedy", bond: 50, home: ["fort"],
         life: { home: "断界山脈の、酒樽を並べた洞穴", kin: "昔、逃がした人の子", food: "焦がした茸と、自分の酒", habit: "銀貨を一枚ずつ噛んで、本物か確かめている", secret: "逃がした子の顔は覚えていない。泣き声だけ、今でも覚えている", keep: "底に名前を刻んだ小さな酒樽" },
-        t: { sword: 1, spear: 0, bow: 1, magic: 0, pray: 0, stealth: 3, talk: 1, lore: 0, wild: 2 }, f: { drink: 2, dice: 1 },
       },
     }),
     valdun: P({
@@ -135,7 +134,6 @@
       join: {
         cls: "山の民の長", desc: "山を下りるのは、民のためだけだ", power: 72, dmg: 3, trait: "soft", bond: 52, home: ["fort"],
         life: { home: "断界山脈の中腹の、石積みの長の家", kin: "竜の墓場の奥へ行った父", food: "山羊の乳の粥", habit: "道ばたの小さな花を摘んで、帳面に挟んでいる", secret: "鱗が、年々増えている。数えるのを、去年やめた", keep: "押し花を挟んだ詩の帳面" },
-        t: { sword: 3, spear: 2, bow: 0, magic: 0, pray: 1, stealth: 0, talk: 1, lore: 1, wild: 2 }, f: { beasts: 1, weather: 2 },
       },
     }),
     gensai: P({
@@ -144,7 +142,6 @@
       join: {
         cls: "島の顔役", desc: "損はさせへんよ。わしはね", power: 48, dmg: 1, trait: "distrust", bond: 50, home: ["yakumo"],
         life: { home: "朧島の桟橋の、灯籠のある家", kin: "霧の夜に見失った妻", food: "夜釣りの鯵の干物", habit: "賭け札を一枚、指のあいだで回している", secret: "霧の夜の灯の油代は、島の帳面ではなく、自分の財布から出している", keep: "妻の簪" },
-        t: { sword: 1, spear: 0, bow: 0, magic: 0, pray: 0, stealth: 2, talk: 3, lore: 1, wild: 0 }, f: { fish: 2, dice: 2 },
       },
     }),
     tsuyuha: P({
@@ -153,7 +150,6 @@
       join: {
         cls: "茶屋の婆さま", desc: "婆は寝ていますよ。用があれば起こしなさい", power: 64, dmg: 3, heal: true, trait: "lazy", bond: 60, home: ["yakumo"],
         life: { home: "島の都の茶屋の、日当たりのいい縁台", kin: "名の無い十三の墓", food: "渋い茶と、塩むすび", habit: "人の子の茶碗が空くと、黙っておかわりをよそう", secret: "墓は十三ある。名前は、一つも彫っていない。全部、覚えているから", keep: "鞘の擦り切れた刀" },
-        t: { sword: 3, spear: 0, bow: 0, magic: 1, pray: 1, stealth: 1, talk: 1, lore: 2, wild: 0 }, f: { calm: 2, cook: 1, kids: 1 },
       },
     }),
     takimaru: P({
@@ -162,7 +158,6 @@
       join: {
         cls: "島の若い衆", desc: "兄貴、どっちっすか。……あ、こっちっすね", power: 60, dmg: 2, trait: "loyal", bond: 56, home: ["yakumo"],
         life: { home: "島の都の浜の、若い衆の番小屋", kin: "鬼ヶ島から帰らなかった七人", food: "浜で焼いた貝", habit: "朝、浜に出て、七人の名前を順に呼ぶ", secret: "七人の名前のうち、一人の顔だけ、もう思い出せない", keep: "七本の紐を編んだ腕輪" },
-        t: { sword: 2, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 1, talk: 1, lore: 0, wild: 2 }, f: { fish: 1, nose: 2 },
       },
     }),
     yurien: P({
@@ -171,7 +166,6 @@
       join: {
         cls: "追われた学者", desc: "解剖の手が足りないのです。……冗談ですよ。半分は", power: 46, dmg: 1, fire: true, trait: "cold", bond: 50, home: ["nerva"],
         life: { home: "港町の古本屋の二階の、骨と紙の部屋", kin: "学院の同期だった、今の研究所の所長", food: "苦い茶と、乾いた堅焼き", habit: "誰かの手首を見ると、骨の数を小声で数える", secret: "石碑の刻印の写しは七十一枚。最後の一枚の場所は、写していない", keep: "書き込みだらけの解剖図" },
-        t: { sword: 0, spear: 0, bow: 0, magic: 3, pray: 0, stealth: 1, talk: 0, lore: 3, wild: 1 }, f: { letters: 2, herbs: 1 },
       },
     }),
     roswitha: P({
@@ -180,7 +174,6 @@
       join: {
         cls: "砦の兵站係", desc: "兵糧は三日分。自分の分は、計算に入れていません", power: 52, dmg: 1, trait: "just", bond: 50, home: ["fort"],
         life: { home: "黒鉄の砦の、帳簿の積まれた倉の二階", kin: "砦の兵たち", food: "兵の粥（温かいうちに）", habit: "数字が合わないと、黙って三回数え直す", secret: "袖の名札は、冬の数だけある。外したことは一度もない", keep: "名札だらけの袖" },
-        t: { sword: 1, spear: 2, bow: 1, magic: 0, pray: 0, stealth: 0, talk: 1, lore: 2, wild: 1 }, f: { needle: 2, compass: 1 },
       },
     }),
     izra: P({
@@ -189,7 +182,6 @@
       join: {
         cls: "使徒領の鷹", desc: "おまえは強いか。……なら、ついていこう", power: 68, dmg: 3, trait: "proud", bond: 50, home: ["fort"],
         life: { home: "断界山脈の、いちばん高い岩棚", kin: "居城の猟兵頭（育ての親のようなもの）", food: "人の町の焼き菓子（はじめて食べた）", habit: "高いところを見つけると、黙って登って、遠くを見ている", secret: "首の革の輪を、外せるのに外さない", keep: "黒い羽を一枚" },
-        t: { sword: 1, spear: 3, bow: 1, magic: 0, pray: 0, stealth: 1, talk: 0, lore: 0, wild: 3 }, f: { weather: 1, beasts: 1 },
       },
     }),
     anselmo: P({
@@ -198,7 +190,6 @@
       join: {
         cls: "墓掘り修道士", desc: "死んだ奴の物は、生きてる奴が使え。わしもな", power: 54, dmg: 2, heal: true, trait: "drunk", bond: 52, home: ["w1_holy"],
         life: { home: "聖都の地下墓地の入り口の、墓守小屋", kin: "拾って聖歌隊に預けた、盲目の娘", food: "安い葡萄酒と、墓守小屋の豆", habit: "道で死んだ鳥を見つけると、穴を掘って埋め、何か一つ持っていく", secret: "弔いの祈りの言葉を、一つだけ、もう三十年思い出せない", keep: "錆びた鋤" },
-        t: { sword: 0, spear: 1, bow: 0, magic: 0, pray: 3, stealth: 1, talk: 2, lore: 1, wild: 0 }, f: { song: 3, drink: 1 },
       },
     }),
     polf: P({
@@ -207,7 +198,6 @@
       join: {
         cls: "砦の鐘番", desc: "わしが若いころはな、山を一つ、殴って崩したもんじゃ", power: 56, dmg: 2, trait: "braggart", bond: 58, home: ["fort"],
         life: { home: "黒鉄の砦の鐘楼の、梯子の上の小部屋", kin: "鳴らし遅れた夜の村にいた息子", food: "干したチーズ", habit: "どこにいても、決まった刻になると、空に向かって鐘を打つ手まねをする", secret: "鳴らし遅れた夜、自分は鐘楼で居眠りをしていた。誰にも話していない", keep: "すり切れた鐘の綱の切れ端" },
-        t: { sword: 2, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 2, talk: 1, lore: 1, wild: 1 }, f: { luck: 1, sleep: 1, kids: 1 },
       },
     }),
 
