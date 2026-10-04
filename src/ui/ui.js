@@ -1,4 +1,4 @@
-// 冒険の画面：背景、記録、行動のボタン、自由入力、キャラクターシート、地図・年表・トロフィー・手引き。
+// 冒険の画面：背景、記録、行動のボタン、キャラクターシート、地図・年表・トロフィー・手引き。
 // エンジン（G.S）を読んで描くだけ。行動は G.act を呼ぶ。レーン U（UI）が管理
 (function (G) {
   const D = G.data;
@@ -214,12 +214,13 @@
     const b = h("button", "act");
     b.type = "button";
     b.disabled = !!a.disabled || busy;
+    if (a.locked) b.classList.add("locked");   // C10：まだ選べない、状態で現れる選択肢（うっすら見せる）
     b.append(h("b", "", a.label));
     if (a.sub) b.append(h("span", "", a.sub));
     // U4：依頼への道の印・押せない理由
     const mark = /^(travel|sail):/.test(a.id || "") ? travelMarks[a.id.split(":")[1]] : "";
     if (mark) { b.classList.add("marked"); b.append(h("em", "mark", "◆ " + mark)); }
-    const why = a.disabled && G.lockReason ? G.lockReason(a, G.S) : "";
+    const why = a.disabled && !a.locked && G.lockReason ? G.lockReason(a, G.S) : "";
     if (why) { b.append(h("em", "why", why)); b.title = why; }
     b.onclick = () => { if (!busy) { G.act(a.id); after(); } };
     return b;
@@ -268,57 +269,6 @@
     renderActions(panel);
   }
 
-  // ---------------------------------------------------------------- 自由入力
-  $("#act").addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    const S = G.S;
-    const text = $("#free").value.trim();
-    const hint = $("#freeHint");
-    if (!text || !S || S.over || busy) return;
-    const a = G.parse(text);
-    hint.hidden = false;
-    hint.textContent = "";
-    if (a) {
-      hint.append(h("span", "", `「${text}」→ ${a.label}`));
-      $("#free").value = "";
-      G.act(a.id);
-      after();
-      return;
-    }
-    hint.append(h("span", "", `「${text}」は、今できる行動に当てはまりませんでした。`));
-    if (G.main.sample) {
-      const b = h("button", "btn", "GM に任せる（Claude の利用量を使う）");
-      b.type = "button";
-      b.onclick = () => askGM(text);
-      hint.append(b);
-    } else hint.append(h("span", "", "（GM に任せる機能は claude.ai で開いたときだけ使えます）"));
-  });
-
-  async function askGM(text) {
-    const hint = $("#freeHint");
-    busy = true;
-    renderPanel();
-    hint.textContent = "GM が考えています…";
-    try {
-      const res = await G.main.sample.json(G.gmPrompt(text), { modelTier: "quick", cache: false });
-      G.gmApply(text, res);
-      $("#free").value = "";
-      hint.hidden = true;
-    } catch (e) {
-      const msg = {
-        not_granted: "Claude の利用が許可されなかったので、GM を呼べません。",
-        rate_limited: "Claude の利用が混み合っているか、上限に達しました。少し待ってから試してください。",
-        refused: "GM がこの行動には応じませんでした。言い回しを変えてください。",
-        invalid_json: "GM の答えを読み取れませんでした。もう一度試してください。",
-      }[e && e.code] || "GM との通信が途切れました。もう一度試してください。";
-      hint.textContent = msg;
-      if (e && e.code === "not_granted") G.main.sample = null;
-    } finally {
-      busy = false;
-      after();
-    }
-  }
-
   // ---------------------------------------------------------------- キャラクターシート
   // シートは小さな部品の積み重ね。新しい欄（装飾品など）は該当する部品に足すか、部品を1つ足して renderSheet に並べる
   const sheetFold = { stats: true, quests: true, inv: true, memos: true }; // 開いている欄
@@ -340,7 +290,7 @@
     nm.setAttribute("role", "button");
     nm.onclick = () => ui.openProfile();
     nm.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); ui.openProfile(); } };
-    hd.append(nm, h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}${G.reputeLabel ? G.reputeLabel() : ""}`));
+    hd.append(nm, h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}`)); // 名声・手配は「名声と評判」の欄に（Q7）
     const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
     head.append(hd, close);
     return head;
@@ -353,6 +303,30 @@
       p.append(h("span", "", n), g, h("span", "n", `${v} / ${m}`)); pools.append(p);
     });
     return pools;
+  }
+  // 名声・位・国ごとの評判と悪名（Q7。中身は engine/q7_repute.js の G.q7.repute）。段階の言葉を主に、棒（次の段階までの進み）と小さな数を添える
+  // 悪名は知られた分だけ（隠れた罪は出さない）。今いる国が先頭
+  function sheetRepute() {
+    const R = G.q7 && G.q7.repute ? G.q7.repute(G.S) : null;
+    if (!R) return null;
+    const box = h("div", "q7rep");
+    const meter = (pct, cls) => { const g = h("span", "q7bar " + (cls || "")); const i = h("i"); i.style.width = Math.round(pct * 100) + "%"; g.append(i); return g; };
+    const row = (label, word, pct, small, cls) => {
+      const r = h("div", "q7row " + (cls || ""));
+      r.append(h("span", "q7k", label), h("b", "q7w", word), pct == null ? h("span") : meter(pct, cls), h("span", "q7n fine num", small || ""));
+      return r;
+    };
+    const f = R.fame;
+    box.append(row("名声", f.rank, f.pct, f.next ? `${f.n}・${f.next}まで ${f.toNext}` : String(f.n), "fame"));
+    if (R.title) box.append(row("位", R.title.name + (R.title.at ? `（${R.title.at}）` : ""), null, "", "title"));
+    R.nations.forEach((n) => {
+      const sec = h("div", "q7nation" + (n.here ? " here" : "") + (n.wanted ? " wanted" : ""));
+      sec.append(h("div", "q7nname", n.name + (n.here ? "（いまいる国）" : "")));
+      sec.append(row("評判", n.repLabel, n.repPct, String(n.rep), "rep"));
+      sec.append(row("悪名", n.wanted ? `手配中・懸賞金 ${n.bounty}G` : n.infLabel, n.infPct, n.inf ? String(n.inf) : "", "inf lv" + n.infLv));
+      box.append(sec);
+    });
+    return sheetSection("repute", "名声と評判", box);
   }
   function sheetStats(ups) {
     const S = G.S;
@@ -509,7 +483,7 @@
     const keep = open ? sh.scrollTop : 0;
     sh.textContent = "";
     const panes = {
-      self: sheetPane("self", [sheetPools(), sheetStats(ups), sheetKv(sheetSelfRows())]),
+      self: sheetPane("self", [sheetPools(), sheetRepute(), sheetStats(ups), sheetKv(sheetSelfRows())]),
       gear: sheetPane("gear", [sheetKv(sheetGearRows()), sheetInventory()]),
       party: sheetPane("party", [sheetCompanions()]),
       more: sheetPane("more", [sheetButtons()]),

@@ -166,7 +166,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     S.mode = "explore"; S.event = null;
     if (!acts().some((a) => a.id === "c2inv:dil")) F("席が空いたのに、港町でディルを誘えない");
     if (acts().some((a) => a.id === "c2inv:sheila")) F("出会っていないシェイラを誘える");
-    if (!G.parse("ディルを誘う")) F("「ディルを誘う」を読み取れない");
+    if (!acts().some((a) => a.id === "c2inv:dil" && /ディルを誘う/.test(a.label))) F("「ディルを誘う」が選択肢に無い");
     G.act("c2inv:dil");
     const c = G.c2In("dil", S);
     if (!c) F("誘ってもディルが加わらない");

@@ -10,8 +10,6 @@
     "engine/core.js",
     "engine/combat.js",
     "engine/explore.js",
-    "engine/parser.js",
-    "engine/gm.js",
     "data/enemies_2.js",
     "engine/foe_quirks.js",
     "data/events_town2.js",

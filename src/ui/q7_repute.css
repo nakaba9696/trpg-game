@@ -1,0 +1,17 @@
+/* Q7：ステータスの「名声と評判」（ui.js の sheetRepute） */
+.q7rep { display: grid; gap: 3px; font-size: 13px; }
+.q7row { display: grid; grid-template-columns: 2.6em minmax(0, auto) minmax(48px, 1fr) auto; align-items: center; gap: 6px; }
+.q7row .q7k { color: var(--muted); }
+.q7row .q7w { font-weight: 700; overflow-wrap: anywhere; }
+.q7row .q7n { font-size: 11.5px; white-space: nowrap; }
+.q7bar { height: 6px; background: var(--paper); border: 1px solid var(--rule); position: relative; min-width: 40px; }
+.q7bar i { position: absolute; inset: 0 auto 0 0; background: var(--ink); opacity: .7; }
+.q7bar.fame i { background: var(--gold, var(--accent)); opacity: 1; }
+.q7bar.rep i { background: var(--ok, var(--ink)); }
+.q7bar.inf i { background: var(--minus, var(--ng, var(--accent))); opacity: 1; }
+.q7row.inf.lv0 .q7w { font-weight: 400; color: var(--muted); }
+.q7row.inf.lv2 .q7w, .q7row.inf.lv3 .q7w { color: var(--minus, var(--ng, var(--accent))); }
+.q7nation { display: grid; gap: 2px; padding: 4px 0 0; border-top: 1px dotted var(--rule); }
+.q7nname { font-size: 12.5px; letter-spacing: .05em; }
+.q7nation.here .q7nname { font-weight: 700; }
+.q7nation.wanted { border-top-color: var(--minus, var(--ng, var(--accent))); }
