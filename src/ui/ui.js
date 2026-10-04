@@ -290,7 +290,7 @@
     nm.setAttribute("role", "button");
     nm.onclick = () => ui.openProfile();
     nm.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); ui.openProfile(); } };
-    hd.append(nm, h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}${G.reputeLabel ? G.reputeLabel() : ""}`));
+    hd.append(nm, h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}`)); // 名声・手配は「名声と評判」の欄に（Q7）
     const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
     head.append(hd, close);
     return head;
@@ -303,6 +303,30 @@
       p.append(h("span", "", n), g, h("span", "n", `${v} / ${m}`)); pools.append(p);
     });
     return pools;
+  }
+  // 名声・位・国ごとの評判と悪名（Q7。中身は engine/q7_repute.js の G.q7.repute）。段階の言葉を主に、棒（次の段階までの進み）と小さな数を添える
+  // 悪名は知られた分だけ（隠れた罪は出さない）。今いる国が先頭
+  function sheetRepute() {
+    const R = G.q7 && G.q7.repute ? G.q7.repute(G.S) : null;
+    if (!R) return null;
+    const box = h("div", "q7rep");
+    const meter = (pct, cls) => { const g = h("span", "q7bar " + (cls || "")); const i = h("i"); i.style.width = Math.round(pct * 100) + "%"; g.append(i); return g; };
+    const row = (label, word, pct, small, cls) => {
+      const r = h("div", "q7row " + (cls || ""));
+      r.append(h("span", "q7k", label), h("b", "q7w", word), pct == null ? h("span") : meter(pct, cls), h("span", "q7n fine num", small || ""));
+      return r;
+    };
+    const f = R.fame;
+    box.append(row("名声", f.rank, f.pct, f.next ? `${f.n}・${f.next}まで ${f.toNext}` : String(f.n), "fame"));
+    if (R.title) box.append(row("位", R.title.name + (R.title.at ? `（${R.title.at}）` : ""), null, "", "title"));
+    R.nations.forEach((n) => {
+      const sec = h("div", "q7nation" + (n.here ? " here" : "") + (n.wanted ? " wanted" : ""));
+      sec.append(h("div", "q7nname", n.name + (n.here ? "（いまいる国）" : "")));
+      sec.append(row("評判", n.repLabel, n.repPct, String(n.rep), "rep"));
+      sec.append(row("悪名", n.wanted ? `手配中・懸賞金 ${n.bounty}G` : n.infLabel, n.infPct, n.inf ? String(n.inf) : "", "inf lv" + n.infLv));
+      box.append(sec);
+    });
+    return sheetSection("repute", "名声と評判", box);
   }
   function sheetStats(ups) {
     const S = G.S;
@@ -459,7 +483,7 @@
     const keep = open ? sh.scrollTop : 0;
     sh.textContent = "";
     const panes = {
-      self: sheetPane("self", [sheetPools(), sheetStats(ups), sheetKv(sheetSelfRows())]),
+      self: sheetPane("self", [sheetPools(), sheetRepute(), sheetStats(ups), sheetKv(sheetSelfRows())]),
       gear: sheetPane("gear", [sheetKv(sheetGearRows()), sheetInventory()]),
       party: sheetPane("party", [sheetCompanions()]),
       more: sheetPane("more", [sheetButtons()]),
