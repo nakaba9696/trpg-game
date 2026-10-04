@@ -1,0 +1,9 @@
+/* Q7：ステータスのタブ（能力／装備と持ち物／仲間／その他。ui.js の renderSheet） */
+.stabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--rule); padding-bottom: 6px; }
+.stabs .stab { flex: 1 1 auto; min-height: 36px; font-size: 13px; padding: 4px 8px; white-space: nowrap; }
+.stabs .stab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--paper); font-weight: 700; }
+.spane { display: grid; gap: 12px; align-content: start; }
+/* 中身が少ないタブでも、段が縦に引き伸ばされないように上に寄せる */
+#sheet.sheet { align-content: start; }
+.spane[hidden] { display: none; }
+@media (max-width: 880px) { .stabs .stab { min-height: 40px; } }
