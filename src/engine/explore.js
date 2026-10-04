@@ -269,8 +269,8 @@
       ] });
     } else if (f === "train") {
       g.push({ title: `訓練場（30G・2日。今の値が低いほど伸びやすい）`, list: D.STATS.map((k) => ({
-        id: "train:" + k, label: `${k}を鍛える`, sub: S.stats[k] >= G.statCap() ? "これ以上は伸びない" : `今 ${G.pt(S.stats[k])}・伸びる見込み ${Math.max(20, 100 - S.stats[k])}%`,
-        disabled: S.gold < 30 || S.stats[k] >= G.statCap(), kw: [k, "鍛", "訓練"],
+        id: "train:" + k, label: `${k}を鍛える`, sub: `今 ${G.pt(S.stats[k])}・伸びる見込み ${Math.max(20, 100 - S.stats[k])}%`,
+        disabled: S.gold < 30, kw: [k, "鍛", "訓練"],
       })) });
     } else if (f === "alley") {
       g.push({ title: "裏路地", list: [

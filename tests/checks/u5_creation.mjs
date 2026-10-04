@@ -1,6 +1,6 @@
 // U5：キャラクター作成（engine/u5_creation.js の G.cre を DOM なしで）
 // - おまかせで作って、そのまま冒険を始められる
-// - ボーナス点の合計が合う（振るたびに変わる。S2）・鍵は無い（振り直しはボーナス点の数だけ。足したボーナスは残り、点が減れば戻る。古い下書きの locks は効かない）
+// - ボーナス点の合計が合う（5 点＋トロフィー。S2）・鍵は無い（振り直しは初期値のダイスを振り直す。古い下書きの locks は効かない）
 // - 古いセーブ（年齢の区分・生まれが無い）でも導入が作れる
 // - 導入と作成画面の文に、明かさない言葉が入っていない（#1 の持ち主の方針）
 export default ({ G, fail: fail0, ok, seeded }) => {
@@ -38,15 +38,14 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     for (let n = 0; n < 40; n++) cre.addBonus(dr, D.STATS[Math.floor(rnd() * D.STATS.length)], rnd() < 0.8 ? 1 : -1);
     const pts = cre.bonusPoints(dr);
     if (cre.bonusUsed(dr) > pts || cre.bonusLeft(dr) < 0) fail(`作成 ${i}: ボーナス点の合計が合わない（${cre.bonusUsed(dr)}／${pts}）`);
-    // 才能限界まで足せば使い切れる（限界までの余地がボーナス点より少ないときは、余地を全部埋める）
+    // 全部使い切れる（上限は無い）
     while (cre.bonusLeft(dr) > 0) { const k = D.STATS.find((s) => cre.canAdd(dr, s)); if (!k) break; cre.addBonus(dr, k, 1); }
-    const room = D.STATS.reduce((a, k) => a + cre.cap(dr, k) - cre.base(dr, k), 0);
-    if (cre.bonusUsed(dr) !== Math.min(pts, room)) fail(`作成 ${i}: ボーナス点 ${pts} を使い切れない（${cre.bonusUsed(dr)}・余地 ${room}）`);
+    if (cre.bonusUsed(dr) !== pts) fail(`作成 ${i}: ボーナス点 ${pts} を使い切れない（${cre.bonusUsed(dr)}）`);
     const sumBase = D.STATS.reduce((a, k) => a + cre.base(dr, k), 0);
     if (cre.total(dr) !== sumBase + cre.bonusUsed(dr)) fail(`作成 ${i}: 合計が素の値＋補正＋ボーナスと合わない`);
     const o = cre.options(dr, rnd);
     for (const k of D.STATS) {
-      if (!(o.stats[k] >= 4 && o.stats[k] <= G.statCap())) fail(`作成 ${i}: ${k} ${o.stats[k]} が範囲の外`);
+      if (!(o.stats[k] >= D.S2.MIN * D.S2.PCT && o.stats[k] === cre.value(dr, k) * D.S2.PCT)) fail(`作成 ${i}: ${k} ${o.stats[k]} が範囲の外`);
     }
     if (!o.profile.name || !o.profile.age || !D.AGES[o.profile.ageBand] || !D.ORIGINS[o.profile.origin]) fail(`作成 ${i}: 人物設定が欠けている`);
     const [lo, hi] = D.AGES[o.profile.ageBand].range;
@@ -66,27 +65,24 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (G.S.profile.origin !== o.profile.origin || G.S.profile.ageBand !== o.profile.ageBand) fail(`作成 ${i}: 生まれ・年齢の区分がセーブに残らない`);
   }
 
-  // 鍵は無い：振り直しはボーナス点の数だけ変わる。素の値は変わらない。足したボーナスは残り、点が減れば戻る。古い下書きの locks は効かない
+  // 鍵は無い：振り直しは初期値（ダイス）を振り直す。何度でもできる。足したボーナスは 0 に戻る。古い下書きの locks は効かない
   {
     if (cre.toggleLock || cre.lockCount || D.LOCK_MAX !== undefined) fail("鍵の仕組みが残っている");
     const dr = cre.fresh(rnd);
     dr.locks = { [D.STATS[0]]: true }; // 古い下書き
-    const rolled = JSON.stringify(dr.rolled);
     const seen = new Set();
     for (let n = 0; n < 200; n++) {
       while (cre.bonusLeft(dr) > 0 && cre.canAdd(dr, D.STATS[n % 6])) cre.addBonus(dr, D.STATS[n % 6], 1);
-      const before = cre.bonusUsed(dr);
+      const keep = dr.rolled[D.STATS[0]];
       cre.roll(dr, rnd);
-      seen.add(dr.bonusRoll);
-      if (JSON.stringify(dr.rolled) !== rolled) { fail("鍵: 振り直しで素の値が変わった"); break; }
-      if (cre.bonusLeft(dr) < 0) { fail("振り直したあと、ボーナス点の残りが負"); break; }
-      if (cre.bonusUsed(dr) !== Math.min(before, cre.bonusPoints(dr))) { fail(`振り直したあと、足したボーナスが残らない（${before} → ${cre.bonusUsed(dr)}）`); break; }
+      seen.add(dr.rolled[D.STATS[0]]);
+      if (cre.bonusUsed(dr) !== 0) { fail("振り直したあと、ボーナスが戻らない"); break; }
+      if (n === 199 && seen.size < 8) fail(`鍵: 古い locks で初期値が固まった（${keep}）`);
     }
-    if (seen.size < 8) fail("振り直してもボーナス点が変わらない");
     if (dr.rolls < 200) fail("振り直しの回数に上限がある");
   }
 
-  // 年齢・生まれを変えると、限界を超えたボーナスは戻る
+  // 年齢・生まれを変えても、ボーナスの合計は崩れない
   {
     const dr = cre.fresh(rnd);
     dr.ageBand = "young"; cre.fit(dr);

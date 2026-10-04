@@ -1,8 +1,4 @@
-/* S2：振ったボーナス点（ふつう・当たり・大当たり）の見せ方 */
+/* S2：ボーナス点と、初期値の上振れ（20 以上）の見せ方 */
 .bonusRoll { font-size: 22px; font-weight: 800; line-height: 1; }
-.bonusTier { font-size: 12.5px; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; color: var(--muted); }
-.bonusRoll.lucky, .bonusTier.lucky { color: var(--gold, #b8860b); }
-.bonusRoll.jackpot { color: var(--blood); font-size: 28px; text-shadow: 0 0 10px rgba(212, 160, 23, .55); animation: s2jackpot 1.2s ease-out 1; }
-.bonusTier.jackpot { color: #fff; background: var(--blood); border-color: var(--blood); font-weight: 700; }
-@keyframes s2jackpot { 0% { transform: scale(1.8); } 60% { transform: scale(.95); } 100% { transform: scale(1); } }
-@media (prefers-reduced-motion: reduce) { .bonusRoll.jackpot { animation: none; } }
+.creStats .lucky .v { color: var(--blood); text-shadow: 0 0 8px rgba(212, 160, 23, .55); }
+.creStats .det .luckyTag { color: var(--blood); font-weight: 700; }
