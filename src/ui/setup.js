@@ -238,10 +238,9 @@
     }
     const B = race === "beast" ? D.BEASTS[draft.beast] : null;
     const tr = G.r1Traits({ race, beast: draft.beast });
-    const tal = sp.talents.map((k) => (D.TALENTS && D.TALENTS[k] ? D.TALENTS[k].name : k));
     const lines = [
       D.RACES[race].blurb + (B ? `${B.name}の獣人は、${B.blurb}` : ""),
-      `能力値：${modText(sp.mod)}${tal.length ? ` ／ 才の付きやすい技能：${tal.join("・")}` : ""}${sp.ages ? ` ／ 年齢 ${sp.ages.young[0]}〜${sp.ages.old[1]}歳` : ""}`,
+      `能力値：${modText(sp.mod)}${sp.ages ? ` ／ 年齢 ${sp.ages.young[0]}〜${sp.ages.old[1]}歳` : ""}`,
     ];
     if (B) lines.push(`気性：${B.temper}`);
     if (tr.length) lines.push(`特性：${tr.map((x) => `${x.name}（${x.hint}）`).join("・")}`);
@@ -362,7 +361,6 @@
     box.append(list);
     box.append(h("p", "fine", `1 点が成功率の基準 ${G.PT()}％（12 点なら ${12 * G.PT()}％）。使った能力値は、冒険の中で伸びていく。能力の名前に触れると説明が出る。`));
     root.append(box);
-    if (G.m8ui) root.append(G.m8ui.creBox(cre.talents(draft), cre.flavors && cre.flavors(draft)));
 
     const nav = h("div", "creNav");
     const next = btn("次へ：確かめる", "primary", () => go("sheet"), "s-next");
@@ -404,7 +402,6 @@
     });
     const sb = h("section");
     sb.append(h("h3", "", "能力値"), stl, h("p", "fine num", `HP ${G.maxHpOf(o.stats)} ／ MP ${G.maxMpOf(o.stats)} ／ 所持金 ${c.gold}G`));
-    if (G.m8ui && o.talents) sb.append(G.m8ui.sheetPart(o.talents, o.flavors));
     const it = (id) => (D.ITEMS[id] ? D.ITEMS[id].name : id);
     const gear = [c.weapon, c.armor].filter(Boolean).map(it).concat(Object.entries(c.items).map(([id, n]) => `${it(id)}${n > 1 ? "×" + n : ""}`));
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));

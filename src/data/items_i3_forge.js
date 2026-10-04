@@ -108,13 +108,13 @@
   // ---------------------------------------------------------------- 名のある伝説の品（一点もの。一つの冒険で一度だけ手に入る）
   // legend：伝説の品の印。from：入手先の手がかり（図鑑の文。apostle＝使徒の骸、deep＝深い迷宮の宝、ev:〜＝出来事）
   Object.assign(D.ITEMS, {
-    i3l_dawnspear: { name: "暁を縫う槍", type: "weapon", dmg: [1, 10, 4], stat: "筋力", hit: 5, first: 40, price: 900, m8: "spear", legend: true, from: "ev", desc: "穂先が、夜明け前の空の色をしている。突くと、その先の闇に細い縫い目ができる。すぐ閉じる。" },
-    i3l_fatheraxe: { name: "戻らぬ父の斧", type: "weapon", dmg: [1, 10, 5], stat: "筋力", hit: -5, stats: { 体力: 5 }, price: 800, m8: "spear", legend: true, from: "ev", desc: "砦に行ったまま戻らなかった男の斧。柄に、子の名前が三つ彫ってある。四つ目を彫る途中で止まっている。" },
-    i3l_saltbite: { name: "塩噛み", type: "weapon", dmg: [1, 8, 4], stat: "敏捷", hit: 10, vital: 10, price: 850, m8: "sword", legend: true, from: "ev", desc: "沈んだ船から上がった曲刀。刃に、白く塩が噛みついている。拭っても、翌朝にはまた噛みついている。" },
-    i3l_lastbell: { name: "最後の鐘", type: "weapon", dmg: [2, 6, 2], stat: "筋力", magic: 15, bonus: { heal: 15 }, price: 950, m8: "spear", legend: true, from: "deep", desc: "滅んだ町の鐘楼から外された鐘の舌。振ると、遠くで誰かが一度だけ鐘を鳴らす。誰も鳴らしていない。" },
-    i3l_nameless: { name: "名無しの剣", type: "weapon", dmg: [1, 10, 5], stat: "筋力", hit: 10, vital: 5, price: 1200, m8: "sword", legend: true, from: "deep", desc: "銘が削られた剣。削った跡の下に、もう一度削った跡がある。その下にも。" },
-    i3l_greywing: { name: "灰翼の弓", type: "weapon", dmg: [1, 10, 4], stat: "敏捷", hit: 10, first: 50, price: 1100, m8: "bow", legend: true, from: "apostle", desc: "使徒の骸のそばに落ちていた弓。弦を引くと、灰色の羽根が一枚舞う。どこから来たのかは分からない。" },
-    i3l_heartgauntlet: { name: "脈打つ籠手", type: "weapon", dmg: [1, 8, 5], stat: "筋力", hit: 10, drain: 0.2, price: 1000, m8: null, legend: true, from: "apostle", desc: "使徒の骸から剥がれた籠手。嵌めると、自分のものではない脈が手首を打つ。" },
+    i3l_dawnspear: { name: "暁を縫う槍", type: "weapon", dmg: [1, 10, 4], stat: "筋力", hit: 5, first: 40, price: 900, legend: true, from: "ev", desc: "穂先が、夜明け前の空の色をしている。突くと、その先の闇に細い縫い目ができる。すぐ閉じる。" },
+    i3l_fatheraxe: { name: "戻らぬ父の斧", type: "weapon", dmg: [1, 10, 5], stat: "筋力", hit: -5, stats: { 体力: 5 }, price: 800, legend: true, from: "ev", desc: "砦に行ったまま戻らなかった男の斧。柄に、子の名前が三つ彫ってある。四つ目を彫る途中で止まっている。" },
+    i3l_saltbite: { name: "塩噛み", type: "weapon", dmg: [1, 8, 4], stat: "敏捷", hit: 10, vital: 10, price: 850, legend: true, from: "ev", desc: "沈んだ船から上がった曲刀。刃に、白く塩が噛みついている。拭っても、翌朝にはまた噛みついている。" },
+    i3l_lastbell: { name: "最後の鐘", type: "weapon", dmg: [2, 6, 2], stat: "筋力", magic: 15, bonus: { heal: 15 }, price: 950, legend: true, from: "deep", desc: "滅んだ町の鐘楼から外された鐘の舌。振ると、遠くで誰かが一度だけ鐘を鳴らす。誰も鳴らしていない。" },
+    i3l_nameless: { name: "名無しの剣", type: "weapon", dmg: [1, 10, 5], stat: "筋力", hit: 10, vital: 5, price: 1200, legend: true, from: "deep", desc: "銘が削られた剣。削った跡の下に、もう一度削った跡がある。その下にも。" },
+    i3l_greywing: { name: "灰翼の弓", type: "weapon", dmg: [1, 10, 4], stat: "敏捷", hit: 10, first: 50, price: 1100, legend: true, from: "apostle", desc: "使徒の骸のそばに落ちていた弓。弦を引くと、灰色の羽根が一枚舞う。どこから来たのかは分からない。" },
+    i3l_heartgauntlet: { name: "脈打つ籠手", type: "weapon", dmg: [1, 8, 5], stat: "筋力", hit: 10, drain: 0.2, price: 1000, legend: true, from: "apostle", desc: "使徒の骸から剥がれた籠手。嵌めると、自分のものではない脈が手首を打つ。" },
     i3l_thousandstitch: { name: "千針の外套", type: "armor", def: 3, agi: 10, magic: 5, price: 900, legend: true, from: "ev", desc: "千人の女が一針ずつ縫った外套。戦に出る男のために。男は帰らなかった。外套は帰ってきた。" },
     i3l_ashshell: { name: "灰殻の鎧", type: "armor", def: 6, agi: -5, magic: 5, price: 1600, legend: true, from: "apostle", desc: "使徒の骸の殻を削って作った鎧。叩くと、中が空洞のような音がする。中には、あなたがいる。" },
     i3l_moonring: { name: "月を呑んだ指輪", type: "ring", stats: { 魔力: 10, 知力: 5 }, magic: 10, price: 1200, legend: true, from: "deep", desc: "魔力+10・知力+5・魔法+10。石の中に、欠けた月がひとつ沈んでいる。満ちたり欠けたりする。空の月とは、合っていない。" },

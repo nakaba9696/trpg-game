@@ -302,10 +302,9 @@
       if (e.dmg) c.dmg = (c.dmg || 0) + e.dmg;
       if (e.heal) c.heal = true;
       if (e.fire) c.fire = true;
-      if (e.t && c.m8 && c.m8.t) Object.entries(e.t).forEach(([sk, n]) => { c.m8.t[sk] = Math.max(0, Math.min(3, (c.m8.t[sk] || 0) + n)); });
       if (e.desc) c.desc = e.desc;
       if (G.affAdd) G.affAdd(id, e.aff !== undefined ? e.aff : C9.END_AFF);
-      const ch = [e.power ? `力 ${G.sign ? G.sign(e.power) : e.power}` : "", e.dmg ? "一撃が重くなった" : "", e.heal ? "手当てを覚えた" : "", e.t ? "才が伸びた" : ""].filter(Boolean);
+      const ch = [e.power ? `力 ${G.sign ? G.sign(e.power) : e.power}` : "", e.dmg ? "一撃が重くなった" : "", e.heal ? "手当てを覚えた" : ""].filter(Boolean);
       if (ch.length) G.note(`${short(c)}が変わった（${ch.join("・")}）`);
     }
     if (e.memo) G.memo(C9.fill(e.memo, id, 0, S));

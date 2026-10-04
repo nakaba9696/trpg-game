@@ -132,7 +132,6 @@
       join: {
         cls: "徴税吏", desc: "嫌われ者。帳面は合っている", power: 50, dmg: 2, trait: "cold", bond: 50, home: ["leavel"],
         life: { home: "王都の下町の外れ、窓に板を打ちつけた一間", kin: "家を出ていった妻と娘", food: "下町の屋台の安い葡萄酒と、固くなった焼き菓子", habit: "石を投げられても、拾って道の端に寄せる", secret: "帳面は二冊ある。二冊目の最後の頁に、下町の家の名が並び、いくつかに線が引いてある", keep: "娘が小さいころに描いた、徴税吏の絵（笑っている）" },
-        t: { sword: 1, spear: 0, bow: 0, magic: 0, pray: 1, stealth: 2, talk: 2, lore: 2, wild: 0 }, f: { letters: 2, calm: 1 },
       },
     }),
     barnabe: P({
@@ -142,7 +141,6 @@
       join: {
         cls: "粉挽き", desc: "力は王都いち。勘定は村いちばん下", power: 64, dmg: 3, trait: "proud", bond: 56, home: ["w2_granbel"],
         life: { home: "麦の都グランベールの川べりの水車小屋", kin: "腰の曲がった母ちゃん", food: "焼きたての白パン（一度に四つ）", habit: "人の荷を、頼まれる前に全部担いでしまう", secret: "毎年同じ日に、迷いの森の同じ木の根もとに、野の花を置いてくる", keep: "優勝のときにもらった、名前入りの木の札（自分では読めない）" },
-        t: { sword: 1, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 0, talk: 1, lore: 0, wild: 2 }, f: { cook: 1, kids: 2 },
       },
     }),
     selevan: P({
@@ -152,7 +150,6 @@
       join: {
         cls: "検屍医", desc: "物騒なことほど、にこやかに", power: 42, dmg: 1, heal: true, trait: "proud", bond: 50, home: ["nerva"],
         life: { home: "ヴァレンツァの裏通り、氷室を兼ねた地下の診療所", kin: "共和国の学院に残してきた、たった一人の弟子", food: "濃く淹れた苦い茶と、塩をした干し魚", habit: "話しながら、相手の手首の脈を勝手に数えている", secret: "三百年、同じ一つの病の治し方を探している。病の名は、帳面にも書いていない", keep: "刃こぼれ一つない、古い銀の小刀の一揃い" },
-        t: { sword: 0, spear: 0, bow: 0, magic: 2, pray: 0, stealth: 1, talk: 1, lore: 3, wild: 1 }, f: { herbs: 2, nose: 1 },
       },
     }),
     aubin: P({
@@ -162,7 +159,6 @@
       join: {
         cls: "老馬丁", desc: "居眠りしている。抜くまでは", power: 66, dmg: 3, trait: "drunk", bond: 54, home: ["leavel"],
         life: { home: "王城の厩舎の、飼い葉桶の隣の寝藁", kin: "名前を呼んではいけない、昔の主", food: "甘い干し杏と、薄めない葡萄酒", habit: "馬の耳もとで、何か長い話をしている", secret: "夜の鐘が鳴ると、必ず目を覚まして、剣の柄に手をやる", keep: "鞘の金具だけが新しい、古い短めの剣" },
-        t: { sword: 3, spear: 1, bow: 0, magic: 0, pray: 1, stealth: 2, talk: 1, lore: 1, wild: 1 }, f: { beasts: 2, sleep: 2 },
       },
     }),
     lazare: P({
@@ -175,7 +171,6 @@
       join: {
         cls: "焚書官見習い", desc: "口が悪い。読書量は王都いち", power: 50, dmg: 2, fire: true, trait: "braggart", bond: 46, home: ["leavel"],
         life: { home: "王都の焚書局の屋根裏（窓は北向き）", kin: "焚書の火で死んだ写本屋の両親", food: "焦げた所を切り落とした黒パン（甘い物は嫌いだと言い張る）", habit: "焚き火の前で、何も持たずに頁をめくる手つきをしている", secret: "師匠を斬る夢を見る。斬る前に、いつも師匠のほうが先に本を閉じる", keep: "焦げた写本の表紙だけ" },
-        t: { sword: 2, spear: 0, bow: 0, magic: 2, pray: 0, stealth: 1, talk: 0, lore: 3, wild: 0 }, f: { letters: 1, mimic: 1 },
       },
     }),
     rodolphe: P({
@@ -188,7 +183,6 @@
       join: {
         cls: "狩猟官", desc: "追う側だった。今もたぶん", power: 58, dmg: 2, trait: "distrust", bond: 44, home: ["leavel"],
         life: { home: "白銀の丘陵の外れ、王家の猟場の番小屋", kin: "名前を書かずに金を送っている、知らない若者", food: "自分で燻した猪の燻製（濃いめ）", habit: "道を歩くとき、自分の足跡を、わざと一つおきに消している", secret: "番小屋の梁に、細い縄が一本だけ、使わずに掛けてある", keep: "使い込んだ罠の鉤と、古い王家の狩猟許し状" },
-        t: { sword: 0, spear: 2, bow: 3, magic: 0, pray: 0, stealth: 2, talk: 0, lore: 1, wild: 3 }, f: { beasts: 1, nose: 2 },
       },
     }),
     margot: P({
@@ -201,7 +195,6 @@
       join: {
         cls: "密輸屋", desc: "欲深。子どもの荷には手を出さない", power: 54, dmg: 2, trait: "greedy", bond: 48, home: ["karna"],
         life: { home: "ブランデールの裏路地の、酒樽の倉の二階", kin: "街道で拾ってきた子分たち（十一人）", food: "辛い腸詰めと、黒い麦酒", habit: "金貨を一枚ずつ指で弾いて、音で混ぜ物を見分ける", secret: "父が吊るされた砦の爆破は、誰が火を点けたのか、知っている", keep: "父の工兵の火打ち金" },
-        t: { sword: 1, spear: 0, bow: 1, magic: 0, pray: 0, stealth: 3, talk: 2, lore: 1, wild: 1 }, f: { dice: 1, nose: 1, luck: 1 },
       },
     }),
     solenne: P({
@@ -211,7 +204,6 @@
       join: {
         cls: "日雇いの騎士", desc: "首席。借金も首席", power: 58, dmg: 2, trait: "just", bond: 52, home: ["karna"],
         life: { home: "ブランデールの下宿の、いちばん安い北向きの部屋", kin: "賭けをやめられない父と、家を守る病弱な母", food: "豆の粥（三日分まとめて煮る）", habit: "質札を出しては数え、数えてはしまう", secret: "首席の褒美の剣の質札は、あと一月で流れる", keep: "質札の束と、騎士学校の首席の徽章" },
-        t: { sword: 3, spear: 1, bow: 0, magic: 0, pray: 1, stealth: 0, talk: 1, lore: 1, wild: 0 }, f: { kids: 1, beasts: 1 },
       },
     }),
     pipinelle: P({
@@ -221,7 +213,6 @@
       join: {
         cls: "祠の婆さま", desc: "小さい。婆と呼べ", power: 48, dmg: 1, heal: true, trait: "lazy", bond: 60, home: ["karna"],
         life: { home: "迷いの森の奥の、苔むした祠", kin: "祠に名を刻んでいった人の子ら", food: "森の蜂蜜（壺ごと）", habit: "人の子の額に手を当てて、熱が無いか確かめる", secret: "祠の名の中に、いちばん新しい、まだ削れていない名が一つある", keep: "名が刻まれた、古い木の札の束" },
-        t: { sword: 0, spear: 0, bow: 1, magic: 3, pray: 2, stealth: 1, talk: 1, lore: 2, wild: 2 }, f: { herbs: 1, kids: 1, weather: 1 },
       },
     }),
     lisette: P({
@@ -231,7 +222,6 @@
       join: {
         cls: "森の狩人", desc: "のんびり。強い相手の前でだけ速い", power: 62, dmg: 3, trait: "soft", bond: 50, home: ["karna"],
         life: { home: "迷いの森の、どこか（本人にも分からない）", kin: "森の入口の茶屋の婆さん（迷うたびに保護してくれる）", food: "人参の甘煮", habit: "分かれ道に来ると、耳の向いたほうへ行く（たいてい外れる）", secret: "勝ちかけた日の傷は、雨の前にだけ疼く。疼くと、少し笑う", keep: "穂先を何度も替えた、柄だけ古い槍" },
-        t: { sword: 0, spear: 3, bow: 1, magic: 0, pray: 0, stealth: 1, talk: 0, lore: 0, wild: 3 }, f: { sleep: 1, luck: 1 },
       },
     }),
 

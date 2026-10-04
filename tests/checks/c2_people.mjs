@@ -1,7 +1,7 @@
 // C2：キャラメモの人物（src/data/c2_people.js・events_c2.js・events_c2_talk.js・engine/zz_c2_people.js）
 // - シートの全員が表にいて、どの人物にも出てくる出来事がある。出来事は実在の場所（か場所の種類）を指す
 // - 全員が出会える：どの人物にも、ふつうに起きる出来事（w > 0）があり、その出来事が起きる場所と状態がある
-// - 仲間になる八人は、出会いの出来事の流れで仲間になる。性格・暮らし・才・性別・歳・絵・好感度がシートのまま。ひとことと恋のひとことがその人のもの
+// - 仲間になる八人は、出会いの出来事の流れで仲間になる。性格・暮らし・性別・歳・絵・好感度がシートのまま。ひとことと恋のひとことがその人のもの
 // - 三人いれば、その人の町で「誘う」で加わる。去った・死んだ者は誘えない。子どもの姿の者は恋の相手にならない
 // - 見せる文に、書かない言葉（見世物まわり・今の人が知らないこと・性的な言葉）が無い
 // - 古いセーブ（S.c2 が無い）で動く。ランダムに遊んで、出会えた回数と仲間になった回数を出す
@@ -40,8 +40,6 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       const j = p.join;
       if (!D.M2_TRAITS[j.trait]) F(`${p.name}の性格 ${j.trait} が M2 に無い`);
       for (const k of Object.keys(D.M2_LIFE)) if (!j.life[k]) F(`${p.name}の暮らし ${k} が無い`);
-      for (const k of D.TALENT_KEYS) if (!(j.t[k] >= 0 && j.t[k] <= 3)) F(`${p.name}の才 ${k} が無い`);
-      for (const k of Object.keys(j.f)) if (!D.FLAVORS[k]) F(`${p.name}の暮らしの才 ${k} が無い`);
       for (const l of j.home) if (!D.LOCS[l] || D.LOCS[l].type !== "town") F(`${p.name}を誘える町 ${l} が町でない`);
       const v = D.C2_VOICE[id];
       if (!v || v.talk.length < 3 || !v.betray || !v.die) F(`${p.name}のひとことが足りない`);
@@ -126,7 +124,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     if (!c) { F(`${p.name}が出会いの流れで仲間にならない（${S.mode} ${S.event}）`); continue; }
     if (!G.c2Met(id, S) || !S.c2.joined[id]) F(`${p.name}が出会った・加わったと記録されない`);
     if (c.trait !== p.join.trait || c.sex !== p.sex || c.age !== p.age || c.race !== p.race || (c.beast || "") !== (p.beast || "") || G.r1Comp(c).race !== p.race || c.bond !== p.join.bond) F(`${p.name}の性格・性別・歳・種族・好感度がシートと違う`);
-    if (c.life.food !== p.join.life.food || !c.m8 || c.m8.t.lore !== p.join.t.lore || c.m8.known) F(`${p.name}の暮らしか才が違う`);
+    if (c.life.food !== p.join.life.food || c.m8) F(`${p.name}の暮らしが違う・才が残っている`);
     if (G.m2Trait(c).talk[0] !== D.C2_VOICE[id].talk[0] || G.m2Trait(c).die !== D.C2_VOICE[id].die) F(`${p.name}のひとことがその人のものでない`);
     if (!p.join.noLove && G.c2Line(c, "confess") !== D.C2_VOICE[id].confess) F(`${p.name}の恋のひとことがその人のものでない`);
     if (p.join.noLove && G.m10Can(c)) F(`${p.name}が恋の相手になる`);

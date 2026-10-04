@@ -1,5 +1,5 @@
-// C2：キャラメモの人物（src/data/c2_people.js）を、仲間（M2）・才（M8）・恋（M10）の仕組みに乗せる。DOM には触らない。
-// core.js・companions_m2.js・m10_love.js は書き換えず、包んで足す。名前の頭の zz は、それらと zm8_talent.js より後に読ませるため。
+// C2：キャラメモの人物（src/data/c2_people.js）を、仲間（M2）・恋（M10）の仕組みに乗せる。DOM には触らない。
+// core.js・companions_m2.js・m10_love.js は書き換えず、包んで足す。名前の頭の zz は、それらより後に読ませるため。
 //
 // セーブ（G.S）に足すもの。古いセーブで無くても動く（G.c2State が埋める）
 //   S.c2 = { met { id: 出会った日 }, joined { id: 加わった日 }, gone { id: "death" | "betray" | "leave" | "dead"（出来事で死んだ） } }
@@ -43,13 +43,13 @@
     if (!m.met[id]) m.met[id] = S.day;
   };
 
-  // 仲間の欄を作る。性格・暮らし・才・性別・歳・絵はシートの人物のまま（M2・M8・M10 の「無ければ埋める」は働かない）
+  // 仲間の欄を作る。性格・暮らし・性別・歳・絵はシートの人物のまま（M2・M10 の「無ければ埋める」は働かない）
   G.c2Make = (id) => {
     const p = P()[id], j = p.join;
     return {
       name: p.name, cls: j.cls, power: j.power, dmg: j.dmg || 0, desc: j.desc, heal: !!j.heal, fire: !!j.fire,
       c2: id, trait: j.trait, sex: p.sex, age: p.age, race: p.race, beast: p.beast || "", who: Object.assign({}, p.who, { look: Object.assign({}, p.who.look) }),
-      life: Object.assign({}, j.life), m8: { t: Object.assign({}, j.t), f: Object.assign({}, j.f), known: false },
+      life: Object.assign({}, j.life),
     };
   };
   G.c2Join = (id) => {

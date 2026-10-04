@@ -169,7 +169,6 @@
       join: {
         cls: "荷揚げ人足", desc: "大きい。臆病。でも逃げない", power: 66, dmg: 3, trait: "coward", bond: 62, home: ["nerva"],
         life: { home: "港の倉の裏の、人足の長屋", kin: "一緒に売られた村の九人", food: "港の屋台の揚げ魚の端っこ", habit: "物音がするたびに、首をすくめて辺りを見回す", secret: "鎖の輪に九つの名前を刻んでいる。十個目の輪は、空けてある", keep: "九つの名を刻んだ鎖" },
-        t: { sword: 2, spear: 1, bow: 0, magic: 0, pray: 1, stealth: 0, talk: 0, lore: 0, wild: 2 }, f: { kids: 2, needle: 1 },
       },
     }),
     trude: P({
@@ -179,7 +178,6 @@
       join: {
         cls: "工房の発明家", desc: "声が大きい。世話も焼く", power: 42, dmg: 2, fire: true, trait: "braggart", bond: 50, home: ["garmund"],
         life: { home: "帝都の工房街の、煤だらけの下宿", kin: "猫の獣人の大家族（きょうだい十一人）", food: "蜂蜜をかけた揚げ菓子（作って配る）", habit: "仲間の外套のほつれを見つけると、黙って針を出す", secret: "責めを負った日の帳面を、今も持ち歩いている。上官の字の計算違いに、赤い丸が付けてある", keep: "赤い丸の付いた帳面" },
-        t: { sword: 0, spear: 0, bow: 1, magic: 2, pray: 0, stealth: 0, talk: 1, lore: 3, wild: 0 }, f: { carve: 2, needle: 1 },
       },
     }),
     souhaku: P({
@@ -189,7 +187,6 @@
       join: {
         cls: "釣り好きの爺", desc: "爺と呼べ、と言った", power: 68, dmg: 3, trait: "lazy", bond: 56, home: ["yakumo"],
         life: { home: "島の都の桟橋の、傾いた小屋", kin: "昔、抱えて泳いだ小さな娘", food: "干した小魚と冷や酒", habit: "釣り竿の先を、ときどき海ではなく沖の空のほうへ向けている", secret: "刀の鞘に、小さな子どもの歯形が残っている", keep: "歯形の残った鞘" },
-        t: { sword: 3, spear: 0, bow: 0, magic: 0, pray: 0, stealth: 2, talk: 1, lore: 1, wild: 2 }, f: { fish: 2, drink: 1 },
       },
     }),
     adele: P({
@@ -203,7 +200,6 @@
       join: {
         cls: "一番槍の先輩", desc: "先輩と呼びなさい、と言った", power: 60, dmg: 2, trait: "soft", bond: 52, home: ["w2_granbel"],
         life: { home: "麦の都の外れの、借金のかたの麦畑", kin: "畑を守っている母さんと妹", food: "母さんの麦粥", habit: "頼まれていないのに、新米の冒険者の荷の詰め方を直している", secret: "昇格試験の筆記に七回落ちている。答案の裏に、毎回、槍の絵を描いてしまう", keep: "七枚の不合格の通知" },
-        t: { sword: 1, spear: 3, bow: 0, magic: 0, pray: 0, stealth: 0, talk: 1, lore: 0, wild: 2 }, f: { weather: 1, beasts: 1 },
       },
     }),
     celestin: P({
@@ -216,7 +212,6 @@
       join: {
         cls: "森の弓手", desc: "三拍遅れて、うなずいた", power: 54, dmg: 2, trait: "just", bond: 46, home: ["zephara"],
         life: { home: "迷いの森の、大きな木の上", kin: "百年、森から出てこない兄", food: "鹿の干し肉（固いほうが好き）", habit: "夜になると、星を指さして、小声で名前を数えている（よく間違える）", secret: "兄あての手紙を、森じゅうの木の洞に入れている。返事が来たことは、一度もない", keep: "兄の古い結界の札" },
-        t: { sword: 0, spear: 0, bow: 3, magic: 1, pray: 0, stealth: 2, talk: 0, lore: 2, wild: 3 }, f: { letters: 2, beasts: 1 },
       },
     }),
     felix: P({
@@ -226,7 +221,6 @@
       join: {
         cls: "取引所の書記", desc: "帳面を一冊、抱えている", power: 48, dmg: 1, trait: "loyal", bond: 56, home: ["w2_granbel"],
         life: { home: "麦の都の取引所の、帳場の奥の寝台", kin: "北の防衛線で、最後に回した隊", food: "帝国の固い黒パン（湯でふやかす。麦の都では手に入らず、自分で焼く）", habit: "歩きながら、すれ違う人の荷を目で数えている", secret: "退く順番を書いた紙を、今も畳んで持っている。最後の一行の隊の名を、毎晩読む", keep: "退く順番を書いた紙" },
-        t: { sword: 2, spear: 1, bow: 1, magic: 0, pray: 0, stealth: 0, talk: 1, lore: 2, wild: 1 }, f: { letters: 1, compass: 2 },
       },
     }),
     // ================================================================ ライバル・宿敵

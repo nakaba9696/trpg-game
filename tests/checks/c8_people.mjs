@@ -103,8 +103,6 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     const j = p.join;
     if (!D.M2_TRAITS[j.trait]) F(`${w}: 性格 ${j.trait} が M2 に無い`);
     for (const key of Object.keys(D.M2_LIFE)) if (!j.life[key]) F(`${w}: 暮らし ${key} が無い`);
-    for (const key of D.TALENT_KEYS) if (!(j.t[key] >= 0 && j.t[key] <= 3)) F(`${w}: 才 ${key} が無い`);
-    for (const key of Object.keys(j.f)) if (!D.FLAVORS[key]) F(`${w}: 暮らしの才 ${key} が無い`);
     for (const l of j.home) if (!D.LOCS[l] || D.LOCS[l].type !== "town") F(`${w}: 誘える町 ${l} が町でない`);
   }
 
