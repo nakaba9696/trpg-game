@@ -202,7 +202,7 @@
       return roll0(dr, rnd);   // 最後に fit（限界を超えたボーナスを戻す）が走る
     };
     const cap0 = cre.cap;
-    cre.cap = (dr, k) => Math.min(99, cap0(dr, k) + (dr.talents ? G.m8CapBonus(dr.talents, k) : 0));
+    cre.cap = (dr, k) => Math.min(cre.MAX_PT || 99, cap0(dr, k) + (dr.talents ? (cre.ptOfPct || ((n) => n))(G.m8CapBonus(dr.talents, k)) : 0));   // 作成は点（S2）
     cre.talents = (dr) => { if (!dr.talents) dr.talents = G.m8Roll(dr.cls, Math.random); return dr.talents; };
     cre.flavors = (dr) => { if (!dr.flavors) dr.flavors = G.m8RollFlavors(Math.random); return dr.flavors; };
     const opts0 = cre.options;

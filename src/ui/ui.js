@@ -326,12 +326,12 @@
     const list = h("div", "statlist num");
     D.STATS.forEach((k) => {
       const row = h("div", "stat" + (ups && ups[k] ? " up" : ""));
-      row.title = D.STAT_HINT[k];
       const bar = h("span", "bar"); const i = h("i"); i.style.width = S.stats[k] + "%"; const u = h("u"); u.style.left = `calc(${S.caps[k]}% - 1px)`; bar.append(i, u);
-      row.append(h("span", "nm", k), h("span", "v", String(S.stats[k])), bar, h("span", "cap", `限界 ${S.caps[k]}`));
+      row.append(h("span", "nm", k), h("span", "v", String(G.pt(S.stats[k]))), bar, h("span", "cap", `限界 ${G.pt(S.caps[k])}`));
+      row.title = `${D.STAT_HINT[k] || k}。成功率の基準 ${S.stats[k]}％・経験 ${G.ptExp(S.stats[k])}／${G.PT()}`;
       list.append(row);
     });
-    return sheetSection("stats", "能力値（成功率の基準％・赤線は才能限界）", list);
+    return sheetSection("stats", "能力値（1点＝成功率4％・赤線は才能限界）", list);
   }
   // 目的・日付・装備などの表（装備の枠を足すときはここの行に足す）
   function sheetGearRows() {
@@ -476,7 +476,7 @@
     const S = G.S;
     const ups = {};
     if (prevStats && prevStats.run !== S.id) prevStats = null; // 別の冒険に替わったら比べない
-    if (prevStats) D.STATS.forEach((k) => { if (S.stats[k] > prevStats[k]) ups[k] = [prevStats[k], S.stats[k]]; });
+    if (prevStats) D.STATS.forEach((k) => { if (G.pt(S.stats[k]) > G.pt(prevStats[k])) ups[k] = [G.pt(prevStats[k]), G.pt(S.stats[k])]; });
     seeTip();
     const grew = Object.entries(ups).map(([k, [a, b]]) => `${k} ${a}→${b}`);
     if (grew.length) ui.toast("能力値が伸びた", grew.join("・"));
@@ -579,7 +579,7 @@
       ep.append(h("b", "", end === "dead" ? `${race ? race + "の" : ""}${cls} ${name}、ここに眠る` : `${race ? race + "の" : ""}${cls} ${name}、物語を終える`));
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
-      ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${run.stats[k]}`).join(" ")));
+      ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${G.pt(run.stats[k])}`).join(" ")));
       if (G.m8ui && G.m8ui.graveLine(run)) ep.append(h("span", "", G.m8ui.graveLine(run)));
     } else ep.hidden = true;
     const list = $("#chronList");

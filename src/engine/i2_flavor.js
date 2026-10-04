@@ -34,7 +34,7 @@
     if (it.def) p.push("防御" + it.def);
     if (it.agi) p.push("敏捷" + sign(it.agi));
     if (it.magic) p.push("魔法" + sign(it.magic));
-    Object.entries(it.stats || {}).forEach(([k, v]) => p.push(k + sign(v)));
+    Object.entries(it.stats || {}).forEach(([k, v]) => p.push(G.statModText ? G.statModText(k, v) : k + sign(v)));
     Object.entries(it.bonus || {}).forEach(([k, v]) => p.push((BONUS[k] || k) + sign(v)));
     if (it.hp) p.push(it.hp > 100 ? "HP全快" : "HP+" + it.hp);
     if (it.mp) p.push(it.mp > 100 ? "MP全快" : "MP+" + it.mp);
