@@ -359,9 +359,9 @@
     const list = h("div", "statlist num");
     D.STATS.forEach((k) => {
       const row = h("div", "stat" + (ups && ups[k] ? " up" : ""));
-      const bar = h("span", "bar"); const i = h("i"); i.style.width = Math.min(100, S.stats[k]) + "%"; bar.append(i);
-      row.append(h("span", "nm", k), h("span", "v", String(G.pt(S.stats[k]))), bar, h("span", "cap", `${Math.min(95, S.stats[k])}%`));
-      row.title = `${D.STAT_HINT[k] || k}。成功率の基準 ${S.stats[k]}％・経験 ${G.ptExp(S.stats[k])}／${G.PT()}`;
+      const bar = h("span", "bar"); const i = h("i"); i.style.width = G.s5Bar(S.stats[k]) + "%"; bar.append(i);   // 99 で満点（S5）
+      row.append(h("span", "nm", k), h("span", "v", String(G.pt(S.stats[k]))), bar, h("span", "cap", `${G.s5Plain(S.stats[k])}%`));
+      row.title = `${D.STAT_HINT[k] || k}。普通の判定 ${G.s5Plain(S.stats[k])}％（相手が強い・難しいほど下がる）・次の点まで ${G.s5Progress(k)}％`;
       list.append(row);
     });
     return sheetSection("stats", "能力値", list);
@@ -648,7 +648,7 @@
       ep.append(h("b", "", end === "dead" ? `${race ? race + "の" : ""}${cls} ${name}、ここに眠る` : `${race ? race + "の" : ""}${cls} ${name}、物語を終える`));
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
-      ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${G.pt(run.stats[k])}`).join(" ")));
+      ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${G.s5GraveStats(run)[k]}`).join(" ")));
     } else ep.hidden = true;
     const list = $("#chronList");
     list.textContent = "";

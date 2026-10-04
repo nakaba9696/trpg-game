@@ -31,7 +31,7 @@ export default ({ G, fail, seeded }) => {
   G.rand = seeded(31);
   G.P = { trophies: {}, graves: [] };
   const stats = {};
-  D.STATS.forEach((k) => { stats[k] = 50; });
+  D.STATS.forEach((k) => { stats[k] = 12; });   // 点（S5）
   G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, goal: Object.keys(D.GOALS)[0], profile: { name: "ログ試し", sex: "男", age: 30, history: "テスト用", personality: "無口" } });
   const kinds = new Set();
   for (let round = 0; round < 6 && !G.S.over; round++) {
