@@ -312,8 +312,10 @@
           G.m2Bond(c, (won ? L.win || 0 : 0) + (won && f.boss ? L.boss || 0 : 0) + (near ? L.near || 0 : 0), true);
         });
         const risk = 0.025 + (f.boss ? 0.1 : 0) + (near ? 0.06 : 0) + (won ? 0 : 0.04);
-        if (S.companions.length && !S.over && G.rand() < risk) {
-          const c = G.pick(S.companions);
+        // B5：深手を負うのは、その戦いで倒れた（戦闘不能になった）仲間だけ（G.b5Fall が f.fell に入れる）
+        const fell = S.companions.filter((c) => (f.fell || []).includes(c.id));
+        if (fell.length && !S.over && G.rand() < risk) {
+          const c = G.pick(fell);
           G.m2Doom(c, won ? `${f.foe || "敵"}との戦いで深手を負った` : `${f.foe || "敵"}から退くとき、しんがりで深手を負った`);
         }
       }
