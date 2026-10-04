@@ -59,7 +59,16 @@
 
   // ---------------------------------------------------------------- 1. タイトル
   function title(root) {
-    root.append(h("div", "titleHero")); // 題も副題も置かない（持ち主の決定 #56・N1）。背景の絵を見せる余白だけ
+    // 題名だけを大きく出す（説明文・副題は置かない。持ち主の決定 U15。前の #56・N1 の「題を置かない」を改めた）。題名は D.CRE_TEXT.title
+    const hero = h("div", "titleHero");
+    const TT = (D.CRE_TEXT || {}).title;
+    if (TT) {
+      const h1 = h("h1", "titleName");
+      h1.append(h("span", "titleLatin", TT.name));
+      if (TT.kana) h1.append(h("span", "titleKana", TT.kana));
+      hero.append(h1);
+    }
+    root.append(hero);
 
     const menu = h("div", "titleMenu");
     const live = G.S && !G.S.over && G.S.profile;

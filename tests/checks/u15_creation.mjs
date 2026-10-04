@@ -2,6 +2,7 @@
 // - 各項目の効き目の一行（D.CRE_HINTS）がそろっていて、数字の羅列や目的の行き先を書いていない
 // - 「今決めること」と「あとでもよいこと」（畳める）に分かれ、効き目の一行が出る。初めての人にはおまかせを勧める
 // - 初めての人（トロフィーも墓碑も無い）の判定と、「おまかせのまま旅立つ」でボーナス点を捨てない
+// - タイトル画面に題名（D.CRE_TEXT.title）が出て、ページの <title> も同じ
 // - 「自分で決める」目的：ゲームは中身を判定しない（宿願成就・物語の結末は付かない）。節目「区切り」とトロフィー「自分で決めた道」には着ける。画面の説明と合う
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -85,5 +86,11 @@ export default ({ G, fail, seeded }) => {
   if (!/HN\.sex/.test(src) || !/HN\.age/.test(src)) fail("作成画面に性別・年齢の効き目の一行が出ない");
   if (!/cre\.firstTime\(\)/.test(src) || !/TX\.first\b/.test(src)) fail("作成画面に、初めての人へのおまかせの一言が無い");
   if (!/creCustomNote/.test(src) || !/TX\.custom\b/.test(src)) fail("作成画面に、自分で決める目的の扱いの説明が無い");
+  // タイトル画面に題名だけを出し、ページの <title> も同じ題名にする
+  const T = (TX.title || {}).name;
+  if (!T) fail("タイトル画面の題名（D.CRE_TEXT.title）が無い");
+  if (!/titleName/.test(src) || !/TT\.name/.test(src)) fail("タイトル画面に題名が出ない");
+  const html = readFileSync(fileURLToPath(new URL("../../src/index.html", import.meta.url)), "utf8");
+  if (T && !html.includes(`<title>${T}</title>`)) fail(`ページの <title> が題名（${T}）と違う`);
   if (/果たすとトロフィー「宿願成就」/.test(src)) fail("作成画面が、自分で決める目的でも「宿願成就」が付くように書いている（D.CRE_TEXT の goalFine・customFine で分ける）");
 };

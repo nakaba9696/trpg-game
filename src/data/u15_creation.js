@@ -15,6 +15,8 @@
   };
 
   D.CRE_TEXT = {
+    // タイトル画面の題名（ページの <title> も同じ。src/index.html）
+    title: { name: "Morsveld", kana: "モルスヴェルド" },
     now: "今決めること",
     nowSub: "職業・目的・名前。迷ったら、おまかせのままでよい",
     later: "あとでもよいこと",
