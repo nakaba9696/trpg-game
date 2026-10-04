@@ -3,28 +3,41 @@
 //   ランダム       … tests/run.mjs のランダムプレイと同じ（できる行動から等確率で選ぶ）
 //   筋のよい遊び方 … tests/bot.mjs（勝ち目を見積もる・逃げる・宿で休む・装備を買う・鍛える・危険の低い所から）
 // どちらも金や能力値の底上げはせず、キャラクター作成の画面と同じ振り方で始める。
-//   node tests/run.mjs                 … テストのあとに表を出す
-//   node tests/balance.mjs             … 表だけ出す
-//   BALANCE_GAMES=400 node tests/balance.mjs   … ランダムの職業ごとの回数（既定 400）
-//   BALANCE_SMART_GAMES=100 …          … 筋のよい遊び方の回数（既定はランダムの 1/8）
-//   STEPS=500 / SMART_STEPS=1500 …     … 1回の行動の上限
+//   node tests/run.mjs                 … テストのあとに表を出す（tests/checks/q2_balance.mjs が遊んだ回を使い回す）
+//   node tests/balance.mjs             … 表だけ出す（働き手に分けて遊ぶ。JOBS=1 なら一つずつ）
+//   BALANCE_GAMES=600 node tests/balance.mjs   … ランダムの職業ごとの回数（既定は q2 と同じ。下の CHECK_PLAN）
+//   BALANCE_SMART_GAMES=100 …          … 筋のよい遊び方の回数（既定は q2 と同じ）
+//   STEPS=500 / SMART_STEPS=1500 …     … 1回の行動の上限（既定は q2 と同じ）
 //   BALANCE_SEED=1 …                   … 乱数の出発点をずらす（揺れの確認用。既定 0）
 //   BALANCE=0 node tests/run.mjs       … 測定を省く
 // GitHub Actions では GITHUB_STEP_SUMMARY にも同じ表を書く。
 import { appendFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { availableParallelism } from "node:os";
+import { Worker } from "node:worker_threads";
 import { loadEngine, seeded } from "./lib.mjs";
 import { makeSmartBot } from "./bot.mjs";
 
 const TOP_CAUSES = 3;
 
+// tests/checks/q2_balance.mjs が遊ぶ回の組（職業ごとの回数・1回の行動の上限・種）。表の既定も同じにして、run.mjs では q2 の回を使い回す
+// 回数は種によるぶれから決めた（Q6）。種を 0〜9 に変えて測った職業の差（最長 ÷ 最短）：
+//   ランダム       240 回 1.31〜1.50 倍（平均 1.41・標準偏差 0.071） → 600 回 1.25〜1.44 倍（平均 1.36・0.065）
+//   筋のよい遊び方  30 回 1.24〜1.99 倍（平均 1.43・0.228）           →  50 回 1.12〜1.24 倍（平均 1.18・0.046。tests/bot.mjs の MP の見積もりも直した）
+// ランダムは 1 回ごとの手番のばらつき（標準偏差が平均とほぼ同じ）が大きく、ぶれを ±0.03 倍にするには職業ごとに 1 万回ほど要る。
+// テスト全体の時間（CI で 8 分以内）に収まる回数にした。
+export const CHECK_PLAN = { random: { games: 600, steps: 500 }, smart: { games: 50, steps: 800 }, seed: 0 };
+
+// q2 の回の組（balancePlan と同じ形。環境変数は見ない）
+export const checkPlan = () => balancePlan({ games: CHECK_PLAN.random.games, smartGames: CHECK_PLAN.smart.games, steps: CHECK_PLAN.random.steps, smartSteps: CHECK_PLAN.smart.steps, seed: CHECK_PLAN.seed });
+
 // 測る回の組（遊び方ごとの回数・行動の上限・種）。tests/run.mjs はこれを職業ごとに分けて並べて遊ばせ、opts.played で渡す
 export function balancePlan(opts = {}) {
-  const GAMES = opts.games ?? Number(process.env.BALANCE_GAMES || 400);
-  const SMART_GAMES = opts.smartGames ?? Number(process.env.BALANCE_SMART_GAMES || Math.max(1, Math.round(GAMES / 8)));
-  const STEPS = opts.steps ?? Number(process.env.STEPS || 500);
-  const SMART_STEPS = opts.smartSteps ?? Number(process.env.SMART_STEPS || 1500);
-  const SEED = opts.seed ?? Number(process.env.BALANCE_SEED || 0);
+  const GAMES = opts.games ?? Number(process.env.BALANCE_GAMES || CHECK_PLAN.random.games);
+  const SMART_GAMES = opts.smartGames ?? Number(process.env.BALANCE_SMART_GAMES || CHECK_PLAN.smart.games);
+  const STEPS = opts.steps ?? Number(process.env.STEPS || CHECK_PLAN.random.steps);
+  const SMART_STEPS = opts.smartSteps ?? Number(process.env.SMART_STEPS || CHECK_PLAN.smart.steps);
+  const SEED = opts.seed ?? Number(process.env.BALANCE_SEED || CHECK_PLAN.seed);
   return [["random", GAMES, STEPS], ["smart", SMART_GAMES, SMART_STEPS]]
     .filter(([mode]) => !opts.modes || opts.modes.includes(mode))
     .map(([mode, games, steps]) => ({ mode, games, steps, seed: SEED }));
@@ -76,6 +89,47 @@ const CLASS_NAME = {};
 export function playGames({ mode = "random", games = 400, steps = 500, seed = 0, classes: only, start = 0 } = {}) {
   const rows = playGames0({ mode, games, steps, seed, only, start });
   if (Array.isArray(globalThis.__played)) globalThis.__played.push({ mode, games, steps, seed, start, rows });
+  return rows;
+}
+
+// playGames と同じ数字を、職業ごと・回の途中で分けて働き手（tests/worker.mjs）に遊ばせて出す。全部の職業の行を返す
+// 種は職業ごと・回ごとに決まっているので、分けても一度に遊んだときと同じ（tests/checks/qt1_split.mjs）。
+// globalThis.__played が配列なら、足し終えた結果を一つにまとめてそこに残す（run.mjs が釣り合いの表に使い回す）
+// jobs は働き手の数（既定は BALANCE_JOBS か JOBS かコアの数。1 なら働き手を使わずにここで遊ぶ）。chunk は一つの仕事で遊ぶ回数（既定は下の CHUNK）
+const CHUNK = { random: 100, smart: 10 };
+export async function playSplit({ mode = "random", games = 400, steps = 500, seed = 0, classes: only, jobs, chunk } = {}) {
+  const classes = only || Object.keys(loadEngine().data.CLASSES);
+  const n = chunk || CHUNK[mode] || games;
+  const tasks = classes.flatMap((cls) => Array.from({ length: Math.ceil(games / n) }, (_, k) => ({ kind: "balance", mode, steps, seed, cls, start: k * n, games: Math.min(games, (k + 1) * n) })));
+  const J = Math.max(1, Math.min(tasks.length, jobs ?? Number(process.env.BALANCE_JOBS || process.env.JOBS || availableParallelism())));
+  const parts = new Array(tasks.length);
+  const keep = globalThis.__played;
+  const t0 = Date.now();
+  if (J === 1) {
+    globalThis.__played = null;
+    try { tasks.forEach((t, i) => { parts[i] = playGames({ ...t, classes: [t.cls] }); }); } finally { globalThis.__played = keep; }
+  } else {
+    // 小分けにした仕事を、働き手が数え札で取り合う（tests/worker.mjs の drain）
+    const counter = new Int32Array(new SharedArrayBuffer(4));
+    const errors = [];
+    await Promise.all(Array.from({ length: J }, () => new Promise((resolve) => {
+      const w = new Worker(new URL("./worker.mjs", import.meta.url), { workerData: { tasks, counter: counter.buffer } });
+      w.on("message", (m) => { if (m.end) w.terminate(); else if (m.data && m.data.error) errors.push(m.data.error); else parts[m.i] = m.data; });
+      w.on("error", (e) => errors.push(String(e.stack || e)));
+      w.on("exit", resolve);
+    })));
+    if (errors.length) throw new Error(errors[0]);
+    if (parts.some((p) => !p)) throw new Error(`${mode}: 働き手から返ってこなかった回がある`);
+  }
+  const rows = [];
+  tasks.forEach((t, i) => {
+    for (const r of parts[i]) {
+      const at = rows.findIndex((x) => x.cls === r.cls);
+      if (at < 0) rows.push(r);
+      else rows[at] = mergeRows(rows[at], r);
+    }
+  });
+  if (Array.isArray(globalThis.__played)) globalThis.__played.push({ mode, games, steps, seed, start: 0, classes: only || null, rows, ms: Date.now() - t0 });
   return rows;
 }
 
@@ -244,4 +298,13 @@ function alignRow(all, i) {
   }).join(" | ") + " |";
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) measureBalance();
+// 表だけ出す：遊び方ごとに働き手に分けて遊び、その結果で表を組む
+if (process.argv[1] === fileURLToPath(import.meta.url) && process.env.BALANCE !== "0") {
+  const played = {};
+  for (const { mode, games, steps, seed } of balancePlan()) {
+    const t0 = Date.now();
+    const rows = await playSplit({ mode, games, steps, seed });
+    played[mode] = { rows, ms: Date.now() - t0 };
+  }
+  measureBalance({ played });
+}

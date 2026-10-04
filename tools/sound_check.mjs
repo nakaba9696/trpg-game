@@ -1,7 +1,8 @@
 // 音の波形を確かめる（耳の代わり）。Chromium の OfflineAudioContext で ui/sound.js の音を1つずつ書き出し、
 // 無音・音割れ（クリップ）・長すぎが無いかを見る。CI では動かさない（Playwright と Chromium が要る）。
 // node tools/sound_check.mjs
-import { readFileSync } from "node:fs";
+// node tools/sound_check.mjs --wav page docs/sound/page_after.wav [回数]  … その音を何回か（1.2 秒おきに）鳴らして WAV に書き出す（聞き比べ用）
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -16,6 +17,32 @@ const browser = await pw.chromium.launch(process.env.PLAYWRIGHT_BROWSERS_PATH ? 
 const page = await browser.newPage();
 await page.setContent("<!doctype html><title>音</title><div class='top'><div class='tools'></div></div>");
 await page.addScriptTag({ content: "globalThis.G = { data: { LOCS: {}, ENEMIES: {} } };\n" + code });
+// --wav：名前の音を何回か並べて鳴らし、16bit の WAV に書き出して、波形の数字を出す
+const wi = process.argv.indexOf("--wav");
+if (wi > 0) {
+  const [name, file, times] = process.argv.slice(wi + 1);
+  const n = +times || 5;
+  const { data, rate, stat } = await page.evaluate(async ({ name, n }) => {
+    const rate = 44100;
+    const ctx = new OfflineAudioContext(1, Math.ceil(rate * (n * 1.2 + 0.6)), rate);
+    G.sound._offline(ctx, Array(n).fill(name), false, Array.from({ length: n }, (_, i) => 0.2 + i * 1.2));
+    const d = (await ctx.startRendering()).getChannelData(0);
+    let peak = 0, sum = 0, clip = 0;
+    for (const v of d) { const a = Math.abs(v); peak = Math.max(peak, a); if (a >= 0.999) clip++; sum += v * v; }
+    return { data: Array.from(d, (v) => Math.round(Math.max(-1, Math.min(1, v)) * 32767)), rate, stat: { peak: +peak.toFixed(3), rms: +Math.sqrt(sum / d.length).toFixed(4), clip } };
+  }, { name, n });
+  await browser.close();
+  const buf = Buffer.alloc(44 + data.length * 2);
+  buf.write("RIFF", 0); buf.writeUInt32LE(36 + data.length * 2, 4); buf.write("WAVE", 8);
+  buf.write("fmt ", 12); buf.writeUInt32LE(16, 16); buf.writeUInt16LE(1, 20); buf.writeUInt16LE(1, 22);
+  buf.writeUInt32LE(rate, 24); buf.writeUInt32LE(rate * 2, 28); buf.writeUInt16LE(2, 32); buf.writeUInt16LE(16, 34);
+  buf.write("data", 36); buf.writeUInt32LE(data.length * 2, 40);
+  data.forEach((v, i) => buf.writeInt16LE(v, 44 + i * 2));
+  mkdirSync(path.dirname(path.resolve(file)), { recursive: true });
+  writeFileSync(file, buf);
+  console.log(`${file}：${name} を ${n} 回（最大 ${stat.peak}・実効値 ${stat.rms}・クリップ ${stat.clip}）`);
+  process.exit(0);
+}
 const res = await page.evaluate(async () => {
   const S = G.sound;
   const measure = (buf) => {

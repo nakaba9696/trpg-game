@@ -234,16 +234,30 @@
     try { r = baseRandom(); } finally { D.EVENTS = all; }
     return (r && back.get(r)) || r;
   };
+  // 予定合わせの結果を、出会いの出来事の持ち主ごとに分ける（並びはそのまま）。「訪ねる」の一覧を作る間は使い回す
+  // （人ごとに全部の出来事を見直していて、ランダムプレイの時間の 2 割ほどを使っていた。Q6。中身は同じ）
+  const byOwner = (S) => {
+    if (nowMemo && nowMemo.S === S && nowMemo.byOwner) return nowMemo.byOwner;
+    const ix = F4.index();
+    const m = new Map();
+    for (const e of F4.eventsNow(S)) {
+      const o = ix.byId[e.id] || e;
+      if (!F4.isEntry(o)) continue;
+      for (const id of new Set([ix.prim.get(o), ...(owners().get(o) || [])])) {
+        if (!id) continue;
+        if (!m.has(id)) m.set(id, []);
+        m.get(id).push(e);
+      }
+    }
+    if (nowMemo && nowMemo.S === S) nowMemo.byOwner = m;
+    return m;
+  };
   // いま、ここで起きうるその人の出会いの出来事
   F4.entriesHere = (id, S) => {
     S = S || G.S;
     if (!S) return [];
-    const ix = F4.index();
     const tags = G.eventTags();
-    return F4.eventsNow(S).filter((e) => {
-      const o = (S && ix.byId[e.id]) || e;
-      return F4.entryOf(o, id) && e.where.some((w) => tags.includes(w)) && !(e.once && S.flags["ev:" + e.id]) && (!e.cond || e.cond(S));
-    });
+    return (byOwner(S).get(id) || []).filter((e) => e.where.some((w) => tags.includes(w)) && !(e.once && S.flags["ev:" + e.id]) && (!e.cond || e.cond(S)));
   };
 
   // 会えなくなった人を仲間に加える選択肢は出さない（ほかに選択肢があるときだけ）
