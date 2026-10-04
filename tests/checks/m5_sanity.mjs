@@ -98,7 +98,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   G.act("back"); G.act("fac:church");
   const conf = acts().find((a) => a.id === "m5:confess");
   if (!conf || conf.disabled) f("教会で懺悔できない");
-  if (!G.parse("懺悔する")) f("「懺悔する」を読み取れない");
+  if (conf && !/懺悔/.test(conf.label)) f("「懺悔する」が選択肢の名前に無い");
   const s1 = S.sanity;
   G.act("m5:confess");
   if (!(S.sanity > s1)) f("懺悔しても正気が戻らない");

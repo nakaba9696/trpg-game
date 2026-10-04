@@ -1,5 +1,5 @@
 // 起動と保存。冒険とトロフィーは、このブラウザと claude.ai のデータ（使えるとき）の両方に保存する。
-// GM（Claude）は、claude.ai で開いたときだけ使える。レーン U（UI）が管理
+// 行動はすべて選択肢で、Claude は呼ばない。レーン U（UI）が管理
 (function (G) {
   const $ = (s) => document.querySelector(s);
   const LKEY = G.SAVE_KEYS;
@@ -25,7 +25,7 @@
     },
   };
 
-  const main = (G.main = { sample: null });
+  const main = (G.main = {});
   main.store = store;
   main.save = () => {
     if (G.S) G.S.savedAt = Date.now();
@@ -89,8 +89,7 @@
   (async () => {
     const c = window.claude;
     if (!c || !c.use) return;
-    const [smp, db, user] = await Promise.all([c.use("sample"), c.use("db"), c.use("user")]);
-    main.sample = smp;
+    const [db, user] = await Promise.all([c.use("db"), c.use("user")]);
     const uid = user ? await user.id().catch(() => null) : null;
     if (!db || !uid) return;
     store.db = db;

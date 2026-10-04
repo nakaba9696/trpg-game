@@ -35,7 +35,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     as(r.season).forEach((x) => G.SEASONS.includes(x) || F(`${w}: 季節 ${x} が無い`));
     as(r.weather).forEach((x) => ["晴", "雨", "霧", "雪"].includes(x) || F(`${w}: 天候 ${x} が無い`));
     as(r.flag).forEach((f) => flagsSet.has(f) || F(`${w}: 印 ${f} を立てる結果が無い（続き物の前の話が無い）`));
-    const ch = e.choices || [];
+    const ch = (e.choices || []).filter((c) => !c.c10);   // 状態で現れる選択肢（C10）は数えない
     if (ch.length < 2 || ch.length > 5) F(`${w}: 選択肢は 2〜5`);
     const stats = new Set(ch.filter((c) => c.stat).map((c) => c.stat));
     if (stats.size < 2) F(`${w}: 能力値の違う解き方が 2 つ以上いる（${[...stats].join("・")}）`);

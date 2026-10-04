@@ -71,7 +71,7 @@ export default ({ G, fail, seeded }) => {
       const t = readFileSync(path.join(root, f), "utf8");
       if (/"性格"|"口癖"|"好きなもの"|"苦手なもの"|p\.personality|p\.quote|p\.like|p\.dislike/.test(t)) fail(`${f}: 主人公の性格・口癖・好き嫌いを出している`);
     }
-    if (/profile\.personality/.test(readFileSync(path.join(root, "engine/gm.js"), "utf8"))) fail("GM への説明に主人公の性格が残っている");
+    // GM（engine/gm.js）は C10 で無くなった（自由入力をやめた）
     // 恋の相性：同じ魅力なら、古いセーブの性格が何であっても同じ
     if (G.m10Compat) {
       const st = Object.fromEntries(D.STATS.map((k) => [k, 50]));

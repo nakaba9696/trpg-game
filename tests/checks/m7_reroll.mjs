@@ -46,7 +46,7 @@ export default ({ G, fail, ok, seeded }) => {
   const rr = acts().find((a) => a.id === "rr:go");
   if (!rr || !/残り 1/.test(rr.sub)) bad("失敗した判定のあとに「振り直す（残り 1）」が出ない");
   if (!G.rerollTarget(failed)) bad("記録の失敗した判定に振り直しのしるしが付かない");
-  if (!G.parse("振り直す") || G.parse("振り直す").id !== "rr:go") bad("「振り直す」を自由入力で読み取れない");
+  if (!/振り直す/.test(rr.label)) bad("「振り直す」が選択肢の名前に無い");
   G.rand = script([0.01, 0.99]); // 出目 2：成功（成長はしない）
   G.act("rr:go");
   const last = S.log.filter((e) => e.k === "dice").pop();

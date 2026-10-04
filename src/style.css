@@ -207,10 +207,6 @@ button { cursor: pointer; }
 @keyframes hpPulse { 50% { box-shadow: 0 0 0 2px var(--ng); } }
 @media (prefers-reduced-motion: reduce) { #mbar.danger .gauge:first-child .g { animation: none; box-shadow: 0 0 0 1px var(--ng); } }
 
-#act { position: sticky; bottom: 0; padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid var(--rule); display: grid; gap: 8px; z-index: 4; }
-.freeRow { display: flex; gap: 8px; }
-.freeRow input { flex: 1; min-width: 0; border: 1px solid var(--rule); background: var(--field); border-radius: 3px; padding: 8px 10px; }
-#freeHint { font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; color: var(--muted); }
 .fin { border: 2px solid var(--ink); padding: 14px 16px; text-align: center; display: grid; gap: 10px; justify-items: center; }
 .fin b { font-family: var(--f-display); font-weight: 400; font-size: 20px; letter-spacing: .1em; }
 
@@ -341,8 +337,6 @@ dialog::backdrop { background: var(--scrim); }
   .foe b { font-size: 14px; overflow-wrap: anywhere; }
 
   /* 自由入力：iOS で拡大されないよう 16px */
-  .freeRow input { font-size: 16px; padding: 9px 10px; }
-  #act .btn.primary { min-width: 64px; }
 
   /* ステータスは下から出る全面のシート */
   #sheetBox { padding: calc(8px + env(safe-area-inset-top, 0px)) 0 0; }
@@ -651,9 +645,6 @@ dialog { background: linear-gradient(var(--dlg-a), var(--dlg-b)); }
 .l-you { border-left-color: var(--accent); color: var(--hi); }
 .check { background: var(--check-bg); border-color: var(--rule); }
 .die { background: var(--die-bg); color: var(--die-ink); border-color: var(--die-ink); }
-#act { background: var(--win-solid); box-shadow: 0 -10px 14px -6px var(--win-solid); border-top: 1px solid var(--rule); margin-inline: -20px; padding-inline: 20px; }
-.freeRow input { background: var(--field); border-color: var(--rule); color: var(--ink); font-family: var(--f-body); }
-.freeRow input::placeholder { color: var(--muted); opacity: .8; }
 /* 選択肢は、文章の窓の中に本の項目のように並ぶ */
 .agroup h3 { font-family: var(--f-body); font-weight: 400; font-size: 13px; letter-spacing: .3em; color: var(--accent); display: flex; align-items: center; gap: 10px; }
 .agroup h3::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--rule), transparent); }
@@ -690,7 +681,6 @@ body.sheet-open { overflow: hidden; }
   #mbar { margin-inline: -16px; padding-inline: 16px; }
   .scene { height: max(150px, calc(var(--pic-h, 55vh) - 150px)); }
   .tome { padding: 14px 12px 0; }
-  #act { margin-inline: -12px; padding-inline: 12px; }
   #log { border-color: var(--rule); }
   .sheet { margin: 0 auto; }
 }
