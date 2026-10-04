@@ -1,6 +1,6 @@
 // U13：町などの行動の選択肢を分類（街で・冒険・仲間・その他）にまとめる（src/ui/u13_menu.js の DOM を使わない部分、G.u13）
 // - どの組も、どれかの分類か「上に出したまま／下に出したまま」に入り、消えない（知らない組は「その他」）
-// - 戦闘・出来事はまとめない。分類が少ない・選択肢が少ないときもまとめない
+// - 出来事はまとめない。戦闘は別の形（いつも出す手と押すと開く組）。分類が少ない・選択肢が少ないときもまとめない
 // - 店で組が多いときは、組そのものを分類にする（店を出るは下に残す）
 // - 開いた分類は場所の種類ごとに覚える。新しく出た項目のある分類には印
 import { readFileSync } from "node:fs";
@@ -20,8 +20,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   let towns = 0, planned = 0, fac = 0, other = 0;
   const notLost = (gs, plan, where) => {
     const n = gs.filter((g) => g.list.length).length;
-    const got = plan.tabs.reduce((a, t) => a + t.groups.length, 0) + plan.top.length + plan.bottom.length;
-    const idx = [...plan.tabs.flatMap((t) => t.groups), ...plan.top, ...plan.bottom];
+    const idx = [...plan.tabs.flatMap((t) => t.groups), ...plan.top, ...plan.bottom, ...(plan.main || [])];
+    const got = idx.length;
     if (got !== n || new Set(idx).size !== n) fail(`U13: ${where} で組が分類からこぼれる・重なる（組 ${n}・分類に ${got}）`);
     if (plan.tabs.length < 2) fail(`U13: ${where} で分類が 1 つなのにまとめている`);
   };
@@ -36,7 +36,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       const gs = G.actions();
       const plan = u.plan(gs, G.S);
       const where = `${G.S.mode}:${G.S.loc}${G.S.fac ? ":" + G.S.fac : ""}`;
-      if (G.S.mode === "combat" || G.S.mode === "event") { if (plan) fail(`U13: ${where} の選択肢をまとめている（戦闘・出来事はまとめない）`); }
+      if (G.S.mode === "event") { if (plan) fail(`U13: ${where} の選択肢をまとめている（出来事はまとめない）`); }
+      else if (G.S.mode === "combat") { if (plan) { if (plan.kind !== "combat") fail(`U13: ${where} の戦闘を町と同じ形でまとめている`); else notLost(gs, plan, where); } }
       else if (plan) {
         planned++;
         notLost(gs, plan, where);
@@ -106,10 +107,11 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       if (!p.bottom.length) fail("U13: 店を出るが、分類の外（下）に残らない");
     }
   }
-  // 戦闘はまとめない
+  // 戦闘は、いつも出す手と押すと開く組に分ける（詳しくは u13_battle.mjs）
   G.S.mode = "explore"; G.S.fac = null;
   G.startCombat(["goblin"], {});
-  if (u.plan(G.actions(), G.S)) fail("U13: 戦闘の選択肢をまとめている");
+  const pc = u.plan(G.actions(), G.S);
+  if (!pc || pc.kind !== "combat") fail("U13: 戦闘の手を、いつも出す手と押すと開く組に分けない");
 
   if (!bad) ok(`U13: 行動の選択肢を分類にまとめる（${planned} 場面でまとめ、うち店 ${fac}・町を見た ${towns} 回。こぼれる組なし）`);
 };

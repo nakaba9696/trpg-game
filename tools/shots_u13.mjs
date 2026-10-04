@@ -1,6 +1,6 @@
 // U13：町の行動の選択肢を分類（街で・冒険・仲間・その他）にまとめた画面を撮る（Playwright。Chromium は PLAYWRIGHT_BROWSERS_PATH のもの）
 // node tools/build.mjs && node tools/shots_u13.mjs [after|before]
-// docs/shots/u13/<前置き>_<pc|phone>_<town|adv|party|shop>.jpg を書く（前置きの既定は after）
+// docs/shots/u13/<前置き>_<pc|phone>_<town|adv|party|shop|combat|combat_magic|combat_items|combat_reveal|result|levelup>.jpg を書く（前置きの既定は after）
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -62,6 +62,36 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   }
   await page.evaluate(() => { G.S.gold = 2000; G.act("fac:shop"); G.main.save(); G.ui.render(); });
   await shot("shop");
+  // 戦闘：道具と術を持たせて、ゴブリン 2 体
+  await page.evaluate(() => {
+    G.S.mode = "explore"; G.S.fac = null;
+    Object.assign(G.S.inv, { herb: 3, potion: 2, jerky: 2, smoke: 1 });
+    G.startCombat(["goblin", "goblin"], {}); G.main.save(); G.ui.render();
+  });
+  await shot("combat");
+  if (tag === "after") {
+    for (const [k, name] of [["d:魔法", "combat_magic"], ["d:道具", "combat_items"]]) {
+      const b = page.locator(`#panel .u13drawer[data-u13="${k}"]`);
+      if (await b.count()) { await b.click(); await shot(name); }
+    }
+    // 一手の記録を一行ずつ出している途中
+    await page.keyboard.press("Escape");
+    await page.locator("#panel .act").first().click();
+    await page.waitForTimeout(900);
+    await shot("combat_reveal");
+    // 勝って、戦いの中で能力値が伸びた：結果の場面
+    await page.evaluate(() => { G.ui.render(); G.S.combat.foes.forEach((f) => { f.hp = 1; }); G.S.stats["筋力"] += 4; G.ui.render(); });
+    for (let i = 0; i < 6 && !(await page.locator("#panel .u13result").count()); i++) {
+      await page.locator("#panel .act").first().click();
+      await page.waitForTimeout(5000);
+    }
+    await shot("result");
+    // 戦いの外で伸びた：その場の演出
+    await page.locator("#panel .u13go").click();
+    await page.evaluate(() => { G.S.stats["知力"] += 4; G.ui.render(); });
+    await page.waitForTimeout(700);
+    await shot("levelup");
+  }
   if (errs.length) console.log("page errors:", errs);
   await page.close(); await ctx.close();
 }

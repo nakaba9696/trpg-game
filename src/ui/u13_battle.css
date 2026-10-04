@@ -1,0 +1,56 @@
+/* U13：戦闘の見せ方（u13_battle.js）。一行ずつ出す・動いた者が光る・結果の場面・能力値が伸びた演出 */
+
+/* ---------------------------------------------------------------- 一行ずつ出す */
+#log > .u13hide { display: none; }
+#log > .u13in { animation: u13in .32s ease-out both; }
+@keyframes u13in { from { opacity: 0; transform: translateX(-6px); } }
+/* 出している間は、次の手を押せない（押すと早送り） */
+#panel.u13wait .act, #panel.u13wait .u13tab:not(.u13speed) { opacity: .55; pointer-events: none; }
+/* 動いた者（敵の札・一行の札）が一瞬光る */
+.foe.u13act, .b5mem.u13act { animation: u13act .7s ease-out; }
+@keyframes u13act { 0% { box-shadow: 0 0 0 0 var(--accent); } 30% { box-shadow: 0 0 0 3px var(--accent), 0 0 18px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.u13speed { margin-left: auto; font-size: 12.5px; letter-spacing: .02em; }
+
+/* ---------------------------------------------------------------- 結果の場面 */
+.u13result { display: grid; gap: 10px; padding: 14px 16px 12px; border: 1px solid var(--accent); border-radius: 3px; background: var(--check-bg, var(--sheet));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25); animation: u13rise .5s cubic-bezier(.2, .9, .3, 1.2) both; }
+.u13result.fast { animation-duration: .2s; }
+@keyframes u13rise { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+.u13rtitle { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 26px; letter-spacing: .3em; color: var(--head); text-align: center; }
+.u13result.win .u13rtitle { color: var(--accent); text-shadow: 0 0 14px rgba(234, 190, 100, .45); }
+.u13rtitle::after { content: ""; display: block; height: 1px; margin: 8px auto 0; width: 60%; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+.u13rrows { display: grid; grid-template-columns: 5em minmax(0, 1fr); gap: 6px 12px; margin: 0; font-size: 14.5px; }
+.u13rrows dt { color: var(--muted); }
+.u13rrows dd { margin: 0; overflow-wrap: anywhere; }
+.u13rrows .u13comp { font-size: 13.5px; }
+.u13result .u13go { justify-content: center; border: 1px solid var(--accent); border-radius: 3px; background: var(--item-hover); }
+.u13result .u13go::before { content: none; }
+.u13waitmsg { margin: 0; text-align: center; color: var(--muted); }
+
+/* ---------------------------------------------------------------- 能力値が伸びた */
+.u13grow1 { font-size: 15.5px; }
+.u13grow1 b { color: var(--ok, var(--accent)); letter-spacing: .04em; }
+.u13grow1 .num { font-variant-numeric: tabular-nums; }
+.u13result .u13grow1 { animation: u13pulse 1.2s ease-out .45s both; }
+@keyframes u13pulse { 0% { opacity: 0; transform: scale(.9); } 40% { opacity: 1; transform: scale(1.06); text-shadow: 0 0 12px var(--accent); } 100% { transform: none; } }
+/* その場で出す見出し（画面の真ん中） */
+#u13grow { position: fixed; left: 50%; top: 38%; z-index: 30; transform: translate(-50%, -50%); min-width: min(320px, calc(100vw - 32px)); max-width: calc(100vw - 32px);
+  display: grid; gap: 6px; padding: 16px 22px 12px; text-align: center; cursor: pointer;
+  background: var(--win-solid, var(--sheet)); color: var(--ink); border: 1px solid var(--accent); border-radius: 3px; box-shadow: 0 10px 34px rgba(0, 0, 0, .45), 0 0 26px rgba(234, 190, 100, .35);
+  animation: u13gin .55s cubic-bezier(.2, .9, .3, 1.3) both; }
+#u13grow[hidden] { display: none; }
+@keyframes u13gin { from { opacity: 0; transform: translate(-50%, -40%) scale(.85); } }
+#u13grow .u13gtitle { font-family: var(--f-display); font-size: 22px; letter-spacing: .2em; color: var(--accent); }
+#u13grow .u13gcomp { font-size: 13px; color: var(--muted); }
+#u13grow .u13ghint { font-size: 11.5px; color: var(--muted); }
+/* 伸びた能力値の欄が光り、棒が伸びる */
+.stat.u13glow { animation: u13glow 1.6s ease-out; border-radius: 2px; }
+.stat.u13glow .bar i { animation: u13bar 1s ease-out; transform-origin: left; }
+@keyframes u13glow { 0%, 30% { background: rgba(234, 190, 100, .35); box-shadow: 0 0 12px rgba(234, 190, 100, .6); } 100% { background: transparent; box-shadow: none; } }
+@keyframes u13bar { from { transform: scaleX(.85); } }
+
+/* 動きを減らす設定：出入りは切り替えるだけ（色の変化は残す） */
+@media (prefers-reduced-motion: reduce) {
+  #log > .u13in, .u13result, .u13result .u13grow1, #u13grow, .stat.u13glow .bar i { animation: none; }
+  .foe.u13act, .b5mem.u13act { animation: none; outline: 2px solid var(--accent); }
+}
