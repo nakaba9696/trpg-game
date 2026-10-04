@@ -1,11 +1,13 @@
 // B5 の測り（PR の数字用・CI では動かさない）：node tests/b5_probe.mjs [smart|random] [回数]
+// falls 仲間が戦闘不能になった回数・dooms 死の淵（看取りの出来事）・deaths 仲間の死別（出来事を含む）・joined 加わった仲間の数・compTurns 戦闘中の仲間の手番
 import { loadEngine, seeded } from "./lib.mjs";
 import { makeSmartBot } from "./bot.mjs";
 const mode = process.argv[2] || "smart", games = Number(process.argv[3] || 50), steps = mode === "smart" ? 800 : 500;
 const G = loadEngine();
 const D = G.data;
-const t = { games: 0, compTurns: 0, joined: 0, falls: 0, deaths: 0, dooms: 0, heroDeaths: 0, allyHits: 0, heroHits: 0, turns: 0, ended: {} };
-let cur = null;
+const t = { games: 0, compTurns: 0, joined: 0, falls: 0, dooms: 0, deaths: 0, heroDeaths: 0, allyHits: 0, heroHits: 0, turns: 0 };
+const ev0 = G.startEvent;
+G.startEvent = (e) => { if (e === "m2_farewell" || (e && e.id === "m2_farewell")) t.dooms++; return ev0(e); };
 const log0 = G.log;
 G.log = (k, text, x) => { if (x && x.fx === "allydown") t.falls++; if (x && x.fx === "ally") t.allyHits++; if (x && x.fx === "hurt") t.heroHits++; return log0(k, text, x); };
 const classes = Object.keys(D.CLASSES), goals = Object.keys(D.GOALS).filter((k) => k !== "custom");
