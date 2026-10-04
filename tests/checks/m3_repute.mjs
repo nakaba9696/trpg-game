@@ -3,6 +3,7 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   let failures = 0;
   const fail = (m) => { failures++; fail0(m); };
   G = loadEngine();
+  G.data.Q8H.off = true; // 悪名がバレたときだけ上がる（Q8）は tests/checks/q8_hidden.mjs で確かめる。ここは悪名の仕組みだけ
   const D = G.data;
     // データ：罪の表・既存の出来事の悪行・倒すと罪になる相手・出来事の結果の罪
   const evById = Object.fromEntries(D.EVENTS.map((e) => [e.id, e]));
