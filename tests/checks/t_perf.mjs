@@ -49,6 +49,25 @@ export default ({ loadEngine, fail, ok }) => {
     if (!/hiddenLayer\(st\.cv\)\) continue/.test(src("scene_v2.js"))) F("毎コマの描き直し（tick）が裏に回った層を飛ばしていない");
   }
 
+  // ---------------------------------------------------------------- 遅い端末では背景の動きのコマ数を下げる
+  if (typeof V.paceStep !== "function") F("scene_v2.js に V.paceStep（遅い端末で背景の動きを間引く）が無い");
+  else {
+    const P = V.pace;
+    const run = (ms, every) => { let t = (P.prev || 1000); const end = t + ms; let g = 0; while (t < end) { t += every; g = V.paceStep(t); } return g; };
+    Object.assign(P, { gap: 42, ema: 16, prev: 0, n: 0, since: 0 });
+    if (run(10000, 16.7) !== 42) F("速い端末で背景の動きを間引いた");
+    if (run(6000, 70) !== 84) F("遅い端末（毎コマ 70ms）で背景の動きを間引かない");
+    if (run(5000, 16.7) !== 84) F("間引いてすぐに戻した（20 秒はそのまま）");
+    if (run(20000, 16.7) !== 42) F("速くなっても間引いたまま");
+  }
+
+  // ---------------------------------------------------------------- 音の卓は 32kHz・同じ揺れは一つの発振器で
+  {
+    const snd = src("sound.js"), bgm = src("sound_bgm.js");
+    if (!/snd\.RATE = 32000/.test(snd) || !/makeDesk\(snd\.newContext\(\)\)/.test(snd) || !/snd\.newContext \?/.test(bgm)) F("音の卓を 32kHz で作っていない（効果音・BGM とも snd.newContext）");
+    if (/vibr\(B, a, t, end, 5\.6, 18, 0\.25\); vibr\(B, b/.test(bgm) || /vibr\(B, a, t, end, 5\.2, 14, 0\.35\); vibr\(B, b/.test(bgm)) F("同じ揺れを二つの発振器で作っている（一つで済む）");
+  }
+
   // ---------------------------------------------------------------- 画像を読み込み中は、canvas の絵を描かない
   const opt = { key, phase: 1, seed: loc, sky: { season: "春", weather: "晴" } };
   const full = () => { ops = 0; G.paintScene(canvas(800, 450), { ...opt, canvasOnly: true }); return ops; };
@@ -189,5 +208,5 @@ export default ({ loadEngine, fail, ok }) => {
   if (!/ec\.filter = /.test(st) || !/echo\.style\.filter = "none"/.test(st)) F("にじみのぼかしを CSS の filter で毎コマかけている（canvas に焼き込む）");
 
   if (!existsSync(new URL("../../tools/perf.mjs", import.meta.url))) F("測る道具 tools/perf.mjs が無い");
-  if (!bad) ok(`T 速さ（裏の層は止める・画像の読み込み中は canvas の絵を描かない（${waitOps}/${heavy} 命令）・白抜きは一度だけ・図鑑の一覧は見えている絵から 1 枚ずつ・閉じたシートは描き込まない・配置はコマの頭で測る・白抜きは裏で・記録の行は使い回す）`);
+  if (!bad) ok(`T 速さ（裏の層は止める・画像の読み込み中は canvas の絵を描かない（${waitOps}/${heavy} 命令）・白抜きは一度だけ・図鑑の一覧は見えている絵から 1 枚ずつ・閉じたシートは描き込まない・配置はコマの頭で測る・白抜きは裏で・記録の行は使い回す・遅い端末は背景の動きを間引く・音は 32kHz）`);
 };
