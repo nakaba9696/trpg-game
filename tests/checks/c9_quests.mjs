@@ -112,7 +112,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
       if (!(e.greet || []).length || !(e.talk || []).length) F(`${ew}: 声のかけ方（greet）か、ひとこと（talk）が無い`);
       if (!(e.topics || (e.topic ? [e.topic] : [])).length) F(`${ew}: 結末のあとの話題が無い`);
       if (!(e.power || e.dmg || e.heal || e.fire || (e.t && Object.keys(e.t).length))) F(`${ew}: 能力が変わらない`);
-      for (const sk of Object.keys(e.t || {})) if (!["sword", "spear", "bow", "magic", "pray", "stealth", "talk", "lore", "wild"].includes(sk)) F(`${ew}: 才 ${sk} が無い`);
+      if (e.t) F(`${ew}: 才（t）が残っている`);
       add(ew, [e.name, e.codex, e.text, e.memo], QFILL);
       add(ew + ".line", e.line, ["{who}", "{name}"]);
       add(ew + ".greet", [e.greet, e.talk], TFILL);

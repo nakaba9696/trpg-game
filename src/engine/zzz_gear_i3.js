@@ -90,7 +90,6 @@
     const it = JSON.parse(JSON.stringify(b));
     delete it.i3;
     const noun = (b.i3 && b.i3.noun) || b.name;
-    if (it.m8 === undefined && b.type === "weapon" && G.m8WeaponSkill) it.m8 = G.m8WeaponSkill(b);
     const lines = [];
     const metal = !b.i3 || !b.i3.mat || b.i3.mat === "metal";
     const RUST = metal ? "錆びた" : "傷んだ";

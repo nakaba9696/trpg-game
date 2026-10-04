@@ -100,8 +100,6 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       if (!(D.C2_INVITE[id] || []).length) F(`${w}: 誘ったときの一言が無い`);
       if (!D.M2_TRAITS[p.join.trait]) F(`${w}: 性格 ${p.join.trait} が M2 に無い`);
       for (const k of Object.keys(D.M2_LIFE)) if (!p.join.life[k]) F(`${w}: 暮らし ${k} が無い`);
-      for (const k of D.TALENT_KEYS) if (!(p.join.t[k] >= 0 && p.join.t[k] <= 3)) F(`${w}: 才 ${k} が無い`);
-      for (const k of Object.keys(p.join.f)) if (!D.FLAVORS[k]) F(`${w}: 暮らしの才 ${k} が無い`);
       for (const l of p.join.home) if (!D.LOCS[l] || D.LOCS[l].type !== "town") F(`${w}: 誘える町 ${l} が町でない`);
     } else if (c.side === "仲間") F(`${w}: side が仲間なのに join が無い`);
   }

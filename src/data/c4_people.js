@@ -97,7 +97,6 @@
       join: {
         cls: "絵描き", desc: "だらしない。剣を抜くまでは", power: 70, dmg: 3, trait: "lazy", bond: 58, home: ["karna"],
         life: { home: "ブランデールの酒場の二階、絵の具の匂いの部屋", kin: "連れていかれた弟子の娘", food: "酒場の豆の煮込み（付けで）", habit: "炭のかけらで、そこにいる誰かの顔を勝手に描いている", secret: "弟子の娘の顔だけは、何度描いても、最後の一筆が入らない", keep: "鞘に布を巻いた古い剣" },
-        t: { sword: 3, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 1, talk: 1, lore: 1, wild: 1 }, f: { faces: 2, drink: 1 },
       },
     }),
     ilse: P({
@@ -106,7 +105,6 @@
       join: {
         cls: "自称・軍師", desc: "策は百。当たるのは半分", power: 46, dmg: 1, trait: "braggart", bond: 54, home: ["nerva"],
         life: { home: "港町の宿の屋根裏（家賃は三月ぶん溜まっている）", kin: "仕えていた家の、小さかった坊ちゃま", food: "帝国風の黒パンと酢漬けの鰊", habit: "扇を開いては閉じ、閉じては開いて、何か数えている", secret: "家が潰れた夜、策を書いた帳面は、彼女の鞄から消えていた", keep: "度の入っていない片眼鏡" },
-        t: { sword: 1, spear: 0, bow: 0, magic: 0, pray: 0, stealth: 2, talk: 2, lore: 2, wild: 0 }, f: { faces: 2, letters: 1, dice: 1 },
       },
     }),
     tula: P({
@@ -115,7 +113,6 @@
       join: {
         cls: "荷運び", desc: "ちっこい。力は大人三人分", power: 58, dmg: 2, trait: "soft", bond: 48, home: ["garmund"], noLove: true,
         life: { home: "帝都の外れの坑夫長屋", kin: "寝込んだ母ちゃんと、弟妹五人", food: "母ちゃんの芋と脂身の煮込み", habit: "誰かの外套のほつれを見つけると、黙って繕いはじめる", secret: "給金は全部うちに送っている。自分の靴は、底が二枚とも抜けている", keep: "父ちゃんの坑夫の札" },
-        t: { sword: 1, spear: 2, bow: 0, magic: 0, pray: 0, stealth: 0, talk: 0, lore: 0, wild: 2 }, f: { cook: 2, needle: 1 },
       },
     }),
     mirlene: P({
@@ -124,7 +121,6 @@
       join: {
         cls: "名家の術士", desc: "おっとり。人を疑わない", power: 44, dmg: 1, fire: true, heal: true, trait: "loyal", bond: 60, home: ["zephara"],
         life: { home: "首都エルメシアの、湖のほとりの古い屋敷", kin: "東の海へ出たきりの許嫁", food: "湖の魚の香草焼き（自分では焼けない）", habit: "港を通るたびに、東の水平線のほうを、少しだけ長く見ている", secret: "毎月、許嫁に手紙を出している。港の役人は、黙って受け取ってくれる", keep: "封をしたままの手紙の束" },
-        t: { sword: 0, spear: 0, bow: 1, magic: 3, pray: 1, stealth: 0, talk: 0, lore: 2, wild: 0 }, f: { letters: 2, song: 1 },
       },
     }),
 

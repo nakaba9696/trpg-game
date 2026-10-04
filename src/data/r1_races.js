@@ -3,9 +3,9 @@
 // 獣人はもっと人に混じって暮らしている。人より力が強いが、元になった獣で中身が大きく違う。
 // 種族は〔知〕（誰でも知っている）。だから説明しない。文は、その人の暮らしの側から出す（docs/lore/voice.md）。
 //
-// D.RACES[種族] = { name, short, blurb（作成画面の一行）, mod（能力値の補正）, talents（才の付きやすい技能。M8）, ages（年齢の区分ごとの幅。無ければ D.AGES）,
+// D.RACES[種族] = { name, short, blurb（作成画面の一行）, mod（能力値の補正）, ages（年齢の区分ごとの幅。無ければ D.AGES）,
 //   look（見た目の歳。絵に使う）, greet（国ごとの魅力の補正。人の目）, names（名前の響き。D.PROFILE.names の鍵）, nameRate（その響きを使う割合）, traits（特性）}
-// D.BEASTS[元の獣] = 同じ形（mod・talents・ages・traits は獣人の分に足す・置き換える）＋ temper（気性。作成画面とシート）
+// D.BEASTS[元の獣] = 同じ形（mod・ages・traits は獣人の分に足す・置き換える）＋ temper（気性。作成画面とシート）
 // 特性（D.R1_TRAITS）：nightEye 夜目／birdEye 鳥目と遠目／nose 鼻／ears 耳（逃げ足）／fur 冬毛／memory 長い記憶。効き目は zr1_race.js
 // レーン C（キャラクター）。R1 が管理
 (function (G) {
@@ -19,13 +19,12 @@
     human: {
       name: "人間", short: "人",
       blurb: "いちばん多い。どこの町にも、どこの墓地にもいる。",
-      mod: {}, talents: [], greet: {}, traits: [],
+      mod: {}, greet: {}, traits: [],
     },
     elf: {
       name: "エルフ", short: "エルフ",
       blurb: "長く生きる。森の生まれでも町の生まれでも、人の町では少し珍しがられる。歳を聞かれると、少し考えてから答える。",
       mod: { 筋力: -4, 体力: -3, 知力: 3, 魔力: 4 },
-      talents: ["magic", "lore", "bow"],
       ages: { young: [30, 99], prime: [100, 249], old: [250, 380] },
       look: { young: 19, prime: 26, old: 44 },
       greet: COLD, names: "elf", nameRate: 0.8,
@@ -35,7 +34,7 @@
       name: "獣人", short: "獣人",
       blurb: "人より力が強い。人の町にすっかり馴染んでいて、市場にも兵舎にも厨房にもいる。元になった獣で、体も気性もまるで違う。",
       mod: { 筋力: 5, 魔力: -5 },
-      talents: [], greet: WARY, names: "beast", nameRate: 0.5,
+      greet: WARY, names: "beast", nameRate: 0.5,
       traits: [],
     },
   };
@@ -44,49 +43,49 @@
     wolf: {
       name: "狼", blurb: "鼻と夜目が利く。寒さに強い。",
       temper: "群れを大事にする。よそ者には無愛想",
-      mod: { 体力: 2, 敏捷: 1, 魅力: -3 }, talents: ["wild", "sword"],
+      mod: { 体力: 2, 敏捷: 1, 魅力: -3 },
       ages: { young: [15, 21], prime: [22, 38], old: [39, 58] }, traits: ["nightEye", "nose", "fur"],
     },
     bear: {
       name: "熊", blurb: "獣人の中でもいちばんの力持ち。足は遅い。長生きする。",
       temper: "気が長い。怒ると、その怒りも長い",
-      mod: { 筋力: 3, 体力: 3, 敏捷: -4, 魅力: -2 }, talents: ["spear", "wild"],
+      mod: { 筋力: 3, 体力: 3, 敏捷: -4, 魅力: -2 },
       ages: { young: [16, 25], prime: [26, 48], old: [49, 80] }, traits: ["nose", "fur"],
     },
     cat: {
       name: "猫", blurb: "身が軽く、夜目が利く。足音を立てない。",
       temper: "気まぐれ。高い所と日だまりが好き",
-      mod: { 筋力: -3, 体力: -2, 敏捷: 4, 魅力: 1 }, talents: ["stealth", "sword"],
+      mod: { 筋力: -3, 体力: -2, 敏捷: 4, 魅力: 1 },
       ages: { young: [15, 21], prime: [22, 36], old: [37, 55] }, traits: ["nightEye", "ears"],
     },
     rabbit: {
       name: "兎", blurb: "耳がよく、逃げ足は誰にも負けない。力は獣人の中ではいちばん弱い。寿命は短い。",
       temper: "臆病。すぐ逃げる。逃げたあとで、よく笑う",
-      mod: { 筋力: -4, 体力: -3, 敏捷: 5, 魅力: 2 }, talents: ["stealth", "wild"],
+      mod: { 筋力: -4, 体力: -3, 敏捷: 5, 魅力: 2 },
       ages: { young: [14, 18], prime: [19, 30], old: [31, 44] }, traits: ["ears"],
     },
     bird: {
       name: "鳥", blurb: "目がとてもいい。そのかわり、暗がりではほとんど見えない。",
       temper: "おしゃべり。光る物を拾って貯める",
-      mod: { 筋力: -2, 体力: -3, 敏捷: 3, 知力: 2 }, talents: ["bow", "lore"],
+      mod: { 筋力: -2, 体力: -3, 敏捷: 3, 知力: 2 },
       ages: { young: [15, 22], prime: [23, 40], old: [41, 65] }, traits: ["birdEye"],
     },
     rat: {
       name: "鼠", blurb: "鼻が利き、夜目が利き、どこにでももぐりこむ。寿命は短い。",
       temper: "用心深い。何でも貯めこむ",
-      mod: { 筋力: -3, 知力: 3, 敏捷: 2, 魅力: -2 }, talents: ["stealth", "lore"],
+      mod: { 筋力: -3, 知力: 3, 敏捷: 2, 魅力: -2 },
       ages: { young: [14, 18], prime: [19, 28], old: [29, 40] }, traits: ["nightEye", "nose"],
     },
     fox: {
       name: "狐", blurb: "鼻と耳がよく、口がうまい。",
       temper: "人をからかうのが好き。からかわれるのは嫌い",
-      mod: { 筋力: -3, 体力: -2, 知力: 2, 魅力: 3 }, talents: ["talk", "stealth"],
+      mod: { 筋力: -3, 体力: -2, 知力: 2, 魅力: 3 },
       ages: { young: [15, 21], prime: [22, 38], old: [39, 60] }, traits: ["nose", "ears"],
     },
     dog: {
       name: "犬", blurb: "鼻が利き、疲れを知らない。人懐っこく、誰とでもすぐ仲良くなる。",
       temper: "人懐っこい。一度なついた相手には、どこまでもついていく",
-      mod: { 体力: 2, 魅力: 2, 知力: -2, 敏捷: -2 }, talents: ["wild", "talk"],
+      mod: { 体力: 2, 魅力: 2, 知力: -2, 敏捷: -2 },
       ages: { young: [15, 20], prime: [21, 36], old: [37, 55] }, traits: ["nose"],
     },
   };

@@ -5,6 +5,7 @@
 // - 換算：1 点 ＝ 成功率 4％。冒険に渡す値は点×4。判定の成功率は今までの式のまま
 // - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。上限は無い（99 を超えても壊れない。古いセーブの caps は効かない）
 // - 古いセーブ：0〜99 の尺度のまま読め、点で見える。読み直しても値が変わらない（二度換算しない）
+// - 才（M8）は無い：判定は能力値だけ。古いセーブの S.m8・仲間の c.m8 は効かない
 // - 作成画面：ボーナス点・上振れの印、点で出す
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -153,13 +154,30 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     G.S = S;
   }
 
+  // ---------------------------------------------------------------- 才（M8）は無い：判定は能力値（と難しさ・装備など）だけで決まる。古いセーブの才は効かない
+  {
+    const left = ["m8Of", "m8Lv", "m8Mod", "m8Roll", "m8CapBonus", "m8Comp", "m8CompLabel", "m8Appraise", "m8ui", "m8FlavorsOf"].filter((k) => G[k] !== undefined);
+    if (left.length || D.TALENTS || D.TALENT_KEYS || D.FLAVORS || cre.talents) fail(`才の仕組みが残っている（${left.join("・")}）`);
+    if (Object.values(D.RACES).concat(Object.values(D.BEASTS)).some((r) => r.talents)) fail("種族の表に才が残っている");
+    const old = JSON.parse(JSON.stringify(S));
+    old.m8 = { t: { sword: 3, magic: 3, lore: 3, stealth: 3, talk: 3, pray: 3, spear: 3, bow: 3, wild: 3 }, f: { cook: 3 }, src: "roll" };
+    old.companions = [{ name: "古い仲間", cls: "傭兵", power: 50, dmg: 1, m8: { t: { sword: 3 }, known: true } }];
+    G.S = old;
+    G.S.stats.知力 = 10 * PCT; G.S.conds = [];
+    if (G.chance("知力", "普通") !== 10 * PCT) fail(`古いセーブの才が成功率に効いている（${G.chance("知力", "普通")}）`);
+    G.rand = seeded(2204);
+    try { for (let i = 0; i < 30 && !G.S.over; i++) { const a = G.actions().flatMap((x) => x.list).filter((x) => !x.disabled); if (!a.length) break; G.act(a[i % a.length].id); } }
+    catch (e) { fail("古いセーブ（才あり）で遊ぶと例外 " + (e.stack || e)); }
+    G.S = S;
+  }
+
   // ---------------------------------------------------------------- 作成画面（DOM なしなので、書き方を読む）
   {
     const src = readFileSync(fileURLToPath(new URL("../../src/ui/setup.js", import.meta.url)), "utf8");
     if (!/上振れ/.test(src) || !/lucky/.test(src)) fail("作成画面に上振れの印が無い");
     if (!/cre\.bonusPoints\(draft\)/.test(src)) fail("作成画面にボーナス点が出ない");
     if (!/TROPHY_PER_STAT/.test(src)) fail("作成画面に、トロフィーの分は 1 つの能力値に 10 点まで、が出ない");
-    if (/才能限界|鍵をかけ|大当たり/.test(src)) fail("作成画面に、なくした仕組みの言葉が残っている");
+    if (/才能限界|鍵をかけ|大当たり|m8ui|才の付きやすい/.test(src)) fail("作成画面に、なくした仕組みの言葉が残っている");
     if (/String\(o\.stats\[k\]\)/.test(src)) fail("作成画面のシートが割合のまま出している");
     const ui = readFileSync(fileURLToPath(new URL("../../src/ui/ui.js", import.meta.url)), "utf8");
     if (/String\(S\.stats\[k\]\)/.test(ui) || /限界/.test(ui)) fail("ステータスの能力値が割合のまま／「限界」が残っている");

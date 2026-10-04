@@ -6,7 +6,7 @@
 //   name 呼び名 / short 仲間になってからの短い呼び名（無ければ name）/ full シートの名前 / nation シートの国（レオネスト・ノルディア・エルメシア。D5 #105 が国名をそろえる）/ role 役どころ（GM と確認用）
 //   sex / age / race（R1 の種族の鍵：human・elf・beast）/ beast 獣人の元の獣（D.BEASTS の鍵）/ who 人物の絵（art_people.js。seed を固定して、出来事と仲間で同じ顔）
 //   仲間になる者だけ join：{ cls 肩書き, desc 加わったときの一言, power, dmg, heal, fire, trait 性格（D.M2_TRAITS の鍵）, bond 好感度の始まり,
-//     home 誘える町（場所の id）, life 暮らし（M2）, t 技能の才（M8）, f 暮らしの才（M8）, noLove 恋の相手にしない }
+//     home 誘える町（場所の id）, life 暮らし（M2）, noLove 恋の相手にしない }
 //   romance: true … 恋（M10・M11）の相手になれる人だけに付ける（無ければ恋の相手にしない。一覧は docs/romance.md・仕組みは src/engine/zzzz_romance.js）
 // D.C2_VOICE[id]：仲間のひとこと（M2 の talk / betray / die を差し替える）と、恋のひとこと（M10 の spark / confess / propose / part / cold）
 // レーン C（キャラクター）＋ V（出来事）＋ A（絵）の C2 #119 が管理
@@ -22,7 +22,6 @@
       join: {
         cls: "港町の若者", desc: "本と悪知恵", power: 38, dmg: 0, trait: "lazy", bond: 58, home: ["nerva"],
         life: { home: "港の裏通り", kin: "古本屋の爺さん", food: "港の揚げ魚", habit: "読みかけの本の頁の角を、指で折っては伸ばしている", secret: "学校には一日も行ってない。字も勘定も、捨てられた本で覚えた", keep: "表紙の取れた本" },
-        t: { sword: 0, spear: 0, bow: 1, magic: 0, pray: 0, stealth: 2, talk: 1, lore: 2, wild: 1 }, f: { dice: 2, letters: 1 },
       },
     }),
     kaidel: P({
@@ -31,7 +30,6 @@
       join: {
         cls: "傭兵", desc: "拳ひとつ。後先は考えない", power: 62, dmg: 2, trait: "soft", bond: 56, home: ["nerva", "karna"],
         life: { home: "山あいの、潰れた道場", kin: "死んだ親父", food: "猪の鍋", habit: "拳の皮の厚いところを、もう片方の手で揉んでいる", secret: "親を殺した奴の顔を、まだ一度も見ていない。見れば分かる、と思っている", keep: "親父の帯" },
-        t: { sword: 2, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 0, talk: 0, lore: 1, wild: 2 }, f: { sleep: 2, drink: 1 },
       },
     }),
     nora: P({
@@ -40,7 +38,6 @@
       join: {
         cls: "森の獣人", desc: "ノラと呼んで、と言った", power: 56, dmg: 2, trait: "loyal", bond: 54, home: ["karna"],
         life: { home: "森の奥の、無くなった村", kin: "村の長老", food: "焼いた木の実", habit: "耳をぴくりと動かして、風上の匂いを嗅いでいる", secret: "あの日、村にいなかったのは、狩りの追試を受けていたから。追試には、まだ受かっていない", keep: "長老にもらった、引けない弓" },
-        t: { sword: 1, spear: 2, bow: 0, magic: 0, pray: 0, stealth: 1, talk: 0, lore: 0, wild: 2 }, f: { nose: 2, beasts: 1 },
       },
     }),
     sheila: P({
@@ -49,7 +46,6 @@
       join: {
         cls: "田舎の城の主", desc: "本を一冊、抱えている", power: 40, dmg: 0, heal: true, trait: "just", bond: 56, home: ["leavel"],
         life: { home: "王都の外れの、田舎の城", kin: "兄さまと姉さまたち", food: "城の厨房の焼き林檎", habit: "読みかけの本に指を一本はさんだまま、歩いている", secret: "城の書庫のいちばん奥の棚には、鍵がかかっている。中の本は、もう全部読んだ", keep: "書き込みだらけの古い本" },
-        t: { sword: 0, spear: 0, bow: 0, magic: 1, pray: 2, stealth: 1, talk: 1, lore: 3, wild: 0 }, f: { letters: 2, faces: 1 },
       },
     }),
     rui: P({
@@ -58,7 +54,6 @@
       join: {
         cls: "遺跡の子", desc: "ひとことも喋らない", power: 66, dmg: 3, fire: true, trait: "loyal", bond: 60, home: ["nerva"], noLove: true,
         life: { home: "遺跡の奥の、石の部屋", kin: "顔を思い出せない誰か", food: "はじめて食べた白パン", habit: "あなたの外套の端を、指でつまんでいる", secret: "眠る前のことを、ひとつも覚えていない。覚えていないことを、怖がってもいない", keep: "石の部屋にあった、名前の彫られた銀の札" },
-        t: { sword: 1, spear: 2, bow: 0, magic: 3, pray: 0, stealth: 0, talk: 0, lore: 1, wild: 1 }, f: { calm: 3 },
       },
     }),
     zerina: P({
@@ -67,7 +62,6 @@
       join: {
         cls: "商人", desc: "がめつい。けど、気前もいい", power: 34, dmg: 0, trait: "greedy", bond: 50, home: ["karna", "nerva"],
         life: { home: "自由都市の市場の裏", kin: "商いを仕込んだおかん", food: "砂糖をまぶした揚げ菓子", habit: "銅貨を一枚、指の背の上で転がしている", secret: "最初の商いで騙されて、全部なくした。騙した相手の顔は、帳面の最後の頁に描いてある", keep: "角の擦り切れた帳面" },
-        t: { sword: 0, spear: 0, bow: 0, magic: 0, pray: 0, stealth: 1, talk: 2, lore: 1, wild: 1 }, f: { kids: 2, faces: 1, luck: 1 },
       },
     }),
     elnea: P({
@@ -76,7 +70,6 @@
       join: {
         cls: "鍛冶ギルドの技師", desc: "鉱石の話になると早口になる", power: 36, dmg: 1, trait: "coward", bond: 55, home: ["w2_dranherz"],
         life: { home: "共和国の森の、エルフの里", kin: "里の母さん", food: "炉の灰で焼いた芋", habit: "拾った石を光にかざして、口の中で何か数えている", secret: "里では、鏡を見るなと言われて育った。わけは、言われなかった", keep: "布に包んだ、透きとおった精晶のかけら" },
-        t: { sword: 0, spear: 1, bow: 0, magic: 1, pray: 0, stealth: 0, talk: 0, lore: 2, wild: 1 }, f: { carve: 1, nose: 1 },
       },
     }),
     natalia: P({
@@ -85,7 +78,6 @@
       join: {
         cls: "拳法家", desc: "王国十指の一人。酒くさい", power: 68, dmg: 3, trait: "drunk", bond: 50, home: ["leavel"],
         life: { home: "王都の古い道場", kin: "道場を継がせた師匠", food: "塩のきつい干し肉", habit: "朝いちばんに、誰もいない方へ向かって型をひとつ打っている", secret: "十指に選ばれた日のことを、覚えていない。前の晩に飲みすぎたから", keep: "師匠の、擦り切れた手甲" },
-        t: { sword: 2, spear: 1, bow: 0, magic: 0, pray: 0, stealth: 1, talk: 0, lore: 0, wild: 2 }, f: { dance: 1 },
       },
     }),
 
