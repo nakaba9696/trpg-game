@@ -79,10 +79,9 @@
       c.append(h("small", "", `${G.S.clsName} ${G.S.profile.name}・${G.dateOf ? G.dateOf(G.S.day) : G.S.day + "日目"}`));
       menu.append(c);
     }
-    menu.append(btn("記録（墓碑・トロフィー）", "", () => G.ui.openTrophies(), "t-rec"));
+    // 墓碑・トロフィー（記録）は右上から開ける（U10）。タイトルは「はじめる」と、保存があるときの「つづきから」だけ
     root.append(menu);
     if (live) root.append(h("p", "fine center", "「はじめる」で新しい者が旅立つと、つづきの冒険は消える。"));
-    root.append(h("p", "fine center", `これまでの冒険者 ${G.P.graves.length} 人 ／ トロフィー ${Object.keys(G.P.trophies).length} 個`));
   }
 
   // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
@@ -205,8 +204,10 @@
     t3.append(btn("特徴をおまかせ", "small", () => { cre.randomTraits(draft, R); cre.TRAITS.forEach(setVal); refresh(); }, "p-traits"));
     s5.append(t3);
     const grid = h("div", "grid2");
-    [["look", "外見", "input"], ["personality", "性格", "input"], ["history", "生い立ち", "textarea"], ["quote", "口癖", "input"], ["like", "好きなもの", "input"], ["dislike", "苦手なもの", "input"]]
+    [["look", "外見", "input"], ["history", "生い立ち", "textarea"]]
       .forEach(([k, label, type]) => grid.append(fieldEl(k, label, type, refresh)));
+    const hi = grid.querySelector("#pf-history");
+    if (hi) hi.placeholder = "空けておいてもよい（「振る」でおまかせ）";
     s5.append(grid);
     form.append(s5);
 
@@ -333,6 +334,8 @@
     bh.append(h("b", "", "ボーナス点"));
     const left = cre.bonusLeft(draft);
     bh.append(h("span", "bonusLeft num" + (left ? " has" : ""), `残り ${left} 点`));
+    const tb = cre.trophyBonus ? cre.trophyBonus() : 0;
+    if (tb) bh.append(h("span", "trophyBonus num", `トロフィーで +${tb}`));
     bh.append(h("span", "fine", "振り終えたら、好きな能力値に足す。才能限界（赤い線）までしか足せない"));
     box.append(bh);
     const list = h("div", "statlist creStats num");
@@ -433,7 +436,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", p.quote ? `「${p.quote}」` : ""], ["好きなもの", p.like], ["苦手なもの", p.dislike]]
+    [["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);
