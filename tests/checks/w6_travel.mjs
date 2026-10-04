@@ -87,6 +87,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     H.newGame({ cls: cls || Object.keys(HD.CLASSES)[0], stats: Object.fromEntries(HD.STATS.map((k) => [k, 60])), caps: Object.fromEntries(HD.STATS.map((k) => [k, 80])), goal: Object.keys(HD.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
     H.S.maxHp = H.S.hp = 9999;
     H.hurt = () => {};   // 死なない（出来事と旅の流れだけを見る）
+    H.S.rerolls = 0;     // 振り直し（M7）で巻き戻した出来事まで数えないように
     return H;
   };
   // 一つの旅を最後まで（選択肢は乱数で・戦いは攻撃で）。起きた出来事の数を返す
