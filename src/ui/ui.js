@@ -12,6 +12,7 @@
 
   // ---------------------------------------------------------------- 人物の絵（art_people.js の G.drawPortrait を通す）
   // face() で canvas を作り、画面に置いてから drawFaces() で描く（大きさを測ってから描くため）
+  // 主人公の絵は出さない（A10。持ち主の決定）。生成画像の無い人の canvas は noart の印が付いて隠れる（v4_assets.js）
   let faceQueue = [];
   function face(cls, who, cw, ch) {
     const cv = h("canvas", "face " + cls);
@@ -52,7 +53,8 @@
     const e = S.mode === "event" && S.event && G.eventWho ? D.EVENTS.find((x) => x.id === S.event) : null;
     const who = e ? G.eventWho(e) : S.mode === "fac" && !S.combat && G.facWho ? G.facWho(S) : null;
     let box = $("#who");
-    if (!who) { if (box) box.hidden = true; lastWho = ""; return; }
+    // 絵の無い人（生成画像が無い・合う型が無い）は額ごと出さない（A10）
+    if (!who || (G.portraitArt && !G.portraitArt(who))) { if (box) box.hidden = true; lastWho = ""; return; }
     if (!box) {
       box = h("div"); box.id = "who";
       box.append(face("whoFace", null, 96, 120), h("span", "whoName"));
@@ -68,7 +70,9 @@
     lastWho = sig;
     if (G.drawPortrait) G.drawPortrait(box.querySelector("canvas"), who);
   }
-  window.addEventListener("resize", () => { if (G.S && !$("#play").hidden) { paint(true); paintWho(); } });
+  // 背景と人の絵を描き直す（魔物の画像が読み終わったときなど。v6_monsters.js）
+  ui.repaint = () => { if (G.S && !$("#play").hidden) { paint(true); paintWho(); } };
+  window.addEventListener("resize", ui.repaint);
 
   // ---------------------------------------------------------------- 記録
   // 1件の記録を要素にする。新しい種類の記録（戦闘の演出など）は logEntryEl に足す
@@ -296,12 +300,16 @@
     const S = G.S;
     const head = h("div", "shead");
     const hd = h("div");
-    const pf = face("sface", heroWho(S), 72, 90);
-    pf.title = "人物を見る";
-    pf.onclick = () => ui.openProfile();
-    hd.append(h("span", "sname", S.profile.name), h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）${G.reputeLabel ? G.reputeLabel() : ""}`));
+    // 主人公の絵は出さない（A10）。人物の詳しい所は名前から開く
+    const nm = h("span", "sname a10who", S.profile.name);
+    nm.title = "人物を見る";
+    nm.tabIndex = 0;
+    nm.setAttribute("role", "button");
+    nm.onclick = () => ui.openProfile();
+    nm.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); ui.openProfile(); } };
+    hd.append(nm, h("span", "sclass", `${S.clsName}${S.title ? "・" + S.title : ""}・${G.fameRank(S.fame)}（名声 ${S.fame}）${G.reputeLabel ? G.reputeLabel() : ""}`));
     const close = h("button", "btn closeSheet", "閉じる"); close.type = "button"; close.onclick = () => ui.setSheetOpen(false);
-    head.append(pf, hd, close);
+    head.append(hd, close);
     return head;
   }
   function sheetPools() {
@@ -435,10 +443,6 @@
     $("#mMpBar").style.width = (S.maxMp ? (S.mp / S.maxMp) * 100 : 0) + "%";
     $("#mGold").textContent = `${S.gold}G`;
     $("#mbar").classList.toggle("danger", !!(G.hpDanger && G.hpDanger(S)));
-    const bar = $("#mbar");
-    let mf = $("#mFace");
-    if (!mf && G.drawPortrait) { mf = face("mface", null, 40, 50); mf.id = "mFace"; bar.prepend(mf); bar.classList.add("hasface"); }
-    if (mf) { const sig = JSON.stringify(heroWho(S)); if (mf.dataset.sig !== sig) { mf.dataset.sig = sig; faceQueue.push([mf, heroWho(S)]); } }
   }
   function renderSheet(ups) {
     const sh = $("#sheet");
@@ -522,10 +526,7 @@
     dl.textContent = "";
     [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["外見", p.look], ["性格", p.personality], ["生い立ち", p.history], ["口癖", `「${p.quote}」`], ["好きなもの", p.like], ["苦手なもの", p.dislike], ["目的", S.goal.text]]
       .forEach(([k, v]) => { if (v) dl.append(h("dt", "", k), h("dd", "", v)); });
-    let pf = $("#profFace");
-    if (!pf) { pf = face("profface", null, 150, 188); pf.id = "profFace"; dl.before(pf); }
     $("#dlgProfile").showModal();
-    if (G.drawPortrait) G.drawPortrait(pf, heroWho(S));
   };
 
   ui.openMap = () => {
@@ -574,9 +575,6 @@
       ep.textContent = "";
       const name = run.profile ? run.profile.name : run.name;
       const cls = run.clsName || run.cls;
-      // 今の冒険は G.S から、墓碑は残した人物設定（hero。#35）から描く。hero の無い古い墓碑は絵なし
-      const who = run.profile && run.cls ? heroWho(run) : G.graveWho ? G.graveWho(run) : null;
-      if (who) ep.append(face("eface", who, 64, 80));
       const race = G.r1GraveLine ? G.r1GraveLine(run) : "";
       ep.append(h("b", "", end === "dead" ? `${race ? race + "の" : ""}${cls} ${name}、ここに眠る` : `${race ? race + "の" : ""}${cls} ${name}、物語を終える`));
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
@@ -618,8 +616,6 @@
     P.graves.forEach((g) => {
       const b = h("button", "grave");
       b.type = "button";
-      const who = G.graveWho ? G.graveWho(g) : null;
-      if (who) { b.classList.add("has-face"); b.append(face("gface", who, 48, 60)); }
       b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : g.epitaph || "物語を終えた"}　${g.turns} 手番`));
       b.onclick = () => { $("#dlgTrophy").close(); ui.openChronicle(g, false); };
       gl.append(b);

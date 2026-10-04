@@ -1,8 +1,8 @@
 // V4：持ち主が作った人物の絵の差し込み（tools/assets.mjs・src/ui/v4_assets.js・docs/art/portraits.json）
-// - 一覧の id がすべてゲームの人物に当たる（キャラメモの人・名のある人の出来事・人の種類の型・主人公の職業の型）。md が json と合っている
+// - 一覧の id がすべてゲームの人物に当たる（キャラメモの人・名のある人の出来事・人の種類の型）。主人公の型は無い（A10）。md が json と合っている
 // - 名のある人は、どの出来事・仲間でも同じ顔（canvas の絵の who が一つに固定されている）
 // - タグに画風・品質・性的な言葉が無い
-// - 画像が無くても今の canvas の絵で描ける。画像があれば、名のある人・型（主人公・名もない人）に正しい画像を選んで描く
+// - 画像が無ければ絵を出さない（A10：canvas の絵はやめた）。画像があれば、名のある人・型（名もない人）に正しい画像を選んで描く。主人公は絵なし
 // - 埋め込み（予備の --embed）：差分を省いても assets/ の合計が 12MB を超えたら落とす。webp を優先し、拡張子で種類を付ける
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -50,14 +50,11 @@ export default ({ G, fail, ok }) => {
     } else if (p.group === "people") {
       m = /^kind_([a-z]+)_([mf])$/.exec(p.id);
       if (!m || !G.PEOPLE[m[1]]) fail(`一覧の ${p.id} が人物の種類（G.PEOPLE）に当たらない`);
-    } else if (p.group === "hero") {
-      m = /^hero_([a-z]+)_([mf])$/.exec(p.id);
-      if (!m || !D.CLASSES[m[1]]) fail(`一覧の ${p.id} が主人公の職業に当たらない`);
     } else fail(`一覧の ${p.id} の group が分からない：${p.group}`);
   }
   for (const id of Object.keys(G.V4_NAMED)) if (!seen.has(id)) fail(`NAMED の ${id} が一覧（docs/art/portraits.json）に無い`);
   for (const k of Object.keys(data.beasts || {})) if (!D.BEASTS[k]) fail(`一覧の獣 ${k} がゲームの獣にいない`);
-  for (const cls of Object.keys(D.CLASSES)) for (const s of ["m", "f"]) if (!seen.has(`hero_${cls}_${s}`)) fail(`主人公の型 ${cls}・${s} が一覧に無い`);
+  if (list.some((p) => /^hero_/.test(p.id))) fail("一覧に主人公の型（hero_*）が残っている（A10：主人公は絵なし）");
   const order = list.map((p) => (p.group === "c2" || p.group === "named" ? 0 : 1));
   if (order.some((v, i) => i && v < order[i - 1])) fail("一覧で、名のある人物が型より先に並んでいない");
   const missC2 = Object.keys(D.C2_PEOPLE).filter((id) => !seen.has(id));
@@ -80,29 +77,23 @@ export default ({ G, fail, ok }) => {
     if (ws.some((w) => look(w) !== look(ws[0]))) fail(`名のある人 ${id} の顔が、出来事や仲間ごとに違う`);
   }
 
-  // ---------------------------------------------------------------- 画像が無いとき：今の絵のまま
+  // ---------------------------------------------------------------- 画像が無いとき：絵を出さない
   G.ASSETS = undefined;
   const hero = G.heroWho({ name: "テスト", sex: "女", age: 24, race: "elf" }, "merc");
   if (G.v4PortraitKey(hero) !== null) fail("画像が無いのに画像の鍵を返す");
   calls.length = 0;
   try { G.drawPortrait(face(), hero); } catch (e) { fail("画像が無いとき描けない：" + e.message); }
-  if (!calls.length || calls.some(([k]) => k === "drawImage")) fail("画像が無いとき、今の canvas の絵で描いていない");
+  if (calls.some(([k]) => k !== "clearRect" && k !== "setTransform")) fail("画像が無いとき、canvas に絵を描いた（A10：絵を出さない）");
 
   // ---------------------------------------------------------------- 画像があるとき：選ぶ
   const A = (G.ASSETS = {});
   const put = (...ids) => ids.forEach((id) => (A["portraits/" + id] = "data:image/webp;base64,AAAA"));
   const want = (who, key, what) => { const got = G.v4PortraitKey(who); if (got !== key) fail(`${what}：${key} のはずが ${got}`); };
-  put("hero_merc_f_elf", "hero_merc_f", "hero_merc_m", "hero_merc_m_old", "hero_thief_m_beast", "hero_thief_m_beast_cat", "hero_mage_f_beast");
-  want(hero, "hero_merc_f_elf", "エルフの女の傭兵");
-  want(G.heroWho({ sex: "男", age: 70 }, "merc"), "hero_merc_m_old", "老いた男の傭兵");
-  want(G.heroWho({ sex: "男", age: 45 }, "merc"), "hero_merc_m", "中年の男の傭兵（中年が無ければ若者）");
-  want(G.heroWho({ sex: "男", race: "beast", beast: "cat" }, "thief"), "hero_thief_m_beast_cat", "猫の獣人の盗賊");
-  want(G.heroWho({ sex: "男", race: "beast", beast: "bear" }, "thief"), "hero_thief_m_beast", "熊の獣人の盗賊（獣ごとが無ければ獣人）");
-  want(G.heroWho({ sex: "女", race: "beast", beast: "fox" }, "mage"), "hero_mage_f_beast", "狐の獣人の魔法使い");
-  want(G.heroWho({ sex: "女", race: "human" }, "mage"), null, "人間の女の魔法使い（合う画像が無い）");
-  want(G.heroWho({ sex: "男", race: "elf" }, "merc"), null, "エルフの男の傭兵（人間の画像は使わない）");
+  put("hero_merc_f_elf", "hero_merc_f", "hero_merc_m");
+  want(hero, null, "主人公（エルフの女の傭兵。画像があっても絵なし。A10）");
+  want(G.heroWho({ sex: "男", age: 45 }, "merc"), null, "主人公（男の傭兵）");
 
-  put("dil", "aurelia", "chancellor", "gaston", "erna", "kind_archer_f", "kind_archer_m", "kind_priest_f", "kind_child_f", "kind_elder_f", "kind_villager_m");
+  put("dil", "aurelia", "chancellor", "gaston", "erna", "kind_archer_f", "kind_archer_m", "kind_priest_f", "kind_child_f", "kind_elder_f", "kind_villager_m", "kind_villager_f", "kind_villager_f_elf");
   const ev = (id) => G.eventWho(D.EVENTS.find((e) => e.id === id));
   want(ev("c2_dil_house"), "dil", "キャラメモの人の出来事");
   want(ev("w1_miracle"), "aurelia", "名のある人の出来事");
@@ -115,9 +106,13 @@ export default ({ G, fail, ok }) => {
   want(ev("donation"), "kind_priest_f", "名の無い出来事の人（修道女の型）");
   want(ev("m4_ruin_looter"), "kind_child_f", "9 歳の子は子どもの型");
   want(ev("fortune"), "kind_elder_f", "老婆は老人の型");
-  want(ev("r1_elf_kin"), null, "エルフの町の人（人間の型は使わない）");
+  const elf = ev("r1_elf_kin");
+  want(elf, elf.sex === "男" ? "kind_villager_m" : "kind_villager_f_elf", "エルフの町の人（エルフの型があればそれ）");
+  want(Object.assign({}, elf, { look: { ears: "pointy" }, kind: "archer" }), elf.sex === "男" ? "kind_archer_m" : "kind_archer_f", "エルフの弓使い（エルフの型が無ければ人間の型。A10）");
+  want({ kind: "priest", sex: "女", age: 30, seed: "a10:cat", look: { beast: "cat" } }, "kind_priest_f", "猫の獣人の神官（獣人の型が無ければ人間の型。A10）");
+  want({ kind: "majin", sex: "女", age: 30, seed: "a10:majin" }, null, "人の姿の使徒（合う型が無い）");
 
-  // 描く：読み込みの前は今の絵、読み込んだら画像
+  // 描く：読み込みの前は枠を空け、読み込んだら画像
   loaded.length = 0; calls.length = 0;
   const cv = face();
   G.drawPortrait(cv, ev("w1_miracle"));

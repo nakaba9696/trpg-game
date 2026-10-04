@@ -27,17 +27,9 @@
   let page = 0;      // 導入のページ
   let rolledNow = false;
 
-  // 人物の絵（art_people.js）
-  function face(cls, cw, ch) {
-    const cv = h("canvas", cls);
-    cv.width = cw * 2; cv.height = ch * 2;
-    cv.setAttribute("aria-hidden", "true");
-    return cv;
-  }
-  const heroWho = () => G.heroWho(Object.assign({}, draft.profile, { sex: draft.sex, ageBand: draft.ageBand, race: draft.race, beast: draft.beast }), draft.cls);
+  // 主人公の絵は出さない（A10。持ち主の決定）
   // 種族の呼び名（R1。無ければ出さない）
   const raceName = (d) => (G.r1Name ? G.r1Name({ profile: { race: d.race, beast: d.beast } }) : "");
-  const paint = (cv) => { if (cv && G.drawPortrait) G.drawPortrait(cv, heroWho()); };
 
   const go = (s) => { step = s; setup.show(); window.scrollTo({ top: 0 }); };
 
@@ -96,11 +88,9 @@
     const lay = h("div", "cre2");
     // 姿と短い説明（スマホでは上）
     const card = h("aside", "whoCard");
-    const cv = face("heroFace", 112, 140);
     const txt = h("div", "whoTxt");
-    card.append(cv, txt);
+    card.append(txt);
     function refresh() {
-      paint(cv);
       const c = D.CLASSES[draft.cls], a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
       txt.textContent = "";
       txt.append(h("b", "whoName", draft.profile.name || "（名無し）"));
@@ -312,12 +302,11 @@
 
     const bar = h("div", "rollBar");
     const who = h("div", "rollWho");
-    const cv = face("miniFace", 48, 60);
     const c = D.CLASSES[draft.cls];
     const st = cre.final(draft);
     const wt = h("div");
     wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", `${[c.name, raceName(draft), D.AGES[draft.ageBand].name].filter(Boolean).join("・")}・${D.ORIGINS[draft.origin].short}生まれ`));
-    who.append(cv, wt);
+    who.append(wt);
     const tray = h("div", "tray");
     tray.setAttribute("aria-hidden", "true");
     const dice = [die(1 + Math.floor(R() * 6)), die(1 + Math.floor(R() * 6)), die(1 + Math.floor(R() * 6))];
@@ -376,8 +365,6 @@
     nav.append(btn("人物に戻る", "", () => go("person")), next);
     if (left > 0) nav.append(h("span", "fine", `ボーナスが ${left} 点残っている`));
     root.append(nav);
-
-    paint(cv);
     // 振った瞬間の小さな演出
     if (rolledNow) {
       rolledNow = false;
@@ -410,11 +397,10 @@
     const p = o.profile, c = D.CLASSES[o.cls];
     const paper = h("article", "charSheet");
     const top = h("header", "csTop");
-    const cv = face("csFace", 96, 120);
     const nm = h("div");
     nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, raceName(draft), p.sex].filter(Boolean).join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）・${D.ORIGINS[p.origin].name}生まれ`));
     nm.append(h("span", "csLine", `目的：${o.goalText}`));
-    top.append(cv, nm);
+    top.append(nm);
     paper.append(top);
 
     const cols = h("div", "csCols");
@@ -446,7 +432,6 @@
       btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); }, "c-go"));
     root.append(nav);
     root.append(h("p", "fine", "普段の行動は Claude を使わない（利用量はかからない）。自由入力で「GM に任せる」を選んだときだけ使う。"));
-    paint(cv);
   }
 
   // ---------------------------------------------------------------- 5. 導入（ページをめくる）

@@ -7,10 +7,6 @@
   "maxKB": 80,
   "framing": "縦長・胸から上・顔が上から 1/3 あたり"
  },
- "heroAge": {
-  "mid": "middle-aged, 45 years old",
-  "old": "old man / old woman, wrinkles, grey hair, 65 years old"
- },
  "races": {
   "elf": "elf, pointy ears",
   "beast": "wolf ears, wolf tail"
@@ -2873,101 +2869,6 @@
    "identity": "1girl, girl, child, 10 years old, black hair, long hair, low twintails, blunt bangs, amber eyes",
    "tags": "simple clothes, small",
    "memo": "名もない子ども。子どもらしく"
-  },
-  {
-   "id": "hero_merc_m",
-   "group": "hero",
-   "name": "主人公：傭兵・男",
-   "type": "classic",
-   "file": "assets/portraits/hero_merc_m.webp",
-   "identity": "1boy, male focus, adult, young man, 20 years old, black hair, short hair, grey eyes",
-   "tags": "mercenary, leather armor, sword",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_merc_f",
-   "group": "hero",
-   "name": "主人公：傭兵・女",
-   "file": "assets/portraits/hero_merc_f.webp",
-   "identity": "1girl, young woman, 20 years old, black hair, medium hair, bob cut, amber eyes",
-   "tags": "mercenary, leather armor, sword",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_thief_m",
-   "group": "hero",
-   "name": "主人公：盗賊・男",
-   "type": "bishonen",
-   "file": "assets/portraits/hero_thief_m.webp",
-   "identity": "1boy, male focus, adult, young man, 20 years old, white hair, short hair, messy hair, amber eyes",
-   "tags": "thief, dark hooded cloak, daggers",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_thief_f",
-   "group": "hero",
-   "name": "主人公：盗賊・女",
-   "file": "assets/portraits/hero_thief_f.webp",
-   "identity": "1girl, young woman, 20 years old, white hair, long hair, blunt bangs, red eyes",
-   "tags": "thief, dark hooded cloak, daggers",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_mage_m",
-   "group": "hero",
-   "name": "主人公：魔法使い・男",
-   "type": "bishonen",
-   "file": "assets/portraits/hero_mage_m.webp",
-   "identity": "1boy, male focus, adult, young man, 20 years old, white hair, medium hair, messy hair, amber eyes",
-   "tags": "mage, robe, wizard hat, staff",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_mage_f",
-   "group": "hero",
-   "name": "主人公：魔法使い・女",
-   "file": "assets/portraits/hero_mage_f.webp",
-   "identity": "1girl, young woman, 20 years old, orange hair, medium hair, amber eyes",
-   "tags": "mage, robe, wizard hat, staff",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_priest_m",
-   "group": "hero",
-   "name": "主人公：破戒神官・男",
-   "type": "classic",
-   "file": "assets/portraits/hero_priest_m.webp",
-   "identity": "1boy, male focus, adult, young man, 20 years old, black hair, short hair, spiky hair, brown eyes",
-   "tags": "priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_priest_f",
-   "group": "hero",
-   "name": "主人公：破戒神官・女",
-   "file": "assets/portraits/hero_priest_f.webp",
-   "identity": "1girl, young woman, 20 years old, white hair, medium hair, bob cut, red eyes",
-   "tags": "priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_samurai_m",
-   "group": "hero",
-   "name": "主人公：侍・男",
-   "type": "classic",
-   "file": "assets/portraits/hero_samurai_m.webp",
-   "identity": "1boy, male focus, adult, young man, 20 years old, black hair, topknot, black eyes",
-   "tags": "samurai, kimono, light armor, katana",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
-  },
-  {
-   "id": "hero_samurai_f",
-   "group": "hero",
-   "name": "主人公：侍・女",
-   "file": "assets/portraits/hero_samurai_f.webp",
-   "identity": "1girl, young woman, 20 years old, black hair, long hair, ponytail, amber eyes",
-   "tags": "samurai, kimono, light armor, katana",
-   "memo": "主人公の型（人間・若者）。外見の文で変わる髪や目の色は入れない"
   }
  ]
 }

@@ -2,7 +2,7 @@
 
 - [portraits.md](portraits.md)：描く人の一覧と、Stable Diffusion に入れる**特徴だけ**のタグ（元は [portraits.json](portraits.json)。md は `node tools/portraits.mjs` で作る）。名のある人物が先、乱数で作られる人の「型」が後。
 - [style.json](style.json)：持ち主の絵柄の設定（モデル・画風のタグ・ネガティブ・sampler など）。**もう入っている。**
-- 画像は `assets/portraits/<id>.webp` に置く。`node tools/build.mjs` で `dist/site/portraits/<id>.webp` に写され、HTML から相対パスで読まれる（`tools/assets.mjs`・公開のしかたは [../publish.md](../publish.md)）。ゲームはその人をその画像で描く（`src/ui/v4_assets.js`）。無い人（読めない人）は今の canvas の絵。
+- 画像は `assets/portraits/<id>.webp` に置く。`node tools/build.mjs` で `dist/site/portraits/<id>.webp` に写され、HTML から相対パスで読まれる（`tools/assets.mjs`・公開のしかたは [../publish.md](../publish.md)）。ゲームはその人をその画像で描く（`src/ui/v4_assets.js`）。無い人（読めない人）は絵を出さない（A10：canvas の人物の絵はやめた。誰に何を当てるかは [a10_map.md](a10_map.md)。`node tools/a10_map.mjs` で作り直す）。**主人公は立ち絵を出さない**ので、主人公の型（`hero_*`）は作らない。
 - 512×640（縦長・胸から上）、1枚 80KB 以下。画像は HTML の外なので、数の上限は Artifact の決まり（1 つの版で 511 ファイル・256MB。`tests/checks/a6_site.mjs`）。予備の埋め込み（`--embed`）は 12MB までで、超えるなら差分を省く。
 
 ## 持ち主のパソコンで作る（AUTOMATIC1111 / Forge / reForge）
@@ -58,7 +58,7 @@
 - 一覧は [monsters.md](monsters.md)（元は [monsters.json](monsters.json)。名前は敵のデータから取るので、敵の名前が変わったら `node tools/monsters.mjs` で作り直す）。人物の一覧に載っている人の姿の敵（コノハ・ベルナなど）は人物の側に任せる。
 - 設定は人物と別の [style_monsters.json](style_monsters.json)（最初は人物と同じモデル・同じ絵柄。後置きは `no humans, monster, creature, …, white background`）。手元だけで変えるなら `docs/art/style_monsters.local.json`。人の姿の敵（一覧の `human: true`）は `human` の後置き・ネガティブに替わる。
 - 作る：`node tools/gen_portraits.mjs --monsters --dry --only goblin,slime` でプロンプトを確かめ、`node tools/gen_portraits.mjs --monsters --only goblin,slime` で作る（引数なしなら、まだ画像の無い魔物をすべて）。`--force`・`--keep`・`--new-seed` も人物と同じ。1024×1024 で作り、512×512 の webp に縮めて `assets/monsters/<id>.webp` に置く。
-- ゲームは戦闘でその敵を画像で描き（`src/ui/v6_monsters.js`）、白い背景は縁から消して周りをぼかす。画像の無い敵は今の canvas の絵。予備の埋め込み（12MB）は人物と魔物を合わせて数えるので、魔物は 1 枚 60KB 以下を目安に。
+- ゲームは戦闘でその敵を画像で描き（`src/ui/v6_monsters.js`）、白い背景は縁から消して周りをぼかす。画像の無い敵は何も描かない（A10）。予備の埋め込み（12MB）は人物と魔物を合わせて数えるので、魔物は 1 枚 60KB 以下を目安に。
 
 ## 異形と、人の姿の使徒（V7）
 

@@ -3,7 +3,7 @@
 // - 回ごとの分け方：どの回も目安に収まり、全部の画像がちょうど一度ずつ載る
 // - 外のファイルの一覧：鍵 → 相対パス・バイト数。G.ASSET_MODE が "files"
 // - 予備の埋め込み（--embed）：上限を超えるなら差分を省く
-// - 絵の部品：外のファイルの相対パスをそのまま読み、読めなければ canvas の絵に戻る。魔物の先読みは起動の後に回す
+// - 絵の部品：外のファイルの相対パスをそのまま読み、読めなければ絵を出さない（A10）。魔物の先読みは起動の後に回す
 // - ビルドしてあれば（dist/site/）：index.html に画像が埋め込まれていない、files.json のファイルがすべてある、HTML の一覧と合う
 import { readFileSync, existsSync, statSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -96,18 +96,18 @@ export default ({ G, fail, ok }) => {
   const srcs = loaded.map((i) => i.src).sort().join();
   if (srcs !== "portraits/kind_priest_f.webp,portraits/kind_priest_f_joy.webp") F(`先読みが違う（その人の絵と差分）：${srcs}`);
   const face = () => ({ width: 96, height: 120, getBoundingClientRect: () => ({ width: 96, height: 120 }), getContext: () => ctx });
-  // 読み込み中：少し待ってから今の絵。読めたら画像
+  // 読み込み中：枠を空けて待つ。読めたら画像
   calls.length = 0;
   const cv = face();
   g.drawPortrait(cv, who);
   if (calls.some(([k]) => k === "drawImage")) F("読み込みの前に画像を描いた");
-  if (calls.some(([k]) => k === "fill" || k === "arc")) F("外のファイルを待つあいだに、すぐ今の絵を描いた（ちらつく）");
+  if (calls.some(([k]) => k === "fill" || k === "arc")) F("外のファイルを待つあいだに、canvas の絵を描いた");
   loaded[0].fire();
   if (!calls.some(([k]) => k === "drawImage")) F("外のファイルを読んだあと画像を描いていない");
   calls.length = 0;
   timers.splice(0).forEach((f) => f());
-  if (calls.length) F("画像を描いたあとに、待ちの時間切れで今の絵を上に描いた");
-  // 読めないファイル：今の絵に戻る
+  if (calls.length) F("画像を描いたあとに、待ちの時間切れで何かを上に描いた");
+  // 読めないファイル：絵を出さない（canvas の絵に戻らない。A10）
   g.ASSETS["portraits/kind_priest_m"] = "portraits/kind_priest_m.webp";
   loaded.length = 0; calls.length = 0;
   g.drawPortrait(face(), { kind: "priest", sex: "男", age: 30, seed: "a6:m" });
@@ -115,7 +115,7 @@ export default ({ G, fail, ok }) => {
   if (!bad) F("外のファイルの相対パスを読みに行っていない");
   else {
     bad.fire("error");
-    if (!calls.some(([k]) => k !== "drawImage" && k !== "clearRect" && k !== "setTransform") || calls.some(([k]) => k === "drawImage")) F("読めない外のファイルのとき、今の絵に戻していない");
+    if (calls.some(([k]) => k !== "clearRect" && k !== "setTransform")) F("読めない外のファイルのとき、canvas の絵を描いた（絵を出さないはず）");
   }
 
   // ---------------------------------------------------------------- 本物の assets/ の大きさ
