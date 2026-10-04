@@ -113,10 +113,21 @@
     logLast = S.log[S.log.length - 1] || null;
     logFresh = fresh ? shown.slice(-fresh) : [];
     shown.forEach((e, i) => { const el = logEntryEl(e); if (fresh && i >= shown.length - fresh) el.classList.add("new"); log.append(el); });
-    // 新しく増えた記録の頭から読めるようにする（増えていなければ末尾）
-    const first = fresh ? log.children[shown.length - fresh] : null;
+    // 新しく増えた記録の頭から読めるようにする（増えていなければ末尾）。位置を測るのは次のコマの頭で一度だけ
+    // （描き直しの途中で測ると、そのたびに画面全体の配置の計算が走って重い。T）
+    logScroll = { first: fresh ? log.children[shown.length - fresh] : null, fresh: !!fresh };
+    if (!logScrollAsked) { logScrollAsked = true; requestAnimationFrame(scrollLog); }
+  }
+  let logScroll = null, logScrollAsked = false;
+  function scrollLog() {
+    logScrollAsked = false;
+    const o = logScroll;
+    logScroll = null;
+    const log = $("#log");
+    if (!o || !log) return;
+    const first = o.first && o.first.isConnected ? o.first : null;
     log.scrollTop = first ? Math.max(0, first.offsetTop - log.offsetTop - 8) : log.scrollHeight;
-    if (fresh && narrow()) {
+    if (o.fresh && narrow()) {
       // スマホでは、画面が記録より下にあるときだけ記録まで戻す
       const top = log.getBoundingClientRect().top;
       if (top < mbarHeight()) log.scrollIntoView({ block: "start", behavior: "smooth" });
@@ -471,7 +482,9 @@
   }
   function renderSheet(ups) {
     const sh = $("#sheet");
-    const keep = sh.scrollTop;
+    // 閉じているシートの位置は読まない（読むと、描き直しの途中で画面全体の配置の計算が走って重い。T）
+    const open = document.body.classList.contains("sheet-open");
+    const keep = open ? sh.scrollTop : 0;
     sh.textContent = "";
     const panes = {
       self: sheetPane("self", [sheetPools(), sheetStats(ups), sheetKv(sheetSelfRows())]),
@@ -480,15 +493,18 @@
       more: sheetPane("more", [sheetButtons()]),
     };
     sh.append(sheetHead(), sheetTabs(panes), ...Object.values(panes));
-    sh.scrollTop = keep;
+    if (open) sh.scrollTop = keep;
     renderMobileBar();
-    drawFaces();
+    // 閉じているシートの顔（仲間）は、開いたときに描く（見えない絵を手番ごとに描き直さない。T）
+    if (open) { sheetFaces = []; drawFaces(); } else { sheetFaces = faceQueue; faceQueue = []; }
   }
+  let sheetFaces = [];
   // ステータスの開閉（必要なときだけ開く窓。スマホは全面、PC は右に重ねて出す。V1）
   ui.setSheetOpen = (on) => {
     const was = document.body.classList.contains("sheet-open");
     document.body.classList.toggle("sheet-open", on);
     $("#openSheet").setAttribute("aria-expanded", on);
+    if (on && sheetFaces.length) { const q = sheetFaces; sheetFaces = []; if (G.drawPortrait) q.forEach(([cv, who]) => { if (cv.isConnected) G.drawPortrait(cv, who); }); }
     if (on && !was) { const c = $("#sheet .closeSheet"); if (c) c.focus({ preventScroll: true }); }
     else if (!on && was && narrow()) $("#openSheet").focus({ preventScroll: true });
   };

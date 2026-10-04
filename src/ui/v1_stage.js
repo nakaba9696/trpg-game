@@ -75,10 +75,46 @@
     L.pic.style.width = size.w + "px";
     L.pic.style.height = size.h + "px";
     paintRaw(L.pic, opt);
-    // にじみ：絵を小さく写し、CSS で大きく伸ばしてぼかす（絵の下の余白を同じ色で埋める）
-    const c = L.echo.getContext("2d");
-    if (c && L.pic.width) c.drawImage(L.pic, 0, 0, L.echo.width, L.echo.height);
+    paintEcho(L);
   }
+  // にじみ：絵を小さく写し、大きく伸ばしてぼかす（絵の下の余白を同じ色で埋める）。
+  // ぼかし・色の調子（--echo-filter）は、CSS の filter で毎コマかけると、背景が動くたびに画面いっぱいのぼかしを計算し直して重い（T）。
+  // canvas の filter が使えれば、描くときに一度だけかけて焼き込み、CSS の filter は外す（見た目は同じ）。使えなければ今まで通り CSS でかける
+  const SMALL = [48, 32];
+  const small = document.createElement("canvas");
+  small.width = SMALL[0]; small.height = SMALL[1];
+  const echoFilter = () => { try { return getComputedStyle(document.documentElement).getPropertyValue("--echo-filter").trim(); } catch (e) { return ""; } };
+  function paintEcho(L) {
+    if (!L.pic.width) return;
+    const echo = L.echo;
+    const f = echoFilter();
+    const sc = small.getContext("2d");
+    const ec = echo.getContext("2d");
+    if (!sc || !ec) return;
+    if (!f || f === "none" || !("filter" in ec)) {
+      echo.style.filter = "";
+      if (echo.width !== SMALL[0] || echo.height !== SMALL[1]) { echo.width = SMALL[0]; echo.height = SMALL[1]; }
+      ec.drawImage(L.pic, 0, 0, echo.width, echo.height);
+      return;
+    }
+    sc.clearRect(0, 0, SMALL[0], SMALL[1]);
+    sc.drawImage(L.pic, 0, 0, SMALL[0], SMALL[1]);
+    // にじみの canvas は画面の 120% に伸ばして置かれる（style.css の .bgEcho）。CSS の 1px が canvas の k px
+    const vw = Math.max(1, window.innerWidth || 1), vh = Math.max(1, window.innerHeight || 1);
+    const W = 256, H = Math.max(16, Math.round((W * vh) / vw)), k = W / (vw * 1.2);
+    if (echo.width !== W || echo.height !== H) { echo.width = W; echo.height = H; }
+    ec.save();
+    ec.clearRect(0, 0, W, H);
+    ec.filter = f.replace(/blur\(\s*([\d.]+)px\s*\)/g, (m, n) => `blur(${(+n * k).toFixed(2)}px)`);
+    ec.imageSmoothingEnabled = true;
+    ec.drawImage(small, 0, 0, W, H);
+    ec.restore();
+    echo.style.filter = "none";
+  }
+  // 色の調子が変わったら（明るい／暗いの切り替え）、にじみを焼き直す
+  const reEcho = () => layers.forEach((L) => { if (L.sig) paintEcho(L); });
+  new MutationObserver(reEcho).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
+  try { window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", reEcho); } catch (e) { /* 古いブラウザ */ }
   // 絵を見せる。違う絵ならフェードで切り替え、同じ絵なら（大きさが変わったときだけ）その場で描き直す
   function show(opt, force) {
     const resized = measure(opt.full);
