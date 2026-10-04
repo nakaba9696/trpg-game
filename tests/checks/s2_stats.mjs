@@ -1,6 +1,6 @@
 // S2：能力値を小さな数（点）で見せる・初期値をダイスで振る（docs/s2_stats.md）
 // - 初期値：能力値ごとに 3D6（8％で +1D6）＋職業・種族・年齢・生まれの補正。だいたい 5〜18、1 人のうちどれか 1 つが 20 以上になるのが約 5％
-// - ボーナス点：5 点で決まり＋トロフィー 1 つにつき +1（合計の上限なし）。トロフィーの分は 1 つの能力値に 10 点まで
+// - ボーナス点：5 点で決まり＋トロフィーの格の点（銅 1・銀 2・金 4）10 点ごとに +1（合計の上限なし）。どの能力値にも好きなだけ
 // - 鍵は無い。振り直しは初期値を振り直す（何度でも）
 // - 換算：1 点 ＝ 成功率 4％。冒険に渡す値は点×4。判定の成功率は今までの式のまま
 // - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。上限は無い（99 を超えても壊れない。古いセーブの caps は効かない）
@@ -58,28 +58,31 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (dr.best < cre.total(dr)) fail("これまでの最高（合計）が覚えられていない");
   }
 
-  // ---------------------------------------------------------------- ボーナス点（5 点＋トロフィー）
+  // ---------------------------------------------------------------- ボーナス点（5 点＋トロフィーの格の点 10 点ごとに 1）
   {
     const P0 = G.P;
     const dr = cre.fresh(rnd);
+    const tr = (list) => Object.fromEntries(list.map((tier, i) => ["t" + i, { name: "t", tier }]));
     G.P = { trophies: {}, graves: [] };
     if (cre.bonusPoints(dr) !== 5) fail(`トロフィー 0 個でボーナス点が 5 にならない（${cre.bonusPoints(dr)}）`);
-    G.P.trophies = Object.fromEntries(Array.from({ length: 40 }, (_, i) => ["t" + i, { name: "t" }]));
-    if (cre.bonusPoints(dr) !== 45) fail(`トロフィー 40 個でボーナス点が 45 にならない（上限が残っている？ ${cre.bonusPoints(dr)}）`);
-    // 1 つの能力値には 5＋10＝15 点まで
+    G.P.trophies = tr(Array(9).fill("銅"));
+    if (cre.bonusPoints(dr) !== 5 || cre.trophyNext() !== 1) fail(`銅 9 個（9 点）で +1 になった・次まで 1 点でない（${cre.bonusPoints(dr)}）`);
+    G.P.trophies = tr(Array(10).fill("銅"));
+    if (cre.bonusPoints(dr) !== 6) fail(`銅だけ 10 個で +1 にならない（${cre.bonusPoints(dr)}）`);
+    G.P.trophies = tr(Array(3).fill("金"));
+    if (cre.trophyScore() !== 12 || cre.bonusPoints(dr) !== 6) fail(`金 3 個（12 点）で +1 にならない（${cre.trophyScore()}・${cre.bonusPoints(dr)}）`);
+    G.P.trophies = tr(Array(5).fill("銀"));
+    if (cre.bonusPoints(dr) !== 6) fail(`銀 5 個（10 点）で +1 にならない`);
+    // 1 つの能力値にいくらでも足せる（トロフィーの分の 1 能力 10 点までの決まりは外した）
+    if (cre.trophyOk || (D.S2 && D.S2.TROPHY_PER_STAT)) fail("トロフィーの分の 1 能力 10 点までの決まりが残っている");
+    G.P.trophies = tr(Array(200).fill("銅"));   // 20 点 → +20（合計 25 点）
     const k0 = D.STATS[0];
     while (cre.canAdd(dr, k0)) cre.addBonus(dr, k0, 1);
-    if (dr.bonus[k0] !== 5 + D.S2.TROPHY_PER_STAT) fail(`1 つの能力値に ${dr.bonus[k0]} 点足せた（5＋${D.S2.TROPHY_PER_STAT} まで）`);
-    // 決まりの 5 点を使い切ったあと、ほかの能力値には 10 点まで
-    const k1 = D.STATS[1];
-    while (cre.canAdd(dr, k1)) cre.addBonus(dr, k1, 1);
-    if (dr.bonus[k1] !== D.S2.TROPHY_PER_STAT) fail(`2 つめの能力値に ${dr.bonus[k1]} 点足せた（トロフィーの分 ${D.S2.TROPHY_PER_STAT} まで）`);
-    // 全部使い切れる（6 能力 × 10 ＋ 5 より少なければ）
-    while (cre.bonusLeft(dr) > 0) { const k = D.STATS.find((s) => cre.canAdd(dr, s)); if (!k) { fail("ボーナス点を使い切れない"); break; } cre.addBonus(dr, k, 1); }
+    if (dr.bonus[k0] !== 25) fail(`1 つの能力値に全部（25 点）足せない（${dr.bonus[k0]}）`);
     // トロフィーが減ったら戻る
     G.P.trophies = {};
     cre.fit(dr);
-    if (cre.bonusLeft(dr) < 0 || !cre.trophyOk(dr)) fail("トロフィーが減ったあと、ボーナスが戻らない");
+    if (cre.bonusLeft(dr) < 0) fail("トロフィーが減ったあと、ボーナスが戻らない");
     G.P = P0;
   }
 
@@ -176,7 +179,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     const src = readFileSync(fileURLToPath(new URL("../../src/ui/setup.js", import.meta.url)), "utf8");
     if (!/上振れ/.test(src) || !/lucky/.test(src)) fail("作成画面に上振れの印が無い");
     if (!/cre\.bonusPoints\(draft\)/.test(src)) fail("作成画面にボーナス点が出ない");
-    if (!/TROPHY_PER_STAT/.test(src)) fail("作成画面に、トロフィーの分は 1 つの能力値に 10 点まで、が出ない");
+    if (!/trophyScore/.test(src) || !/次の \+1 まであと/.test(src)) fail("作成画面に、トロフィーの点と次の +1 までが出ない");
     if (/才能限界|鍵をかけ|大当たり|m8ui|才の付きやすい/.test(src)) fail("作成画面に、なくした仕組みの言葉が残っている");
     if (/String\(o\.stats\[k\]\)/.test(src)) fail("作成画面のシートが割合のまま出している");
     // 目的は行き先・手順を出さない（名前と目指すことだけ。「自分で決める」の遊び方の説明は残す）

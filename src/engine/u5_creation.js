@@ -75,11 +75,11 @@
   // 持ち主の決定（エルミナージュ風）：
   //   初期値をダイスで振る … 能力値ごとに 3D6（3〜18）。8％（D.S2.EXTRA）でもう 1D6 が乗って 20 以上も出る（1 人のうちどれか 1 つが 20 以上になるのが約 5％）。
   //     それに職業・種族・年齢・生まれの補正を足す（D.S2.MIN より下げない）。振り直しは何度でも。鍵は無い。
-  //   ボーナス点 … 5 点（D.BONUS_POINTS）で決まり。トロフィー 1 つにつき +1（cre.extraBonus。合計の上限は無い）。
-  //     トロフィーの分は、1 つの能力値に 10 点（D.S2.TROPHY_PER_STAT）まで。
+  //   ボーナス点 … 5 点（D.BONUS_POINTS）で決まり。トロフィーの格の点（銅 1・銀 2・金 4）10 点ごとに +1（cre.extraBonus。合計の上限は無い）。
+  //     トロフィーは格ごとの点（銅 1・銀 2・金 4）の合計 10 点ごとに +1（zz_u10_trophy_bonus.js）。どの能力値にも好きなだけ足せる。
   //   上限 … 能力値そのものに上限は無い（判定は 5〜95％で止まる）。
   // 古い下書きの locks・caps・bonusRoll は見ない
-  const S2 = () => D.S2 || { PCT: 4, MIN: 3, EXTRA: 0, TROPHY_PER_STAT: 10 };
+  const S2 = () => D.S2 || { PCT: 4, MIN: 3, EXTRA: 0 };
   cre.MAX_PT = Infinity;
   cre.ptOfPct = (n) => Math.round((n || 0) / S2().PCT);   // 割合で書かれた補正を点に
 
@@ -126,20 +126,14 @@
   cre.bonusLeft = (dr) => cre.bonusPoints(dr) - cre.bonusUsed(dr);
   cre.total = (dr) => D.STATS.reduce((a, k) => a + cre.value(dr, k), 0);
   cre.baseTotal = (dr) => D.STATS.reduce((a, k) => a + cre.base(dr, k), 0);   // ボーナスを足す前（初期値と補正）の合計
-  // トロフィーの分が 1 つの能力値に 10 点までに収まるか。決まりの 5 点を、10 点を超えた分に当てられれば収まる
-  cre.trophyOk = (dr, b) => {
-    b = b || dr.bonus;
-    const per = S2().TROPHY_PER_STAT;
-    const over = D.STATS.reduce((a, k) => a + Math.max(0, (b[k] || 0) - per), 0);
-    return over <= cre.basePoints(dr);
-  };
+
 
   // ボーナスの合計が点を超えたら後ろの能力値から戻す（トロフィーが減ったときなど）
   cre.fit = (dr) => {
     if (!dr.rolled) return;
     D.STATS.forEach((k) => { dr.bonus[k] = Math.max(0, dr.bonus[k] || 0); });
     const back = [...D.STATS].reverse();
-    while (cre.bonusLeft(dr) < 0 || !cre.trophyOk(dr)) { const k = back.find((s) => dr.bonus[s] > 0); if (!k) break; dr.bonus[k]--; }
+    while (cre.bonusLeft(dr) < 0) { const k = back.find((s) => dr.bonus[s] > 0); if (!k) break; dr.bonus[k]--; }
   };
 
   // 残りのボーナス点を、職業の得意な能力値と体力へ順に配る（even なら 6 つに均等に。テスト・ボット）
@@ -153,7 +147,7 @@
     }
   };
 
-  cre.canAdd = (dr, k) => cre.bonusLeft(dr) > 0 && cre.trophyOk(dr, Object.assign({}, dr.bonus, { [k]: (dr.bonus[k] || 0) + 1 }));
+  cre.canAdd = (dr) => cre.bonusLeft(dr) > 0;
   cre.canSub = (dr, k) => (dr.bonus[k] || 0) > 0;
   cre.addBonus = (dr, k, dir) => {
     if (dir > 0 ? !cre.canAdd(dr, k) : !cre.canSub(dr, k)) return false;
