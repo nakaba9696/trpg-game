@@ -2,7 +2,8 @@
 // U10・S2：トロフィーで、キャラクター作成のボーナス点が増える（冒険をまたいで残る記録 G.P.trophies から数える）
 // トロフィーの格ごとに点（銅 1・銀 2・金 5。D.TROPHY_POINTS）を数え、その合計 10 点（D.TROPHY_PER_BONUS）ごとにボーナス点 +1（端数は切り捨て）。
 // 難しいトロフィーほど効く（持ち主の決定）。決まりの 5 点（D.BONUS_POINTS）に足す（cre.extraBonus）。合計の上限は無い。
-// 古い記録（trophies が無い・格が書いていない）でも動く。格が分からないトロフィーは銅として数える。レーン U（決まりは engine、画面は ui/setup.js）
+// 古い記録（trophies が無い・格が書いていない）でも動く。格が分からないトロフィーは銅として数える。
+// 格はトロフィーの表（D.TROPHIES）の今の格で数える（T2 で格を直したとき、前に取ったものも新しい格になる）。表に無いものだけ、取ったときの格。レーン U（決まりは engine、画面は ui/setup.js）
 (function (G) {
   const D = G.data;
   const cre = G.cre;
@@ -13,7 +14,7 @@
   cre.trophyScore = (P) => {
     const t = ((P || G.P) && (P || G.P).trophies) || {};
     return Object.entries(t).reduce((a, [key, v]) => {
-      const tier = (v && v.tier) || ((D.TROPHIES || []).find((x) => x.key === key) || {}).tier;
+      const tier = ((D.TROPHIES || []).find((x) => x.key === key) || {}).tier || (v && v.tier);
       return a + (D.TROPHY_POINTS[tier] || D.TROPHY_POINTS.銅);
     }, 0);
   };

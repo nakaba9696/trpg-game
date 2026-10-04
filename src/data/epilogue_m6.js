@@ -409,9 +409,9 @@
   (D.TROPHIES = D.TROPHIES || []).push(
     { key: "m6_end", name: "物語を閉じる", tier: "銅", desc: "節目で、物語を自分で終えた" },
     { key: "m6_bed", name: "寝床の上で", tier: "銀", desc: "物語を終えたあと、寝床の上で死んだ" },
-    { key: "m6_blade", name: "昔の借り", tier: "銅", desc: "物語を終えたあと、昔の恨みに追いつかれた" },
+    { key: "m6_blade", name: "昔の借り", tier: "銀", desc: "物語を終えたあと、昔の恨みに追いつかれた" },
     { key: "m6_vanish", name: "その後を見た者はいない", tier: "銀", desc: "物語を終えたあと、ふっと姿を消した" },
-    { key: "m6_folly", name: "あっけない最期", tier: "銅", desc: "物語を終えたあと、ばかばかしい死に方をした" },
+    { key: "m6_folly", name: "あっけない最期", tier: "銀", desc: "物語を終えたあと、ばかばかしい死に方をした" },
     { key: "m6_road", name: "もう一度だけ", tier: "銀", desc: "物語を終えたあと、最後の旅に出て戻らなかった" },
     { key: "m6_wall", name: "東の果てへ", tier: "金", desc: "東の果てで、光の壁に触れた" },
     { key: "m6_brief", name: "帳面の一行", tier: "銅", desc: "旅立って十日のうちに死んだ" },
