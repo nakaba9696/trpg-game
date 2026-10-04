@@ -183,21 +183,22 @@ timed("1b. 敵の台詞と逃げ方");
   G.rand = seeded(11);
   G.P = { trophies: {}, graves: [] };
   const stats = {}, caps = {};
-  D.STATS.forEach((k) => { stats[k] = 40; caps[k] = 60; });
+  D.STATS.forEach((k) => { stats[k] = 10; caps[k] = 15; });   // 点（S5）
   G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
   const S = G.S;
+  const M = G.s5Mod;   // 装飾品の補正は％で書いてあり、3 で 1 点（S5）
   delete S.ring; // 古いセーブには枠が無い
   const base = { str: G.chance("筋力", 0), steal: G.gearBonus("steal"), magic: G.magicBonus(), agi: G.statEff("敏捷") };
   if (G.ring() !== null) fail("古いセーブで装飾品があることになっている");
   if (G.unequip("ring")) fail("何も付けていないのに外せた");
   G.give("i1_fangring");
   if (!G.equip("i1_fangring") || S.ring !== "i1_fangring" || S.inv.i1_fangring) fail("装飾品を装備できない");
-  if (G.chance("筋力", 0) !== base.str + 5) fail(`牙の指輪で筋力の判定が +5 にならない（${base.str}→${G.chance("筋力", 0)}）`);
+  if (!(G.chance("筋力", 0) > base.str + 3) || G.statEff("筋力") !== 10 + M(5)) fail(`牙の指輪で筋力の判定が上がらない（${base.str}→${G.chance("筋力", 0)}）`);
   if (!G.has("i1_fangring")) fail("装備中の装飾品を持っていないことになる");
   G.give("i1_slipring");
   G.equip("i1_slipring");
   if (S.ring !== "i1_slipring" || S.inv.i1_fangring !== 1) fail("装飾品を付け替えると前の物が持ち物に戻らない");
-  if (G.gearBonus("steal") !== base.steal + 10 || G.statEff("敏捷") !== base.agi + 5) fail("すり抜けの指輪の補正が効かない");
+  if (G.gearBonus("steal") !== base.steal + 10 || G.statEff("敏捷") !== base.agi + M(5)) fail("すり抜けの指輪の補正が効かない");
   G.give("i1_foxring");
   G.equip("i1_foxring");
   if (G.magicBonus() !== base.magic + 5 || G.gearBonus("fire") < 10) fail("狐火の指輪の魔法の補正が効かない");
@@ -206,7 +207,7 @@ timed("1b. 敵の台詞と逃げ方");
   // 呪われた指輪は外すと HP が減るが、それで死にはしない
   G.give("i1_eyering");
   G.equip("i1_eyering");
-  if (G.statEff("知力") !== 50 || G.statEff("魅力") !== 30) fail("覗き目の指輪の補正が効かない");
+  if (G.statEff("知力") !== 10 + M(10) || G.statEff("魅力") !== 10 - M(10)) fail("覗き目の指輪の補正が効かない");
   S.hp = 2;
   G.unequip("ring");
   if (S.hp !== 1 || S.over) fail(`呪われた指輪を外したあとの HP が変 ${S.hp}`);

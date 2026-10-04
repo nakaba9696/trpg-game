@@ -32,7 +32,7 @@
     if (it.type === "weapon" && it.dmg) p.push(`${it.dmg[0]}D${it.dmg[1]}${it.dmg[2] ? "+" + it.dmg[2] : ""}`, `${it.stat || "筋力"}で戦う`);
     if (it.hit) p.push("命中" + sign(it.hit));
     if (it.def) p.push("防御" + it.def);
-    if (it.agi) p.push("敏捷" + sign(it.agi));
+    if (it.agi) p.push(G.statModText ? G.statModText("敏捷", it.agi) : "敏捷" + sign(it.agi));   // 能力値の補正は点で（S5）
     if (it.magic) p.push("魔法" + sign(it.magic));
     Object.entries(it.stats || {}).forEach(([k, v]) => p.push(G.statModText ? G.statModText(k, v) : k + sign(v)));
     Object.entries(it.bonus || {}).forEach(([k, v]) => p.push((BONUS[k] || k) + sign(v)));

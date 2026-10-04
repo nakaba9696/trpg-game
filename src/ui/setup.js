@@ -306,8 +306,7 @@
       const row = h("div", "srow" + (rolledNow ? " rolled" : "") + (lucky ? " lucky" : ""));
       row.title = D.STAT_HINT[k];
       const v = cre.value(draft, k);
-      const PCT = G.PT();
-      const b = h("span", "bar"); const i = h("i"); i.style.width = Math.min(100, v * PCT) + "%"; b.append(i);
+      const b = h("span", "bar"); const i = h("i"); i.style.width = G.s5Bar(v) + "%"; b.append(i);   // 99 で満点（S5）
       const pm = h("span", "pm");
       const minus = btn("−", "small", () => { cre.addBonus(draft, k, -1); setup.show(); }, "m-" + k);
       minus.setAttribute("aria-label", `${k}のボーナスを1戻す`);
@@ -324,7 +323,7 @@
       if (m.age) det.append(h("span", m.age > 0 ? "plus" : "minus", `年齢 ${signed(m.age)}`));
       if (m.origin) det.append(h("span", m.origin > 0 ? "plus" : "minus", `生まれ ${signed(m.origin)}`));
       if (draft.bonus[k]) det.append(h("span", "plus", `ボーナス +${draft.bonus[k]}`));
-      det.append(h("span", "", `成功率 ${Math.min(95, v * PCT)}%`));   // 判定は 95％で止まる
+      det.append(h("span", "", `普通の判定 ${G.s5Plain(v)}%`));   // 相手・難しさとの差で決まる（S5）
       row.append(h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
       list.append(row);
     });
@@ -333,7 +332,7 @@
     const sum = h("div", "statSum num");
     sum.append(h("span", "", "合計"), h("b", "", String(cre.baseTotal(draft))), h("span", "fine", `ボーナス込み ${cre.total(draft)}`));
     box.append(sum);
-    box.append(h("p", "fine", `1 点が成功率の基準 ${G.PT()}％（12 点なら ${12 * G.PT()}％）。使った能力値は、冒険の中で伸びていく。能力の名前に触れると説明が出る。`));
+    box.append(h("p", "fine", `能力値は点で、冒険の中で 99 まで伸びていく（使うほど、強い相手に挑むほど伸びる）。12 点で普通の判定が五分五分。相手が強い・難しいほど成功率は下がり、点が上なら上がる。能力の名前に触れると説明が出る。`));
     root.append(box);
 
     const nav = h("div", "creNav");
@@ -370,8 +369,8 @@
     const stl = h("div", "statlist num");
     D.STATS.forEach((k) => {
       const r = h("div", "stat");
-      const b = h("span", "bar"); const i = h("i"); i.style.width = o.stats[k] + "%"; b.append(i);
-      r.append(h("span", "nm", k), h("span", "v", String(G.pt(o.stats[k]))), b, h("span", "cap", `${Math.min(95, o.stats[k])}%`));
+      const b = h("span", "bar"); const i = h("i"); i.style.width = G.s5Bar(o.stats[k]) + "%"; b.append(i);
+      r.append(h("span", "nm", k), h("span", "v", String(G.pt(o.stats[k]))), b, h("span", "cap", `${G.s5Plain(o.stats[k])}%`));
       stl.append(r);
     });
     const sb = h("section");

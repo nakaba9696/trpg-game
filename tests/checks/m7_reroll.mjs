@@ -11,7 +11,7 @@ export default ({ G, fail, ok, seeded }) => {
     G.rand = seeded(seed);
     G.P = { trophies: {}, graves: [] };
     const stats = {}, caps = {};
-    D.STATS.forEach((k) => { stats[k] = 40; caps[k] = 60; });
+    D.STATS.forEach((k) => { stats[k] = 10; caps[k] = 60; });   // 点（S5）
     G.newGame({ cls, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
     return G.S;
   };
@@ -35,7 +35,7 @@ export default ({ G, fail, ok, seeded }) => {
 
   // 失敗 → 振り直す → 同じ場面で出目だけ新しい。回数が減る。二度目は振り直せない
   S = start("merc", 4);
-  S.stats.魔力 = 40;
+  S.stats.魔力 = 10;   // 点（S5）
   G.startEvent("shrine");
   const gold0 = S.gold, turn0 = S.turn;
   G.rand = script([0.9]); // 出目 91：失敗
@@ -128,7 +128,7 @@ export default ({ G, fail, ok, seeded }) => {
       G.rand = seeded(1000 + g);
       G.P = { trophies: {}, graves: [] };
       const stats = {}, caps = {};
-      D.STATS.forEach((k) => { stats[k] = D.CLASSES[cls].base[k] + 5; caps[k] = stats[k] + 30; });
+      D.STATS.forEach((k) => { stats[k] = Math.round((D.CLASSES[cls].base[k] + 5) / 4); caps[k] = stats[k] + 30; });   // 点（S5）
       G.newGame({ cls, stats, caps, goal: Object.keys(D.GOALS)[g % 4], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
       if (!useIt) G.S.rerolls = 0;
       for (let step = 0; step < STEPS && !G.S.over; step++) {
