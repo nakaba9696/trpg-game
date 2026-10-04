@@ -45,7 +45,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   // ---- 効果の短い説明
   if (!/1D4\+1/.test(G.itemEffect(D.ITEMS.dagger))) F(`短剣の効果に威力が無い：${G.itemEffect(D.ITEMS.dagger)}`);
   if (!/逃げられ/.test(G.itemEffect(D.ITEMS.smoke))) F(`煙玉の効果に「逃げられる」が無い：${G.itemEffect(D.ITEMS.smoke)}`);
-  if (!/筋力\+5/.test(G.itemEffect(D.ITEMS.i1_fangring))) F(`牙の指輪の効果に筋力+5 が無い：${G.itemEffect(D.ITEMS.i1_fangring)}`);
+  if (!G.itemEffect(D.ITEMS.i1_fangring).includes(G.statModText("筋力", 5))) F(`牙の指輪の効果に筋力の補正（点。S5）が無い：${G.itemEffect(D.ITEMS.i1_fangring)}`);
 
   // ---- 用語説明のきっかけ
   const valid = (t) => { const [id, key] = String(t).split(":"); const e = D.LORE[id]; return !!e && (!key || e.lines.some((l) => l[0] === key)); };

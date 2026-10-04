@@ -16,8 +16,10 @@
     const w = G.S.weather || (G.skyAt ? G.skyAt(G.S.loc, G.S.day).weather : "");
     return w === "雨" || w === "雪";
   };
-  const hitOf = (gun, t) => (gun.hit || 0) - G.foeData(t).def + (gun.wet && wetNow() ? gun.wet : 0);
-  G.c1ShotChance = (id) => { const g = D.ITEMS[id].gun; const t = G.target(); return t ? G.chance(g.stat, 0, hitOf(g, t)) : 0; };
+  // 相手の点は敵の強さ（S5。G.foeVs.eva）。銃の命中・雨の補正は％で足す
+  const hitOf = (gun) => (gun.hit || 0) + (gun.wet && wetNow() ? gun.wet : 0);
+  const vsOf = (t) => ({ vs: G.foeVs.eva(G.foeData(t)) });
+  G.c1ShotChance = (id) => { const g = D.ITEMS[id].gun; const t = G.target(); return t ? G.chance(g.stat, vsOf(t), hitOf(g)) : 0; };
 
   const baseActions = G.combatActions;
   G.combatActions = () => {
@@ -68,7 +70,7 @@
     G.log("you", `${t.name}に${it.name}を向ける`);
     if (g.wet && wetNow()) G.note("火口が湿っている。");
     const e = G.foeData(t);
-    const r = G.check(g.stat, 0, it.name, hitOf(g, t));
+    const r = G.check(g.stat, vsOf(t), it.name, hitOf(g));
     if (r.ok) {
       if (e.majin) {
         G.log("nar", `弾は${t.name}の体の手前で、見えない壁に止まり、ぽとりと落ちた。絶界だ。`, { fx: "wall", foe: t.name });

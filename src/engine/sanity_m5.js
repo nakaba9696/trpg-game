@@ -124,7 +124,7 @@
     return v;
   };
   const baseStatEff = G.statEff;
-  G.statEff = (k) => baseStatEff(k) + (G.S ? G.m5StatMod(k) : 0);
+  G.statEff = (k) => baseStatEff(k) + (G.S ? G.s5Mod(G.m5StatMod(k)) : 0);   // 補正は％。点にする（S5）
 
   // 狂気の縁より下では、判定が揺れる。大失敗は小さく心を削る
   const baseCheck = G.check;

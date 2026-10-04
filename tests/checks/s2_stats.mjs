@@ -2,9 +2,9 @@
 // - 初期値：能力値ごとに 3D6（8％で +1D6）＋職業・種族・年齢・生まれの補正。だいたい 5〜18、1 人のうちどれか 1 つが 20 以上になるのが約 5％
 // - ボーナス点：5 点で決まり＋トロフィーの格の点（銅 1・銀 2・金 5）10 点ごとに +1（合計の上限なし）。どの能力値にも好きなだけ
 // - 鍵は無い。振り直しは初期値を振り直す（何度でも）
-// - 換算：1 点 ＝ 成功率 4％。冒険に渡す値は点×4。判定の成功率は今までの式のまま
-// - 成長：割合で伸び、4 たまると 1 点。点が上がったときだけ「伸びた」を見せる。上限は無い（99 を超えても壊れない。古いセーブの caps は効かない）
-// - 古いセーブ：0〜99 の尺度のまま読め、点で見える。読み直しても値が変わらない（二度換算しない）
+// - 換算（S5）：冒険に渡す値もセーブも点そのもの（D.S2.PCT = 1）。成功率は相手・難しさの点との差（tests/checks/s5_scale.mjs）
+// - 成長：経験がたまって 1 点（12 点なら経験 4 で 1 点）。点が上がったときだけ「伸びた」を見せる。上限は無い（99 を超えても壊れない。古いセーブの caps は効かない）
+// - 古いセーブ：0〜99 の尺度のセーブは、読み込むときに ÷4 して点にする（G.s5Upgrade）。二度換算しない
 // - 才（M8）は無い：判定は能力値だけ。古いセーブの S.m8・仲間の c.m8 は効かない
 // - 作成画面：ボーナス点・上振れの印、点で出す。能力値の合計（ボーナス込みも）。目的は行き先を出さない。種族は選べない（主人公は人間だけ）。マイナスの補正は太字・濃い色
 import { readFileSync } from "node:fs";
@@ -93,26 +93,26 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   const q = cre.quickStats("merc", G.rand);
   G.newGame({ cls: "merc", stats: q.stats, caps: q.caps, goal: "rich", profile: { name: "テスト", sex: "男", age: 30, history: "テスト用" } });
   const S = G.S;
-  if (G.pt(48) !== 12 || G.pt(51) !== 12 || G.pt(52) !== 13 || G.ptExp(51) !== 3) fail("点の換算（割合÷4 の切り捨て・端数は経験）が合わない");
-  S.stats.知力 = 12 * PCT;
-  if (G.chance("知力", "普通") !== 12 * PCT || G.chance("知力", "難しい") !== 12 * PCT - 20) fail("成功率が 点×4＋難しさ になっていない");
-  if (G.maxHpOf(st(10 * PCT)) !== 10 + Math.floor(10 * PCT / 3)) fail("HP の式が変わった");
-  if (!/%$/.test(G.statModText("筋力", 5))) fail("装備の能力値の補正が％で書かれていない");
+  if (PCT !== 1 || G.pt(12) !== 12 || G.pt(52) !== 52) fail("セーブの値が点そのものでない（S5）");
+  S.stats.知力 = 12;
+  if (G.chance("知力", "普通") !== 50 || G.chance("知力", "難しい") !== 28) fail(`12 点の成功率が 普通 50％・難しい 28％でない（${G.chance("知力", "普通")}・${G.chance("知力", "難しい")}）`);
+  if (G.maxHpOf(st(10)) !== 10 + Math.floor(40 / 3)) fail("HP の式が変わった（20 点までは今までと同じ）");
+  if (/%$/.test(G.statModText("筋力", 6)) || G.statModText("筋力", 6) !== "筋力+2") fail(`装備の能力値の補正が点で書かれていない（${G.statModText("筋力", 6)}）`);
 
   // ---------------------------------------------------------------- 成長
-  S.stats.筋力 = 12 * PCT; S.caps.筋力 = 14 * PCT;   // 古いセーブの caps：効かない
+  S.stats.筋力 = 12; S.caps.筋力 = 14; S.s5exp = {};   // 古いセーブの caps：効かない
   let g = G.grow("筋力", 1);
   if (g[0] !== 12 || g[1] !== 12 || g[2] !== 1) fail(`1 だけの成長で点が上がった（${g}）`);
   g = G.grow("筋力", 3);
   if (g[0] !== 12 || g[1] !== 13) fail(`経験が 4 たまっても点が上がらない（${g}）`);
   g = G.grow("筋力", 40);
-  if (g[1] !== 23 || S.stats.筋力 !== 92) fail(`古い caps で止まった・40 伸ばして 92 にならない（${g}・${S.stats.筋力}）`);
-  g = G.grow("筋力", 40);
-  if (g[1] !== 33 || S.stats.筋力 !== 132) fail(`上限で止まった（上限は無いはず。${g}・${S.stats.筋力}）`);
-  if (G.chance("筋力", "普通") !== 95 || G.chance("筋力", "至難") !== 92) fail("99 を超えた能力値の成功率が 95％で止まらない");
-  if (G.pt(S.stats.筋力) !== 33) fail("99 を超えた能力値の点が出ない");
+  if (!(g[1] > 14 && g[1] < 23)) fail(`古い caps で止まった・高い点ほど伸びにくくなっていない（40 伸ばして ${g}）`);
+  g = G.grow("筋力", 5000);
+  if (!(S.stats.筋力 > 99)) fail(`上限で止まった（上限は無いはず。${g}・${S.stats.筋力}）`);
+  if (G.chance("筋力", "普通") !== 95 || G.chance("筋力", "至難") !== 95) fail("99 を超えた能力値の成功率が 95％で止まらない");
+  if (G.pt(S.stats.筋力) !== S.stats.筋力) fail("99 を超えた能力値の点が出ない");
   const logN = S.log.length;
-  S.stats.魅力 = 10 * PCT; S.caps.魅力 = 20 * PCT;
+  S.stats.魅力 = 10; S.caps.魅力 = 20;
   G.apply({ grow: { 魅力: 1 } });
   const added = S.log.slice(logN);
   if (added.some((e) => e.k === "grow")) fail("点が上がらない成長で「伸びた」が出た");
@@ -120,7 +120,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   G.apply({ grow: { 魅力: 3 } });
   if (!S.log.slice(logN).some((e) => e.k === "grow" && e.text.includes("10→11"))) fail("点が上がった成長が 10→11 で出ない");
   // 判定の成長は、見せるときは点
-  S.stats.敏捷 = 10 * PCT + 3; S.caps.敏捷 = 20 * PCT;
+  S.stats.敏捷 = 10; S.s5exp.敏捷 = 75; S.caps.敏捷 = 20;
   G.rand = seeded(2203);
   for (let i = 0; i < 200; i++) {
     const r = G.check("敏捷", "易しい", "テスト");
@@ -134,26 +134,28 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   // トロフィー（点で書く）
   const t70 = D.TROPHIES.find((t) => t.key === "stat70");
   if (t70) {
-    D.STATS.forEach((k) => { S.stats[k] = 10 * PCT; });
-    S.stats.知力 = 17 * PCT + 3;
-    if (t70.test(S)) fail("トロフィー「一流」が 17 点で取れた");
-    S.stats.知力 = 18 * PCT; S.caps.知力 = 20 * PCT;
-    if (!t70.test(S)) fail("トロフィー「一流」が 18 点で取れない");
+    D.STATS.forEach((k) => { S.stats[k] = 10; });
+    S.stats.知力 = 39;
+    if (t70.test(S)) fail("トロフィー「一流」が 39 点で取れた");
+    S.stats.知力 = 40; S.caps.知力 = 20;
+    if (!t70.test(S)) fail("トロフィー「一流」が 40 点で取れない");
   }
 
   // ---------------------------------------------------------------- 古いセーブ（0〜99 の尺度）
   {
     const old = JSON.parse(JSON.stringify(S));
+    delete old.s5; delete old.s5exp;
     Object.assign(old.stats, { 筋力: 52, 体力: 47, 敏捷: 38, 知力: 25, 魔力: 11, 魅力: 33 });
     Object.assign(old.caps, { 筋力: 88, 体力: 80, 敏捷: 70, 知力: 61, 魔力: 40, 魅力: 66 });
     const json = JSON.stringify(old);
-    G.S = JSON.parse(json);
+    G.S = JSON.parse(json); G.fixOldNames(G.S);   // 読み込みの入口（q7_slots.js・main.js）と同じ
     const shown = G.ptStats(G.S.stats);
     if (shown.筋力 !== 13 || shown.体力 !== 11 || shown.魔力 !== 2) fail(`古いセーブの点が合わない（${JSON.stringify(shown)}）`);
-    if (G.chance("筋力", "普通") !== G.clamp(G.statEff("筋力"), 5, 95) || G.statEff("筋力") < 40) fail("古いセーブの成功率が変わった");
-    // 読んで、保存して、また読む：値はそのまま（換算しないので二度換算もない）
+    if (G.s5Progress("体力") !== 75) fail(`古いセーブの端数が経験にならない（${G.s5Progress("体力")}）`);
+    // 読んで、保存して、また読む：値はそのまま（二度換算しない）
     const again = JSON.parse(JSON.stringify(G.S));
-    if (JSON.stringify(again.stats) !== JSON.stringify(old.stats) || JSON.stringify(G.ptStats(again.stats)) !== JSON.stringify(shown)) fail("古いセーブを読み直すと値が変わる");
+    G.fixOldNames(again);
+    if (JSON.stringify(G.ptStats(again.stats)) !== JSON.stringify(shown)) fail("古いセーブを読み直すと値が変わる");
     G.S = S;
   }
 
@@ -166,8 +168,8 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     old.m8 = { t: { sword: 3, magic: 3, lore: 3, stealth: 3, talk: 3, pray: 3, spear: 3, bow: 3, wild: 3 }, f: { cook: 3 }, src: "roll" };
     old.companions = [{ name: "古い仲間", cls: "傭兵", power: 50, dmg: 1, m8: { t: { sword: 3 }, known: true } }];
     G.S = old;
-    G.S.stats.知力 = 10 * PCT; G.S.conds = [];
-    if (G.chance("知力", "普通") !== 10 * PCT) fail(`古いセーブの才が成功率に効いている（${G.chance("知力", "普通")}）`);
+    G.S.stats.知力 = 10; G.S.conds = [];
+    if (G.chance("知力", "普通") !== G.s5Plain(10)) fail(`古いセーブの才が成功率に効いている（${G.chance("知力", "普通")}）`);
     G.rand = seeded(2204);
     try { for (let i = 0; i < 30 && !G.S.over; i++) { const a = G.actions().flatMap((x) => x.list).filter((x) => !x.disabled); if (!a.length) break; G.act(a[i % a.length].id); } }
     catch (e) { fail("古いセーブ（才あり）で遊ぶと例外 " + (e.stack || e)); }
