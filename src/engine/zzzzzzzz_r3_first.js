@@ -124,7 +124,7 @@
     ["rout", "群れは、頭の一匹を中心に動いていた。"],
   ];
   // 敵の様子（いつも同じ敵なら同じ一行。周回でぶれない）
-  R3.foeTrait = (id) => {
+  R3.foeTrait = (id, noDesc) => {
     const e = D.ENEMIES[id];
     if (!e) return "";
     if (e.weak && WEAK[e.weak]) return WEAK[e.weak];
@@ -138,7 +138,9 @@
     if ((e.agi || 0) >= 60) return "速かった。背を向けても、逃げきれなかっただろう。";
     if (e.bribe) return "斬り合いのあいだも、ちらちらとあなたの財布のあたりを見ていた。";
     if ((e.will || 0) <= 35) return "あなたが声を荒らげたとき、一度だけびくりと身をすくめた。";
-    return "";
+    // 目立つ癖が無ければ、図鑑の説明（見て分かること）。弱点をそのまま言っているもの・数のあるものは使わない
+    const d = noDesc ? "" : String(e.desc || "");
+    return d && !/弱|[0-9０-９]/.test(d) ? d : "";
   };
   const STAT_WAY = { 筋力: "力ずく", 体力: "耐えしのぐこと", 敏捷: "身のこなし", 知力: "よく見て考えること", 魔力: "術", 魅力: "言葉" };
   const SPECIAL = [
@@ -170,9 +172,9 @@
       const ratio = (f) => f.hp / Math.max(1, f.max);
       const start = S.r3fight == null ? 1 : S.r3fight;
       if (e.boss || e.majin) hint = "正面から一人で挑む相手ではなかった。剣を抜く前に、集めておくべきものがあったのかもしれない。";
-      else if (alive.length && alive.every((f) => ratio(f) >= 0.75)) hint = "ほとんど傷を負わせられなかった。今のあなたには、まだ早い相手だったのだろう。";
       else if (conds.includes("毒")) hint = "毒が回ったまま戦っていた。先に毒を抜いていれば、違ったかもしれない。";
       else if (start < 0.5) hint = "傷の癒えないまま戦いに入った。一晩休んでからなら、あるいは。";
+      else if (alive.length && alive.every((f) => ratio(f) >= 0.75)) hint = "ほとんど傷を負わせられなかった。今のあなたには、まだ早い相手だったのだろう。";
       else if (L.type === "dungeon" && (S.depth || 0) >= 2) hint = "深く潜りすぎた。引き返す頃合いを、見誤った。";
       else if (alive.length >= 2 && !(S.companions || []).length) hint = "一人で多勢を相手にした。仲間を連れていれば、違ったかもしれない。";
       else if (alive.some((f) => ratio(f) <= 0.25)) hint = "あと一太刀だった。傷薬をもう一つ持っていれば。";
@@ -214,7 +216,7 @@
       try {
         const c = R3.clue(S, cause);
         S.r3clue = c;
-        const t = c.foe && R3.foeTrait(c.foe);
+        const t = c.foe && R3.foeTrait(c.foe, true);   // 図鑑の説明と同じ文は、聞いた話に足さない
         if (t && G.heard) G.heard(`${nameOf(c.foe)}に倒された者の話：${t}`, { foe: c.foe });
       } catch (e) { /* 手がかりが組めなくても、死ぬことは止めない */ }
     }
