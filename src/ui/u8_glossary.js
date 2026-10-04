@@ -277,15 +277,8 @@
   // ---------------------------------------------------------------- 手引きのその項目へ飛ぶ
   function jump(title) {
     hideTip();
-    // 手引きは図鑑の「用語」のタブ（U11。G.ui.openWorld は ui/f2_codex.js）
-    if (!G.ui.openWorld) return;
-    G.ui.openWorld();
-    const dt = Array.from(document.querySelectorAll("#worldBody dt")).find((d) => d.dataset.term === title);
-    if (!dt) return;
-    dt.scrollIntoView({ block: "center" });
-    [dt, dt.nextElementSibling].forEach((e) => { if (!e) return; e.classList.remove("u8flash"); void e.offsetWidth; e.classList.add("u8flash"); });
-    dt.tabIndex = -1;
-    dt.focus({ preventScroll: true });
+    // 手引きは図鑑の「用語」のタブ。その用語を選んだ状態で開く（U11。G.ui.openWorld は ui/f2_codex.js）
+    if (G.ui.openWorld) G.ui.openWorld(title);
   }
   gl.jump = jump;
 
