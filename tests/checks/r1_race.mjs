@@ -10,6 +10,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   let bad = 0;
   const fail = (m) => { bad++; fail0(m); };
   const G = loadEngine();
+  G.data.Q8H.off = true; // 悪名がバレたときだけ上がる（Q8）は tests/checks/q8_hidden.mjs で確かめる。ここは悪名の仕組みだけ
   const D = G.data;
   const cre = G.cre;
 
