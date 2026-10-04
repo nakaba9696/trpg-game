@@ -26,8 +26,10 @@
     return (T[t] != null ? T[t] : 12 + (t - 1) * 8) + (e.boss ? (D.S5 && D.S5.BOSS) || 0 : 0);
   };
   G.foeVs = {
-    eva: (e) => G.foeLv(e) + 1 + G.s5Mod(e.def || 0),               // こちらの攻撃（武器の能力値と比べる）
-    vital: (e) => G.foeVs.eva(e) + 5,                                 // 急所（敏捷）
+    // こちらの攻撃（武器の能力値と比べる）。S6：素早い敵（agi が 40 より上）には筋力の武器が、硬い敵（def が 10 より上）には敏捷の武器が当たりにくい
+    eva: (e, k) => G.foeLv(e) + 1 + G.s5Mod(e.def || 0) + (k === "筋力" ? ((e.agi || 0) - 40) / 10 : k === "敏捷" ? ((e.def || 0) - 10) / 10 : 0),
+    // 急所（敏捷）。S6：同じ戦いで急所ばかり狙うと、相手が見切ってくる（1 回ごとに +4 点、+16 まで）
+    vital: (e) => G.foeVs.eva(e, "敏捷") + 5 + Math.min(16, 4 * ((G.S && G.S.combat && G.S.combat.vitalN) || 0)),
     mres: (e) => G.foeLv(e) + 1 + G.s5Mod(e.mres || 0),             // 魔法（魔力）
     will: (e) => G.foeLv(e) + 1 + G.s5Mod((e.will || 0) - 30),      // 威圧（魅力）
     flee: (e) => G.foeLv(e) + 1 + G.s5Mod((e.agi || 0) - 10),       // 逃げる（敏捷）
@@ -78,7 +80,7 @@
 
   // ---------------------------------------------------------------- 成功率
   G.cb = {
-    attack: () => { const w = G.weapon(); const t = G.target(); return G.chance(w.stat, { vs: G.foeVs.eva(G.foeData(t)) }, w.hit || 0); },
+    attack: () => { const w = G.weapon(); const t = G.target(); return G.chance(w.stat, { vs: G.foeVs.eva(G.foeData(t), w.stat) }, w.hit || 0); },
     vital: () => { const w = G.weapon(); const t = G.target(); return G.chance("敏捷", { vs: G.foeVs.vital(G.foeData(t)) }, w.vital || 0); },
     fire: () => { const t = G.target(); return G.chance("魔力", { vs: G.foeVs.mres(G.foeData(t)) }, G.gearBonus("fire") + G.magicBonus()); },
     heal: () => G.chance("魔力", "易しい", G.gearBonus("heal") + G.magicBonus()),   // 場所の上乗せは無い（S5）
@@ -173,7 +175,7 @@
     const ally = (id) => (id && id !== "you" ? S.companions.find((c) => c.id === id) || null : null);
     if (kind === "attack") {
       G.log("you", `${w.name}で${t.name}に斬りかかる`);
-      const r = G.check(w.stat, { vs: G.foeVs.eva(G.foeData(t)) }, "攻撃", w.hit || 0);
+      const r = G.check(w.stat, { vs: G.foeVs.eva(G.foeData(t), w.stat) }, "攻撃", w.hit || 0);
       if (r.ok) {
         let dmg = G.dice(w.dmg) + (w.stat === "筋力" ? pow("筋力", 15) : pow("敏捷", 20));
         if (r.crit) { dmg *= 2; G.log("nar", "会心の一撃！", { fx: "crit" }); }
@@ -183,6 +185,8 @@
     } else if (kind === "vital") {
       G.log("you", `${t.name}の急所を狙う`);
       const r = G.check("敏捷", { vs: G.foeVs.vital(G.foeData(t)) }, "急所狙い", w.vital || 0);
+      C.vitalN = (C.vitalN || 0) + 1;
+      if (C.vitalN === 2) G.note(`${t.name}は、急所を狙う手を見切りはじめた。`);
       if (r.ok) {
         const dmg = (G.dice(w.dmg) + pow("敏捷", 15)) * (r.crit ? 3 : 2);
         G.log("nar", "刃が急所を捉えた！", { fx: "crit" });

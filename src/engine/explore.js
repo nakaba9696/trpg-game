@@ -269,7 +269,7 @@
       ] });
     } else if (f === "train") {
       g.push({ title: `訓練場（30G・2日。今の点が低いほど伸びやすい）`, list: D.STATS.map((k) => ({
-        id: "train:" + k, label: `${k}を鍛える`, sub: `今 ${G.pt(S.stats[k])}・次の点まで ${G.s5Progress(k)}%`,
+        id: "train:" + k, label: `${k}を鍛える`, sub: `今 ${G.pt(S.stats[k])}・次の点まで ${G.s5Progress(k)}%${G.s5Fresh(k) < 0.8 ? "・使い込んでいる" : G.s5Fresh(k) > 1.2 ? "・伸びやすい" : ""}`,
         disabled: S.gold < 30, kw: [k, "鍛", "訓練"],
       })) });
     } else if (f === "alley") {
@@ -422,7 +422,7 @@
     G.log("you", `${stat}を鍛える`);
     G.passDays(2);
     // 経験 2〜4（S5。12 点なら 1〜2 回で 1 点。高い点ほど次の点に要る経験が多いので、伸びにくくなる）
-    const [a, b, got] = G.grow(stat, G.d(3) + 1);
+    const [a, b, got] = G.grow(stat, (G.d(3) + 1) * G.s5Used(stat));   // S6：同じ能力ばかり鍛えると伸びが鈍る
     G.say(G.pick(["教官にしごかれ、泥と汗にまみれた二日間だった。", "血豆がつぶれるまで繰り返した。", "教官が「筋は悪くない」とだけ言った。"]));
     if (b > a) G.log("grow", `${stat}が伸びた ${a}→${b}`); else G.note(got ? "手応えはあった。もう少しで伸びそうだ。" : "手応えはなかった。");
   }
