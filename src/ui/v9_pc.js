@@ -159,7 +159,15 @@
   const $ = (s) => document.querySelector(s);
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
   const calm = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const vw = () => document.documentElement.clientWidth || window.innerWidth;
+  // 画面の幅（読むと配置の計算が走るので、同じコマのあいだは覚えておく。大きさが変わればすぐ読み直す。T）
+  let vwMemo = 0;
+  const vw = () => {
+    if (vwMemo) return vwMemo;
+    vwMemo = document.documentElement.clientWidth || window.innerWidth;
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => { vwMemo = 0; }); else vwMemo = 0;
+    return vwMemo;
+  };
+  window.addEventListener("resize", () => { vwMemo = 0; }, true);
   const vh = () => window.innerHeight;
   const playing = () => { const p = $("#play"); return !!(p && !p.hidden && G.S); };
   const on = () => v9.isPC(vw(), vh()) && playing();
@@ -294,6 +302,7 @@
   // ---------------------------------------------------------------- 戦闘の魔物（背景から外して、魔物の場所に大きく描く）
   let foesNow = [];
   let foeCv = null;
+  let foeInk = false; // 魔物の層に何か描いてあるか（空のままなら、測り直しも消し直しもしない。T）
   function drawFoes() {
     const scene = $(".scene");
     if (!scene) return;
@@ -303,7 +312,11 @@
       foeCv.setAttribute("aria-hidden", "true");
       const fx = scene.querySelector("canvas.fxLayer");
       if (fx) fx.before(foeCv); else scene.append(foeCv);
+      foeInk = true;
     }
+    const want = body.classList.contains("v9combat") && !!G.paintMonster && foesNow.length > 0;
+    if (!want && !foeInk) return;
+    foeInk = want;
     const r = foeCv.getBoundingClientRect();
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const w = Math.max(1, Math.round(r.width)), hh = Math.max(1, Math.round(r.height));

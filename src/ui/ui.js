@@ -471,7 +471,9 @@
   }
   function renderSheet(ups) {
     const sh = $("#sheet");
-    const keep = sh.scrollTop;
+    // 閉じているシートの位置は読まない（読むと、描き直しの途中で画面全体の配置の計算が走って重い。T）
+    const open = document.body.classList.contains("sheet-open");
+    const keep = open ? sh.scrollTop : 0;
     sh.textContent = "";
     const panes = {
       self: sheetPane("self", [sheetPools(), sheetStats(ups), sheetKv(sheetSelfRows())]),
@@ -480,15 +482,18 @@
       more: sheetPane("more", [sheetButtons()]),
     };
     sh.append(sheetHead(), sheetTabs(panes), ...Object.values(panes));
-    sh.scrollTop = keep;
+    if (open) sh.scrollTop = keep;
     renderMobileBar();
-    drawFaces();
+    // 閉じているシートの顔（仲間）は、開いたときに描く（見えない絵を手番ごとに描き直さない。T）
+    if (open) { sheetFaces = []; drawFaces(); } else { sheetFaces = faceQueue; faceQueue = []; }
   }
+  let sheetFaces = [];
   // ステータスの開閉（必要なときだけ開く窓。スマホは全面、PC は右に重ねて出す。V1）
   ui.setSheetOpen = (on) => {
     const was = document.body.classList.contains("sheet-open");
     document.body.classList.toggle("sheet-open", on);
     $("#openSheet").setAttribute("aria-expanded", on);
+    if (on && sheetFaces.length) { const q = sheetFaces; sheetFaces = []; if (G.drawPortrait) q.forEach(([cv, who]) => { if (cv.isConnected) G.drawPortrait(cv, who); }); }
     if (on && !was) { const c = $("#sheet .closeSheet"); if (c) c.focus({ preventScroll: true }); }
     else if (!on && was && narrow()) $("#openSheet").focus({ preventScroll: true });
   };

@@ -1,7 +1,7 @@
 # 公開のしかた（claude.ai の Artifact）
 
 立ち絵・差分・魔物の絵を HTML に埋め込むと 1 ページの上限を超えるので（#186）、**ページ（HTML）と画像を別のファイルにして、一つの Artifact に載せる**。
-コードと CSS は今まで通り 1 枚の HTML に入っていて、画像だけが隣のフォルダにある。HTML は画像を相対パス（`portraits/packs/people-1.svg#xywh=…` などのスプライトの升目）で読む。
+CSS は HTML に入っていて、コード（JS）はページの隣の `game.js`、画像は隣のフォルダにある（コードを分けると、ブラウザが裏で読んでくれるので起動のあいだ画面が固まらない。2 回目からは覚えた結果を使う。T）。HTML は画像を相対パス（`portraits/packs/people-1.svg#xywh=…` などのスプライトの升目）で読む。
 
 ## 作る
 ```
@@ -11,7 +11,8 @@ node tools/build.mjs && node tests/run.mjs
 
 | ファイル | 中身 |
 |---|---|
-| `dist/site/index.html` | ページ（コード・CSS・画像の一覧（鍵 → 相対パス・バイト数）。画像そのものは入っていない） |
+| `dist/site/index.html` | ページ（CSS と、`game.js` を読む 1 行。`node tools/build.mjs --inline` なら今まで通りコードも中に入る） |
+| `dist/site/game.js` | コード（画像の一覧（鍵 → 相対パス・バイト数）も入っている。画像そのものは入っていない）。最初の回の公開（`files-1.json`）に入る |
 | `dist/site/portraits/packs/people-<n>.svg`・`kinds-<n>.svg` | 基本の立ち絵のスプライト（`assets/portraits/<id>.webp` を 25 枚ずつ 1 枚にまとめたもの。名のある人は `docs/art/portraits.json` の順、型 `kind_*` は名前順。A12。下の「立ち絵と魔物の絵のまとめ方」） |
 | `dist/site/monsters/packs/monsters-<n>.svg` | 魔物の絵のスプライト（`assets/monsters/<id>.webp` を `docs/art/monsters.json` の順に 25 枚ずつ。A12） |
 | `dist/site/portraits/<id>.webp`・`dist/site/monsters/<id>.webp` | 大きさがほかと違うなど、まとめられなかった絵だけ（`assets/` の写し） |
@@ -32,7 +33,7 @@ node tools/build.mjs && node tests/run.mjs
 claude.ai/code のセッションで、このリポジトリを開いて「`dist/site` を Artifact に公開して」と頼む。Claude は Artifact ツールで次のように載せる。
 
 1. `node tools/build.mjs` で作る（ビルドの最後に、合計の大きさと、何回に分けるかが出る）。
-2. **ページ**は `file_path: "dist/site/index.html"`、**画像**は `files` に `dist/site/files.json` の中身（`{ "portraits/packs/people-1.svg": "dist/site/portraits/packs/people-1.svg", … }`）を渡して publish する。
+2. **ページ**は `file_path: "dist/site/index.html"`、**コードと画像**は `files` に `dist/site/files.json` の中身（`{ "game.js": "dist/site/game.js", "portraits/packs/people-1.svg": "dist/site/portraits/packs/people-1.svg", … }`）を渡して publish する。`game.js` が載っていないと、ページは開いても遊べない（何も出ない）。
    - 前に公開した Artifact を新しくするときは、その `url` を付ける（リンクが変わらない）。前の 1 枚の HTML（`dist/morsveld.html`）の Artifact に載せ替えてもよい。
    - アイコンは最初の公開のときだけ（例：`icon: "game"`）。
 3. 公開した Artifact を開き、立ち絵と戦闘の魔物の絵が出るのを確かめる。

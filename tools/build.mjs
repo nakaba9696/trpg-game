@@ -3,8 +3,12 @@
 //                                   表情の差分は 1 人 1 枚（dist/site/portraits/<id>.moods.svg）、背景は組ごとに 1 枚（dist/site/scenes/<組>.svg。A11）にまとめる（1 つの版は 511 ファイルまでのため）
 //                                   HTML には画像の一覧（鍵 → 相対パス・バイト数）だけを入れ、無い画像は読みに行かない。
 //                                   Artifact に載せるファイルの一覧（公開パス → ローカルパス）を dist/site/files.json に書く（載せ方は docs/publish.md）
+//                                   コード（JS）は隣の dist/site/game.js に分けて、HTML から <script src="game.js?v=…"> で読む（T。10MB のコードを
+//                                   ページの中に書くと、読み込みのあいだ画面が固まる。別のファイルならブラウザが裏で読み、2 回目からは覚えておいた結果を使う）
+//   node tools/build.mjs --inline … 今まで通りコードも 1 枚の HTML に入れる（画像は別ファイルのまま）
 //   node tools/build.mjs --embed  … 予備。今まで通り画像を埋め込んだ 1 枚の dist/morsveld.html（上限を超えるなら差分を省く）
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import vm from "node:vm";
@@ -17,6 +21,7 @@ const root = path.join(here, "..");
 const src = path.join(root, "src");
 const out = path.join(root, "dist");
 const embed = process.argv.includes("--embed");
+const inline = embed || process.argv.includes("--inline"); // コードを HTML に入れる（既定は dist/site/game.js に分ける。T）
 const { engine, ui } = listFiles(src); // manifest の順 → 無いものを名前順で足す → main.js（tools/files.mjs）
 const files = [...engine, ...ui];
 const assetsDir = path.join(root, "assets"); // 持ち主が作った画像（tools/assets.mjs・docs/art/）
@@ -30,7 +35,11 @@ new vm.Script(js, { filename: "bundle.js" }); // 構文だけ確かめる
 const uiCss = readdirSync(path.join(src, "ui")).filter((n) => n.endsWith(".css")).sort();
 const css = [readFileSync(path.join(src, "style.css"), "utf8"), ...uiCss.map((n) => `/* ==== ui/${n} */\n` + readFileSync(path.join(src, "ui", n), "utf8"))].join("\n");
 let html = readFileSync(path.join(src, "index.html"), "utf8");
-html = html.replace("/*@STYLE@*/", () => css).replace("/*@SCRIPTS@*/", () => js);
+html = html.replace("/*@STYLE@*/", () => css);
+// 分けるときは、版ごとに名前の後ろを変える（前の版の game.js を覚えたブラウザが、新しいページと古いコードを混ぜないように）
+const jsTag = inline ? null : `<script src="game.js?v=${createHash("sha1").update(js).digest("hex").slice(0, 10)}"></script>`;
+html = inline ? html.replace("/*@SCRIPTS@*/", () => js) : html.replace(/<script>\s*\/\*@SCRIPTS@\*\/\s*<\/script>/, () => jsTag);
+if (!inline && !html.includes(jsTag)) throw new Error("src/index.html に <script>/*@SCRIPTS@*/</script> が無い");
 const htmlBytes = Buffer.byteLength(html);
 const kb = (n) => (n / 1024).toFixed(0) + " KB";
 
@@ -45,13 +54,19 @@ if (embed) {
   mkdirSync(site, { recursive: true });
   writeFileSync(path.join(site, "index.html"), html);
   const rel = (abs) => path.relative(root, abs).split(path.sep).join("/");
-  const list = assets.files.map((f) => {
+  // コード（T）。最初の回の公開にページと一緒に載るよう、一覧の先頭に置く
+  const code = [];
+  if (!inline) {
+    writeFileSync(path.join(site, "game.js"), js);
+    code.push({ pub: "game.js", local: rel(path.join(site, "game.js")), bytes: Buffer.byteLength(js) });
+  }
+  const list = code.concat(assets.files.map((f) => {
     const dest = path.join(site, ...f.pub.split("/"));
     mkdirSync(path.dirname(dest), { recursive: true });
     if (f.data) writeFileSync(dest, f.data); // 差分をまとめたスプライト（tools/assets.mjs の siteAssets）
     else copyFileSync(f.abs, dest);
     return { pub: f.pub, local: rel(dest), bytes: f.bytes };
-  });
+  }));
   const plan = planSite({ pageBytes: htmlBytes, files: list });
   if (plan.errors.length) throw new Error("Artifact に載らない：" + plan.errors.join("／"));
   // 載せるファイルの一覧（公開パス → リポジトリの根からのローカルパス）。1 回で載らないときは回ごとの一覧も書く
@@ -60,7 +75,7 @@ if (embed) {
   // A12 より前に載せた Artifact を新しくするとき、1 枚ずつ載せていた基本の立ち絵・魔物の絵を消す一覧（公開パス → null）。1 回 250 個までずつ（docs/publish.md）
   const gone = assets.gone || [];
   for (let i = 0; i * SITE_LIMITS.batchFiles < gone.length; i++) writeFileSync(path.join(site, `gone-${i + 1}.json`), JSON.stringify(Object.fromEntries(gone.slice(i * SITE_LIMITS.batchFiles, (i + 1) * SITE_LIMITS.batchFiles).map((p) => [p, null])), null, 1) + "\n");
-  console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル）＋ 画像 ${list.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル／1 つの版の上限 ${SITE_LIMITS.versionFiles}）`);
+  console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル${inline ? "" : `・コードは game.js ${kb(code[0].bytes)}`}）＋ 画像 ${list.length - code.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル／1 つの版の上限 ${SITE_LIMITS.versionFiles}）`);
   if (assets.sprites) console.log(`  表情の差分 ${assets.merged} 枚を ${assets.sprites} 人分のスプライト（portraits/<id>.moods.svg）にまとめた`);
   if (assets.artPacks) console.log(`  基本の立ち絵と魔物の絵 ${assets.artMerged} 枚を ${assets.artPacks} 枚のスプライト（portraits/packs/・monsters/packs/）にまとめた`);
   if (assets.scenePacks) console.log(`  背景 ${assets.sceneMerged} 枚を ${assets.scenePacks} 組のスプライト（scenes/<組>.svg）にまとめた`);
