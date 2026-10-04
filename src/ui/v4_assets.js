@@ -208,7 +208,9 @@
     const ctx = cv.getContext("2d");
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, w, h);
-    ctx.drawImage(img, ox + (iw - sw) / 2, oy + (ih - sh) * 0.2, sw, sh, 0, 0, w, h);
+    // なめらかに縮めて描く（A14。大きく縮めるときは段階的に）
+    if (G.a13 && G.a13.draw) G.a13.draw(ctx, img, ox + (iw - sw) / 2, oy + (ih - sh) * 0.2, sw, sh, 0, 0, w, h);
+    else ctx.drawImage(img, ox + (iw - sw) / 2, oy + (ih - sh) * 0.2, sw, sh, 0, 0, w, h);
     return true;
   };
   const blank = (cv) => (G.blankPortrait ? G.blankPortrait(cv) : null);
@@ -225,7 +227,8 @@
     ctx.fillRect(0, 0, w, h);
     const iw = sp.width || sp.naturalWidth || 512, ih = sp.height || sp.naturalHeight || 512;
     const k = (w / iw) * 1.25, sw = w / k, sh = h / k;
-    ctx.drawImage(sp, (iw - sw) / 2, ih * 0.08, sw, sh, 0, 0, w, h);
+    if (G.a13 && G.a13.draw) G.a13.draw(ctx, sp, (iw - sw) / 2, ih * 0.08, sw, sh, 0, 0, w, h);
+    else ctx.drawImage(sp, (iw - sw) / 2, ih * 0.08, sw, sh, 0, 0, w, h);
     return true;
   };
   G.drawPortrait = (cv, who) => {

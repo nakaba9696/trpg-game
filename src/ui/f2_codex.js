@@ -1,6 +1,8 @@
 // F2：図鑑の窓（アイテム／魔物／人物／用語をタブで切り替え。一覧の格子 → 押すと詳しい説明）。上の道具の列に「図鑑」ボタンを足す。
-// 用語のタブは「世界の手引き」そのもの（U11。手引きの別の窓は無くした。#worldBody はこの窓の中にあり、ui.buildWorld が描く。G.ui.openWorld で開く）。
-// 新しく載った項目（G.codexFresh）は、入口のボタン（[data-codex-open]）・タブ・見出し・格子に赤い「！」。項目を詳しく開くと消える（用語はタブを開くと消える）。
+// 用語のタブは「世界の手引き」（U11。手引きの別の窓は無くした）。ほかのタブと同じく、節ごとの一覧（知らない用語は「？？？」）→ 選んだ用語の行だけ詳しく。
+//   一覧の上に名前で探す欄。はじめから載る行（出発の町・冒険者ギルド・金貨。D.WORLD.start）も「w:見出し」の項目として並べる。
+//   何も選んでいないときは、手引きのはじめの文と判定のしくみ。本文の強調（U8）からは G.ui.openWorld(見出し) で、その用語を選んだ状態で開く。
+// 新しく載った項目（G.codexFresh）は、入口のボタン（[data-codex-open]）・タブ・見出し・格子に赤い「！」。項目を詳しく開くと消える。
 // 記録と性能・入手場所・説明はエンジン（engine/zz_f2_codex.js）が引く。ここは描くだけ。
 // 新しく埋まった項目は、格子に印・ボタンに印・画面の左下に「図鑑に追加：〇〇」（U8 の「用語集に追加」と同じ箱に縦に並べるので重ならない）。
 // 説明の文は F2.paintText の一か所で描く（アイテムは I2 の G.i2.paintFlavor を通す。U8 の G.gloss.mark で用語を強調。過去の冒険の行は強調しない）。
@@ -40,15 +42,21 @@
   tabs.append(...TABS);
   const sum = h("p", "fine f2sum");
   const panes = h("div", "f2panes");
-  // 用語：世界の手引き（物語で出てきた行だけ。かつての冒険で知った行は淡く。U8 の強調から飛んでくる）
-  const world = h("div", "world f2world");
-  world.id = "worldBody";
-  world.hidden = true;
+  // 用語：名前で探す欄（用語のタブだけ）
+  const find = h("div", "f2find");
+  const findIn = h("input", "f2findin");
+  findIn.type = "search";
+  findIn.placeholder = "用語を名前で探す";
+  findIn.setAttribute("aria-label", "用語を名前で探す");
+  findIn.autocomplete = "off";
+  const findNote = h("span", "fine f2findnote");
+  find.append(findIn, findNote);
+  find.hidden = true;
   const list = h("div", "f2list");
   const detail = h("div", "f2detail");
   detail.setAttribute("aria-live", "polite");
   panes.append(list, detail);
-  body.append(tabs, sum, panes, world);
+  body.append(tabs, sum, find, panes);
   dlg.append(head, body);
   dlg.addEventListener("click", (ev) => { if (ev.target === dlg) dlg.close(); });
   document.body.append(dlg);
@@ -259,14 +267,60 @@
       });
     });
   }
-  // 用語：世界の手引き（ui.buildWorld が #worldBody に描く。U8・F4・下の「かつての冒険で」が包む）。新しく載った項目の見出しに「！」を付け、見たことにする
+  // 用語の項目：D.LORE（物語で一行ずつ開く）と、はじめから載る行（D.WORLD.start・出発の町。id は "w:見出し"、いつも知っている）
+  F2.loreEntries = () => {
+    const known = G.codexLore();
+    const out = [];
+    const start = (D.WORLD && D.WORLD.start) || [];
+    const add = (sec, row) => { if (row && row[0] && row[1] && !out.some((x) => x.id === "w:" + row[0])) out.push({ id: "w:" + row[0], title: row[0], sec, lines: [["0", row[1], "now"]], known: true }); };
+    // 出発の町（data/world.js の homeRow と同じ決め方）
+    const S = G.S, homeId = S && D.CLASSES && D.CLASSES[S.cls] ? D.CLASSES[S.cls].start : S && S.loc, L = homeId && D.LOCS && D.LOCS[homeId];
+    if (L && !Object.values(D.LORE || {}).some((e) => e.title === L.name)) add((start[0] || ["大陸と国"])[0], [L.name, (D.WORLD.home || {})[homeId] || `冒険を始めた場所。${L.region}にある。`]);
+    start.forEach(([sec, rows]) => (rows || []).forEach((r) => add(sec, r)));
+    Object.entries(D.LORE || {}).forEach(([id, e]) => {
+      const k = known[id];
+      out.push({ id, title: e.title, sec: e.sec, lines: e.lines.filter(([key]) => k && k[key]).map(([key, text]) => [key, text, k[key]]), rest: e.lines.filter(([key]) => !(k && k[key])).length, known: !!k });
+    });
+    return out;
+  };
+  F2.loreMatch = (e, q) => !q || (e.known && e.title.toLowerCase().includes(q.toLowerCase()));
+  let loreQ = "";
   function drawLore() {
     const cnt = G.codexCount();
     sum.textContent = `知った用語 ${cnt.lore}／${cnt.loreAll}（淡い行は、かつての冒険で知ったこと）`;
-    if (G.ui && G.ui.buildWorld) G.ui.buildWorld();
-    const fresh = new Set(freshOf("lore").map((id) => (D.LORE[id] || {}).title).filter(Boolean));
-    world.querySelectorAll("dt").forEach((dt) => { if (dt.textContent && fresh.has(dt.textContent)) { dt.classList.add("f2fresh"); dt.append(bang(1)); } });
-    freshOf("lore").forEach((id) => G.codexSeen("lore", id));
+    const all = F2.loreEntries();
+    const secs = [...(D.LORE_SECS || [])];
+    all.forEach((e) => { if (!secs.includes(e.sec)) secs.push(e.sec); });
+    let shown = 0;
+    secs.forEach((sec) => {
+      const mine = all.filter((e) => e.sec === sec);
+      const hit = mine.filter((e) => F2.loreMatch(e, loreQ));
+      if (!hit.length) return;
+      const grid = group(sec, mine.filter((e) => e.known).length, mine.length, mine.filter((e) => G.codexIsFresh("lore", e.id)).length);
+      grid.classList.add("f2words");
+      hit.forEach((e) => {
+        const now = e.lines.some((l) => l[2] === "now");
+        const b = cell(e.known ? e.title : "？？？", e.known, G.codexIsFresh("lore", e.id), () => showLore(e.id));
+        if (e.known && !now) b.classList.add("past");
+        b.dataset.id = e.id;
+        if (e.known) b.dataset.title = e.title;
+        grid.append(b);
+        shown++;
+      });
+    });
+    findNote.textContent = loreQ ? (shown ? `「${loreQ}」を含む用語 ${shown}` : `「${loreQ}」を含む用語は、まだ知らない`) : "";
+  }
+  findIn.addEventListener("input", () => {
+    loreQ = findIn.value.trim();
+    list.textContent = "";
+    drawLore();
+  });
+  // 何も選んでいないとき：手引きのはじめの文と、判定のしくみ
+  function loreIntro() {
+    detail.textContent = "";
+    if (D.WORLD && D.WORLD.intro) detail.append(h("h3", "f2title", "この大陸のこと"), h("p", "f2line", D.WORLD.intro));
+    if (D.RULES_TEXT) detail.append(h("h4", "f2sub", "判定のしくみ"), h("p", "f2line f2rules", D.RULES_TEXT));
+    detail.append(h("p", "fine", "一覧から用語を選ぶと、知っている行が出る。物語の中で強調された言葉を押しても開く。"));
   }
 
   // ---------------------------------------------------------------- 詳しい説明
@@ -386,15 +440,30 @@
     seen("person", id);
     reveal();
   }
+  function showLore(id) {
+    const e = F2.loreEntries().find((x) => x.id === id);
+    if (!e || !e.known) return showUnknown();
+    detail.textContent = "";
+    detail.append(h("h3", "f2title", e.title), h("p", "fine", e.sec));
+    e.lines.forEach(([, text, st]) => {
+      const p = h("p", "f2line" + (st === "past" ? " past" : ""));
+      F2.paintText(p, text, st === "now" ? "lore" : "lorePast", id);
+      if (st === "past") p.append(h("small", "f2ago", "かつての冒険で"));
+      detail.append(p);
+    });
+    if (e.rest) detail.append(h("p", "fine", `まだ知らない行が ${e.rest} つある。`));
+    seen("lore", id);
+    reveal();
+  }
   // ---------------------------------------------------------------- 切り替えと開く
   function show(key) {
     cur = key;
     TABS.forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === key));
     list.textContent = "";
     detail.textContent = "";
-    panes.hidden = key === "lore";
-    world.hidden = key !== "lore";
+    find.hidden = key !== "lore";
     detail.append(h("p", "fine", "一覧から選ぶと、詳しい説明が出る。"));
+    if (key === "lore") loreIntro();
     // U9：？の人の見つけ方（まだ会っていない人は押せないので、ここに書く）
     if (key === "person") detail.append(h("p", "fine", "？の人には、まだ会っていない。"));
     ({ item: drawItems, foe: drawFoes, person: drawPeople, lore: drawLore })[key]();
@@ -408,11 +477,21 @@
     show(key);
     if (!dlg.open) dlg.showModal();
     markBtn();
-    const first = key === "lore" ? world.querySelector("dt.f2fresh") || world : list.querySelector(".f2cell.fresh") || list.querySelector("button.f2cell") || list.querySelector(".f2cell");
-    if (first) { if (first === world) world.tabIndex = -1; first.focus({ preventScroll: key === "lore" && first === world }); }
+    const first = list.querySelector(".f2cell.fresh") || list.querySelector("button.f2cell") || list.querySelector(".f2cell");
+    if (first) first.focus();
   };
-  // 世界の手引き（用語のタブ）を開く。U8 の本文の強調から・古い入口から
-  if (G.ui) G.ui.openWorld = () => { if (dlg.open && cur === "lore") { G.ui.buildWorld(); return; } F2.open("lore"); };
+  // 世界の手引き（用語のタブ）を開く。title（見出し）か id を渡せば、その用語を選んだ状態で（U8 の本文の強調から）
+  F2.openLore = (title) => {
+    if (loreQ) { loreQ = ""; findIn.value = ""; }
+    F2.open("lore");
+    if (!title) return;
+    const b = cells().find((x) => x.dataset.title === title || x.dataset.id === title);
+    if (!b) return;
+    b.click();
+    b.scrollIntoView({ block: "nearest" });
+    b.focus({ preventScroll: true });
+  };
+  if (G.ui) G.ui.openWorld = F2.openLore;
   dlg.addEventListener("close", markBtn);
 
   // 格子の中を矢印キーで辿る（上下は見た目の列に合わせる）
@@ -447,24 +526,6 @@
     b.focus();
     ev.preventDefault();
   });
-
-  // ---------------------------------------------------------------- 世界の手引き：かつての冒険で知った行も、淡く
-  if (G.ui && G.ui.buildWorld) {
-    const baseBuild = G.ui.buildWorld;
-    G.ui.buildWorld = () => {
-      F2.withPast = true;
-      try { baseBuild(); } finally { F2.withPast = false; }
-      const past = F2.pastTexts || new Set();
-      if (!past.size) return;
-      document.querySelectorAll("#worldBody dd").forEach((dd) => {
-        if (!past.has(dd.textContent)) return;
-        dd.classList.add("f2past");
-        const dt = dd.previousElementSibling;
-        if (dt && dt.tagName === "DT") dt.classList.add("f2past");
-        dd.append(h("small", "f2ago", "かつての冒険で"));
-      });
-    };
-  }
 
   setTimeout(markBtn, 0);
 })(globalThis.G = globalThis.G || {});

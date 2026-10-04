@@ -244,9 +244,11 @@
   if (G.openLore) {
     const baseOpenLore = G.openLore;
     G.openLore = (trig, quiet) => {
-      const id = String(trig || "").split(":")[0];
-      // U11：かつての冒険でも知らなかった項目が初めて載ったら、図鑑の用語に新しい印
-      const before = G.P && G.P.loreSeen && G.P.loreSeen[id] && G.P.loreSeen[id].length;
+      const [id, key0] = String(trig || "").split(":");
+      const e = (D.LORE || {})[id];
+      const key = key0 || (e && e.lines && e.lines[0] && e.lines[0][0]);
+      // U11：かつての冒険でも知らなかった用語・行が初めて載ったら、図鑑の用語に新しい印
+      const before = !!(G.P && G.P.loreSeen && (G.P.loreSeen[id] || []).includes(key));
       const r = baseOpenLore(trig, quiet);
       if (r && !before && !quiet) notify("lore", id);
       if (r) changed();

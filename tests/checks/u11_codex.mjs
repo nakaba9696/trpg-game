@@ -1,7 +1,8 @@
 // U11：図鑑の新しい印（赤い「！」）・世界の手引きを図鑑の「用語」のタブへ・図鑑と地図のボタン・キーの近道
 // - 載る → 印が付く（G.codexFresh）→ 見る（G.codexSeen）→ 消える。用語も、かつての冒険でも知らなかった項目なら印が付く
 // - 古い記録（freshV が無い）の印は「見た」扱いになり、いきなり大量に付かない。記録をまとめても新しい印は消えない
-// - 手引きの別の窓・入口（#openWorld・#dlgWorld）は無く、#worldBody は図鑑の窓の中。本文の強調（U8）からは G.ui.openWorld で用語のタブへ
+// - 手引きの別の窓・入口（#openWorld・#dlgWorld）は無く、図鑑の「用語」のタブがほかのタブと同じ一覧 → 詳しく（知らない用語は ？？？・名前で探す欄）。
+//   本文の強調（U8）からは G.ui.openWorld(見出し) で、その用語を選んだ状態で開く。知っている用語の新しい行にも印
 // - 世界地図は図鑑の窓から外し、図鑑の隣の「地図」ボタン（上の列・冒険中の帯）。Z で図鑑・M で地図
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -52,6 +53,19 @@ export default ({ G, fail, ok, seeded, loadEngine }) => {
   if (G.codexFresh("lore").includes(l3)) no("かつての冒険で知っていた用語に印が付く");
   G.codexSeen("lore", l1);
   if (G.codexFresh("lore").length) no("見た用語の印が消えない");
+  // 知っている用語の、まだ知らない行が開いたら印（かつての冒険で知っていた行なら付けない）
+  const multi = Object.keys(D.LORE).find((id) => D.LORE[id].lines.length >= 3 && !(G.loreOf(G.S)[id] || []).length && id !== l1 && id !== l2 && id !== l3);
+  if (multi) {
+    const [k1, k2, k3] = D.LORE[multi].lines.map((l) => l[0]);
+    G.openLore(`${multi}:${k1}`);
+    G.codexSeen("lore", multi);
+    G.P.loreSeen[multi].push(k3);
+    G.openLore(`${multi}:${k3}`);
+    if (G.codexFresh("lore").includes(multi)) no("かつての冒険で知っていた行に印が付く");
+    G.openLore(`${multi}:${k2}`);
+    if (!G.codexFresh("lore").includes(multi)) no("知っている用語に新しい行が載ったのに印が付かない");
+    G.codexSeen("lore", multi);
+  }
 
   // ---------------------------------------------------------------- 古い記録で大量に付かない・まとめても消えない
   {
@@ -93,10 +107,12 @@ export default ({ G, fail, ok, seeded, loadEngine }) => {
   const uiFiles = readdirSync(path.join(src, "ui")).filter((f) => f.endsWith(".js"));
   uiFiles.forEach((f) => { if (/["#]openWorld"|#dlgWorld|"dlgWorld"/.test(read("ui/" + f).replace(/G\.ui\.openWorld|ui\.openWorld/g, ""))) no(`ui/${f} がまだ手引きの窓（#openWorld・#dlgWorld）を見ている`); });
   const f2 = read("ui/f2_codex.js");
-  if (!/\.id = "worldBody"/.test(f2)) no("図鑑の窓の中に #worldBody（用語のタブ）が無い");
-  if (!/G\.ui\.openWorld = /.test(f2)) no("G.ui.openWorld（用語のタブを開く）が無い");
+  if (/worldBody/.test(f2)) no("用語のタブが、まだ手引きの長い文（#worldBody）を並べている");
+  if (!/F2\.loreEntries = /.test(f2) || !/"？？？"/.test(f2)) no("用語のタブが一覧（知らない用語は ？？？）になっていない");
+  if (!/type = "search"/.test(f2) || !/F2\.loreMatch = /.test(f2)) no("用語を名前で探す欄が無い");
+  if (!/G\.ui\.openWorld = F2\.openLore/.test(f2)) no("G.ui.openWorld（用語を選んで開く）が無い");
   if (!/tab\("lore", "用語"\)/.test(f2)) no("図鑑に「用語」のタブが無い");
-  if (!/G\.ui\.openWorld\(\)/.test(read("ui/u8_glossary.js"))) no("本文の強調（U8）から用語のタブへ飛ばない");
+  if (!/G\.ui\.openWorld\(title\)/.test(read("ui/u8_glossary.js"))) no("本文の強調（U8）から、その用語を選んで開かない");
   if (/dlgCodex/.test(read("ui/w5_map.js"))) no("世界地図が図鑑の窓の中に残っている（w5_map.js）");
   const q = read("ui/zu11_quick.js");
   ["\"openMap\"", "\"u11Codex\"", "\"u11Map\"", "codexOpen", "#openSheet", "showSaved"].forEach((x) => { if (!q.includes(x)) no(`図鑑・地図のボタンか保存の印が無い：${x}`); });

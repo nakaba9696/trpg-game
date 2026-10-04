@@ -631,7 +631,8 @@
   $("#tabT").onclick = () => setTab("T");
   $("#tabG").onclick = () => setTab("G");
 
-  // 世界の手引き：図鑑の「用語」のタブ（#worldBody は ui/f2_codex.js が図鑑の窓の中に作る。U11）。新しい印は図鑑の印（G.codexFresh）で出す
+  // 世界の手引き：図鑑の「用語」のタブ（一覧 → 詳しく。ui/f2_codex.js。U11）。新しい印は図鑑の印（G.codexFresh）で出す。
+  // ui.buildWorld は #worldBody があるときだけ描く（今の画面には無い。包んでいるファイルのために入口だけ残す）
   function markWorld() { if (G.f2 && G.f2.markBtn) G.f2.markBtn(); }
   ui.buildWorld = () => {
     const body = $("#worldBody");

@@ -1,5 +1,5 @@
 // Q7：セーブ・ロードの画面。枠の読み書きはエンジン（src/engine/q7_slots.js）、ここは選ぶ画面だけ。
-// 入口：ステータスの下のボタン（セーブ・ロード）と、タイトルの「ロード」。ui.js・setup.js は書き換えず、G.ui.render と G.setup.show を包む。レーン U
+// 入口：冒険中の画面の右上（上の道具の列の右端）の「セーブ」「ロード」、ステータスの下のボタン、タイトルの「ロード」、キーの近道 S・L。ui.js・setup.js は書き換えず、G.ui.render と G.setup.show を包む。レーン U
 (function (G) {
   if (typeof document === "undefined" || !G.ui || !G.ui.render || !G.setup) return;
   const ui = G.ui;
@@ -116,6 +116,7 @@
     if (mode === "load" && !list.some((e) => !e.empty)) body.append(h("p", "fine", "まだ保存された冒険が無い。"));
   }
 
+  ui.slotMode = () => (dlg.open ? mode : null);
   ui.openSlots = (m) => {
     mode = m === "load" ? "load" : "save";
     asking = null;
@@ -147,10 +148,53 @@
   // main.js はこのあとに読まれる
   if (G.main) ready(); else queueMicrotask(ready);
 
+  // ---------------------------------------------------------------- 入口：画面の右上（持ち主の声「セーブするとこ分かりにくすぎ。右上に作って」）
+  // 上の道具の列の右端に [セーブ][ロード] を並べる。冒険中だけ見せる。保存できない場面では押せない見た目にして、押すと理由を出す
+  const topBox = h("span", "q7top");
+  const topSave = button("", "q7topSave", () => {
+    const can = G.canSave(G.S);
+    if (!can.ok) { ui.toast("今はセーブできない", can.why); return; }
+    ui.openSlots("save");
+  });
+  topSave.id = "q7TopSave";
+  topSave.append(h("span", "q7ico", "▼"), h("span", "", "セーブ"), h("kbd", "u11key", "S"));
+  const topLoad = button("", "q7topLoad", () => ui.openSlots("load"));
+  topLoad.id = "q7TopLoad";
+  topLoad.append(h("span", "q7ico", "▲"), h("span", "", "ロード"), h("kbd", "u11key", "L"));
+  topLoad.title = "保存した枠から戻る（L）";
+  [topSave, topLoad].forEach((b) => b.querySelectorAll(".q7ico, kbd").forEach((x) => x.setAttribute("aria-hidden", "true")));
+  topBox.append(topSave, topLoad);
+  const tools = document.querySelector(".top .tools");
+  if (tools) tools.append(topBox);
+  const playEl = document.querySelector("#play");
+  const syncTop = () => {
+    topBox.hidden = !(playEl && !playEl.hidden && G.S);
+    const can = G.canSave(G.S);
+    topSave.classList.toggle("q7off", !can.ok);
+    topSave.setAttribute("aria-disabled", String(!can.ok));
+    topSave.title = can.ok ? "今の冒険を枠に残す（S）" : `今はセーブできない：${can.why}`;
+  };
+  if (playEl) new MutationObserver(syncTop).observe(playEl, { attributes: true, attributeFilter: ["hidden"] });
+  syncTop();
+
+  // キーの近道 S・L（文字を打っている所・ほかの窓の上では効かない。同じキーで閉じる）
+  document.addEventListener("keydown", (ev) => {
+    const t = ev.target;
+    const typing = !!(t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)));
+    const open = document.querySelector("dialog[open]");
+    const a = G.slotKeyAction(ev, typing, open ? open.id || "?" : null, !!(playEl && !playEl.hidden && G.S), ui.slotMode());
+    if (!a) return;
+    ev.preventDefault();
+    if (a === "close") dlg.close();
+    else if (a === "save") topSave.click();
+    else ui.openSlots("load");
+  });
+
   // ---------------------------------------------------------------- 入口：ステータスの下
   const base = ui.render;
   ui.render = (...a) => {
     const r = base(...a);
+    try { syncTop(); } catch {}
     try {
       const acts = document.querySelector("#sheet .sheet-actions");
       if (acts && !acts.querySelector(".q7save")) {
