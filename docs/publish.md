@@ -15,6 +15,7 @@ node tools/build.mjs && node tests/run.mjs
 | `dist/site/portraits/<id>.webp`・`dist/site/monsters/<id>.webp` | 画像（`assets/` の写し） |
 | `dist/site/portraits/<id>.moods.svg` | 表情の差分のスプライト（その人の `assets/portraits/<id>_<表情>.webp` を 1 枚にまとめたもの。下の「差分のまとめ方」） |
 | `dist/site/scenes/<組>.svg` | 背景の絵のスプライト（`assets/scenes/<id>.webp` を一覧 `docs/art/scenes.json` の組ごとに 8 枚までずつ 1 枚にまとめたもの。A11。1 枚だけの組は `scenes/<id>.webp` のまま） |
+| `dist/site/sounds/<名前>_<何か>.ogg`（webm・mp3） | 録音した効果音（`assets/sounds/` の写し。置いたときだけ。下の「音のファイル」） |
 | `dist/site/files.json` | 載せる画像の一覧（公開パス → リポジトリの根からのローカルパス）。Artifact の `files` にそのまま渡す |
 | `dist/site/files-1.json`・`files-2.json`… | 1 回の公開に収まらないときだけ。回ごとの一覧（下の「分けて載せる」） |
 
@@ -69,4 +70,5 @@ MB は余裕を見て 1000×1000 バイトで数える。予備の埋め込み�
 - 背景のまとめ方（A11）：背景の絵（`assets/scenes/<id>.webp`）は、一覧（`docs/art/scenes.json`）の `pack`（組）ごとに 8 枚までずつ `scenes/<組>.svg` にまとめる（升目は 2 列。1232×704 が 8 枚で 2464×2816）。値は差分と同じ「公開パス#xywh=…」で、`src/ui/scene_v3_photo.js` がスプライトを一度だけ読んで升目を切り出し、canvas の背景の代わりに敷く。72 枚を全部作っても 11 ファイル（`tests/checks/a11_scenes.mjs` が今のファイル数と合わせて 511 に収まるかを見る）。予備の埋め込み（`--embed`）が上限を超えるときは、差分の次に背景を省く（canvas の背景になる）。
 - `src/ui/v4_assets.js`：人物の絵。外のファイルは読み終わるまで枠を空けておき、読めたら画像を描く。無い人・読めない画像は絵を出さない（A10。canvas の人物の絵はやめた）。主人公は絵なし。仲間・話している人とその差分は描く前に先読みし、名のある人の基本の絵は暇なときに少しずつ読む（`G.v4Preload`）。
 - `src/ui/v8_moods.js`：表情の差分は、読み終わってから顔を入れ替える（それまでは前の顔のまま）。PC の配置（V9）では、話している人の顔に表情を付ける。
+- 音のファイル（S3）：効果音は Web Audio でその場で合成するが、`assets/sounds/<名前>.ogg`・`<名前>_1.ogg`…（webm・mp3 も可。同じ名前なら mp3）を置くと、画像と同じく別ファイルで載り、`G.ASSETS["sounds/<名前>_1"]` に相対パスが入る。`src/ui/sound.js` が最初のタップのあとに読み、いくつかあれば毎回一つ選んで鳴らす（高さと強さを少し揺らす）。無い・読めない（file:// など）ときは合成に戻る。今は 1 つも置いていない（ページの音は合成。`docs/sound/page_before.wav`・`page_after.wav` で聞き比べられる）。置くなら 1 つの版の 511 ファイルに数えられるので、1 つの音に 3〜4 個まで。音量は `G.sound.FILE_GAIN` で揃える。
 - `src/ui/v6_monsters.js`：魔物の絵は起動の少しあとにまとめて先読みする。

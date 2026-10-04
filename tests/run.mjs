@@ -13,7 +13,7 @@ import { Worker } from "node:worker_threads";
 import vm from "node:vm";
 import { loadEngine, seeded } from "./lib.mjs";
 import { drain } from "./worker.mjs";
-import { balancePlan, measureBalance, playGames, mergeRows } from "./balance.mjs";
+import { balancePlan, checkPlan, measureBalance } from "./balance.mjs";
 
 let failures = 0;
 const fail = (msg) => { failures++; console.log("FAIL " + msg); };
@@ -29,11 +29,12 @@ const timed = (name) => { const t = performance.now(); timings.push([name, t - l
 const checkDir = new URL("./checks/", import.meta.url);
 const checkNames = readdirSync(checkDir).filter((n) => n.endsWith(".mjs")).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
   .filter((n) => !process.env.ONLY || process.env.ONLY.split(",").some((k) => n.includes(k)));
-// 釣り合いの測定は、遊び方ごと・職業ごとに分けて並べる（種は職業ごと・回ごとに決まっているので、分けても数字は同じ）
-// ランダムのはじめの SHARED 回は tests/checks/q2_balance.mjs が同じ種・同じ行動の上限で遊ぶので、その結果を使い回す
-// （q2 が遊ばなかったとき・回数や種が合わないときは、最後に親が遊んで足す。表はどちらでも同じ）
-const SHARED = 240;
-const balanceParts = process.env.BALANCE === "0" || (process.env.ONLY && !process.env.ONLY.includes("balance")) ? [] : balancePlan().flatMap((p, _, __, classes = Object.keys(loadEngine().data.CLASSES)) => classes.map((cls) => ({ kind: "balance", name: `釣り合いの測定 ${p.mode} ${cls}`, ...p, cls, start: p.mode === "random" && p.games > SHARED ? SHARED : 0 })));
+// 釣り合いの表は、tests/checks/q2_balance.mjs が働き手に分けて遊んだ回（tests/balance.mjs の CHECK_PLAN）をそのまま使う（同じ回を二度遊ばない）。
+// q2 を動かさないとき（ONLY=balance など）や、回数を変えたとき（BALANCE_GAMES など）だけ、遊び方ごと・職業ごとに分けてここで並べて遊ぶ
+// （種は職業ごと・回ごとに決まっているので、分けても数字は同じ）
+const fromQ2 = checkNames.includes("q2_balance.mjs") && JSON.stringify(balancePlan()) === JSON.stringify(checkPlan());
+const balanceOn = !(process.env.BALANCE === "0" || (process.env.ONLY && !process.env.ONLY.includes("balance") && !fromQ2));
+const balanceParts = !balanceOn || fromQ2 ? [] : balancePlan().flatMap((p, _, __, classes = Object.keys(loadEngine().data.CLASSES)) => classes.map((cls) => ({ kind: "balance", name: `釣り合いの測定 ${p.mode} ${cls}`, ...p, cls })));
 const shown = [...checkNames.map((name) => ({ kind: "check", name })), ...balanceParts];
 const rank = (t) => { const i = HEAVY.indexOf(t.kind === "balance" ? (t.mode === "smart" ? "balance" : "balance_random") : t.name); return i < 0 ? HEAVY.length : i; };
 const tasks = shown.map((t, at) => ({ ...t, at })).sort((a, b) => rank(a) - rank(b) || a.at - b.at);
@@ -533,23 +534,25 @@ for (const [at, t] of shown.entries()) {
     const p = (played[t.mode] ||= { rows: [], ms: 0, error: null });
     p.ms += r.ms;
     if (r.data?.error) { p.error = r.data.error; continue; }
-    let rows = r.data;
-    if (t.start) {
-      // はじめの回：q2 が遊んだもの（同じ遊び方・回数・行動の上限・種）か、無ければここで遊ぶ
-      const pre = results.flatMap((x) => x?.played || []).find((x) => x.mode === t.mode && x.start === 0 && x.games === t.start && x.steps === t.steps && x.seed === t.seed && x.rows.some((y) => y.cls === t.cls));
-      const t0 = performance.now();
-      const head = pre ? pre.rows.filter((y) => y.cls === t.cls) : playGames({ mode: t.mode, games: t.start, steps: t.steps, seed: t.seed, classes: [t.cls] });
-      p.ms += performance.now() - t0;
-      rows = head.map((a) => { const b = rows.find((y) => y.cls === a.cls); return b ? mergeRows(a, b) : a; }).concat(rows.filter((b) => !head.some((a) => a.cls === b.cls)));
-    }
+    const rows = r.data;
     p.rows.push(...rows);
   }
 }
 // 3. 釣り合いの測定（失敗にはしない）
-if (balanceParts.length) {
+if (fromQ2 && balanceOn) {
+  // q2 が遊んだ回（同じ遊び方・回数・行動の上限・種で、全部の職業）を使う。q2 が途中で止まったときは表を出さない（q2 の失敗で分かる）
+  const all = results.flatMap((x) => x?.played || []);
+  for (const { mode, games, steps, seed } of balancePlan()) {
+    const pre = all.find((x) => x.mode === mode && x.start === 0 && x.games === games && x.steps === steps && x.seed === seed && !x.classes);
+    if (pre) played[mode] = { rows: pre.rows, ms: pre.ms };
+  }
+}
+if (balanceOn) {
   const bad = Object.values(played).find((p) => p.error);
+  const missing = balancePlan().filter((p) => !played[p.mode]);
   try {
     if (bad) throw new Error(bad.error);
+    if (missing.length) throw new Error(`q2 が遊んだ回が見つからない（${missing.map((p) => p.mode).join("・")}）`);
     measureBalance({ played });
   } catch (e) {
     console.log("NOTE 釣り合いの測定を出せなかった（失敗にはしない）: " + (e.stack || e));

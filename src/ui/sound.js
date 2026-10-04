@@ -1,4 +1,4 @@
-// 効果音と環境音。音声ファイルは使わず、Web Audio でその場で合成する。
+// 効果音と環境音。Web Audio でその場で合成する（S3：assets/sounds/<名前>_*.ogg などの録音したファイルがあれば、その名前の音はそれを鳴らす）。
 // 鳴らすのは画面側だけ。ui.js が描き直すたびに G.sound.react(G.S) を呼び、増えた記録と状態の変化から音を選ぶ。
 // 名前で鳴らす：G.sound.play("slash")。名前の一覧は G.sound.names。
 // AudioContext が無い環境（テスト）や、最初のタップの前は何もしない。
@@ -171,11 +171,68 @@
     return t + p.end;
   }
 
+  // ---------------------------------------------------------------- S3：本のページをめくる音
+  // 前（S1）は、白い雑音を帯域で絞った滑らかな「シュッ」2 つだけで、紙のざらつき・はためき・落ちる当たりが無く、息か衣ずれに聞こえた。
+  // 本物は三つの重なり：①指が紙の端をつまむ小さな擦れ ②紙がたわんで空気を切る「さらっ」（高めの帯域が上がって下がり、はためいて揺れ、
+  // 紙の繊維が細かくぱちぱち鳴る） ③反対側に倒れて落ちる「ぱさっ」（中低域の短い当たり＋空気が押し出される柔らかい音）。
+  // 表（DOM・音なしでも作れる。テストはこれを見る）：長さ・高さ・強さを毎回少し揺らす。返す：{ pinch, sweep, grains, flop, end }（秒）
+  snd.pagePlan = () => {
+    const k = rr(0.85, 1.15); // 紙の大きさ（長さ）
+    const g = rr(0.8, 1.15);  // めくる強さ
+    const s0 = rr(0.03, 0.05);
+    // 指の擦れ：「さらっ」が始まるまでに 2〜4 回
+    const pinch = [];
+    for (let i = 0, n = 2 + Math.floor(R() * 3); i < n; i++) pinch.push({ at: (s0 * 0.85 * (i + rr(0, 0.6))) / n, f: rr(3000, 6000), g: g * rr(0.02, 0.045), d: rr(0.006, 0.014) });
+    const sweep = { at: s0, dur: rr(0.13, 0.2) * k, f0: rr(1500, 2200), f1: rr(3600, 5200), f2: rr(2000, 2800), q: rr(0.9, 1.4), g: g * rr(0.11, 0.14), flut: rr(14, 26), depth: rr(0.3, 0.5) };
+    const grains = [];
+    for (let i = 0, n = 5 + Math.floor(R() * 6); i < n; i++) grains.push({ at: s0 + sweep.dur * rr(0.1, 0.95), f: rr(2500, 7500), g: g * rr(0.015, 0.04), d: rr(0.003, 0.008) });
+    // 落ちる当たりは「さらっ」の消え際に重ねる（間が空くと二つの別の音に聞こえる）
+    const flop = { at: s0 + sweep.dur * rr(0.72, 0.88), f: rr(500, 800), g: g * rr(0.16, 0.22), d: rr(0.05, 0.08) };
+    return { pinch, sweep, grains, flop, end: flop.at + flop.d + 0.06 };
+  };
+  // 帯域の中心が上がって下がる雑音を、はためき（速い揺れ）で揺らす
+  function flutterHiss(E, t, w) {
+    const ctx = E.ctx;
+    const s = ctx.createBufferSource(); s.buffer = E.white; s.loop = true;
+    const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.Q.value = w.q;
+    f.frequency.setValueAtTime(w.f0, t);
+    f.frequency.exponentialRampToValueAtTime(w.f1, t + w.dur * 0.45);
+    f.frequency.exponentialRampToValueAtTime(w.f2, t + w.dur);
+    const hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 900;
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 9000; // 耳に刺さる上を丸める
+    const g = ctx.createGain();
+    const p = g.gain;
+    p.setValueAtTime(0.0001, t);
+    p.linearRampToValueAtTime(w.g * 0.6, t + w.dur * 0.25);
+    p.linearRampToValueAtTime(w.g, t + w.dur * 0.6);
+    p.exponentialRampToValueAtTime(0.0001, t + w.dur);
+    const m = ctx.createGain(); m.gain.value = 1 - w.depth / 2; // はためき：1±depth/2 で揺れる
+    const l = ctx.createOscillator(); l.frequency.setValueAtTime(w.flut, t); l.frequency.linearRampToValueAtTime(w.flut * 1.6, t + w.dur);
+    const lg = ctx.createGain(); lg.gain.value = w.depth / 2;
+    l.connect(lg); lg.connect(m.gain);
+    s.connect(f); f.connect(hp); hp.connect(lp); lp.connect(g); g.connect(m);
+    route(E, m, { wet: 0.06 });
+    s.start(t, R() * 1.5); s.stop(t + w.dur + 0.05);
+    l.start(t); l.stop(t + w.dur + 0.05);
+    return t + w.dur;
+  }
+  function pageSound(E, t) {
+    const p = snd.pagePlan();
+    p.pinch.forEach((c) => hiss(E, t + c.at, { ft: "bandpass", ff: c.f, q: 3, a: 0.001, d: c.d, g: c.g }));
+    flutterHiss(E, t + p.sweep.at, p.sweep);
+    p.grains.forEach((c) => hiss(E, t + c.at, { ft: "bandpass", ff: c.f, q: 4, a: 0.0005, d: c.d, g: c.g }));
+    const f = p.flop;
+    hiss(E, t + f.at, { ft: "bandpass", ff: f.f, ff2: f.f * 0.6, q: 0.9, a: 0.003, d: f.d, g: f.g, wet: 0.08 });
+    hiss(E, t + f.at, { ft: "highpass", ff: 3000, a: 0.001, d: f.d * 0.5, g: f.g * 0.35 });
+    hiss(E, t + f.at + 0.004, { brown: true, ft: "lowpass", ff: 350, a: 0.006, d: f.d * 1.2, g: f.g * 0.5 });
+    return t + p.end;
+  }
+
   // ---------------------------------------------------------------- 効果音（名前 → 合成）。どれも t から鳴らし、終わる時刻を返す
   const SFX = {
     // 画面
     click: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 2400, q: 3, g: 0.12, d: 0.03 }); return tone(E, t, { f: 210, f2: 150, g: 0.12, d: 0.05 }); },
-    page: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 3200, ff2: 1600, q: 0.8, a: 0.04, d: 0.12, g: 0.1 }); return hiss(E, t + 0.09, { ft: "highpass", ff: 2500, a: 0.01, d: 0.1, g: 0.07 }); },
+    page: (E, t) => pageSound(E, t),
     // 判定。roll はダイスを振る音（結果の音より先に鳴らす）、rollShort は短い版
     roll: (E, t) => rollSound(E, t, false),
     rollShort: (E, t) => rollSound(E, t, true),
@@ -482,6 +539,28 @@
   };
 
 
+  // ---------------------------------------------------------------- S3：録音した音のファイル（あれば使い、無い・読めなければ合成）
+  // assets/sounds/<名前>.ogg や <名前>_1.ogg・<名前>_2.ogg …（webm・mp3 も可）を置くと、ビルドが別ファイルとして載せ、G.ASSETS["sounds/<名前>_1"] に相対パスが入る（tools/assets.mjs）。
+  // その名前の音は、読めたファイルから毎回一つ選び、高さと強さを少し揺らして鳴らす。ファイルの音量は FILE_GAIN で合成の音に揃える
+  snd.FILE_GAIN = { page: 0.35 };
+  // 名前 → その音のファイルの鍵の一覧（DOM・音なしでも動く。テストはこれを見る）
+  snd.fileKeys = (name, assets) => Object.keys(assets || G.ASSETS || {}).filter((k) => k === "sounds/" + name || k.startsWith("sounds/" + name + "_")).sort();
+  // 鳴らす元：ファイルが読めていれば "file"、無ければ "synth"
+  snd.source = (name) => (snd.buffers && snd.buffers[name] && snd.buffers[name].length ? "file" : "synth");
+  snd.buffers = {};
+  // S3：ボタン → 押したときの音（DOM が無くても、id・dataset・getAttribute・closest を持つ物なら判じられる。テストはこれを見る）
+  //   本を開く（世界の手引き・図鑑）と、本の中の頁を移るタブ（手引き・図鑑・トロフィーと墓碑）は "page"。
+  //   導入の本の「ページをめくる」「前のページ」は setup.js が "page" を鳴らすので、ここでは鳴らさない（null）。ほかは "click"
+  const BOOK_OPEN = { openWorld: 1, openCodex: 1 };
+  const BOOK_DLG = "#dlgWorld, #dlgCodex, #dlgTrophy";
+  snd.clickCue = (b) => {
+    const fid = b.dataset && b.dataset.fid;
+    if (fid === "b-next" || fid === "b-prev") return null;
+    if (BOOK_OPEN[b.id]) return "page";
+    if (b.getAttribute && b.getAttribute("role") === "tab" && b.closest && b.closest(BOOK_DLG)) return "page";
+    return "click";
+  };
+
   // ---------------------------------------------------------------- 実際に鳴らす（ブラウザの中だけ）
   if (!AC || typeof document === "undefined") return;
   let E = null;
@@ -498,18 +577,45 @@
     E.sfx.gain.value = 0; E.amb.gain.value = 0;
     vol();
     if (G.S) snd.ambient(snd.ambFor(G.S));
+    loadFiles();
+  }
+  // 音のファイルを読んで AudioBuffer にする（file:// などで読めなければ黙って合成のまま）
+  function loadFiles() {
+    const A = G.ASSETS || {};
+    const names = new Set(Object.keys(A).filter((k) => k.startsWith("sounds/")).map((k) => k.slice(7).replace(/_.*$/, "")));
+    names.forEach((n) => {
+      if (!SFX[n]) return;
+      snd.fileKeys(n).forEach((k) => {
+        fetch(A[k]).then((r) => { if (!r.ok) throw 0; return r.arrayBuffer(); })
+          .then((ab) => new Promise((ok, ng) => { const p = E.ctx.decodeAudioData(ab, ok, ng); if (p && p.then) p.then(ok, ng); }))
+          .then((buf) => { (snd.buffers[n] = snd.buffers[n] || []).push(buf); })
+          .catch(() => {});
+      });
+    });
+  }
+  // ファイルの音を鳴らす：毎回一つ選び、高さ（±4%）と強さ（±15%）を揺らす
+  function playFile(name, t) {
+    const list = snd.buffers[name];
+    const s = E.ctx.createBufferSource();
+    s.buffer = list[Math.floor(R() * list.length)];
+    s.playbackRate.value = rr(0.96, 1.04);
+    const g = E.ctx.createGain();
+    g.gain.value = (snd.FILE_GAIN[name] || 0.5) * rr(0.85, 1.15);
+    s.connect(g); g.connect(E.sfx);
+    s.start(t);
   }
   document.addEventListener("pointerdown", wake, true);
   document.addEventListener("keydown", wake, true);
   document.addEventListener("visibilitychange", () => { if (!E) return; if (document.hidden) E.ctx.suspend().catch(() => {}); else E.ctx.resume().catch(() => {}); });
-  // ボタンを押したときの小さな音
-  document.addEventListener("click", (ev) => { const b = ev.target.closest && ev.target.closest("button"); if (b && !b.disabled && !b.classList.contains("act")) snd.play("click"); }, true);
+  // ボタンを押したときの小さな音。本を開く・頁を移るボタンは、ページをめくる音（snd.clickCue）
+  document.addEventListener("click", (ev) => { const b = ev.target.closest && ev.target.closest("button"); if (b && !b.disabled && !b.classList.contains("act")) { const c = snd.clickCue(b); if (c) snd.play(c); } }, true);
 
   snd.play = (name, delay) => {
     const st = snd.settings;
     if (!E || st.mute || !SFX[name] || E.ctx.state !== "running") return;
     if (st.sfxOn === false || ((name === "roll" || name === "rollShort") && st.dice === false)) return;
-    try { SFX[name](E, E.ctx.currentTime + 0.01 + (delay || 0)); } catch {}
+    const t = E.ctx.currentTime + 0.01 + (delay || 0);
+    try { if (snd.source(name) === "file") playFile(name, t); else SFX[name](E, t); } catch {}
   };
 
   let amb = null; // { name, gain, stops, timer }
