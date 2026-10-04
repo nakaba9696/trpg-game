@@ -105,7 +105,7 @@
       if (!qbtn.isConnected) {
         const rowEl = $("#mbar .u11quick");
         const map = rowEl && rowEl.querySelector("#u11Map");
-        if (map) map.after(qbtn); else if (rowEl) rowEl.append(qbtn);
+        if (map) map.after(qbtn); else if (rowEl) rowEl.append(qbtn); else { const t = $(".top .tools"); if (t) t.append(qbtn); } // 帯の段が無ければ右上（zz_q7_topbar.js が並べ直す）
       }
       const n = S ? Q7.list(S).length : 0;
       const ready = S ? Q7.readyCount(S) : 0;
