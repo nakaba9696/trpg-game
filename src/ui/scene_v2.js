@@ -1325,10 +1325,24 @@
   const hiddenLayer = (cv) => { const p = cv.parentNode; return !!(p && p.classList && p.classList.contains("bgLayer") && !p.classList.contains("on")); };
   V.hiddenLayer = hiddenLayer;
   let looping = false, lastT = 0;
+  // 遅い端末では背景の動きのコマ数を下げる（T）：毎コマの間隔がずっと長い（画面が追いつかない）なら、24 コマ/秒を 12 コマ/秒に。
+  // 下げたら 20 秒はそのまま、そのあと間隔が短ければ戻す。速い端末では今まで通り
+  const pace = V.pace = { gap: 42, ema: 16, prev: 0, n: 0, since: 0 };
+  V.paceStep = (now) => {
+    const d = pace.prev ? now - pace.prev : 0;
+    pace.prev = now;
+    if (!(d > 0 && d < 400)) return pace.gap; // 裏に回っていた・止まっていた間は数えない
+    pace.ema = pace.ema * 0.95 + d * 0.05;
+    pace.n++;
+    if (pace.gap === 42 && pace.n > 90 && pace.ema > 48) { pace.gap = 84; pace.since = now; }
+    else if (pace.gap === 84 && now - pace.since > 20000 && pace.ema < 26) { pace.gap = 42; pace.n = 0; }
+    return pace.gap;
+  };
   function tick(now) {
-    if (!LIVE.size) { looping = false; return; }
+    if (!LIVE.size) { looping = false; pace.prev = 0; return; }
     requestAnimationFrame(tick);
-    if ((typeof document !== "undefined" && document.hidden) || now - lastT < 42) return;
+    const gap = V.paceStep(now);
+    if ((typeof document !== "undefined" && document.hidden) || now - lastT < gap) return;
     lastT = now;
     for (const st of LIVE) {
       if (!st.cv.isConnected) { LIVE.delete(st); continue; }

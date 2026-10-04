@@ -176,12 +176,13 @@
   function lp(B, f, q, type) { const n = B.ctx.createBiquadFilter(); n.type = type || "lowpass"; n.frequency.value = f; n.Q.value = q || 0.7; return n; }
   function gain(B, v) { const g = B.ctx.createGain(); g.gain.value = v; return g; }
   // 揺れ（ビブラート）：遅れて深くなる。短い音には付けない（聞こえないうえ、重くなるため）
+  // 同じ揺れを二本以上の発振器にかけるときは、o に配列を渡すと揺れの発振器を一つで済ませる（同じ揺れなので音は同じ。T）
   function vibr(B, o, t, end, rate, cents, delay) {
     if (end - t < 0.45) return;
     const l = B.ctx.createOscillator(); l.frequency.value = rate;
     const g = B.ctx.createGain();
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(cents, t + (delay || 0.3) + 0.3);
-    l.connect(g); g.connect(o.detune); l.start(t); l.stop(end);
+    l.connect(g); (Array.isArray(o) ? o : [o]).forEach((x) => g.connect(x.detune)); l.start(t); l.stop(end);
   }
   // 倍音の表から波を作る（管の音・オルガン）。同じ表は一度だけ作る
   function wave(B, name, amps) {
@@ -234,7 +235,7 @@
       const g = gain(B, 0);
       const a = osc(B, "sawtooth", f, t, end, -4); a.connect(g);
       // 刻み（短い音）はのこぎり一本。伸ばす音は矩形を重ねて太くし、揺らす
-      if (dur >= 0.25) { const b = osc(B, "square", f * 1.002, t, end, 3); vibr(B, a, t, end, 5.6, 18, 0.25); vibr(B, b, t, end, 5.6, 18, 0.25); b.connect(g); }
+      if (dur >= 0.25) { const b = osc(B, "square", f * 1.002, t, end, 3); vibr(B, [a, b], t, end, 5.6, 18, 0.25); b.connect(g); }
       g.connect(out);
       adsr(g.gain, t, dur * 0.97, 0.22 * v, 0.004, 0.6, 0.8, 0.09);
     },
@@ -244,7 +245,7 @@
       const g = gain(B, 0); const fl = lp(B, 1200, 4);
       fl.frequency.setValueAtTime(500, t); fl.frequency.linearRampToValueAtTime(1200 + 2600 * v, t + 0.04); fl.frequency.setTargetAtTime(1300 + 900 * v, t + 0.05, 0.2);
       const a = osc(B, "sawtooth", f, t, end); const b = osc(B, "square", f, t, end, 7);
-      vibr(B, a, t, end, 5.2, 14, 0.35); vibr(B, b, t, end, 5.2, 14, 0.35);
+      vibr(B, [a, b], t, end, 5.2, 14, 0.35);
       a.connect(fl); b.connect(fl); fl.connect(g); g.connect(out);
       adsr(g.gain, t, dur * 0.96, 0.13 * v, 0.01, 0.3, 0.75, 0.12);
     },
@@ -530,7 +531,7 @@
   function ensure() {
     if (B) return B;
     let ctx = snd.ctx && snd.ctx(); // 効果音と同じ AudioContext を使う（無ければ自分で作る）
-    if (!ctx) { try { ctx = new AC(); own = true; } catch { return null; } }
+    if (!ctx) { try { ctx = snd.newContext ? snd.newContext() : new AC(); own = true; } catch { return null; } }
     try { B = makeBus(ctx); } catch { B = null; return null; }
     snd.bgmVol();
     return B;

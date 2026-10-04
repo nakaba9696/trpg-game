@@ -103,16 +103,38 @@
   const LOG_KEEP = 90;
   let logLast = null; // 前回描いたときの最後の記録（記録は 240 件で古い方から消えるので、数ではなく中身で覚える）
   let logFresh = []; // 今回増えた記録（戦闘の演出 fx.js に渡す）
+  // 記録の要素は使い回す（T）：手番ごとに 90 行を作り直さず、増えた行だけ足し、消えた行だけ外す。中身が変わった行（振り直しのボタンなど）は作り直す。
+  // 描いたあとに行へ書き足すファイル（用語の強調 U8・数の色 Q7・品名 I2）は、書き足し済みの行には触らない。書き足しの決まりが変わったとき
+  // （知った用語・持ち物が変わった）は、ui.logInvalidate() で次の描き直しを全部の作り直しにする（今までと同じ見た目になる）
+  let logEls = new WeakMap(); // 記録 → { el, sig }
+  let logReset = true;
+  ui.logInvalidate = () => { logReset = true; };
+  const entrySig = (e) => {
+    if (e.k !== "dice") return e.k + "|" + (e.fx || "") + "|" + e.text;
+    const rr = G.rerollTarget && G.rerollTarget(e) && !busy;
+    return JSON.stringify(e) + "|" + (rr ? G.rerolls() : "-");
+  };
   function renderLog() {
     const S = G.S;
     const log = $("#log");
-    log.textContent = "";
     const shown = S.log.slice(-LOG_KEEP);
     const at = logLast ? S.log.lastIndexOf(logLast) : -1; // 見つからなければ初回か、別の冒険
     const fresh = at < 0 ? 0 : Math.min(shown.length, S.log.length - 1 - at);
     logLast = S.log[S.log.length - 1] || null;
     logFresh = fresh ? shown.slice(-fresh) : [];
-    shown.forEach((e, i) => { const el = logEntryEl(e); if (fresh && i >= shown.length - fresh) el.classList.add("new"); log.append(el); });
+    if (logReset) { logReset = false; logEls = new WeakMap(); log.textContent = ""; }
+    const els = shown.map((e, i) => {
+      const sig = entrySig(e);
+      let c = logEls.get(e);
+      if (!c || c.sig !== sig) { c = { el: logEntryEl(e), sig }; logEls.set(e, c); }
+      c.el.classList.toggle("new", !!fresh && i >= shown.length - fresh);
+      return c.el;
+    });
+    // 並びを合わせる（たいていは、頭の数行を外して末尾に足すだけ）
+    const keep = new Set(els);
+    Array.from(log.children).forEach((k) => { if (!keep.has(k)) k.remove(); });
+    let cur = log.firstChild;
+    els.forEach((el) => { if (cur === el) cur = cur.nextSibling; else log.insertBefore(el, cur); });
     // 新しく増えた記録の頭から読めるようにする（増えていなければ末尾）。位置を測るのは次のコマの頭で一度だけ
     // （描き直しの途中で測ると、そのたびに画面全体の配置の計算が走って重い。T）
     logScroll = { first: fresh ? log.children[shown.length - fresh] : null, fresh: !!fresh };
