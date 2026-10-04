@@ -36,14 +36,15 @@
   const imgs = {};
   const waiting = typeof Map === "function" ? new Map() : null; // canvas → 待っているファイル
   const ready = (img) => !!(img && !img.a11bad && img.complete && (img.naturalWidth || img.width));
-  function image(src) {
-    if (imgs[src]) return imgs[src];
+  // pri：0 いま描く（既定）／2 そのうち（隣の町・施設の中の先読み）。読む順番は t3_loadq.js（T3）
+  function image(src, pri) {
+    if (imgs[src]) return G.needImage ? G.needImage(imgs[src], pri) : imgs[src];
     if (typeof Image !== "function" || !src) return null;
     const img = new Image();
     img.a11bad = false;
     img.addEventListener("error", () => { img.a11bad = true; done(src); });
     img.addEventListener("load", () => done(src));
-    img.src = src;
+    if (G.loadImage) G.loadImage(img, src, pri); else img.src = src;
     return (imgs[src] = img);
   }
   G.sceneImage = (id) => { const w = G.sceneWhere(id); return w ? image(w.src) : null; };
@@ -102,7 +103,7 @@
     if (L.type === "dungeon" && G.dungeonScene) keys.push(G.dungeonScene(L));
     const ids = keys.map((k) => G.sceneImageId(k));
     Object.keys(Object.assign({}, L.links, L.sea)).forEach((to) => ids.push(A()["scenes/" + to] ? to : null));
-    setTimeout(() => ids.forEach((id) => { if (id) G.sceneImage(id); }), 1500);
+    setTimeout(() => ids.forEach((id) => { const w = id && G.sceneWhere(id); if (w) image(w.src, 2); }), 1500);
   }
 
   // ---------------------------------------------------------------- 描く

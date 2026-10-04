@@ -1,0 +1,5 @@
+/* T3：コード（game.js）を読み込んでいるあいだの知らせ（src/index.html の #boot。動き出したら ui/t3_boot.js が消す） */
+#boot { margin: 18vh auto 0; max-width: 28em; text-align: center; font-family: var(--f-body); font-size: 18px; letter-spacing: .2em; color: var(--muted); animation: t3boot 1.6s ease-in-out infinite alternate; }
+#boot span { display: block; margin-top: 10px; font-family: var(--f-ui); font-size: 12.5px; letter-spacing: .05em; }
+@keyframes t3boot { from { opacity: .45; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { #boot { animation: none; } }
