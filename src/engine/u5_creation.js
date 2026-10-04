@@ -187,21 +187,24 @@
     return { cls: dr.cls, stats: cre.final(dr), caps: cre.caps(dr), profile: p, goal: dr.goal, goalText: cre.goalText(dr) };
   };
 
-  // 始まりの導入。ページ（段落の並び）の配列を返す。古いセーブの人物（年齢の区分・生まれが無い）でも作れる
+  // 始まりの導入。ページ（段落の並び）の配列を返す。状況の概要だけの 1 頁（D.PROLOGUE）。古いセーブの人物（生まれが無い）でも作れる
   cre.prologue = (o) => {
     const P = D.PROLOGUE;
     const p = o.profile || {};
-    const band = p.ageBand || (parseInt(p.age, 10) >= 40 ? "old" : parseInt(p.age, 10) <= 22 ? "young" : "prime");
     const org = D.ORIGINS[p.origin];
-    const start = D.LOCS[D.CLASSES[o.cls].start];
+    const c = D.CLASSES[o.cls];
+    const start = D.LOCS[c.start];
     // 作成画面の形（goal: id, goalText）とセーブの形（goal: { id, text }）のどちらでもよい
     const g = o.goal && typeof o.goal === "object" ? o.goal : { id: o.goal, text: o.goalText };
-    const goalLine = P.goal[D.GOALS[g.id] && P.goal[g.id] ? g.id : "custom"].replace("{text}", g.text || o.goalText || "");
-    const fill = (t) => t.replace("{name}", p.name).replace("{age}", p.age);
-    return [
-      (P.cls[o.cls] || []).slice(),
-      [org ? org.home : "", fill(P.age[band]) + (p.history ? `${p.history}。` : "")].filter(Boolean),
-      [goalLine, P.arrive.replace("{place}", start.name)],
-    ];
+    const text = String(g.text || o.goalText || "").trim().replace(/[。．.]+$/, "");
+    const fill = (t) => t.replace("{name}", p.name).replace("{age}", p.age).replace("{cls}", c.name).replace("{origin}", org ? org.name : "")
+      .replace("{place}", start.name).replace("{text}", text);
+    // 自分で書いた生い立ちは、誰かの一文のあとに一言だけ添える
+    const history = String(p.history || "").trim().replace(/[。．.]+$/, "");
+    return [[
+      fill(org ? P.who : P.whoNoOrigin) + (history ? `${history}。` : ""),
+      fill(org && org.name === start.name ? P.arriveHome : P.arrive),
+      fill(g.id !== "custom" && D.GOALS[g.id] ? P.goal : P.custom),
+    ]];
   };
 })(globalThis.G = globalThis.G || {});
