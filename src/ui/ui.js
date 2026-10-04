@@ -393,13 +393,6 @@
     });
     return sheetSection("inv", `持ち物（${ids.length}）`, ul);
   }
-  function sheetMemos() {
-    const S = G.S;
-    if (!S.memos.length) return null;
-    const ol = h("ol", "memos");
-    S.memos.slice(-10).forEach((x) => ol.append(h("li", "", x)));
-    return sheetSection("memos", "覚えていること", ol);
-  }
   function sheetButtons() {
     const S = G.S;
     const acts = h("div", "sheet-actions");
@@ -433,7 +426,7 @@
     $("#mbar").classList.toggle("danger", !!(G.hpDanger && G.hpDanger(S)));
   }
   // ステータスはタブで分ける（Q7。持ち主の声「ステータスに内容が入りすぎてる」）。はじめは「能力」。前に開いていたタブは、ページを開いているあいだ覚えておく（セーブには残さない）
-  // ほかに入口があるもの（受けている依頼・地図・セーブとロード・所持金）はステータスに置かない。どのタブの中身も描いておき、見せないものは hidden にする
+  // ほかに入口があるもの（受けている依頼・地図・セーブとロード・所持金）はステータスに置かない。覚え書き（S.memos）は図鑑の各項目に振り分けるので、ここには出さない（V12）。どのタブの中身も描いておき、見せないものは hidden にする
   // （ほかのファイルが描いたあとに書き足す：持ち物の .ssec・装備の dl.kv・仲間の .comps .comp。名前と形は変えない）
   const SHEET_TABS = [["self", "能力"], ["gear", "装備と持ち物"], ["party", "仲間"], ["more", "その他"]];
   let sheetTab = "self";
@@ -484,7 +477,7 @@
       self: sheetPane("self", [sheetPools(), sheetStats(ups), sheetKv(sheetSelfRows())]),
       gear: sheetPane("gear", [sheetKv(sheetGearRows()), sheetInventory()]),
       party: sheetPane("party", [sheetCompanions()]),
-      more: sheetPane("more", [sheetMemos(), sheetButtons()]),
+      more: sheetPane("more", [sheetButtons()]),
     };
     sh.append(sheetHead(), sheetTabs(panes), ...Object.values(panes));
     sh.scrollTop = keep;
