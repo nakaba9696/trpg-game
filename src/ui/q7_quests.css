@@ -1,0 +1,36 @@
+/* Q7：受けている依頼の一覧（src/ui/q7_quests.js） */
+.q7qdlg { width: min(620px, calc(100vw - 32px)); }
+.q7qnone, .q7qlead { margin: 0 0 10px; }
+.q7qlead { font-weight: 700; }
+.q7qlist { display: grid; gap: 8px; }
+.q7q { border: 1px solid var(--rule); border-radius: 3px; }
+.q7q[open] { border-color: var(--ink); }
+.q7q.q7q-ready { border-left: 4px solid var(--gold, var(--accent)); }
+.q7q.q7q-soon, .q7q.q7q-late { border-left: 4px solid var(--minus, var(--accent)); }
+.q7qsum { list-style: none; cursor: pointer; padding: 10px 12px; display: grid; gap: 3px; min-height: 44px; }
+.q7qsum::-webkit-details-marker { display: none; }
+.q7qname::before { content: "▸"; margin-right: 6px; color: var(--muted); font-weight: 400; }
+.q7q[open] .q7qname::before { content: "▾"; }
+.q7qtop { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.q7qname { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+.q7qstate { font-size: 12px; padding: 1px 8px; border: 1px solid var(--rule); border-radius: 999px; white-space: nowrap; }
+.q7qstate.s-ready { border-color: var(--gold, var(--accent)); color: var(--gold, var(--accent)); font-weight: 700; }
+.q7qstate.s-soon, .q7qstate.s-late { border-color: var(--minus, var(--accent)); color: var(--minus, var(--accent)); font-weight: 700; }
+.q7qsub { font-size: 13px; }
+.q7qreport { font-size: 13px; font-weight: 700; color: var(--gold, var(--accent)); }
+.q7qbody { padding: 0 12px 10px 28px; }
+.q7qbody p { margin: 0 0 6px; line-height: 1.7; }
+.q7qkv { margin: 6px 0 0; }
+.q7qdone { margin-top: 14px; border-top: 1px solid var(--rule); padding-top: 8px; }
+.q7qdone > summary { cursor: pointer; min-height: 36px; display: flex; align-items: center; color: var(--muted); list-style: none; }
+.q7qdone > summary::-webkit-details-marker { display: none; }
+.q7qdone > summary::before { content: "▸"; margin-right: 6px; }
+.q7qdone[open] > summary::before { content: "▾"; }
+.q7qdonelist { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; }
+.q7qdonelist li { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; font-size: 14px; }
+.q7qdonelist li.failed .q7qdname { text-decoration: line-through; color: var(--muted); }
+/* 帯の「依頼」ボタンの報告待ちの印 */
+.q7qmark { color: var(--accent); font-weight: 700; margin-left: 1px; }
+@media (max-width: 520px) {
+  .q7qbody { padding-left: 12px; }
+}
