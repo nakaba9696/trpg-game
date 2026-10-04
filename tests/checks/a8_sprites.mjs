@@ -123,7 +123,7 @@ export default ({ G, fail, ok }) => {
     else if (n > limit * 0.9) console.log(`NOTE A8：dist/site/ が ${n} ファイル（1 つの版の上限 ${limit} の 9 割を超えた）`);
     now = `今 ${n} ファイル・`;
   }
-  // 見込み：基本の立ち絵 250 枚（名のある人・型・主人公）、表情のある人 60 人で差分 700 枚、魔物 120 枚、背景（A11）を一覧の全部（組ごとのスプライト）
+  // 見込み：基本の立ち絵 250 枚（名のある人・型。主人公の絵は A10 で外し、名もない人の二枚目の型 kind_*_b に回した）、表情のある人 60 人で差分 700 枚、魔物 120 枚、背景（A11）を一覧の全部（組ごとのスプライト）
   const scenes = sceneChunks(JSON.parse(readFileSync(path.join(root, "docs/art/scenes.json"), "utf8")).scenes.map((x) => ({ key: "scenes/" + x.id })));
   const est = (sprites) => {
     const files = [];
