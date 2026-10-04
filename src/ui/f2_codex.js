@@ -1,4 +1,6 @@
-// F2：図鑑の窓（アイテム／魔物をタブで切り替え。一覧の格子 → 押すと詳しい説明）。上の道具の列に「図鑑」ボタンを足す。
+// F2：図鑑の窓（アイテム／魔物／人物／用語をタブで切り替え。一覧の格子 → 押すと詳しい説明）。上の道具の列に「図鑑」ボタンを足す。
+// 用語のタブは「世界の手引き」そのもの（U11。手引きの別の窓は無くした。#worldBody はこの窓の中にあり、ui.buildWorld が描く。G.ui.openWorld で開く）。
+// 新しく載った項目（G.codexFresh）は、入口のボタン（[data-codex-open]）・タブ・見出し・格子に赤い「！」。項目を詳しく開くと消える（用語はタブを開くと消える）。
 // 記録と性能・入手場所・説明はエンジン（engine/zz_f2_codex.js）が引く。ここは描くだけ。
 // 新しく埋まった項目は、格子に印・ボタンに印・画面の左下に「図鑑に追加：〇〇」（U8 の「用語集に追加」と同じ箱に縦に並べるので重ならない）。
 // 説明の文は F2.paintText の一か所で描く（アイテムは I2 の G.i2.paintFlavor を通す。U8 の G.gloss.mark で用語を強調。過去の冒険の行は強調しない）。
@@ -38,11 +40,15 @@
   tabs.append(...TABS);
   const sum = h("p", "fine f2sum");
   const panes = h("div", "f2panes");
+  // 用語：世界の手引き（物語で出てきた行だけ。かつての冒険で知った行は淡く。U8 の強調から飛んでくる）
+  const world = h("div", "world f2world");
+  world.id = "worldBody";
+  world.hidden = true;
   const list = h("div", "f2list");
   const detail = h("div", "f2detail");
   detail.setAttribute("aria-live", "polite");
   panes.append(list, detail);
-  body.append(tabs, sum, panes);
+  body.append(tabs, sum, panes, world);
   dlg.append(head, body);
   dlg.addEventListener("click", (ev) => { if (ev.target === dlg) dlg.close(); });
   document.body.append(dlg);
@@ -50,11 +56,30 @@
   const btn = h("button", "btn", "図鑑");
   btn.id = "openCodex";
   btn.type = "button";
+  btn.dataset.codexOpen = "";
   btn.onclick = () => F2.open();
   const tro = $("#openTrophy");
   if (tro) tro.after(btn); else { const t = $(".top .tools"); if (t) t.append(btn); }
 
-  const markBtn = () => { const c = G.codex(); btn.classList.toggle("fresh", !!Object.keys(c.fresh || {}).length); };
+  // 新しい印の数え方：種類ごと（タブ）と全体（入口）
+  const TAB_KIND = { item: "item", foe: "foe", person: "person", lore: "lore" };
+  const freshOf = (kind) => (G.codexFresh ? G.codexFresh(kind) : []);
+  const bang = (n) => { const b = h("span", "f2bang", "！"); b.setAttribute("aria-label", `新しく載った ${n}`); b.title = `新しく載った項目 ${n}`; return b; };
+  const markTabs = () => TABS.forEach((b) => {
+    const n = freshOf(TAB_KIND[b.dataset.tab]).length;
+    b.classList.toggle("fresh", !!n);
+    b.querySelectorAll(".f2bang").forEach((x) => x.remove());
+    if (n) b.append(bang(n));
+  });
+  const markBtn = () => {
+    const n = freshOf().length;
+    document.querySelectorAll("[data-codex-open]").forEach((b) => {
+      b.classList.toggle("fresh", !!n);
+      if (n) b.setAttribute("aria-description", `新しく載った項目が ${n} ある`); else b.removeAttribute("aria-description");
+    });
+    if (dlg.open) markTabs();
+  };
+  F2.markBtn = markBtn;
 
   // ---------------------------------------------------------------- 保存と通知
   let saveT = 0;
@@ -127,9 +152,11 @@
     if (label) b.append(h("span", "f2name", label));
     return b;
   };
-  const group = (name, n, all) => {
+  const group = (name, n, all, nFresh) => {
     const g = h("section", "f2group");
-    g.append(h("h3", "", `${name}　${n}／${all}`));
+    const t = h("h3", "", `${name}　${n}／${all}`);
+    if (nFresh) t.append(bang(nFresh));
+    g.append(t);
     const grid = h("div", "f2grid");
     g.append(grid);
     list.append(g);
@@ -144,7 +171,7 @@
     F2.ITEM_KINDS.forEach(([k, name]) => {
       const mine = ids.filter((id) => F2.kindOf(D.ITEMS[id]) === k);
       if (!mine.length) return;
-      const grid = group(name, mine.filter((id) => c.items[id]).length, mine.length);
+      const grid = group(name, mine.filter((id) => c.items[id]).length, mine.length, mine.filter((id) => G.codexIsFresh("item", id)).length);
       mine.forEach((id) => {
         const it = D.ITEMS[id];
         const known = !!c.items[id];
@@ -163,7 +190,7 @@
     F2.regions().forEach((r) => {
       const mine = ids.filter((id) => G.codexFoeRegion(id) === r).sort((a, b) => (F2.foe(a).tier || 0) - (F2.foe(b).tier || 0) || !!F2.foe(a).boss - !!F2.foe(b).boss);
       if (!mine.length) return;
-      const grid = group(r, mine.filter((id) => c.foes[id]).length, mine.length);
+      const grid = group(r, mine.filter((id) => c.foes[id]).length, mine.length, mine.filter((id) => G.codexIsFresh("foe", id)).length);
       mine.forEach((id) => {
         const e = F2.foe(id);
         const rec = c.foes[id];
@@ -219,7 +246,7 @@
     F2.PEOPLE_GROUPS.forEach((gname) => {
       const mine = ids.filter((id) => F2.personGroup(id) === gname);
       if (!mine.length) return;
-      const grid = group(gname, mine.filter((id) => c.people[id]).length, mine.length);
+      const grid = group(gname, mine.filter((id) => c.people[id]).length, mine.length, mine.filter((id) => G.codexIsFresh("person", id)).length);
       mine.forEach((id) => {
         const rec = c.people[id];
         const b = cell(rec ? F2.personName(id) : "？？？", !!rec, G.codexIsFresh("person", id), () => showPerson(id));
@@ -232,26 +259,14 @@
       });
     });
   }
+  // 用語：世界の手引き（ui.buildWorld が #worldBody に描く。U8・F4・下の「かつての冒険で」が包む）。新しく載った項目の見出しに「！」を付け、見たことにする
   function drawLore() {
-    const known = G.codexLore();
     const cnt = G.codexCount();
     sum.textContent = `知った用語 ${cnt.lore}／${cnt.loreAll}（淡い行は、かつての冒険で知ったこと）`;
-    const secs = [...(D.LORE_SECS || [])];
-    Object.values(D.LORE || {}).forEach((e) => { if (!secs.includes(e.sec)) secs.push(e.sec); });
-    secs.forEach((sec) => {
-      const mine = Object.keys(D.LORE || {}).filter((id) => D.LORE[id].sec === sec);
-      if (!mine.length) return;
-      const grid = group(sec, mine.filter((id) => known[id]).length, mine.length);
-      grid.classList.add("f2words");
-      mine.forEach((id) => {
-        const k = known[id];
-        const now = k && Object.values(k).includes("now");
-        const b = cell(k ? D.LORE[id].title : "？？？", !!k, false, () => showLore(id));
-        if (k && !now) b.classList.add("past");
-        b.dataset.id = id;
-        grid.append(b);
-      });
-    });
+    if (G.ui && G.ui.buildWorld) G.ui.buildWorld();
+    const fresh = new Set(freshOf("lore").map((id) => (D.LORE[id] || {}).title).filter(Boolean));
+    world.querySelectorAll("dt").forEach((dt) => { if (dt.textContent && fresh.has(dt.textContent)) { dt.classList.add("f2fresh"); dt.append(bang(1)); } });
+    freshOf("lore").forEach((id) => G.codexSeen("lore", id));
   }
 
   // ---------------------------------------------------------------- 詳しい説明
@@ -269,13 +284,24 @@
     return s;
   };
   const flavor = (text, kind, id) => { const p = h("p", "f2flavor"); F2.paintText(p, text, kind, id); return p; };
-  const seen = (kind, id) => { if (G.codexSeen(kind, id)) { const b = list.querySelector(`.f2cell[data-id="${id}"]`); if (b) b.classList.remove("fresh"); } };
+  const seen = (kind, id) => {
+    if (!G.codexSeen(kind, id)) return;
+    const b = list.querySelector(`.f2cell[data-id="${CSS.escape(id)}"]`);
+    if (!b) return;
+    b.classList.remove("fresh");
+    // 見出しの「！」も数え直す
+    const g = b.closest(".f2group"), t = g && g.querySelector("h3");
+    if (!t) return;
+    t.querySelectorAll(".f2bang").forEach((x) => x.remove());
+    const n = g.querySelectorAll(".f2cell.fresh").length;
+    if (n) t.append(bang(n));
+  };
   const narrow = () => window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
   const reveal = () => { if (narrow()) detail.scrollIntoView({ block: "start", behavior: "smooth" }); };
 
   function showUnknown() {
     detail.textContent = "";
-    detail.append(h("p", "fine", { item: "まだ見つけていない。", foe: "まだ出会っていない。", person: "まだ会っていない。", lore: "まだ知らない。" }[cur]));
+    detail.append(h("p", "fine", { item: "まだ見つけていない。", foe: "まだ出会っていない。", person: "まだ会っていない。" }[cur] || "まだ知らない。"));
     reveal();
   }
   function showItem(id) {
@@ -360,43 +386,33 @@
     seen("person", id);
     reveal();
   }
-  function showLore(id) {
-    const e = (D.LORE || {})[id];
-    const k = G.codexLore()[id];
-    if (!e || !k) return showUnknown();
-    detail.textContent = "";
-    detail.append(h("h3", "f2title", e.title), h("p", "fine", e.sec));
-    e.lines.forEach(([key, text]) => {
-      if (!k[key]) return;
-      const p = h("p", "f2line" + (k[key] === "past" ? " past" : ""));
-      F2.paintText(p, text, k[key] === "now" ? "lore" : "lorePast", id);
-      if (k[key] === "past") p.append(h("small", "f2ago", "かつての冒険で"));
-      detail.append(p);
-    });
-    const rest = e.lines.filter(([key]) => !k[key]).length;
-    if (rest) detail.append(h("p", "fine", `まだ知らない行が ${rest} つある。`));
-    reveal();
-  }
-
   // ---------------------------------------------------------------- 切り替えと開く
   function show(key) {
     cur = key;
     TABS.forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === key));
     list.textContent = "";
     detail.textContent = "";
+    panes.hidden = key === "lore";
+    world.hidden = key !== "lore";
     detail.append(h("p", "fine", "一覧から選ぶと、詳しい説明が出る。"));
     // U9：？の人の見つけ方（まだ会っていない人は押せないので、ここに書く）
     if (key === "person") detail.append(h("p", "fine", "？の人には、まだ会っていない。"));
     ({ item: drawItems, foe: drawFoes, person: drawPeople, lore: drawLore })[key]();
+    markTabs();
   }
   F2.open = (key) => {
     if (G.S && G.codexSeed) G.codexSeed(G.S);
     if (F2.syncSlain) F2.syncSlain();
-    show(key || cur);
+    // 何も指定が無ければ、新しい印のあるタブから
+    if (!key) key = freshOf(cur).length ? cur : (TABS.map((b) => b.dataset.tab).find((k) => freshOf(k).length) || cur);
+    show(key);
     if (!dlg.open) dlg.showModal();
-    const first = list.querySelector(".f2cell.fresh") || list.querySelector("button.f2cell") || list.querySelector(".f2cell");
-    if (first) first.focus();
+    markBtn();
+    const first = key === "lore" ? world.querySelector("dt.f2fresh") || world : list.querySelector(".f2cell.fresh") || list.querySelector("button.f2cell") || list.querySelector(".f2cell");
+    if (first) { if (first === world) world.tabIndex = -1; first.focus({ preventScroll: key === "lore" && first === world }); }
   };
+  // 世界の手引き（用語のタブ）を開く。U8 の本文の強調から・古い入口から
+  if (G.ui) G.ui.openWorld = () => { if (dlg.open && cur === "lore") { G.ui.buildWorld(); return; } F2.open("lore"); };
   dlg.addEventListener("close", markBtn);
 
   // 格子の中を矢印キーで辿る（上下は見た目の列に合わせる）

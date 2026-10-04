@@ -67,7 +67,13 @@
     dl = dl || showing;
     if (!dl) return;
     box.classList.add(dl.up ? "u11up" : "u11down");
-    box.append(el("span", "u11d " + (dl.up ? "up" : "down") + (fresh ? "" : " kept"), dl.text));
+    const dEl = el("span", "u11d " + (dl.up ? "up" : "down") + (fresh ? "" : " kept"), dl.text);
+    box.append(dEl);
+    // 札の右に出す。右に場所が無ければ（スマホで札が行の終わりにあるとき）札の上に（u11_gold.css の .above）
+    try {
+      const bar = box.closest("#mbar") || document.body;
+      if (dEl.getBoundingClientRect().right > Math.min(bar.getBoundingClientRect().right, document.documentElement.clientWidth) - 4) dEl.classList.add("above");
+    } catch (e) { /* 測れなくても出す */ }
     if (!fresh) return;
     showing = dl;
     if (!still()) { box.classList.remove("u11flash"); void box.offsetWidth; box.classList.add("u11flash"); }

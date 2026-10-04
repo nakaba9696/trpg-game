@@ -3,7 +3,7 @@
 // - 下絵（海・陸・国の色分け・国境・山・森・川・湿地・荒野・雪原・羅針盤）は明暗ごとに一度だけ描いてとっておく
 // - 上に重ねる（画面の大きさで描く）：道・場所の印・国の名前・場所の名前（重ならないように置く。重なるときは大事なほうだけ）
 // - 指でつまむ・ドラッグ・ホイールで拡大と移動。印を押すと下にその場所のこと
-// 開く場所：冒険の「地図」ボタン（G.ui.openMap を置き換える）と、図鑑の窓の「世界地図」（冒険の外でも）。
+// 開く場所：冒険の「地図」ボタン（G.ui.openMap を置き換える）と、上の道具の列・冒険中の帯の「地図」（U11。冒険の外でも）。
 // index.html・ui.js・f2_codex.js は書き換えない（窓とボタンはここで作る）。見た目は ui/w5_map.css。レーン W＋U（W5）
 (function (G) {
   if (typeof document === "undefined") return;
@@ -512,13 +512,5 @@
 
   // 冒険の「地図」ボタン
   if (G.ui) G.ui.openMap = UI.open;
-  // 図鑑の窓から（冒険の外でも）
-  const codexHead = document.querySelector("#dlgCodex .dhead");
-  if (codexHead) {
-    const b = h("button", "btn w5codex", "世界地図");
-    b.type = "button";
-    b.onclick = () => { const cd = document.getElementById("dlgCodex"); if (cd && cd.open) cd.close(); UI.open(); };
-    const cl = codexHead.querySelector("button:last-of-type");
-    if (cl) cl.before(b); else codexHead.append(b);
-  }
+  // 図鑑とは別の「地図」ボタン（上の道具の列・冒険中の帯）は ui/zu11_quick.js が置く（冒険の外でも開ける）
 })(globalThis.G = globalThis.G || {});

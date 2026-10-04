@@ -20,11 +20,12 @@ body.v9pc #mbar #mGold .u11n { font-size: 14.5px; }
 /* 狭い画面では「所持金」の札を省いて、印と数字だけ */
 @media (max-width: 380px) { #mGold .u11lab { display: none; } }
 
-/* 増減：数字の上に一瞬出る */
+/* 増減：札の右に一瞬出る */
 #mGold .u11d { position: absolute; left: calc(100% + 6px); top: 50%; transform: translateY(-50%); padding: 0 5px; font-size: 12px; font-weight: 700; white-space: nowrap; pointer-events: none;
   border-radius: 3px; background: var(--bar-bg, var(--sheet)); box-shadow: 0 1px 4px rgba(0, 0, 0, .25); }
-/* スマホ：右は詰まっているので、札のすぐ下に出す */
-body:not(.v9pc) #mGold .u11d { left: auto; right: 2px; top: 100%; transform: none; margin-top: 2px; }
+/* 右に場所が無いとき（u11_gold.js が測る）：はみ出さないよう札の上に右寄せで出す（そのあいだは帯の「保存済み」を引っ込める。zu11_quick.css） */
+#mGold .u11d.above { left: auto; right: 0; top: auto; bottom: 100%; transform: none; margin-bottom: 3px; }
+#mbar:has(.u11d.above) .u11saved { visibility: hidden; }
 #mGold .u11d.up { color: var(--u11-up); }
 #mGold .u11d.down { color: var(--u11-down); }
 #mGold.u11up { border-color: var(--u11-up); }
