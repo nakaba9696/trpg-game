@@ -447,8 +447,8 @@
 
   // ---------------------------------------------------------------- トロフィー
   if (Array.isArray(D.TROPHIES)) D.TROPHIES.push(
-    { key: "e4_elder", name: "年経たものを狩る", tier: "銅", desc: "まれに出る強い個体を倒した" },
-    { key: "e4_elder5", name: "古傷の目録", tier: "銀", desc: "冒険をまたいで、五種の強い個体を倒したことがある" },
-    { key: "e4_core", name: "縄張りを崩す", tier: "銅", desc: "使徒の縄張りの眷属を退けて、主を弱らせた" },
+    { key: "e4_elder", name: "年経たものを狩る", tier: "銀", desc: "まれに出る強い個体を倒した" },
+    { key: "e4_elder5", name: "古傷の目録", tier: "金", desc: "冒険をまたいで、五種の強い個体を倒したことがある" },
+    { key: "e4_core", name: "縄張りを崩す", tier: "銀", desc: "使徒の縄張りの眷属を退けて、主を弱らせた" },
   );
 })(globalThis.G = globalThis.G || {});

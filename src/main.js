@@ -30,6 +30,7 @@
   main.save = () => {
     if (G.S) G.S.savedAt = Date.now();
     try { if (G.keepLastBreath) G.keepLastBreath(localStorage, G.S); } catch {} // Q7：倒れる前の自動の枠を残す
+    try { if (G.townAutoSave && G.townAutoSave(localStorage, G.S) && main.onTownSave) main.onTownSave(); } catch {} // Q7：町に着いたらオートセーブの枠へ
     store.write("save", G.S || null);
   };
   main.saveProfile = () => { G.P.updatedAt = Date.now(); store.write("profile", G.P); };
