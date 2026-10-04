@@ -134,7 +134,6 @@
       b.onclick = () => { drawer = on ? null : d.key; ui.render(); const f = document.querySelector(`#panel .u13drawer[data-u13="${CSS.escape(d.key)}"]`); if (f) f.focus(); };
       bar.append(b);
     });
-    if (u13.speedButton) bar.append(u13.speedButton()); // 戦闘の表示の速さ（u13_battle.js）
     const open = plan.drawers.find((d) => d.key === drawer);
     const keep = new Set([...plan.main, ...plan.top, ...(open ? open.groups : [])]);
     els.forEach((el, i) => { if (!keep.has(i)) el.remove(); });

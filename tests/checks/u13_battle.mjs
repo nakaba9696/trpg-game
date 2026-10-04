@@ -96,5 +96,10 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   // 誰に使うかを選んでいる途中（問いだけ）はまとめない
   if (u.plan([{ title: "薬草を誰に使う？", list: [{ id: "cb:item:herb:x", label: "x" }, { id: "b5:cancel", label: "やめる" }] }], S)) fail("U13: 誰に使うかの問いだけなのにまとめる");
 
+  // 速さは独自のボタンを置かず、設定の窓（G.ui.addSetting）に足す
+  const bsrc = readFileSync(new URL("../../src/ui/u13_battle.js", import.meta.url), "utf8");
+  if (!/ui\.addSetting\(\{[\s\S]*?id: "u13speed"[\s\S]*?kind: "select"/.test(bsrc)) fail("U13: 戦闘の表示の速さを設定の窓（G.ui.addSetting）に足していない");
+  if (/speedButton/.test(bsrc + readFileSync(new URL("../../src/ui/u13_menu.js", import.meta.url), "utf8"))) fail("U13: 戦闘の表示の速さの独自のボタンが残っている");
+
   if (!bad) ok(`U13: 戦闘の見せ方（一行の間 ${gap}ms・早送り・「すぐ」・結果の場面・能力値の伸び・戦闘の手の札）`);
 };

@@ -1,7 +1,7 @@
 // U13：戦闘の見せ方（エンジン combat.js は触らない。1 手をまとめて計算した記録を、画面の側で順に見せる）
 // - 1 手の記録（あなた → 仲間 → 敵 → 結果）を、一行ずつ間をおいて出す。動いた者の札を一瞬光らせ、ダメージの数字・HP の棒（fx.js）もその行に合わせる。
 //   画面を押す／キーを押すと残りをすぐ全部出す（早送り）。出している間は次の手を押せない（押すと早送りだけする）。
-//   速さは「ゆっくり／ふつう／すぐ」（G.P.u13speed。記録に残る。無ければ「ふつう」）。「すぐ」は今まで通り一度に出す。
+//   速さは「ゆっくり／ふつう／すぐ」（G.P.u13speed。記録に残る。無ければ「ふつう」。設定の窓 G.ui.addSetting に足す）。「すぐ」は今まで通り一度に出す。
 // - 戦闘が終わったら、すぐ探索の画面に戻さず結果の場面を出す（勝利などの見出し・得た物・成長・一行の HP）。「先へ進む」を押すまでそのまま。
 // - 能力値の点が伸びたら、レベルアップのような演出（ファンファーレ・見出し・伸びた欄が光る）。戦闘の後なら結果の場面の中に、ほかはその場で。
 //   成長の計算には触らず、「表示の点（G.pt）が増えた」ことだけを見る。仲間の HP の上限・腕前が伸びたときも小さく出す。
@@ -73,21 +73,21 @@
   const calm = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const play = (name, delay) => { try { if (G.sound && G.sound.play) G.sound.play(name, delay); } catch {} };
 
-  // 速さの札（戦闘の手の札の並びの右に置く。u13_menu.js が呼ぶ）。押すたびに ゆっくり → ふつう → すぐ
-  u13.speedButton = () => {
-    const cur = u13.speed(G.P);
-    const b = h("button", "u13tab u13speed");
-    b.type = "button";
-    b.title = "戦闘の表示の速さ（押すと替わる）";
-    b.append(h("span", "u13lab", "表示：" + u13.SPEEDS[cur].name));
-    b.onclick = () => {
-      const next = u13.SPEED_ORDER[(u13.SPEED_ORDER.indexOf(cur) + 1) % u13.SPEED_ORDER.length];
-      if (G.P) { G.P.u13speed = next; if (G.main && G.main.saveProfile) G.main.saveProfile(); }
-      ui.render();
-      const f = $("#panel .u13speed"); if (f) f.focus();
-    };
-    return b;
-  };
+  // 速さは「設定」の窓（Q7 の G.ui.addSetting）に足す。窓のファイルはこのあとに読まれる（zz_q7_topbar.js）ので、
+  // 描き直しのたびに口があるか見て、一度だけ足す。口がまだ無ければ、記録の値（G.P.u13speed、既定「ふつう」）だけで動く
+  let registered = false;
+  function registerSetting() {
+    if (registered || typeof ui.addSetting !== "function") return;
+    registered = true;
+    ui.addSetting({
+      id: "u13speed", section: "遊び", label: "戦闘の表示の速さ", kind: "select",
+      options: u13.SPEED_ORDER.map((k) => [k, u13.SPEEDS[k].name]),
+      get: () => u13.speed(G.P),
+      set: (v) => { if (G.P && u13.SPEEDS[v]) { G.P.u13speed = v; if (G.main && G.main.saveProfile) G.main.saveProfile(); } },
+      hint: "戦闘の一手を一行ずつ出す間。「すぐ」は一度に出す。出している間に画面を押すと、残りをすぐ出す",
+    });
+  }
+  setTimeout(registerSetting, 0);
 
   // 戦闘の終わり方（勝利・逃走…）。エンジンが b5AfterCombat(how) を呼ぶので、それを包んで覚える
   let lastHow = null;
@@ -143,7 +143,7 @@
   const skip = (ev) => {
     if (!reveal) return;
     if (ev.type === "keydown" && (ev.altKey || ev.ctrlKey || ev.metaKey || ev.key === "Shift" || ev.key === "Tab")) return;
-    if (ev.target && ev.target.closest && ev.target.closest(".u13speed, dialog, .top")) { reveal.r.finish(); return; }
+    if (ev.target && ev.target.closest && ev.target.closest("dialog, .top")) { reveal.r.finish(); return; }
     reveal.r.finish();
     ev.preventDefault();
     ev.stopPropagation();
@@ -220,6 +220,7 @@
 
   // ---------------------------------------------------------------- 描き直しのたびに
   function post(S) {
+    registerSetting();
     const panel = $("#panel"), log = $("#log");
     if (!panel || !log) return;
     const pend = pendingFx; pendingFx = null;

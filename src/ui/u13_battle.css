@@ -5,11 +5,10 @@
 #log > .u13in { animation: u13in .32s ease-out both; }
 @keyframes u13in { from { opacity: 0; transform: translateX(-6px); } }
 /* 出している間は、次の手を押せない（押すと早送り） */
-#panel.u13wait .act, #panel.u13wait .u13tab:not(.u13speed) { opacity: .55; pointer-events: none; }
+#panel.u13wait .act, #panel.u13wait .u13tab { opacity: .55; pointer-events: none; }
 /* 動いた者（敵の札・一行の札）が一瞬光る */
 .foe.u13act, .b5mem.u13act { animation: u13act .7s ease-out; }
 @keyframes u13act { 0% { box-shadow: 0 0 0 0 var(--accent); } 30% { box-shadow: 0 0 0 3px var(--accent), 0 0 18px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
-.u13speed { margin-left: auto; font-size: 12.5px; letter-spacing: .02em; }
 
 /* ---------------------------------------------------------------- 結果の場面 */
 .u13result { display: grid; gap: 10px; padding: 14px 16px 12px; border: 1px solid var(--accent); border-radius: 3px; background: var(--check-bg, var(--sheet));

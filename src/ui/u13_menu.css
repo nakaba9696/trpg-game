@@ -50,7 +50,6 @@ body.v9pc.v9combat #panel.u13fight .act { min-height: 34px; padding-block: 4px; 
   body.u13combat #panel .u13drawers { position: fixed; left: 0; right: 0; bottom: 0; z-index: 13; margin: 0; flex-wrap: nowrap; gap: 4px;
     padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); background: var(--win-solid, var(--sheet)); border-top: 1px solid var(--rule); box-shadow: 0 -6px 14px rgba(0, 0, 0, .18); }
   body.u13combat #panel .u13drawers .u13tab { flex: 1 1 0; min-width: 0; padding-inline: 6px; }
-  body.u13combat #panel .u13drawers .u13speed { flex: 0 1 auto; font-size: 11.5px; }
   body.u13combat #panel { padding-bottom: 64px; }
   body.u13combat #toActs { display: none; }
   /* 開いた一覧は、下の帯のすぐ上に出る欄 */
