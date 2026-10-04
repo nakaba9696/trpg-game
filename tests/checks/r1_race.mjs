@@ -10,6 +10,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   let bad = 0;
   const fail = (m) => { bad++; fail0(m); };
   const G = loadEngine();
+  G.data.Q8H.off = true; // 悪名がバレたときだけ上がる（Q8）は tests/checks/q8_hidden.mjs で確かめる。ここは悪名の仕組みだけ
   const D = G.data;
   const cre = G.cre;
 
@@ -52,7 +53,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 古いセーブ・種族を書かない始まり
   const stats = {}, caps = {};
-  D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 80; });
+  D.STATS.forEach((k) => { stats[k] = 12; caps[k] = 80; });   // 点（S5）
   const base = { cls: "merc", stats, caps, goal: "rich", profile: { name: "テスト", sex: "男", age: 24, history: "テスト用", personality: "無口" } };
   const start = (profile, seed) => {
     G.rand = seeded(seed || 120);
@@ -122,7 +123,9 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     const b = ctx ? ctx() : G.chance(stat, 0);
     return a - b;
   };
-  const expect = (name, got, want) => { if (got !== want) fail(`${name}: ${got} になった（${want} のはず）`); };
+  // 補正は％で書いてあり、3 で 1 点（S5）。12 点の人の成功率がどれだけ動くかで見る（T は相手の点）
+  const pc = (n, T) => G.clamp(Math.round(G.s5p(12 + G.s5Mod(n) - T)), 5, 95);
+  const expect = (name, got, want, T = G.s5Target(0)) => { const w = pc(want, T) - pc(0, T); if (got !== w) fail(`${name}: ${got} になった（${w} のはず。補正 ${want}）`); };
   expect("狼の夜目（夜の敏捷）", diff({ race: "beast", beast: "wolf" }, "敏捷", "karna", 3), 5);
   expect("狼の夜目（昼は効かない）", diff({ race: "beast", beast: "wolf" }, "敏捷", "karna", 1), 0);
   expect("鳥目（迷宮の知力）", diff({ race: "beast", beast: "bird" }, "知力", "ruins", 1), -5);
@@ -132,17 +135,25 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   expect("エルフの人の目（共和国の魅力）", diff({ race: "elf" }, "魅力", "zephara", 1), 5);
   expect("獣人の人の目（自由都市）", diff({ race: "beast", beast: "fox" }, "魅力", "karna", 1), 0);
   // 耳：逃げるとき。見込み（G.cb.flee）と判定（G.check の「逃走」）が同じ
+  let fleeVs = null;
   const flee = (race) => {
     start(race); at("plains", 1);
     G.startCombat(["goblin"]);
+    fleeVs = { vs: Math.max(...G.alive().map((f) => G.foeVs.flee(G.foeData(f)))) };
     const shown = G.cb.flee();
     const r = G.check("敏捷", 10 - Math.max(...G.alive().map((f) => G.foeData(f).agi)), "逃走");
     if (r.chance !== shown) fail(`${G.r1Name(G.S)}: 逃げる見込み ${shown}% と判定 ${r.chance}% が違う`);
     return shown;
   };
   const fh = flee({ race: "human" });
-  expect("兎の耳（逃げる）", flee({ race: "beast", beast: "rabbit" }) - fh, 10);
-  expect("猫の耳（逃げる）", flee({ race: "beast", beast: "cat" }) - fh, 5);
+  // 人間の見込みに、耳の補正（％）を足したときの見込み
+  const fT = fleeVs;
+  const earAdd = (n) => G.chance("敏捷", fT, n) - G.chance("敏捷", fT);
+  start({ race: "human" }); at("plains", 1);   // flee() の判定で伸びた分を戻す
+  const want10 = earAdd(10), want5 = earAdd(5);
+  const gotR = flee({ race: "beast", beast: "rabbit" }) - fh, gotC = flee({ race: "beast", beast: "cat" }) - fh;
+  if (gotR !== want10 || !(gotR > 0)) fail(`兎の耳（逃げる）: ${gotR} になった（${want10} のはず）`);
+  if (gotC !== want5 || !(gotC > 0)) fail(`猫の耳（逃げる）: ${gotC} になった（${want5} のはず）`);
   // 出来事の見込みと判定が同じ（エルフが王国で魅力の判定）
   start({ race: "elf" }); at("leavel", 1);
   {
