@@ -189,19 +189,19 @@
   tipEl.setAttribute("role", "tooltip");
   tipEl.hidden = true;
   body.append(tipEl);
-  // 記録の窓
+  // ログの窓（画面の名前は「ログ」。「記録」だとセーブと紛らわしい）
   const dlgLog = h("dialog");
   dlgLog.id = "dlgLog";
   const dh = h("div", "dhead");
   const closeLog = h("button", "btn", "閉じる");
   closeLog.type = "button";
   closeLog.onclick = () => dlgLog.close();
-  dh.append(h("h2", "", "記録"), closeLog);
+  dh.append(h("h2", "", "ログ"), closeLog);
   const logAll = h("div", "dbody v9logAll");
   dlgLog.append(dh, logAll);
   dlgLog.addEventListener("click", (ev) => { if (ev.target === dlgLog) dlgLog.close(); });
   body.append(dlgLog);
-  const openLog = h("button", "btn", "記録");
+  const openLog = h("button", "btn", "ログ");
   openLog.id = "openLog";
   openLog.type = "button";
   openLog.title = "これまでの文章を読む";

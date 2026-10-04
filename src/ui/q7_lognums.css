@@ -1,0 +1,9 @@
+/* Q7：ログのダメージの数値（赤）と回復の数値（緑）。色だけでなく太字でも分かるように。明るい版・暗い版の両方で読める濃さ */
+:root { --q7-dmg: #b0201a; --q7-hurt: #7d0f0b; --q7-heal: #17692a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --q7-dmg: #ff8f84; --q7-hurt: #ffb8b0; --q7-heal: #8de29a; } }
+:root[data-theme="dark"] { --q7-dmg: #ff8f84; --q7-hurt: #ffb8b0; --q7-heal: #8de29a; }
+.q7n { font-weight: 700; font-variant-numeric: tabular-nums; }
+.q7n-dmg { color: var(--q7-dmg); }
+/* 受けたダメージは、もっと濃い赤に下線（色の見分けにくい人にも、与えた・受けたの違いが分かる） */
+.q7n-hurt { color: var(--q7-hurt); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
+.q7n-heal { color: var(--q7-heal); }

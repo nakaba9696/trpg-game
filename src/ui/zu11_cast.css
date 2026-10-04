@@ -1,0 +1,6 @@
+/* U11：仲間の名前だけの小さな欄（ui/zu11_cast.js）。PC の左上の札の中だけ（スマホは帯を高くしない。仲間はステータスの窓で見る） */
+.u11party { display: none; }
+body.v9pc #mbar .u11party:not([hidden]) { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 3px 6px; min-width: 0; font-family: var(--f-ui); font-size: 12px; }
+.u11party .u11plab { color: var(--muted); font-size: 11px; }
+.u11party .u11pc { padding: 0 7px; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink); white-space: nowrap; max-width: 12em; overflow: hidden; text-overflow: ellipsis; }
+.u11party .u11pc.talking { border-color: var(--accent); background: var(--accent-soft); color: var(--hi); font-weight: 700; }

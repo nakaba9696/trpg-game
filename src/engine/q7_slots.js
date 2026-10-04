@@ -109,6 +109,17 @@
     return true;
   };
 
+  // キーの近道（S＝セーブ、L＝ロード。同じキーで閉じる）。typing＝文字を打っている所、openDlg＝開いている窓の id、playing＝冒険の画面か
+  // 返すもの："save" | "load" | "close" | null（DOM なしでも呼べる。画面は ui/q7_slots.js）
+  G.slotKeyAction = (ev, typing, openDlg, playing, mode) => {
+    if (!ev || ev.ctrlKey || ev.metaKey || ev.altKey || ev.isComposing || typing) return null;
+    const k = String(ev.key || "").toLowerCase();
+    const want = k === "s" ? "save" : k === "l" ? "load" : null;
+    if (!want) return null;
+    if (openDlg) return openDlg === "dlgSlots" && mode === want ? "close" : null;
+    return playing ? want : null;
+  };
+
   // 自動の枠へ書く直前に呼ぶ。倒れた冒険を書こうとしていて、自動の枠にまだ同じ冒険の生きている姿があれば、それを「倒れる前」として残す
   G.keepLastBreath = (storage, S) => {
     if (!storage || !S || S.over !== "dead") return false;
