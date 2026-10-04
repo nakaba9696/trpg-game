@@ -18,6 +18,7 @@ node tools/build.mjs && node tests/run.mjs
 | `dist/site/portraits/<id>.moods.svg` | 表情の差分のスプライト（その人の `assets/portraits/<id>_<表情>.webp` を 1 枚にまとめたもの。下の「差分のまとめ方」） |
 | `dist/site/scenes/<組>.svg` | 背景の絵のスプライト（`assets/scenes/<id>.webp` を一覧 `docs/art/scenes.json` の組ごとに 8 枚までずつ 1 枚にまとめたもの。A11。1 枚だけの組は `scenes/<id>.webp` のまま） |
 | `dist/site/sounds/<名前>_<何か>.ogg`（webm・mp3） | 録音した効果音（`assets/sounds/` の写し。置いたときだけ。下の「音のファイル」） |
+| `dist/site/music/<場面>.ogg`（webm・mp3） | 曲のファイル（`assets/music/` の写し。置いたときだけ。下の「曲のファイル」） |
 | `dist/site/files.json` | 載せる画像の一覧（公開パス → リポジトリの根からのローカルパス）。Artifact の `files` にそのまま渡す |
 | `dist/site/files-1.json`・`files-2.json`… | 1 回の公開に収まらないときだけ。回ごとの一覧（下の「分けて載せる」） |
 | `dist/site/gone-1.json`・`gone-2.json`… | A12 より前に載せた Artifact を新しくするときだけ使う。1 枚ずつ載せていた基本の立ち絵・魔物の絵（今はスプライトの中）を消す一覧（公開パス → `null`。下の「A12 の載せ替え」） |
@@ -89,4 +90,5 @@ MB は余裕を見て 1000×1000 バイトで数える。予備の埋め込み�
 - 白い背景の消し方（A13・A14）：人物の絵も魔物の絵も白い無地の背景で作るので、`src/ui/a13_cutout.js`（`G.a13.keyOut`）が描く前に一度だけ背景を消して透明にする（同じ鍵は覚えておく。仲間・話している人とその差分は先読みのあと暇なときに処理）。**消すのは絵の外周からつながった、縁の色（白に近い升）にごく近い所だけ**で、線画に囲まれた白（白い魔物の体・毛皮・白い服・白髪・白目・歯・光の反射、耳と髪のあいだの背景も）は残す（A14：迷うなら消さない。A13 の「囲まれた白も消す」と、魔物の「大きな白も消す」はやめた）。境目の 3px は 0/1 で切らず、その画素の色が背景の色とすぐ内側の絵の色（線画があれば線画）のどこにあるかで半透明にし、白と混ざった分を取り除いて色を戻す（ソフトマット・色のにじみ抜き）。内側ほど透けない（線画のすぐ内側の白が透けて穴にならない）。描くときは `G.a13.draw` が imageSmoothingQuality high で、半分より小さく縮めるときは半分ずつ段階的に縮める。立ち絵は消せた canvas に `cut` の印が付き、`src/ui/a13_cutout.css` が足元だけを溶かす。魔物（`v6_monsters.js`）は下の縁からも消す。file:// では画素を読めないので元の絵のまま。白い背景でない絵（隅が白くない）も元の絵のまま。確かめは `tests/checks/a13_cutout.mjs`・`a14_matte.mjs`（実際の絵を縮めた `tests/fixtures/a14/*.png` で、白い体や服が残り、穴が空かず、境目が半透明か）。
 - `src/ui/v8_moods.js`：表情の差分は、読み終わってから顔を入れ替える（それまでは前の顔のまま）。PC の配置（V9）では、話している人の顔に表情を付ける。
 - 音のファイル（S3）：効果音は Web Audio でその場で合成するが、`assets/sounds/<名前>.ogg`・`<名前>_1.ogg`…（webm・mp3 も可。同じ名前なら mp3）を置くと、画像と同じく別ファイルで載り、`G.ASSETS["sounds/<名前>_1"]` に相対パスが入る。`src/ui/sound.js` が最初のタップのあとに読み、いくつかあれば毎回一つ選んで鳴らす（高さと強さを少し揺らす）。無い・読めない（file:// など）ときは合成に戻る。今は 1 つも置いていない（ページの音は合成。`docs/sound/page_before.wav`・`page_after.wav` で聞き比べられる）。置くなら 1 つの版の 511 ファイルに数えられるので、1 つの音に 3〜4 個まで。音量は `G.sound.FILE_GAIN` で揃える。
+- 曲のファイル（S4）：BGM は `src/data/s4_tracks.js` の作曲データを `src/ui/sound_bgm.js` が Web Audio でその場で合成して鳴らすが、`assets/music/<場面>.ogg`（または `<曲の id>.ogg`。webm・mp3 も可）を置くと、別ファイルで載り、`G.ASSETS["music/<場面>"]` に相対パスが入る。その場面に入ったとき読み、繰り返し鳴らす（ループの頭と終わりは自分でつなげておく）。無い・読めないときは合成の曲。場面の名前は `title town town_night tavern inn road dungeon abyss battle boss apostle death epilogue`。埋め込み（`--embed`）で上限を超えるときは、曲のファイルから先に省く。各曲の頭 20 秒は `docs/sound/bgm/<曲の id>.mp3` で聞ける（`node tools/bgm_render.mjs --out docs/sound/bgm 20` で作り直せる）。
 - `src/ui/v6_monsters.js`：魔物の絵は起動の少しあとにまとめて先読みする。

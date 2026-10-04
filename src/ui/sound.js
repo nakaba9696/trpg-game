@@ -610,6 +610,7 @@
   // ボタンを押したときの小さな音。本を開く・頁を移るボタンは、ページをめくる音（snd.clickCue）
   document.addEventListener("click", (ev) => { const b = ev.target.closest && ev.target.closest("button"); if (b && !b.disabled && !b.classList.contains("act")) { const c = snd.clickCue(b); if (c) snd.play(c); } }, true);
 
+  snd.ctx = () => (E ? E.ctx : null); // S4：BGM（sound_bgm.js）も同じ AudioContext で鳴らす
   snd.play = (name, delay) => {
     const st = snd.settings;
     if (!E || st.mute || !SFX[name] || E.ctx.state !== "running") return;
