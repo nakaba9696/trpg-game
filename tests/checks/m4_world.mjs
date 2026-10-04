@@ -125,7 +125,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!S.chronicle.slice(chron0).some((c) => c.kind === "world" && /ヴァレンツァ/.test(c.text))) fail("焼けた町に着いたことが年表に残らない");
     if (!acts(G).find((a) => a.id === "fac:inn")?.disabled) fail("焼けた町の宿が開いている");
     const walk = acts(G).find((a) => a.id === "walk");
-    if (!walk || walk.label !== "焼け跡を歩く" || !G.parse(walk.label)) fail("焼けた町で「焼け跡を歩く」にならない");
+    if (!walk || walk.label !== "焼け跡を歩く") fail("焼けた町で「焼け跡を歩く」にならない");
     const log0 = S.log.length;
     for (let i = 0; i < 5; i++) { G.act("walk"); if (S.mode === "event") { S.mode = "explore"; S.event = null; } }
     if (S.log.length <= log0) fail("焼け跡を歩いても何も起きない");

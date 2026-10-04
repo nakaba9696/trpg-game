@@ -16,9 +16,14 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   }
   for (const [id, a] of Object.entries(D.AGES)) for (const k of Object.keys(a.mod || {})) if (!D.STATS.includes(k)) fail(`年齢 ${id}: 能力値 ${k} が無い`);
   for (const [c, o] of Object.entries(D.CLASS_ORIGIN)) if (!D.CLASSES[c] || !D.ORIGINS[o]) fail(`職業のはじめの生まれ ${c}→${o} が無い`);
-  // 導入は状況の概要だけ（持ち主の決定）：職業の情景・生まれの思い出・年齢の一文・目的の情景は持たない
-  for (const k of ["who", "whoNoOrigin", "arrive", "arriveHome", "goal", "custom"]) if (typeof D.PROLOGUE[k] !== "string") fail(`導入: ${k} の文が無い`);
-  for (const k of ["cls", "age"]) if (D.PROLOGUE[k]) fail(`導入: 使わなくなった ${k} の文が残っている`);
+  // 導入は状況の概要の 3 頁（持ち主の決定。V12 で厚く）：世界の今・あなたは誰か・今どこにいて何を目指すか。目的ごとの情景の挿話は持たない
+  for (const k of ["who", "whoNoOrigin", "arrive", "arriveHome", "goal", "custom", "close", "pastNone", "history"]) if (typeof D.PROLOGUE[k] !== "string") fail(`導入: ${k} の文が無い`);
+  if (!Array.isArray(D.PROLOGUE.world) || D.PROLOGUE.world.length < 3) fail("導入: 世界の今（world）の文が無い");
+  for (const id of Object.keys(D.ORIGINS)) if (!(D.PROLOGUE.life[id] || []).length) fail(`導入: 生まれ ${id} の暮らしの文が無い`);
+  for (const c of Object.keys(D.CLASSES)) for (const a of Object.keys(D.AGES)) if (!(D.PROLOGUE.past[c] || {})[a]) fail(`導入: 職業 ${c}・年齢 ${a} の、冒険者になったわけの文が無い`);
+  for (const k of ["cls", "age", "goals", "scene"]) if (D.PROLOGUE[k]) fail(`導入: 使わなくなった ${k} の文が残っている`);
+  // 地の文に「！」を使わない
+  if (/[！!]/.test(JSON.stringify(D.PROLOGUE))) fail("導入: 「！」がある");
   for (const [id, o] of Object.entries(D.ORIGINS)) if (o.home) fail(`生まれ ${id}: 導入の思い出（home）が残っている`);
   // 明かさない言葉（#1 の持ち主の方針）
   const BANNED = /見世物|観客|客席|舞台|台本|神々が(世界を)?眺め/;
@@ -54,14 +59,19 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     const age = Number(o.profile.age);
     if (!(age >= lo && age <= hi)) fail(`作成 ${i}: 年齢 ${age} が ${D.AGES[o.profile.ageBand].name} の幅の外`);
     const pages = cre.prologue(o);
-    if (pages.length !== 1 || pages.some((pg) => !pg.length || pg.some((t) => !t || /undefined|\{/.test(t)))) fail(`作成 ${i}: 導入が状況の概要の 1 頁になっていない ${JSON.stringify(pages)}`);
+    if (pages.length !== 3 || pages.some((pg) => !pg.length || pg.length > 5 || pg.some((t) => !t || /undefined|\{/.test(t)))) fail(`作成 ${i}: 導入が状況の概要の 3 頁になっていない ${JSON.stringify(pages)}`);
     pages.flat().forEach((t) => scan(`作成 ${i} の導入`, t));
     {
       // 誰か（名前・年齢・職業・生まれ）・どこにいるか（出発地）・何を目指すか（目的の文だけ）
       const all = pages.flat().join("");
       const want = [o.profile.name, `${o.profile.age}歳`, D.CLASSES[o.cls].name, D.ORIGINS[o.profile.origin].name, D.LOCS[D.CLASSES[o.cls].start].name, o.goalText.replace(/[。．.]+$/, "")];
       for (const w of want) if (!all.includes(w)) fail(`作成 ${i}: 導入に「${w}」が無い ${all}`);
-      if (all.length > 260) fail(`作成 ${i}: 導入が長い（${all.length} 字。概要だけにする）`);
+      if (all.length > 900) fail(`作成 ${i}: 導入が長い（${all.length} 字。概要だけにする）`);
+      // 行き先・手順のヒントを書かない（目的の文は除いて調べる）。年齢のほかに数字を出さない
+      const rest = all.replace(o.goalText.replace(/[。．.]+$/, ""), "");
+      const HINT = /竜の墓場|鬼ヶ島|ヴォルグリム|白夜|エンバルダ|灰の荒野|騎士|領主|王位|絶界/;
+      if (HINT.test(rest)) fail(`作成 ${i}: 導入に行き先・手順のヒント「${rest.match(HINT)[0]}」`);
+      if (/[0-9０-９]/.test(rest.replace(`${o.profile.age}歳`, ""))) fail(`作成 ${i}: 導入に数字がある ${rest}`);
     }
     G.rand = seeded(6400 + i);
     G.P = { trophies: {}, graves: [] };

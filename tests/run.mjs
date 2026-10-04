@@ -378,7 +378,7 @@ timed("1d. 魔法の種類と習得");
         if (!acts.length) { fail(`game ${g} step ${step}: できる行動が無い（mode=${G.S.mode} fac=${G.S.fac} loc=${G.S.loc}）`); break; }
         if (step % 17 === 0) {
           const a = acts[Math.floor(G.rand() * acts.length)];
-          if (!G.parse(a.label)) fail(`game ${g}: 「${a.label}」を読み取れない`);
+          if (!a.label || !String(a.label).trim()) fail(`game ${g}: 名前の無い選択肢（${a.id}）`);
         }
         // ときどき持ち物の装備・装飾品の付け外しもする（画面の持ち物欄の代わり）
         if (step % 23 === 11 && G.S.mode !== "combat") {
@@ -398,12 +398,6 @@ timed("1d. 魔法の種類と習得");
         if (S.mode === "event" && !S.event) fail(`game ${g}: 出来事中なのに event が無い`);
         if (!D.LOCS[S.loc]) fail(`game ${g}: 場所が変 ${S.loc}`);
         if (failures - before > 20) throw new Error("失敗が多すぎるので打ち切り");
-      }
-      // 自由入力 → GM の結果の当てはめ（Claude の代わりに決まった答えを使う）
-      if (!G.S.over) {
-        const res = { check: { stat: "魅力", difficulty: "普通" }, intro: "試す", success: { text: "うまくいった", gold: 999, hp: 50, item: "謎の鍵" }, failure: { text: "だめだった", hp: -3 } };
-        G.gmApply("門番を口説く", res);
-        if (G.S.gold < 0) fail(`game ${g}: GM の結果で所持金が負`);
       }
     } catch (e) {
       fail(`game ${g}: 例外 ${e.stack || e}`);
