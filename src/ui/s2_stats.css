@@ -12,3 +12,7 @@
 .statSum { display: flex; align-items: baseline; justify-content: flex-end; gap: 8px; padding: 6px 0 2px; border-top: 1px solid var(--rule); font-size: 13.5px; }
 .statSum b { font-size: 20px; }
 .rollInfo .statTotal { color: var(--ink); font-weight: 700; }
+
+/* 作成画面の外見・生い立ち：中身に合わせて高さが伸びる textarea（setup.js の fitArea）。切れずに全部見える */
+.field textarea.fit { min-height: 0; resize: none; overflow: hidden; line-height: 1.55; overflow-wrap: anywhere; }
+.field:has(> .row > textarea.fit) { align-content: start; }

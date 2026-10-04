@@ -16,16 +16,18 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   }
   for (const [id, a] of Object.entries(D.AGES)) for (const k of Object.keys(a.mod || {})) if (!D.STATS.includes(k)) fail(`年齢 ${id}: 能力値 ${k} が無い`);
   for (const [c, o] of Object.entries(D.CLASS_ORIGIN)) if (!D.CLASSES[c] || !D.ORIGINS[o]) fail(`職業のはじめの生まれ ${c}→${o} が無い`);
-  for (const c of Object.keys(D.CLASSES)) if (!(D.PROLOGUE.cls[c] || []).length) fail(`導入: 職業 ${c} の文が無い`);
-  for (const g of Object.keys(D.GOALS)) if (!D.PROLOGUE.goal[g]) fail(`導入: 目的 ${g} の文が無い`);
+  // 導入は状況の概要だけ（持ち主の決定）：職業の情景・生まれの思い出・年齢の一文・目的の情景は持たない
+  for (const k of ["who", "whoNoOrigin", "arrive", "arriveHome", "goal", "custom"]) if (typeof D.PROLOGUE[k] !== "string") fail(`導入: ${k} の文が無い`);
+  for (const k of ["cls", "age"]) if (D.PROLOGUE[k]) fail(`導入: 使わなくなった ${k} の文が残っている`);
+  for (const [id, o] of Object.entries(D.ORIGINS)) if (o.home) fail(`生まれ ${id}: 導入の思い出（home）が残っている`);
   // 明かさない言葉（#1 の持ち主の方針）
   const BANNED = /見世物|観客|客席|舞台|台本|神々が(世界を)?眺め/;
   const scan = (where, t) => { if (BANNED.test(t)) fail(`${where}: 明かさない言葉が入っている「${t}」`); };
-  for (const o of Object.values(D.ORIGINS)) { scan("生まれ", o.blurb); scan("生まれ", o.home); }
+  for (const o of Object.values(D.ORIGINS)) scan("生まれ", o.blurb);
   for (const a of Object.values(D.AGES)) scan("年齢", a.blurb);
   scan("導入", JSON.stringify(D.PROLOGUE));
   // 導入は世界を説明しない：使徒の名前と「〇〇の使徒」を出さない（二つ名だけだと「契約」のような普通の言葉と重なる）。「神様は良い」と説く文を置かない
-  const told = JSON.stringify([D.PROLOGUE, Object.values(D.ORIGINS).map((o) => [o.blurb, o.home])]);
+  const told = JSON.stringify([D.PROLOGUE, Object.values(D.ORIGINS).map((o) => o.blurb)]);
   for (const m of Object.values(D.MAJIN || {})) for (const w of [m.name, m.title && `${m.title}の使徒`]) if (w && told.includes(w)) fail(`導入: 使徒の名「${w}」を出している`);
   if (/神(様|々)?は(良い|よい|善い|優しい)/.test(told)) fail("導入: 神を説明する文がある");
 
@@ -52,9 +54,15 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     const age = Number(o.profile.age);
     if (!(age >= lo && age <= hi)) fail(`作成 ${i}: 年齢 ${age} が ${D.AGES[o.profile.ageBand].name} の幅の外`);
     const pages = cre.prologue(o);
-    if (pages.length < 3 || pages.some((pg) => !pg.length || pg.some((t) => !t || /undefined|\{/.test(t)))) fail(`作成 ${i}: 導入の文が欠けている ${JSON.stringify(pages)}`);
+    if (pages.length !== 1 || pages.some((pg) => !pg.length || pg.some((t) => !t || /undefined|\{/.test(t)))) fail(`作成 ${i}: 導入が状況の概要の 1 頁になっていない ${JSON.stringify(pages)}`);
     pages.flat().forEach((t) => scan(`作成 ${i} の導入`, t));
-    if (!pages[pages.length - 1].join("").includes(D.LOCS[D.CLASSES[o.cls].start].name)) fail(`作成 ${i}: 導入の最後に最初の町が出ない`);
+    {
+      // 誰か（名前・年齢・職業・生まれ）・どこにいるか（出発地）・何を目指すか（目的の文だけ）
+      const all = pages.flat().join("");
+      const want = [o.profile.name, `${o.profile.age}歳`, D.CLASSES[o.cls].name, D.ORIGINS[o.profile.origin].name, D.LOCS[D.CLASSES[o.cls].start].name, o.goalText.replace(/[。．.]+$/, "")];
+      for (const w of want) if (!all.includes(w)) fail(`作成 ${i}: 導入に「${w}」が無い ${all}`);
+      if (all.length > 260) fail(`作成 ${i}: 導入が長い（${all.length} 字。概要だけにする）`);
+    }
     G.rand = seeded(6400 + i);
     G.P = { trophies: {}, graves: [] };
     try {
@@ -92,11 +100,13 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (cre.value(dr, k) > cre.cap(dr, k) || cre.bonusLeft(dr) < 0) fail("年齢を変えたあと、上限かボーナス点の合計が崩れる");
   }
 
-  // 古いセーブ（年齢の区分・生まれが無い）でも導入の文が作れる
+  // 古いセーブ（年齢の区分・生まれが無い）でも導入の文が作れる。「自分で決める」目的は書いた文をそのまま使う
   {
     const old = { cls: "merc", goal: { id: "rich", text: "大陸一の大金持ちになる" }, profile: { name: "ロイド", sex: "男", age: "45", history: "テスト用" } };
-    try { const pg = cre.prologue(old); if (!pg.flat().join("").includes("膝は冷える")) fail("古いセーブ: 年齢から区分を推し量れない"); }
+    try { const t = cre.prologue(old).flat().join(""); if (!t.includes("ロイド") || !t.includes("45歳") || !t.includes("大陸一の大金持ちになる") || /undefined|\{/.test(t)) fail(`古いセーブ: 導入が崩れる ${t}`); }
     catch (e) { fail("古いセーブ: 導入で例外 " + (e.stack || e)); }
+    const mine = cre.prologue({ cls: "thief", goal: "custom", goalText: "生き別れの妹を探し出す", profile: { name: "ミア", age: "19", origin: "nerva" } }).flat().join("");
+    if (!mine.includes("「生き別れの妹を探し出す」")) fail(`自分で決めた目的が導入にそのまま出ない ${mine}`);
   }
   if (!bad) ok(`キャラクター作成（おまかせで ${made} 人が旅立つ・ボーナス点・生まれ ${Object.keys(D.ORIGINS).length}・年齢 ${Object.keys(D.AGES).length}）`);
 };

@@ -100,7 +100,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     o.profile.race = want.race;
     if (want.beast) o.profile.beast = want.beast;
     const pages = cre.prologue(o);
-    if (!pages[1].some((t) => D.R1_TEXT.prologue[want.race].some((x) => x.replace("{beast}", want.beast ? D.BEASTS[want.beast].name : "") === t))) fail(`${nm}: 導入に種族の一行が無い`);
+    if (pages.flat().some((t) => !t || /undefined|\{/.test(t))) fail(`${nm}: 導入が崩れる`);  // 導入は状況の概要だけ（種族の一行は添えない）
     pages.flat().forEach((t) => scan(`${nm} の導入`, t));
     G.rand = seeded(1300 + i);
     G.P = { trophies: {}, graves: [] };

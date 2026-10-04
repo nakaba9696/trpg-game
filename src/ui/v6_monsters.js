@@ -57,46 +57,12 @@
     img.src = src;
     return (imgs[src] = img);
   };
-  // 縁から続く白っぽい所（背景）を消す。魔物の中の白（目・牙）は縁と繋がっていないので残る
+  // 背景を消す（A14）：絵の外周からつながった白い背景だけを、境目を半透明にして消す（a13_cutout.js の G.a13.keyOut。下の縁からも）。
+  // 魔物の中の白（白い毛皮・目・牙・光の反射）は消さない。画素を読めない・共有の処理が無いときは消さない（ぼかしだけ）
   function keyOut(g, W, H) {
-    const d = g.getImageData(0, 0, W, H), p = d.data, n = W * H;
-    const bg = new Uint8Array(n), q = new Int32Array(n);
-    let qt = 0;
-    const light = (i) => {
-      const r = p[i * 4], gg = p[i * 4 + 1], b = p[i * 4 + 2];
-      const mn = Math.min(r, gg, b), mx = Math.max(r, gg, b);
-      return mn > 224 && mx - mn < 26;
-    };
-    const seed = (i) => { if (!bg[i] && light(i)) { bg[i] = 1; q[qt++] = i; } };
-    for (let x = 0; x < W; x++) { seed(x); seed((H - 1) * W + x); }
-    for (let y = 0; y < H; y++) { seed(y * W); seed(y * W + W - 1); }
-    for (let qh = 0; qh < qt; qh++) {
-      const i = q[qh], x = i % W;
-      if (x > 0) seed(i - 1);
-      if (x < W - 1) seed(i + 1);
-      if (i >= W) seed(i - W);
-      if (i < n - W) seed(i + W);
-    }
-    // 縁と繋がっていなくても、大きな真っ白の所（脚のあいだなど）は背景。小さな白（目・牙）は残す
-    const white = (i) => { const mn = Math.min(p[i * 4], p[i * 4 + 1], p[i * 4 + 2]); return mn > 236 && Math.max(p[i * 4], p[i * 4 + 1], p[i * 4 + 2]) - mn < 16; };
-    const seen = new Uint8Array(n), big = n * 0.006;
-    for (let s = 0; s < n; s++) {
-      if (bg[s] || seen[s] || !white(s)) continue;
-      let t = 0;
-      q[t++] = s; seen[s] = 1;
-      for (let h = 0; h < t; h++) {
-        const i = q[h], x = i % W;
-        for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) if (j >= 0 && j < n && !seen[j] && !bg[j] && white(j)) { seen[j] = 1; q[t++] = j; }
-      }
-      if (t > big) for (let h = 0; h < t; h++) bg[q[h]] = 1;
-    }
-    for (let i = 0; i < n; i++) {
-      if (bg[i]) { p[i * 4 + 3] = 0; continue; }
-      const x = i % W;
-      const edge = (x > 0 && bg[i - 1]) || (x < W - 1 && bg[i + 1]) || (i >= W && bg[i - W]) || (i < n - W && bg[i + W]);
-      if (edge) { const mn = Math.min(p[i * 4], p[i * 4 + 1], p[i * 4 + 2]); p[i * 4 + 3] = Math.min(255, (255 - mn) * 5); }
-    }
-    g.putImageData(d, 0, 0);
+    if (!G.a13 || !G.a13.keyOut) return;
+    const d = g.getImageData(0, 0, W, H);
+    if (G.a13.keyOut(d.data, W, H, { bottom: true }) > 0) g.putImageData(d, 0, 0);
   }
   function sprite(id, img) {
     if (sprites[id]) return sprites[id];
@@ -160,6 +126,12 @@
     else preload();
   }
 
+  // なめらかに縮めて描く（A14。a13_cutout.js の G.a13.draw。無ければそのまま）
+  const draw = (ctx, sp, x, y, w, h) => {
+    const sw = sp.width || sp.naturalWidth, sh = sp.height || sp.naturalHeight;
+    if (G.a13 && G.a13.draw && sw && sh) G.a13.draw(ctx, sp, 0, 0, sw, sh, x, y, w, h);
+    else ctx.drawImage(sp, x, y, w, h);
+  };
   // ---------------------------------------------------------------- 描く（x：真ん中、base：足元、s：大きさ。art_monsters.js と同じ）
   G.paintMonster = (ctx, x, base, s, f) => {
     f = f || {};
@@ -172,11 +144,11 @@
     if (key.startsWith("portraits/")) {
       // 人の姿の敵：胸から上の絵（4:5）を、足元の少し上まで
       const hh = D * 0.95, ww = hh * 0.8;
-      ctx.drawImage(sp, x - ww / 2, base - hh, ww, hh);
+      draw(ctx, sp, x - ww / 2, base - hh, ww, hh);
     } else {
       ctx.fillStyle = "rgba(0,0,0,.4)";
       ctx.beginPath(); ctx.ellipse(x, base - 1, D * 0.3, D * 0.04, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.drawImage(sp, x - D / 2, base - D * 0.97, D, D);
+      draw(ctx, sp, x - D / 2, base - D * 0.97, D, D);
     }
     ctx.restore();
   };
