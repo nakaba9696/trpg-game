@@ -86,7 +86,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     for (const k of D.STATS) {
       if ((cre.modParts(dr, k).race || 0) !== (sp.mod[k] || 0)) fail(`${nm}: ${k} の種族の補正が出ない`);
       const m = cre.modParts(dr, k);
-      const expect = Math.max(1, Math.min(cre.MAX_PT, dr.rolled[k] + m.age + m.origin + m.race)) + (dr.bonus[k] || 0);   // 点（S2）
+      const expect = Math.max(D.S2 ? D.S2.MIN : 1, dr.rolled[k] + m.age + m.origin + m.race) + (dr.bonus[k] || 0);   // 点（S2。下限は D.S2.MIN、上限は無い）
       if (cre.value(dr, k) !== expect) fail(`${nm}: ${k} が振った値＋補正と合わない（${cre.value(dr, k)} / ${expect}）`);
     }
     for (const band of ["young", "prime", "old"]) {
