@@ -173,6 +173,30 @@ for (let i = 0; i < 2; i++) {
 }
 res.steps.codex = { first: codex[0], second: codex[1], longTasks: lt(await ltSince(t)) };
 
+// ---- 図鑑がいっぱいの冒険（魔物・人物・品をすべて見たことにして）で、魔物・人物のタブを開く。2.5 秒のあいだの Long Tasks も
+const full = await page.evaluate(async () => {
+  const c = G.codex(), F2 = G.f2, at = { by: "測る", date: "-", at: "-" };
+  F2.itemIds().forEach((id) => { c.items[id] = c.items[id] || { ...at }; });
+  F2.foeIds().forEach((id) => { c.foes[id] = c.foes[id] || { ...at, kills: 1 }; });
+  c.people = c.people || {};
+  F2.peopleIds().forEach((id) => { c.people[id] = c.people[id] || { ...at, ev: 1, rels: {} }; });
+  const out = {};
+  for (const tab of ["foe", "person", "foe", "person"]) {
+    const t0 = performance.now();
+    const n0 = window.__lt.length;
+    F2.open(tab);
+    await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+    const shown = performance.now() - t0;
+    await new Promise((r) => setTimeout(r, 2500));
+    const lts = window.__lt.slice(n0).filter(([s]) => s >= t0);
+    out[out[tab] ? tab + "2" : tab] = { shown: Math.round(shown), longTasks: lts.length, ltTotal: Math.round(lts.reduce((a, [, d]) => a + d, 0)), ltMax: Math.round(Math.max(0, ...lts.map(([, d]) => d))) };
+    document.querySelectorAll("dialog[open]").forEach((d) => d.close());
+    await new Promise((r) => setTimeout(r, 300));
+  }
+  return out;
+});
+res.steps.codexFull = full;
+
 // ---- 場面の切り替え（町を移る・施設に入る。背景の描き直し）
 t = await now();
 const sw = [];
