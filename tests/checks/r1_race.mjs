@@ -1,7 +1,8 @@
 // R1：種族（人間・エルフ・獣人）。engine/zr1_race.js・data/r1_races.js・data/events_r1.js を DOM なしで確かめる
 // - 表の整合（能力値・技能・特性・年齢の幅・名前・国）
 // - 古いセーブ（種族が無い）は人間として動く。種族を書かない始まりでは乱数の並びが変わらない
-// - 作成：種族と元の獣を選ぶと、補正・年齢・名前・導入が変わる。能力値は振り直さない。そのまま冒険を始められる
+// - 作成：主人公は人間だけ（種族を選べない。古い下書きに種族があっても人間で始まる）
+// - 古いセーブの人間でない主人公（エルフ・獣人それぞれ）：そのまま遊べる・導入に種族の一行
 // - 判定：夜目・鳥目と遠目・冬毛・耳・人の目。見込みの％と判定の％が同じ
 // - 出来事：既存の出来事に足した選択肢・種族の出来事を最後まで通す。見せない言葉が無い
 // - 仲間・評判（M3）・恋（M10）・人生の物語（M6）・墓碑
@@ -73,32 +74,33 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   if ("race" in S.profile) fail("古いセーブを読んだだけで種族が書き込まれた");
   if (G.r1GraveLine({ name: "古い墓" }) !== "") fail("古い墓碑に種族の行が出る");
 
-  // ---------------------------------------------------------------- 作成
+  // ---------------------------------------------------------------- 作成：主人公は人間だけ
   const rnd = seeded(1200);
-  const every = [{ race: "human" }, { race: "elf" }, ...D.BEAST_KEYS.map((b) => ({ race: "beast", beast: b }))];
-  every.forEach((want, i) => {
+  if (cre.setRace || cre.setBeast || cre.randomRace) fail("作成で種族を選ぶ仕組みが残っている");
+  {
     const dr = cre.fresh(rnd);
-    const rolled = { ...dr.rolled };
-    if (want.race === "beast") cre.setBeast(dr, want.beast, rnd); else cre.setRace(dr, want.race, rnd);
-    const nm = G.r1Name(want);
-    if (JSON.stringify(dr.rolled) !== JSON.stringify(rolled)) fail(`${nm}: 種族を変えたら能力値を振り直した`);
-    const sp = G.r1Spec(want);
-    for (const k of D.STATS) {
-      if ((cre.modParts(dr, k).race || 0) !== (sp.mod[k] || 0)) fail(`${nm}: ${k} の種族の補正が出ない`);
-      const m = cre.modParts(dr, k);
-      const expect = Math.max(D.S2 ? D.S2.MIN : 1, dr.rolled[k] + m.age + m.origin + m.race) + (dr.bonus[k] || 0);   // 点（S2。下限は D.S2.MIN、上限は無い）
-      if (cre.value(dr, k) !== expect) fail(`${nm}: ${k} が振った値＋補正と合わない（${cre.value(dr, k)} / ${expect}）`);
-    }
+    if (dr.race || dr.beast) fail("作成の下書きに種族が入った");
+    dr.race = "elf"; dr.beast = "wolf";   // 古い下書き
+    const o = cre.options(dr, rnd);
+    if (o.profile.race !== "human" || o.profile.beast) fail(`作成した主人公が人間にならない（${o.profile.race}）`);
+    for (const k of D.STATS) if ((cre.modParts(dr, k).race || 0) !== 0) fail(`作成で種族の補正が付いた（${k}）`);
     for (const band of ["young", "prime", "old"]) {
       cre.setAge(dr, band, rnd);
-      const [lo, hi] = cre.ageRange(dr);
+      const [lo, hi] = D.AGES[band].range;
       const a = Number(dr.profile.age);
-      if (!(a >= lo && a <= hi)) fail(`${nm}: ${band} の歳 ${a} が幅 ${lo}〜${hi} の外`);
+      if (!(a >= lo && a <= hi)) fail(`${band} の歳 ${a} が人間の幅 ${lo}〜${hi} の外`);
     }
-    const o = cre.options(dr, rnd);
-    if (o.profile.race !== want.race || (want.beast && o.profile.beast !== want.beast)) fail(`${nm}: 冒険に種族が渡らない`);
+  }
+
+  // ---------------------------------------------------------------- 古いセーブの人間でない主人公：そのまま遊べる
+  const every = [{ race: "elf" }, ...D.BEAST_KEYS.map((b) => ({ race: "beast", beast: b }))];
+  every.forEach((want, i) => {
+    const nm = G.r1Name(want);
+    const o = cre.options(cre.fresh(rnd), rnd);
+    o.profile.race = want.race;
+    if (want.beast) o.profile.beast = want.beast;
     const pages = cre.prologue(o);
-    if (want.race !== "human" && !pages[1].some((t) => D.R1_TEXT.prologue[want.race].some((x) => x.replace("{beast}", want.beast ? D.BEASTS[want.beast].name : "") === t))) fail(`${nm}: 導入に種族の一行が無い`);
+    if (!pages[1].some((t) => D.R1_TEXT.prologue[want.race].some((x) => x.replace("{beast}", want.beast ? D.BEASTS[want.beast].name : "") === t))) fail(`${nm}: 導入に種族の一行が無い`);
     pages.flat().forEach((t) => scan(`${nm} の導入`, t));
     G.rand = seeded(1300 + i);
     G.P = { trophies: {}, graves: [] };
@@ -106,20 +108,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       G.newGame(o);
       if (G.r1Name(G.S) !== nm) fail(`${nm}: 冒険の種族が ${G.r1Name(G.S)}`);
       for (let t = 0; t < 40 && !G.S.over; t++) { const acts = G.actions().flatMap((x) => x.list).filter((a) => !a.disabled); if (!acts.length) break; G.act(acts[Math.floor(G.rand() * acts.length)].id); }
-    } catch (e) { fail(`${nm}: 作成した人物で遊ぶと例外 ${e.stack}`); }
+    } catch (e) { fail(`${nm}: 古いセーブの主人公で遊ぶと例外 ${e.stack}`); }
   });
-  // 名前の響き：エルフを何人か作ると、エルフの名前が出る
-  {
-    let elfName = 0;
-    for (let i = 0; i < 40; i++) { const dr = cre.fresh(rnd); dr.origin = "karna"; cre.setRace(dr, "elf", rnd); if (D.PROFILE.names.elf[dr.sex].includes(dr.profile.name)) elfName++; }
-    if (elfName < 15) fail(`エルフの名前の響きがほとんど出ない（${elfName}/40）`);
-  }
-  // おまかせ：人間が多く、獣人・エルフも出る
-  {
-    const n = { human: 0, elf: 0, beast: 0 };
-    for (let i = 0; i < 300; i++) { const dr = cre.fresh(rnd); cre.randomRace(dr, rnd); n[dr.race || "human"]++; }
-    if (!(n.human > n.beast && n.beast > n.elf && n.elf > 10)) fail(`おまかせの種族の割合がおかしい ${JSON.stringify(n)}`);
-  }
 
   // ---------------------------------------------------------------- 判定
   const at = (loc, phase) => { G.S.loc = loc; G.S.phase = phase; G.S.mode = "explore"; };
@@ -268,18 +258,19 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (se) [...se.life, ...(se.after || [])].forEach((t) => scan("エルフの物語", t));
   }
 
-  // ---------------------------------------------------------------- ランダムプレイ（種族をおまかせで）
+  // ---------------------------------------------------------------- ランダムプレイ（古いセーブの主人公の種族を回す）
   let errs = 0;
   for (let i = 0; i < 40; i++) {
-    const dr = cre.fresh(rnd);
-    cre.randomRace(dr, rnd);
+    const o = cre.options(cre.fresh(rnd), rnd);   // 古いセーブの主人公を、種族を回して作る
+    const want = every[i % (every.length + 1)] || { race: "human" };
+    o.profile.race = want.race; if (want.beast) o.profile.beast = want.beast;
     G.rand = seeded(1700 + i);
     G.P = { trophies: {}, graves: [] };
     try {
-      G.newGame(cre.options(dr, rnd));
+      G.newGame(o);
       for (let t = 0; t < 150 && !G.S.over; t++) { const acts = G.actions().flatMap((x) => x.list).filter((a) => !a.disabled); if (!acts.length) break; G.act(acts[Math.floor(G.rand() * acts.length)].id); }
       G.S.log.forEach((l) => { if (/undefined/.test(l.text || "")) fail(`ランダムプレイ ${i}: 記録に undefined「${l.text}」`); });
-    } catch (e) { errs++; fail(`ランダムプレイ ${i}（${G.r1Name({ profile: { race: dr.race, beast: dr.beast } })}）: 例外 ${e.stack}`); }
+    } catch (e) { errs++; fail(`ランダムプレイ ${i}（${G.r1Name({ profile: o.profile })}）: 例外 ${e.stack}`); }
   }
   if (!bad) ok(`R1：種族 ${Object.keys(D.RACES).length}・獣 ${D.BEAST_KEYS.length}・出来事 ${r1Events.length}（通した選択 ${ran}）`);
 };
