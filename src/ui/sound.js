@@ -549,10 +549,10 @@
   snd.source = (name) => (snd.buffers && snd.buffers[name] && snd.buffers[name].length ? "file" : "synth");
   snd.buffers = {};
   // S3：ボタン → 押したときの音（DOM が無くても、id・dataset・getAttribute・closest を持つ物なら判じられる。テストはこれを見る）
-  //   本を開く（世界の手引き・図鑑）と、本の中の頁を移るタブ（手引き・図鑑・トロフィーと墓碑）は "page"。
+  //   本を開く（図鑑。世界の手引きはその「用語」のタブ）と、本の中の頁を移るタブ（図鑑・トロフィーと墓碑）は "page"。
   //   導入の本の「ページをめくる」「前のページ」は setup.js が "page" を鳴らすので、ここでは鳴らさない（null）。ほかは "click"
-  const BOOK_OPEN = { openWorld: 1, openCodex: 1 };
-  const BOOK_DLG = "#dlgWorld, #dlgCodex, #dlgTrophy";
+  const BOOK_OPEN = { openCodex: 1, u11Codex: 1 }; // 世界の手引きは図鑑の「用語」のタブ（U11）
+  const BOOK_DLG = "#dlgCodex, #dlgTrophy";
   snd.clickCue = (b) => {
     const fid = b.dataset && b.dataset.fid;
     if (fid === "b-next" || fid === "b-prev") return null;

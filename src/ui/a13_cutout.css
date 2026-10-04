@@ -1,0 +1,8 @@
+/* A13：白い背景を消せた立ち絵（canvas に cut の印。ui/a13_cutout.js・v4_assets.js）は、縁を四角くぼかす覆いをやめ、足元だけを背景の絵へ溶かす。
+   消せなかった絵（file:// で画素を読めないときなど）は今までの覆い（style.css・v9_pc.css）のまま */
+#stand .standFace.cut, .v9fig.img .v9face.cut {
+  -webkit-mask-image: linear-gradient(#000 0, #000 70%, transparent 97%);
+  mask-image: linear-gradient(#000 0, #000 70%, transparent 97%);
+  -webkit-mask-composite: source-over; mask-composite: add; }
+/* 背景の絵の上に立つので、輪郭に薄い影を落として沈ませる（白い縁の代わり） */
+#stand .standFace.cut { filter: var(--stand-filter) drop-shadow(0 0 10px rgba(0, 0, 0, .35)); }

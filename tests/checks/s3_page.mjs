@@ -35,8 +35,8 @@ export default ({ G, fail, ok }) => {
   // ---------------------------------------------------------------- ボタン → 音
   const btn = (o) => ({ id: o.id || "", dataset: o.fid ? { fid: o.fid } : {}, getAttribute: (k) => (k === "role" ? o.role || null : null), closest: (sel) => (o.dlg && sel.split(",").map((x) => x.trim()).includes("#" + o.dlg) ? {} : null) });
   const want = [
-    [{ id: "openWorld" }, "page"], [{ id: "openCodex" }, "page"],
-    [{ role: "tab", dlg: "dlgCodex" }, "page"], [{ role: "tab", dlg: "dlgWorld" }, "page"], [{ role: "tab", dlg: "dlgTrophy" }, "page"],
+    [{ id: "openCodex" }, "page"], [{ id: "u11Codex" }, "page"], // 世界の手引きは図鑑の「用語」のタブ（U11）
+    [{ role: "tab", dlg: "dlgCodex" }, "page"], [{ role: "tab", dlg: "dlgTrophy" }, "page"],
     [{ fid: "b-next" }, null], [{ fid: "b-prev" }, null], [{ fid: "b-go" }, "click"], [{ id: "openSound" }, "click"], [{ role: "tab", dlg: "dlgOther" }, "click"],
   ];
   for (const [o, w] of want) { const got = snd.clickCue(btn(o)); if (got !== w) F(`ボタン ${JSON.stringify(o)} の音が ${got}（${w} のはず）`); }

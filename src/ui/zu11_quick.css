@@ -1,0 +1,48 @@
+/* U11：帯の下の段の [ステータス][図鑑][地図]・図鑑の新しい印（赤い「！」）・保存の印（ui/zu11_quick.js・ui/f2_codex.js） */
+:root { --u11-bang: #c62a1d; --u11-bang-ink: #fff; --u11-bang-ring: rgba(255, 250, 238, .95); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u11-bang: #d8392b; --u11-bang-ring: rgba(8, 12, 12, .95); } }
+:root[data-theme="dark"] { --u11-bang: #d8392b; --u11-bang-ring: rgba(8, 12, 12, .95); }
+
+/* ---------------------------------------------------------------- 帯：ステータスのボタンを下の段へ移したので、右の列は無くす */
+#mbar.u11q { grid-template-columns: minmax(0, 1fr); }
+#mbar.u11q.hasface { grid-template-columns: auto minmax(0, 1fr); }
+#mbar .u11quick { grid-column: 1 / -1; display: flex; gap: 6px; min-width: 0; margin-top: 2px; }
+body #mbar .u11quick .btn.u11qb { grid-column: auto; grid-row: auto; flex: 1 1 0; min-width: 0; min-height: 36px; padding: 4px 8px; font-size: 14px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; position: relative; }
+body #mbar .u11quick .btn.u11main { flex-grow: 1.35; font-weight: 700; }
+body.v9pc #mbar .u11quick .btn.u11qb { min-height: 32px; font-size: 13.5px; }
+.u11key { font-family: var(--f-ui); font-size: 10.5px; line-height: 1; padding: 2px 4px; border: 1px solid var(--rule); border-radius: 3px; color: var(--muted); }
+/* 指で触る画面ではキーの札は出さない */
+@media (hover: none), (max-width: 600px) { .u11key { display: none; } }
+
+/* スマホで冒険しているあいだは、上の道具の列の図鑑・地図を隠す（帯に大きいのがある） */
+@media (max-width: 999.98px) { body.u11inplay:not(.v9pc) .top #openCodex, body.u11inplay:not(.v9pc) .top #openMap { display: none; } }
+
+/* ---------------------------------------------------------------- 新しい印：赤い丸に白い「！」（色だけに頼らない） */
+.f2bang, [data-codex-open].fresh::after, .f2cell.fresh::after {
+  display: inline-grid; place-items: center; min-width: 17px; height: 17px; padding: 0 3px; border-radius: 999px;
+  background: var(--u11-bang); color: var(--u11-bang-ink); box-shadow: 0 0 0 1.5px var(--u11-bang-ring);
+  font-family: var(--f-ui); font-size: 11.5px; font-weight: 700; line-height: 1; letter-spacing: 0; vertical-align: 1px; }
+[data-codex-open].fresh::after, .f2cell.fresh::after { content: "！"; }
+#openCodex.fresh::after { content: "！"; display: inline-grid; place-items: center; line-height: 1; position: static; width: auto; height: 17px; margin-left: 5px; border-radius: 999px; background: var(--u11-bang); vertical-align: 1px; }
+#u11Codex.fresh::after { position: absolute; top: -7px; right: -6px; margin: 0; }
+.f2cell.fresh::after { position: absolute; top: -6px; right: -6px; width: auto; }
+.f2bang { margin-left: 6px; }
+.f2world dt.f2fresh { color: var(--u11-bang); }
+:root[data-theme="dark"] .f2world dt.f2fresh { color: #f08a72; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .f2world dt.f2fresh { color: #f08a72; } }
+.tabs .btn.fresh { border-color: var(--u11-bang); }
+
+/* 用語のタブ：世界の手引き */
+.f2world { display: grid; gap: 8px; margin-top: 8px; }
+.f2world:focus { outline: none; }
+
+/* ---------------------------------------------------------------- 保存の印：帯の右上に一瞬 */
+#mbar .u11saved { position: absolute; top: 5px; right: 10px; font-family: var(--f-ui); font-size: 11px; color: var(--ok); opacity: 0; pointer-events: none; white-space: nowrap; padding: 0 4px; border-radius: 2px; background: var(--bar-bg); }
+#mbar .u11saved.on { animation: u11saved 1.5s ease-out forwards; }
+@keyframes u11saved { 0% { opacity: 0; } 15% { opacity: .95; } 70% { opacity: .95; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { #mbar .u11saved.on { animation: none; opacity: .95; } }
+
+/* 図鑑のタブ：狭い画面では字を縦に割らず、二段に折り返す（「！」が付いても読める） */
+#dlgCodex .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+#dlgCodex .tabs .btn { white-space: nowrap; }

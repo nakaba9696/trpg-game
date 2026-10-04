@@ -13,7 +13,7 @@
   const D = G.data;
   const F2 = (G.f2 = G.f2 || {});
 
-  G.onCodex = G.onCodex || null;           // 画面への通知（新しく埋まった項目）：(kind "item" | "foe", id)
+  G.onCodex = G.onCodex || null;           // 画面への通知（新しく埋まった項目）：(kind "item" | "foe" | "person" | "lore", id)
   G.onCodexChange = G.onCodexChange || null; // 図鑑が変わった（倒した数を含む）。画面が profile を保存する
 
   // 図鑑に載せない物：素手と、データに無い物（"x:" の拾い物）
@@ -31,6 +31,8 @@
     if (!c.items) c.items = {};
     if (!c.foes) c.foes = {};
     if (!c.people) c.people = {};
+    // U11：新しく載った印（c.fresh）を入口の赤い「！」に出すようにした。それより前の記録の印は「見た」扱いにする（いきなり大量の！が付かないように）
+    if (!c.freshV) { c.fresh = {}; c.freshV = 1; }
     return c;
   };
   const stamp = () => {
@@ -44,6 +46,8 @@
     (c.fresh || (c.fresh = {}))[kind + ":" + id] = 1;
     if (G.onCodex) try { G.onCodex(kind, id); } catch {}
   };
+  // U11：新しい印の一覧（"kind:id"）。kind を渡せばその種類だけ。用語（lore）も含む
+  G.codexFresh = (kind) => Object.keys(G.codex().fresh || {}).filter((k) => !kind || k.startsWith(kind + ":")).map((k) => kind ? k.slice(kind.length + 1) : k);
   G.codexIsFresh = (kind, id) => !!(G.codex().fresh || {})[kind + ":" + id];
   G.codexSeen = (kind, id) => { const f = G.codex().fresh; if (!f || !f[kind + ":" + id]) return false; delete f[kind + ":" + id]; changed(); return true; };
 
@@ -93,7 +97,10 @@
 
   // 冒険をまたいだ図鑑を一つにまとめる（claude.ai のデータとこのブラウザの両方に残っていたとき。main.js が呼ぶ）
   G.codexMerge = (a, b) => {
-    const out = { items: {}, foes: {}, people: {}, fresh: Object.assign({}, (a && a.fresh) || {}, (b && b.fresh) || {}) };
+    // U11：新しい印は、印の形が変わったあと（freshV）の記録の分だけ持ち越す
+    const nowFresh = (c) => (c && c.freshV && c.fresh) || {};
+    const out = { items: {}, foes: {}, people: {}, fresh: Object.assign({}, nowFresh(a), nowFresh(b)) };
+    if ((a && a.freshV) || (b && b.freshV)) out.freshV = 1;
     [a, b].forEach((c) => {
       if (!c) return;
       Object.entries(c.items || {}).forEach(([id, e]) => { const o = out.items[id]; if (!o || (e.at || 0) < (o.at || 0)) out.items[id] = { ...e }; });
@@ -237,7 +244,11 @@
   if (G.openLore) {
     const baseOpenLore = G.openLore;
     G.openLore = (trig, quiet) => {
+      const id = String(trig || "").split(":")[0];
+      // U11：かつての冒険でも知らなかった項目が初めて載ったら、図鑑の用語に新しい印
+      const before = G.P && G.P.loreSeen && G.P.loreSeen[id] && G.P.loreSeen[id].length;
       const r = baseOpenLore(trig, quiet);
+      if (r && !before && !quiet) notify("lore", id);
       if (r) changed();
       return r;
     };
