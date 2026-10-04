@@ -56,8 +56,9 @@ export default ({ G, fail, seeded }) => {
   autoSave(st);
   G.writeSlot(st, 3, S);
   let list = G.listSlots(st);
-  if (list.length !== G.SLOT_COUNT + 1) fail(`一覧の数が違う：${list.length}`);
-  if (list[0].kind !== "auto" || list[0].empty) fail("一覧の先頭が自動の枠でない");
+  // 並び：オートセーブ（町に着いたとき。空でも並ぶ）→ 中断（最後の行動）→ 手動 1〜N
+  if (list.length !== G.SLOT_COUNT + 2) fail(`一覧の数が違う：${list.length}`);
+  if (list[0].kind !== "town" || list[1].kind !== "auto" || list[1].empty) fail(`一覧の並びが オートセーブ → 中断 でない：${list.slice(0, 2).map((e) => e.kind).join(",")}`);
   const s3 = list.find((e) => e.id === "slot3");
   if (!s3 || s3.empty || !s3.meta) fail("保存した枠 3 が一覧で空き");
   else {
@@ -102,7 +103,8 @@ export default ({ G, fail, seeded }) => {
   st = mem();
   st.setItem(G.SAVE_KEYS.save, JSON.stringify(old));
   list = G.listSlots(st);
-  if (list[0].kind !== "auto" || !list[0].meta) fail("古いセーブが一覧の自動の枠に出ない");
+  const oldAuto = list.find((e) => e.kind === "auto");
+  if (!oldAuto || !oldAuto.meta) fail("古いセーブが一覧の中断（自動）の枠に出ない");
   if (list.filter((e) => e.kind === "slot").some((e) => !e.empty)) fail("古いセーブなのに手動の枠が埋まっている");
   const back = G.loadEntry(st, "auto");
   if (!back) fail("古いセーブを読めない");
@@ -134,7 +136,7 @@ export default ({ G, fail, seeded }) => {
   try {
     list = G.listSlots(st);
     [1, 2, 3, 4].forEach((i) => { if (!list.find((e) => e.id === "slot" + i).broken) fail(`壊れた枠 ${i} が壊れと出ない`); });
-    if (!list[0].broken) fail("壊れた自動の枠が壊れと出ない");
+    if (!list.find((e) => e.kind === "auto").broken) fail("壊れた自動の枠が壊れと出ない");
     ["slot1", "slot2", "slot3", "slot4", "auto", "slot9", "nothing"].forEach((id) => { if (G.loadEntry(st, id)) fail(`壊れた枠 ${id} を読めたことになる`); });
     if (!G.writeSlot(st, 1, G.S.over ? start(9) : G.S).ok) fail("壊れた枠に上書きできない");
   } catch (e) { fail(`壊れた枠で止まる：${e.message}`); }
