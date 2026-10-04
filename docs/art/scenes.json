@@ -191,7 +191,8 @@
    "region": "ノルディア帝国",
    "name": "帝都ノルディア",
    "pack": "nordia",
-   "tags": "military capital of black stone, snow, fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets"
+   "tags": "vast fortified city of black stone seen from above, many black stone buildings and towers, snow on the roofs, high fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets, overcast sky",
+   "sky": "overcast"
   },
   {
    "id": "w2_zalgros",
@@ -201,7 +202,7 @@
    "region": "ノルディア帝国",
    "name": "闘技の都ザルグロス",
    "pack": "nordia",
-   "tags": "huge bowl-shaped stone colosseum in the snow, barracks, betting booths, bandage shop signs, snowy town, banners"
+   "tags": "(huge round stone colosseum:1.3) in the middle of a snowy town, barracks, betting booths, snowy rooftops, banners"
   },
   {
    "id": "w4_kaesverg",
@@ -221,7 +222,7 @@
    "region": "ノルディア帝国",
    "name": "市の都ヴァルミリア",
    "pack": "nordia",
-   "tags": "snowy town square where four roads meet, large market of colorful tents, tall stone pillar in the center, snow"
+   "tags": "bustling market town, many colorful market tents and stalls, stone houses around a snowy town square, four roads meet, tall stone pillar in the center, snow"
   },
   {
    "id": "w4_oldrail",
@@ -331,7 +332,8 @@
    "region": "エルメシア共和国",
    "name": "毒沼の湿地",
    "pack": "elmesia",
-   "tags": "toxic swamp, murky green water, rotting dead trees, purple mist, bubbles, reeds"
+   "tags": "toxic swamp, murky green water, rotting dead trees, purple mist, bubbles, reeds, dark gloomy overcast sky",
+   "sky": "overcast"
   },
   {
    "id": "e2_garden",
@@ -341,7 +343,8 @@
    "region": "エルメシア共和国",
    "name": "腐れ庭園",
    "pack": "elmesia",
-   "tags": "beautiful flower garden in the middle of a swamp, perfectly trimmed flowerbeds, unnaturally vivid flowers, mist, eerie"
+   "tags": "beautiful flower garden in the middle of a dark swamp, perfectly trimmed flowerbeds, unnaturally vivid flowers, dead trees around, mist, eerie, gloomy overcast sky",
+   "sky": "overcast"
   },
   {
    "id": "w2_amyrein",
@@ -500,7 +503,7 @@
    "scene": "shop",
    "name": "商店",
    "pack": "town_in",
-   "tags": "general store interior, shelves full of potions and goods, weapons on the wall, counter with scales"
+   "tags": "medieval fantasy general store interior, rustic wooden shelves with potion bottles and clay jars, swords and shields hanging on the stone wall, wooden counter with brass scales, candlelight, old shop"
   },
   {
    "id": "in_guild",

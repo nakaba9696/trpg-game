@@ -2,7 +2,7 @@
  "_comment": "背景の絵の設定（A11。tools/gen_scenes.mjs が読む。人物の style.json とは別）。手元だけで変えたいときは docs/art/style_scenes.local.json（git に入れない）に同じ名前の項目を書く。プロンプト ＝ prefix ＋ 案（variants）の prefix_add ＋ 一覧の特徴のタグ ＋ suffix（屋外は suffix_place、室内・迷宮は suffix_inside）＋ 空（一覧に sky が無い屋外だけ daytime）",
  "url": "http://127.0.0.1:7860",
  "prefix": "masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest",
- "variant": "plain",
+ "variant": "artist",
  "variants": {
   "_comment": "2 案。試しの 5 枚（--trial）は両方で作って docs/art/scenes_trial/ に並べるので、持ち主が見比べて variant を決める。prefix_add に書いてよいのは人物の設定（style.json・style_monsters.json）の prefix にある語だけ（作家名・作品名を新しく足さない。tests/checks/a11_scenes.mjs が見る）",
   "plain": { "label": "背景らしさを優先（絵師タグなし）", "prefix_add": "" },

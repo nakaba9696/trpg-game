@@ -40,10 +40,10 @@
 | `w3_frosleia` | 火山の都フロスレイア（レオネスト王国・町） | `w3_volcano` | leonest | volcano city, black ash slopes, white plaster houses in terraces, research observatory, brooms leaning on ash-covered roofs, smoking volcano behind |
 | `w3_ashvault` | 灰の観測所（レオネスト王国・迷宮） | `w3_ashvault` | leonest | half-buried domed observatory in volcanic ash, on a volcano slope, door boarded up with planks, ash-covered ground |
 | `frost` | 凍てつく街道（ノルディア帝国・荒野） | `snow` | nordia | frozen highway across a snowfield, blizzard, snow-covered wooden signpost, dead trees, distant snowy mountains |
-| `garmund` | 帝都ノルディア（ノルディア帝国・町） | `snowcity` | nordia | military capital of black stone, snow, fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets |
-| `w2_zalgros` | 闘技の都ザルグロス（ノルディア帝国・町） | `w2_arena` | nordia | huge bowl-shaped stone colosseum in the snow, barracks, betting booths, bandage shop signs, snowy town, banners |
+| `garmund` | 帝都ノルディア（ノルディア帝国・町）・空 overcast | `snowcity` | nordia | vast fortified city of black stone seen from above, many black stone buildings and towers, snow on the roofs, high fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets, overcast sky |
+| `w2_zalgros` | 闘技の都ザルグロス（ノルディア帝国・町） | `w2_arena` | nordia | (huge round stone colosseum:1.3) in the middle of a snowy town, barracks, betting booths, snowy rooftops, banners |
 | `w4_kaesverg` | 鉱山の都カースヴェルグ（ノルディア帝国・町） | `w4_mine` | nordia | mining town in snowy mountains, mine entrances in the mountainside with smoke, old iron rails running through the town, rusted mine cart covered in snow |
-| `w4_valmiria` | 市の都ヴァルミリア（ノルディア帝国・町） | `w4_market` | nordia | snowy town square where four roads meet, large market of colorful tents, tall stone pillar in the center, snow |
+| `w4_valmiria` | 市の都ヴァルミリア（ノルディア帝国・町） | `w4_market` | nordia | bustling market town, many colorful market tents and stalls, stone houses around a snowy town square, four roads meet, tall stone pillar in the center, snow |
 | `w4_oldrail` | 古い鉄の道（ノルディア帝国・迷宮） | `w4_rail` | nordia | abandoned mine entrance in a snowy mountain, ancient iron railway tracks leading inside, boarded wooden barricade, rusted machinery |
 | `fort` | 黒鉄の砦（人類の最前線・町） | `fort` | border | black iron fortress wall blocking a narrow mountain pass, watchtowers with alarm bells, graveyard outside the wall, rugged mountains |
 | `w4_watch` | 鐘の見張り塔（人類の最前線・荒野） | `w4_watch` | border | line of stone watchtowers stretching to the horizon, alarm bell on top of each tower, barren plain, northeast road |
@@ -54,8 +54,8 @@
 | `w2_shadow` | 影の谷（ノルディア帝国・荒野） | `w2_shadow` | border | ruined empty town, black scorched shadow stains on walls and cobblestones, laundry lines, abandoned streets |
 | `w2_acid` | 酸の谷（ノルディア帝国・迷宮） | `w2_acid` | border | melting valley, green acidic steam, rows of rusted giant iron robots kneeling, corroded metal, toxic pools |
 | `zephara` | 首都エルメシア（エルメシア共和国・町） | `magic` | elmesia | floating crystal towers in the sky, elegant city of elves, council hall at the top of long stairs, gigantic world tree in the far distance, greenery |
-| `swamp` | 毒沼の湿地（エルメシア共和国・荒野） | `swamp` | elmesia | toxic swamp, murky green water, rotting dead trees, purple mist, bubbles, reeds |
-| `e2_garden` | 腐れ庭園（エルメシア共和国・迷宮） | `e2_garden` | elmesia | beautiful flower garden in the middle of a swamp, perfectly trimmed flowerbeds, unnaturally vivid flowers, mist, eerie |
+| `swamp` | 毒沼の湿地（エルメシア共和国・荒野）・空 overcast | `swamp` | elmesia | toxic swamp, murky green water, rotting dead trees, purple mist, bubbles, reeds, dark gloomy overcast sky |
+| `e2_garden` | 腐れ庭園（エルメシア共和国・迷宮）・空 overcast | `e2_garden` | elmesia | beautiful flower garden in the middle of a dark swamp, perfectly trimmed flowerbeds, unnaturally vivid flowers, dead trees around, mist, eerie, gloomy overcast sky |
 | `w2_amyrein` | 湯の町アミュレイン（エルメシア共和国・町） | `w2_spa` | elmesia | quiet hot spring town by a lake, steam rising, wooden bathhouses, stone baths, calm lake |
 | `w2_nagris` | 狩り場の町ナグリス（エルメシア共和国・町） | `w2_hunt` | elmesia | town built on huge tree branches, treehouses, rope bridges, giant world tree silhouette filling the eastern sky, forest |
 | `w4_tulier` | 水の都トゥリエル（エルメシア共和国・町） | `w4_water` | elmesia | water town on a lake, wooden boardwalks, houses and council hall on stilts, stargazing tower, small boats, reflection of a giant tree on the lake |
@@ -78,7 +78,7 @@
 |---|---|---|---|---|
 | `in_inn` | 宿屋 | `inn` | town_in | cozy inn interior, wooden beams, fireplace, tables and chairs, staircase to guest rooms, lanterns, warm light |
 | `in_tavern` | 酒場・**試し** | `tavern` | town_in | medieval tavern interior, long wooden bar counter, ale barrels, mugs, round tables, candlelight, notice board |
-| `in_shop` | 商店 | `shop` | town_in | general store interior, shelves full of potions and goods, weapons on the wall, counter with scales |
+| `in_shop` | 商店 | `shop` | town_in | medieval fantasy general store interior, rustic wooden shelves with potion bottles and clay jars, swords and shields hanging on the stone wall, wooden counter with brass scales, candlelight, old shop |
 | `in_guild` | 冒険者ギルド | `guild` | town_in | adventurers guild hall interior, reception counter, notice board covered in papers, wooden benches, banners |
 | `in_church` | 教会 | `church` | town_in | church interior, stained glass windows, rows of pews, altar with candles, stone pillars, light rays |
 | `in_train` | 訓練場 | `train` | town_in | training hall interior, wooden floor, practice dummies, weapon racks, sandbags |
