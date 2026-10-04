@@ -15,6 +15,7 @@ import path from "node:path";
 export const TYPES = { ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg" };
 // S3：録音した効果音（assets/sounds/<名前>.ogg・<名前>_<何か>.ogg。webm・mp3 も可）。画像と同じく別ファイルで載せ、鍵は "sounds/<名前>_<何か>"。
 // 鳴らすのは src/ui/sound.js（あればそれを選んで鳴らし、無い・読めないときは合成）。assets/sounds/ の外の音のファイルは拾わない
+// S4：曲のファイル（assets/music/<場面>.ogg・<曲の id>.ogg）も同じく別ファイルで載せ、鍵は "music/<場面>"。鳴らすのは src/ui/sound_bgm.js（無ければ合成の曲）
 export const SOUND_TYPES = { ".ogg": "audio/ogg", ".webm": "audio/webm", ".mp3": "audio/mpeg" };
 Object.assign(TYPES, SOUND_TYPES);
 export const LIMIT = 12 * 1024 * 1024; // 埋め込み（--embed）の合計（data URI の文字数）の上限。Artifact の 1 ページ 16MB に余裕を残す
@@ -46,7 +47,7 @@ export function scanAssets(dir) {
       const ext = path.extname(n).toLowerCase();
       if (!TYPES[ext]) continue;
       const key = path.relative(dir, abs).split(path.sep).join("/").slice(0, -ext.length);
-      if (!!SOUND_TYPES[ext] !== key.startsWith("sounds/")) { out.notes.push(`${key}${ext} は置き場所と種類が合わないので使わない（音は assets/sounds/ に ogg・webm・mp3 で）`); continue; }
+      if (!!SOUND_TYPES[ext] !== (key.startsWith("sounds/") || key.startsWith("music/"))) { out.notes.push(`${key}${ext} は置き場所と種類が合わないので使わない（音は assets/sounds/・assets/music/ に ogg・webm・mp3 で）`); continue; }
       const prev = found[key];
       if (prev) {
         out.notes.push(`${key} が二つある（${path.basename(prev.abs)}・${n}）。${RANK[ext] < RANK[prev.ext] ? n : path.basename(prev.abs)} を使う`);
@@ -245,8 +246,8 @@ export function collectAssets(dir, { limit = LIMIT, shrink = false } = {}) {
     return out;
   };
   let out = make(s.files);
-  // 省く順：表情の差分 → 背景の絵（A11。省いた背景は canvas の絵になる）
-  for (const [what, drop] of [["差分", isVariant], ["背景", (k) => k.startsWith("scenes/")]]) {
+  // 省く順：曲のファイル（S4。省いた場面は合成の曲になる） → 表情の差分 → 背景の絵（A11。省いた背景は canvas の絵になる）
+  for (const [what, drop] of [["曲", (k) => k.startsWith("music/")], ["差分", isVariant], ["背景", (k) => k.startsWith("scenes/")]]) {
     if (!(out.total > limit && shrink)) break;
     const gone = new Set(out.dropped);
     const keep = s.files.filter((f) => !gone.has(f.key) && !drop(f.key));
