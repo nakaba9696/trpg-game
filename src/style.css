@@ -206,7 +206,6 @@ button { cursor: pointer; }
 #mbar.danger .gauge:first-child .g { border-color: var(--ng); animation: hpPulse 1.2s ease-in-out infinite; }
 @keyframes hpPulse { 50% { box-shadow: 0 0 0 2px var(--ng); } }
 @media (prefers-reduced-motion: reduce) { #mbar.danger .gauge:first-child .g { animation: none; box-shadow: 0 0 0 1px var(--ng); } }
-#openWorld.fresh::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 5px; border-radius: 50%; background: var(--ng); vertical-align: 2px; }
 
 #act { position: sticky; bottom: 0; padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid var(--rule); display: grid; gap: 8px; z-index: 4; }
 .freeRow { display: flex; gap: 8px; }

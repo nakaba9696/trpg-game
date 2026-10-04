@@ -207,7 +207,7 @@
   openLog.title = "これまでの文章を読む";
   openLog.hidden = true;
   const tools = $(".top .tools");
-  if (tools) { const w = $("#openWorld"); if (w) w.before(openLog); else tools.append(openLog); }
+  if (tools) { const w = $("#openTrophy"); if (w) w.before(openLog); else tools.append(openLog); }
   openLog.onclick = () => v9.openLog();
   v9.openLog = () => {
     logAll.textContent = "";

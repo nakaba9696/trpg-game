@@ -5,7 +5,7 @@
 // - 行った場所だけ名前が出る（行っていない場所は印だけ。今の冒険で行った場所から道がつながる場所は名前だけ薄く）
 // - 行った場所は冒険をまたいで残る（死んでも・新しい冒険でも。今の冒険の分とは見分けがつく）。古い profile・古いセーブでも動く。二つの記録をまとめられる
 // - 道は、両端のどちらかに行ったことがあるものだけ
-// - 画面：冒険の「地図」ボタン（G.ui.openMap）を置き換え、図鑑の窓からも開ける
+// - 画面：冒険の「地図」ボタン（G.ui.openMap）を置き換え、図鑑の隣の「地図」ボタン（U11）からも開ける
 import { readFileSync } from "node:fs";
 
 const MAJOR = ["レオネスト王国", "ノルディア帝国", "エルメシア共和国", "自由都市連合", "光天教会領", "シェルアーク", "人と魔の境", "使徒領"];
@@ -140,7 +140,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   {
     const src = readFileSync(new URL("../../src/ui/w5_map.js", import.meta.url), "utf8");
     if (!/G\.ui\.openMap\s*=/.test(src)) F("冒険の「地図」ボタン（G.ui.openMap）を置き換えていない");
-    if (!/dlgCodex/.test(src)) F("図鑑の窓から開けない");
+    // U11：世界地図は図鑑の窓から外し、図鑑の隣の「地図」ボタン（ui/zu11_quick.js。冒険の外でも開ける）
+    if (/dlgCodex/.test(src)) F("世界地図が図鑑の窓の中に残っている");
+    if (!/id = "openMap"/.test(readFileSync(new URL("../../src/ui/zu11_quick.js", import.meta.url), "utf8"))) F("図鑑の隣の「地図」ボタンが無い");
     if (!/pointerdown/.test(src) || !/wheel/.test(src)) F("拡大・移動（指・ホイール）ができない");
     if (/G\.(rand|d|dice|pick)\(/.test(src)) F("地図の絵がゲームの乱数を使っている（毎回同じ形にならない）");
     const css = readFileSync(new URL("../../src/ui/w5_map.css", import.meta.url), "utf8");

@@ -277,10 +277,9 @@
   // ---------------------------------------------------------------- 手引きのその項目へ飛ぶ
   function jump(title) {
     hideTip();
-    const btn = $("#openWorld");
-    const dlg = $("#dlgWorld");
-    if (!btn || !dlg) return;
-    if (!dlg.open) btn.click();
+    // 手引きは図鑑の「用語」のタブ（U11。G.ui.openWorld は ui/f2_codex.js）
+    if (!G.ui.openWorld) return;
+    G.ui.openWorld();
     const dt = Array.from(document.querySelectorAll("#worldBody dt")).find((d) => d.dataset.term === title);
     if (!dt) return;
     dt.scrollIntoView({ block: "center" });
