@@ -4,8 +4,6 @@
 (function (G) {
   const D = (G.data = G.data || {});
 
-  D.LOCK_MAX = 3; // 能力値の鍵（振り直しても変わらない）の数
-
   // 年齢。mod は能力値の補正（点に書き直すのは src/data/zs2_points.js）。cap は使わない（能力値ごとの上限は無い。S2）
   D.AGES = {
     young: {

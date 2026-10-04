@@ -1,5 +1,5 @@
-// タイトルとキャラクター作成：タイトル → 人物（一画面でまとめて選ぶ）→ 能力値（何度でも振り直し・鍵・ボーナス点）→ キャラクターシート → 導入 → 冒険。
-// 決まり（おまかせ・振る・鍵・ボーナス点・導入の文）は engine/u5_creation.js の G.cre。ここは画面だけ。
+// タイトルとキャラクター作成：タイトル → 人物（一画面でまとめて選ぶ）→ 能力値（何度でも振り直し・ボーナス点）→ キャラクターシート → 導入 → 冒険。
+// 決まり（おまかせ・振る・ボーナス点・導入の文）は engine/u5_creation.js の G.cre。ここは画面だけ。
 // 作成画面の乱数は Math.random（CLAUDE.md の例外）。レーン U（画面）が管理
 (function (G) {
   const D = G.data;
@@ -299,7 +299,7 @@
 
   function stats(root) {
     steps(root, 1);
-    head(root, "能力値", "何度でも振り直せる。ボーナス点の数は振るたびに変わり、ときどき大当たりが出る。鍵をかけた能力値は、振り直しても足したボーナス点が残る");
+    head(root, "能力値", "何度でも振り直せる。ボーナス点の数は振るたびに変わり、ときどき大当たりが出る。足したボーナスは振り直しても残る");
 
     const bar = h("div", "rollBar");
     const who = h("div", "rollWho");
@@ -314,7 +314,7 @@
     tray.append(...dice);
     const rb = btn("振る", "primary rollBtn", () => { cre.roll(draft, R); rolledNow = true; sfx("dice", "coin"); setup.show(); }, "s-roll");
     const info = h("div", "rollInfo num");
-    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `これまでの最高 ${draft.best || cre.bonusPoints(draft)} 点`), h("span", "", `鍵 ${cre.lockCount(draft)}／${D.LOCK_MAX}`), h("span", "", `合計 ${cre.total(draft)}`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
+    info.append(h("span", "", `振った回数 ${draft.rolls}`), h("span", "", `これまでの最高 ${draft.best || cre.bonusPoints(draft)} 点`), h("span", "", `合計 ${cre.total(draft)}`), h("span", "", `HP ${G.maxHpOf(st)} ／ MP ${G.maxMpOf(st)}`));
     bar.append(who, tray, rb, info);
     root.append(bar);
 
@@ -335,14 +335,8 @@
     box.append(bh);
     const list = h("div", "statlist creStats num");
     D.STATS.forEach((k) => {
-      const row = h("div", "srow" + (rolledNow && !draft.locks[k] ? " rolled" : "") + (draft.locks[k] ? " locked" : ""));
+      const row = h("div", "srow" + (rolledNow ? " rolled" : ""));
       row.title = D.STAT_HINT[k];
-      const lk = btn(draft.locks[k] ? "鍵" : "−", "lock", () => { if (!cre.toggleLock(draft, k)) { G.ui.toast && G.ui.toast("鍵は " + D.LOCK_MAX + " つまで", "どれかの鍵を外してから"); return; } setup.show(); }, "lk-" + k);
-      lk.setAttribute("aria-pressed", String(!!draft.locks[k]));
-      lk.setAttribute("aria-label", draft.locks[k] ? `${k}の鍵を外す（今は振り直しても足したボーナス点が残る）` : `${k}に鍵をかける（振り直しても足したボーナス点が残る）`);
-      lk.title = draft.locks[k] ? "鍵を外す" : "鍵をかける（振り直しても足したボーナス点が残る）";
-      lk.textContent = "";
-      lk.append(lockIcon(!!draft.locks[k]), h("small", "", draft.locks[k] ? "鍵" : "鍵なし"));
       const v = cre.value(draft, k);
       const PCT = G.PT();
       const b = h("span", "bar"); const i = h("i"); i.style.width = v * PCT + "%"; b.append(i);
@@ -362,7 +356,7 @@
       if (m.race) det.append(h("span", m.race > 0 ? "plus" : "minus", `種族 ${signed(m.race)}`));
       if (draft.bonus[k]) det.append(h("span", "plus", `ボーナス +${draft.bonus[k]}`));
       det.append(h("span", "", `成功率 ${v * PCT}%`));
-      row.append(lk, h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
+      row.append(h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
       list.append(row);
     });
     box.append(list);
@@ -384,19 +378,6 @@
         const t = setInterval(() => { dice.forEach((d) => setDie(d, 1 + Math.floor(R() * 6))); if (++n >= 6) { clearInterval(t); tray.classList.remove("tumble"); } }, 60);
       }
     }
-  }
-  function lockIcon(on) {
-    const ns = "http://www.w3.org/2000/svg";
-    const s = document.createElementNS(ns, "svg");
-    s.setAttribute("viewBox", "0 0 16 16"); s.setAttribute("width", "16"); s.setAttribute("height", "16"); s.setAttribute("aria-hidden", "true");
-    const p = document.createElementNS(ns, "path");
-    p.setAttribute("d", on ? "M4 7V5a4 4 0 0 1 8 0v2" : "M4 7V5a4 4 0 0 1 7.5-2");
-    p.setAttribute("fill", "none"); p.setAttribute("stroke", "currentColor"); p.setAttribute("stroke-width", "1.6");
-    const r = document.createElementNS(ns, "rect");
-    r.setAttribute("x", "2.5"); r.setAttribute("y", "7"); r.setAttribute("width", "11"); r.setAttribute("height", "8"); r.setAttribute("rx", "1");
-    r.setAttribute("fill", on ? "currentColor" : "none"); r.setAttribute("stroke", "currentColor"); r.setAttribute("stroke-width", "1.6");
-    s.append(p, r);
-    return s;
   }
 
   // ---------------------------------------------------------------- 4. キャラクターシート（確認）

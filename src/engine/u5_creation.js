@@ -1,4 +1,4 @@
-// キャラクター作成（U5）の決まり：下書き（draft）を作る・おまかせ・能力値を振る・鍵・ボーナス点・導入の文。
+// キャラクター作成（U5）の決まり：下書き（draft）を作る・おまかせ・能力値を振る・ボーナス点・導入の文。
 // DOM に触らない。乱数は引数 rnd で受け取る（作成画面は Math.random、テストは決まった乱数）。
 // 作成は冒険の前なので G.rand を進めない。レーン C（キャラクター）が管理
 (function (G) {
@@ -40,13 +40,12 @@
     dr.goal = pickR(rnd, Object.keys(D.GOALS).filter((g) => g !== "custom"));
     dr.profile = { name: cre.gen(dr, "name", rnd), age: cre.gen(dr, "age", rnd) };
     cre.randomTraits(dr, rnd);
-    dr.locks = {};
     dr.bonus = {};
     cre.roll(dr, rnd);
     return dr;
   };
 
-  cre.fresh = (rnd) => cre.randomAll({ rolls: 0, customGoal: "", bonus: {}, locks: {} }, rnd);
+  cre.fresh = (rnd) => cre.randomAll({ rolls: 0, customGoal: "", bonus: {} }, rnd);
 
   // 職業を変える：生まれが前の職業のはじめの生まれなら、新しい職業の方へ寄せる。名前の響きが変われば名前も作り直す
   cre.setClass = (dr, cls, rnd) => {
@@ -56,7 +55,6 @@
     dr.cls = cls;
     if (culture(dr) !== oldCul) dr.profile.name = cre.gen(dr, "name", rnd);
     if (dr.profile.history) dr.profile.history = cre.gen(dr, "history", rnd);
-    dr.locks = {};
     cre.roll(dr, rnd);
   };
   cre.setOrigin = (dr, id, rnd) => {
@@ -76,7 +74,8 @@
   // 作成はすべて点で数える（src/data/zs2_points.js）。冒険に渡すときに成功率の尺度（点×4）にする（cre.final）。
   // 振るたびに変わるのは、ボーナス点の数（ふつう 5〜10・当たり 15〜20・大当たり 25〜）。素の値は職業で決まる。
   // 上限は全員共通の D.S2.MAX（24 点）だけ。ボーナス点はそこまで好きに足せる。
-  // 鍵：鍵をかけた能力値は、振り直しても、そこに足したボーナス点が残る（鍵の無い能力値のボーナスは振るたびに 0 に戻る）
+  // 振り直しは、ボーナス点の数を振り直すだけ。足したボーナスはそのまま残し、点が減ったら後ろの能力値から戻す（cre.fit）。
+  // 鍵は持ち主の決定でなくした。古い下書きに locks が残っていても見ない
   const S2 = () => D.S2 || { PCT: 4, MAX: 24, BONUS: [[1, 6, 6, "ふつう"]], BONUS_EXTRA: 0 };
   cre.MAX_PT = S2().MAX;
   cre.ptOfPct = (n) => Math.round((n || 0) / S2().PCT);   // 割合で書かれた補正（才の限界など）を点に
@@ -96,10 +95,9 @@
     const c = D.CLASSES[dr.cls];
     dr.rolled = dr.rolled || {};
     dr.bonus = dr.bonus || {};
-    dr.locks = dr.locks || {};
     delete dr.caps;
     D.STATS.forEach((k) => {
-      if (dr.bonus[k] === undefined || !dr.locks[k]) dr.bonus[k] = 0;
+      if (dr.bonus[k] === undefined) dr.bonus[k] = 0;
       dr.rolled[k] = c.pt[k];
     });
     const b = cre.rollBonus(rnd);
@@ -130,18 +128,14 @@
   cre.bonusLeft = (dr) => cre.bonusPoints(dr) - cre.bonusUsed(dr);
   cre.total = (dr) => D.STATS.reduce((a, k) => a + cre.value(dr, k), 0);
 
-  // 上限を超えたボーナスを戻す（年齢や生まれを変えたあと）。点が足りなければ、鍵の無い能力値から戻す（振り直してボーナス点が減ったあと）
+  // 上限を超えたボーナスを戻す（年齢や生まれを変えたあと）。点が足りなければ後ろの能力値から戻す
   cre.fit = (dr) => {
     if (!dr.rolled) return;
     D.STATS.forEach((k) => {
       dr.bonus[k] = Math.max(0, dr.bonus[k] || 0);
       while (dr.bonus[k] > 0 && cre.value(dr, k) > cre.cap(dr, k)) dr.bonus[k]--;
     });
-    while (cre.bonusLeft(dr) < 0) {
-      const back = [...D.STATS].reverse();
-      const k = back.find((s) => dr.bonus[s] > 0 && !dr.locks[s]) || back.find((s) => dr.bonus[s] > 0);
-      dr.bonus[k]--;
-    }
+    while (cre.bonusLeft(dr) < 0) { const k = [...D.STATS].reverse().find((s) => dr.bonus[s] > 0); dr.bonus[k]--; }
   };
 
   // 残りのボーナス点を、職業の得意な能力値と体力へ順に配る（even なら 6 つに均等に。テスト・ボット）
@@ -162,13 +156,6 @@
     dr.bonus[k] += dir > 0 ? 1 : -1;
     return true;
   };
-  cre.lockCount = (dr) => D.STATS.filter((k) => dr.locks[k]).length;
-  cre.toggleLock = (dr, k) => {
-    if (dr.locks[k]) { delete dr.locks[k]; return true; }
-    if (cre.lockCount(dr) >= D.LOCK_MAX) return false;
-    dr.locks[k] = true;
-    return true;
-  };
 
   // 得意な能力値（職業の素の値の高い順に 2 つ）
   cre.strengths = (cls) => {
@@ -180,7 +167,7 @@
   // 返すのは冒険に渡す形（成功率の尺度）と、振ったボーナス点
   cre.quickStats = (cls, rnd, o) => {
     o = o || {};
-    const dr = { cls, ageBand: o.ageBand || "prime", origin: o.origin || D.CLASS_ORIGIN[cls], profile: {}, bonus: {}, locks: {}, rolls: 0 };
+    const dr = { cls, ageBand: o.ageBand || "prime", origin: o.origin || D.CLASS_ORIGIN[cls], profile: {}, bonus: {}, rolls: 0 };
     if (o.race) { dr.profile.race = o.race; dr.profile.beast = o.beast || ""; }
     cre.roll(dr, rnd);
     cre.autoBonus(dr, o.even !== false);

@@ -1,6 +1,6 @@
 // U5：キャラクター作成（engine/u5_creation.js の G.cre を DOM なしで）
 // - おまかせで作って、そのまま冒険を始められる
-// - ボーナス点の合計が合う（振るたびに変わる。S2）・鍵が効く（振り直しても、鍵をかけた能力値に足したボーナス点が残る。LOCK_MAX まで）
+// - ボーナス点の合計が合う（振るたびに変わる。S2）・鍵は無い（振り直しはボーナス点の数だけ。足したボーナスは残り、点が減れば戻る。古い下書きの locks は効かない）
 // - 古いセーブ（年齢の区分・生まれが無い）でも導入が作れる
 // - 導入と作成画面の文に、明かさない言葉が入っていない（#1 の持ち主の方針）
 export default ({ G, fail: fail0, ok, seeded }) => {
@@ -66,23 +66,24 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (G.S.profile.origin !== o.profile.origin || G.S.profile.ageBand !== o.profile.ageBand) fail(`作成 ${i}: 生まれ・年齢の区分がセーブに残らない`);
   }
 
-  // 鍵：鍵をかけた能力値は、振り直しても足したボーナス点が残る（点が足りなければ減る）。鍵の無い能力値のボーナスは 0 に戻る。鍵は LOCK_MAX まで
+  // 鍵は無い：振り直しはボーナス点の数だけ変わる。素の値は変わらない。足したボーナスは残り、点が減れば戻る。古い下書きの locks は効かない
   {
+    if (cre.toggleLock || cre.lockCount || D.LOCK_MAX !== undefined) fail("鍵の仕組みが残っている");
     const dr = cre.fresh(rnd);
-    const [a, b, c, d4] = D.STATS;
-    if (!cre.toggleLock(dr, a) || !cre.toggleLock(dr, b) || !cre.toggleLock(dr, c)) fail("鍵: 3 つかけられない");
-    if (D.LOCK_MAX === 3 && cre.toggleLock(dr, d4)) fail("鍵: 4 つ目がかかる");
-    dr.bonus = Object.fromEntries(D.STATS.map((k) => [k, 0]));
-    cre.addBonus(dr, a, 1); cre.addBonus(dr, b, 1); cre.addBonus(dr, d4, 1);
+    dr.locks = { [D.STATS[0]]: true }; // 古い下書き
+    const rolled = JSON.stringify(dr.rolled);
+    const seen = new Set();
     for (let n = 0; n < 200; n++) {
+      while (cre.bonusLeft(dr) > 0 && cre.canAdd(dr, D.STATS[n % 6])) cre.addBonus(dr, D.STATS[n % 6], 1);
+      const before = cre.bonusUsed(dr);
       cre.roll(dr, rnd);
-      if (dr.bonus[a] !== 1 || dr.bonus[b] !== 1) { fail(`鍵: 鍵をかけた能力値のボーナスが振り直しで消えた（${dr.bonus[a]}・${dr.bonus[b]}）`); break; }
-      if (dr.bonus[d4] !== 0) { fail("鍵: 鍵の無い能力値のボーナスが振り直しで残った"); break; }
-      if (cre.bonusLeft(dr) < 0) { fail("鍵: 振り直したあと、ボーナス点の残りが負"); break; }
+      seen.add(dr.bonusRoll);
+      if (JSON.stringify(dr.rolled) !== rolled) { fail("鍵: 振り直しで素の値が変わった"); break; }
+      if (cre.bonusLeft(dr) < 0) { fail("振り直したあと、ボーナス点の残りが負"); break; }
+      if (cre.bonusUsed(dr) !== Math.min(before, cre.bonusPoints(dr))) { fail(`振り直したあと、足したボーナスが残らない（${before} → ${cre.bonusUsed(dr)}）`); break; }
     }
-    if (dr.rolls < 200) fail("鍵: 振り直しの回数に上限がある");
-    cre.toggleLock(dr, a);
-    if (!cre.toggleLock(dr, d4)) fail("鍵: 外したあと、別の能力値にかけられない");
+    if (seen.size < 8) fail("振り直してもボーナス点が変わらない");
+    if (dr.rolls < 200) fail("振り直しの回数に上限がある");
   }
 
   // 年齢・生まれを変えると、限界を超えたボーナスは戻る
@@ -101,5 +102,5 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     try { const pg = cre.prologue(old); if (!pg.flat().join("").includes("膝は冷える")) fail("古いセーブ: 年齢から区分を推し量れない"); }
     catch (e) { fail("古いセーブ: 導入で例外 " + (e.stack || e)); }
   }
-  if (!bad) ok(`キャラクター作成（おまかせで ${made} 人が旅立つ・ボーナス点・鍵 ${D.LOCK_MAX} つ・生まれ ${Object.keys(D.ORIGINS).length}・年齢 ${Object.keys(D.AGES).length}）`);
+  if (!bad) ok(`キャラクター作成（おまかせで ${made} 人が旅立つ・ボーナス点・生まれ ${Object.keys(D.ORIGINS).length}・年齢 ${Object.keys(D.AGES).length}）`);
 };
