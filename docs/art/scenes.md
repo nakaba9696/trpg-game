@@ -3,7 +3,7 @@
 > このファイルは [scenes.json](scenes.json) から `node tools/scenes.mjs` で作る。直すときは json を直してから作り直す。
 > 作り方は [README.md](README.md) の「背景の絵（A11）」。設定は [style_scenes.json](style_scenes.json)。1344×768 で作り、1232×704 の webp に縮めて `assets/scenes/<id>.webp` に置く（1 枚 150KB 以下）。
 
-全部で 89 枚（場所 63・施設の中 14・迷宮の中 12）。
+全部で 98 枚（場所 72・施設の中 14・迷宮の中 12）。
 
 ## 試しの 5 枚
 
@@ -17,7 +17,7 @@
 | `in_tavern` | 酒場 | 施設の中 |
 | `in_ruins` | エル・ナフ遺構の中 | 迷宮の中 |
 
-## 場所（63）
+## 場所（72）
 
 町・荒野・迷宮の外の景色（場所の id ごとに 1 枚）。屋外は昼・晴れで作り、時間帯・季節・天候はゲームが色味と雨・雪・霧の粒で重ねる。`sky` が night・red の場所は空が決まっている（朧島は夜、使徒領は赤い空）。
 
@@ -60,8 +60,13 @@
 | `w4_valmiria` | 市の都ヴァルミリア（ノルディア帝国・町） | `w4_market` | nordia | bustling market town, many colorful market tents and stalls, stone houses around a snowy town square, four roads meet, tall stone pillar in the center, snow |
 | `w4_oldrail` | 古い鉄の道（ノルディア帝国・迷宮） | `w4_rail` | nordia | abandoned mine entrance in a snowy mountain, ancient iron railway tracks leading inside, boarded wooden barricade, rusted machinery |
 | `fort` | 黒鉄の砦（人類の最前線・町） | `fort` | border | black iron fortress wall blocking a narrow mountain pass, watchtowers with alarm bells, graveyard outside the wall, rugged mountains |
+| `w7_frostgate` | 北の烽火台ヴェルト（人類の最前線・町） | `w7_beacon` | border | northern beacon station by a cold sea, three stone beacon towers with fire and smoke, firewood piles, soldiers |
+| `w7_widows` | 鐘待ちの村リーネ（人類の最前線・町） | `w7_widows` | border | farming village of soldiers' families, ploughed fields, a graveyard slightly larger than the fields, distant watchtower |
+| `w7_ironwell` | 井戸の砦町ケルン（人類の最前線・町） | `w7_wellfort` | border | frontier supply town, deep stone well with a wooden frame in the center, storehouses and soldiers' row houses, grey sky |
 | `w4_watch` | 鐘の見張り塔（人類の最前線・荒野） | `w4_watch` | border | line of stone watchtowers stretching to the horizon, alarm bell on top of each tower, barren plain, northeast road |
 | `mountains` | 断界山脈（人と魔の境・荒野） | `mountain` | border | towering jagged mountain peaks, sea of clouds below, narrow ridge trail, cold thin air, snowy summits |
+| `w7_hermitage` | 峠の庵ザレム（人と魔の境・町） | `w7_hermitage` | border | misty mountain pass with a crumbling hermitage and an old altar, small huts of settlers, fog |
+| `w7_lastvillage` | 最後の村ハルト（人と魔の境・町） | `w7_lastvillage` | border | last human village on a mountain shoulder, a dozen stone houses, small statues facing away from the peaks, snowy mountains |
 | `graveyard` | 竜の墓場（人と魔の境・迷宮） | `bones` | border | valley of giant dragon skeletons, huge white ribcages taller than houses, piles of bones, wind-swept barren valley |
 | `w4_pass` | 断界の古関（人と魔の境・迷宮） | `w4_pass` | border | ancient massive stone gatehouse sealing a mountain crevice, unreadable inscription above the gate, height notches carved on the gate, cliffs |
 | `w2_echo` | 懺悔の谷（ノルディア帝国・荒野） | `w2_echo` | border | valley with crumbled city walls, roofless houses half-buried in the valley floor, steep cliffs, desolate |
@@ -78,6 +83,10 @@
 | `w4_tulier` | 水の都トゥリエル（エルメシア共和国・町） | `w4_water` | elmesia | water town on a lake, wooden boardwalks, houses and council hall on stilts, stargazing tower, small boats, reflection of a giant tree on the lake |
 | `w4_silent` | 沈黙の森（エルメシア共和国・荒野） | `w4_silent` | elmesia | silent forest, faded white paper talismans stuck on tree trunks, still air, pale light, birds perched on branches |
 | `yakumo` | 島の都シェルアーク（シェルアーク・町） | `yakumo` | isles | sea city built across small islands, wooden walkway bridges between islands, fish drying racks, barrels, small boats, sailing ships offshore |
+| `w7_pearlisle` | 真珠採りの島ヨナ（シェルアーク・町） | `w7_pearls` | isles | island with a shallow turquoise cove, pearl diving boats, huts roofed with shells, beach with shells |
+| `w7_bellisle` | 霧鐘の島ミストラ（シェルアーク・町） | `w7_bellisle` | isles | rocky island facing the open ocean, a large fog bell on a wooden frame on the cliff top, misty sea, small chapel |
+| `w7_netisle` | 網の島カラヴ（シェルアーク・町） | `w7_netisle` | isles | small fishing island with ropes strung between beaches and dozens of fishing nets drying, wooden cottages, boats |
+| `w7_saltisle` | 塩の島ソルネ（シェルアーク・町） | `w7_saltpans` | isles | island village with square salt evaporation ponds shining like mirrors, salt rakers, small wooden huts, calm sea |
 | `onigashima` | 鬼ヶ島の洞窟（シェルアーク・迷宮） | `onigashima` | isles | rocky island, huge cave mouth, rough sea, sake barrels, bonfire smoke from the cave |
 | `w1_oboro` | シェルアーク・朧島（シェルアーク・町）・空 night | `w1_oboro` | isles | night, island festival, paper lanterns hanging from the beach to a shrine on the cape, incense smoke drifting low, festival stalls, cherry trees |
 | `w3_driftisle` | 数の合わない島（シェルアーク・荒野） | `w3_isles` | isles | many scattered small islands in the sea, sandbars, small rowboat on a beach, calm sea |
