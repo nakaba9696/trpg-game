@@ -16,7 +16,7 @@
   G.beastOf = (S) => (S && S.beast) || 0;
   G.sanityStage = (v) => (v >= 70 ? 0 : v >= 40 ? 1 : v >= 15 ? 2 : v > 0 ? 3 : 4);
   const st = (S) => (S.m5 = S.m5 || {});
-  const holding = (id) => G.count(id) > 0 || G.S.weapon === id || G.S.armor === id || G.S.ring === id;
+  const holding = (id) => G.count(id) > 0 || (G.i2s ? G.i2s.wears(G.S, id) : G.S.weapon === id || G.S.armor === id || G.S.ring === id);
 
   // 正気を n 増減する（負で減る）。段が変わったら、数字ではなく症状の文を出す
   // cap：戻るときの上限（宿と酒場は M.REST_CAP まで）
@@ -171,7 +171,7 @@
   }
   function oneDay(S, x) {
     // 持っているだけで進む代償
-    const items = new Set([...Object.keys(S.inv), S.weapon, S.armor, S.ring].filter(Boolean));
+    const items = new Set([...Object.keys(S.inv), ...(G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring])].filter(Boolean));
     items.forEach((id) => {
       const t = D.ITEMS[id] && D.ITEMS[id].toll && D.ITEMS[id].toll.day;
       if (!t || S.over) return;
