@@ -1,0 +1,29 @@
+/* I2：装備の 7 枠（src/ui/zi2s_slots.js）。人の形に沿った並び：頭／右手・胴・左手／装飾品・足・装飾品 */
+.i2doll { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;
+  grid-template-areas: ". head ." "weapon armor off" "ring feet ring2" "sum sum sum"; }
+.i2doll .i2s-head { grid-area: head; }
+.i2doll .i2s-weapon { grid-area: weapon; }
+.i2doll .i2s-armor { grid-area: armor; }
+.i2doll .i2s-off { grid-area: off; }
+.i2doll .i2s-ring { grid-area: ring; }
+.i2doll .i2s-feet { grid-area: feet; }
+.i2doll .i2s-ring2 { grid-area: ring2; }
+.i2slot { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 5px 7px 6px; border: 1px solid var(--rule); border-radius: 3px;
+  background: var(--box); font-size: 13px; line-height: 1.4; }
+.i2slot .i2lab { font-family: var(--f-ui); font-size: 11px; letter-spacing: .06em; color: var(--muted); }
+.i2slot .i2nm { overflow-wrap: anywhere; color: var(--ink); }
+.i2slot .i2nm.none { color: var(--muted); }
+.i2slot .i2eff { font-family: var(--f-ui); font-size: 11.5px; color: var(--muted); overflow-wrap: anywhere; }
+.i2slot .btn.small { align-self: flex-start; margin-top: 2px; }
+.i2slot.empty { border-style: dashed; background: transparent; }
+/* 両手持ちで塞がった左手 */
+.i2slot.blocked { border-style: dashed; color: var(--muted);
+  background: repeating-linear-gradient(135deg, transparent 0 6px, var(--accent-soft) 6px 9px); }
+.i2slot.blocked .i2nm { color: var(--muted); font-style: italic; }
+.i2doll .i2sum { grid-area: sum; margin: 0; }
+/* 持ち物の行：入る枠 */
+.inv .i2where { flex: none !important; font-family: var(--f-ui); font-size: 11px; color: var(--muted); border: 1px solid var(--rule); border-radius: 2px; padding: 0 4px; white-space: nowrap; }
+@media (max-width: 420px) {
+  .i2doll { gap: 4px; }
+  .i2slot { padding: 4px 5px 5px; font-size: 12.5px; }
+}

@@ -8,6 +8,7 @@
 //   G.cbMove(f, e)            敵がこの手番にすること { skip, times, mul, hit, through（身を守っても避けにくくならない）, guardDiv, pierce, you, name, text, f1 }。null ならふつうに一撃
 //   G.cbStruck(f, e, mv, who, dmg)  敵の一撃が当たった・外れた（who は仲間か null＝あなた、dmg は与えた数か 0）のあと
 //   C.f1dodge                 「躱す」が決まった：あなたへの最初の一撃を丸ごと外す
+//   G.cbAfterAct(kind, t)     こちらの手のあと、仲間と敵の手番の前（I2：二刀の左手の一撃）
 (function (G) {
   const D = G.data;
   G.cbActs = G.cbActs || {};
@@ -259,6 +260,7 @@
       else if (it.hp) { G.heal(it.hp); G.note(it.hp > 100 ? "HP が全快した。" : `HP +${it.hp}`); }
       if (it.mp) { S.mp = Math.min(S.maxMp, S.mp + it.mp); G.note(it.mp > 100 ? "MP が全快した。" : `MP +${it.mp}`); }
     }
+    if (G.cbAfterAct && !S.over && S.combat === C) G.cbAfterAct(kind, t); // こちらの手のあと、仲間と敵の手番の前（I2 の二刀の左手の一撃）
     if (S.over) return;
     if (!G.alive().length) return endCombat("win");
     companionsTurn();

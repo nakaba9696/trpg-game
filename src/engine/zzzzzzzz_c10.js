@@ -37,7 +37,7 @@
   C.lawless = (S) => !C.nation(S);
   C.titled = (S) => ["騎士", "領主", "国王"].includes(st(S).title);
   C.cls = (S, id) => st(S).cls === id;
-  C.item = (S, id) => { S = st(S); return !!((S.inv && S.inv[id] > 0) || S.weapon === id || S.armor === id || S.ring === id); };
+  C.item = (S, id) => { S = st(S); return !!((S.inv && S.inv[id] > 0) || (G.i2s ? G.i2s.wears(S, id) : S.weapon === id || S.armor === id || S.ring === id)); };
 
   // 仲間の得意。名前つきの仲間（C2 など）も、職の名と印で見分ける
   const KINDS = {
