@@ -2,6 +2,7 @@
 (function (G) {
   const D = (G.data = G.data || {});
   Object.assign((D.ITEMS = D.ITEMS || {}), {
-    w7g_writ: { name: "砦の通行証", type: "key", price: 0, desc: "黒鉄の砦の守将の印が押された木の札。裏に、小刀で日付が刻んである。日付の数は、札の裏の余白より多い。" },
+    w7g_writ: { name: "砦の通行証", type: "key", price: 0, desc: "黒鉄の砦の守将の印が押された木の札。裏に、小刀で日付が刻んである。日付の数は、札の裏の余白より多い。",
+      flavor: "黒鉄の砦の守将の印が押された木の札。裏に、通った者が小刀で日付を刻んでいく。刻みの数は、札の裏の余白より多い。帰ってきた日付は、どこにも刻まれていない。" },
   });
 })(globalThis.G = globalThis.G || {});
