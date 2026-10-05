@@ -13,7 +13,7 @@ export default ({ fail, ok, loadEngine }) => {
   let files = 0;
   for (const dir of ["data", "engine"]) {
     for (const f of readdirSync(new URL(dir + "/", ROOT))) {
-      if (!f.endsWith(".js")) continue;
+      if (!f.endsWith(".js") || f === "changelog.js") continue; // 更新履歴は前の決まりを説明してよい
       files++;
       readFileSync(new URL(`${dir}/${f}`, ROOT), "utf8").split("\n").forEach((line, i) => {
         const code = line.replace(/^\s*\/\/.*$/, "");
