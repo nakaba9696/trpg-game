@@ -22,4 +22,10 @@
   // リグノアの湖：市の都ヴァルミリアを北へ移したので、道が湖を渡らないように、森と湖の都リグノアの西へ
   const lake = D.W5_MAP.lakes.find((e) => e.x === 24.5 && e.y === 19.5);
   if (lake) Object.assign(lake, { x: 16.5, y: 22 });
+  // シェルアークの島（W7c の町）：網の島・霧鐘の島・真珠採りの島。名の無い小島を町の島に広げる（大陸と島の都のあいだの船の道にはかからないように）
+  const isl = D.W5_MAP.islands;
+  const grow = (x, y, to) => { const e = isl.find((i) => i.x === x && i.y === y); if (e) Object.assign(e, to); else isl.push(to); };
+  grow(7, 101, { x: 8, y: 98, rx: 2.6, ry: 2.2, rot: 0.2 });     // 網の島カラヴ
+  grow(-4, 88, { x: 0, y: 87, rx: 2.6, ry: 2.4, rot: 0.5 });     // 霧鐘の島ミストラ
+  grow(60, 101, { x: 13.5, y: 99.5, rx: 2.6, ry: 1.9, rot: 0.2 }); // 真珠採りの島ヨナ（南の海の名の無い小島を移す）
 })(globalThis.G = globalThis.G || {});
