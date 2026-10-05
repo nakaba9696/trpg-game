@@ -49,7 +49,7 @@
         if (G.itemFlavor && G.itemFlavor(r.id)) nm.dataset.i2item = r.id;
         cell.append(nm);
         const eff = effOf(r.it);
-        const extra = r.k === "weapon" && G.weapon().dual ? "二刀・手数" : r.k === "off" && r.it.type === "weapon" ? "二刀（振るのは右手）" : "";
+        const extra = r.k === "weapon" && G.weapon().dual ? "二刀" : r.k === "off" && r.it.type === "weapon" ? "二刀・ふつうの攻撃で浅く一撃" : "";
         const e = [eff, extra].filter(Boolean).join("・");
         if (e) cell.append(h("span", "i2eff", e));
         cell.append(btn("外す", () => G.unequip(r.k), r.it.cursed ? "呪われている。外すと傷を負う" : ""));

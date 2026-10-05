@@ -7,6 +7,7 @@
 // - 古いセーブ（足した枠が無い・両手の武器と左手が重なっている）を読んでも壊れず、品は荷物か自然な枠へ
 export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   let n0 = 0;
+  let dualNote = "";
   const F = (m) => { n0++; fail("I2 枠: " + m); };
   const G = loadEngine();
   const D = G.data;
@@ -66,10 +67,27 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   const w1 = G.weapon();
   if (!G.equip("dagger", "off") || S.off !== "dagger" || S.inv.i2s_buckler !== 1) F("片手の武器を左手に持てない（盾が荷物に戻らない）");
   const w2 = G.weapon();
-  if (w2.dmg[2] !== w1.dmg[2] + X.DUAL || w2.name !== w1.name) F(`二刀で威力が足されない（${w1.dmg}→${w2.dmg}）`);
+  if (w2.dmg.join() !== w1.dmg.join() || w2.name !== w1.name || !X.dual(S)) F(`二刀で右手の武器が変わった（${w1.dmg}→${w2.dmg}）`);
+  // ふつうの攻撃では左手でも一撃。読み合いの技（割り込む）と急所は右手だけ
+  {
+    G.startCombat(["ogre"], {});
+    const lab = G.combatActions().flatMap((g) => g.list).find((a) => a.id === "cb:attack");
+    if (!lab || !/二刀/.test(lab.label) || !/左手/.test(lab.sub)) F(`二刀の攻撃の札に左手が出ない（${lab && lab.label}・${lab && lab.sub}）`);
+    const n0 = G.S.log.length;
+    let tries = 0;
+    while (G.S.combat && tries++ < 6 && !G.S.log.slice(n0).some((l) => /左手の/.test(l.text || ""))) { G.S.hp = G.S.maxHp; G.combatAct("attack"); }
+    if (!G.S.log.slice(n0).some((l) => /左手の/.test(l.text || ""))) F("二刀でふつうに攻撃しても左手が振られない");
+    if (G.S.combat) {
+      const n1 = G.S.log.length;
+      G.S.hp = G.S.maxHp;
+      G.combatAct("f1cut");
+      if (G.S.log.slice(n1).some((l) => /左手の/.test(l.text || ""))) F("割り込む（読み合いの技）で左手まで振られた");
+    }
+    G.S.combat = null; G.S.mode = "explore"; G.S.hp = G.S.maxHp;
+  }
   if (X.fits("i3w_greatsword", "off") || X.fits("volgrim", "off") || X.fits("i1_fangring", "off") || !X.fits("dagger", "off")) F("左手に持てる品の決まりが変");
   G.unequip("off");
-  if (S.off || S.inv.dagger !== 1 || G.weapon().dmg[2] !== w1.dmg[2]) F("左手を外せない・二刀の威力が残る");
+  if (S.off || S.inv.dagger !== 1 || X.dual(S)) F("左手を外せない・二刀が残る");
 
   // 頭・足：防御と能力値・補正
   const agi0 = G.statEff("敏捷"), steal0 = G.gearBonus("steal"), body0 = G.armor().def;
@@ -163,6 +181,34 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     if (G.weapon().name !== D.ITEMS.fists.name || G.ring() !== null) F("武器と装飾品の欄が無いセーブで壊れる");
   }
 
+  // ---- 二刀の釣り合い：同じ乱数で同じ敵と戦い、倒すまでの手番を比べる。二刀は片手より速いが、両手の大剣より目立って速くはない
+  {
+    const fight = (setup, foe) => {
+      const G3 = loadEngine();
+      const D3 = G3.data;
+      G3.rand = seeded(3);
+      G3.P = { trophies: {}, graves: [] };
+      const st = Object.fromEntries(D3.STATS.map((k) => [k, 25]));
+      G3.newGame({ cls: "merc", stats: st, caps, goal: Object.keys(D3.GOALS)[0], profile: { name: "テスト", sex: "女", age: 20, history: "テスト用", personality: "無口" } });
+      setup(G3);
+      let rounds = 0;
+      const N = 120;
+      for (let i = 0; i < N; i++) {
+        Object.assign(G3.S, { hp: G3.S.maxHp, over: false, mode: "explore", combat: null });
+        G3.startCombat([foe], {});
+        for (let r = 0; r < 30 && G3.S.combat && !G3.S.over; r++) { G3.combatAct("attack"); rounds++; }
+      }
+      return rounds / N;
+    };
+    const one = () => {}, two = (g) => { g.give("i3w_greatsword"); g.equip("i3w_greatsword"); }, dual = (g) => { g.give("i3w_shortsword"); g.equip("i3w_shortsword", "off"); };
+    const rows = ["oni", "blackknight"].map((foe) => [foe, fight(one, foe), fight(two, foe), fight(dual, foe)]);
+    rows.forEach(([foe, a, b, c]) => {
+      if (!(c < a)) F(`二刀が片手より遅い（${foe}：片手 ${a.toFixed(2)}・二刀 ${c.toFixed(2)}）`);
+      if (c < b * 0.85) F(`二刀が強すぎる（${foe}：大剣 ${b.toFixed(2)}・二刀 ${c.toFixed(2)} 手番）`);
+    });
+    dualNote = rows.map(([foe, a, b, c]) => `${foe} 片手 ${a.toFixed(2)}・大剣 ${b.toFixed(2)}・二刀 ${c.toFixed(2)}`).join("／");
+  }
+
   // ---- 150 回のランダムプレイ相当：着けたまま数手番まわしても例外が出ない
   {
     const G2 = loadEngine();
@@ -181,5 +227,5 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     } catch (e) { F(`着けたまま遊ぶと例外：${e && e.stack}`); }
   }
 
-  if (!n0) ok(`I2 装備の枠（7 枠・装備品 ${gear.length} 種に枠・頭 ${bySlot("head").length}・足 ${bySlot("feet").length}・盾 ${bySlot("off").length}・両手持ち・古いセーブの移し替え）`);
+  if (!n0) ok(`I2 装備の枠（7 枠・装備品 ${gear.length} 種に枠・頭 ${bySlot("head").length}・足 ${bySlot("feet").length}・盾 ${bySlot("off").length}・両手持ち・二刀・古いセーブの移し替え。倒すまでの手番 ${dualNote}）`);
 };

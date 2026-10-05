@@ -3,9 +3,9 @@
 //     両手の武器を右手に持つと、左手の物は荷物へ。左手に何か持つと、両手の武器は荷物へ（右手は素手）。
 //     呪われた品は、外すと傷を負う（I3・I1 と同じ）。正体不明の品は、着けると正体が分かる（I3 と同じ）。
 //   ・効き目のまとめ：戦闘・判定は今までどおり G.weapon()・G.armor()・G.ring() を読むだけなので、それを包んで足した写しを返す
-//     （combat.js・F1 の読み合いは書き換えない）。
+//     （combat.js は、二刀の左手の一撃を差し込むつなぎ目 G.cbAfterAct を一行足しただけ。F1 の読み合いは書き換えない）。
 //       G.armor() … 胴の鎧に、頭・足・盾の防御・身のこなし・魔法・先手を足したもの
-//       G.weapon() … 右手の武器。左手にも武器を持つと、手数の分だけ威力が少し上がり（DUAL）、左手の武器の魔法も足す
+//       G.weapon() … 右手の武器。左手にも武器を持つと二刀（左手の武器の魔法も足す）。ふつうの攻撃では左手でも一撃（下の「二刀」）
 //       G.ring() … 装飾品 1 に、装飾品 2 の能力値・補正・魔法・先手・吸う・代償を足したもの
 //     能力値と行動の補正（stats・bonus）は、頭・足・左手の品の分を G.statEff・G.gearBonus に足す（胴と右手は I3、装飾品は core.js が見る）。
 //     F3 の癖（条件で化ける品）は、どの枠でも効く（F3 の G.f3i.fx を使う。能力値の分は F3 が身に着けた品すべてから足す）。
@@ -45,7 +45,6 @@
 
   // ---------------------------------------------------------------- 枠の中身
   const slotId = (S, k) => { const v = S[k]; return v && v !== "fists" ? v : ""; };
-  X.DUAL = 1;   // 二刀流の手数（右手の威力に足す）
   // 品に F3 の癖の効き目（命中・防御など。能力値と補正は F3 が足す）を足した写し。癖が無ければそのまま
   const fxMemo = new Map();
   const withFx = (it) => {
@@ -94,13 +93,76 @@
     const off = X.item("off");
     if (!off || off.type !== "weapon") return r;
     if (!slotId(S, "weapon")) return off;   // 右手が空なら、左手の武器で戦う
-    return memo2("w", r, off, () => {
+    const c = memo2("w", r, off, () => {
       const c = Object.assign({}, r);
-      c.dmg = [r.dmg[0], r.dmg[1], r.dmg[2] + X.DUAL];
       if (off.magic) c.magic = (r.magic || 0) + off.magic;
       c.dual = off.name;
       return c;
     });
+    if (!X.swing) return c;
+    // 二刀で振っているあいだ（ふつうの攻撃の一手）は、右手も少し当たりにくい
+    let sw = swingMemo.get(c);
+    if (!sw) { sw = Object.assign({}, c, { hit: (c.hit || 0) + X.DUAL_HIT }); swingMemo.set(c, sw); }
+    return sw;
+  };
+  const swingMemo = new WeakMap();
+  X.dual = (S) => { S = S || G.S; const off = S && X.item("off", S); return !!(off && off.type === "weapon" && slotId(S, "weapon")); };
+
+  // ---------------------------------------------------------------- 二刀：ふつうの攻撃（cb:attack）のときだけ、右手のあとに左手でも一撃
+  //   右手も左手も当たりにくくなり（DUAL_HIT。左手はさらに OFF_HIT）、左手の一撃は浅い（OFF_MUL）。
+  //   読み合いの技（割り込む・捨て身・身を削る）と急所狙いは右手だけで出す（当たりにくさも付かない）。躱す・目つぶしは手を選ばない。
+  //   左手の一撃も G.cbDamage を通るので、F1 の構え・隙・とどめ、絶界はそのまま効く。
+  X.DUAL_HIT = -15;
+  X.OFF_HIT = -10;
+  X.OFF_MUL = 0.8;
+  X.offChance = (t) => {
+    const off = X.item("off");
+    t = t || G.target();
+    if (!off || !t || off.type !== "weapon") return 0;
+    return G.chance(off.stat, { vs: G.foeVs.eva(G.foeData(t), off.stat) }, (off.hit || 0) + X.DUAL_HIT + X.OFF_HIT);
+  };
+  const baseCombatAct = G.combatAct;
+  G.combatAct = (arg) => {
+    const S = G.S;
+    const kind = String(arg).split(":")[0];
+    if (!S || !S.combat || kind !== "attack" || !X.dual(S)) return baseCombatAct(arg);
+    X.swing = true;
+    try { return baseCombatAct(arg); } finally { X.swing = false; }
+  };
+  // 攻撃の見込み（画面とボットが読む）は、二刀なら右手の当たりにくさ込み。選択肢の札に左手の見込みを添える
+  if (G.cb && G.cb.attack) {
+    const baseAtk = G.cb.attack;
+    G.cb.attack = () => { if (X.swing || !X.dual()) return baseAtk(); X.swing = true; try { return baseAtk(); } finally { X.swing = false; } };
+  }
+  const baseActions = G.combatActions;
+  G.combatActions = () => {
+    const groups = baseActions();
+    if (!X.dual()) return groups;
+    const off = X.item("off");
+    groups.forEach((g) => (g.list || []).forEach((a) => {
+      if (a.id !== "cb:attack") return;
+      a.label = `${G.weapon().name}と${off.name}で攻撃（二刀）`;
+      a.sub = `${a.sub}・左手 ${off.stat} ${X.offChance()}%（浅い）`;
+    }));
+    return groups;
+  };
+  const baseAfterAct = G.cbAfterAct;
+  G.cbAfterAct = (kind, t0) => {
+    if (baseAfterAct) baseAfterAct(kind, t0);
+    const S = G.S;
+    const C = S && S.combat;
+    if (!C || S.over || kind !== "attack" || !X.swing || C.e4disarm) return;
+    const off = X.item("off");
+    const t = t0 && t0.hp > 0 ? t0 : G.target();
+    if (!off || !t || t.hp <= 0) return;
+    const r = G.check(off.stat, { vs: G.foeVs.eva(G.foeData(t), off.stat) }, "左手の一撃", (off.hit || 0) + X.DUAL_HIT + X.OFF_HIT);
+    if (r.ok) {
+      // 左手は力を乗せきれない：武器の目だけ（能力値の上乗せは無し）を OFF_MUL 倍
+      let dmg = Math.max(1, Math.round(G.dice(off.dmg) * X.OFF_MUL));
+      if (r.crit) dmg *= 2;
+      G.say(`返す左手の${off.name}が、${t.name}を捉えた。`);
+      G.cbDamage(t, dmg, "blade");
+    } else G.say(`左手の${off.name}は、届かなかった。`);
   };
   const ARMOR_PARTS = ["head", "feet", "off"];
   G.armor = () => {
