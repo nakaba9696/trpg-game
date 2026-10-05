@@ -269,7 +269,7 @@
       ] });
     } else if (f === "train") {
       g.push({ title: `訓練場（30G・2日。今の点が低いほど伸びやすい）`, list: D.STATS.map((k) => ({
-        id: "train:" + k, label: `${k}を鍛える`, sub: `今 ${G.pt(S.stats[k])}・次の点まで ${G.s5Progress(k)}%${G.s5Fresh(k) < 0.8 ? "・使い込んでいる" : G.s5Fresh(k) > 1.2 ? "・伸びやすい" : ""}`,
+        id: "train:" + k, label: `${k}を鍛える`, sub: `今 ${G.pt(S.stats[k])}・次の点まで ${G.s5Progress(k)}%・${G.s5AptKind(k)}${G.s5Fresh(k) < 0.8 ? "・使い込んでいる" : ""}`,
         disabled: S.gold < 30, kw: [k, "鍛", "訓練"],
       })) });
     } else if (f === "alley") {

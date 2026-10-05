@@ -383,6 +383,12 @@
   }
 
   // ---------------------------------------------------------------- 4. キャラクターシート（確認）
+  // S7：職業による伸び方の一言（得意な能力は伸びやすく、苦手な能力は伸びにくい）
+  function growLine(cls) {
+    const m = D.CLASSES[cls].mod2 || {};
+    const up = D.STATS.filter((k) => (m[k] || 0) > 0), down = D.STATS.filter((k) => (m[k] || 0) < 0);
+    return `得意な能力ほど伸びやすく、高くなっても伸び続ける。苦手な能力は伸びにくい（伸びやすい：${up.join("・") || "なし"}／伸びにくい：${down.join("・") || "なし"}）`;
+  }
   function sheet(root) {
     steps(root, 2);
     head(root, "この者で旅立つか", "戻って直すこともできる");
@@ -411,7 +417,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["出発地", D.LOCS[c.start].name], ...rrows]
+    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["伸び方", growLine(o.cls)], ["出発地", D.LOCS[c.start].name], ...rrows]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);

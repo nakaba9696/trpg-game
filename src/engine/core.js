@@ -153,13 +153,25 @@
   // 体の目盛り：HP・MP・ダメージ・術の威力に効く量。20 点までは今までの割合と同じ（点×4）、その先は 1 点で 2 ずつ
   G.s5Pow = (v) => { v = Math.max(0, v || 0); return v <= 20 ? v * 4 : 80 + (v - 20) * 2; };
   // 次の 1 点に要る経験（100 が「今までの 4％ぶん」。12 点を超えると SLOPE 点ごとに 1 倍ずつ増える）
-  G.s5Need = (v) => S5().NEED * (1 + Math.max(0, (v || 0) - S5().BASE) / S5().SLOPE);
+  // S7：職業の向き不向き（D.CLASSES[職業].mod2。+2〜−3）で、伸び始めが鈍る点と鈍り方が変わる。
+  //   得意（+）は高い所まで伸び続け（+1 で 4 点遅く・なだらかに鈍る）、苦手（−）は低いうちから鈍る。a を渡さなければ補正なし
+  G.s5Need = (v, a) => {
+    a = a || 0;
+    const base = S5().BASE + 4 * a, slope = Math.max(12, S5().SLOPE + 8 * a);
+    return S5().NEED * (1 + Math.max(0, (v || 0) - base) / slope);
+  };
+  // その能力の向き不向き（職業の補正。古いセーブや職業の無い冒険では 0）
+  G.s5Apt = (k, S) => { S = S || G.S; const c = S && D.CLASSES[S.cls]; return G.clamp(((c && c.mod2) || {})[k] || 0, -3, 3); };
+  // 経験の入り方の倍率：得意 +1 で 1.3 倍・+2 で 1.6 倍、苦手 −1 で 0.74 倍・−3 で 0.49 倍
+  G.s5AptMul = (a) => (a > 0 ? 1 + 0.3 * a : 1 / (1 + 0.35 * -a));
+  // 画面の印：伸びやすい／ふつう／伸びにくい
+  G.s5AptKind = (k, S) => { const a = G.s5Apt(k, S); return a > 0 ? "伸びやすい" : a < 0 ? "伸びにくい" : "ふつう"; };
   // 普通の判定（補正も場所の上乗せも無し）の成功率。画面の目安
   G.s5Plain = (v) => G.clamp(Math.round(G.s5p((v || 0) - G.s5Target("普通"))), 5, 95);
   // 能力値の棒の長さ（99 で満点。％）
   G.s5Bar = (v) => G.clamp(Math.round(((v || 0) / 99) * 100), 0, 100);
   // 次の点までの進み（0〜99％。画面用）
-  G.s5Progress = (k, S) => { S = S || G.S; const e = ((S && S.s5exp) || {})[k] || 0; return Math.min(99, Math.floor((100 * e) / G.s5Need(S.stats[k]))); };
+  G.s5Progress = (k, S) => { S = S || G.S; const e = ((S && S.s5exp) || {})[k] || 0; return Math.min(99, Math.floor((100 * e) / G.s5Need(S.stats[k], G.s5Apt(k, S)))); };
   // 装備などの能力値の補正の書き方（点）
   G.statModText = (k, n) => `${k}${G.sign(Math.sign(n) * Math.max(1, Math.round(Math.abs(G.s5Mod(n)))))}`;
   // 能力値への補正（％で書いたもの）。ほかの仕組みはこれではなく G.statEff を包んで点を足す
@@ -194,13 +206,14 @@
   G.chance = (stat, diff, extra) => G.clamp(Math.round(G.s5p(G.statEff(stat) + G.s5Mod(extra) - G.s5Target(diff))), 5, 95);
 
   // S6：使い方の偏り。判定・訓練のたびに、その能力値を使った重み（S.s5use。古い分は少しずつ薄れる）を足す。
-  // 同じ能力ばかり使うと伸びが鈍り（最低 0.4 倍）、しばらく使っていない能力は伸びやすい（最高 1.4 倍）。6 つを均等に使えば約 1.3 倍
+  // 同じ能力ばかり使うと伸びが鈍り（最低 0.6 倍）、しばらく使っていない能力は少し伸びやすい（最高 1.15 倍）。
+  // S7：均等に上げるのが正解にならないよう、幅を狭めた（得意の能力は職業の倍率で、二つに寄せても均等より速く伸びる）
   G.s5Fresh = (k, S) => {
     S = S || G.S;
     const u = (S && S.s5use) || {};
     const w = (x) => (u[x] === undefined ? 1 : u[x]);
     const tot = D.STATS.reduce((a, x) => a + w(x), 0);
-    return G.clamp(1.6 - (2 * w(k)) / Math.max(1e-9, tot), 0.4, 1.4);
+    return G.clamp(1.3 - (1.2 * w(k)) / Math.max(1e-9, tot), 0.6, 1.15);
   };
   G.s5Used = (k) => {
     const S = G.S;
@@ -235,15 +248,17 @@
   };
 
   // n は経験（今までの「割合で +1〜4」と同じ数。12 点のとき 4 で 1 点）。返すのは [前の点, 後の点, 足した経験]
+  // S7：職業の向き不向きで、経験の入り方（G.s5AptMul）と鈍り方（G.s5Need）が変わる。判定・訓練・出来事のどれにも効く
   G.grow = (k, n) => {
     const S = G.S;
     n = Math.max(0, n || 0);
     const a = S.stats[k];
     if (!n) return [a, a, 0];
     S.s5exp = S.s5exp || {};
-    let e = (S.s5exp[k] || 0) + n * (S5().NEED / 4);
+    const apt = G.s5Apt(k, S);
+    let e = (S.s5exp[k] || 0) + n * (S5().NEED / 4) * G.s5AptMul(apt);
     let b = a;
-    while (e >= G.s5Need(b)) { e -= G.s5Need(b); b++; }
+    while (e >= G.s5Need(b, apt)) { e -= G.s5Need(b, apt); b++; }
     S.s5exp[k] = Math.round(e * 100) / 100;
     if (b > a) {
       S.stats[k] = b;
