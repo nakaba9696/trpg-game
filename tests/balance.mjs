@@ -96,25 +96,35 @@ export function playGames({ mode = "random", games = 400, steps = 500, seed = 0,
 // 種は職業ごと・回ごとに決まっているので、分けても一度に遊んだときと同じ（tests/checks/qt1_split.mjs）。
 // globalThis.__played が配列なら、足し終えた結果を一つにまとめてそこに残す（run.mjs が釣り合いの表に使い回す）
 // jobs は働き手の数（既定は BALANCE_JOBS か JOBS かコアの数。1 なら働き手を使わずにここで遊ぶ）。chunk は一つの仕事で遊ぶ回数（既定は下の CHUNK）
+// T2：globalThis.__preplayed（Map：splitKey → 遊んだ行）に先に遊んだ回があれば、それを使って遊び直さない。
+//   tests/run.mjs が q2 の回を、ほかの checks と同じ並びの仕事として先に遊ばせておく（働き手の中でさらに働き手を起こさない）。種も回も同じなので数字は変わらない
 const CHUNK = { random: 100, smart: 10 };
+export function splitTasks({ mode = "random", games = 400, steps = 500, seed = 0, classes, chunk } = {}) {
+  const n = chunk || CHUNK[mode] || games;
+  return classes.flatMap((cls) => Array.from({ length: Math.ceil(games / n) }, (_, k) => ({ kind: "balance", mode, steps, seed, cls, start: k * n, games: Math.min(games, (k + 1) * n) })));
+}
+export const splitKey = (t) => JSON.stringify([t.mode, t.steps, t.seed, t.cls, t.start || 0, t.games]);
 export async function playSplit({ mode = "random", games = 400, steps = 500, seed = 0, classes: only, jobs, chunk } = {}) {
   const classes = only || Object.keys(loadEngine().data.CLASSES);
-  const n = chunk || CHUNK[mode] || games;
-  const tasks = classes.flatMap((cls) => Array.from({ length: Math.ceil(games / n) }, (_, k) => ({ kind: "balance", mode, steps, seed, cls, start: k * n, games: Math.min(games, (k + 1) * n) })));
+  const all = splitTasks({ mode, games, steps, seed, classes, chunk });
+  const pre = globalThis.__preplayed instanceof Map ? globalThis.__preplayed : new Map();
+  const parts = all.map((t) => pre.get(splitKey(t)));
+  const tasks = all.filter((_, i) => !parts[i]);
+  const at = all.map((_, i) => i).filter((i) => !parts[i]);
   const J = Math.max(1, Math.min(tasks.length, jobs ?? Number(process.env.BALANCE_JOBS || process.env.JOBS || availableParallelism())));
-  const parts = new Array(tasks.length);
   const keep = globalThis.__played;
   const t0 = Date.now();
-  if (J === 1) {
+  if (!tasks.length) { /* 全部先に遊んであった */ }
+  else if (J === 1) {
     globalThis.__played = null;
-    try { tasks.forEach((t, i) => { parts[i] = playGames({ ...t, classes: [t.cls] }); }); } finally { globalThis.__played = keep; }
+    try { tasks.forEach((t, i) => { parts[at[i]] = playGames({ ...t, classes: [t.cls] }); }); } finally { globalThis.__played = keep; }
   } else {
     // 小分けにした仕事を、働き手が数え札で取り合う（tests/worker.mjs の drain）
     const counter = new Int32Array(new SharedArrayBuffer(4));
     const errors = [];
     await Promise.all(Array.from({ length: J }, () => new Promise((resolve) => {
       const w = new Worker(new URL("./worker.mjs", import.meta.url), { workerData: { tasks, counter: counter.buffer } });
-      w.on("message", (m) => { if (m.end) w.terminate(); else if (m.data && m.data.error) errors.push(m.data.error); else parts[m.i] = m.data; });
+      w.on("message", (m) => { if (m.end) w.terminate(); else if (m.data && m.data.error) errors.push(m.data.error); else parts[at[m.i]] = m.data; });
       w.on("error", (e) => errors.push(String(e.stack || e)));
       w.on("exit", resolve);
     })));
@@ -122,7 +132,7 @@ export async function playSplit({ mode = "random", games = 400, steps = 500, see
     if (parts.some((p) => !p)) throw new Error(`${mode}: 働き手から返ってこなかった回がある`);
   }
   const rows = [];
-  tasks.forEach((t, i) => {
+  all.forEach((t, i) => {
     for (const r of parts[i]) {
       const at = rows.findIndex((x) => x.cls === r.cls);
       if (at < 0) rows.push(r);
