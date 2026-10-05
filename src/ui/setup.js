@@ -426,7 +426,7 @@
 
     const nav = h("div", "creNav");
     nav.append(btn("人物を直す", "", () => go("person")), btn("能力値を直す", "", () => go("stats")),
-      btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); }, "c-go"));
+      btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); if (G.sound && G.sound.bgmUpdate) G.sound.bgmUpdate(); }, "c-go"));
     root.append(nav);
   }
 
