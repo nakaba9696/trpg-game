@@ -9,9 +9,10 @@
   G.arrive = (dest) => {
     const S = G.S;
     const from = S && S.loc;
+    const traveled = !!(S && S.w6); // 旅の様子（W6）があるときだけ。旅をせずに着いたときは書かない
     const r = arrive0(dest);
     const lines = (D.W7_ARRIVE || {})[dest];
-    if (!S || S.loc !== dest || !from || from === dest || !lines || !lines.length) return r;
+    if (!S || S.loc !== dest || !traveled || !from || from === dest || !lines || !lines.length) return r;
     const L = D.LOCS[dest] || {};
     const ti = S.log.map((x) => x.k === "title" && x.text === L.name).lastIndexOf(true);
     if (ti < 0) return r;
