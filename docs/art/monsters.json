@@ -857,7 +857,7 @@
    "file": "assets/monsters/e4k_acidbud.webp",
    "name": "酸の芽",
    "tags": "acid slime sprout, bright green bubbling blob, three eyes, dripping acid",
-   "memo": "酸の溜まりの芽"
+   "memo": "ゼノバスの芽"
   },
   {
    "id": "e4k_greenwatch",
@@ -1416,7 +1416,7 @@
   {
    "id": "e3_kurobane",
    "file": "assets/monsters/e3_kurobane.webp",
-   "name": "黒翼",
+   "name": "黒翼の使徒ノクターヴ",
    "boss": true,
    "human": true,
    "tags": "(dorontabi:1.3), (colossal:1.2) faceless winged being, featureless pitch black head, (no face:1.2), hollow white glowing eyes, enormous jet black feathered wings spread wide, long black robe, floating high, black feathers falling, shadow spilling from its body, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
@@ -1425,7 +1425,7 @@
   {
    "id": "e3_tojizuki",
    "file": "assets/monsters/e3_tojizuki.webp",
-   "name": "閉じ月",
+   "name": "閉じ月の使徒クロフェン",
    "boss": true,
    "tags": "(dorontabi:1.3), (no humans:1.4), (round moon creature:1.3), (the moon is a giant eyeball:1.3) with its eyelid shut, closed eye seam across the whole sphere, pale grey cratered skin, long silver eyelashes, floating in the dark sky, no body, no limbs, cold glowing moonlight, from below, god rays, rim light, dramatic lighting, solemn, ominous, divine, ancient, awe-inspiring",
    "memo": "使徒。夜空の二つ目の月。まぶたを閉じた大きな目"
@@ -1433,7 +1433,7 @@
   {
    "id": "e3_tetsukui",
    "file": "assets/monsters/e3_tetsukui.webp",
-   "name": "鉄喰い",
+   "name": "鉄喰いの使徒ザルガドム",
    "boss": true,
    "tags": "(dorontabi:1.3), (colossal divine beast:1.3) of rusted iron, lion-like head with a crown of broken swords and spears fused into its mane, hide of ancient engraved iron plates with glowing molten orange runes, (six glowing orange eyes:1.2), ornate bronze ornaments and chains on its body, huge fangs gripping a broken sword, a circular ring of molten light floating behind its head, four legs, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
    "memo": "使徒。土から出てきた錆色の獣。剣を噛む"
@@ -1441,7 +1441,7 @@
   {
    "id": "e3_togaoi",
    "file": "assets/monsters/e3_togaoi.webp",
-   "name": "咎追い",
+   "name": "咎追いの使徒ネリオス",
    "boss": true,
    "human": true,
    "tags": "(dorontabi:1.3), (colossal executioner deity:1.3) many times taller than a man, (faceless:1.2) iron mask engraved with runes, two faint glowing eyes in the slits, black executioner robe dissolving into smoke, no legs, floating, (hundreds of small bells hanging on chains around it:1.2), a giant ring of bells and chains floating behind its head, huge executioner axe, counting, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
@@ -1450,7 +1450,7 @@
   {
    "id": "e3_midori",
    "file": "assets/monsters/e3_midori.webp",
-   "name": "緑の御方",
+   "name": "芽吹きの使徒リサルナ",
    "boss": true,
    "tags": "(dorontabi:1.3), (isolated:1.2), no trees around, (colossal gentle nature deity:1.3), giant stag-like god covered in deep green moss, a small living tree growing from its back, great antlers of living branches, golden wheat and white flowers sprouting from its body, (many small glowing green eyes along its face:1.2), no mouth, ornate wooden ornaments and leaf patterns, floating seeds and petals, a circular ring of soft green light behind its head, serene, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
    "memo": "使徒。苔と若木に覆われた大きなもの。足跡から麦が芽吹く"
@@ -1458,7 +1458,7 @@
   {
    "id": "e3_sanno",
    "file": "assets/monsters/e3_sanno.webp",
-   "name": "酸の溜まり",
+   "name": "酸溜まりの使徒ゼノバス",
    "boss": true,
    "tags": "(dorontabi:1.3), (amorphous towering mass of glowing green acid:1.3), no architecture, (no legs, no arms, no body shape:1.2), rising from a bubbling acid pool, translucent, a pulsing emerald stone heart visible inside, (crown of half-melted helmets on top:1.2), dissolving bones and swords suspended inside, (empty glowing eye holes:1.2), no mouth, ring of floating acid droplets circling behind it like a sigil, dripping, toxic glow, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
    "memo": "使徒。谷の底の緑に光る液。ときどき人の形に立ち上がる"

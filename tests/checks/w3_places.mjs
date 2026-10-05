@@ -79,7 +79,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const n = evs.filter((e) => e.where.includes(id)).length;
     if (n < 8) F(`${id}: 出来事が ${n}（8 以上のはず）`);
   }
-  const old = Object.entries(D.LOCS).filter(([id, L]) => !id.startsWith("w3_") && REGIONS.includes(L.region));
+  // 「今ある場所」は W3 のときにあった場所。あとの W7 で増やした町（w7_）は、それぞれ自分の出来事を持つ（tests/checks/w7_map.mjs・w7b_towns.mjs）
+  const old = Object.entries(D.LOCS).filter(([id, L]) => !id.startsWith("w3_") && !id.startsWith("w7_") && REGIONS.includes(L.region));
   for (const [id] of old) if (!evs.some((e) => e.where.includes(id))) F(`${id}: 担当の地域の今ある場所なのに、W3 の出来事が無い`);
   if (!(D.RUMORS || []).some((r) => /カルメラント|リグノア|フロスレイア|鐘撞き|修道院|数の合わない|観測所|潮鳴り/.test(r))) F("新しい場所の噂が無い");
 

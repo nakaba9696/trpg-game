@@ -2,8 +2,15 @@
 // 演出（B1）：画面が描けるよう、記録に fx を添える。DOM には触らない。
 //   { fx: "hit", foe: 名前, n } 敵にダメージ / { fx: "down", foe, boss } 敵が倒れた / { fx: "wall", foe } 絶界に弾かれた
 //   { fx: "hurt", n, heavy } あなたがダメージ / { fx: "ally", who: 仲間の名前, n } 仲間がダメージ / { fx: "allydown", who } 仲間が戦闘不能（B5）/ { fx: "crit" } 会心・急所 / { fx: "boss", foe: id, name } ボスの前口上（D.BOSS_LINES）
+// 読み合いのためのつなぎ目（F1。中身は engine/zzzzzzzzzz_f1_duel.js）。無ければ今まで通り：
+//   G.cbActs[kind](t, a, b)   こちらの手を足す（"cb:<kind>"。この手番の中で行うので、図鑑・依頼・弱点の上乗せがそのまま数える）
+//   G.cbDmgMod(f, n, how)     こちらの一撃のダメージを変える（構え・隙・とどめ）。返した数を与える
+//   G.cbMove(f, e)            敵がこの手番にすること { skip, times, mul, hit, through（身を守っても避けにくくならない）, guardDiv, pierce, you, name, text, f1 }。null ならふつうに一撃
+//   G.cbStruck(f, e, mv, who, dmg)  敵の一撃が当たった・外れた（who は仲間か null＝あなた、dmg は与えた数か 0）のあと
+//   C.f1dodge                 「躱す」が決まった：あなたへの最初の一撃を丸ごと外す
 (function (G) {
   const D = G.data;
+  G.cbActs = G.cbActs || {};
 
   const VOLGRIM_LINES = [
     "ヴォルグリム「おい、腰が引けてるぞ。もっと深く踏み込め」",
@@ -26,8 +33,10 @@
     return (T[t] != null ? T[t] : 12 + (t - 1) * 8) + (e.boss ? (D.S5 && D.S5.BOSS) || 0 : 0);
   };
   G.foeVs = {
-    eva: (e) => G.foeLv(e) + 1 + G.s5Mod(e.def || 0),               // こちらの攻撃（武器の能力値と比べる）
-    vital: (e) => G.foeVs.eva(e) + 5,                                 // 急所（敏捷）
+    // こちらの攻撃（武器の能力値と比べる）。S6：素早い敵（agi が 40 より上）には筋力の武器が、硬い敵（def が 10 より上）には敏捷の武器が当たりにくい
+    eva: (e, k) => G.foeLv(e) + 1 + G.s5Mod(e.def || 0) + (k === "筋力" ? ((e.agi || 0) - 40) / 10 : k === "敏捷" ? ((e.def || 0) - 10) / 10 : 0),
+    // 急所（敏捷）。S6：同じ戦いで急所ばかり狙うと、相手が見切ってくる（1 回ごとに +4 点、+16 まで）
+    vital: (e) => G.foeVs.eva(e, "敏捷") + 5 + Math.min(16, 4 * ((G.S && G.S.combat && G.S.combat.vitalN) || 0)),
     mres: (e) => G.foeLv(e) + 1 + G.s5Mod(e.mres || 0),             // 魔法（魔力）
     will: (e) => G.foeLv(e) + 1 + G.s5Mod((e.will || 0) - 30),      // 威圧（魅力）
     flee: (e) => G.foeLv(e) + 1 + G.s5Mod((e.agi || 0) - 10),       // 逃げる（敏捷）
@@ -78,7 +87,7 @@
 
   // ---------------------------------------------------------------- 成功率
   G.cb = {
-    attack: () => { const w = G.weapon(); const t = G.target(); return G.chance(w.stat, { vs: G.foeVs.eva(G.foeData(t)) }, w.hit || 0); },
+    attack: () => { const w = G.weapon(); const t = G.target(); return G.chance(w.stat, { vs: G.foeVs.eva(G.foeData(t), w.stat) }, w.hit || 0); },
     vital: () => { const w = G.weapon(); const t = G.target(); return G.chance("敏捷", { vs: G.foeVs.vital(G.foeData(t)) }, w.vital || 0); },
     fire: () => { const t = G.target(); return G.chance("魔力", { vs: G.foeVs.mres(G.foeData(t)) }, G.gearBonus("fire") + G.magicBonus()); },
     heal: () => G.chance("魔力", "易しい", G.gearBonus("heal") + G.magicBonus()),   // 場所の上乗せは無い（S5）
@@ -145,10 +154,12 @@
       G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
       return;
     }
+    if (G.cbDmgMod) n = Math.max(0, Math.round(G.cbDmgMod(f, n, how)));
     f.hp = Math.max(0, f.hp - n);
     G.log("sys", `${f.name}に ${n} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n });
     if (f.hp <= 0) onFoeDown(f);
   }
+  G.cbDamage = (f, n, how) => damageFoe(f, n, how);
   function onFoeDown(f) {
     const S = G.S;
     G.log("nar", `${f.name}を倒した！`, { fx: "down", foe: f.name, boss: !!G.foeData(f).boss });
@@ -173,7 +184,7 @@
     const ally = (id) => (id && id !== "you" ? S.companions.find((c) => c.id === id) || null : null);
     if (kind === "attack") {
       G.log("you", `${w.name}で${t.name}に斬りかかる`);
-      const r = G.check(w.stat, { vs: G.foeVs.eva(G.foeData(t)) }, "攻撃", w.hit || 0);
+      const r = G.check(w.stat, { vs: G.foeVs.eva(G.foeData(t), w.stat) }, "攻撃", w.hit || 0);
       if (r.ok) {
         let dmg = G.dice(w.dmg) + (w.stat === "筋力" ? pow("筋力", 15) : pow("敏捷", 20));
         if (r.crit) { dmg *= 2; G.log("nar", "会心の一撃！", { fx: "crit" }); }
@@ -183,6 +194,8 @@
     } else if (kind === "vital") {
       G.log("you", `${t.name}の急所を狙う`);
       const r = G.check("敏捷", { vs: G.foeVs.vital(G.foeData(t)) }, "急所狙い", w.vital || 0);
+      C.vitalN = (C.vitalN || 0) + 1;
+      if (C.vitalN === 2) G.note(`${t.name}は、急所を狙う手を見切りはじめた。`);
       if (r.ok) {
         const dmg = (G.dice(w.dmg) + pow("敏捷", 15)) * (r.crit ? 3 : 2);
         G.log("nar", "刃が急所を捉えた！", { fx: "crit" });
@@ -207,6 +220,8 @@
       const r = G.check("魔力", "易しい", "癒しの奇跡", G.gearBonus("heal") + G.magicBonus());
       if (r.ok) { const n = G.dice([2, 6, 2]) + pow("魔力", 10); if (c) G.b5Heal(c, n); else { G.heal(n); G.note(`HP +${n}`); } }
       else G.say("祈りは届かなかった。");
+    } else if (G.cbActs[kind]) {
+      G.cbActs[kind](t, itemId, tgt);
     } else if (D.SPELLS && D.SPELLS[kind] && !D.SPELLS[kind].base) {
       castSpell(kind, t);
     } else if (kind === "talk") {
@@ -337,16 +352,17 @@
     for (let i = 0; i < list.length; i++) { r -= w[i]; if (r < 0) return list[i]; }
     return list[list.length - 1];
   }
-  function hitAlly(f, e, c, hexed) {
+  function hitAlly(f, e, c, hexed, mv) {
     const C = G.S.combat;
-    const chance = G.foeHitAlly(e, c, hexed ? -20 : 0);
-    if (G.d(100) > chance) { G.note(`${c.name}は${f.name}の攻撃をかわした。`); return; }
-    let dmg = G.dice(e.dmg) - (e.magic ? 0 : G.b5Def(c));
+    const chance = G.foeHitAlly(e, c, (hexed ? -20 : 0) + ((mv && mv.hit) || 0));
+    if (G.d(100) > chance) { G.note(`${c.name}は${f.name}の攻撃をかわした。`); if (mv && G.cbStruck) G.cbStruck(f, e, mv, c, 0); return; }
+    let dmg = Math.round(G.dice(e.dmg) * ((mv && mv.mul) || 1)) - (e.magic || (mv && mv.pierce) ? 0 : G.b5Def(c));
     if (C.ward > 0) dmg -= wardCut();
     dmg = Math.max(1, dmg);
     c.hp = Math.max(0, c.hp - dmg);
     G.log("nar", `${f.name}の${e.magic ? "呪い" : "攻撃"}！ ${c.name}に ${dmg} のダメージ（残り ${c.hp}/${G.b5Max(c)}）`, { fx: "ally", who: c.name, n: dmg });
     if (c.hp <= 0) G.b5Fall(c, f);
+    if (mv && G.cbStruck) G.cbStruck(f, e, mv, c, dmg);
   }
 
   // 一行をなぎ払う（使徒の余波）：立っている仲間それぞれに、少し弱い一撃
@@ -376,22 +392,37 @@
         if (f.hp <= 0) return;
       }
       if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は凍りついたまま動けない。`); return; }
+      // F1：この手番の動き（溜め・構え・連撃・大技）。skip なら殴ってこない
+      const mv = G.cbMove ? G.cbMove(f, e) : null;
+      if (mv && mv.text) G.say(mv.text);
+      if (mv && mv.skip) return;
       // 使徒（絶界を持つ者）は、あなただけを狙う。仲間は余波でなぎ払われる（下の sweep）
       //（絶界を破る剣を持つと e.majin は消えるので、もとのデータと E3 の印で見る）
       const apostle = !!(f.e3 || (D.ENEMIES[f.id] && D.ENEMIES[f.id].majin));
-      const ally = apostle ? null : aimOf();
-      if (ally) { hitAlly(f, e, ally, hexed); return; }
-      if (apostle && G.b5Standing(S).length && G.rand() < 0.35) sweep(f, e);
-      const chance = G.foeHitChance(e, -(C.guard ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0));
-      if (G.d(100) <= chance) {
-        let dmg = G.dice(e.dmg) - (e.magic ? 0 : (armor ? armor.def : 0));
-        if (C.guard) dmg = Math.floor(dmg / 2);
-        if (C.ward > 0) dmg -= wardCut();
-        dmg = Math.max(1, dmg);
-        G.log("nar", `${f.name}の${e.magic ? "呪い" : "攻撃"}！ ${dmg} のダメージ。`, { fx: "hurt", n: dmg, heavy: dmg >= S.maxHp / 4 });
-        G.hurt(dmg, `${f.name}に倒された`);
-      } else G.note(`${f.name}の攻撃をかわした。`);
+      const times = (mv && mv.times) || 1;
+      for (let i = 0; i < times && !S.over && f.hp > 0; i++) {
+        const ally = apostle || (mv && mv.you) ? null : aimOf();
+        if (ally) { hitAlly(f, e, ally, hexed, mv); continue; }
+        if (apostle && G.b5Standing(S).length && G.rand() < 0.35) sweep(f, e);
+        if (C.f1dodge) {
+          C.f1dodge = false;
+          G.say(`${f.name}の${mv && mv.mul > 1.5 ? "大技" : "一撃"}を、紙一重で躱した。`);
+          if (G.cbStruck) G.cbStruck(f, e, mv, null, 0, "dodged");
+          continue;
+        }
+        const chance = G.foeHitChance(e, -(C.guard && !(mv && mv.through) ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0) + ((mv && mv.hit) || 0));
+        if (G.d(100) <= chance) {
+          let dmg = Math.round(G.dice(e.dmg) * ((mv && mv.mul) || 1)) - (e.magic || (mv && mv.pierce) ? 0 : (armor ? armor.def : 0));
+          if (C.guard) dmg = Math.floor(dmg / ((mv && mv.guardDiv) || 2));
+          if (C.ward > 0) dmg -= wardCut();
+          dmg = Math.max(1, dmg);
+          G.log("nar", `${f.name}の${e.magic ? "呪い" : (mv && mv.name) || "攻撃"}！ ${dmg} のダメージ。`, { fx: "hurt", n: dmg, heavy: dmg >= S.maxHp / 4 });
+          G.hurt(dmg, `${f.name}に倒された`);
+          if (G.cbStruck) G.cbStruck(f, e, mv, null, dmg);
+        } else { G.note(`${f.name}の攻撃をかわした。`); if (G.cbStruck) G.cbStruck(f, e, mv, null, 0); }
+      }
     });
+    C.f1dodge = false;
     C.exposed = false;
     if (C.ward > 0 && --C.ward === 0) G.note("加護の光が消えた。");
   }

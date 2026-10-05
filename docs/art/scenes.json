@@ -22,6 +22,46 @@
    "trial": true
   },
   {
+   "id": "w7_vinale",
+   "kind": "place",
+   "scene": "w7_vineyard",
+   "type": "town",
+   "region": "自由都市連合",
+   "name": "葡萄の町ヴィナレ",
+   "pack": "west",
+   "tags": "vineyard town on gentle south-facing slopes, terraced grape trellises, wooden wine barrels, press house, warm sunlight"
+  },
+  {
+   "id": "w7_durm",
+   "kind": "place",
+   "scene": "w7_diggers",
+   "type": "town",
+   "region": "自由都市連合",
+   "name": "発掘人の町ドゥルム",
+   "pack": "west",
+   "tags": "diggers' town grown from tents, canvas tents beside rough stone houses, broken white ancient pillars in the distance, shovels and carts"
+  },
+  {
+   "id": "w7_glatz",
+   "kind": "place",
+   "scene": "w7_mercs",
+   "type": "town",
+   "region": "自由都市連合",
+   "name": "傭兵の町グラッツ",
+   "pack": "west",
+   "tags": "mercenary town around a fenced drill yard, wooden palisade, large notice board covered with paper postings, inns, taverns and smithy"
+  },
+  {
+   "id": "w7_russen",
+   "kind": "place",
+   "scene": "w7_ferry",
+   "type": "town",
+   "region": "自由都市連合",
+   "name": "渡しの町リュッセン",
+   "pack": "west",
+   "tags": "river ferry town, wide river with a flat ferry boat, wooden landing piers, small toll booth hut, half-timbered houses on the bank"
+  },
+  {
    "id": "nerva",
    "kind": "place",
    "scene": "port",
@@ -72,6 +112,56 @@
    "name": "聖都エルヴィナ",
    "pack": "west",
    "tags": "holy city, white stone pavement, golden spires, grand cathedral, many bell towers, pilgrim road lined with candles and flowers"
+  },
+  {
+   "id": "w7_norve",
+   "kind": "place",
+   "scene": "w7_prayerbeach",
+   "type": "town",
+   "region": "光天教会領",
+   "name": "祈りの浜ノルヴェ",
+   "pack": "west",
+   "tags": "fishing beach village, small boats pulled up on sand, fishing nets drying on poles, tiny wooden shrine on the beach"
+  },
+  {
+   "id": "w7_serena",
+   "kind": "place",
+   "scene": "w7_spring",
+   "type": "town",
+   "region": "光天教会領",
+   "name": "泉の町セレナ",
+   "pack": "west",
+   "tags": "small town on a seaside cliff around a little sacred spring, stone basin, chapel, sea below"
+  },
+  {
+   "id": "w7_lumie",
+   "kind": "place",
+   "scene": "w7_candles",
+   "type": "town",
+   "region": "光天教会領",
+   "name": "蝋燭の町リュミエ",
+   "pack": "west",
+   "tags": "candle-making town, rows of white beeswax candles hanging in windows like curtains, warm glowing streets, small church"
+  },
+  {
+   "id": "w7_melvi",
+   "kind": "place",
+   "scene": "w7_scriptorium",
+   "type": "town",
+   "region": "光天教会領",
+   "name": "写本の町メルヴィ",
+   "pack": "west",
+   "tags": "riverside monastery town, long stone scriptorium building with many windows, paper mills and ink shops, calm river"
+  },
+  {
+   "id": "w7_orbe",
+   "kind": "place",
+   "scene": "w7_pilgrim",
+   "type": "town",
+   "region": "光天教会領",
+   "name": "巡礼の宿場オルベ",
+   "pack": "west",
+   "tags": "pilgrim road waystation town, inns with bundles of wooden walking staffs hanging from eaves, distant cathedral spire beyond a hill"
   },
   {
    "id": "w1_catacomb",
@@ -295,6 +385,36 @@
    "tags": "black iron fortress wall blocking a narrow mountain pass, watchtowers with alarm bells, graveyard outside the wall, rugged mountains"
   },
   {
+   "id": "w7_frostgate",
+   "kind": "place",
+   "scene": "w7_beacon",
+   "type": "town",
+   "region": "人類の最前線",
+   "name": "北の烽火台ヴェルト",
+   "pack": "border",
+   "tags": "northern beacon station by a cold sea, three stone beacon towers with fire and smoke, firewood piles, soldiers"
+  },
+  {
+   "id": "w7_widows",
+   "kind": "place",
+   "scene": "w7_widows",
+   "type": "town",
+   "region": "人類の最前線",
+   "name": "鐘待ちの村リーネ",
+   "pack": "border",
+   "tags": "farming village of soldiers' families, ploughed fields, a graveyard slightly larger than the fields, distant watchtower"
+  },
+  {
+   "id": "w7_ironwell",
+   "kind": "place",
+   "scene": "w7_wellfort",
+   "type": "town",
+   "region": "人類の最前線",
+   "name": "井戸の砦町ケルン",
+   "pack": "border",
+   "tags": "frontier supply town, deep stone well with a wooden frame in the center, storehouses and soldiers' row houses, grey sky"
+  },
+  {
    "id": "w4_watch",
    "kind": "place",
    "scene": "w4_watch",
@@ -313,6 +433,26 @@
    "name": "断界山脈",
    "pack": "border",
    "tags": "towering jagged mountain peaks, sea of clouds below, narrow ridge trail, cold thin air, snowy summits"
+  },
+  {
+   "id": "w7_hermitage",
+   "kind": "place",
+   "scene": "w7_hermitage",
+   "type": "town",
+   "region": "人と魔の境",
+   "name": "峠の庵ザレム",
+   "pack": "border",
+   "tags": "misty mountain pass with a crumbling hermitage and an old altar, small huts of settlers, fog"
+  },
+  {
+   "id": "w7_lastvillage",
+   "kind": "place",
+   "scene": "w7_lastvillage",
+   "type": "town",
+   "region": "人と魔の境",
+   "name": "最後の村ハルト",
+   "pack": "border",
+   "tags": "last human village on a mountain shoulder, a dozen stone houses, small statues facing away from the peaks, snowy mountains"
   },
   {
    "id": "graveyard",
@@ -475,6 +615,46 @@
    "name": "島の都シェルアーク",
    "pack": "isles",
    "tags": "sea city built across small islands, wooden walkway bridges between islands, fish drying racks, barrels, small boats, sailing ships offshore"
+  },
+  {
+   "id": "w7_pearlisle",
+   "kind": "place",
+   "scene": "w7_pearls",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "真珠採りの島ヨナ",
+   "pack": "isles",
+   "tags": "island with a shallow turquoise cove, pearl diving boats, huts roofed with shells, beach with shells"
+  },
+  {
+   "id": "w7_bellisle",
+   "kind": "place",
+   "scene": "w7_bellisle",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "霧鐘の島ミストラ",
+   "pack": "isles",
+   "tags": "rocky island facing the open ocean, a large fog bell on a wooden frame on the cliff top, misty sea, small chapel"
+  },
+  {
+   "id": "w7_netisle",
+   "kind": "place",
+   "scene": "w7_netisle",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "網の島カラヴ",
+   "pack": "isles",
+   "tags": "small fishing island with ropes strung between beaches and dozens of fishing nets drying, wooden cottages, boats"
+  },
+  {
+   "id": "w7_saltisle",
+   "kind": "place",
+   "scene": "w7_saltpans",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "塩の島ソルネ",
+   "pack": "isles",
+   "tags": "island village with square salt evaporation ponds shining like mirrors, salt rakers, small wooden huts, calm sea"
   },
   {
    "id": "onigashima",
