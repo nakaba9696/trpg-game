@@ -24,8 +24,7 @@ node tools/build.mjs && node tests/run.mjs
 | `src/engine/core.js` | 状態・判定・成長・時間・出来事の結果・死と引退 | C |
 | `src/engine/combat.js` | 戦闘 | B |
 | `src/engine/explore.js` | 探索・旅・迷宮・施設・依頼・王城 | W / F |
-| `src/engine/parser.js` | 自由入力の読み取り（トークンを使わない） | C |
-| `src/engine/gm.js` | GM（Claude）に任せる自由行動（任意） | C |
+| `src/engine/zzzzzzzz_c10.js`・`src/data/c10_*.js` | 状態（善悪・名声・評判・位・職業・仲間・持ち物）で現れる選択肢 | C＋V |
 | `src/ui/scene.js` | 背景の絵（canvas） | A |
 | `src/ui/art_monsters.js`・`src/ui/art_people.js` | 魔物・人物の入口（canvas では描かない。人物の「誰か」を決める表。A10） | A |
 | `assets/`・`src/ui/v4_assets.js` | 持ち主が作った画像（ビルドで `dist/site/` に別ファイルとして置き、HTML から相対パスで読む。`tools/assets.mjs`・`tools/site.mjs`・[docs/publish.md](docs/publish.md)。描く物の一覧は `docs/art/portraits.md`） | A |
@@ -33,7 +32,7 @@ node tools/build.mjs && node tests/run.mjs
 | `src/manifest.json` | 読み込む順番（順番を決めたいファイルだけ。無いものは `tools/files.mjs` が自動で足す） | 追記だけ |
 
 ## 決まり
-- **普段の遊びで Claude を呼ばない。** 判定・戦闘・出来事はすべてゲームのデータとルールで動かす。Claude を使うのは、プレイヤーが自由入力で「GM に任せる」を選んだときだけ。
+- **Claude を呼ばない。** 判定・戦闘・出来事はすべてゲームのデータとルールで動かす。自由入力は無く、行動はすべて選択肢から選ぶ。できることを増やすときは、状態で現れる選択肢を足す（`src/data/c10_choices*.js`）。
 - エンジン（`src/data`・`src/engine`）は DOM に触らない。画面は `G.S` を読んで描く。テストは DOM なしでエンジンを動かす。
 - 乱数は必ず `G.rand` / `G.d` / `G.dice` / `G.pick` を使う（テストで固定できるように）。`src/ui/setup.js` の作成画面だけは例外。
 - **新しい内容は、なるべく新しいファイルに書く。`src/data/`・`src/engine/`・`src/ui/` に置けば自動で読まれるので、`src/manifest.json` は編集しない。** manifest に書いたファイルを順に読んだあと、書いていない `.js` を data → engine → ui、名前順で足し、`main.js` は必ず最後（`tools/files.mjs`）。順番がどうしても効くときだけ manifest に書く（書いても二重には読まない）。例：出来事を足すなら `src/data/events_<名前>.js` を作り、中で `G.data.EVENTS.push(...)`。敵なら `Object.assign(G.data.ENEMIES, {...})`。既存の大きなファイルを並行して書き換えると衝突する。

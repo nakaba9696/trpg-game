@@ -232,6 +232,43 @@
     return t + p.end;
   }
 
+  // ---------------------------------------------------------------- S4：戦闘開始の合図と咆哮の部品
+  // 「ジャン」：のこぎりの和音（短二度を含む）を明るく吹いてすぐ閉じる。k は強さ
+  function sting(E, t, k) {
+    [146.8, 155.6, 220, 293.7].forEach((f) => tone(E, t, { type: "sawtooth", f, det: rr(-6, 6), g: 0.07 * k, a: 0.008, d: 0.5, ff: 3200, ff2: 500, fglide: 0.4, q: 1, wet: 0.35 }));
+    thud(E, t, { f: 92, f2: 70, g: 0.5 * k, d: 0.7, ff: 380, wet: 0.35 });
+    return hiss(E, t, { ft: "highpass", ff: 5000, a: 0.002, d: 0.6, g: 0.07 * k, wet: 0.4 });
+  }
+  // 喉の唸り：のこぎりを f[0]→f[1]→f[2] と動かし、速い揺れ（rough 回/秒）で荒らし、口の響き（form の二つの山）に通す。noise は息の荒さ
+  function growl(E, t, o) {
+    const ctx = E.ctx, end = t + o.dur;
+    const s = ctx.createOscillator(); s.type = "sawtooth";
+    s.frequency.setValueAtTime(o.f[0], t);
+    s.frequency.exponentialRampToValueAtTime(o.f[1], t + o.dur * 0.3);
+    s.frequency.exponentialRampToValueAtTime(o.f[2], end);
+    const am = ctx.createGain(); am.gain.value = 0.6;
+    const l = ctx.createOscillator(); l.frequency.value = o.rough; const lg = ctx.createGain(); lg.gain.value = 0.4;
+    l.connect(lg); lg.connect(am.gain);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(o.g, t + Math.min(0.12, o.dur * 0.2));
+    g.gain.setValueAtTime(o.g * 0.85, t + o.dur * 0.6);
+    g.gain.exponentialRampToValueAtTime(0.0001, end);
+    const f1 = ctx.createBiquadFilter(); f1.type = "bandpass"; f1.frequency.value = o.form[0]; f1.Q.value = 3;
+    const f2 = ctx.createBiquadFilter(); f2.type = "bandpass"; f2.frequency.value = o.form[1]; f2.Q.value = 4;
+    const low = ctx.createBiquadFilter(); low.type = "lowpass"; low.frequency.value = o.form[0] * 0.9;
+    s.connect(am); am.connect(f1); am.connect(f2); am.connect(low);
+    f1.connect(g); f2.connect(g); low.connect(g);
+    route(E, g, { wet: o.wet || 0.2 });
+    s.start(t); s.stop(end + 0.05); l.start(t); l.stop(end + 0.05);
+    if (o.noise) hiss(E, t, { brown: true, ft: "bandpass", ff: o.form[0], ff2: o.form[0] * 0.6, q: 1.2, a: 0.08, d: o.dur * 0.8, g: o.noise, wet: o.wet || 0.2 });
+    return end;
+  }
+  // 亡霊のうめき：三角波の声が「うー」の響き（低い山）でゆっくり揺れる
+  function ghost(E, t, o) {
+    return tone(E, t, { type: "triangle", f: o.f[0], f2: o.f[2], glide: o.dur, g: 0.12, a: 0.35, hold: o.dur * 0.3, d: o.dur * 0.6, ft: "bandpass", ff: 380, q: 2, vib: [5.5, 9], wet: 0.7 });
+  }
+
   // ---------------------------------------------------------------- 効果音（名前 → 合成）。どれも t から鳴らし、終わる時刻を返す
   const SFX = {
     // 画面
@@ -248,6 +285,22 @@
       [0, 0.09, 0.18].forEach((dt, i) => bell(E, t + dt, [262, 330, 392][i], { g: 0.18, d: 1.6, wet: 0.45 }));
       hiss(E, t + 0.18, { ft: "highpass", ff: 6000, a: 0.2, d: 0.8, g: 0.06, wet: 0.5 });
       return thud(E, t, { f: 90, f2: 45, g: 0.4, d: 0.5 }) + 1.3;
+    },
+    // U13：能力値が伸びた。上がっていく短いファンファーレ（鐘を四つ、最後を長く）
+    levelup: (E, t) => {
+      [[0, 392], [0.11, 494], [0.22, 587], [0.36, 784]].forEach(([dt, f], i) => bell(E, t + dt, f, { g: i === 3 ? 0.2 : 0.14, d: i === 3 ? 1.6 : 0.5, wet: 0.4 }));
+      hiss(E, t + 0.36, { ft: "highpass", ff: 7000, a: 0.05, d: 0.7, g: 0.04, wet: 0.5 });
+      return tone(E, t + 0.36, { f: 196, g: 0.1, a: 0.02, d: 1.2, type: "triangle" }) + 0.6;
+    },
+    // U13：主人公が倒れた。遠くで低い鐘がひとつ、長く消えていく
+    fall: (E, t) => {
+      bell(E, t, 98, { g: 0.2, d: 3.2, wet: 0.6, parts: [[1, 1], [2.01, 0.25], [2.76, 0.12]] });
+      return hiss(E, t, { brown: true, ft: "lowpass", ff: 260, ff2: 90, a: 0.4, d: 2.2, g: 0.18, wet: 0.5 }) + 1;
+    },
+    // U13：戦闘に勝った。低い和音を一度
+    victory: (E, t) => {
+      [196, 247, 294].forEach((f, i) => bell(E, t + i * 0.05, f, { g: 0.15, d: 1.8, wet: 0.45 }));
+      return thud(E, t, { f: 90, f2: 60, g: 0.3, d: 0.4 }) + 1.4;
     },
     // 大失敗：間の抜けた、ばねのような下がり音
     fumble: (E, t) => {
@@ -277,11 +330,44 @@
       tone(E, t, { type: "square", f: 330, f2: 70, glide: 0.35, g: 0.12, d: 0.4, ff: 900, q: 4 });
       return thud(E, t + 0.3, { f: 140, f2: 70, g: 0.3, d: 0.15 });
     },
-    battle: (E, t) => {
-      thud(E, t, { f: 65, f2: 38, g: 0.8, d: 0.6, ff: 350, wet: 0.3 });
-      thud(E, t + 0.32, { f: 65, f2: 38, g: 0.7, d: 0.6, ff: 350, wet: 0.3 });
-      // 剣を抜く音
-      return hiss(E, t + 0.55, { ft: "bandpass", ff: 1800, ff2: 7000, q: 6, a: 0.25, d: 0.25, g: 0.18, wet: 0.2 });
+    // 戦闘開始の合図「ジャン」：金管の短い不協和の一撃＋ティンパニ＋シンバルのしぶき（S4。敵の咆哮 roar* が続く）
+    battle: (E, t) => sting(E, t, 1),
+    // 強敵・ボス・不意を突いたとき：二度打ちで重く
+    battleBig: (E, t) => { sting(E, t, 1.15); return sting(E, t + 0.24, 1.3); },
+    // S4：敵の分類ごとの咆哮・鳴き声（snd.roarOf が選ぶ）
+    roarBeast: (E, t) => growl(E, t, { f: [95, 150, 70], dur: 0.85, rough: 34, form: [480, 900], g: 0.32, noise: 0.22 }),
+    roarDragon: (E, t) => {
+      growl(E, t, { f: [58, 120, 48], dur: 1.7, rough: 22, form: [380, 760], g: 0.34, noise: 0.35, wet: 0.45 });
+      growl(E, t + 0.05, { f: [87, 175, 70], dur: 1.6, rough: 27, form: [700, 1300], g: 0.14, noise: 0 });
+      return thud(E, t + 0.02, { f: 70, f2: 30, g: 0.45, d: 0.9, ff: 260, wet: 0.4 }) + 0.8;
+    },
+    roarGiant: (E, t) => { thud(E, t + 0.5, { f: 60, f2: 30, g: 0.55, d: 0.5, ff: 300, wet: 0.3 }); return growl(E, t, { f: [72, 82, 52], dur: 1.15, rough: 13, form: [300, 620], g: 0.34, noise: 0.15, wet: 0.3 }); },
+    roarUndead: (E, t) => {
+      // 二つの声が半音でぶつかるうめき＋かすれた息
+      ghost(E, t, { f: [210, 250, 170], dur: 1.5 });
+      ghost(E, t + 0.12, { f: [222, 262, 178], dur: 1.4 });
+      return hiss(E, t, { ft: "bandpass", ff: 1600, ff2: 600, q: 2, a: 0.5, d: 0.9, g: 0.06, wet: 0.7 });
+    },
+    roarWing: (E, t) => { hiss(E, t, { ft: "bandpass", ff: 1200, ff2: 3000, q: 1, a: 0.08, d: 0.3, g: 0.12 }); return growl(E, t + 0.05, { f: [880, 1500, 760], dur: 0.6, rough: 19, form: [2400, 3600], g: 0.15, noise: 0.08, wet: 0.35 }); },
+    roarBlob: (E, t) => {
+      // 湿った音：泡が弾ける小さな上がり音を重ね、低い粘りを鳴らす
+      let end = t;
+      for (let i = 0; i < 7; i++) end = Math.max(end, tone(E, t + i * rr(0.04, 0.08), { f: rr(110, 190), f2: rr(320, 560), glide: 0.05, g: rr(0.1, 0.16), a: 0.004, d: 0.07, ff: 900 }));
+      hiss(E, t, { brown: true, ft: "lowpass", ff: 260, ff2: 700, q: 4, a: 0.05, d: 0.45, g: 0.3 });
+      return end;
+    },
+    roarSwarm: (E, t) => {
+      // ざわめく羽音＋細かな顎の音
+      growl(E, t, { f: [190, 230, 180], dur: 0.8, rough: 45, form: [1100, 1800], g: 0.1, noise: 0.05 });
+      let end = t;
+      for (let i = 0; i < 16; i++) end = Math.max(end, hiss(E, t + i * rr(0.03, 0.05), { ft: "bandpass", ff: rr(2500, 5500), q: 5, a: 0.0008, d: 0.012, g: rr(0.05, 0.12) }));
+      return end;
+    },
+    roarHuman: (E, t) => {
+      // 剣を抜く音と、数人の怒号「おおっ」
+      hiss(E, t, { ft: "bandpass", ff: 1800, ff2: 7000, q: 6, a: 0.22, d: 0.22, g: 0.16, wet: 0.2 });
+      [128, 151, 175].forEach((f, i) => growl(E, t + 0.18 + i * 0.03, { f: [f, f * 1.25, f * 0.9], dur: 0.6, rough: 7, form: [650, 1050], g: 0.11, noise: 0.04 }));
+      return t + 0.9;
     },
     // 使徒：地の底から湧く不協和な唸り
     majin: (E, t) => {
@@ -445,7 +531,7 @@
     }
     if (e.k === "grow") return "levelup";
     if (e.k === "trophy") return "trophy";
-    if (e.k === "title") return t === "戦闘" ? "battle" : /地下\d+階/.test(t) ? "step" : null;
+    if (e.k === "title") return /地下\d+階/.test(t) ? "step" : null; // 「戦闘」の見出しは snd.encounterOf（開始の合図と咆哮）
     if (e.k === "you") {
       if (/宿に泊まる|野営/.test(t)) return "sleep";
       if (/へ向かう/.test(t)) return "depart";
@@ -474,6 +560,27 @@
     if (/を手に入れた|を見つけた|を買った/.test(t)) return "item";
     return null;
   }
+  // S4：敵 → 咆哮の名前（使徒・亡霊・竜・巨人・獣・翼・不定形・群れ／小さなもの・人の姿）
+  const ROAR = { beast: "roarBeast", dragon: "roarDragon", giant: "roarGiant", winged: "roarWing", blob: "roarBlob", swarm: "roarSwarm", small: "roarSwarm", humanoid: "roarHuman" };
+  snd.roarOf = (d) => {
+    if (!d) return "roarHuman";
+    if (d.majin) return "majin";
+    if (d.undead) return "roarUndead";
+    return ROAR[d.shape] || "roarHuman";
+  };
+  // 戦闘の始まり → { level: normal|ambush|boss|majin, sting（開始の合図）, roar（咆哮）, lead（先頭に立つ敵の id）, names }
+  //   先頭に立つのは 使徒 ＞ ボス ＞ 段の高い敵。不意を突いた（engine の firstStrike）は記録の「不意を突いた」で見る。画面の演出（ui/s4_encounter.js）も使う
+  snd.encounterOf = (S) => {
+    const E = (G.data && G.data.ENEMIES) || {};
+    const foes = ((S && S.combat && S.combat.foes) || []).map((f) => ({ id: f.id, d: E[f.id] || {} }));
+    const rank = (x) => (x.d.majin ? 1000 : 0) + (x.d.boss ? 100 : 0) + (x.d.tier || 0);
+    const lead = foes.slice().sort((a, b) => rank(b) - rank(a))[0] || { id: null, d: null };
+    const tail = ((S && S.log) || []).slice(-10);
+    const at = tail.map((e) => e.k === "title" && e.text === "戦闘").lastIndexOf(true);
+    const ambush = at >= 0 && tail.slice(at).some((e) => /不意を突いた/.test(e.text || ""));
+    const level = lead.d && lead.d.majin ? "majin" : foes.some((x) => x.d.boss) || (S && S.combat && S.combat.boss) ? "boss" : ambush ? "ambush" : "normal";
+    return { level, sting: level === "normal" ? "battle" : "battleBig", roar: snd.roarOf(lead.d), lead: lead.id, names: ((S && S.combat && S.combat.foes) || []).map((f) => f.name) };
+  };
   const MAGIC = /魔法|術|放つ|唱え|奇跡|祈|呪いの言葉/;
   const BLUNT = /棍|槌|杖|拳|メイス|鎚|こん棒|棒/;
   // 鳴らす音の名前を順に返す（DOM・音なしでも動く。テストはこれを見る）
@@ -503,7 +610,8 @@
       add(cueOf(e, ctx), e);
     });
     if (!fresh) {
-      if (S.combat && !prev.combat && S.combat.foes.some((f) => { const d = G.data.ENEMIES[f.id]; return d && (d.majin || (d.boss && d.tier >= 5)); })) { cues.unshift("majin"); from.unshift(null); }
+      // S4：戦闘が始まった瞬間に「ジャン」と敵の咆哮（使徒は地の底の唸り）を先頭に
+      if (S.combat && !prev.combat) { const en = snd.encounterOf(S); cues.unshift(en.sting, en.roar); from.unshift(null, null); }
       if (S.gold > prev.gold && !cues.includes("coin")) add("coin");
       const inv = Object.values(S.inv || {}).reduce((a, n) => a + n, 0);
       if (inv > prev.inv && !cues.includes("item") && !cues.includes("coin")) add("item");
@@ -565,6 +673,22 @@
     return "click";
   };
 
+  // ---------------------------------------------------------------- S4：音のつり合い（src/data/s4_mix.js）
+  // 種類（bgm・amb・sfx）と名前 → 聞こえる大きさを揃える倍率（表に無ければ 1）
+  snd.mixGain = (kind, name) => {
+    const M = (G.data && G.data.MIX) || {};
+    const t = M[kind.toUpperCase()] || {};
+    const v = Number(t[name]);
+    return Number.isFinite(v) && v > 0 ? v : 1;
+  };
+  // 効果音一つぶんの倍率を掛けた卓（出口だけ差し替える。残響への送りはそのまま）
+  function mixed(E, name) {
+    const k = snd.mixGain("sfx", name);
+    if (k === 1) return E;
+    const g = E.ctx.createGain(); g.gain.value = k; g.connect(E.sfx); // 鳴り終われば入力が無くなり、ブラウザが片づける
+    return Object.assign(Object.create(E), { sfx: g });
+  }
+
   // ---------------------------------------------------------------- 実際に鳴らす（ブラウザの中だけ）
   if (!AC || typeof document === "undefined") return;
   let E = null;
@@ -620,7 +744,8 @@
     if (!E || st.mute || !SFX[name] || E.ctx.state !== "running") return;
     if (st.sfxOn === false || ((name === "roll" || name === "rollShort") && st.dice === false)) return;
     const t = E.ctx.currentTime + 0.01 + (delay || 0);
-    try { if (snd.source(name) === "file") playFile(name, t); else SFX[name](E, t); } catch {}
+    try { if (snd.source(name) === "file") playFile(name, t); else SFX[name](mixed(E, name), t); } catch {}
+    if (snd.duck) snd.duck(name, t); // S4：効果音の瞬間だけ BGM を少し下げる
   };
 
   let amb = null; // { name, gain, stops, timer }
@@ -637,7 +762,7 @@
     }
     if (!name || !AMB[name]) return;
     const g = E.ctx.createGain(); g.gain.value = 0; g.connect(E.amb);
-    g.gain.setTargetAtTime(1, now, 0.8);
+    g.gain.setTargetAtTime(snd.mixGain("amb", name), now, 0.8);
     const made = AMB[name](E, g);
     const stops = made.nodes.flat();
     const timer = made.tick ? setInterval(() => { if (E.ctx.state === "running" && !snd.settings.mute) made.tick(E.ctx.currentTime + 0.05); }, 1100) : 0;
@@ -665,7 +790,7 @@
         <p class="fine">設定はこのブラウザに保存されます。音は画面を一度押してから鳴ります。</p>
       </div>`;
     document.body.append(dlg);
-    const $ = (id) => dlg.querySelector("#" + id);
+    const $ = (id) => document.getElementById(id); // 行は設定の窓（ui/zz_q7_topbar.js）へ移ることがあるので、窓の中に限らず探す
     const sync = () => {
       const st = snd.settings;
       $("sndMute").checked = st.mute;
@@ -693,10 +818,12 @@
 
   // 検証用：OfflineAudioContext に同じ卓を組んで鳴らす（tools/sound_check.mjs が使う）
   //   name を配列にすると、同じ卓で順に鳴らす（at は始まりの秒の配列）
-  snd._offline = (ctx, name, isAmb, at) => {
+  //   levels：true なら既定の音量（設定の音量 × つり合いの倍率。S4）で鳴らす（tools/loudness.mjs が使う）
+  snd._offline = (ctx, name, isAmb, at, levels) => {
     const D = makeDesk(ctx);
-    D.sfx.gain.value = 1; D.amb.gain.value = 0.5;
-    if (isAmb) { const g = ctx.createGain(); g.connect(D.amb); const m = AMB[name](D, g); if (m.tick) for (let t = 0.2; t < ctx.length / ctx.sampleRate - 1; t += 1.1) m.tick(t); return; }
-    [].concat(name).forEach((n, i) => SFX[n](D, 0.01 + ((at && at[i]) || 0)));
+    const st = DEF; // 既定の音量で測る
+    D.sfx.gain.value = levels ? st.sfx : 1; D.amb.gain.value = levels ? st.amb * 0.5 : 0.5;
+    if (isAmb) { const g = ctx.createGain(); g.gain.value = levels ? snd.mixGain("amb", name) : 1; g.connect(D.amb); const m = AMB[name](D, g); if (m.tick) for (let t = 0.2; t < ctx.length / ctx.sampleRate - 1; t += 1.1) m.tick(t); return; }
+    [].concat(name).forEach((n, i) => { const t = 0.01 + ((at && at[i]) || 0); SFX[n](levels ? mixed(D, n) : D, t); });
   };
 })(globalThis.G = globalThis.G || {});

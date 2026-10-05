@@ -1,0 +1,167 @@
+/* U14：場面ごとの見た目（ui/zu14_scenes.js が <body data-u14="town|wild|dungeon|combat|story|over"> を付ける）。
+   街は明るい真鍮の枠と看板、荒野は暗い緑の枠と危険度、迷宮はさらに暗く深さ、戦闘は赤い枠と暗い背景、語り（出来事・会話・旅）は本の頁。
+   動きは opacity・transform・transition だけ。動きを減らす設定では切り替えるだけ。選択肢の並べ方には触らない（U12・U13） */
+:root {
+  --u14-town: #e3c27c; --u14-wild: #8fa98a; --u14-dungeon: #98a3c4; --u14-combat: #d4523a; --u14-story: #b88a4a;
+}
+
+/* ---------------------------------------------------------------- 色味の幕（背景の舞台の上） */
+#u14tint { position: absolute; inset: 0; pointer-events: none; }
+#u14tint.solo { position: fixed; z-index: 0; }
+#u14tint > i { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+#u14tint .u14t-town { background: radial-gradient(ellipse 90% 70% at 50% 18%, rgba(255, 222, 160, .16), transparent 70%), linear-gradient(rgba(255, 236, 200, .05), transparent); }
+#u14tint .u14t-wild { background: radial-gradient(ellipse 110% 85% at 50% 40%, transparent 40%, rgba(6, 18, 14, .55)), linear-gradient(rgba(8, 20, 18, .18), rgba(8, 20, 18, .28)); }
+#u14tint .u14t-dungeon { background: radial-gradient(ellipse 80% 70% at 50% 42%, rgba(4, 6, 12, .15) 20%, rgba(2, 3, 8, .78)), linear-gradient(rgba(6, 8, 18, .3), rgba(6, 8, 18, .3)); }
+#u14tint .u14t-combat { background: radial-gradient(ellipse 85% 75% at 50% 40%, rgba(20, 0, 0, .1) 30%, rgba(70, 6, 2, .62)), linear-gradient(rgba(10, 2, 2, .3), rgba(10, 2, 2, .3)); }
+#u14tint .u14t-story { background: radial-gradient(ellipse 90% 80% at 50% 45%, rgba(10, 8, 4, .2), rgba(10, 8, 4, .62)); }
+#u14tint .u14t-over { background: rgba(4, 4, 4, .5); }
+body[data-u14="town"] #u14tint .u14t-town, body[data-u14="wild"] #u14tint .u14t-wild, body[data-u14="dungeon"] #u14tint .u14t-dungeon,
+body[data-u14="combat"] #u14tint .u14t-combat, body[data-u14="story"] #u14tint .u14t-story, body[data-u14="over"] #u14tint .u14t-over { opacity: 1; }
+body:not([data-u14]) #u14tint { display: none; }
+
+/* ---------------------------------------------------------------- 文章の窓の枠：場面の色 */
+body[data-u14] .tome { --u14-c: var(--orn); transition: border-color .6s ease, box-shadow .6s ease; }
+body[data-u14="town"] .tome { --u14-c: var(--u14-town); --orn: var(--u14-town); --win-edge: rgba(214, 178, 104, .85);
+  box-shadow: var(--win-shade), 0 0 0 1px rgba(227, 194, 124, .3), 0 0 30px rgba(240, 200, 120, .16); }
+body[data-u14="wild"] .tome { --u14-c: var(--u14-wild); --orn: var(--u14-wild); --win-edge: rgba(122, 146, 116, .7); }
+body[data-u14="dungeon"] .tome { --u14-c: var(--u14-dungeon); --orn: var(--u14-dungeon); --win-edge: rgba(112, 124, 156, .7);
+  box-shadow: var(--win-shade), 0 0 40px rgba(0, 0, 0, .55); }
+body[data-u14="combat"] .tome { --u14-c: var(--u14-combat); --orn: var(--u14-combat); --win-edge: rgba(200, 70, 48, .9);
+  box-shadow: var(--win-shade), 0 0 0 1px rgba(212, 82, 58, .35), 0 0 34px rgba(190, 40, 20, .3); }
+body[data-u14="combat"] .tome::after, body[data-u14="town"] .tome::after { color: var(--u14-c); }
+
+/* ---------------------------------------------------------------- 語り：本の頁（明暗どちらでも羊皮紙に墨の字） */
+body[data-u14="story"] .tome {
+  color-scheme: light;
+  --paper: #d9ccae; --ink: #2b2116; --muted: #6a5c47; --rule: rgba(96, 74, 44, .3);
+  --accent: #85561f; --accent-soft: rgba(133, 86, 31, .12); --ok: #3d6b2c; --ng: #a3321f; --crit: #8a5c08;
+  --field: rgba(255, 251, 240, .7); --win: #efe4c8; --win-solid: #ece0c2; --win-edge: rgba(110, 80, 40, .6);
+  --orn: rgba(120, 82, 36, .8); --hi: #1d150c; --head: #6e3f12;
+  --btn-a: #f4ead3; --btn-b: #e0d0ad; --btn-hi: #1d150c; --btn-line: rgba(255, 255, 255, .6);
+  --box: rgba(250, 243, 226, .7); --item-hover: rgba(133, 86, 31, .14); --track: rgba(80, 60, 30, .14);
+  --tip-bg: rgba(200, 214, 204, .55); --danger-bg: rgba(246, 214, 204, .85); --check-bg: rgba(255, 250, 238, .6);
+  --die-bg: #fffaf0; --die-ink: #2b2116;
+  --q7-dmg: #b0201a; --q7-hurt: #7d0f0b; --q7-heal: #17692a;
+  --u11-ink: #6b4c06; --u11-edge: rgba(143, 106, 18, .55); --u11-bg: rgba(226, 193, 114, .22);
+  --u14-c: var(--u14-story);
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, rgba(110, 76, 36, .22), transparent 3.5%, transparent 96.5%, rgba(110, 76, 36, .22)),
+    radial-gradient(ellipse 120% 90% at 50% 35%, #f5ecd6 30%, #e6d5b0);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, .6), inset 0 0 0 4px rgba(255, 250, 235, .5), inset 0 0 0 5px rgba(110, 80, 40, .3), inset 0 0 70px rgba(150, 110, 60, .22);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+body[data-u14="story"] #log { font-size: 1.05em; }
+body.v9pc[data-u14="story"] #log { font-size: calc(var(--v9-fs) + 1px); line-height: 2.05; }
+body[data-u14="story"] #log .l-title { color: var(--head); text-align: center; letter-spacing: .3em; }
+body[data-u14="story"] #log .l-title::after { margin-inline: auto; width: 40%; background: linear-gradient(90deg, transparent, var(--win-edge), transparent) !important; }
+/* 語りの場面の立ち絵は、話し手だけ（PC。スマホはもともと話し手だけ） */
+body.v9pc[data-u14="story"] #v9cast .v9fig:not(.speaker) { visibility: hidden; }
+
+/* ---------------------------------------------------------------- 看板（文章の窓の上の縁に掛ける） */
+#u14sign { position: absolute; top: 0; left: 22px; z-index: 2; transform: translateY(-58%); max-width: calc(100% - 44px);
+  display: flex; align-items: baseline; gap: 10px; padding: 4px 14px 5px; white-space: nowrap; overflow: hidden;
+  background: linear-gradient(var(--win-solid), var(--win-solid)); color: var(--ink);
+  border: 1px solid var(--u14-c, var(--win-edge)); border-radius: 2px; box-shadow: 0 3px 10px rgba(0, 0, 0, .4), inset 0 0 0 2px var(--win-solid), inset 0 0 0 3px var(--rule); }
+#u14sign[hidden] { display: none; }
+#u14sign .u14tag { font: 700 11px/1.4 var(--f-ui); letter-spacing: .2em; padding: 1px 7px; border-radius: 2px; color: var(--win-solid); background: var(--u14-c, var(--accent)); flex: none; }
+#u14sign .u14name { font-family: var(--f-display); font-weight: 400; font-size: 16px; letter-spacing: .1em; color: var(--head); overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+#u14sign .u14marks { display: flex; gap: 10px; font-size: 12px; color: var(--muted); letter-spacing: .06em; flex: none; }
+#u14sign .u14marks:empty { display: none; }
+body[data-u14] .tome { padding-top: 28px; }
+body.v9pc[data-u14] .tome { padding-top: 30px; }
+/* 街の看板は大きめに（町の名前が主役） */
+#u14sign[data-kind="town"] { padding: 5px 18px 6px; }
+#u14sign[data-kind="town"] .u14name { font-size: 19px; letter-spacing: .14em; }
+#u14sign[data-kind="town"] .u14tag { color: #241a0c; }
+#u14sign[data-kind="combat"] .u14name { color: var(--u14-combat); }
+#u14sign[data-kind="dungeon"] .u14marks span:first-child, #u14sign[data-kind="combat"] .u14marks span { color: var(--ink); font-weight: 700; }
+/* スマホ：場面の名前は看板が出すので、絵の下の名前は出さない（日付は上の帯） */
+body[data-u14]:not(.v9pc) .scene figcaption { display: none; }
+@media (max-width: 600px) {
+  #u14sign { left: 12px; max-width: calc(100% - 24px); gap: 8px; padding-inline: 10px; }
+  #u14sign .u14marks { font-size: 11px; gap: 8px; }
+  #u14sign[data-kind="town"] .u14name { font-size: 17px; }
+}
+/* スマホの語り：絵の帯を低くして、文を上に寄せる */
+body[data-u14="story"]:not(.v9pc) .scene { height: max(140px, calc(var(--pic-h, 60vh) - 260px)); }
+
+/* ---------------------------------------------------------------- ログ：場面の区切りと、前の場面を淡く */
+#log .u14past { opacity: .48; transition: opacity .4s ease; }
+#log .u14past:hover { opacity: .85; }
+#log .u14place { font-size: 1.15em; letter-spacing: .12em; }
+#log .u14place::before { content: attr(data-date); float: right; margin-left: 12px; font: 400 12px/2.2 var(--f-ui); letter-spacing: .04em; color: var(--muted); }
+#log .u14place:not([data-date])::before { content: none; }
+#log .u14lead { font-size: 1.06em; line-height: 2; }
+/* PC：町に着いた手番は、選択肢の欄を少し低くして、着いたときの語りを読ませる（欄の中は流れる） */
+body.v9pc.u14arrived #panel { max-height: 34vh; }
+
+/* ---------------------------------------------------------------- 切り替えの演出 */
+body.u14swap[data-u14="story"] .tome { transform-origin: 0 50%; animation: u14page .7s cubic-bezier(.2, .7, .2, 1) both; }
+body.u14swap[data-u14="combat"] .tome { animation: u14clash .6s ease-out both; }
+body.u14swap[data-u14="town"] .tome, body.u14swap[data-u14="wild"] .tome, body.u14swap[data-u14="dungeon"] .tome { animation: u14rise .6s ease-out both; }
+body.u14swap[data-u14from="story"]:not([data-u14="story"]) .tome { transform-origin: 100% 50%; animation-name: u14pageBack; }
+@keyframes u14page { from { opacity: .15; transform: perspective(1600px) rotateY(9deg) translateX(16px); } }
+@keyframes u14pageBack { from { opacity: .15; transform: perspective(1600px) rotateY(-9deg) translateX(-16px); } }
+@keyframes u14clash { 0% { opacity: .3; transform: scale(.985); } 35% { opacity: 1; box-shadow: var(--win-shade), 0 0 0 2px var(--u14-combat), 0 0 70px rgba(200, 40, 20, .55); } }
+@keyframes u14rise { from { opacity: .2; transform: translateY(10px); } }
+
+/* ---------------------------------------------------------------- 町の見出し（画面の中央に大きく。押せば消える） */
+#u14card { position: fixed; inset: 0; z-index: 30; display: grid; place-content: center; justify-items: center; gap: 12px; padding: 24px 16px; text-align: center; cursor: pointer;
+  background: radial-gradient(ellipse 75% 42% at 50% 48%, rgba(5, 8, 8, .86), rgba(5, 8, 8, .6) 65%, rgba(5, 8, 8, .42));
+  color: #f3e8cc; text-shadow: 0 2px 14px #000, 0 0 2px #000; opacity: 0; transition: opacity .5s ease; }
+#u14card[hidden] { display: none; }
+#u14card.on { opacity: 1; }
+#u14card.out { opacity: 0; transition-duration: .45s; }
+#u14card .u14region { font: 400 13px/1.4 var(--f-ui); letter-spacing: .5em; color: #d8c79f; padding-left: .5em; }
+#u14card .u14town { font-family: var(--f-display); font-weight: 400; font-size: clamp(22px, min(7vw, calc((100vw - 40px) / var(--n, 8) / 1.16)), 74px); line-height: 1.2; letter-spacing: .12em; padding-left: .12em; color: #f6ead0;
+  transition: letter-spacing 1.8s cubic-bezier(.2, .7, .2, 1), transform 1.8s cubic-bezier(.2, .7, .2, 1); }
+#u14card:not(.on) .u14town { letter-spacing: .26em; transform: scale(1.03); }
+#u14card .u14town::before, #u14card .u14town::after { content: ""; display: block; height: 1px; margin: 10px auto; width: min(70vw, 520px);
+  background: linear-gradient(90deg, transparent, rgba(227, 194, 124, .85), transparent); }
+#u14card .u14line { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 1.4em; font: 400 15px/1.6 var(--f-body); letter-spacing: .18em; color: #e4d6b4; }
+#u14card .u14line span { white-space: nowrap; }
+#u14card .u14line span + span::before { content: "◆"; margin-right: 1.4em; font-size: 9px; vertical-align: .25em; color: rgba(227, 194, 124, .8); }
+#u14card .u14line[hidden] { display: none; }
+
+/* ---------------------------------------------------------------- 戦闘との境目（会話・出来事・旅 → 戦闘。持ち主「話していた人が襲ってきたように見える」）
+   戦闘の見た目に替わったら、出ていく立ち絵（話していた人）はフェードを待たずにすぐ消す */
+body[data-u14="combat"] #v9cast .v9fig.out, body[data-u14="combat"] #v9cast .v9fig.speaker,
+body[data-u14="combat"] #stand .standFig:not(.on), body[data-u14="combat"] #who { opacity: 0 !important; visibility: hidden; transition: none !important; }
+/* ログの区切りの一行（「――そのとき」「旅を続けるうちに」） */
+#log .u14cutline { text-align: center; font-family: var(--f-display); letter-spacing: .4em; color: var(--u14-combat); margin-top: .8em !important;
+  display: flex; align-items: center; gap: 14px; font-size: .95em; }
+#log .u14cutline::before, #log .u14cutline::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, currentColor); opacity: .55; }
+#log .u14cutline::after { background: linear-gradient(90deg, currentColor, transparent); }
+#log .u14cutline + .l-title { margin-top: .2em !important; border-top: 0; }
+/* 結果の場面を出している間は、次の場面の文を出さない */
+#log .u14later { display: none !important; }
+/* 境目の幕：画面を暗くして、区切りの一行と、何が襲ってきたか */
+#u14cut { position: fixed; inset: 0; z-index: 29; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 24px 20px; text-align: center; cursor: pointer;
+  background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(8, 2, 2, .9), rgba(4, 2, 2, .78)); color: #f3e8cc; text-shadow: 0 2px 12px #000;
+  opacity: 0; transition: opacity .35s ease; }
+#u14cut[hidden] { display: none; }
+#u14cut.on { opacity: 1; }
+#u14cut.out { opacity: 0; transition-duration: .4s; }
+#u14cut .u14cuthead { font: 400 14px/1.4 var(--f-display); letter-spacing: .5em; color: #e9a089; padding-left: .5em; }
+#u14cut .u14cutline { max-width: 26em; font: 400 clamp(18px, 4.6vw, 28px)/1.6 var(--f-body); letter-spacing: .06em; color: #f6ead0;
+  transform: translateY(6px); transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+#u14cut.on .u14cutline { transform: none; }
+#u14cut .u14cutline::before { content: ""; display: block; width: min(60vw, 360px); height: 1px; margin: 0 auto 14px; background: linear-gradient(90deg, transparent, rgba(212, 82, 58, .9), transparent); }
+#u14cut .u14cuttag { font: 700 12px/1.4 var(--f-ui); letter-spacing: .3em; padding: 3px 12px 3px calc(12px + .3em); border: 1px solid rgba(212, 82, 58, .85); border-radius: 2px; color: #f0b3a3; }
+#u14cut .u14cuttag[hidden] { display: none; }
+#u14cut[data-level="ambush"] .u14cuttag { border-color: rgba(230, 190, 90, .9); color: #f0cf7a; }
+#u14cut[data-level="majin"] .u14cuttag { border-color: rgba(150, 90, 200, .85); color: #c9a6ee; }
+/* 幕を出している間は、S4 の「敵が現れた」の小さな見出しを重ねない（言葉は幕に添える） */
+body.u14cutting #s4enc { visibility: hidden; }
+#u14cut[data-kind="story"] { background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(10, 8, 4, .9), rgba(6, 5, 3, .78)); }
+#u14cut[data-kind="story"] .u14cuthead { color: #d9c08a; }
+#u14cut[data-kind="story"] .u14cutline::before { background: linear-gradient(90deg, transparent, rgba(227, 194, 124, .85), transparent); }
+
+/* ---------------------------------------------------------------- 動きを減らす */
+@media (prefers-reduced-motion: reduce) {
+  #u14tint > i, body[data-u14] .tome, #u14card, #u14card .u14town, #log .u14past, #u14cut, #u14cut .u14cutline { transition: none; }
+  #u14cut .u14cutline { transform: none; }
+  body.u14swap .tome { animation: none !important; }
+  #u14card:not(.on) .u14town { letter-spacing: .12em; transform: none; }
+}

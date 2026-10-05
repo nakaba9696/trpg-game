@@ -1,16 +1,17 @@
 // 起動と保存。冒険とトロフィーは、このブラウザと claude.ai のデータ（使えるとき）の両方に保存する。
-// GM（Claude）は、claude.ai で開いたときだけ使える。レーン U（UI）が管理
+// 行動はすべて選択肢で、Claude は呼ばない。レーン U（UI）が管理
 (function (G) {
   const $ = (s) => document.querySelector(s);
   const LKEY = G.SAVE_KEYS;
   const lget = (k) => { try { const j = localStorage.getItem(k); return j ? JSON.parse(j) : null; } catch { return null; } };
-  const lset = (k, v) => { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  const lset = (k, v) => { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } };
 
   const store = {
     db: null, uid: null, chains: {},
     write(name, data) {
-      lset(LKEY[name], data);
+      const ok = lset(LKEY[name], data);
       this.remote(name, data);
+      return ok;
     },
     // claude.ai のデータにだけ書く（Q7 の手動の枠は、ブラウザ側を engine/q7_slots.js が書く）
     remote(name, data) {
@@ -25,13 +26,14 @@
     },
   };
 
-  const main = (G.main = { sample: null });
+  const main = (G.main = {});
   main.store = store;
   main.save = () => {
     if (G.S) G.S.savedAt = Date.now();
     try { if (G.keepLastBreath) G.keepLastBreath(localStorage, G.S); } catch {} // Q7：倒れる前の自動の枠を残す
     try { if (G.townAutoSave && G.townAutoSave(localStorage, G.S) && main.onTownSave) main.onTownSave(); } catch {} // Q7：町に着いたらオートセーブの枠へ
-    store.write("save", G.S || null);
+    // 行動のたびの保存（中断の枠）。うまくいっても印は出さない。失敗したときだけ知らせる（Q7。ui/q7_slots.js の onSaveFail）
+    if (!store.write("save", G.S || null) && main.onSaveFail) { try { main.onSaveFail(); } catch {} }
   };
   main.saveProfile = () => { G.P.updatedAt = Date.now(); store.write("profile", G.P); };
 
@@ -89,8 +91,7 @@
   (async () => {
     const c = window.claude;
     if (!c || !c.use) return;
-    const [smp, db, user] = await Promise.all([c.use("sample"), c.use("db"), c.use("user")]);
-    main.sample = smp;
+    const [db, user] = await Promise.all([c.use("db"), c.use("user")]);
     const uid = user ? await user.id().catch(() => null) : null;
     if (!db || !uid) return;
     store.db = db;

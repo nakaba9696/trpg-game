@@ -55,14 +55,15 @@
       } catch (e) { /* 描き直しに失敗しても止めない */ }
     }, 30);
   };
-  const image = (key) => {
+  // pri：0 いま描く（既定）／1 もうすぐ要る（今いる場所の魔物）／2 そのうち（起動のあとの先読み）。読む順番は t3_loadq.js（T3）
+  const image = (key, pri) => {
     const src = where(key).src;
-    if (imgs[src]) return imgs[src];
+    if (imgs[src]) return G.needImage ? G.needImage(imgs[src], pri) : imgs[src];
     const img = new Image();
     img.v6bad = false;
     img.addEventListener("error", () => { img.v6bad = true; });
     img.addEventListener("load", () => { if (img.v6want) repaint(); });
-    img.src = src;
+    if (G.loadImage) G.loadImage(img, src, pri); else img.src = src;
     return (imgs[src] = img);
   };
   // 背景を消す（A14）：絵の外周からつながった白い背景だけを、境目を半透明にして消す（a13_cutout.js の G.a13.keyOut。下の縁からも）。
@@ -188,7 +189,7 @@
   G.v6ArtReady = (id) => { const key = G.v6ArtKey(id); return !!(key && sprites[key]); };
 
   // 魔物の絵は、最初に読み始めておく（戦闘が始まったときに間に合うように）。外のファイルの形では、起動の読み込みと取り合わないよう少し後で
-  const preload = () => { for (const k of Object.keys(A())) if (k.startsWith("monsters/")) image(k); };
+  const preload = () => { for (const k of Object.keys(A())) if (k.startsWith("monsters/")) image(k, 2); };
   if (typeof Image === "function") {
     if (G.ASSET_MODE === "files" && typeof setTimeout === "function") setTimeout(preload, 1500);
     else preload();
@@ -206,7 +207,7 @@
       const id = ids.shift();
       if (!id) return;
       const key = G.v6ArtKey(id);
-      const img = key && image(key);
+      const img = key && image(key, 1);
       if (!img || img.v6bad || sprites[key]) return next();
       if (!ready(img)) { img.addEventListener("load", () => setTimeout(next, 0), { once: true }); return; }
       spriteLater(key, img, () => setTimeout(next, 50));

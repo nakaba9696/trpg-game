@@ -152,13 +152,14 @@
   };
   G.v4Where = (key) => (key && has(key) ? where(key) : null);
   const slot = (key) => { const w = where(key); return w.rect ? "sprite:" + w.src : key; };
-  const image = (key) => {
+  // pri：0 いま描く（既定）／1 もうすぐ要る（仲間・話している人の差分）／2 そのうち（暇なときの先読み）。読む順番は t3_loadq.js（T3）
+  const image = (key, pri) => {
     const id = slot(key);
-    if (imgs[id]) return imgs[id];
+    if (imgs[id]) return G.needImage ? G.needImage(imgs[id], pri) : imgs[id];
     const img = new Image();
     img.v4bad = false;
     img.addEventListener("error", () => { img.v4bad = true; });
-    img.src = where(key).src;
+    if (G.loadImage) G.loadImage(img, where(key).src, pri); else img.src = where(key).src;
     return (imgs[id] = img);
   };
   const ready = (img) => !!(img && !img.v4bad && img.complete && (img.naturalWidth || img.width));
@@ -176,7 +177,7 @@
   // 読んで、読み終わったら暇なときに白い背景を消しておく（A13。描くときに待たないように。同じ鍵は一度だけ）
   const later = (f) => (typeof requestIdleCallback === "function" ? requestIdleCallback(f, { timeout: 1500 }) : typeof setTimeout === "function" ? setTimeout(f, 50) : f());
   const prep = (key) => {
-    const img = image(key);
+    const img = image(key, 1);
     if (!G.a13 || !G.a13.cutout || typeof document === "undefined") return;
     const go = () => later(() => { if (!ready(img)) return; if (G.a13.prepare) G.a13.prepare(key, img, where(key).rect); else G.a13.cutout(key, img, where(key).rect); });
     if (ready(img)) go();
@@ -277,7 +278,7 @@
   function trickle() {
     if (!idleList) idleList = Object.keys(A()).filter((k) => k.startsWith("portraits/") && !/^portraits\/hero_/.test(k) && !new RegExp(`_(${moods().join("|")})$`).test(k)).map((k) => k.slice(10));
     let n = 0;
-    while (idleList.length && n < 2) { const k = idleList.shift(); if (!imgs[slot(k)]) { image(k); n++; } }
+    while (idleList.length && n < 2) { const k = idleList.shift(); if (!imgs[slot(k)]) { image(k, 2); n++; } }
     if (idleList.length) setTimeout(() => idle(trickle), 250);
   }
   const base = ui.render;

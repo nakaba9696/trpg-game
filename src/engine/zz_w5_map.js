@@ -185,7 +185,27 @@
       return { id, x: L.x, y: L.y, type: L.type, region: L.region, danger: L.danger || 0, status: st, name: st === "none" ? null : L.name, faint: st === "heard", rec };
     });
   };
+  // 道の描く線：両端と、そのあいだの曲がり角（D.W5_MAP.via。キーは id を名前順に「a|b」、角は a から b へ）。
+  // 角の無い道はまっすぐ。地図の上で、ほかの場所の印の上を通って「そこからも行ける」ように見えないように曲げる（W7）
+  W5.roadPts = (a, b, kind) => {
+    const [p, q] = a < b ? [a, b] : [b, a];
+    const via = ((M().via || {})[`${kind === "sea" ? "~" : ""}${p}|${q}`] || []).map((v) => [v[0], v[1]]);
+    const A = D.LOCS[p], B = D.LOCS[q];
+    const pts = [[A.x, A.y], ...via, [B.x, B.y]];
+    return a < b ? pts : pts.reverse();
+  };
+  // 描く線をなぞった点（画面と同じ曲がり方：陸は角をまっすぐ、船は角をなめらかに・角が無ければ少しふくらませる）。テストが使う
+  W5.roadSamples = (pts, kind, n = 12) => {
+    const out = [];
+    const quad = (a, c, b) => { for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t; out.push([u * u * a[0] + 2 * u * t * c[0] + t * t * b[0], u * u * a[1] + 2 * u * t * c[1] + t * t * b[1]]); } };
+    if (kind !== "sea") { pts.slice(1).forEach((b, k) => { const a = pts[k]; for (let i = 0; i <= n; i++) out.push([a[0] + (b[0] - a[0]) * (i / n), a[1] + (b[1] - a[1]) * (i / n)]); }); return out; }
+    if (pts.length === 2) { const [a, b] = pts, dx = b[0] - a[0], dy = b[1] - a[1]; quad(a, [(a[0] + b[0]) / 2 + dy * 0.12, (a[1] + b[1]) / 2 - dx * 0.12], b); return out; }
+    let from = pts[0];
+    for (let i = 1; i < pts.length - 1; i++) { const p = pts[i], q = pts[i + 1], to = i === pts.length - 2 ? q : [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2]; quad(from, p, to); from = to; }
+    return out;
+  };
   // 見える道：陸路（links）と船（sea）。両端のどちらかに行ったことがある道だけ。known は両端とも行ったことがある
+  // pts は描く線（W5.roadPts）。描く線は links・sea にある道だけ（tests/checks/w7_map.mjs）
   W5.roads = (S) => {
     S = S === undefined ? G.S : S;
     const out = [];
@@ -195,7 +215,7 @@
         if (id >= to || !D.LOCS[to]) return;
         const a = been(id), b = been(to);
         if (!a && !b) return;
-        out.push({ a: id, b: to, kind, days, known: a && b });
+        out.push({ a: id, b: to, kind, days, known: a && b, pts: W5.roadPts(id, to, kind) });
       }));
     });
     return out;

@@ -39,7 +39,7 @@
   const info = h("p", "w5info");
   info.setAttribute("aria-live", "polite");
   const legend = h("p", "fine w5legend");
-  [["w5k here", "今いる所"], ["w5k now", "この冒険で行った"], ["w5k past", "前の冒険で行った"], ["w5k heard", "道標で名だけ"], ["w5k none", "まだ知らない"], ["w5k road", "陸路"], ["w5k sea", "船"]].forEach(([c, t]) => { const s = h("span", "w5li"); s.append(h("i", c), document.createTextNode(t)); legend.append(s); });
+  [["w5k here", "今いる所"], ["w5k now", "この冒険で行った"], ["w5k past", "前の冒険で行った"], ["w5k heard", "道標で名だけ"], ["w5k none", "まだ知らない"], ["w5k road", "陸路"], ["w5k road far", "陸路（先はまだ知らない）"], ["w5k sea", "船"], ["w5k border", "国境（道ではない）"]].forEach(([c, t]) => { const s = h("span", "w5li"); s.append(h("i", c), document.createTextNode(t)); legend.append(s); });
   const side = h("div", "w5side");
   side.append(info, legend);
   body.append(wrap, side);
@@ -338,13 +338,19 @@
     marks = W5.marks(S);
     marks.forEach((m) => { pos[m.id] = toScreen(m.x, m.y); });
     x.lineCap = "round";
+    x.lineJoin = "round";
     W5.roads(S).forEach((rd) => {
-      const a = pos[rd.a], b = pos[rd.b];
-      if (!a || !b) return;
-      x.beginPath(); x.moveTo(a[0], a[1]);
-      if (rd.kind === "sea") { const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, dx = b[0] - a[0], dy = b[1] - a[1]; x.quadraticCurveTo(mx + dy * 0.12, my - dx * 0.12, b[0], b[1]); }
-      else x.lineTo(b[0], b[1]);
-      x.setLineDash(rd.kind === "sea" ? [5, 5] : rd.known ? [] : [2, 4]);
+      if (!pos[rd.a] || !pos[rd.b]) return;
+      // 曲がり角（W7）を通る。船は角をなめらかに、陸はまっすぐつなぐ
+      const pts = (rd.pts || [[D.LOCS[rd.a].x, D.LOCS[rd.a].y], [D.LOCS[rd.b].x, D.LOCS[rd.b].y]]).map((p) => toScreen(p[0], p[1]));
+      x.beginPath(); x.moveTo(pts[0][0], pts[0][1]);
+      if (rd.kind === "sea" && pts.length > 2) {
+        for (let i = 1; i < pts.length - 1; i++) { const p = pts[i], q = pts[i + 1], last = i === pts.length - 2; x.quadraticCurveTo(p[0], p[1], last ? q[0] : (p[0] + q[0]) / 2, last ? q[1] : (p[1] + q[1]) / 2); }
+      } else if (rd.kind === "sea") { const [a, b] = pts, mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, dx = b[0] - a[0], dy = b[1] - a[1]; x.quadraticCurveTo(mx + dy * 0.12, my - dx * 0.12, b[0], b[1]); }
+      else pts.slice(1).forEach((p) => x.lineTo(p[0], p[1]));
+      // 陸路は下に紙の色の縁をつけて、国境の点・使徒領の斜線・川と見分けがつくようにする（W7）
+      if (rd.kind !== "sea") { x.setLineDash([]); x.strokeStyle = P.halo; x.globalAlpha = 0.8; x.lineWidth = (rd.known ? 1.8 : 1.3) + 2.6; x.stroke(); x.globalAlpha = 1; }
+      x.setLineDash(rd.kind === "sea" ? [5, 5] : rd.known ? [] : [6, 3]);
       x.strokeStyle = rd.kind === "sea" ? P.seaRoute : rd.known ? P.road : P.roadSoft;
       x.lineWidth = rd.known ? 1.8 : 1.3;
       x.stroke();
@@ -373,6 +379,16 @@
         x.lineWidth = 1; x.beginPath(); x.arc(sx, sy, r * 2.9, 0, Math.PI * 2); x.stroke();
       }
       if (picked === m.id) { x.strokeStyle = P.here; x.lineWidth = 1.5; x.setLineDash([3, 3]); x.beginPath(); x.arc(sx, sy, r * 2.4, 0, Math.PI * 2); x.stroke(); x.setLineDash([]); }
+    });
+    // 世の大事（M12）の印：聞いたことのある大事の舞台に、小さな一字。控えめに
+    const m12 = (G.m12 && G.m12.mapMarks ? G.m12.mapMarks(S) : []).filter((e) => pos[e.id] && e.glyph);
+    m12.forEach((e) => {
+      const [sx, sy] = pos[e.id];
+      const fs = Math.round(Math.max(9, rad * 1.5));
+      x.save(); x.font = `${fs}px ${fBody}`; x.textAlign = "center"; x.textBaseline = "middle";
+      x.fillStyle = P.dreadInk;
+      haloText(x, P, e.glyph, sx + rad * 1.6, sy - rad * 1.6, 0.85);
+      x.restore();
     });
     // 場所の名前：大事なものから、重ならない位置に置く。置けなければ出さない
     const placed = marks.map((m) => { const [sx, sy] = pos[m.id]; return [sx - rad, sy - rad, sx + rad, sy + rad]; });
@@ -423,6 +439,8 @@
         more += " 道：" + named.map(([to, d, k]) => `${D.LOCS[to].name}（${k}${typeof d === "number" ? d + "日" : ""}）`).concat(unknown ? [`まだ知らない所へ ${unknown} 本`] : []).join("・");
       }
     }
+    const ev = (G.m12 && G.m12.mapMarks ? G.m12.mapMarks(G.S) : []).filter((e) => e.id === m.id && e.text).map((e) => e.text);
+    if (ev.length) more += " いま：" + ev.join("・");
     info.append(h("span", "w5more", more));
   }
 

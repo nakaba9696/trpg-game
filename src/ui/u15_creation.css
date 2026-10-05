@@ -1,0 +1,31 @@
+/* U15：作成画面の「今決めること／あとでもよいこと」、各項目の効き目の一行、初めての人への一言、「自分で決める」目的の説明 */
+.creFirst { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; border: 1px dashed var(--accent); background: var(--accent-soft); border-radius: 3px; padding: 10px 14px; }
+.creFirst p { margin: 0; flex: 1 1 260px; font-size: 14px; }
+.creGroup { display: grid; gap: 14px; }
+.creGroupHead { display: flex; flex-wrap: wrap; gap: 2px 12px; align-items: baseline; }
+.creGroupHead > b { font-family: var(--f-display); font-weight: 400; font-size: 19px; letter-spacing: .06em; display: inline-flex; gap: 8px; align-items: center; }
+.creNow > .creGroupHead { border-bottom: 2px solid var(--ink); padding-bottom: 4px; }
+.creLaterTag { font-family: var(--f-ui); font-size: 11px; letter-spacing: .04em; color: var(--muted); border: 1px solid var(--rule); border-radius: 999px; padding: 0 8px; line-height: 1.7; }
+.creLater { border: 1px solid var(--rule); border-radius: 3px; padding: 10px 14px; background: var(--sheet); }
+.creLater > summary { cursor: pointer; list-style: none; }
+.creLater > summary::-webkit-details-marker { display: none; }
+.creLater > summary > b::before { content: "▸"; color: var(--accent); font-size: 14px; }
+.creLater[open] > summary > b::before { content: "▾"; }
+.creLater > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.creLaterLine { flex-basis: 100%; font-family: var(--f-body); font-size: 13px; color: var(--muted); min-width: 0; overflow-wrap: anywhere; }
+.creLater[open] .creLaterLine { display: none; }
+.creLater[open] > summary { padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+.creLater .creSec:first-of-type { border-top: 0; padding-top: 0; }
+p.creEff { margin: 0; font-size: 13px; color: var(--muted); padding-left: 10px; border-left: 2px solid var(--accent-soft); }
+.creEffs { display: grid; gap: 2px; }
+.creCustomNote { margin-top: 6px; border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 8px 12px; border-radius: 0 3px 3px 0; display: grid; gap: 4px; }
+.creCustomNote p { margin: 0; font-size: 13px; line-height: 1.6; }
+.creCustomNote p:first-child { font-weight: 700; }
+.creNow > .creGroupHead + .creSec { border-top: 0; padding-top: 0; }
+/* 名前は見出しと同じなので、入力の札は読み上げだけに残す */
+.creNameSec .field > label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* タイトル画面の題名（背景の絵の上に、大きく） */
+.titleHero { display: grid; place-items: center; align-content: end; padding-bottom: 12px; }
+.titleName { margin: 0; display: grid; justify-items: center; gap: 4px; font-family: var(--f-display); font-weight: 400; line-height: 1.1; color: #f1e6c8; text-shadow: 0 2px 6px rgba(0, 0, 0, .85), 0 0 24px rgba(0, 0, 0, .5); }
+.titleLatin { font-size: clamp(44px, 11vw, 88px); letter-spacing: .14em; padding-left: .14em; }
+.titleKana { font-size: clamp(13px, 3.2vw, 17px); letter-spacing: .5em; padding-left: .5em; color: #d8ccb0; }

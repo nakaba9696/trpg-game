@@ -1,0 +1,76 @@
+/* U13：行動の分類の札（u13_menu.js）。札を選ぶと、その分類の選択肢だけが出る */
+.u13tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 2px 0 4px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+.u13tab { position: relative; display: inline-flex; align-items: baseline; gap: 6px; min-height: 36px; padding: 6px 14px; border: 1px solid var(--rule); border-radius: 3px;
+  background: transparent; color: var(--muted); font: inherit; font-size: 14px; letter-spacing: .08em; cursor: pointer; }
+.u13tab .u13n { font-size: 11.5px; opacity: .75; letter-spacing: 0; }
+.u13tab:hover { color: var(--ink); border-color: var(--accent); background: var(--item-hover); }
+.u13tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.u13tab.on { color: var(--head); border-color: var(--accent); background: var(--accent-soft, var(--item-hover)); box-shadow: inset 0 -2px 0 var(--accent); font-weight: 700; cursor: default; }
+/* 新しい項目がある分類の印 */
+.u13dot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--win-solid, var(--sheet)); }
+/* 分類の下の最初の見出しは、札とくっつきすぎないように */
+#panel.u13on .u13tabs + .agroup { margin-top: 2px; }
+/* スマホ：札は幅いっぱいに並べ、入らなければ折り返す（文字は折らない）。指で押しやすい高さ */
+@media (max-width: 600px) {
+  .u13tab { flex: 1 1 auto; justify-content: center; white-space: nowrap; padding: 8px 10px; min-height: 44px; font-size: 14px; letter-spacing: .04em; }
+}
+
+/* ---------------------------------------------------------------- 戦闘：いつも出す手と、押すと開く一覧（魔法・口と頭・道具…） */
+.u13drawers { border-bottom: 0; padding-bottom: 0; margin-top: 6px; }
+.u13drawer .u13caret { font-size: 11px; opacity: .7; letter-spacing: 0; }
+.u13drawer.dim { opacity: .6; }
+/* 開いた一覧は、札のすぐ上に少し浮かせた箱で */
+#panel .agroup.u13pop { border: 1px solid var(--accent); border-radius: 3px; padding: 4px 8px 6px; background: var(--win-solid, var(--sheet)); box-shadow: 0 6px 18px rgba(0, 0, 0, .28); animation: u13pop .18s ease-out; }
+@keyframes u13pop { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { #panel .agroup.u13pop { animation: none; } }
+
+.u13close { display: none; margin-left: auto; letter-spacing: 0; }
+
+/* PC の戦闘：帯が低いので、いつも出す手と開いた一覧は 2 列にして、欄を流さずに収める */
+body.v9pc #panel.u13fight .agroup.u13main .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; }
+body.v9pc #panel .agroup.u13pop .alist { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 14px; }
+body.v9pc #panel .agroup.u13pop h3 { display: none; }
+/* PC の戦闘：手の欄は縦に積む（手 → 開いた一覧 → 札）。高さが足りないときは、開いた一覧の中だけが流れる（札や手と重ならない） */
+body.v9pc.v9combat #panel.u13fight { display: flex; flex-direction: column; gap: 8px; }
+body.v9pc.v9combat #panel.u13fight > * { flex: none; order: 0; }
+body.v9pc.v9combat #panel.u13fight > .u13main { order: 1; }
+body.v9pc.v9combat #panel.u13fight > .u13pop { order: 2; flex: 0 1 auto; min-height: 3.2em; overflow-y: auto; overscroll-behavior: contain; }
+body.v9pc.v9combat #panel.u13fight > .u13drawers { order: 3; }
+/* 一覧を開いている間は、いつも出す手と遊び方の一行を隠して、一覧に高さを渡す（閉じる・Esc・手番が進むと戻る） */
+body.v9pc.v9combat #panel.u13fight:has(> .u13pop) > .u13main, body.v9pc.v9combat #panel.u13fight:has(> .u13pop) > .tip { display: none; }
+body.v9pc.v9combat #panel.u13fight .act { min-height: 34px; padding-block: 4px; }
+
+/* スマホ・狭い窓の戦闘：敵・一行の HP・記録・手が一画面に収まるように詰める */
+@media (max-width: 880px) {
+  body.u13combat .scene { height: 100px; }
+  body.u13combat .scene canvas { height: 100px; }
+  body.u13combat #log { max-height: 17vh; max-height: 17svh; }
+  body.u13combat #panel .aimHint { display: none; }
+  body.u13combat #panel .foe { padding: 4px 8px; }
+  body.u13combat #panel .agroup.u13main .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 8px; }
+  body.u13combat #panel .agroup.u13main .act { min-height: 44px; padding-block: 6px; }
+  body.u13combat #panel .agroup h3 { font-size: 12px; }
+  /* 自由入力は戦闘のあいだ隠す（手の札を覆わないように） */
+  body.u13combat #act { display: none; }
+  /* ほかの手の札（魔法・口と頭・道具・速さ）は、画面の下に留めた帯にする（自由入力の代わりの場所） */
+  body.u13combat #panel .u13drawers { position: fixed; left: 0; right: 0; bottom: 0; z-index: 13; margin: 0; flex-wrap: nowrap; gap: 4px;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); background: var(--win-solid, var(--sheet)); border-top: 1px solid var(--rule); box-shadow: 0 -6px 14px rgba(0, 0, 0, .18); }
+  body.u13combat #panel .u13drawers .u13tab { flex: 1 1 0; min-width: 0; padding-inline: 6px; }
+  body.u13combat #panel { padding-bottom: 64px; }
+  body.u13combat #toActs { display: none; }
+  /* 開いた一覧は、下の帯のすぐ上に出る欄 */
+  body.u13combat #panel .agroup.u13pop { position: fixed; left: 8px; right: 8px; bottom: calc(62px + env(safe-area-inset-bottom, 0px)); z-index: 12; max-height: 58vh; overflow-y: auto;
+    padding: 6px 10px 8px; box-shadow: 0 -8px 28px rgba(0, 0, 0, .45); }
+  body.u13combat #panel .agroup.u13pop h3 { position: sticky; top: -6px; z-index: 1; background: inherit; padding-block: 4px; }
+  body.u13combat .u13close { display: inline-block; }
+}
+
+/* まとめた行（「〇〇」と「〇〇を仲間に」）と、使う相手を選ぶ小さな一覧 */
+.u13whoMark { color: var(--accent); font-weight: 400; }
+.u13who { display: grid; gap: 4px; }
+.u13whoQ { margin: 0; font-size: 13px; color: var(--accent); letter-spacing: .08em; }
+body.v9pc #panel .u13who .alist { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 14px; }
+/* 窓が狭い PC（〜1240px）では、一覧は 2 列（3 列だと補足が折れて行が高くなる） */
+@media (max-width: 1240px) {
+  body.v9pc #panel .agroup.u13pop .alist, body.v9pc #panel .u13who .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

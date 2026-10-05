@@ -49,6 +49,7 @@
       if (r.ok) {
         msg = { text: `手動 ${e.i} に保存した。` };
         sfx("page");
+        if (G.u11 && G.u11.showSaved) G.u11.showSaved("✓ セーブしました");
         mirror("slot" + e.i, G.slotKey(e.i));
       } else msg = { text: r.why, bad: true };
       paint();
@@ -149,16 +150,18 @@
         else if (mineRaw) mirror(name, key);
       }
     };
-    // 町に着いてオートセーブの枠に書いたとき（main.save から）。claude.ai のデータにも写し、「保存済み」の印を「オートセーブしました」にする
-    let townT = 0;
+    // 町に着いてオートセーブの枠に書いたとき（main.save から）。claude.ai のデータにも写し、帯の右上に「オートセーブしました」を一瞬出す
+    // （行動のたびの保存では印を出さない。出すのは手動のセーブと町のオートセーブだけ）
     G.main.onTownSave = () => {
       mirror("town", G.TOWN_SAVE_KEY);
-      const mark = document.querySelector(".u11saved");
-      if (!mark) return;
-      mark.textContent = "✓ オートセーブしました";
-      mark.classList.add("q7town");
-      clearTimeout(townT);
-      townT = setTimeout(() => { mark.textContent = "✓ 保存済み"; mark.classList.remove("q7town"); }, 2200);
+      if (G.u11 && G.u11.showSaved) G.u11.showSaved("✓ オートセーブしました");
+    };
+    // 行動のたびの保存（中断の枠）に失敗したとき（保存の場所が使えない・いっぱい）。何度も出さないよう、一分に一度だけ知らせる
+    let failAt = 0;
+    G.main.onSaveFail = () => {
+      if (Date.now() - failAt < 60000) return;
+      failAt = Date.now();
+      if (ui.toast) ui.toast("保存できませんでした", "ブラウザの保存の場所がいっぱいか、使えません。");
     };
   };
   // main.js はこのあとに読まれる

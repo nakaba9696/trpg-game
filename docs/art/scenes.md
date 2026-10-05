@@ -3,7 +3,7 @@
 > このファイルは [scenes.json](scenes.json) から `node tools/scenes.mjs` で作る。直すときは json を直してから作り直す。
 > 作り方は [README.md](README.md) の「背景の絵（A11）」。設定は [style_scenes.json](style_scenes.json)。1344×768 で作り、1232×704 の webp に縮めて `assets/scenes/<id>.webp` に置く（1 枚 150KB 以下）。
 
-全部で 72 枚（場所 46・施設の中 14・迷宮の中 12）。
+全部で 80 枚（場所 54・施設の中 14・迷宮の中 12）。
 
 ## 試しの 5 枚
 
@@ -17,7 +17,7 @@
 | `in_tavern` | 酒場 | 施設の中 |
 | `in_ruins` | エル・ナフ遺構の中 | 迷宮の中 |
 
-## 場所（46）
+## 場所（54）
 
 町・荒野・迷宮の外の景色（場所の id ごとに 1 枚）。屋外は昼・晴れで作り、時間帯・季節・天候はゲームが色味と雨・雪・霧の粒で重ねる。`sky` が night・red の場所は空が決まっている（朧島は夜、使徒領は赤い空）。
 
@@ -36,11 +36,16 @@
 | `w2_granbel` | 麦の都グランベール（レオネスト王国・町） | `w2_farm` | leonest | endless golden wheat fields, many windmills, farming town, crooked field boundaries, young forest where old fields used to be |
 | `w2_dranherz` | 鍛冶の都ドランヘルツ（レオネスト王国・町） | `w2_forge` | leonest | forge town clinging to a mountainside, countless chimneys, smoke, stone houses on steep slope, glowing furnaces, anvils |
 | `w3_carmeland` | 港の商都カルメラント（レオネスト王国・町） | `w3_harbor` | leonest | merchant harbor city in a cove, crowded warehouses and counting houses, cargo cranes, crates and barrels on the quay, small brass bells hanging at doorways |
+| `w7_zaigros` | 辺境の都ザイグロス（レオネスト王国・町） | `w7_frontier` | leonest | frontier military town on a hill, stone barracks on the hilltop, low stone houses ringing it, watchtower with a bell, noticeboard in the square, distant snowy mountains to the north |
 | `w3_lignoa` | 森と湖の都リグノア（レオネスト王国・町） | `w3_lake` | leonest | fortress city on a lake, surrounded by deep forest, raised drawbridge, stone walls, calm lake, flock of birds over the forest |
 | `w3_frosleia` | 火山の都フロスレイア（レオネスト王国・町） | `w3_volcano` | leonest | volcano city, black ash slopes, white plaster houses in terraces, research observatory, brooms leaning on ash-covered roofs, smoking volcano behind |
 | `w3_ashvault` | 灰の観測所（レオネスト王国・迷宮） | `w3_ashvault` | leonest | half-buried domed observatory in volcanic ash, on a volcano slope, door boarded up with planks, ash-covered ground |
 | `frost` | 凍てつく街道（ノルディア帝国・荒野） | `snow` | nordia | frozen highway across a snowfield, blizzard, snow-covered wooden signpost, dead trees, distant snowy mountains |
 | `garmund` | 帝都ノルディア（ノルディア帝国・町）・空 overcast | `snowcity` | nordia | vast fortified city of black stone seen from above, many black stone buildings and towers, snow on the roofs, high fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets, overcast sky |
+| `w7_eldenholm` | 緑の都エルデンホルム（ノルディア帝国・町） | `w7_greenvale` | nordia | green valley town in a snowy land, warm spring with steam, grove of trees around it, archery butts and practice range, herb gardens, wooden houses |
+| `w7_eisenvan` | 北の港アイゼルヴァン（ノルディア帝国・町） | `w7_icehaven` | nordia | cold northern harbor, ice-covered wooden piers and mooring posts, fishing boats tied up, rough grey ocean waves, warehouses, overcast stormy sky |
+| `w7_grishaim` | 監獄の都グリスハイム（ノルディア帝国・町） | `w7_prison` | nordia | bleak snowy plain with several tall stone prison towers with tiny windows, a small town clustered at their feet, smoke from chimneys, grey sky |
+| `w7_brenark` | 砦の都ブレイナーク（ノルディア帝国・町） | `w7_clawwall` | nordia | snowy fortress city with three rings of grey stone walls, frozen sea behind, huge old claw marks high on the outer wall, banners, overcast sky |
 | `w2_zalgros` | 闘技の都ザルグロス（ノルディア帝国・町） | `w2_arena` | nordia | (huge round stone colosseum:1.3) in the middle of a snowy town, barracks, betting booths, snowy rooftops, banners |
 | `w4_kaesverg` | 鉱山の都カースヴェルグ（ノルディア帝国・町） | `w4_mine` | nordia | mining town in snowy mountains, mine entrances in the mountainside with smoke, old iron rails running through the town, rusted mine cart covered in snow |
 | `w4_valmiria` | 市の都ヴァルミリア（ノルディア帝国・町） | `w4_market` | nordia | bustling market town, many colorful market tents and stalls, stone houses around a snowy town square, four roads meet, tall stone pillar in the center, snow |
@@ -58,6 +63,9 @@
 | `e2_garden` | 腐れ庭園（エルメシア共和国・迷宮）・空 overcast | `e2_garden` | elmesia | beautiful flower garden in the middle of a dark swamp, perfectly trimmed flowerbeds, unnaturally vivid flowers, dead trees around, mist, eerie, gloomy overcast sky |
 | `w2_amyrein` | 湯の町アミュレイン（エルメシア共和国・町） | `w2_spa` | elmesia | quiet hot spring town by a lake, steam rising, wooden bathhouses, stone baths, calm lake |
 | `w2_nagris` | 狩り場の町ナグリス（エルメシア共和国・町） | `w2_hunt` | elmesia | town built on huge tree branches, treehouses, rope bridges, giant world tree silhouette filling the eastern sky, forest |
+| `w7_volera` | 灯台の港ヴォルエラ（エルメシア共和国・町） | `w7_lighthouse` | elmesia | calm bay harbor with a tall white lighthouse, gentle sea, small trading ships with patterned sails, wooden piers, market cloth and dried fish |
+| `w7_revandel` | 隠れ里レヴァンデル（エルメシア共和国・町） | `w7_mossvillage` | elmesia | hidden village melting into a deep forest, moss-covered roofs, vines over doorways, houses built among huge tree trunks, a large old stump with offerings, dappled light |
+| `w7_salyues` | 芸の町サリュエス（エルメシア共和国・町） | `w7_artstown` | elmesia | colorful crossroads town, open-air theater stage of wooden boards in the square, walls covered with painted murals, market stalls with banners, forest road beyond |
 | `w4_tulier` | 水の都トゥリエル（エルメシア共和国・町） | `w4_water` | elmesia | water town on a lake, wooden boardwalks, houses and council hall on stilts, stargazing tower, small boats, reflection of a giant tree on the lake |
 | `w4_silent` | 沈黙の森（エルメシア共和国・荒野） | `w4_silent` | elmesia | silent forest, faded white paper talismans stuck on tree trunks, still air, pale light, birds perched on branches |
 | `yakumo` | 島の都シェルアーク（シェルアーク・町） | `yakumo` | isles | sea city built across small islands, wooden walkway bridges between islands, fish drying racks, barrels, small boats, sailing ships offshore |

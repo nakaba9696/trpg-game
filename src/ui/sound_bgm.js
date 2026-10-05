@@ -449,7 +449,8 @@
     const comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 6; comp.attack.value = 0.01; comp.release.value = 0.3;
     const hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 32; // 聞こえないほど低い揺れを切る
-    B.vol.connect(hp); hp.connect(comp); comp.connect(dest || ctx.destination);
+    B.duck = ctx.createGain(); // S4：効果音の瞬間だけ少し下げる
+    B.vol.connect(B.duck); B.duck.connect(hp); hp.connect(comp); comp.connect(dest || ctx.destination);
     B.rev = ctx.createConvolver(); B.rev.buffer = impulse(ctx, 3.4, 3.2);
     const rl = lp(B, 4200, 0.5); B.rev.connect(rl); rl.connect(B.vol);
     const n = ctx.sampleRate;
@@ -460,9 +461,9 @@
   // 歪み（ギター）
   function driveCurve(k) { const n = 1024, c = new Float32Array(n); for (let i = 0; i < n; i++) { const x = (i / (n - 1)) * 2 - 1; c[i] = Math.tanh(k * x) / Math.tanh(k); } return c; }
   // 曲を一つ鳴らす係：曲の束（fader）を作り、刻みを先読みして予約し続ける
-  function makePlayer(B, id, tr, C, t0, fadeIn) {
+  function makePlayer(B, id, tr, C, t0, fadeIn, noMix) {
     const ctx = B.ctx;
-    const fader = ctx.createGain(); fader.gain.setValueAtTime(0, t0); fader.gain.linearRampToValueAtTime(tr.gain || 1, t0 + fadeIn);
+    const fader = ctx.createGain(); fader.gain.setValueAtTime(0, t0); fader.gain.linearRampToValueAtTime((tr.gain || 1) * (snd.mixGain && !noMix ? snd.mixGain("bgm", id) : 1), t0 + fadeIn);
     fader.connect(B.vol);
     const send = ctx.createGain(); send.gain.value = 1; fader.connect(send);
     const wet = ctx.createGain(); wet.gain.value = tr.wet ?? 0.3; send.connect(wet); wet.connect(B.rev);
@@ -512,12 +513,16 @@
     return { id, fader, stopAt: Infinity, src: s, tick() {} };
   }
 
+  // 設定 → BGM の束の音量（つまみの 0〜1 を控えめに）
+  const bgmLevel = (st) => (st.mute || !st.bgmOn ? 0 : st.bgm * 0.55);
+  snd.bgmLevel = bgmLevel;
   // 検証用：OfflineAudioContext に同じ卓を組んで曲を鳴らす（tools/bgm_render.mjs が使う）
-  snd._bgmOffline = (ctx, id, sec) => {
+  //   levels：true なら既定の音量（設定の音量 × つり合いの倍率）で鳴らす（tools/loudness.mjs が使う）
+  snd._bgmOffline = (ctx, id, sec, levels) => {
     const tr = BGM().TRACKS[id];
     const B = makeBus(ctx);
-    B.vol.gain.value = 1;
-    const P = makePlayer(B, id, tr, snd.bgmCompile(tr), 0, 0.01);
+    B.vol.gain.value = levels ? bgmLevel(snd.bgmSettings(snd.BGM_DEF)) : 1;
+    const P = makePlayer(B, id, tr, snd.bgmCompile(tr), 0, 0.01, !levels);
     P.tick(sec);
     return P;
   };
@@ -527,7 +532,7 @@
   let B = null, cur = null, curScene = null, curId = null, own = false;
   const olds = [];
   const files = {}; // 鍵 → AudioBuffer | "loading" | "bad"
-  const level = () => { const st = snd.bgmSettings(snd.settings); return st.mute || !st.bgmOn ? 0 : st.bgm * 0.55; };
+  const level = () => bgmLevel(snd.bgmSettings(snd.settings));
   function ensure() {
     if (B) return B;
     let ctx = snd.ctx && snd.ctx(); // 効果音と同じ AudioContext を使う（無ければ自分で作る）
@@ -541,6 +546,18 @@
     if (!B) return;
     B.vol.gain.setTargetAtTime(document.hidden ? 0 : level(), B.ctx.currentTime, document.hidden ? 0.15 : 0.4);
     if (curScene) snd.bgm(curScene);
+  };
+  // S4：効果音が鳴る瞬間（t）に BGM を少し下げ、すぐ戻す（つり合いの表 MIX.DUCK。小さな音では下げない）
+  snd.duck = (name, t) => {
+    const K = (G.data && G.data.MIX && G.data.MIX.DUCK) || null;
+    if (!B || !K || (K.skip || []).includes(name) || !cur) return;
+    const p = B.duck.gain;
+    const at = Math.max(B.ctx.currentTime, t || 0);
+    try {
+      p.cancelScheduledValues(at);
+      p.setTargetAtTime(K.depth, at, K.attack / 3);
+      p.setTargetAtTime(1, at + K.attack + K.hold, K.release / 3);
+    } catch {}
   };
   function stopCur(fade) {
     if (!cur) return;
