@@ -14,7 +14,7 @@
 (function (G) {
   const D = (G.data = G.data || {});
 
-  const has = (id) => (S) => !!((S.inv && S.inv[id]) || S.weapon === id || S.armor === id || S.ring === id);
+  const has = (id) => (S) => !!((S.inv && S.inv[id]) || (G.i2s ? G.i2s.wears(S, id) : S.weapon === id || S.armor === id || S.ring === id));
   const flag = (f) => (S) => !!(S.flags && S.flags[f]);
   const night = (S) => S.phase === 3;
   const season = (s) => (S) => !!(G.seasonOf && G.seasonOf(S.day) === s);

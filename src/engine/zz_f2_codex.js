@@ -264,7 +264,7 @@
   G.codexSeed = (S) => {
     if (!S || S.f2codex) return false;
     S.f2codex = 1;
-    const items = new Set([...Object.keys(S.inv || {}), S.weapon, S.armor, S.ring].filter(Boolean));
+    const items = new Set([...Object.keys(S.inv || {}), ...(G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring])].filter(Boolean));
     items.forEach((id) => G.codexItem(id, true));
     (S.log || []).forEach((l) => {
       if (l.fx === "down" && l.foe) { const id = foeByName(l.foe); if (id) G.codexKill(id, true); }
@@ -310,7 +310,7 @@
   G.newGame = (opt) => {
     const S = baseNewGame(opt);
     S.f2codex = 1;
-    [...Object.keys(S.inv || {}), S.weapon, S.armor, S.ring].filter(Boolean).forEach((id) => G.codexItem(id, true));
+    [...Object.keys(S.inv || {}), ...(G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring])].filter(Boolean).forEach((id) => G.codexItem(id, true));
     return S;
   };
 

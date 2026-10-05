@@ -141,7 +141,7 @@
   );
 
   // ---------------------------------------------------------------- 掘り出し物の出来事
-  const has = (S, id) => !!((S.inv && S.inv[id] > 0) || S.weapon === id || S.armor === id || S.ring === id);
+  const has = (S, id) => !!((S.inv && S.inv[id] > 0) || (G.i2s ? G.i2s.wears(S, id) : S.weapon === id || S.armor === id || S.ring === id));
   const CURIOS = Object.keys(D.ITEMS).filter((id) => D.ITEMS[id].curio);
   const curios = (S) => CURIOS.filter((id) => S.inv && S.inv[id] > 0);
   D.F3I.CURIOS = CURIOS;

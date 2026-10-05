@@ -39,7 +39,8 @@
   const tabs = h("div", "tabs");
   tabs.setAttribute("role", "tablist");
   const tab = (key, label) => { const b = h("button", "btn", label); b.type = "button"; b.setAttribute("role", "tab"); b.dataset.tab = key; b.onclick = () => show(key); return b; };
-  const TABS = [tab("item", "アイテム"), tab("foe", "魔物"), tab("person", "人物"), tab("lore", "用語"), tab("heard", "噂")];
+  // 噂のタブは「受けている依頼」の窓へ移した（U17。ui/u17_rumors.js）。drawHeard は残すが、タブは出さない
+  const TABS = [tab("item", "アイテム"), tab("foe", "魔物"), tab("person", "人物"), tab("lore", "用語")];
   tabs.append(...TABS);
   const sum = h("p", "fine f2sum");
   const panes = h("div", "f2panes");
@@ -72,7 +73,7 @@
 
   // 新しい印の数え方：種類ごと（タブ）と全体（入口）
   const TAB_KIND = { item: "item", foe: "foe", person: "person", lore: "lore", heard: "heard" };
-  const freshOf = (kind) => (G.codexFresh ? G.codexFresh(kind) : []);
+  const freshOf = (kind) => (G.codexFresh ? G.codexFresh(kind) : []).filter((k) => kind || !String(k).startsWith("heard:")); // 噂の印は依頼の窓が持つ（U17）
   const bang = (n) => { const b = h("span", "f2bang", "！"); b.setAttribute("aria-label", `新しく載った ${n}`); b.title = `新しく載った項目 ${n}`; return b; };
   const markTabs = () => TABS.forEach((b) => {
     const n = freshOf(TAB_KIND[b.dataset.tab]).length;
