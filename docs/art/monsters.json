@@ -1435,7 +1435,7 @@
    "file": "assets/monsters/e3_tetsukui.webp",
    "name": "鉄喰いの使徒ザルガドム",
    "boss": true,
-   "tags": "(dorontabi:1.3), (colossal:1.3) (rusty brown:1.3) iron lion beast, lion-like head with a mane of rusted iron spikes, hide of corroded cracked iron plates, glowing orange eyes, huge fangs crushing a broken sword, spiked iron tail, four legs, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
+   "tags": "(dorontabi:1.3), (colossal divine beast:1.3) of rusted iron, lion-like head with a crown of broken swords and spears fused into its mane, hide of ancient engraved iron plates with glowing molten orange runes, (six glowing orange eyes:1.2), ornate bronze ornaments and chains on its body, huge fangs gripping a broken sword, a circular ring of molten light floating behind its head, four legs, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
    "memo": "使徒。土から出てきた錆色の獣。剣を噛む"
   },
   {
@@ -1444,7 +1444,7 @@
    "name": "咎追いの使徒ネリオス",
    "boss": true,
    "human": true,
-   "tags": "(dorontabi:1.3), (colossal executioner many times taller than a man:1.3), (faceless:1.2) smooth iron mask, two faint glowing eyes in the slits, black executioner robe and long tattered cape, floating above the ground, raising a gigantic executioner axe with a small bell on the handle, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
+   "tags": "(dorontabi:1.3), (colossal executioner deity:1.3) many times taller than a man, (faceless:1.2) iron mask engraved with runes, two faint glowing eyes in the slits, black executioner robe dissolving into smoke, no legs, floating, (hundreds of small bells hanging on chains around it:1.2), a giant ring of bells and chains floating behind its head, huge executioner axe, counting, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
    "memo": "使徒。鉄の仮面と黒い処刑衣。鈴で何かを数える"
   },
   {
@@ -1452,7 +1452,7 @@
    "file": "assets/monsters/e3_midori.webp",
    "name": "芽吹きの使徒リサルナ",
    "boss": true,
-   "tags": "(dorontabi:1.3), (colossal:1.3) ancient nature god beast like a giant elk, (thick green moss covering its whole body:1.2), small young trees growing on its back, great antlers of living branches with leaves, (glowing green eyes:1.2), no mouth, white flowers blooming on its body, wheat sprouting at its hooves, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
+   "tags": "(dorontabi:1.3), (isolated:1.2), no trees around, (colossal gentle nature deity:1.3), giant stag-like god covered in deep green moss, a small living tree growing from its back, great antlers of living branches, golden wheat and white flowers sprouting from its body, (many small glowing green eyes along its face:1.2), no mouth, ornate wooden ornaments and leaf patterns, floating seeds and petals, a circular ring of soft green light behind its head, serene, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
    "memo": "使徒。苔と若木に覆われた大きなもの。足跡から麦が芽吹く"
   },
   {
@@ -1460,7 +1460,7 @@
    "file": "assets/monsters/e3_sanno.webp",
    "name": "酸溜まりの使徒ゼノバス",
    "boss": true,
-   "tags": "(dorontabi:1.3), (slime monster:1.3), (colossal:1.2) glowing green acid slime rising into a towering hollow humanoid shape, (empty glowing eye holes:1.2), no mouth, dissolving bones and a melting helmet suspended inside the slime, dripping acid puddle, toxic green glow, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
+   "tags": "(dorontabi:1.3), (amorphous towering mass of glowing green acid:1.3), no architecture, (no legs, no arms, no body shape:1.2), rising from a bubbling acid pool, translucent, a pulsing emerald stone heart visible inside, (crown of half-melted helmets on top:1.2), dissolving bones and swords suspended inside, (empty glowing eye holes:1.2), no mouth, ring of floating acid droplets circling behind it like a sigil, dripping, toxic glow, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
    "memo": "使徒。谷の底の緑に光る液。ときどき人の形に立ち上がる"
   },
   {
@@ -1470,6 +1470,41 @@
    "boss": true,
    "tags": "(dorontabi:1.3), (colossal ancient world tree roots:1.4) rising like mountains, gnarled roots coiling like giant serpents, cracked bark, five glowing eyes deep in the bark, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
    "memo": "使徒。東の空の大樹の根。根の一本が町より太い"
+  },
+  {
+   "id": "e3_yura",
+   "file": "assets/monsters/e3_yura.webp",
+   "name": "逆夢の使徒ベルファス",
+   "boss": true,
+   "human": true,
+   "tags": "(dorontabi:1.3), (upside down:1.4), (otherworldly dream deity:1.3) shaped like a small sleeping child hanging inverted in the air, silver hair falling upward, eyes closed, (body below the chest dissolving into a swirl of stars and sand:1.2), (a giant inverted hourglass behind it:1.2), (several huge closed eyes floating around it:1.2), rings of floating sand, faint violet glow, serene, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
+   "memo": "使徒（人に化ける）。本性：夢の底で逆さに眠る幼子。見ているだけで上下が分からなくなる"
+  },
+  {
+   "id": "e3_chezar",
+   "file": "assets/monsters/e3_chezar.webp",
+   "name": "百面の使徒ディエラン",
+   "boss": true,
+   "human": true,
+   "tags": "(dorontabi:1.3), (colossal masked general:1.3) many times taller than a man, (no real face:1.2), face made of stacked porcelain masks of old generals, cracked, (a ring of dozens of floating masks behind its head:1.2), each mask a different expression, four arms, each hand holding a different sword, noble military coat with eyes on the cloth, floating giant chess pieces, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
+   "memo": "使徒（人に化ける）。本性：仮面を何枚も重ねた巨きな軍師。面ごとに剣筋が違う"
+  },
+  {
+   "id": "e3_azlag",
+   "file": "assets/monsters/e3_azlag.webp",
+   "name": "剣翼の使徒ヴァルグレア",
+   "boss": true,
+   "tags": "(dorontabi:1.3), (colossal black bird god:1.3), (silver steel blade wings:1.4), (mechanical wings of overlapping sword blades:1.3), no soft feathers, enormous blade wings spread wide, blades raining down, golden glowing eyes with slit pupils, sharp steel beak, crest of swords, talons, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
+   "memo": "使徒（人に化ける）。本性：刃の羽を持つ巨きな黒い鳥。羽ばたくたびに刃が降る"
+  },
+  {
+   "id": "e3_yuzuel",
+   "file": "assets/monsters/e3_yuzuel.webp",
+   "name": "問答の使徒ユズエル",
+   "boss": true,
+   "human": true,
+   "tags": "(dorontabi:1.3), (towering inhuman aristocrat:1.3), impossibly tall and thin, (face hidden in shadow:1.2), only a glowing red eye behind a monocle visible, long dark wine red hair, black tailcoat with deep purple waistcoat, white cravat with red gem pin, (long arms ending in thin blades:1.2), bowing politely, (a ring of floating blades behind it:1.2), names engraved on the blades, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
+   "memo": "使徒（人に化ける）。本性：片眼鏡の老紳士の形をした、刃で問いに答えるもの"
   }
  ]
 }

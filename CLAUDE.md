@@ -40,6 +40,7 @@ node tools/build.mjs && node tests/run.mjs
 - 性的な描写は直接書かない。残酷さ・下品な笑いはよいが、ほのめかしと場面転換で済ませる。
 - 文章は日本語。地の文は二人称（あなた）か三人称。ゲームの用語は `docs/VISION.md` の用語集に合わせる。
 - セーブの形（`G.S`）に項目を足すときは、古いセーブで項目が無くても動くように書く（`S.foo || 既定値`）。
+- プレイヤーに見える変更を入れた PR は、`src/data/changelog.js` の「次の版」（`next: true`）の `items` にプレイヤー向けの一行を足す。版を上げる（`version.js` と一緒に）のは配り役。`CHANGELOG.md` は `node tools/changelog.mjs` で作り直す。
 - `.github/workflows/` の Actions はコミットの SHA で固定する。`pull_request_target` は使わない。
 
 ## 並行作業（配り役）
