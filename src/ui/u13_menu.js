@@ -79,13 +79,29 @@
     return null;
   };
 
+  // 同じ品・術の「〇〇を仲間に」（b5:pick:…）を、元の行（cb:…）にまとめる。元の行を押すと、使う相手（自分・仲間）を選ぶ。
+  //   pick の id は "b5:pick:" + 元の id の "cb:" を除いたもの（cb:item:herb ↔ b5:pick:item:herb、cb:heal ↔ b5:pick:heal）。
+  //   相手を選んだら、b5:pick:<ref> のあとに cb:<ref>:<仲間の id> を続けて行う（選ぶ間は手番が進まない。B5）
+  u13.pickOf = (id) => (/^cb:/.test(id || "") ? "b5:pick:" + id.slice(3) : null);
+  u13.pairPicks = (list) => {
+    const ids = new Set((list || []).map((a) => a.id));
+    const pairs = {};
+    (list || []).forEach((a) => { const p = u13.pickOf(a.id); if (p && ids.has(p)) pairs[a.id] = p; });
+    return pairs; // 元の行の id → まとめた pick の id
+  };
+  u13.targetOf = (pick, cid) => "cb:" + String(pick).slice("b5:pick:".length) + ":" + cid;
+
   // 戦闘：いつも出す組（main）と、押すと開く組（drawers）。開く組が無ければまとめない
   function combatPlan(gs) {
     const main = [], top = [], drawers = [];
     gs.forEach((g, i) => {
       if (asking(g)) top.push(i);
       else if (g.list.some((a) => u13.COMBAT_MAIN.includes(a.id))) main.push(i);
-      else drawers.push({ key: "d:" + shortTitle(g.title || "その他"), label: shortTitle(g.title || "その他"), groups: [i], ids: g.list.map((a) => a.id), usable: g.list.filter((a) => !a.disabled).length });
+      else {
+        const merged = new Set(Object.values(u13.pairPicks(g.list)));
+        const shown = g.list.filter((a) => !merged.has(a.id));
+        drawers.push({ key: "d:" + shortTitle(g.title || "その他"), label: shortTitle(g.title || "その他"), groups: [i], ids: g.list.map((a) => a.id), count: shown.length, usable: shown.filter((a) => !a.disabled).length });
+      }
     });
     if (!drawers.length || !main.length) return null;
     return { kind: "combat", main, top, drawers, tabs: drawers, bottom: [], place: "combat" };
@@ -130,7 +146,7 @@
       b.type = "button";
       b.dataset.u13 = d.key;
       b.setAttribute("aria-expanded", String(on));
-      b.append(h("span", "u13lab", d.label), h("span", "u13n num", String(d.ids.length)), h("span", "u13caret", on ? "▾" : "▸"));
+      b.append(h("span", "u13lab", d.label), h("span", "u13n num", String(d.count != null ? d.count : d.ids.length)), h("span", "u13caret", on ? "▾" : "▸"));
       b.onclick = () => { drawer = on ? null : d.key; ui.render(); const f = document.querySelector(`#panel .u13drawer[data-u13="${CSS.escape(d.key)}"]`); if (f) f.focus(); };
       bar.append(b);
     });
@@ -148,9 +164,11 @@
       pop.classList.add("u13pop");
       // スマホでは下から出る欄になるので、閉じるボタンを見出しに添える
       const t = pop.querySelector("h3");
-      if (t) { const x = h("button", "btn small u13close", "閉じる"); x.type = "button"; x.onclick = () => { drawer = null; ui.render(); }; t.append(x); }
-      bar.before(pop);
-    }
+      if (t) { const x = h("button", "btn small u13close", "閉じる"); x.type = "button"; x.onclick = () => { drawer = null; who = null; ui.render(); }; t.append(x); }
+      mergePicks(S, pop, G.actions().filter((g) => g.list.length)[open.groups[0]]);
+      // 一覧は DOM ではいつも出す手より前に置く（1〜9 の番号が一覧の中から振られる）。見た目の順は CSS の order で「手 → 一覧 → 札」
+      head.before(pop);
+    } else who = null;
     panel.classList.add("u13on", "u13fight");
     // 戦闘が始まったら、スマホでは見出しの道具を画面の外へ送り、絵・記録・手が一画面に入るようにする
     if (S.combat !== fightOf) {
@@ -162,16 +180,82 @@
     }
   }
   let fightOf = null;
+
+  // 開いた一覧の中で、「〇〇」と「〇〇を仲間に」を一行にまとめる。まとめた行を押すと、使う相手を選ぶ小さな一覧（who）に替わる
+  let who = null; // 相手を選んでいる行の id
+  function mergePicks(S, pop, g) {
+    if (!g) return;
+    const pairs = u13.pairPicks(g.list);
+    if (!Object.keys(pairs).length) { who = null; return; }
+    const btns = Array.from(pop.querySelectorAll(".alist > .act"));
+    if (btns.length !== g.list.length) return; // 描いた行と数が合わなければ、まとめない
+    const picks = new Set(Object.values(pairs));
+    g.list.forEach((a, i) => {
+      if (picks.has(a.id)) { btns[i].remove(); return; }
+      const p = pairs[a.id];
+      if (!p) return;
+      const pick = g.list.find((x) => x.id === p);
+      btns[i].classList.add("u13hasWho");
+      if (btns[i].querySelector("b")) btns[i].querySelector("b").append(h("span", "u13whoMark", " ▸"));
+      btns[i].onclick = () => { if (btns[i].disabled) return; who = a.id; ui.render(); };
+      if (who === a.id) showWho(S, pop, a, pick);
+    });
+    if (who && !pairs[who]) who = null;
+  }
+  function showWho(S, pop, a, pick) {
+    const box = h("div", "u13who");
+    box.append(h("p", "u13whoQ", `${a.label.replace(/（\d+）$/, "")}を誰に使う？`));
+    const list = h("div", "alist u13whoList");
+    const opt = (label, sub, disabled, fn) => {
+      const b = h("button", "act u13whoOpt");
+      b.type = "button";
+      b.disabled = !!disabled;
+      b.append(h("b", "", label));
+      if (sub) b.append(h("span", "", sub));
+      b.onclick = () => { if (!b.disabled) fn(); };
+      list.append(b);
+    };
+    const go = (ids) => { who = null; drawer = null; ids.forEach((id) => G.act(id)); ui.after(); };
+    opt("あなた", `HP ${S.hp}/${S.maxHp}`, a.disabled, () => go([a.id]));
+    (S.companions || []).forEach((c) => {
+      const max = G.b5Max ? G.b5Max(c) : c.maxHp || c.hp;
+      opt(c.name, `HP ${Math.max(0, c.hp)}/${max}`, pick.disabled || c.hp >= max, () => go([pick.id, u13.targetOf(pick.id, c.id)]));
+    });
+    opt("やめる", "選び直す", false, () => { who = null; ui.render(); });
+    box.append(list);
+    // 相手を選んでいる間は、一覧の中身をこの小さな一覧に替える
+    const al = pop.querySelector(".alist");
+    if (al) al.hidden = true;
+    pop.append(box);
+  }
   // 開いた一覧の外（記録・絵など）を押したら閉じる（スマホでは一覧が手の札に重なるので）
   document.addEventListener("click", (ev) => {
     if (!drawer || !ev.target || !ev.target.closest) return;
     if (ev.target.closest(".u13pop, .u13drawers, .act, button, a, input, dialog")) return;
     drawer = null; ui.render();
   });
+  // 数字キーの 10 番目は 0（1〜9 は v9_pc.js）。番号の札も付ける
+  const playing = () => { const p = document.getElementById("play"); return p && !p.hidden; };
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key !== "0" || ev.defaultPrevented || ev.altKey || ev.ctrlKey || ev.metaKey || !playing() || document.querySelector("dialog[open]")) return;
+    const t = ev.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return;
+    const b = document.querySelectorAll("#panel .act")[9];
+    if (b && !b.disabled) { ev.preventDefault(); b.click(); }
+  });
+  function keyTen() {
+    const b = document.querySelectorAll("#panel .act")[9];
+    if (!b || b.querySelector(".v9key") || !document.body.classList.contains("v9pc")) return;
+    const k = h("kbd", "v9key", "0");
+    k.setAttribute("aria-hidden", "true");
+    b.prepend(k);
+    b.setAttribute("aria-keyshortcuts", "0");
+  }
   // Esc で戦闘の一覧を閉じる
   document.addEventListener("keydown", (ev) => {
     if (ev.key !== "Escape" || !drawer || document.querySelector("dialog[open]")) return;
-    drawer = null; ui.render();
+    if (who) who = null; else drawer = null;
+    ui.render();
   });
 
   function paint() {
@@ -230,6 +314,7 @@
   ui.render = (...a) => {
     const r = base(...a);
     try { paint(); } catch (e) { /* まとめられなくても、画面は止めない */ }
+    requestAnimationFrame(() => { try { keyTen(); } catch {} }); // 番号は v9_pc.js が振ったあとに
     return r;
   };
 })(globalThis.G = globalThis.G || {});

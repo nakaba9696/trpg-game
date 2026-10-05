@@ -98,6 +98,45 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   // 誰に使うかを選んでいる途中（問いだけ）はまとめない
   if (u.plan([{ title: "薬草を誰に使う？", list: [{ id: "cb:item:herb:x", label: "x" }, { id: "b5:cancel", label: "やめる" }] }], S)) fail("U13: 誰に使うかの問いだけなのにまとめる");
 
+  // 「〇〇」と「〇〇を仲間に」は一行にまとめる（押すと使う相手を選ぶ）。まとめた行の数を札に出す
+  {
+    const pairs = u.pairPicks([{ id: "cb:item:herb" }, { id: "b5:pick:item:herb" }, { id: "cb:item:smoke" }, { id: "cb:heal" }, { id: "b5:pick:heal" }]);
+    if (pairs["cb:item:herb"] !== "b5:pick:item:herb" || pairs["cb:heal"] !== "b5:pick:heal" || pairs["cb:item:smoke"]) fail(`U13: 品・術と「仲間に」の組み合わせが合わない ${JSON.stringify(pairs)}`);
+    if (u.targetOf("b5:pick:item:herb", "c1") !== "cb:item:herb:c1" || u.targetOf("b5:pick:heal", "c1") !== "cb:heal:c1") fail("U13: 仲間に使うときの行動の id が合わない");
+    // 実際の戦闘で：仲間が傷ついていて「仲間に」が出るとき、まとめた行から相手を選ぶ流れがエンジンで通る
+    G.rand = seeded(31);
+    G.P = { trophies: {}, graves: [] };
+    const st2 = {};
+    D.STATS.forEach((k) => { st2[k] = 50; });
+    G.newGame({ cls: "priest", stats: st2, goal: "majin", profile: { name: "テスト", sex: "女", age: 30 } });
+    G.addCompanion({ name: "テストの僧侶", cls: "僧侶", desc: "", power: 50, dmg: 2, hp: 20, maxHp: 20 });
+    G.S.inv = { herb: 3, smoke: 1 };
+    G.startCombat(["goblin"], {});
+    const c = G.S.companions[0];
+    c.hp = 3;
+    const tools = G.actions().find((g) => g.list.some((a) => a.id === "cb:item:herb"));
+    const pr = tools ? u.pairPicks(tools.list) : {};
+    if (!pr["cb:item:herb"]) fail("U13: 仲間が傷ついているのに、薬草と「薬草を仲間に」がまとまらない");
+    else {
+      const p2 = u.plan(G.actions(), G.S);
+      const d = p2 && p2.drawers.find((x) => x.label === "道具");
+      if (!d || d.count !== tools.list.length - 1) fail(`U13: 道具の札の数が、まとめた行の数になっていない（${d && d.count}）`);
+      const hp0 = c.hp;
+      G.act(pr["cb:item:herb"]);
+      const target = u.targetOf(pr["cb:item:herb"], c.id);
+      if (!G.actions().flatMap((g) => g.list).some((a) => a.id === target)) fail(`U13: 相手を選ぶ行動 ${target} が出ない`);
+      G.act(target);
+      if (!(c.hp > hp0) || G.S.b5pick) fail(`U13: まとめた行から仲間に薬草を使えない（HP ${hp0}→${c.hp}）`);
+    }
+  }
+  // 開いた一覧はボタンや手と重ならない：PC は縦に積み、一覧の中だけが流れる。開いている間は手を隠して高さを渡す
+  const mcss = readFileSync(new URL("../../src/ui/u13_menu.css", import.meta.url), "utf8");
+  if (!/#panel\.u13fight \{[^}]*flex-direction: column/.test(mcss) || !/> \.u13pop \{[^}]*overflow-y: auto/.test(mcss) || !/:has\(> \.u13pop\) > \.u13main/.test(mcss)) fail("U13: 戦闘の一覧が札と重ならない並べ方になっていない");
+  if (/u13pop \{[^}]*min-height: min-content/.test(mcss)) fail("U13: 一覧が欄からはみ出す書き方（min-height: min-content）が残っている");
+  // 10 番目の選択肢は 0 のキー
+  const msrc = readFileSync(new URL("../../src/ui/u13_menu.js", import.meta.url), "utf8");
+  if (!/ev\.key !== "0"/.test(msrc)) fail("U13: 10 番目の選択肢を 0 のキーで選べない");
+
   // 速さは独自のボタンを置かず、設定の窓（G.ui.addSetting）に足す
   const bsrc = readFileSync(new URL("../../src/ui/u13_battle.js", import.meta.url), "utf8");
   if (!/ui\.addSetting\(\{[\s\S]*?id: "u13speed"[\s\S]*?kind: "select"/.test(bsrc)) fail("U13: 戦闘の表示の速さを設定の窓（G.ui.addSetting）に足していない");
