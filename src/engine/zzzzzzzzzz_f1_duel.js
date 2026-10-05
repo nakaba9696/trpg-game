@@ -9,7 +9,7 @@
 //   ult   本気の必殺：強敵・使徒が HP 半分を切ったあと。およそ 2 倍。潰せない。受けるか躱すか
 //   崩れた敵（f.f1stun）は次の手番は動けず、次に受ける一撃が深く入る（f.f1open。1.5 倍、強敵は 1.3 倍）
 // 知っている敵（図鑑で倒したことがある・覚え書きがある）は、気配のあとに一言（D.F1_HINT）が添い、合う手に「◎」が付く。成功率は変わらない（L1 と同じ考え）
-// 賭けの技：捨て身（当たりにくいが 2.5 倍、外すと無防備）・身を削る（HP を払って当てやすく 1.8 倍）・目つぶし（道具をひとつ投げ捨てて、気配を潰して崩す）
+// 賭けの技：捨て身（当たりにくいが 2.5 倍、外すと無防備）・身を削る（HP を払って当てやすく 1.8 倍。HP が半分あるうち）・目つぶし（狙いが気配を見せているとき、道具をひとつ投げ捨てて、気配を潰して崩す）
 // 雑魚戦を長引かせない：ボスでない敵は、こちらの一撃で HP が 2 割を切るなら、そのまま倒れる（とどめ）
 // 手応え：勝った戦いの読み勝ち・崩し・いちばん重い一撃を記録に一行（S.f1last。結果の場面 U13 が読む）
 // セーブに足すもの：S.combat.f1（数え）・敵の f1i / f1stun / f1open / f1rage / f1struck・S.f1last。古いセーブに無くても動く
@@ -191,7 +191,7 @@
   const baseDmg = () => G.dice(w().dmg) + (w().stat === "筋力" ? pow("筋力", 15) : pow("敏捷", 20));
   const eva = (t) => G.foeVs.eva(G.foeData(t));
   // 成功率（画面と判定で同じ数）
-  F1.BONUS = { cut: 15, all: -25, blood: 20, throw: 30, throwBig: -20 };
+  F1.BONUS = { cut: 15, all: -20, blood: 20, throw: 30, throwBig: -20 };
   F1.bloodCost = (S) => Math.max(2, Math.ceil((S || G.S).maxHp * 0.12));
   F1.throwItem = (S) => {
     S = S || G.S;
@@ -294,8 +294,8 @@
     const item = F1.throwItem(S);
     const bet = { title: "賭け", list: [
       { id: "cb:f1all", label: "捨て身の一撃", sub: `${w().stat} ${F1.chance.all()}%・当たれば2.5倍・外せば無防備`, disabled: disarmed, kw: ["捨て身", "渾身", "全力"] },
-      { id: "cb:f1blood", label: "身を削る一撃", sub: `HP${cost}を払う・${w().stat} ${F1.chance.blood()}%・1.8倍`, disabled: disarmed || S.hp <= cost * 3, kw: ["身を削", "血"] },
-      { id: "cb:f1throw", label: item ? `${D.ITEMS[item].name}を投げて目つぶし` : "目つぶし", sub: item ? `${D.ITEMS[item].name}を失う・敏捷 ${F1.chance.throw()}%・相手を崩す` : "投げる物が無い", disabled: !item || walled(t), kw: ["目つぶし", "投げ"] },
+      { id: "cb:f1blood", label: "身を削る一撃", sub: `HP${cost}を払う・${w().stat} ${F1.chance.blood()}%・1.8倍`, disabled: disarmed || S.hp < S.maxHp / 2 || S.hp <= cost * 2, kw: ["身を削", "血"] },
+      { id: "cb:f1throw", label: item ? `${D.ITEMS[item].name}を投げて目つぶし` : "目つぶし", sub: !item ? "投げる物が無い" : !t.f1i ? "狙いが何か仕掛けてくるときに" : `${D.ITEMS[item].name}を失う・敏捷 ${F1.chance.throw()}%・気配を潰して崩す`, disabled: !item || !t.f1i || walled(t), kw: ["目つぶし", "投げ"] },
     ] };
     const at = groups.indexOf(find("cb:attack"));
     groups.splice(at >= 0 ? at + 1 : groups.length, 0, bet);

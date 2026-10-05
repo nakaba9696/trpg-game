@@ -102,8 +102,10 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       with_(0.5, () => G.combatAct("f1blood"));
       if (!(G.S.hp <= hp - F1.bloodCost(G.S))) F("身を削る一撃で HP が減らない");
       G.give("herb", 1);
-      if (acts().find((a) => a.id === "cb:f1throw").disabled) F("薬草を持っているのに目つぶしが選べない");
+      f.f1i = null;
+      if (!acts().find((a) => a.id === "cb:f1throw").disabled) F("狙いが何も仕掛けてこないのに目つぶしが選べる");
       f.f1i = { k: "heavy" };
+      if (acts().find((a) => a.id === "cb:f1throw").disabled) F("薬草を持っていて、狙いが仕掛けてくるのに目つぶしが選べない");
       with_(0.01, () => G.combatAct("f1throw"));
       if (G.S.inv.herb) F("目つぶしで道具が減らない");
       if (!f.f1open) F("目つぶしが決まっても敵が崩れない");
