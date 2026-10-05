@@ -576,6 +576,22 @@
     return "click";
   };
 
+  // ---------------------------------------------------------------- S4：音のつり合い（src/data/s4_mix.js）
+  // 種類（bgm・amb・sfx）と名前 → 聞こえる大きさを揃える倍率（表に無ければ 1）
+  snd.mixGain = (kind, name) => {
+    const M = (G.data && G.data.MIX) || {};
+    const t = M[kind.toUpperCase()] || {};
+    const v = Number(t[name]);
+    return Number.isFinite(v) && v > 0 ? v : 1;
+  };
+  // 効果音一つぶんの倍率を掛けた卓（出口だけ差し替える。残響への送りはそのまま）
+  function mixed(E, name) {
+    const k = snd.mixGain("sfx", name);
+    if (k === 1) return E;
+    const g = E.ctx.createGain(); g.gain.value = k; g.connect(E.sfx); // 鳴り終われば入力が無くなり、ブラウザが片づける
+    return Object.assign(Object.create(E), { sfx: g });
+  }
+
   // ---------------------------------------------------------------- 実際に鳴らす（ブラウザの中だけ）
   if (!AC || typeof document === "undefined") return;
   let E = null;
@@ -631,7 +647,8 @@
     if (!E || st.mute || !SFX[name] || E.ctx.state !== "running") return;
     if (st.sfxOn === false || ((name === "roll" || name === "rollShort") && st.dice === false)) return;
     const t = E.ctx.currentTime + 0.01 + (delay || 0);
-    try { if (snd.source(name) === "file") playFile(name, t); else SFX[name](E, t); } catch {}
+    try { if (snd.source(name) === "file") playFile(name, t); else SFX[name](mixed(E, name), t); } catch {}
+    if (snd.duck) snd.duck(name, t); // S4：効果音の瞬間だけ BGM を少し下げる
   };
 
   let amb = null; // { name, gain, stops, timer }
@@ -648,7 +665,7 @@
     }
     if (!name || !AMB[name]) return;
     const g = E.ctx.createGain(); g.gain.value = 0; g.connect(E.amb);
-    g.gain.setTargetAtTime(1, now, 0.8);
+    g.gain.setTargetAtTime(snd.mixGain("amb", name), now, 0.8);
     const made = AMB[name](E, g);
     const stops = made.nodes.flat();
     const timer = made.tick ? setInterval(() => { if (E.ctx.state === "running" && !snd.settings.mute) made.tick(E.ctx.currentTime + 0.05); }, 1100) : 0;
@@ -704,10 +721,12 @@
 
   // 検証用：OfflineAudioContext に同じ卓を組んで鳴らす（tools/sound_check.mjs が使う）
   //   name を配列にすると、同じ卓で順に鳴らす（at は始まりの秒の配列）
-  snd._offline = (ctx, name, isAmb, at) => {
+  //   levels：true なら既定の音量（設定の音量 × つり合いの倍率。S4）で鳴らす（tools/loudness.mjs が使う）
+  snd._offline = (ctx, name, isAmb, at, levels) => {
     const D = makeDesk(ctx);
-    D.sfx.gain.value = 1; D.amb.gain.value = 0.5;
-    if (isAmb) { const g = ctx.createGain(); g.connect(D.amb); const m = AMB[name](D, g); if (m.tick) for (let t = 0.2; t < ctx.length / ctx.sampleRate - 1; t += 1.1) m.tick(t); return; }
-    [].concat(name).forEach((n, i) => SFX[n](D, 0.01 + ((at && at[i]) || 0)));
+    const st = DEF; // 既定の音量で測る
+    D.sfx.gain.value = levels ? st.sfx : 1; D.amb.gain.value = levels ? st.amb * 0.5 : 0.5;
+    if (isAmb) { const g = ctx.createGain(); g.gain.value = levels ? snd.mixGain("amb", name) : 1; g.connect(D.amb); const m = AMB[name](D, g); if (m.tick) for (let t = 0.2; t < ctx.length / ctx.sampleRate - 1; t += 1.1) m.tick(t); return; }
+    [].concat(name).forEach((n, i) => { const t = 0.01 + ((at && at[i]) || 0); SFX[n](levels ? mixed(D, n) : D, t); });
   };
 })(globalThis.G = globalThis.G || {});
