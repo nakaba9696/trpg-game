@@ -27,8 +27,10 @@ for (const [key, c] of Object.entries(CASES)) {
   await page.check(`input[name="cls"][value="${c.cls}"]`, { force: true });
   await page.check(`input[name="origin"][value="${c.origin}"]`, { force: true });
   await page.check(`input[name="goal"][value="${c.goal}"]`, { force: true });
-  await page.fill("#pf-name", c.name);
-  await page.fill("#pf-age", c.age);
+  // 名前と歳は選ぶ形（U16）。名前は候補の先頭、歳は年頃を選んでからその幅の中で
+  await page.check(`input[name="pname"] >> nth=0`, { force: true });
+  await page.check(`input[name="age"][value="${Number(c.age) >= 40 ? "old" : Number(c.age) >= 23 ? "prime" : "young"}"]`, { force: true });
+  await page.selectOption("#pf-age", c.age);
   await page.fill("#pf-history", c.history);
   await page.click('[data-fid="p-next"]');
   await page.click('[data-fid="s-next"]');
