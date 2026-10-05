@@ -1,0 +1,11 @@
+/* F3：ステータスの「節目」 */
+.f3list { display: grid; gap: 4px; font-size: 13px; }
+.f3row { display: grid; grid-template-columns: 3em 1fr auto; gap: 6px; align-items: baseline; }
+.f3row .nm { opacity: .75; }
+.f3row .got { display: flex; flex-wrap: wrap; gap: 4px; }
+.f3name { font-weight: 600; padding: 0 6px; border-radius: 8px; border: 1px solid currentColor; font-size: 12px; }
+.f3row .none { opacity: .4; }
+.f3row .next { opacity: .7; font-size: 12px; white-space: nowrap; }
+.f3row .next.done { opacity: .9; }
+.f3hint { margin: 6px 0 0; font-size: 12px; opacity: .8; line-height: 1.5; }
+.f3pop { margin-top: 6px; font-weight: 600; font-size: 14px; }
