@@ -137,6 +137,24 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const msrc = readFileSync(new URL("../../src/ui/u13_menu.js", import.meta.url), "utf8");
   if (!/ev\.key !== "0"/.test(msrc)) fail("U13: 10 番目の選択肢を 0 のキーで選べない");
 
+  // 死の場面：見出し・倒れたわけ（R3 の墓碑と同じ文。無ければ死因）。年表は押すまで開かない（ui.after の自動を止める印）
+  {
+    G.rand = seeded(77);
+    G.P = { trophies: {}, graves: [] };
+    const st3 = {};
+    D.STATS.forEach((k) => { st3[k] = 40; });
+    G.newGame({ cls: "merc", stats: st3, goal: "majin", profile: { name: "テスト", sex: "男", age: 30 } });
+    G.die("崩れた床の下の杭に貫かれた");
+    const d = u.deathScene(G.S);
+    const clue = G.r3Clue && G.r3Clue(G.S);
+    if (d.title !== "あなたは倒れた" || !d.cause) fail("U13: 死の場面の見出しか倒れたわけが無い");
+    if (clue && clue.what && d.cause !== clue.what) fail("U13: 死の場面の倒れたわけが、墓碑（R3）の文と違う");
+    if (!clue && !d.cause.includes("杭")) fail("U13: 死の場面に死因が出ない");
+    if (!/ロード/.test(u.RETRY)) fail("U13: 墓碑にロードでやり直せる一言が無い");
+    const bsrc2 = readFileSync(new URL("../../src/ui/u13_battle.js", import.meta.url), "utf8");
+    if (!/justDied[\s\S]*?S\.flags\.chronShown = true/.test(bsrc2) || !/ui\.openChronicle\(S, true\)/.test(bsrc2)) fail("U13: 死んだとき、押すまで年表を開かない形になっていない");
+  }
+
   // 速さは独自のボタンを置かず、設定の窓（G.ui.addSetting）に足す
   const bsrc = readFileSync(new URL("../../src/ui/u13_battle.js", import.meta.url), "utf8");
   if (!/ui\.addSetting\(\{[\s\S]*?id: "u13speed"[\s\S]*?kind: "select"/.test(bsrc)) fail("U13: 戦闘の表示の速さを設定の窓（G.ui.addSetting）に足していない");
