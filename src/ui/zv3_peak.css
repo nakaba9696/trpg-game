@@ -1,0 +1,6 @@
+/* V3：山場の見せ方（ui/zv3_peak.js）。山場の見出しは大きく、段落は間を置いて一段ずつ */
+#log p.l-title.v3peak { font-size: 1.35em; letter-spacing: .14em; margin-top: 1.1em; padding-bottom: .2em; border-bottom: 1px solid var(--rule, currentColor); }
+#log p.l-nar.v3peak { line-height: 1.95; margin: .55em 0; }
+body #log p.l-nar.new.v3stage { animation: v3stageIn .9s ease-out both; }
+@keyframes v3stageIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { body #log p.l-nar.new.v3stage { animation: none; } }
