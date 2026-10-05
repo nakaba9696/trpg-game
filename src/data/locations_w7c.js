@@ -1,6 +1,6 @@
 // 町を国・地方ごとに 6〜8 まで増やす（W7 の続き。その 2：シェルアーク・境の地（人類の最前線・人と魔の境））。欄の意味は locations.js と同じ
 // シェルアークは島々の自治（島ごとに顔役）。境の地は黒鉄の砦のまわりの兵と鐘と見張りの土地、人と魔の境は断界山脈の中の、人がしがみつく最後の村。
-// 使徒領には町を置かない（人の住まない土地。docs/lore/world.md 1.）。marks は locations_w7b.js の頭の説明と同じ
+// 人と魔の境の二つの村は、黒鉄の砦の兵がときどき見回る（nation：人類の最前線。衛兵と評判はそちら）。使徒領には町を置かない（人の住まない土地。docs/lore/world.md 1.）。marks は locations_w7b.js の頭の説明と同じ
 // 島の形は data/w7_map.js（D.W5_MAP.islands に足す）。レーン W（W7）
 (function (G) {
   const D = (G.data = G.data || {});
@@ -61,14 +61,14 @@
 
     // ---------------------------------------------------------------- 人と魔の境
     w7_lastvillage: {
-      name: "最後の村ハルト", region: "人と魔の境", type: "town", danger: 1, scene: "w7_lastvillage", x: 76, y: 9, marks: ["border", "mine"],
+      name: "最後の村ハルト", region: "人と魔の境", nation: "人類の最前線", type: "town", danger: 1, scene: "w7_lastvillage", x: 76, y: 9, marks: ["border", "mine"],
       desc: "断界山脈の北の肩に、石を積んだ家が十いくつ。地図では、ここが人の住む東の端になっている。村の者は山の石を掘って砦に売り、山の向こうの物には手を触れない。戸口には、どの家にも、山に背を向けた小さな像が置いてある。",
       fac: ["inn", "shop"],
       shop: ["i3w_pick", "jerky", "potion", "i3a_bearhide", "holywater"],
       links: {},
     },
     w7_hermitage: {
-      name: "峠の庵ザレム", region: "人と魔の境", type: "town", danger: 1, scene: "w7_hermitage", x: 75, y: 38, marks: ["border", "holy"],
+      name: "峠の庵ザレム", region: "人と魔の境", nation: "人類の最前線", type: "town", danger: 1, scene: "w7_hermitage", x: 75, y: 38, marks: ["border", "holy"],
       desc: "山脈の南の峠の、崩れかけた庵のまわりに、山を越えられなかった者たちが住みついてできた集落。庵の奥に古い祭壇があって、そこに供えた物は、翌朝には少しずつ減っている。住人は、減ることを喜んでいる。",
       fac: ["inn", "shop", "church"],
       shop: ["holywater", "herb", "potion", "i3r_bonebeads", "jerky"],
