@@ -11,7 +11,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   let n = 0;
   const F = (m) => { n++; fail("恋の相手：" + m); };
   const G = loadEngine();
-  G.data.Q8P.off = true; // Q8 の恋の相手の一覧（人間の見た目の名のある人だけ）と組み合わせは tests/checks/q8_pairs.mjs で確かめる。ここは仕組みだけ
+  G.data.Q8P.off = G.data.Q8Q.off = true; // Q8 の恋の相手の一覧（人間の見た目の名のある人だけ）と組み合わせは tests/checks/q8_pairs.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   if (!G.romanceOk || !G.romanceIds || !G.bondKin) return F("G.romanceOk・G.romanceIds・G.bondKin が無い");
   G.rand = seeded(9);
