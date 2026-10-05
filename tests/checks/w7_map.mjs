@@ -138,7 +138,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   }
 
   // ---------------------------------------------------------------- 出来事の形
-  const evs = D.EVENTS.filter((e) => /^w7b?_/.test(e.id));
+  const evs = D.EVENTS.filter((e) => /^w7[bc]?_/.test(e.id));
   const free = (c) => !c.stat && !c.fight && !c.cond && !c.cost;
   const nexts = new Set();
   const scan = (o) => { if (!o) return; if (o.next) nexts.add(o.next); scan(o.win); };

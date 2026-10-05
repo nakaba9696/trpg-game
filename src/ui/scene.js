@@ -898,6 +898,64 @@
       ctx.strokeStyle = rgba("#3a3a3a", 0.6); ctx.lineWidth = 1; for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.moveTo(w * (0.72 + i * 0.02), h * 0.78); ctx.lineTo(w * (0.72 + i * 0.02), h * 0.88); ctx.stroke(); }
       ctx.fillStyle = "#8a3a2a"; ctx.fillRect(w * 0.9, h * 0.82, 14, 16); ctx.beginPath(); ctx.moveTo(w * 0.9 - 4, h * 0.82); ctx.lineTo(w * 0.9 + 7, h * 0.79); ctx.lineTo(w * 0.9 + 18, h * 0.82); ctx.fill();
     },
+    // W7c：塩の島ソルネ（鏡のような四角い塩田）
+    w7_saltpans(ctx, w, h, sk, R) {
+      OUT.yakumo(ctx, w, h, sk, R);
+      for (let i = 0; i < 6; i++) { ctx.fillStyle = rgba("#f4f6f8", 0.75); ctx.fillRect(w * (0.05 + i * 0.15), h * 0.86, w * 0.12, h * 0.05); ctx.strokeStyle = "#8a7a5a"; ctx.strokeRect(w * (0.05 + i * 0.15), h * 0.86, w * 0.12, h * 0.05); }
+    },
+    // W7c：網の島カラヴ（浜から浜へ渡した綱に干した網）
+    w7_netisle(ctx, w, h, sk, R) {
+      OUT.yakumo(ctx, w, h, sk, R);
+      ctx.strokeStyle = rgba("#3a3a3a", 0.55); ctx.lineWidth = 1;
+      for (let i = 0; i < 18; i++) { const x = w * (0.04 + i * 0.053); ctx.beginPath(); ctx.moveTo(x, h * 0.62); ctx.lineTo(x + 6, h * 0.8); ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(0, h * 0.62); ctx.lineTo(w, h * 0.62); ctx.stroke();
+    },
+    // W7c：霧鐘の島ミストラ（外海に向いた崖の上の大きな鐘）
+    w7_bellisle(ctx, w, h, sk, R) {
+      OUT.port(ctx, w, h, sk, R);
+      ctx.fillStyle = "#3a3634"; ctx.beginPath(); ctx.moveTo(w * 0.62, h); ctx.lineTo(w * 0.7, h * 0.52); ctx.lineTo(w, h * 0.5); ctx.lineTo(w, h); ctx.fill();
+      ctx.fillStyle = "#5a4a34"; ctx.fillRect(w * 0.8, h * 0.36, 4, h * 0.14); ctx.fillRect(w * 0.88, h * 0.36, 4, h * 0.14); ctx.fillRect(w * 0.8, h * 0.36, w * 0.08 + 4, 4);
+      ctx.fillStyle = "#b08a3a"; ctx.beginPath(); ctx.moveTo(w * 0.83, h * 0.46); ctx.quadraticCurveTo(w * 0.842, h * 0.38, w * 0.854, h * 0.38); ctx.quadraticCurveTo(w * 0.866, h * 0.38, w * 0.878, h * 0.46); ctx.fill();
+      ctx.fillStyle = rgba("#e8ecf0", 0.25); ctx.fillRect(0, h * 0.5, w, h * 0.5);
+    },
+    // W7c：真珠採りの島ヨナ（浅い入り江と小舟、殻で葺いた屋根）
+    w7_pearls(ctx, w, h, sk, R) {
+      OUT.yakumo(ctx, w, h, sk, R);
+      ctx.fillStyle = rgba("#6ad0c8", 0.35); ctx.fillRect(0, h * 0.82, w, h * 0.08);
+      for (let i = 0; i < 20; i++) { ctx.fillStyle = rgba("#f0ece4", 0.85); ctx.beginPath(); ctx.arc(w * (0.1 + R() * 0.8), h * (0.92 + R() * 0.06), 3, 0, Math.PI * 2); ctx.fill(); }
+    },
+    // W7c：井戸の砦町ケルン（深い井戸と、兵站の倉）
+    w7_wellfort(ctx, w, h, sk, R) {
+      OUT.fort(ctx, w, h, sk, R);
+      ctx.fillStyle = "#5a5450"; ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.9, w * 0.06, h * 0.025, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#4a3424"; ctx.fillRect(w * 0.46, h * 0.8, 4, h * 0.1); ctx.fillRect(w * 0.54 - 4, h * 0.8, 4, h * 0.1); ctx.fillRect(w * 0.46, h * 0.8, w * 0.08, 4);
+    },
+    // W7c：鐘待ちの村リーネ（畑と、畑より少し広い墓地）
+    w7_widows(ctx, w, h, sk, R) {
+      OUT.w2_farm(ctx, w, h, sk, R);
+      ctx.fillStyle = "#6a6460"; for (let i = 0; i < 14; i++) { const x = w * (0.55 + (i % 7) * 0.06), y = h * (0.84 + Math.floor(i / 7) * 0.06); ctx.fillRect(x, y, 4, 10); ctx.fillRect(x - 3, y + 3, 10, 3); }
+    },
+    // W7c：北の烽火台ヴェルト（北の海を背にした三つの烽火台と煙）
+    w7_beacon(ctx, w, h, sk, R) {
+      OUT.fort(ctx, w, h, sk, R);
+      for (const x of [0.2, 0.5, 0.8]) { ctx.fillStyle = "#4a4648"; ctx.fillRect(w * x - 8, h * 0.42, 16, h * 0.2); glow(ctx, w * x, h * 0.4, h * 0.05, "#ffa040", sk.night || sk.dusk ? 0.6 : 0.2); ctx.fillStyle = rgba("#9a9a9a", 0.35); for (let k = 0; k < 4; k++) { ctx.beginPath(); ctx.arc(w * x + k * 5, h * (0.36 - k * 0.05), 8 + k * 4, 0, Math.PI * 2); ctx.fill(); } }
+    },
+    // W7c：最後の村ハルト（山の肩の石の家、山に背を向けた小さな像）
+    w7_lastvillage(ctx, w, h, sk, R) {
+      OUT.mountain(ctx, w, h, sk, R);
+      const [, mid] = layers(sk);
+      buildings(ctx, w * 0.5, h * 0.86, h * 0.1, mix(mid, "#6a6460", 0.4), sk.night || sk.dusk, R, true);
+      for (const x of [0.6, 0.66, 0.72]) { ctx.fillStyle = "#8a8480"; ctx.fillRect(w * x, h * 0.88, 5, 12); ctx.beginPath(); ctx.arc(w * x + 2.5, h * 0.875, 4, 0, Math.PI * 2); ctx.fill(); }
+    },
+    // W7c：峠の庵ザレム（霧の峠の、崩れかけた庵と祭壇）
+    w7_hermitage(ctx, w, h, sk, R) {
+      OUT.mountain(ctx, w, h, sk, R);
+      const [, mid] = layers(sk);
+      ctx.fillStyle = mix(mid, "#5a4a3a", 0.5); ctx.fillRect(w * 0.42, h * 0.74, w * 0.16, h * 0.12);
+      ctx.beginPath(); ctx.moveTo(w * 0.4, h * 0.74); ctx.lineTo(w * 0.5, h * 0.66); ctx.lineTo(w * 0.6, h * 0.74); ctx.fill();
+      glow(ctx, w * 0.5, h * 0.8, h * 0.05, "#ffd08a", sk.night || sk.dusk ? 0.5 : 0.15);
+      ctx.fillStyle = rgba("#e8ecf0", 0.3); ctx.fillRect(0, h * 0.6, w, h * 0.4);
+    },
     // W3：火山の都フロスレイア（煙を上げる火山の斜面に、白い家が段々に貼りつく）
     w3_volcano(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);
