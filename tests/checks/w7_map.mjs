@@ -82,7 +82,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     for (let a = 0; a < A.pts.length - 1 && !hit; a++) for (let b = 0; b < B.pts.length - 1 && !hit; b++) hit = cross(A.pts[a], A.pts[a + 1], B.pts[b], B.pts[b + 1]);
     if (hit) F(`道 ${A.a}–${A.b} と ${B.a}–${B.b} が町の外で交わる（交わる所で乗り換えられるように見える）`);
   }
-  for (const r of drawn.filter((r) => r.kind === "sea")) {
+  // 島から島への短い渡し（両端の島の浜をまたぐだけ）は見ない
+  for (const r of drawn.filter((r) => r.kind === "sea" && Math.hypot(L[r.a].x - L[r.b].x, L[r.a].y - L[r.b].y) >= 12)) {
     const s = W5.roadSamples(r.pts, "sea", 40);
     const mid = s.slice(Math.floor(s.length * 0.25), Math.ceil(s.length * 0.75));
     const onLand = mid.filter((p) => W5.onLand(p[0], p[1])).length;
@@ -195,11 +196,12 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const id of towns) {
     try {
       start(9);
-      const from = Object.keys(L[id].links)[0];
+      const byLand = Object.keys(L[id].links || {}).length > 0;   // 船でしか行けない島もある
+      const from = byLand ? Object.keys(L[id].links)[0] : Object.keys(L[id].sea)[0];
       G.S.loc = from;
       G.arrive(id); // 旅をせずに着いた（一文は出ない）ときでも壊れない
       G.S.loc = from;
-      G.S.w6 = { days: L[id].links[from], sea: false };
+      G.S.w6 = byLand ? { days: L[id].links[from], sea: false } : { days: L[id].sea[from].days, sea: true };
       const mark = G.S.log.length;
       G.arrive(id);
       const tail = G.S.log.slice(Math.max(0, mark - 2)).map((x) => x.text);
