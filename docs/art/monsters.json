@@ -857,7 +857,7 @@
    "file": "assets/monsters/e4k_acidbud.webp",
    "name": "酸の芽",
    "tags": "acid slime sprout, bright green bubbling blob, three eyes, dripping acid",
-   "memo": "酸の溜まりの芽"
+   "memo": "ゼノバスの芽"
   },
   {
    "id": "e4k_greenwatch",
@@ -1416,7 +1416,7 @@
   {
    "id": "e3_kurobane",
    "file": "assets/monsters/e3_kurobane.webp",
-   "name": "黒翼",
+   "name": "黒翼の使徒ノクターヴ",
    "boss": true,
    "human": true,
    "tags": "(dorontabi:1.3), (colossal:1.2) faceless winged being, featureless pitch black head, (no face:1.2), hollow white glowing eyes, enormous jet black feathered wings spread wide, long black robe, floating high, black feathers falling, shadow spilling from its body, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
@@ -1425,7 +1425,7 @@
   {
    "id": "e3_tojizuki",
    "file": "assets/monsters/e3_tojizuki.webp",
-   "name": "閉じ月",
+   "name": "閉じ月の使徒クロフェン",
    "boss": true,
    "tags": "(dorontabi:1.3), (no humans:1.4), (round moon creature:1.3), (the moon is a giant eyeball:1.3) with its eyelid shut, closed eye seam across the whole sphere, pale grey cratered skin, long silver eyelashes, floating in the dark sky, no body, no limbs, cold glowing moonlight, from below, god rays, rim light, dramatic lighting, solemn, ominous, divine, ancient, awe-inspiring",
    "memo": "使徒。夜空の二つ目の月。まぶたを閉じた大きな目"
@@ -1433,7 +1433,7 @@
   {
    "id": "e3_tetsukui",
    "file": "assets/monsters/e3_tetsukui.webp",
-   "name": "鉄喰い",
+   "name": "鉄喰いの使徒ザルガドム",
    "boss": true,
    "tags": "(dorontabi:1.3), (colossal:1.3) (rusty brown:1.3) iron lion beast, lion-like head with a mane of rusted iron spikes, hide of corroded cracked iron plates, glowing orange eyes, huge fangs crushing a broken sword, spiked iron tail, four legs, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
    "memo": "使徒。土から出てきた錆色の獣。剣を噛む"
@@ -1441,7 +1441,7 @@
   {
    "id": "e3_togaoi",
    "file": "assets/monsters/e3_togaoi.webp",
-   "name": "咎追い",
+   "name": "咎追いの使徒ネリオス",
    "boss": true,
    "human": true,
    "tags": "(dorontabi:1.3), (colossal executioner many times taller than a man:1.3), (faceless:1.2) smooth iron mask, two faint glowing eyes in the slits, black executioner robe and long tattered cape, floating above the ground, raising a gigantic executioner axe with a small bell on the handle, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
@@ -1450,7 +1450,7 @@
   {
    "id": "e3_midori",
    "file": "assets/monsters/e3_midori.webp",
-   "name": "緑の御方",
+   "name": "芽吹きの使徒リサルナ",
    "boss": true,
    "tags": "(dorontabi:1.3), (colossal:1.3) ancient nature god beast like a giant elk, (thick green moss covering its whole body:1.2), small young trees growing on its back, great antlers of living branches with leaves, (glowing green eyes:1.2), no mouth, white flowers blooming on its body, wheat sprouting at its hooves, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
    "memo": "使徒。苔と若木に覆われた大きなもの。足跡から麦が芽吹く"
@@ -1458,7 +1458,7 @@
   {
    "id": "e3_sanno",
    "file": "assets/monsters/e3_sanno.webp",
-   "name": "酸の溜まり",
+   "name": "酸溜まりの使徒ゼノバス",
    "boss": true,
    "tags": "(dorontabi:1.3), (slime monster:1.3), (colossal:1.2) glowing green acid slime rising into a towering hollow humanoid shape, (empty glowing eye holes:1.2), no mouth, dissolving bones and a melting helmet suspended inside the slime, dripping acid puddle, toxic green glow, (from below:1.3), worm's eye view, looming over the viewer, god rays, backlight, rim light, dramatic lighting, deep shadows, solemn, ominous, divine, ancient, awe-inspiring",
    "memo": "使徒。谷の底の緑に光る液。ときどき人の形に立ち上がる"
