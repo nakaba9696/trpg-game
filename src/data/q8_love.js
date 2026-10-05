@@ -1,9 +1,9 @@
 // Q8：恋人（M10 の間柄 "love"）になる条件を、好感度のほかに一人ずつ（持ち主の声「街でだべってるだけでどんどん好感度上がるので、好感度のほかに条件を」）。
 // 仕組みは src/engine/zzzzzzz_q8_love.js（恋の筋〔R2〕の告白の段・M10 の告白の出来事・恋仲になる所を包む）。
-// 条件は数で見せない。噂（下の D.RUMORS）と会話で察せる。条件にするのは、その人の話を聞いた・一緒に行った・一緒に旅した日数と、
+// 条件は数で見せない。噂（下の D.RUMORS）と会話で察せる。条件にするのは、その人の頼みごとの前半（data/q8_love_quests.js）・一緒に行った・一緒に旅した日数と、
 // はっきりした大きな行い（人殺し・追い剥ぎ・罰当たり・人を売る・書類の偽造・借金の踏み倒し）をしていないかだけ。
 // 小さな言い合い・好感度が下がったことは条件にしない（持ち主の決定）。
-//   heard  その人の話題（D.TALK）を聞いている（すべて）
+//   heard  その人の話題（D.TALK）を聞いている（すべて）。今は使っていない（その人の頼みごとの前半に置き換えた：data/q8_love_quests.js）
 //   days   その人が仲間に加わってから、この日数がたっている
 //   with   その人を連れて、この場所に着いたことがある
 //   clean  この罪（D.CRIMES の種類）を一度も犯していない（この条件ができてから数える）
@@ -16,19 +16,19 @@
     // off: true にすると働かない（今までの決まりで仕組みを確かめるテスト用。遊びでは使わない）
     off: false,
     PEOPLE: {
-      dil: { heard: ["dil_p4"], clean: ["betrayal"] },                  // 積み荷の目録（指を折られた話）。人を売る者には、本を開かない
-      kaidel: { heard: ["kaidel_p5"], days: 30 },                       // 背中（仇の話）。長く一緒に殴り合ってから
-      bertrand: { heard: ["bertrand_p5"], days: 20 },                   // 糸の夜（連れていかれた弟子）
-      ilse: { heard: ["ilse_p6"], clean: ["forgery"] },                 // 鞄の中（消えた帳面）。帳面を偽る者は、二度と信じない
-      bruno: { heard: ["bruno_p5"], with: "nerva" },                    // 嵐の夜。港へ一緒に帰ってから
-      adele: { heard: ["adele_p6"], with: "w2_granbel" },               // 穂先の届いた日。麦の都の母さんに会わせてから
-      felix: { heard: ["felix_p5"], clean: ["forgery"] },               // 退く順番。数の合わない帳面（偽造）は許せない
-      lucien: { heard: ["lucien_p6"], clean: ["debt"] },                // 線を引いた名。借金を踏み倒す者の名にも線を引く
-      barnabe: { heard: ["barnabe_p6"], days: 25 },                     // 森の木の根もと（消えた幼なじみ）
-      margot: { heard: ["margot_p5"], clean: ["murder"] },              // 吊るされた日。卑怯はしても、罪のない者は殺さない
-      solenne: { heard: ["solenne_p6"], clean: ["robbery"] },           // 御前試合。騎士の娘は、追い剥ぎの隣には立たない
-      ingrid: { heard: ["ingrid_p6"], clean: ["murder"] },              // 外套の裏。死因の欄に「あなた」と書く日は来てほしくない
-      sieglinde: { heard: ["sieglinde_p6"], days: 30, clean: ["betrayal"] }, // 四十一行目。捨て石にした者の名を、もう書きたくない
+      dil: { clean: ["betrayal"] },                  // 積み荷の目録（指を折られた話）。人を売る者には、本を開かない
+      kaidel: { days: 30 },                       // 背中（仇の話）。長く一緒に殴り合ってから
+      bertrand: { days: 20 },                   // 糸の夜（連れていかれた弟子）
+      ilse: { clean: ["forgery"] },                 // 鞄の中（消えた帳面）。帳面を偽る者は、二度と信じない
+      bruno: { with: "nerva" },                    // 嵐の夜。港へ一緒に帰ってから
+      adele: { with: "w2_granbel" },               // 穂先の届いた日。麦の都の母さんに会わせてから
+      felix: { clean: ["forgery"] },               // 退く順番。数の合わない帳面（偽造）は許せない
+      lucien: { clean: ["debt"] },                // 線を引いた名。借金を踏み倒す者の名にも線を引く
+      barnabe: { days: 25 },                     // 森の木の根もと（消えた幼なじみ）
+      margot: { clean: ["murder"] },              // 吊るされた日。卑怯はしても、罪のない者は殺さない
+      solenne: { clean: ["robbery"] },           // 御前試合。騎士の娘は、追い剥ぎの隣には立たない
+      ingrid: { clean: ["murder"] },              // 外套の裏。死因の欄に「あなた」と書く日は来てほしくない
+      sieglinde: { days: 30, clean: ["betrayal"] }, // 四十一行目。捨て石にした者の名を、もう書きたくない
       // 難しい道の人は、恋の筋の告白の条件（hard.need[5]）を、M10 の告白の出来事にも当てる。加えて、その人に合う行いを
       nora: { arc: true, clean: ["murder"] },                           // 村のお墓に一緒に参った。群れを殺す者には、なつかない
       mirlene: { arc: true },                                           // 艦隊の出た日の話・首都の湖
