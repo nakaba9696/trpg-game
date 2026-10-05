@@ -213,6 +213,7 @@
   function actionButton(a) {
     const b = h("button", "act");
     b.type = "button";
+    b.dataset.act = a.id || "";   // W7：旅の行き先の小さな地図が、行き先の選択肢を見つけるため
     b.disabled = !!a.disabled || busy;
     if (a.locked) b.classList.add("locked");   // C10：まだ選べない、状態で現れる選択肢（うっすら見せる）
     b.append(h("b", "", a.label));
