@@ -6,7 +6,7 @@
 // - D.R2.ARCS に入れない（仲間の会話の筋ではない）。見せる文に書かない言葉・名前が無い
 export default ({ fail, ok, loadEngine, seeded }) => {
   const G = loadEngine();
-  G.data.Q8P.off = true; // Q8 の恋の相手の一覧（人間の見た目の名のある人だけ）と組み合わせは tests/checks/q8_pairs.mjs で確かめる。ここは仕組みだけ
+  G.data.Q8P.off = G.data.Q8Q.off = true; // Q8 の恋の相手の一覧（人間の見た目の名のある人だけ）と組み合わせは tests/checks/q8_pairs.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   let n = 0;
   const F = (m) => { n++; fail("R2 格の違う相手: " + m); };

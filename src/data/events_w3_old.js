@@ -208,7 +208,7 @@
       ],
     },
     {
-      id: "w3_o_p_tower", where: ["plains"], w: 2, once: true, title: "遠い鐘", who: { kind: "soldier", sex: "男", age: 57 },
+      id: "w3_o_p_tower", where: ["plains", "w7_zaigros"], w: 2, once: true, title: "遠い鐘", who: { kind: "soldier", sex: "男", age: 57 },
       text: "風に乗って、北西の方角から鐘の音が届いた。三つ。間を置いて、また三つ。丘の上の小屋の前で、片脚の老兵が、杖に寄りかかって耳を澄ましている。「火事だな。……いや、四つ目が鳴りかけた」老兵は、しばらく黙って風を嗅いでいた。",
       choices: [
         { label: "小屋の物見台に登って、煙を探す", stat: "体力", diff: "普通", ok: { text: "梯子の上から、遠い丘の連なりの向こうに、細い煙が一本見えた。そのさらに向こうに、小さな塔が並んでいる。老兵は頷いた。「煙が一本なら、ただの火事だ」干し肉を分けてくれた。", item: "jerky", lore: "w3_bells:first" }, ng: { text: "梯子の三段目が折れた。老兵は、あなたを助け起こしながら言った。「わしの脚も、そこでやった」", hp: -3, lore: "w3_bells:first" } },

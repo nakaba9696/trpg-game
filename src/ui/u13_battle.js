@@ -296,8 +296,10 @@
       growBase = u13.snap(S);
     }
     // 一行ずつ出す（戦闘の中か、戦闘が今終わったとき。行が 2 つ以上で「すぐ」でないとき）
-    const fresh = Array.from(log.querySelectorAll(":scope > .new"));
-    const entries = pend ? pend.entries.slice(-fresh.length) : [];
+    // 結果の場面のあとに始まる次の場面の行（U14 が結果の場面の間は隠す。G.u14.later）は順に出さない。その行は記録の末尾にある
+    const all = Array.from(log.querySelectorAll(":scope > .new"));
+    const fresh = G.u14 && G.u14.later ? all.filter((el) => !G.u14.later(el)) : all;
+    const entries = pend ? pend.entries.slice(0, pend.entries.length - (all.length - fresh.length)).slice(-fresh.length) : [];
     if ((turn || ended) && fresh.length >= 2 && u13.delay(G.P) > 0) startReveal(S, fresh, entries);
     else if (pend) flushFx(pend.entries, pend.S);
     // 死の場面：今この描き直しで死んだとき。ui.after が年表を自動で開かないよう印を付け、押されたら開く
