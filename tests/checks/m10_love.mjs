@@ -1,7 +1,7 @@
 // M10：仲間との恋と結婚（気配・告白・すれ違い・嫉妬・別れ・求婚・式・家・連れ合いの死と裏切り・人生の物語・古いセーブ）。
 // 仕組みは src/engine/m10_love.js、表は src/data/m10_love.js、出来事は src/data/events_m10.js。ランダムに遊んで、恋仲・結婚・別れの回数も出す
 export default ({ G, fail, ok, loadEngine, seeded }) => {
-  G.data.Q8B.off = G.data.Q8L.off = G.data.Q8P.off = true; // Q8 の上がり方・恋人の条件・恋の相手の一覧と組み合わせは tests/checks/q8_love.mjs・q8_pairs.mjs で確かめる。ここは仕組みだけ
+  G.data.Q8B.off = G.data.Q8L.off = G.data.Q8P.off = G.data.Q8Q.off = true; // Q8 の上がり方・恋人の条件・恋の相手の一覧と組み合わせは tests/checks/q8_love.mjs・q8_pairs.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   const before = { n: 0 };
   const F = (m) => { before.n++; fail("M10: " + m); };
@@ -203,7 +203,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- ランダムに遊ぶ（仲間 2 人を連れて）
   const R = loadEngine();
-  R.data.Q8B.off = R.data.Q8L.off = R.data.Q8P.off = true;
+  R.data.Q8B.off = R.data.Q8L.off = R.data.Q8P.off = R.data.Q8Q.off = true;
   const RD = R.data;
   const n = {};
   const GAMES = 100;

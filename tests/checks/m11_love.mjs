@@ -2,7 +2,7 @@
 // 仕組みは src/engine/zz_m11_love.js、表は src/data/m11_love.js、出来事は src/data/events_m11_love.js
 export default ({ fail, ok, loadEngine, seeded }) => {
   const G = loadEngine();
-  G.data.Q8P.off = true; // Q8 の恋の相手の一覧（人間の見た目の名のある人だけ）と組み合わせは tests/checks/q8_pairs.mjs で確かめる。ここは仕組みだけ
+  G.data.Q8P.off = G.data.Q8Q.off = true; // Q8 の恋の相手の一覧（人間の見た目の名のある人だけ）と組み合わせは tests/checks/q8_pairs.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   const before = { n: 0 };
   const F = (m) => { before.n++; fail("M11: " + m); };
