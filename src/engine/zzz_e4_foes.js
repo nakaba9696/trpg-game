@@ -448,9 +448,10 @@
         const a = (ix.foe[id] = ix.foe[id] || []);
         if (!a.some((r) => r.text === L.name)) a.push({ rank: 0, text: L.name, region: L.region, n: a.length });
       }));
+      // 出来事で出会う場所（W8 の名のある強敵など）が先に入っていても、「まれに」の場所を足す
       Object.entries(E4.ELDER_OF || {}).forEach(([base, x]) => {
-        if (ix.foe[x]) return;
-        ix.foe[x] = (ix.foe[base] || []).map((r, n) => ({ rank: r.rank, text: `${r.text}（まれに）`, region: r.region, n }));
+        const a = (ix.foe[x] = ix.foe[x] || []);
+        (ix.foe[base] || []).forEach((r) => { const text = `${r.text}（まれに）`; if (!a.some((y) => y.text === text)) a.push({ rank: r.rank, text, region: r.region, n: a.length }); });
       });
       return ix;
     };
