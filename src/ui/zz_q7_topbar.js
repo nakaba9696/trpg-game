@@ -1,10 +1,14 @@
 // Q7：右上の道具の列を一か所にまとめる・設定を一つの窓に（持ち主の声「図鑑も地図も 2 つ表示されてる。右上にまとめていい」「音とかの設定系は一個にまとめて開く感じ」）
-// - 図鑑・地図・依頼・ステータス・セーブ／ロード・トロフィーと墓碑・ログ・タイトルへ・設定 を、右上の .top .tools に決まった順で並べる。
+// - 右上の .top .tools に、よく使う順・まとまりの順で並べる（持ち主の声「右上の配置、順番がおかしい」）：
+//   冒険の情報［図鑑・地図・依頼・ステータス］｜ 記録と振り返り［ログ・トロフィーと墓碑］｜［システム・設定］
 //   帯（#mbar）の下の段（U11 の [ステータス][図鑑][地図][依頼]）は外す。図鑑の赤い「！」は右上の図鑑（data-codex-open）に付く
-// - 狭い画面では、トロフィーと墓碑・ログ・タイトルへを「…」の中に畳む（横にはみ出さない）。タイトルへは確かめてから、中断の枠に残して戻る
+// - セーブ・ロード・タイトルへは「システム」の一つのボタンにまとめる（持ち主の声「セーブ・ロード・タイトル画面は一個にまとめていい」）。
+//   押すと小さな一覧で「セーブ」「ロード」「タイトルへ」。キーの近道 S・L はそのまま（q7_slots.js。直接セーブ／ロードの窓を開く）
+// - 狭い画面では、使う頻度の低いログ・トロフィーと墓碑を「…」の中に畳む（横にはみ出さない）。システムと設定はいつも見える
+// - タイトルへは確かめてから、中断の枠に残して戻る
 // - 「明暗」「音」のボタンは「設定」の窓にまとめる。音の行は音の窓（sound.js・sound_bgm.js が作る #dlgSound）の中身をそのまま移す
 // - 設定の窓に項目を足す口：G.ui.addSetting({ id, section, label, kind: "toggle" | "range" | "select" | "custom", get, set, options, min, max, step, hint, render })
-// ほかのファイルは書き換えず、作られたボタンを並べ直すだけ（名前の頭の zz は、zu11_quick.js・zu12・q7_quests.js より後に読ませるため）。見た目は ui/zz_q7_topbar.css。レーン U
+// ほかのファイルは書き換えず、作られたボタンを並べ直すだけ（名前の頭の zz は、zu11_quick.js・zu12・q7_quests.js・q7_slots.js より後に読ませるため）。見た目は ui/zz_q7_topbar.css。レーン U
 (function (G) {
   if (typeof document === "undefined" || !G.ui || !G.ui.render) return;
   const ui = G.ui;
@@ -138,16 +142,49 @@
   const moreBtn = h("button", "btn q7morebtn", "…");
   moreBtn.id = "q7More";
   moreBtn.type = "button";
-  moreBtn.title = "ほかの道具（トロフィーと墓碑・ログ・タイトルへ）";
+  moreBtn.title = "ほかの道具（ログ・トロフィーと墓碑）";
   moreBtn.setAttribute("aria-label", "ほかの道具");
   moreBtn.setAttribute("aria-expanded", "false");
   const more = h("span", "q7more");
   more.id = "q7MoreBox";
-  const setMore = (on) => { more.classList.toggle("open", on); moreBtn.setAttribute("aria-expanded", String(on)); };
+  // 一覧はボタンの真下に、画面に対して置く（右上の列は PC で横に流せる入れ物＝overflow なので、その中に置くと切れて見えない）
+  const place = (box, btn) => {
+    const r = btn.getBoundingClientRect();
+    box.style.position = "fixed";
+    box.style.top = Math.round(r.bottom + 4) + "px";
+    box.style.right = Math.max(4, Math.round(window.innerWidth - r.right)) + "px";
+    box.style.left = "auto";
+  };
+  const setMore = (on) => { if (on) place(more, moreBtn); more.classList.toggle("open", on); moreBtn.setAttribute("aria-expanded", String(on)); };
   moreBtn.onclick = (ev) => { ev.stopPropagation(); setMore(!more.classList.contains("open")); };
   document.addEventListener("click", (ev) => { if (!more.contains(ev.target) && ev.target !== moreBtn) setMore(false); });
   more.addEventListener("click", (ev) => { if (ev.target.closest("button")) setMore(false); });
   document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && more.classList.contains("open")) { setMore(false); moreBtn.focus(); } });
+
+  // ---------------------------------------------------------------- システム（セーブ・ロード・タイトルへ）
+  const sysWrap = h("span", "q7sys");
+  sysWrap.id = "q7SystemWrap";
+  const sysBtn = h("button", "btn q7sysbtn", "システム");
+  sysBtn.id = "q7System";
+  sysBtn.type = "button";
+  sysBtn.title = "セーブ（S）・ロード（L）・タイトルへ";
+  sysBtn.setAttribute("aria-haspopup", "true");
+  sysBtn.setAttribute("aria-expanded", "false");
+  const sysBox = h("span", "q7sysbox");
+  sysBox.id = "q7SystemBox";
+  sysWrap.append(sysBtn, sysBox);
+  const setSys = (on) => { if (on) place(sysBox, sysBtn); sysBox.classList.toggle("open", on); sysBtn.setAttribute("aria-expanded", String(on)); };
+  sysBtn.onclick = (ev) => {
+    ev.stopPropagation();
+    const on = !sysBox.classList.contains("open");
+    setSys(on);
+    if (on) { setMore(false); const first = sysBox.querySelector("button"); if (first) first.focus(); }
+  };
+  document.addEventListener("click", (ev) => { if (!sysWrap.contains(ev.target)) setSys(false); });
+  sysBox.addEventListener("click", (ev) => { if (ev.target.closest("button")) setSys(false); });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && sysBox.classList.contains("open")) { setSys(false); sysBtn.focus(); } });
+  moreBtn.addEventListener("click", () => setSys(false));
+  window.addEventListener("resize", () => { setSys(false); setMore(false); });
 
   // ---------------------------------------------------------------- タイトルへ（持ち主の声「タイトルに戻るも追加して」）
   // 確かめてから戻る。戻る前に今の冒険を中断の枠（G.main.save）に残すので、タイトルの「つづきから」やロードの「中断」で戻れる。戦闘中も押せる
@@ -180,11 +217,12 @@
     G.main.toTitle();
   };
   toTitle.onclick = () => { try { ask.showModal(); } catch { ask.setAttribute("open", ""); } yes.focus(); };
-  tools.append(toTitle);
+  sysBox.append(toTitle);
 
-  // 並べる順（無い物は飛ばす）。main：いつも見える。more：狭い画面では「…」の中
-  const MAIN = ["#openCodex", "#openMap", "#q7Quests", "#openSheet", ".q7top"];
-  const MORE = ["#openTrophy", "#openLog", "#q7ToTitle"];
+  // 並べる順（無い物は飛ばす）。main：いつも見える。more：狭い画面では「…」の中。system：「システム」の一覧の中
+  const MAIN = ["#openCodex", "#openMap", "#q7Quests", "#openSheet"];
+  const MORE = ["#openLog", "#openTrophy"];
+  const SYSTEM = ["#q7TopSave", "#q7TopLoad", "#q7ToTitle"];
   const HIDE = ["#themeBtn", "#openSound"]; // 設定の窓にまとめた
   function arrange() {
     // 帯の下の段（U11）は外す。そこにあったステータスと依頼は右上へ
@@ -194,20 +232,24 @@
     if (quests) quests.classList.remove("u11qb");
     MAIN.forEach((sel) => { const el = $(sel); if (el && el.parentNode !== tools) tools.append(el); else if (el) tools.append(el); });
     MORE.forEach((sel) => { const el = $(sel); if (el) more.append(el); });
-    tools.append(more, moreBtn, setBtn);
+    SYSTEM.forEach((sel) => { const el = $(sel); if (el) sysBox.append(el); });
+    const box = $(".top .tools .q7top"); // セーブ・ロードの元の入れ物（q7_slots.js）は空になるので隠す
+    if (box) box.classList.add("q7empty");
+    tools.append(more, moreBtn, sysWrap, setBtn);
     HIDE.forEach((sel) => { const el = $(sel); if (el) el.hidden = true; });
     if (row) row.remove();
     const bar = $("#mbar");
     if (bar) bar.classList.add("q7norow");
     if (G.f2 && G.f2.markBtn) { try { G.f2.markBtn(); } catch {} }
   }
-  ui.topOrder = () => [...MAIN, ...MORE, "#openSettings"];
+  ui.topOrder = () => [...MAIN, ...MORE, "#q7System", "#openSettings"];
   // 右上が決まった順に並んでいるか（並んでいれば動かさない。押したボタンから focus を奪わないように）
   function inOrder() {
-    const want = [...MAIN.map((x) => $(x)).filter(Boolean), more, moreBtn, setBtn];
+    const want = [...MAIN.map((x) => $(x)).filter(Boolean), more, moreBtn, sysWrap, setBtn];
     const got = [...tools.children].filter((el) => want.includes(el));
     if (got.length !== want.length || got.some((el, i) => el !== want[i])) return false;
-    return MORE.every((x) => { const el = $(x); return !el || el.parentNode === more; });
+    const inside = (list, box) => { const els = list.map((x) => $(x)).filter(Boolean); return els.every((el, i) => el.parentNode === box && box.children[i] === el); };
+    return inside(MORE, more) && inside(SYSTEM, sysBox);
   }
 
   // 冒険中かどうか（ステータス・依頼は冒険中だけ）
