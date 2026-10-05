@@ -107,8 +107,10 @@
     });
   };
   API.apply();
+  // あとから足された出来事にも効くように。出来事の数が変わったときだけ見直す（毎回すべてを見ると手番が重い）
+  let seenN = (D.EVENTS || []).length;
   const choices0 = G.eventChoices;
-  G.eventChoices = () => { API.apply(); return choices0(); };
+  G.eventChoices = () => { const n = (D.EVENTS || []).length; if (n !== seenN) { seenN = n; API.apply(); } return choices0(); };
 
   // 画面：節目の選択肢に名を添え、まだ届かない節目の選択肢を一つだけうっすら見せる（選択肢が多い場面では見せない）
   API.showLocked = true;
