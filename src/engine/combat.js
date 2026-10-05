@@ -5,7 +5,7 @@
 // 読み合いのためのつなぎ目（F1。中身は engine/zzzzzzzzzz_f1_duel.js）。無ければ今まで通り：
 //   G.cbActs[kind](t, a, b)   こちらの手を足す（"cb:<kind>"。この手番の中で行うので、図鑑・依頼・弱点の上乗せがそのまま数える）
 //   G.cbDmgMod(f, n, how)     こちらの一撃のダメージを変える（構え・隙・とどめ）。返した数を与える
-//   G.cbMove(f, e)            敵がこの手番にすること { skip, times, mul, hit, text, f1 }。null ならふつうに一撃
+//   G.cbMove(f, e)            敵がこの手番にすること { skip, times, mul, hit, through（身を守っても避けにくくならない）, guardDiv, pierce, you, name, text, f1 }。null ならふつうに一撃
 //   G.cbStruck(f, e, mv, who, dmg)  敵の一撃が当たった・外れた（who は仲間か null＝あなた、dmg は与えた数か 0）のあと
 //   C.f1dodge                 「躱す」が決まった：あなたへの最初の一撃を丸ごと外す
 (function (G) {
@@ -406,7 +406,7 @@
           if (G.cbStruck) G.cbStruck(f, e, mv, null, 0, "dodged");
           continue;
         }
-        const chance = G.foeHitChance(e, -(C.guard ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0) + ((mv && mv.hit) || 0));
+        const chance = G.foeHitChance(e, -(C.guard && !(mv && mv.through) ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0) + ((mv && mv.hit) || 0));
         if (G.d(100) <= chance) {
           let dmg = Math.round(G.dice(e.dmg) * ((mv && mv.mul) || 1)) - (e.magic || (mv && mv.pierce) ? 0 : (armor ? armor.def : 0));
           if (C.guard) dmg = Math.floor(dmg / ((mv && mv.guardDiv) || 2));

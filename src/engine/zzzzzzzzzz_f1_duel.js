@@ -2,11 +2,11 @@
 // combat.js のつなぎ目（G.cbActs・G.cbDmgMod・G.cbMove・G.cbStruck・C.f1dodge）に中身を入れ、G.combatAct・G.combatActions・G.startCombat を包む。DOM には触らない。
 //
 // 読み合い：敵は手番の終わりに、次の手番にすることの気配を見せる（f.f1i = { k }。文は data/f1_tells.js）。気配のとおりに動く（はったりは無い）。
-//   heavy 大技の溜め：次の一撃はおよそ 1.8 倍（当たりにくい）。受ける（身を守る）と 1/4 になって敵が崩れる。躱すと丸ごと外れて崩れる。割り込めば技を潰す
+//   heavy 大技の溜め：次の一撃はおよそ 1.8 倍（当たりにくい）。身を守っても避けにくさは変わらないが、受け止めれば 1/4 になって敵が崩れる。躱すと丸ごと外れて崩れる。割り込めば技を潰す
 //   quick 連撃      ：弱い一撃（0.55 倍）を 2 回。身を守ると 1/4 ずつ
 //   brace 待ちの構え：殴ってこない。刃で踏み込むと浅くなり（半分）、返しの一撃を受ける。術は深く入る（1.3 倍）
 //   chant 詠唱・息吹：鎧を素通りする重い一撃（1.5 倍）。割り込めば潰せる。躱せる
-//   ult   本気の必殺：強敵・使徒が HP 半分を切ったあと。およそ 2.4 倍。潰せない。受けるか躱すか
+//   ult   本気の必殺：強敵・使徒が HP 半分を切ったあと。およそ 2 倍。潰せない。受けるか躱すか
 //   崩れた敵（f.f1stun）は次の手番は動けず、次に受ける一撃が深く入る（f.f1open。1.5 倍、強敵は 1.3 倍）
 // 知っている敵（図鑑で倒したことがある・覚え書きがある）は、気配のあとに一言（D.F1_HINT）が添い、合う手に「◎」が付く。成功率は変わらない（L1 と同じ考え）
 // 賭けの技：捨て身（当たりにくいが 2.5 倍、外すと無防備）・身を削る（HP を払って当てやすく 1.8 倍）・目つぶし（道具をひとつ投げ捨てて、気配を潰して崩す）
@@ -19,12 +19,13 @@
   const F1 = (G.f1 = G.f1 || {});
 
   const BLADE = ["attack", "vital", "f1cut", "f1all", "f1blood"];
-  F1.P = { tell: 0.35, tellBoss: 0.55, tellRage: 0.7, ult: 0.5, maxTellers: 2, finish: 0.2 };
+  F1.P = { tell: 0.35, tellBoss: 0.4, tellRage: 0.45, ult: 0.35, maxTellers: 2, finish: 0.2 };
+  F1.BIG_MUL = { heavy: 1.5, ult: 1.8, chant: 1.3 }; // 強敵・使徒は元の一撃が重いので、倍率は控えめ
   F1.MOVE = {
-    heavy: { mul: 1.8, hit: -15, guardDiv: 4, name: "大技", you: true },
+    heavy: { mul: 1.8, hit: -15, through: true, guardDiv: 4, name: "大技", you: true },
     quick: { times: 2, mul: 0.55, guardDiv: 4, name: "連撃" },
     chant: { mul: 1.5, pierce: true, name: "術", you: true },
-    ult: { mul: 2.4, hit: -5, guardDiv: 3.5, name: "必殺", you: true },
+    ult: { mul: 2, hit: -5, through: true, guardDiv: 3.5, name: "必殺", you: true },
   };
 
   const C = () => (G.S && G.S.combat) || null;
@@ -90,6 +91,7 @@
     if (G.rand() >= p) return;
     const w = F1.weights(f.id);
     if (f.f1last === "brace") w.brace = 0; // 構えを続けない
+    if (big) w.brace = (w.brace || 0) / 3; // 強敵は待たずに攻めてくる（山場は大技と必殺で作る）
     const keys = Object.keys(w).filter((k) => w[k] > 0);
     const sum = keys.reduce((a, k) => a + w[k], 0);
     if (!sum) return;
@@ -130,7 +132,7 @@
     if (i.cut) return { skip: true, text: `${f.name}の溜めた力は、行き場を失って霧散した。` };
     const m = F1.MOVE[i.k];
     if (!m) return null;
-    return Object.assign({}, m, { f1: i.k, text: i.k === "ult" ? `${f.name}の全力の一撃が来る！` : i.k === "heavy" ? `${f.name}の${m.name}が来る！` : "" });
+    return Object.assign({}, m, isBig(f) && F1.BIG_MUL[i.k] ? { mul: F1.BIG_MUL[i.k] } : {}, { f1: i.k, text: i.k === "ult" ? `${f.name}の全力の一撃が来る！` : i.k === "heavy" ? `${f.name}の${m.name}が来る！` : "" });
   };
 
   // 敵の一撃のあと：身を守って大技を受け止めた・躱した → 崩れる。読み勝ち
@@ -144,9 +146,9 @@
       if (big) { s.reads++; breakFoe(f, `大きく空振りした${f.name}の体が、泳いだ。`); }
       return;
     }
-    if (c.guard && (mv.f1 === "heavy" || mv.f1 === "ult")) {
+    if (c.guard && dmg && (mv.f1 === "heavy" || mv.f1 === "ult")) {
       s.reads++;
-      breakFoe(f, dmg ? `${mv.name}を正面から受け止めた。${f.name}の体勢が崩れた！` : `固めた守りの前で、${f.name}の${mv.name}は空を切った。体が泳いでいる！`);
+      breakFoe(f, `${mv.name}を正面から受け止めた。${f.name}の体勢が崩れた！`);
     } else if (c.guard && mv.f1 === "quick" && !mv.counted) {
       mv.counted = true;
       s.reads++;
