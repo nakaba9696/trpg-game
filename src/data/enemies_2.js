@@ -85,7 +85,7 @@
     },
     e1_melted: {
       name: "溶けかけた見習いたち", tier: 3, hp: 30, dmg: [1, 8, 2], hit: 50, def: 15, agi: 15, will: 999, mres: 30, gold: [5, 40], loot: [["manawater", 0.4], ["grimoire", 0.05]], shape: "blob", eye: "#c77dff",
-      desc: "エルメシアの塔から「失敗作」として沼に捨てられた魔法使いの見習いたち。溶け合った体で、まだ呪文の暗唱を続けている。魔法はほとんど効かない。",
+      desc: "首都エルメシアの塔から「失敗作」として沼に捨てられた魔法使いの見習いたち。溶け合った体で、まだ呪文の暗唱を続けている。魔法はほとんど効かない。",
       look: { body: "blob", skin: "#7a5a9a", skin2: "#c8a8e0", eyes: "hollow", eyeN: 3, mouth: "jaw", pattern: "scars", extra: ["bubbles", "runes", "bone"], mood: "fierce" },
       lines: {
         turn: ["溶けた口が、三つの声で同じ呪文を唱えている。最後の一節だけ、いつも間違えている。", "「……試験……明日は……試験……」", "肉の中から、見習いの印章がついた指輪がのぞいている。"],
