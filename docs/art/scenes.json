@@ -385,6 +385,36 @@
    "tags": "black iron fortress wall blocking a narrow mountain pass, watchtowers with alarm bells, graveyard outside the wall, rugged mountains"
   },
   {
+   "id": "w7_frostgate",
+   "kind": "place",
+   "scene": "w7_beacon",
+   "type": "town",
+   "region": "人類の最前線",
+   "name": "北の烽火台ヴェルト",
+   "pack": "border",
+   "tags": "northern beacon station by a cold sea, three stone beacon towers with fire and smoke, firewood piles, soldiers"
+  },
+  {
+   "id": "w7_widows",
+   "kind": "place",
+   "scene": "w7_widows",
+   "type": "town",
+   "region": "人類の最前線",
+   "name": "鐘待ちの村リーネ",
+   "pack": "border",
+   "tags": "farming village of soldiers' families, ploughed fields, a graveyard slightly larger than the fields, distant watchtower"
+  },
+  {
+   "id": "w7_ironwell",
+   "kind": "place",
+   "scene": "w7_wellfort",
+   "type": "town",
+   "region": "人類の最前線",
+   "name": "井戸の砦町ケルン",
+   "pack": "border",
+   "tags": "frontier supply town, deep stone well with a wooden frame in the center, storehouses and soldiers' row houses, grey sky"
+  },
+  {
    "id": "w4_watch",
    "kind": "place",
    "scene": "w4_watch",
@@ -403,6 +433,26 @@
    "name": "断界山脈",
    "pack": "border",
    "tags": "towering jagged mountain peaks, sea of clouds below, narrow ridge trail, cold thin air, snowy summits"
+  },
+  {
+   "id": "w7_hermitage",
+   "kind": "place",
+   "scene": "w7_hermitage",
+   "type": "town",
+   "region": "人と魔の境",
+   "name": "峠の庵ザレム",
+   "pack": "border",
+   "tags": "misty mountain pass with a crumbling hermitage and an old altar, small huts of settlers, fog"
+  },
+  {
+   "id": "w7_lastvillage",
+   "kind": "place",
+   "scene": "w7_lastvillage",
+   "type": "town",
+   "region": "人と魔の境",
+   "name": "最後の村ハルト",
+   "pack": "border",
+   "tags": "last human village on a mountain shoulder, a dozen stone houses, small statues facing away from the peaks, snowy mountains"
   },
   {
    "id": "graveyard",
@@ -565,6 +615,46 @@
    "name": "島の都シェルアーク",
    "pack": "isles",
    "tags": "sea city built across small islands, wooden walkway bridges between islands, fish drying racks, barrels, small boats, sailing ships offshore"
+  },
+  {
+   "id": "w7_pearlisle",
+   "kind": "place",
+   "scene": "w7_pearls",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "真珠採りの島ヨナ",
+   "pack": "isles",
+   "tags": "island with a shallow turquoise cove, pearl diving boats, huts roofed with shells, beach with shells"
+  },
+  {
+   "id": "w7_bellisle",
+   "kind": "place",
+   "scene": "w7_bellisle",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "霧鐘の島ミストラ",
+   "pack": "isles",
+   "tags": "rocky island facing the open ocean, a large fog bell on a wooden frame on the cliff top, misty sea, small chapel"
+  },
+  {
+   "id": "w7_netisle",
+   "kind": "place",
+   "scene": "w7_netisle",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "網の島カラヴ",
+   "pack": "isles",
+   "tags": "small fishing island with ropes strung between beaches and dozens of fishing nets drying, wooden cottages, boats"
+  },
+  {
+   "id": "w7_saltisle",
+   "kind": "place",
+   "scene": "w7_saltpans",
+   "type": "town",
+   "region": "シェルアーク",
+   "name": "塩の島ソルネ",
+   "pack": "isles",
+   "tags": "island village with square salt evaporation ponds shining like mirrors, salt rakers, small wooden huts, calm sea"
   },
   {
    "id": "onigashima",
