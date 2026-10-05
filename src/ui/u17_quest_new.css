@@ -19,3 +19,20 @@
   border-left: 3px solid var(--u11-bang); padding: 5px 10px; border-radius: 0 3px 3px 0; }
 .l-quest::before { content: "！"; display: inline-grid; place-items: center; min-width: 17px; height: 17px; margin-right: 6px; border-radius: 999px;
   background: var(--u11-bang); color: var(--u11-bang-ink); font-size: 11.5px; line-height: 1; vertical-align: 1px; }
+
+/* 噂（ui/u17_rumors.js）：依頼の一覧の下 */
+.u17rum { margin-top: 14px; border-top: 1px solid var(--rule); padding-top: 10px; }
+.u17rumh { margin: 0 0 4px; font-size: 15px; letter-spacing: .08em; }
+.u17rumlead { margin: 0 0 8px; }
+.u17rumlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.u17r { border: 1px solid var(--rule); border-radius: 3px; padding: 8px 10px; display: grid; gap: 3px; }
+.u17r.fresh { border-color: var(--u11-bang); }
+.u17rtop { display: flex; align-items: baseline; gap: 8px; }
+.u17rtext { flex: 1 1 auto; min-width: 0; line-height: 1.6; overflow-wrap: anywhere; }
+.u17rsub { font-size: 13px; font-weight: 700; color: var(--accent); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.u17rdate { font-weight: 400; color: var(--muted); margin-left: auto; }
+.u17r.done { opacity: .62; }
+.u17r.done .u17rsub { color: var(--muted); }
+
+/* 行動の分類（U13）の札：依頼・噂の続きに関係ある選択肢が中にある */
+.u13tab .u17tabmark { color: var(--accent); font-style: normal; font-weight: 700; margin-left: 4px; }

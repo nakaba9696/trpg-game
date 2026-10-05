@@ -1,6 +1,6 @@
 // U17：依頼が増えたときの印を撮る（Playwright。Chromium は PLAYWRIGHT_BROWSERS_PATH のもの）
 // node tools/build.mjs && node tools/shots_u17.mjs
-// docs/shots/u17/<pc|phone>_<bang|list>.jpg を書く
+// docs/shots/u17/<pc|phone>_<bang|list|rumors|marks>.jpg を書く
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -41,12 +41,21 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
     take("guard");
     G.q17.clear(S);
     take("hunt");
+    G.heard("噂：竜の墓場の奥で、しゃべる剣が眠ってるって話だ。竜の腹の中にな。");
+    G.heard("噂：赤い月の晩に生まれた子は、よく笑うか、まったく笑わないかのどっちかだとさ。");
+    G.heard("噂：港町ヴァレンツァの裏通りで、本ばかり読んでる若いのが、妙に頭が回るんだと。");
     G.ui.render();
   });
   await hideToast();
   await shot("bang");
   await page.click("#q7Quests");
   await shot("list");
+  await page.evaluate(() => { const r = document.querySelector("#dlgQuests .u17rum"); if (r) r.scrollIntoView(); });
+  await shot("rumors");
+  await page.evaluate(() => document.querySelector("#dlgQuests").close());
+  await page.evaluate(() => { const t = document.querySelector('#panel .u13tab[data-u13="adv"]'); if (t) t.click(); });
+  await page.evaluate(() => { const b = document.querySelector("#panel .act.marked"); if (b) b.scrollIntoView({ block: "center" }); });
+  await shot("marks");
   console.log(vn, "errors:", errs.length ? errs : "none");
   await ctx.close();
 }
