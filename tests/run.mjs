@@ -8,8 +8,8 @@
 //   出力は名前順のまま、最後に遅いものの一覧を出す。
 //   JOBS=1 node tests/run.mjs   … 並べずに一つずつ（既定はコアの数）
 //   ONLY=q2,q4 node tests/run.mjs … 名前にその文字を含む checks だけ（手元で直すとき。CI では使わない。釣り合いの測定は ONLY に balance を含めたときだけ）
-//   SHARD=2/5 node tests/run.mjs … 仕事を 5 つに分けた 2 つ目だけ（CI の matrix。.github/workflows/ci.yml）。
-//     分け方は下の WEIGHT（かかる秒の目安）で決まり、どの番号でも同じ。1/5〜5/5 を全部動かすと、SHARD なしと同じ確認が一度ずつ走る。
+//   SHARD=2/2 node tests/run.mjs … 仕事を 2 つに分けた 2 つ目だけ（CI の「CI result」。1/2 は「Test 1/2」。.github/workflows/ci.yml）。
+//     分け方は下の WEIGHT（かかる秒の目安）で決まり、どの番号でも同じ。1/N〜N/N を全部動かすと、SHARD なしと同じ確認が一度ずつ走る。
 // checks は別々の働き手で、ほかの checks と同時に動く。ほかの check の後始末やグローバルの状態に頼らないこと（今までも順番には頼れなかった）
 import { readdirSync } from "node:fs";
 import { availableParallelism } from "node:os";
@@ -28,9 +28,9 @@ const fail = (msg) => { failures++; console.log("FAIL " + msg); };
 // 重いものから取らせると早く終わる。SHARD の分け方にも使う（目安がずれても、確認が抜けたり二度走ったりはしない。遅くなるだけ）
 const WEIGHT = {
   "core:2. ランダムに遊ぶ": 150,
-  "e3_apostles.mjs": 200, "c2_people.mjs": 160, "m4_world.mjs": 120, "m10_love.mjs": 90, "m2_companions.mjs": 65, "m6_ending.mjs": 65,
+  "e3_apostles.mjs": 270, "c2_people.mjs": 160, "m4_world.mjs": 120, "m10_love.mjs": 90, "m2_companions.mjs": 65, "m6_ending.mjs": 65,
   "m7_reroll.mjs": 55, "m9_plague.mjs": 45, "q4_goals.mjs": 45, "u7_glossary.mjs": 35,
-  "balance:random": 0.3, "balance:smart": 1.6, // 遊ぶ一回あたり
+  "balance:random": 0.36, "balance:smart": 1.9, // 遊ぶ一回あたり
 };
 const weightOf = (t) => t.kind === "balance" ? (t.games - (t.start || 0)) * (WEIGHT["balance:" + t.mode] || 1) : WEIGHT[t.kind === "core" ? "core:" + t.name : t.name] ?? 5;
 

@@ -1,4 +1,4 @@
-// T2：CI で仕事を N 個のジョブに分ける（tests/run.mjs の SHARD）。
+// T2：CI で仕事を N 個のジョブに分ける（tests/run.mjs の SHARD。今の CI は 2 つ）。
 // groups は { key, weight } の並び。重い順に、いちばん空いている番号へ配る。同じ一覧なら、どの番号から見ても同じ分け方。
 // 返すのは番号（0 から）ごとのまとまりの並びと、番号ごとの目安の合計
 export function assignShards(groups, N) {
