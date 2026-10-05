@@ -89,4 +89,36 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (total(V) !== n) F("古いセーブの振り分けを二度する");
     if (!failures) ok("V12 古いセーブの噂を振り分ける");
   }
+
+  // 噂のタブの印は、そのタブを開いて見える話があるときだけ（空のタブに印を出さない）
+  {
+    const G = start();
+    const V = G.v12;
+    const heardMarks = () => G.codexFresh("heard");
+    const visible = () => new Set(V.boxes().flatMap((b) => b.keys));
+    const allShown = (where) => { const v = visible(); heardMarks().forEach((k) => { if (!v.has(k)) F(`${where}：噂のタブに見えない話に印が付いている（${k}）`); }); };
+    if (heardMarks().length || V.boxes().length) F("始めたばかりで、噂のタブに印か中身がある");
+    // まだ会っていない魔物の噂 → 噂のタブに見えて、印が付く
+    G.heard("噂：街道のゴブリンは、火を焚くと寄ってこないんだと");
+    if (!heardMarks().includes("foe:goblin")) F("まだ会っていない魔物の噂に、噂のタブの印が付かない");
+    allShown("会う前");
+    // 会うと話は魔物の項目に移る。噂のタブの印は消え、魔物の項目の印になる（再現：前は噂のタブに印だけ残った）
+    G.codexMeet("goblin", true);
+    if (heardMarks().length) F(`会ったあとも、噂のタブに印が残る（${heardMarks().join("・")}）`);
+    if (V.boxes().length) F("会ったあとも、噂のタブに魔物の話が残る");
+    if (!G.codexIsFresh("foe", "goblin")) F("会ったあと、魔物の項目に新しい話の印が移らない");
+    // 古い記録に残った「見えないのに新しい」印（前の形の「ほかの噂」・中身の無い話・形の違う話）は読むたびに掃除する
+    const c = G.codex();
+    Object.assign(c.fresh, { "heard:misc": 1, "heard:loc:nerva": 1, "heard:foe:slime": 1, "heard:xyz": 1 });
+    c.heard.misc = [{ t: "前の形の話", at: 1 }];
+    if (heardMarks().length) F(`古い記録の、見えない話の印が掃除されない（${heardMarks().join("・")}）`);
+    if (Object.keys(c.fresh).some((k) => k.startsWith("heard:"))) F("古い記録の印が profile に残る");
+    // 土地の話は噂のタブに見えて、印も付く。開けば消える
+    G.heard("噂：ヴァレンツァの魚屋は、月曜だけ口がきけない");
+    allShown("土地の話");
+    const b = V.boxes().find((x) => x.id === "loc:nerva");
+    if (!b || !V.boxFresh(b)) F("土地の話の箱に印が付かない");
+    else { V.boxSeen(b); if (heardMarks().length) F("土地の話を開いても印が消えない"); }
+    if (!failures) ok("V12 噂のタブの印は、見える話があるときだけ");
+  }
 };

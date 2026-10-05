@@ -6,7 +6,7 @@
 /* U11 が冒険中のスマホで隠していた上の図鑑・地図を、ここでは出す（帯の方を外したので） */
 body.q7play .top .tools #openCodex, body.q7play .top .tools #openMap { display: inline-flex; align-items: center; }
 /* 冒険の外では、ステータス・依頼は出さない */
-body:not(.q7play) .top .tools #openSheet, body:not(.q7play) .top .tools #q7Quests, body:not(.q7play) #q7ToTitle { display: none; }
+body:not(.q7play) .top .tools #openSheet, body:not(.q7play) .top .tools #q7Quests, body:not(.q7play) #q7SystemWrap { display: none; }
 .top .tools #openSheet, .top .tools #q7Quests { display: inline-flex; align-items: center; gap: 4px; }
 .top .tools .u11key { margin-left: 2px; }
 /* 図鑑の赤い「！」：右上のボタンの右肩に */
@@ -17,8 +17,21 @@ body:not(.q7play) .top .tools #openSheet, body:not(.q7play) .top .tools #q7Quest
 .q7setbtn { display: inline-flex; align-items: center; gap: 4px; }
 .q7gear { font-size: 1.05em; line-height: 1; }
 
-/* 幅が足りない画面（PC の 1280px 前後を含む）：トロフィーと墓碑・ログ・タイトルへは「…」の中 */
-@media (max-width: 1360px) {
+/* システム：押すと小さな一覧（セーブ・ロード・タイトルへ）。セーブ・ロードの元の入れ物（q7_slots.js の .q7top）は空なので出さない */
+.top .tools .q7top.q7empty { display: none; }
+.q7sys { position: relative; display: inline-flex; flex-shrink: 0; }
+.q7sysbtn::after { content: "▾"; margin-left: 4px; font-size: .8em; opacity: .7; }
+.q7sysbox { display: none; position: absolute; right: 0; top: calc(100% + 4px); z-index: 31; flex-direction: column; align-items: stretch; gap: 4px;
+  padding: 6px; background: var(--win-solid, var(--sheet)); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); min-width: 10em; }
+.q7sysbox.open { display: flex; }
+.q7sysbox > .btn { display: flex; align-items: center; gap: 6px; justify-content: flex-start; text-align: left; min-height: 40px; white-space: nowrap; }
+.q7sysbox .q7ico { font-size: .8em; line-height: 1; }
+.top .tools .q7sysbox .u11key { margin-left: auto; }
+.q7sysbox .q7topSave.q7off { color: var(--muted); cursor: not-allowed; }
+.q7sysbox #q7ToTitle { border-top-style: dashed; }
+
+/* 幅が足りない画面（狭い PC・タブレット・スマホ）：使う頻度の低いログ・トロフィーと墓碑は「…」の中 */
+@media (max-width: 1180px) {
   .top .tools { position: relative; }
   .q7morebtn { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; font-weight: 700; }
   .q7more { display: none; position: absolute; right: 0; top: calc(100% + 4px); z-index: 30; flex-direction: column; align-items: stretch; gap: 4px;
@@ -30,6 +43,7 @@ body:not(.q7play) .top .tools #openSheet, body:not(.q7play) .top .tools #q7Quest
 @media (max-width: 760px) {
   .top .tools { flex-wrap: wrap; justify-content: flex-end; row-gap: 4px; }
   .q7setword { display: none; }
+  .q7sysbtn::after { display: none; }
   .q7setbtn { min-width: 36px; justify-content: center; }
 }
 
