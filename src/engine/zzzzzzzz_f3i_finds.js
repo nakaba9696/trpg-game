@@ -82,13 +82,17 @@
     const base = G[slot];
     G[slot] = () => withFx(base());
   });
-  // 能力値と行動の補正（stats・bonus）は、身に着けている品と、持っているだけの品（gear）の癖から
+  // 能力値と行動の補正（stats・bonus）は、身に着けている品と、持っているだけの品（gear）の癖から。
+  // 判定のたびに呼ばれるので、癖のある品を何も持っていなければすぐ返す（持ち物を毎回すべて見ない）
+  const GEAR_Q = Object.keys(RAW).filter((id) => RAW[id].type === "gear" && RAW[id].quirk);
   const quirkItems = (S) => {
-    const out = [S.weapon, S.armor, S.ring].filter((id) => id && RAW[id] && RAW[id].quirk).map((id) => RAW[id]);
-    Object.keys(S.inv || {}).forEach((id) => { const it = RAW[id]; if (S.inv[id] > 0 && it && it.type === "gear" && it.quirk) out.push(it); });
+    let out = null;
+    for (const id of [S.weapon, S.armor, S.ring]) { const it = id && RAW[id]; if (it && it.quirk) (out = out || []).push(it); }
+    for (const id of GEAR_Q) if (S.inv && S.inv[id] > 0) (out = out || []).push(RAW[id]);
     return out;
   };
-  const sumFx = (S) => { const o = {}; quirkItems(S).forEach((it) => { const fx = API.fx(it, S); if (fx) add(o, fx); }); return o; };
+  const NONE = {};
+  const sumFx = (S) => { const l = quirkItems(S); if (!l) return NONE; const o = {}; l.forEach((it) => { const fx = API.fx(it, S); if (fx) add(o, fx); }); return o; };
   const baseStatEff = G.statEff;
   G.statEff = (k) => {
     const v = baseStatEff(k);
