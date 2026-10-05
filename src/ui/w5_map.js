@@ -380,6 +380,16 @@
       }
       if (picked === m.id) { x.strokeStyle = P.here; x.lineWidth = 1.5; x.setLineDash([3, 3]); x.beginPath(); x.arc(sx, sy, r * 2.4, 0, Math.PI * 2); x.stroke(); x.setLineDash([]); }
     });
+    // 世の大事（M12）の印：聞いたことのある大事の舞台に、小さな一字。控えめに
+    const m12 = (G.m12 && G.m12.mapMarks ? G.m12.mapMarks(S) : []).filter((e) => pos[e.id] && e.glyph);
+    m12.forEach((e) => {
+      const [sx, sy] = pos[e.id];
+      const fs = Math.round(Math.max(9, rad * 1.5));
+      x.save(); x.font = `${fs}px ${fBody}`; x.textAlign = "center"; x.textBaseline = "middle";
+      x.fillStyle = P.dreadInk;
+      haloText(x, P, e.glyph, sx + rad * 1.6, sy - rad * 1.6, 0.85);
+      x.restore();
+    });
     // 場所の名前：大事なものから、重ならない位置に置く。置けなければ出さない
     const placed = marks.map((m) => { const [sx, sy] = pos[m.id]; return [sx - rad, sy - rad, sx + rad, sy + rad]; });
     const over = (b, list) => list.some((q) => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
@@ -429,6 +439,8 @@
         more += " 道：" + named.map(([to, d, k]) => `${D.LOCS[to].name}（${k}${typeof d === "number" ? d + "日" : ""}）`).concat(unknown ? [`まだ知らない所へ ${unknown} 本`] : []).join("・");
       }
     }
+    const ev = (G.m12 && G.m12.mapMarks ? G.m12.mapMarks(G.S) : []).filter((e) => e.id === m.id && e.text).map((e) => e.text);
+    if (ev.length) more += " いま：" + ev.join("・");
     info.append(h("span", "w5more", more));
   }
 

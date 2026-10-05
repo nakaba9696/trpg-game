@@ -623,6 +623,9 @@
       ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
       ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${G.s5GraveStats(run)[k]}`).join(" ")));
+      // 生きた時代の世の大事（M12）
+      const m12 = Array.isArray(run.m12) ? run.m12 : run.m12 && G.m12 ? G.m12.history(run).filter((x) => x.heard || x.joined) : [];
+      if (m12.length) ep.append(h("span", "", "生きた時代の大事：" + m12.map((x) => x.name + (x.joined ? "（関わった）" : "")).join("・")));
     } else ep.hidden = true;
     const list = $("#chronList");
     list.textContent = "";
