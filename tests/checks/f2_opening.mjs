@@ -36,6 +36,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (D.LOCS[wild].type === "dungeon") F(`三段目の野 ${wild} が迷宮`);
     }
     for (const [id, th] of Object.entries(TH)) {
+      // 導入の一節は目的の行き先・手順を言わない（U5 と同じ言葉）
+      [th.pro.home, th.pro.away, th.arrive].forEach((t) => { if (/竜の墓場|鬼ヶ島|ヴォルグリム|白夜|エンバルダ|灰の荒野|騎士|領主|王位|絶界/.test(t)) F(`${id}: 導入・着いた文に行き先・手順のヒント：${t}`); });
       if (th.steps.length !== 5) F(`${id}: 段が五つでない`);
       [th.pro.home, th.pro.away, th.arrive, ...th.steps.flatMap((s) => [s.label, s.hint, s.glimpse || ""])].forEach((t) => { if (NARR.test(t)) F(`${id}: 文に数字か「！」：${t}`); });
       th.steps.forEach((s, i) => {
