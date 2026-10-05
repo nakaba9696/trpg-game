@@ -60,7 +60,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   await page.evaluate(() => document.querySelector("#dlgSettings").close());
   // タイトルへ：戦闘中に押す → 確かめ → タイトル。中断から戦闘に戻れる
   await page.evaluate(() => { G.startCombat(["goblin"], {}); G.ui.render(); });
-  if (await page.isVisible("#q7More")) await page.click("#q7More");
+  await page.click("#q7System"); // セーブ・ロード・タイトルへは「システム」の一覧の中
   await page.click("#q7ToTitle");
   await shot("totitle");
   await page.click("#q7ToTitleYes");
