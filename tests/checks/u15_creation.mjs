@@ -1,6 +1,6 @@
 // U15：作成画面の情報の整理と、「自分で決める」目的の扱い
 // - 各項目の効き目の一行（D.CRE_HINTS）がそろっていて、数字の羅列や目的の行き先を書いていない
-// - 「今決めること」と「あとでもよいこと」（畳める）に分かれ、効き目の一行が出る。初めての人にはおまかせを勧める
+// - 「今決めること」の各項目に効き目の一行が出る（「あとでもよいこと」の欄は U17 で無くした）。初めての人にはおまかせを勧める
 // - 初めての人（トロフィーも墓碑も無い）の判定と、「おまかせのまま旅立つ」でボーナス点を捨てない
 // - タイトル画面に題名（D.CRE_TEXT.title）が出て、ページの <title> も同じ
 // - 「自分で決める」目的：ゲームは中身を判定しない（宿願成就・物語の結末は付かない）。節目「区切り」とトロフィー「自分で決めた道」には着ける。画面の説明と合う
@@ -12,7 +12,7 @@ export default ({ G, fail, seeded }) => {
   const HN = D.CRE_HINTS, TX = D.CRE_TEXT;
   if (!HN || !TX) { fail("作成画面の説明の表（D.CRE_HINTS・D.CRE_TEXT）が無い"); return; }
   const WHERE = /竜の墓場|鬼ヶ島|最奥|エンバルダ|絶界|10000|ヴォルグリム|白夜/;
-  for (const k of ["cls", "goal", "name", "sex", "age", "origin", "traits"]) {
+  for (const k of ["cls", "goal", "name", "sex", "age", "origin"]) {
     const t = HN[k];
     if (!t) { fail(`作成画面の「${k}」に効き目の一行が無い`); continue; }
     if (/[0-9０-９]/.test(t)) fail(`作成画面の「${k}」の説明が数字を並べている（${t}）`);
@@ -80,9 +80,10 @@ export default ({ G, fail, seeded }) => {
 
   // 画面（DOM なしなので、書き方を読む）
   const src = readFileSync(fileURLToPath(new URL("../../src/ui/setup.js", import.meta.url)), "utf8");
-  if (!/details", "creGroup creLater"/.test(src)) fail("作成画面に「あとでもよいこと」の畳める欄が無い");
-  if (!/TX\.now/.test(src) || !/TX\.laterTag/.test(src)) fail("作成画面に「今決めること」「後回しでよい」の印が無い");
-  for (const k of ["cls", "goal", "name", "origin", "traits"]) if (!new RegExp(`eff\\("${k}"\\)`).test(src)) fail(`作成画面に「${k}」の効き目の一行が出ない`);
+  // 「あとでもよいこと」（外見・生い立ち）の欄は無くした（U17）
+  if (/creLater|TX\.later/.test(src)) fail("作成画面に、無くした「あとでもよいこと」の欄が残っている");
+  if (!/TX\.now/.test(src)) fail("作成画面に「今決めること」の印が無い");
+  for (const k of ["cls", "goal", "name", "origin"]) if (!new RegExp(`eff\\("${k}"\\)`).test(src)) fail(`作成画面に「${k}」の効き目の一行が出ない`);
   if (!/HN\.sex/.test(src) || !/HN\.age/.test(src)) fail("作成画面に性別・年齢の効き目の一行が出ない");
   if (!/cre\.firstTime\(\)/.test(src) || !/TX\.first\b/.test(src)) fail("作成画面に、初めての人へのおまかせの一言が無い");
   if (!/creCustomNote/.test(src) || !/TX\.custom\b/.test(src)) fail("作成画面に、自分で決める目的の扱いの説明が無い");
