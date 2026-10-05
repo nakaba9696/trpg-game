@@ -2,7 +2,7 @@
 // 1. 形：D.W5_MAP の粗い海岸線を決まった種で細かくし（毎回同じ）、陸か海か・国（region）の色分けを答える
 // 2. 行った場所の記録：G.P.codex.places = { id: { by, date, at } }。冒険をまたいで残る（図鑑と同じ。死んでも・引退しても）
 //    今の冒険で行った場所は S.visited（core.js）。着いたとき（G.arrive）と冒険の始まり（G.newGame）に写す。古いセーブは地図を開いたときに写す
-// 3. 見え方：場所ごとに here（今いる）/ now（今の冒険で行った）/ past（前の冒険で行った）/ heard（今の冒険で行った場所から道がつながる＝道標で名前だけ知る）/ none（印だけ）
+// 3. 見え方：今の冒険だけで決める（持ち主の声「前の冒険で行った場所は表示しなくていい」。冒険をまたぐ記録 G.P.codex.places は残すが、地図には出さない）。場所ごとに here（今いる）/ now（今の冒険で行った）/ heard（今の冒険で行った場所から道がつながる＝道標で名前だけ知る）/ none（印だけ）
 //    道は、両端のどちらかに行ったことがあれば見える
 // 乱数は G.rand を使わない（地図の形はゲームの乱数と関係なく、いつも同じにしたいので、決まった種の小さな乱数を使う）。レーン W（W5）
 (function (G) {
@@ -167,7 +167,6 @@
     S = S === undefined ? G.S : S;
     if (S && S.loc === id && !S.over) return "here";
     if (S && S.visited && S.visited[id]) return "now";
-    if ((G.P && G.P.codex && G.P.codex.places || {})[id]) return "past";
     if (S && S.visited) {
       const L = D.LOCS[id];
       const near = Object.keys(Object.assign({}, L.links, L.sea)).some((to) => S.visited[to]);
@@ -175,7 +174,7 @@
     }
     return "none";
   };
-  W5.KNOWN = { here: 1, now: 1, past: 1 };
+  W5.KNOWN = { here: 1, now: 1 };
   // 地図に置く場所の一覧。name は見えるときだけ（heard は faint：名前だけ薄く）
   W5.marks = (S) => {
     S = S === undefined ? G.S : S;
