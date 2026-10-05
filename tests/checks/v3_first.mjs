@@ -1,6 +1,6 @@
 // V3：はじめて訪れる町の場面（src/engine/zzzzzzzzzz_v3_first.js・src/data/zv3_first*.js）
 // - 表の町がすべてあり、町で、二段落以上・数字なし
-// - 旅をして、はじめて着いたときだけ、町の説明の前に段落ごとに出る。U14 の「はじめての町」の一言とは重ねない。二度目は出ない
+// - 旅をして、はじめて着いたときだけ、町の説明の前に段落ごとに出る。U14 の「はじめての町」の一言は残る。二度目は出ない
 export default ({ loadEngine, seeded, fail, ok }) => {
   const G = loadEngine();
   const D = G.data;
@@ -37,7 +37,7 @@ export default ({ loadEngine, seeded, fail, ok }) => {
     if (desc >= 0 && desc < at) fail(`V3_FIRST ${id}：町の説明より後に出た`);
     if (got.slice(at, at + first.length).map((e) => e.text).join("|") !== first.join("|")) fail(`V3_FIRST ${id}：段落が順に並ばない`);
     const fl = new Set(); for (let k = 0; k < 12; k++) fl.add(G.u14.firstLine(k));
-    if (got.some((e) => fl.has(e.text))) fail(`V3_FIRST ${id}：「はじめての町」の一言と重なった`);
+    if (!got.some((e) => fl.has(e.text))) fail(`V3_FIRST ${id}：「はじめての町」の一言が消えた`);
     // 二度目は出ない
     G.arrive(id === "karna" ? "nerva" : "karna");
     S.w6 = { days: 2, sea: false };
