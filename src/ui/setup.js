@@ -84,7 +84,7 @@
   }
 
   // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
-  // おまかせで全部埋まった状態から始める。「今決めること」（職業・目的・名前と性別・年齢・生まれ）を上に、「あとでもよいこと」（外見・生い立ち）は
+  // おまかせで全部埋まった状態から始める。「今決めること」（職業・目的・名前と性別・年齢・生まれ）を上に、「あとでもよいこと」（外見）は
   // 畳んで下に置き、開けば直せる。各項目に、ゲームにどう効くかの一行（D.CRE_HINTS）。U15。名前・年齢・生まれを今決めることへ移し、候補から選ぶ形に（U16）
   let laterOpen = false;   // 「あとでもよいこと」を開いているか（描き直しても保つ）
   function person(root) {
@@ -118,7 +118,7 @@
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
       if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
       // 畳んであるときも、いま何が入っているかは見える
-      if (laterLine) laterLine.textContent = [draft.profile.look, draft.profile.history].filter(Boolean).join("・");
+      if (laterLine) laterLine.textContent = draft.profile.look || "";
     }
     lay.append(card);
 
@@ -147,7 +147,7 @@
       inp.onchange = () => {
         const oldOrigin = draft.origin;
         cre.setClass(draft, id, R);
-        drawNames(); setVal("history");
+        drawNames();
         if (draft.origin !== oldOrigin) { const r = form.querySelector(`input[name=origin][value=${draft.origin}]`); if (r) r.checked = true; }
         refresh();
       };
@@ -272,17 +272,12 @@
     laterLine = h("span", "creLaterLine");
     sum.append(st, h("span", "fine", TX.laterSub), laterLine);
     later.append(sum);
-    // 生い立ち・特徴
-    const s5 = h("section", "creSec");
-    const t3 = h("h3", "", "外見・生い立ち");
-    t3.append(btn("特徴をおまかせ", "small", () => { cre.randomTraits(draft, R); cre.TRAITS.forEach(setVal); refresh(); }, "p-traits"));
+    // 外見（生い立ちは無くした。U17）
+    const s5 = h("section", "creSec creLookSec");
+    const t3 = h("h3", "", "外見");
+    t3.append(btn("外見をおまかせ", "small", () => { cre.randomTraits(draft, R); cre.TRAITS.forEach(setVal); refresh(); }, "p-traits"));
     s5.append(t3, eff("traits"));
-    const grid = h("div", "grid2");
-    [["look", "外見", "input"], ["history", "生い立ち", "textarea"]]
-      .forEach(([k, label, type]) => grid.append(fieldEl(k, label, type, refresh)));
-    const hi = grid.querySelector("#pf-history");
-    if (hi) hi.placeholder = "空けておいてもよい（「振る」でおまかせ）";
-    s5.append(grid);
+    s5.append(fieldEl("look", "外見", "input", refresh));
     later.append(s5);
     // 畳んだまま描いた textarea は、開いたときに高さを合わせる
     later.addEventListener("toggle", () => { if (later.open) later.querySelectorAll("textarea.fit").forEach(fitArea); });
@@ -333,7 +328,7 @@
     lab.htmlFor = "pf-" + key;
     f.append(lab);
     const row = h("div", "row");
-    // 外見も生い立ちも textarea にして、文の長さに合わせて高さを伸ばす（おまかせの長い文も全部見える。持ち主の要望）
+    // 外見は textarea にして、文の長さに合わせて高さを伸ばす（おまかせの長い文も全部見える。持ち主の要望）
     const inp = h("textarea", "fit");
     inp.id = "pf-" + key;
     inp.rows = 1;
@@ -472,7 +467,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
+    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look]]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);
