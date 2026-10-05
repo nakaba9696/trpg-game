@@ -160,8 +160,16 @@
     const base = S5().BASE + 4 * a, slope = Math.max(12, S5().SLOPE + 8 * a);
     return S5().NEED * (1 + Math.max(0, (v || 0) - base) / slope);
   };
-  // その能力の向き不向き（職業の補正。古いセーブや職業の無い冒険では 0）
-  G.s5Apt = (k, S) => { S = S || G.S; const c = S && D.CLASSES[S.cls]; return G.clamp(((c && c.mod2) || {})[k] || 0, -3, 3); };
+  // その能力の向き不向き（職業の補正。古いセーブや職業の無い冒険では 0）。
+  // 職業の初めの武器で使う能力は、補正がマイナスでも苦手にしない（破戒神官の錫杖の筋力など。戦う手が育たなくならないように）
+  G.s5AptOf = (cls, k) => {
+    const c = D.CLASSES[cls];
+    if (!c) return 0;
+    const a = G.clamp((c.mod2 || {})[k] || 0, -3, 3);
+    const w = D.ITEMS[c.weapon];
+    return w && w.stat === k ? Math.max(0, a) : a;
+  };
+  G.s5Apt = (k, S) => { S = S || G.S; return S ? G.s5AptOf(S.cls, k) : 0; };
   // 経験の入り方の倍率：得意 +1 で 1.3 倍・+2 で 1.6 倍、苦手 −1 で 0.74 倍・−3 で 0.49 倍
   G.s5AptMul = (a) => (a > 0 ? 1 + 0.3 * a : 1 / (1 + 0.35 * -a));
   // 画面の印：伸びやすい／ふつう／伸びにくい

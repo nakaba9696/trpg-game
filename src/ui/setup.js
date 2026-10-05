@@ -385,8 +385,7 @@
   // ---------------------------------------------------------------- 4. キャラクターシート（確認）
   // S7：職業による伸び方の一言（得意な能力は伸びやすく、苦手な能力は伸びにくい）
   function growLine(cls) {
-    const m = D.CLASSES[cls].mod2 || {};
-    const up = D.STATS.filter((k) => (m[k] || 0) > 0), down = D.STATS.filter((k) => (m[k] || 0) < 0);
+    const up = D.STATS.filter((k) => G.s5AptOf(cls, k) > 0), down = D.STATS.filter((k) => G.s5AptOf(cls, k) < 0);
     return `得意な能力ほど伸びやすく、高くなっても伸び続ける。苦手な能力は伸びにくい（伸びやすい：${up.join("・") || "なし"}／伸びにくい：${down.join("・") || "なし"}）`;
   }
   function sheet(root) {
