@@ -31,7 +31,6 @@ for (const [key, c] of Object.entries(CASES)) {
   await page.check(`input[name="pname"] >> nth=0`, { force: true });
   await page.check(`input[name="age"][value="${Number(c.age) >= 40 ? "old" : Number(c.age) >= 23 ? "prime" : "young"}"]`, { force: true });
   await page.selectOption("#pf-age", c.age);
-  await page.fill("#pf-history", c.history);
   await page.click('[data-fid="p-next"]');
   await page.click('[data-fid="s-next"]');
   await page.click('[data-fid="c-go"]');

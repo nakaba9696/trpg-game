@@ -213,6 +213,7 @@
   function actionButton(a) {
     const b = h("button", "act");
     b.type = "button";
+    b.dataset.act = a.id || "";   // W7：旅の行き先の小さな地図が、行き先の選択肢を見つけるため
     b.disabled = !!a.disabled || busy;
     if (a.locked) b.classList.add("locked");   // C10：まだ選べない、状態で現れる選択肢（うっすら見せる）
     b.append(h("b", "", a.label));
@@ -568,7 +569,7 @@
     $("#profTitle").textContent = `${p.name}（${S.clsName}）`;
     const dl = $("#profBody");
     dl.textContent = "";
-    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["外見", p.look], ["生い立ち", p.history], ["目的", S.goal.text]]
+    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["目的", S.goal.text]]
       .forEach(([k, v]) => { if (v) dl.append(h("dt", "", k), h("dd", "", v)); });
     $("#dlgProfile").showModal();
   };

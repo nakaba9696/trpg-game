@@ -17,7 +17,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   for (const [id, a] of Object.entries(D.AGES)) for (const k of Object.keys(a.mod || {})) if (!D.STATS.includes(k)) fail(`年齢 ${id}: 能力値 ${k} が無い`);
   for (const [c, o] of Object.entries(D.CLASS_ORIGIN)) if (!D.CLASSES[c] || !D.ORIGINS[o]) fail(`職業のはじめの生まれ ${c}→${o} が無い`);
   // 導入は状況の概要の 3 頁（持ち主の決定。V12 で厚く）：世界の今・あなたは誰か・今どこにいて何を目指すか。目的ごとの情景の挿話は持たない
-  for (const k of ["who", "whoNoOrigin", "arrive", "arriveHome", "goal", "custom", "close", "pastNone", "history"]) if (typeof D.PROLOGUE[k] !== "string") fail(`導入: ${k} の文が無い`);
+  for (const k of ["who", "whoNoOrigin", "arrive", "arriveHome", "goal", "custom", "close", "pastNone"]) if (typeof D.PROLOGUE[k] !== "string") fail(`導入: ${k} の文が無い`);
   if (!Array.isArray(D.PROLOGUE.world) || D.PROLOGUE.world.length < 3) fail("導入: 世界の今（world）の文が無い");
   for (const id of Object.keys(D.ORIGINS)) if (!(D.PROLOGUE.life[id] || []).length) fail(`導入: 生まれ ${id} の暮らしの文が無い`);
   for (const c of Object.keys(D.CLASSES)) for (const a of Object.keys(D.AGES)) if (!(D.PROLOGUE.past[c] || {})[a]) fail(`導入: 職業 ${c}・年齢 ${a} の、冒険者になったわけの文が無い`);
