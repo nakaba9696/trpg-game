@@ -5,6 +5,8 @@
 // - 戦闘が終わったら、すぐ探索の画面に戻さず結果の場面を出す（勝利などの見出し・得た物・成長・一行の HP）。「先へ進む」を押すまでそのまま。
 // - 能力値の点が伸びたら、レベルアップのような演出（ファンファーレ・見出し・伸びた欄が光る）。戦闘の後なら結果の場面の中に、ほかはその場で。
 //   成長の計算には触らず、「表示の点（G.pt）が増えた」ことだけを見る。仲間の HP の上限・腕前が伸びたときも小さく出す。
+// - 主人公が死んだら、すぐ年表・墓碑にせず死の場面を挟む（致命の一手を順に見せたあと「あなたは倒れた」・倒れたわけ・画面が暗く色が抜ける）。
+//   押すまで先へ進まない。押したら墓碑・年表の窓（ui.openChronicle）。墓碑には「最後に保存した所から、やり直すこともできる」を添える。
 // 見せ方は u13_battle.css。レーン U
 (function (G) {
   const u13 = (G.u13 = G.u13 || {});
@@ -64,6 +66,13 @@
       party: [{ name: "あなた", hp: S.hp, max: S.maxHp }, ...(S.companions || []).map((c) => ({ name: c.name, hp: c.hp, max: maxOf(c) }))],
     };
   };
+
+  // 死の場面の中身：見出し・倒れたわけ（R3 の墓碑と同じ文。無ければ死因）・次に試せそうなこと
+  u13.deathScene = (S) => {
+    const c = (G.r3Clue && G.r3Clue(S)) || null;
+    return { title: "あなたは倒れた", cause: (c && c.what) || (S.deathCause ? `${S.deathCause}。` : "力尽きた。"), hint: (c && c.hint) || "" };
+  };
+  u13.RETRY = "最後に保存した所から、やり直すこともできる（タイトルの「ロード」から）。";
 
   // ---------------------------------------------------------------- 画面
   if (typeof document === "undefined" || !G.ui || !G.ui.render) return;
@@ -134,7 +143,8 @@
     const done = () => {
       panel.classList.remove("u13wait");
       if (reveal === st) reveal = null;
-      if (hold && !hold.shown) showHold();
+      if (dead && !dead.shown) showDead(G.S);
+      else if (hold && !hold.shown) showHold();
     };
     reveal = st;
     st.r = u13.makeReveal(delays, show, done);
@@ -154,7 +164,7 @@
   // ---------------------------------------------------------------- 結果の場面
   let fightRef = null, fightSnap = null;
   let hold = null; // { data, shown }
-  u13.holding = () => !!hold;
+  u13.holding = () => !!hold || !!dead;
   function holdEl(d) {
     const box = h("div", "u13result " + d.how + (calm() || u13.speed(G.P) === "instant" ? " fast" : ""));
     box.setAttribute("role", "status");
@@ -195,6 +205,50 @@
       if (hold.data.grow.length) glowStats(hold.data.grow);
     }
   }
+
+  // ---------------------------------------------------------------- 死の場面
+  let prevOver = { id: null, over: null };
+  let dead = null; // { id, data, shown }
+  function showDead(S) {
+    const panel = $("#panel");
+    if (!panel || !dead) return;
+    const d = dead.data;
+    const fast = calm() || u13.speed(G.P) === "instant";
+    document.body.classList.add("u13dead");
+    document.body.classList.toggle("u13deadFast", fast);
+    panel.textContent = "";
+    const box = h("div", "u13death" + (fast ? " fast" : ""));
+    box.setAttribute("role", "status");
+    box.append(h("h3", "u13dtitle", d.title), h("p", "u13dcause", d.cause));
+    if (d.hint) box.append(h("p", "u13dhint", d.hint));
+    const go = h("button", "act u13go");
+    go.type = "button";
+    go.append(h("b", "", "墓碑と年表へ"));
+    go.onclick = () => {
+      dead = null;
+      document.body.classList.remove("u13dead", "u13deadFast");
+      ui.render();
+      ui.openChronicle(S, true);
+    };
+    box.append(go);
+    panel.append(box);
+    if (!dead.shown) {
+      dead.shown = true;
+      play("fall");
+      // スマホでは死の場面を画面の真ん中に送る（記録の下に隠れないように）
+      if (window.matchMedia("(max-width: 880px)").matches) requestAnimationFrame(() => box.scrollIntoView({ block: "center", behavior: fast ? "auto" : "smooth" }));
+    }
+  }
+  // 墓碑の窓には、ロードでやり直せることを一言添える（死んだときだけ）
+  const chron0 = ui.openChronicle;
+  if (chron0) ui.openChronicle = (run, fromEnd) => {
+    chron0(run, fromEnd);
+    try {
+      const ep = $("#epitaph"), old = $("#u13retry");
+      if (old) old.remove();
+      if (ep && fromEnd && (run.over || run.end) === "dead") { const r = h("span", "u13retry"); r.id = "u13retry"; r.textContent = u13.RETRY; ep.append(r); }
+    } catch {}
+  };
 
   // ---------------------------------------------------------------- 能力値が伸びた（戦闘の外）
   let growBase = null;
@@ -248,6 +302,12 @@
     const entries = pend ? pend.entries.slice(0, pend.entries.length - (all.length - fresh.length)).slice(-fresh.length) : [];
     if ((turn || ended) && fresh.length >= 2 && u13.delay(G.P) > 0) startReveal(S, fresh, entries);
     else if (pend) flushFx(pend.entries, pend.S);
+    // 死の場面：今この描き直しで死んだとき。ui.after が年表を自動で開かないよう印を付け、押されたら開く
+    const justDied = prevOver.id === S.id && !prevOver.over && S.over === "dead";
+    prevOver = { id: S.id, over: S.over };
+    if (justDied) { dead = { id: S.id, data: u13.deathScene(S), shown: false }; hold = null; S.flags.chronShown = true; }
+    if (dead && (dead.id !== S.id || S.over !== "dead")) { dead = null; document.body.classList.remove("u13dead", "u13deadFast"); }
+    if (dead) { if (reveal) { panel.textContent = ""; panel.append(h("p", "fine u13waitmsg", "…")); } else showDead(S); return; }
     // 結果の場面（順に出し終えてから見せる）
     if (hold) { if (reveal) { panel.textContent = ""; panel.append(h("p", "fine u13waitmsg", "…")); } else showHold(); }
   }

@@ -53,3 +53,18 @@
   #log > .u13in, .u13result, .u13result .u13grow1, #u13grow, .stat.u13glow .bar i { animation: none; }
   .foe.u13act, .b5mem.u13act { animation: none; outline: 2px solid var(--accent); }
 }
+
+/* ---------------------------------------------------------------- 死の場面（押すまで墓碑・年表に進まない） */
+body.u13dead #backdrop, body.u13dead .scene, body.u13dead #v9cast { filter: grayscale(1) brightness(.45); transition: filter 1.6s ease; }
+body.u13deadFast #backdrop, body.u13deadFast .scene, body.u13deadFast #v9cast { transition-duration: .3s; }
+.u13death { display: grid; gap: 10px; padding: 18px 18px 14px; text-align: center; border: 1px solid var(--ng, #7a1f1f); border-radius: 3px;
+  background: var(--check-bg, var(--sheet)); box-shadow: 0 10px 30px rgba(0, 0, 0, .45); animation: u13fall 1.4s ease-out both; }
+.u13death.fast { animation-duration: .25s; }
+@keyframes u13fall { from { opacity: 0; filter: blur(2px); transform: translateY(-6px); } }
+.u13dtitle { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 26px; letter-spacing: .3em; color: var(--ng, #9a2a2a); }
+.u13dcause { margin: 0; font-size: 15.5px; line-height: 1.8; }
+.u13dhint { margin: 0; font-size: 13.5px; color: var(--muted); }
+.u13death .u13go { justify-content: center; border: 1px solid var(--rule); border-radius: 3px; }
+.u13death .u13go::before { content: none; }
+.epitaph .u13retry { font-size: 13px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .u13death { animation: none; } body.u13dead #backdrop, body.u13dead .scene, body.u13dead #v9cast { transition: none; } }
