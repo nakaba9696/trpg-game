@@ -78,7 +78,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       ["seen", "lines", "heard"].forEach((f) => put("町の様子 " + st, T[f]));
       Object.values(T.off || {}).forEach((t) => put("町の様子 " + st, t));
     }
-    const m12ev = D.EVENTS.filter((e) => e.id.startsWith("m12_"));
+    const m12ev = D.EVENTS.filter((e) => /^(w6_)?m12_/.test(e.id));
     for (const e of m12ev) {
       put(e.id, [e.title, e.text]);
       e.choices.forEach((c, i) => {
