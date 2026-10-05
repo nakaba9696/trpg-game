@@ -23,3 +23,9 @@
     return r;
   };
 })(globalThis.G = globalThis.G || {});
+// 町の印（locations_w7b*.js の marks）で町を引く。R3 の最初のきっかけ・M12 の世の大事の舞台を選ぶときに使える。印の無い町は入らない
+(function (G) {
+  const D = G.data;
+  const W7 = (G.w7 = G.w7 || {});
+  W7.townsWith = (mark) => Object.keys(D.LOCS).filter((id) => D.LOCS[id].type === "town" && (D.LOCS[id].marks || []).includes(mark));
+})(globalThis.G = globalThis.G || {});
