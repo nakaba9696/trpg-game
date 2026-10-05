@@ -215,7 +215,7 @@
         if (id >= to || !D.LOCS[to]) return;
         const a = been(id), b = been(to);
         if (!a && !b) return;
-        out.push({ a: id, b: to, kind, days, known: a && b, pts: W5.roadPts(id, to, kind) });
+        out.push({ a: id, b: to, kind, days, known: a && b, pts: W5.roadPts(id, to, kind), gate: !!(G.w7g && (G.w7g.gated(id, to) || G.w7g.gated(to, id))) }); // gate：砦が塞ぐ、人の住まない土地への道（W7g）
       }));
     });
     return out;
