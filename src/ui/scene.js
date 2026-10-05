@@ -765,6 +765,70 @@
       ctx.fillStyle = mid; ctx.save(); ctx.translate(w * 0.62, h * 0.7); ctx.rotate(-1.1); ctx.fillRect(0, -3, h * 0.14, 6); ctx.restore();
       pines(ctx, w, h * 1.02, h * 0.26, 8, near, R);
     },
+    // W7：辺境の都ザイグロス（丘の上の兵舎と、鐘のある見張り塔。遠くに帝国の雪の山）
+    w7_frontier(ctx, w, h, sk, R) {
+      OUT.fort(ctx, w, h, sk, R);
+      const [, mid] = layers(sk);
+      tower(ctx, w * 0.82, h * 0.72, 14, h * 0.3, mid, mid, "#c8a24c");
+      ctx.fillStyle = "#c8a040"; ctx.beginPath(); ctx.arc(w * 0.82, h * 0.72 - h * 0.3 + 10, 5, 0, Math.PI * 2); ctx.fill();
+      if (sk.night || sk.dusk) glow(ctx, w * 0.82, h * 0.44, h * 0.06, "#ffb04a", 0.4);
+    },
+    // W7：砦の都ブレイナーク（雪の中の三重の灰色の城壁。外の壁の高い所に、四本の爪の跡）
+    w7_clawwall(ctx, w, h, sk, R) {
+      OUT.fort(ctx, w, h, sk, R);
+      ctx.fillStyle = rgba("#f4f6fa", 0.35); ctx.fillRect(0, h * 0.86, w, h * 0.14);
+      ctx.strokeStyle = rgba("#1a1416", 0.75); ctx.lineWidth = 3; ctx.lineCap = "round";
+      for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.moveTo(w * (0.18 + i * 0.03), h * 0.5); ctx.quadraticCurveTo(w * (0.2 + i * 0.03), h * 0.6, w * (0.17 + i * 0.03), h * 0.7); ctx.stroke(); }
+      ctx.lineCap = "butt";
+    },
+    // W7：監獄の都グリスハイム（雪の野に、窓の小さな石の塔が何本も。足もとにしがみつく町）
+    w7_prison(ctx, w, h, sk, R) {
+      const [far, mid, near] = layers(sk);
+      ridge(ctx, w, h, h * 0.62, h * 0.03, 1, far, R);
+      ctx.fillStyle = mix(near, "#e8ecf2", 0.45); ctx.fillRect(0, h * 0.7, w, h);
+      for (let i = 0; i < 5; i++) {
+        const x = w * (0.14 + i * 0.18), th = h * (0.32 + R() * 0.16);
+        tower(ctx, x, h * 0.74, 22, th, mid, mix(mid, "#000000", 0.2));
+        for (let k = 0; k < 4; k++) { ctx.fillStyle = sk.night || sk.dusk ? "#ffcc66" : "#151214"; ctx.fillRect(x - 2, h * 0.74 - th + 14 + k * th * 0.22, 4, 6); }
+      }
+      buildings(ctx, w, h * 0.86, h * 0.12, near, sk.night || sk.dusk, R, true);
+    },
+    // W7：北の港アイゼルヴァン（氷でふくらんだ杭と舫い、荒れた灰色の外海）
+    w7_icehaven(ctx, w, h, sk, R) {
+      OUT.port(ctx, w, h, sk, R);
+      ctx.fillStyle = rgba("#eef4fa", 0.5);
+      for (let i = 0; i < 9; i++) { const x = R() * w, y = h * (0.72 + R() * 0.2); ctx.beginPath(); ctx.ellipse(x, y, 14 + R() * 30, 3 + R() * 4, 0, 0, Math.PI * 2); ctx.fill(); }
+      ctx.fillStyle = rgba("#ffffff", 0.18); ctx.fillRect(0, 0, w, h);
+    },
+    // W7：緑の都エルデンホルム（雪の谷の中の、湯気の立つ泉と森。弓の的）
+    w7_greenvale(ctx, w, h, sk, R) {
+      OUT.w3_lake(ctx, w, h, sk, R);
+      for (let i = 0; i < 6; i++) glow(ctx, w * (0.2 + R() * 0.6), h * (0.62 + R() * 0.1), h * 0.08, "#ffffff", 0.18);
+      for (const x of [0.12, 0.2]) { ctx.fillStyle = "#e8dcc0"; ctx.beginPath(); ctx.arc(w * x, h * 0.86, 9, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#a83a2a"; ctx.beginPath(); ctx.arc(w * x, h * 0.86, 4, 0, Math.PI * 2); ctx.fill(); }
+    },
+    // W7：芸の町サリュエス（広場の芝居の板と、色とりどりの幕と壁の絵）
+    w7_artstown(ctx, w, h, sk, R) {
+      OUT.town(ctx, w, h, sk, R);
+      const cols = ["#c84a3a", "#3a7ac8", "#d8b040", "#5aa04a", "#a04ac8"];
+      ctx.fillStyle = "#6a4a30"; ctx.fillRect(w * 0.36, h * 0.8, w * 0.28, h * 0.04);
+      for (let i = 0; i < 10; i++) { ctx.fillStyle = cols[i % cols.length]; ctx.beginPath(); ctx.moveTo(w * (0.3 + i * 0.04), h * 0.62); ctx.lineTo(w * (0.32 + i * 0.04), h * 0.62); ctx.lineTo(w * (0.31 + i * 0.04), h * 0.66); ctx.fill(); }
+      ctx.strokeStyle = "#3a2a1a"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(w * 0.3, h * 0.62); ctx.lineTo(w * 0.7, h * 0.62); ctx.stroke();
+    },
+    // W7：隠れ里レヴァンデル（苔の屋根の家が森に溶ける。真ん中の大きな切り株）
+    w7_mossvillage(ctx, w, h, sk, R) {
+      OUT.w2_hunt(ctx, w, h, sk, R);
+      ctx.fillStyle = rgba("#3a6a2a", 0.22); ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "#5a4030"; ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.9, w * 0.08, h * 0.03, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillRect(w * 0.42, h * 0.84, w * 0.16, h * 0.06);
+      ctx.fillStyle = "#8a6a48"; ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.84, w * 0.08, h * 0.025, 0, 0, Math.PI * 2); ctx.fill();
+    },
+    // W7：灯台の港ヴォルエラ（凪いだ湾の奥の、白い灯台）
+    w7_lighthouse(ctx, w, h, sk, R) {
+      OUT.port(ctx, w, h, sk, R);
+      const x = w * 0.86, base = h * 0.7, th = h * 0.4;
+      ctx.fillStyle = "#f2efe6"; ctx.beginPath(); ctx.moveTo(x - 14, base); ctx.lineTo(x - 8, base - th); ctx.lineTo(x + 8, base - th); ctx.lineTo(x + 14, base); ctx.fill();
+      ctx.fillStyle = "#a83a2a"; ctx.fillRect(x - 10, base - th - 10, 20, 10);
+      glow(ctx, x, base - th - 5, h * (sk.night || sk.dusk ? 0.14 : 0.05), "#fff0b0", sk.night || sk.dusk ? 0.6 : 0.3);
+    },
     // W3：火山の都フロスレイア（煙を上げる火山の斜面に、白い家が段々に貼りつく）
     w3_volcano(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);

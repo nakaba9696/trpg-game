@@ -104,12 +104,18 @@
     if (kind === "person") return "まだ会っていない人";
     return "まだよく知らないこと";
   };
+  // 噂のタブに出る話か（中身があり、項目の形が正しく、まだ図鑑の一覧に載っていない）。印の数え方と表示の条件は、この一つで決める
+  V.inBox = (key) => {
+    const arr = V.store()[key];
+    if (!arr || !arr.length) return false;
+    if (!["foe", "person", "lore", "loc"].includes(key.split(":")[0])) return false; // 前の形の「ほかの噂」は出さない
+    return !V.listed(key);
+  };
   V.boxes = () => {
     const out = new Map();
     Object.entries(V.store()).forEach(([key, arr]) => {
-      if (!arr || !arr.length || V.listed(key)) return;
+      if (!V.inBox(key)) return;
       const kind = key.split(":")[0];
-      if (!["foe", "person", "lore", "loc"].includes(kind)) return; // 前の形の「ほかの噂」は出さない
       const bid = kind === "loc" ? key : "un:" + kind;
       const b = out.get(bid) || { id: bid, name: V.boxName(key), keys: [], items: [] };
       b.keys.push(key);
@@ -123,6 +129,33 @@
   V.boxSeen = (b) => { let any = false; b.keys.forEach((k) => { if (G.codexSeen && G.codexSeen("heard", k)) any = true; }); return any; };
   // 項目を開いたら、その項目の「まだ載っていなかったころ」の印も消す
   V.seenKey = (key) => (G.codexSeen ? G.codexSeen("heard", key) : false);
+
+  // 印の掃除：噂のタブの印（"heard:key"）は、噂のタブに見える話にだけ残す
+  //   その話が図鑑の一覧に載った（魔物に会った・人に会った・用語を知った）なら、印はその項目へ移す（項目の「聞いた話」に見える）
+  //   中身が無い・前の形の「ほかの噂」・振り分けで落とした話の印は消す。古い記録に残った分も、読むたびにここで片づく
+  V.tidy = () => {
+    if (!G.P || !G.P.codex || !G.P.codex.fresh) return false;
+    const f = G.P.codex.fresh;
+    let changed = false;
+    Object.keys(f).forEach((k) => {
+      if (!k.startsWith("heard:")) return;
+      const key = k.slice(6);
+      if (V.inBox(key)) return;
+      delete f[k];
+      changed = true;
+      const arr = V.store()[key];
+      if (arr && arr.length && V.listed(key)) f[key] = 1;
+    });
+    return changed;
+  };
+  if (G.codexFresh) {
+    const baseFresh = G.codexFresh;
+    G.codexFresh = (kind) => { V.tidy(); return baseFresh(kind); };
+  }
+  if (G.codexIsFresh) {
+    const baseIsFresh = G.codexIsFresh;
+    G.codexIsFresh = (kind, id) => { V.tidy(); return baseIsFresh(kind, id); };
+  }
 
   // 古いセーブ（S.memos だけある）の噂と手がかりを、一度だけ振り分ける。印は付けない
   V.seed = (S) => {

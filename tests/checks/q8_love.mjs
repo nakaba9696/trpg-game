@@ -19,6 +19,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     return G;
   };
   const aff = (G, c) => G.affFromBond(c.bond);
+  const quest = (S, id, n) => { S.q9 = S.q9 || {}; S.q9[id] = { n, day: S.day, r: [], end: "" }; }; // その人の頼みごとを n 段まで済ませたことにする
 
   // ---- 雑談の上限と頭打ち
   {
@@ -77,13 +78,13 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.m10Do("love", dil, { confess: true });
     if (G.m10St(dil) === "love") F("条件のそろわないディルと恋仲になった");
     if (!S.log.some((l) => (l.text || "").includes("その時ではない"))) F("恋仲が先送りになったとき、一言も出ない");
-    G.tkState(S).heard.dil_p4 = { day: S.day, k: "" };
+    quest(S, "dil", 2); // 頼みごとの前半（data/q8_love_quests.js）
     dil.m10.cool = 0;
     if (!confessable(G, dil)) F(`条件がそろったのに、ディルの告白が起きない（${G.q8LoveMissing(dil, S).join("・")}）`);
     G.crime("betrayal");
     if (G.q8LoveOk(dil, S)) F("人を売ったのに、ディルの条件がそろったまま");
     // アデル：話と、麦の都へ一緒に行くこと
-    G.tkState(S).heard.adele_p6 = { day: S.day, k: "" };
+    quest(S, "adele", 2);
     if (G.q8LoveOk(adele, S)) F("麦の都へ一緒に行かずに、アデルの条件がそろった");
     G.arrive("w2_granbel");
     if (!G.q8LoveOk(adele, S)) F(`麦の都へ一緒に行ったのに、アデルの条件がそろわない（${G.q8LoveMissing(adele, S).join("・")}）`);
@@ -95,11 +96,11 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const G = start(4, ["kaidel", "margot"]);
     const S = G.S;
     const [kai, mar] = S.companions;
-    G.tkState(S).heard.kaidel_p5 = { day: S.day, k: "" };
+    quest(S, "kaidel", 2);
     if (G.q8LoveOk(kai, S)) F("加わったその日に、カイデルの条件（一緒に旅した日数）がそろった");
     S.day += 31;
     if (!G.q8LoveOk(kai, S)) F(`ひと月旅したのに、カイデルの条件がそろわない（${G.q8LoveMissing(kai, S).join("・")}）`);
-    G.tkState(S).heard.margot_p5 = { day: S.day, k: "" };
+    quest(S, "margot", 3);
     G.affAdd("margot", -30);
     G.crime("theft");
     if (!G.q8LoveOk(mar, S)) F("好感度が下がった・小さな罪で、マルゴの条件がそろわない");
@@ -112,7 +113,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const S = G.S, c = S.companions[0];
     c.bond = 95;
     if (confessable(G, c)) F("身の上の最後を聞かずに、ギグラの告白が起きる");
-    G.tkState(S).heard.gigra_p6 = { day: S.day, k: "" };
+    G.tkState(S).heard.gigra_p6 = { day: S.day, k: "" }; quest(S, "gigra", 9);
     c.m10.cool = 0;
     if (!confessable(G, c)) F(`身の上の最後を聞いたのに、ギグラの告白が起きない（${G.q8LoveMissing(c, S).join("・")}）`);
     // 名の無い仲間は、一緒に旅した日数
@@ -147,7 +148,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (r.with && !D.LOCS[r.with]) F(`${id}: 場所 ${r.with} が無い`);
       (r.clean || []).forEach((k) => { if (!D.CRIMES[k]) F(`${id}: 罪 ${k} が無い`); });
       if (r.arc && !(D.R2.ARCS[id] && D.R2.ARCS[id].hard && D.R2.ARCS[id].hard.need && D.R2.ARCS[id].hard.need[5])) F(`${id}: 恋の筋の告白の条件が無い`);
-      if (!r.heard && !r.days && !r.with && !r.clean && !r.arc) F(`${id}: 条件が空`);
+      if (!r.heard && !r.days && !r.with && !r.clean && !r.arc && !(D.Q9 && D.Q9[id])) F(`${id}: 条件が空`);
     }
     if (seen.size < ids.length / 2) F("恋の相手の条件が、ほとんど同じ");
   }
