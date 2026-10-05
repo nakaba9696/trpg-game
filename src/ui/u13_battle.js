@@ -63,6 +63,7 @@
       items,
       grow: u13.grown(a, S),
       comp: u13.compGrown(a, S),
+      f1: G.f1Summary ? G.f1Summary(S) : "", // F1：読み勝ち・崩し・いちばん重い一撃
       party: [{ name: "あなた", hp: S.hp, max: S.maxHp }, ...(S.companions || []).map((c) => ({ name: c.name, hp: c.hp, max: maxOf(c) }))],
     };
   };
@@ -179,6 +180,7 @@
       row("成長", g);
     }
     if (d.comp.length) row("仲間", d.comp.map((c) => `${c.name}の${c.what}が伸びた ${c.from}→${c.to}`).join("・"), "u13comp");
+    if (d.f1) row("手応え", d.f1, "u13f1");
     row("一行", d.party.map((p) => `${p.name} HP ${Math.max(0, p.hp)}/${p.max}`).join("・"), "num");
     box.append(rows);
     const go = h("button", "act u13go");
