@@ -144,6 +144,16 @@
    "tags": "merchant harbor city in a cove, crowded warehouses and counting houses, cargo cranes, crates and barrels on the quay, small brass bells hanging at doorways"
   },
   {
+   "id": "w7_zaigros",
+   "kind": "place",
+   "scene": "fort",
+   "type": "town",
+   "region": "レオネスト王国",
+   "name": "辺境の都ザイグロス",
+   "pack": "leonest",
+   "tags": "frontier military town on a hill, stone barracks on the hilltop, low stone houses ringing it, watchtower with a bell, noticeboard in the square, distant snowy mountains to the north"
+  },
+  {
    "id": "w3_lignoa",
    "kind": "place",
    "scene": "w3_lake",
@@ -193,6 +203,46 @@
    "pack": "nordia",
    "tags": "vast fortified city of black stone seen from above, many black stone buildings and towers, snow on the roofs, high fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets, overcast sky",
    "sky": "overcast"
+  },
+  {
+   "id": "w7_eldenholm",
+   "kind": "place",
+   "scene": "w3_lake",
+   "type": "town",
+   "region": "ノルディア帝国",
+   "name": "緑の都エルデンホルム",
+   "pack": "nordia",
+   "tags": "green valley town in a snowy land, warm spring with steam, grove of trees around it, archery butts and practice range, herb gardens, wooden houses"
+  },
+  {
+   "id": "w7_eisenvan",
+   "kind": "place",
+   "scene": "w3_harbor",
+   "type": "town",
+   "region": "ノルディア帝国",
+   "name": "北の港アイゼルヴァン",
+   "pack": "nordia",
+   "tags": "cold northern harbor, ice-covered wooden piers and mooring posts, fishing boats tied up, rough grey ocean waves, warehouses, overcast stormy sky"
+  },
+  {
+   "id": "w7_grishaim",
+   "kind": "place",
+   "scene": "snowcity",
+   "type": "town",
+   "region": "ノルディア帝国",
+   "name": "監獄の都グリスハイム",
+   "pack": "nordia",
+   "tags": "bleak snowy plain with several tall stone prison towers with tiny windows, a small town clustered at their feet, smoke from chimneys, grey sky"
+  },
+  {
+   "id": "w7_brenark",
+   "kind": "place",
+   "scene": "fort",
+   "type": "town",
+   "region": "ノルディア帝国",
+   "name": "砦の都ブレイナーク",
+   "pack": "nordia",
+   "tags": "snowy fortress city with three rings of grey stone walls, frozen sea behind, huge old claw marks high on the outer wall, banners, overcast sky"
   },
   {
    "id": "w2_zalgros",
@@ -365,6 +415,36 @@
    "name": "狩り場の町ナグリス",
    "pack": "elmesia",
    "tags": "town built on huge tree branches, treehouses, rope bridges, giant world tree silhouette filling the eastern sky, forest"
+  },
+  {
+   "id": "w7_volera",
+   "kind": "place",
+   "scene": "port",
+   "type": "town",
+   "region": "エルメシア共和国",
+   "name": "灯台の港ヴォルエラ",
+   "pack": "elmesia",
+   "tags": "calm bay harbor with a tall white lighthouse, gentle sea, small trading ships with patterned sails, wooden piers, market cloth and dried fish"
+  },
+  {
+   "id": "w7_revandel",
+   "kind": "place",
+   "scene": "w2_hunt",
+   "type": "town",
+   "region": "エルメシア共和国",
+   "name": "隠れ里レヴァンデル",
+   "pack": "elmesia",
+   "tags": "hidden village melting into a deep forest, moss-covered roofs, vines over doorways, houses built among huge tree trunks, a large old stump with offerings, dappled light"
+  },
+  {
+   "id": "w7_salyues",
+   "kind": "place",
+   "scene": "town",
+   "type": "town",
+   "region": "エルメシア共和国",
+   "name": "芸の町サリュエス",
+   "pack": "elmesia",
+   "tags": "colorful crossroads town, open-air theater stage of wooden boards in the square, walls covered with painted murals, market stalls with banners, forest road beyond"
   },
   {
    "id": "w4_tulier",
