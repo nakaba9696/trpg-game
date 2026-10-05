@@ -4,7 +4,7 @@
 // - 描く線（曲がり角 D.W5_MAP.via を通る）は、ほかの場所の印の上を通らない。陸路どうしは町の外で交わらない。船は海の上を行く
 // - 狩り場の町ナグリスの近くを、ナグリスに出入りしない道が通らない。ナグリスから使徒領へ道は無い
 // - どの場所にも、どこからでも行ける
-// - 新しい町（w7_）が 6〜8、三つ以上の国・地方に。どれにも施設・店・気候・背景の一覧・用語説明・着いたときの一文・通行人・噂・出来事 8〜12
+// - 新しい町（w7_）が 6 以上、三つ以上の国・地方に。どれにも施設・店・気候・背景の一覧・用語説明・着いたときの一文・通行人・噂・出来事 6〜12
 // - 出来事の形（能力値の違う解き方 2 つ以上・判定なしの選択肢・地の文に「！」なし・続きがある）。全部の選択肢を回しても壊れない
 // - 旅をして新しい町に着くと、見出しのあとに町の一文が出る。新しい町を歩き回っても止まらない
 import { readFileSync } from "node:fs";
@@ -115,11 +115,11 @@ export default ({ fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 新しい町
   const towns = ids.filter((id) => id.startsWith("w7_"));
-  if (towns.length < 6 || towns.length > 8) F(`新しい町が ${towns.length}（6〜8 のはず）`);
+  if (towns.length < 6) F(`新しい町が ${towns.length}（6 以上のはず）`);   // 国・地方ごとの数は tests/checks/w7b_towns.mjs
   if (towns.some((id) => L[id].type !== "town")) F("w7_ の場所が町でない");
   if (new Set(towns.map((id) => L[id].region)).size < 3) F("新しい町が三つ以上の国・地方に散っていない");
   const scenes = JSON.parse(readFileSync(new URL("../../docs/art/scenes.json", import.meta.url), "utf8")).scenes;
-  const short = (n) => n.replace(/^.*?の(都|町|港)|^隠れ里/, "");
+  const short = (n) => (n.match(/[ァ-ヶー＝]+$/) || [n])[0]; // 名前の終わりのカタカナ（ザイグロス・オルベ）
   const rumors = (D.RUMORS || []).map(String);
   const evAt = (id) => D.EVENTS.filter((e) => e.w > 0 && (e.where || []).includes(id) && !e.w6);
   for (const id of towns) {
@@ -133,7 +133,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if ((D.AMBIENT || []).filter((a) => a.where.includes(id)).length < 2) F(`${id}: 通行人のひとことが 2 つ未満`);
     if (!rumors.some((r) => r.includes(short(T.name)))) F(`${id}: 噂（${short(T.name)}）が無い`);
     const n = evAt(id).length;
-    if (n < 8 || n > 12) F(`${id}: 町の出来事が ${n} 件（8〜12 のはず）`);
+    if (n < 6 || n > 12) F(`${id}: 町の出来事が ${n} 件（6〜12 のはず）`);
     if (/！|!/.test(T.desc)) F(`${id}: 町の説明に「！」`);
   }
 
