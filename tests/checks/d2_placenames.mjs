@@ -7,8 +7,8 @@
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
-// 話す言葉だけの表と、名前そのものの表（短い名前で書くのが正しい）。ORIGINS・PROLOGUE（作成画面の生まれ。src/data/u5_origins.js）は作成画面の作業（U16）と重なるので今は見ない。E4.RG は正規表現
-const SPEECH = /^(ORIGINS|PROLOGUE|E4\.RG|TALK_BANTER|TALK_PARTS|C2_VOICE|K10_VOICE|K10_VOICE_EXCEPT|BOSS_LINES|LORE_GM|C3_NAMES|PLACE_COUNTRY|PLACE_REGION)(\.|$)/;
+// 話す言葉だけの表と、名前そのものの表（短い名前で書くのが正しい）。E4.RG は正規表現
+const SPEECH = /^(E4\.RG|TALK_BANTER|TALK_PARTS|C2_VOICE|K10_VOICE|K10_VOICE_EXCEPT|BOSS_LINES|LORE_GM|C3_NAMES|PLACE_COUNTRY|PLACE_REGION)(\.|$)/;
 // 都の名が国の名と同じもの：後ろに国の種類が付けば国の名
 const COUNTRY = { "レオネスト": "王国", "ノルディア": "帝国", "エルメシア": "共和国" };
 // 南西の島々

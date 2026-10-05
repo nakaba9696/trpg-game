@@ -59,8 +59,7 @@ export default ({ G, fail, seeded }) => {
     for (let i = 0; i < 20; i++) {
       const dr = cre.fresh(rnd);
       for (const k of ["personality", "quote", "like", "dislike"]) if (dr.profile[k]) fail(`作成 ${i}: おまかせで ${k} が入った`);
-      if (dr.profile.history) fail(`作成 ${i}: おまかせで生い立ちが埋まった`);
-      if (!dr.profile.look) fail(`作成 ${i}: 外見が空`);
+      if (dr.profile.history || dr.profile.look) fail(`作成 ${i}: 無くした生い立ち・外見が埋まった`);
       dr.profile.personality = "無口"; dr.profile.quote = "古い口癖"; dr.profile.like = "酒"; dr.profile.dislike = "虫";
       const o = cre.options(dr, rnd);
       for (const k of ["personality", "quote", "like", "dislike"]) if (k in o.profile) fail(`作成 ${i}: 旅立つ人物に ${k} が残る`);

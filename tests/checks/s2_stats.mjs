@@ -206,11 +206,8 @@ export default ({ G, fail: fail0, ok, seeded }) => {
       const sh = src.slice(src.indexOf("function sheet("));
       if (!/\["職業", c\.blurb\]/.test(sh) || !/\["得意", cre\.strengths/.test(sh) || !/\["出発地"/.test(sh)) fail("最後のシートに、職業の説明・得意・出発地が出ない");
     }
-    // 外見・生い立ちは中身に合わせて伸びる textarea（長い文でも切れない。持ち主の要望）
-  {
-    const fe = src.slice(src.indexOf("function fieldEl("), src.indexOf("function fieldEl(") + 1500);
-    if (!/h\("textarea", "fit"\)/.test(fe) || !/fitArea\(inp\)/.test(fe) || !/function fitArea\(/.test(src)) fail("作成画面の外見・生い立ちの欄が、文の長さに合わせて伸びない");
-  }
+    // 外見・生い立ちの欄は無くした（U17。持ち主の決定）
+    if (/pf-look|pf-history|fieldEl\(/.test(src)) fail("作成画面に、無くした外見・生い立ちの欄が残っている");
   // 主人公は人間だけ：作成画面で種族を選べない
     if (/raceSec|cre\.setRace|cre\.randomRace|radios\("race"/.test(src)) fail("作成画面に種族を選ぶ所が残っている");
     const o = cre.options(cre.fresh(rnd), rnd);
