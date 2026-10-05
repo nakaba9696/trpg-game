@@ -1,0 +1,25 @@
+/* U18：版の番号と更新履歴（ui/zzz_u18_changelog.js） */
+/* タイトル画面の隅：小さく、背景の絵の上でも読めるように */
+.u18corner { position: fixed; left: 12px; bottom: 12px; z-index: 20; min-height: 32px; padding: 4px 10px; font-family: var(--f-ui); font-size: 12px; letter-spacing: .04em;
+  color: #e8dcc0; background: rgba(10, 12, 14, .45); border-color: rgba(232, 220, 192, .35); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.u18corner[hidden] { display: none; }
+/* 新しい版の赤い「！」（図鑑の「！」と同じ見た目） */
+.u18new:not(.u18corner), #q7System { position: relative; }
+.u18new.fresh::after, #q7System.fresh::after {
+  content: "！"; display: inline-grid; place-items: center; min-width: 17px; height: 17px; padding: 0 3px; margin-left: 6px; border-radius: 999px;
+  background: var(--u11-bang, #c62a1d); color: var(--u11-bang-ink, #fff); box-shadow: 0 0 0 1.5px var(--u11-bang-ring, #fff);
+  font-family: var(--f-ui); font-size: 11.5px; font-weight: 700; line-height: 1; letter-spacing: 0; vertical-align: 1px; opacity: 1; }
+/* システムの一覧では「タイトルへ」の上に */
+.q7sysbox > .btn { order: 0; }
+.q7sysbox > #u18SysLog { order: 1; }
+.q7sysbox > #q7ToTitle { order: 2; }
+
+/* 窓 */
+.u18log { width: min(620px, calc(100vw - 32px)); }
+.u18logbody { max-height: min(70vh, 640px); overflow-y: auto; }
+.u18logbody > .fine { margin: 0 0 10px; }
+.u18ver { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--rule); }
+.u18ver:last-child { border-bottom: 0; }
+.u18ver h3 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 8px; font-size: 16px; }
+.u18vdate { font-size: 12px; color: var(--muted); font-weight: 400; }
+.u18items { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; line-height: 1.7; }

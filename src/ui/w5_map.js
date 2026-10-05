@@ -525,6 +525,10 @@
   };
   UI.draw = () => draw();
   UI.view = view;
+  // 旅の行き先の小さな地図（ui/w7_travelmap.js）が、同じ下絵と色を使う
+  UI.base = () => baseFor();
+  UI.palette = () => (isDark() ? PAL.dark : PAL.light);
+  UI.haloText = (x, P, t, sx, sy, a) => haloText(x, P, t, sx, sy, a);
   // 明暗が変わったら描き直す
   new MutationObserver(() => { if (dlg.open) draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
