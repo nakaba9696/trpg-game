@@ -25,11 +25,24 @@
     q.sig = {};
     list(S).forEach((e) => { q.sig[e.key] = U.sigOf(e); });
   };
+  // 一覧の元になる状態の指紋（安い。変わっていなければ一覧を作り直さない。毎手番の行動を重くしない）
+  //   ギルドの依頼（S.quests）・仲間の頼み（S.q9 と聞いた話題の数）・因縁（S.f2o）・R3 の続き（S.r3.follow）
+  U.fp = (S) => {
+    const qs = Array.isArray(S.quests) ? S.quests.map((x) => (x && typeof x === "object" ? [x.id, x.done, x.progress, x.title, x.revealed] : x)) : null;
+    const f = S.f2o ? [S.f2o.th, S.f2o.step, S.f2o.done] : null;
+    const r = S.r3 && S.r3.follow ? Object.keys(S.r3.follow) : null;
+    const heard = S.tk && S.tk.heard ? Object.keys(S.tk.heard).length : 0;
+    return JSON.stringify([qs, S.q9 || null, heard, f, r]);
+  };
+  let lastS = null, lastFp = "";
   // 見比べる。増えた・進んだ依頼を [{ key, title, how: "new" | "up" | "ready" }] で返し、記録に一行ずつ出す
   U.scan = (S) => {
     S = S || G.S;
     const q = U.state(S);
     if (!q) return [];
+    const fp = U.fp(S);
+    if (q.sig && S === lastS && fp === lastFp) return [];
+    lastS = S; lastFp = fp;
     if (!q.sig) { U.baseline(S); return []; }
     const now = {};
     const out = [];
