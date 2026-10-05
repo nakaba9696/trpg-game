@@ -1,4 +1,4 @@
-// 評判と悪名（M3）の用語説明。足音のしない処刑人（咎追い。docs/lore/strata.md・igyo.md 11）
+// 評判と悪名（M3）の用語説明。足音のしない処刑人（咎追いの使徒ネリオス。docs/lore/strata.md・igyo.md 11）
 // lore_u3.js が D.LORE を作ったあとに足すので、ファイル名は lore_u3.js より後ろに並ぶ名前にしてある（自動読み込みは名前順）。
 // 載せるのは、そのとき分かったことだけ（docs/lore/voice.md）。出来事の lore は src/data/events_m3.js
 // レーン V（出来事）＋C（コア）

@@ -84,8 +84,8 @@
   }
 
   // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
-  // おまかせで全部埋まった状態から始める。「今決めること」（職業・目的・名前）を上に、「あとでもよいこと」（性別・年齢・生まれ・外見・生い立ち）は
-  // 畳んで下に置き、開けば直せる。各項目に、ゲームにどう効くかの一行（D.CRE_HINTS）。U15
+  // おまかせで全部埋まった状態から始める。「今決めること」（職業・目的・名前と性別・年齢・生まれ）を上に、「あとでもよいこと」（外見・生い立ち）は
+  // 畳んで下に置き、開けば直せる。各項目に、ゲームにどう効くかの一行（D.CRE_HINTS）。U15。名前・年齢・生まれを今決めることへ移し、候補から選ぶ形に（U16）
   let laterOpen = false;   // 「あとでもよいこと」を開いているか（描き直しても保つ）
   function person(root) {
     const HN = D.CRE_HINTS || {}, TX = D.CRE_TEXT || {};
@@ -118,7 +118,7 @@
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
       if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
       // 畳んであるときも、いま何が入っているかは見える
-      if (laterLine) laterLine.textContent = `${draft.sex}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ${draft.profile.look ? "・" + draft.profile.look : ""}`;
+      if (laterLine) laterLine.textContent = [draft.profile.look, draft.profile.history].filter(Boolean).join("・");
     }
     lay.append(card);
 
@@ -147,7 +147,7 @@
       inp.onchange = () => {
         const oldOrigin = draft.origin;
         cre.setClass(draft, id, R);
-        setVal("name"); setVal("history");
+        drawNames(); setVal("history");
         if (draft.origin !== oldOrigin) { const r = form.querySelector(`input[name=origin][value=${draft.origin}]`); if (r) r.checked = true; }
         refresh();
       };
@@ -187,11 +187,79 @@
     setGoalFine();
     now.append(s4);
 
-    // 名前
+    // 名前（性別と生まれの響きの表から選ぶ。自由入力は無い。「別の候補」で引き直す。U16）
     const s1 = h("section", "creSec creNameSec");
-    s1.append(h("h3", "", "名前"), eff("name"));
-    s1.append(fieldEl("name", "名前", "input", refresh));
+    const n3 = h("h3", "", "名前");
+    n3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "name", R); drawNames(); refresh(); }, "p-name-r"));
+    s1.append(n3, eff("name"));
+    const sexRow = h("div", "creRow");
+    sexRow.append(segEl("性別", "sex", [["男", "男"], ["女", "女"]], draft.sex, (v) => { cre.setSex(draft, v, R); drawNames(); refresh(); }));
+    s1.append(sexRow, h("p", "creEff", `性別：${HN.sex || ""}`));
+    const nameBox = h("div", "creNames");
+    const nameChips = h("div", "chips");
+    nameChips.setAttribute("role", "radiogroup");
+    nameChips.setAttribute("aria-label", "名前の候補");
+    nameBox.append(nameChips, btn("別の候補", "small", () => { cre.drawNames(draft, R); drawNames(); }, "p-name-more"));
+    s1.append(nameBox);
+    function drawNames() {
+      nameChips.textContent = "";
+      cre.nameOptions(draft, R).forEach((n) => {
+        const l = h("label", "chip");
+        const inp = h("input"); inp.type = "radio"; inp.name = "pname"; inp.value = n; inp.checked = draft.profile.name === n;
+        inp.onchange = () => { cre.setName(draft, n); refresh(); };
+        l.append(inp, document.createTextNode(n));
+        nameChips.append(l);
+      });
+    }
+    drawNames();
     now.append(s1);
+
+    // 年齢（区分を選び、その幅の中の歳を選ぶ。U16）
+    const s0 = h("section", "creSec");
+    const a3 = h("h3", "", "年齢");
+    a3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "age", R); drawAge(); refresh(); }, "p-age-r"));
+    s0.append(a3, h("p", "creEff", HN.age || ""));
+    const row = h("div", "creRow");
+    const bandSeg = segEl("年頃", "age", Object.entries(D.AGES).map(([id, a]) => [id, a.name]), draft.ageBand, (v) => { cre.setAge(draft, v, R); drawAge(); refresh(); });
+    row.append(bandSeg);
+    const ageF = h("div", "field ageNum");
+    const al = h("label", "flabel", "歳"); al.htmlFor = "pf-age";
+    const ai = h("select"); ai.id = "pf-age";
+    ai.onchange = () => { cre.setAgeNum(draft, ai.value); refresh(); };
+    ageF.append(al, ai);
+    row.append(ageF);
+    s0.append(row);
+    function drawAge() {
+      bandSeg.querySelectorAll("input").forEach((i) => { i.checked = i.value === draft.ageBand; });
+      ai.textContent = "";
+      cre.ageChoices(draft).forEach((n) => { const op = h("option", "", `${n}歳`); op.value = String(n); ai.append(op); });
+      ai.value = String(draft.profile.age);
+    }
+    drawAge();
+    aBlurb = h("p", "fine");
+    s0.append(aBlurb);
+    now.append(s0);
+
+    // 生まれ
+    const s2 = h("section", "creSec");
+    const o3 = h("h3", "", "生まれ");
+    o3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "origin", R); drawOrigin(); drawNames(); refresh(); }, "p-origin-r"));
+    s2.append(o3, eff("origin"));
+    const chips = h("div", "chips");
+    chips.setAttribute("role", "radiogroup");
+    chips.setAttribute("aria-label", "生まれ");
+    Object.entries(D.ORIGINS).forEach(([id, o]) => {
+      const l = h("label", "chip");
+      const inp = h("input"); inp.type = "radio"; inp.name = "origin"; inp.value = id; inp.checked = draft.origin === id;
+      inp.onchange = () => { cre.setOrigin(draft, id, R); drawNames(); refresh(); };
+      l.append(inp, document.createTextNode(o.name));
+      chips.append(l);
+    });
+    const drawOrigin = () => chips.querySelectorAll("input").forEach((i) => { i.checked = i.value === draft.origin; });
+    s2.append(chips);
+    oBlurb = h("p", "fine");
+    s2.append(oBlurb);
+    now.append(s2);
     form.append(now);
 
     // ================= あとでもよいこと（畳んでおく。おまかせで埋まっている）
@@ -204,45 +272,6 @@
     laterLine = h("span", "creLaterLine");
     sum.append(st, h("span", "fine", TX.laterSub), laterLine);
     later.append(sum);
-
-    // 性別・年齢
-    const s0 = h("section", "creSec");
-    s0.append(h("h3", "", "性別・年齢"));
-    const row = h("div", "creRow");
-    row.append(segEl("性別", "sex", [["男", "男"], ["女", "女"]], draft.sex, (v) => { cre.setSex(draft, v, R); setVal("name"); refresh(); }));
-    row.append(segEl("年齢", "age", Object.entries(D.AGES).map(([id, a]) => [id, a.name]), draft.ageBand, (v) => { cre.setAge(draft, v, R); setVal("age"); refresh(); }));
-    const ageF = h("div", "field ageNum");
-    const al = h("label", "", "歳"); al.htmlFor = "pf-age";
-    const ai = h("input"); ai.id = "pf-age"; ai.inputMode = "numeric"; ai.maxLength = 3; ai.value = draft.profile.age || "";
-    ai.oninput = () => { draft.profile.age = ai.value.replace(/[^0-9]/g, ""); refresh(); };
-    ageF.append(al, ai);
-    row.append(ageF);
-    s0.append(row);
-    const se = h("div", "creEffs");
-    se.append(h("p", "creEff", `性別：${HN.sex || ""}`), h("p", "creEff", `年齢：${HN.age || ""}`));
-    s0.append(se);
-    aBlurb = h("p", "fine");
-    s0.append(aBlurb);
-    later.append(s0);
-
-    // 生まれ
-    const s2 = h("section", "creSec");
-    s2.append(h("h3", "", "生まれ"), eff("origin"));
-    const chips = h("div", "chips");
-    chips.setAttribute("role", "radiogroup");
-    chips.setAttribute("aria-label", "生まれ");
-    Object.entries(D.ORIGINS).forEach(([id, o]) => {
-      const l = h("label", "chip");
-      const inp = h("input"); inp.type = "radio"; inp.name = "origin"; inp.value = id; inp.checked = draft.origin === id;
-      inp.onchange = () => { cre.setOrigin(draft, id, R); setVal("name"); refresh(); };
-      l.append(inp, document.createTextNode(o.name));
-      chips.append(l);
-    });
-    s2.append(chips);
-    oBlurb = h("p", "fine");
-    s2.append(oBlurb);
-    later.append(s2);
-
     // 生い立ち・特徴
     const s5 = h("section", "creSec");
     const t3 = h("h3", "", "外見・生い立ち");

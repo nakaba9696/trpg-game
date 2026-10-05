@@ -84,7 +84,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.act("arena:1");
     let died = false;
     S.hp = 1; S.clungUsed = true;
-    for (let i = 0; i < 30 && S.combat && !S.over; i++) { S.combat.w2_late = false; S.hp = 1; G.act("cb:guard"); }
+    // 敵の命中は下限 5% ほどまで下がるので、手番は多めに取る（F1 の構え・崩しで殴ってこない手番もある）
+    for (let i = 0; i < 100 && S.combat && !S.over; i++) { S.combat.w2_late = false; S.hp = 1; G.act("cb:guard"); }
     died = !!S.over;
     if (died) F(`闘技場で倒れて死んだ（${S.overCause || ""}）`);
     if (!died && S.combat) F("闘技場の戦いが終わらない");

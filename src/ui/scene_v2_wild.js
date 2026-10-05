@@ -510,12 +510,12 @@
     V.frame(P, { color: "#2a2620" });
   };
 
-  // ---------------------------------------------------------------- 酸の谷（緑の湯気、光る酸の溜まり、膝をついた鉄の巨人たち）
+  // ---------------------------------------------------------------- 酸の谷（緑の湯気、光る酸の池、膝をついた鉄の巨人たち）
   OUT.w2_acid = (P) => {
     const { u, w, h, hz, cx, ctx, R } = P;
     V.mountains(P, { base: hz + u * 2, height: u * 22, d: 0.55, color: "#4a5048", snow: 0.05, scale: 2.5 });
     V.ground(P, { top: hz + u, color: "#4a4a3a", tex: "rock" });
-    // 酸の溜まり
+    // 酸の池
     for (let i = 0; i < 5; i++) { const t = R(), y = hz + u * 4 + (h - hz - u * 6) * t, x = R() * w, s = u * (3 + t * 10); const g = ctx.createRadialGradient(x, y, 0, x, y, s); g.addColorStop(0, "rgba(180,255,90,.85)"); g.addColorStop(1, "rgba(60,140,30,.6)"); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, s, s * 0.25, 0, 0, Math.PI * 2); ctx.fill(); V.light(P, x, y, s * 2, "#9aff4a", 0.7, true); }
     // 膝をついた鉄の巨人
     const giant = (x, base, s, d) => {

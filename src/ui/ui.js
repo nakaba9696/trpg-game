@@ -98,7 +98,7 @@
   const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" };
   function logEntryEl(e) {
     if (e.k === "dice") return checkEl(e);
-    return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : ""), e.k === "you" ? "▶ " + e.text : e.text);
+    return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : "") + (e.tell ? " l-tell" + (e.rage ? " l-rage" : e.brk ? " l-brk" : "") : ""), e.k === "you" ? "▶ " + e.text : e.text);
   }
   const LOG_KEEP = 90;
   let logLast = null; // 前回描いたときの最後の記録（記録は 240 件で古い方から消えるので、数ではなく中身で覚える）

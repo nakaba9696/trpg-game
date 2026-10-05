@@ -39,7 +39,7 @@
   const info = h("p", "w5info");
   info.setAttribute("aria-live", "polite");
   const legend = h("p", "fine w5legend");
-  [["w5k here", "今いる所"], ["w5k now", "この冒険で行った"], ["w5k past", "前の冒険で行った"], ["w5k heard", "道標で名だけ"], ["w5k none", "まだ知らない"], ["w5k road", "陸路"], ["w5k road far", "陸路（先はまだ知らない）"], ["w5k sea", "船"], ["w5k border", "国境（道ではない）"]].forEach(([c, t]) => { const s = h("span", "w5li"); s.append(h("i", c), document.createTextNode(t)); legend.append(s); });
+  [["w5k here", "今いる所"], ["w5k now", "この冒険で行った"], ["w5k past", "前の冒険で行った"], ["w5k heard", "道標で名だけ"], ["w5k none", "まだ知らない"], ["w5k road", "陸路"], ["w5k road far", "陸路（先はまだ知らない）"], ["w5k sea", "船"], ["w5k border", "国境（道ではない）"], ["w5k gate", "砦が塞ぐ道"]].forEach(([c, t]) => { const s = h("span", "w5li"); s.append(h("i", c), document.createTextNode(t)); legend.append(s); });
   const side = h("div", "w5side");
   side.append(info, legend);
   body.append(wrap, side);
@@ -351,7 +351,7 @@
       // 陸路は下に紙の色の縁をつけて、国境の点・使徒領の斜線・川と見分けがつくようにする（W7）
       if (rd.kind !== "sea") { x.setLineDash([]); x.strokeStyle = P.halo; x.globalAlpha = 0.8; x.lineWidth = (rd.known ? 1.8 : 1.3) + 2.6; x.stroke(); x.globalAlpha = 1; }
       x.setLineDash(rd.kind === "sea" ? [5, 5] : rd.known ? [] : [6, 3]);
-      x.strokeStyle = rd.kind === "sea" ? P.seaRoute : rd.known ? P.road : P.roadSoft;
+      x.strokeStyle = rd.kind === "sea" ? P.seaRoute : rd.gate ? P.dreadInk : rd.known ? P.road : P.roadSoft; // 砦が塞ぐ道は使徒領の色（W7g）
       x.lineWidth = rd.known ? 1.8 : 1.3;
       x.stroke();
     });

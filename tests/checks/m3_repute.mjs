@@ -1,4 +1,4 @@
-// M3：国ごとの評判と悪名、賞金首、咎追い（core.js・engine/m3_repute.js・data/events_m3.js・data/m3_lore.js）
+// M3：国ごとの評判と悪名、賞金首、咎追いの使徒ネリオス（core.js・engine/m3_repute.js・data/events_m3.js・data/m3_lore.js）
 export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   let failures = 0;
   const fail = (m) => { failures++; fail0(m); };
@@ -106,18 +106,18 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   G.addCompanion("random"); G.S.sin = 12;
   G.startEvent("m3_sellout"); G.chooseEvent(0);
   if (S.companions.length || S.sin !== 22 || G.infamyHere() !== D.CRIMES.betrayal.inf) fail(`悪名: 仲間を売っても裏切りにならない（仲間 ${S.companions.length}・罪 ${S.sin}）`);
-  // 足音が二度混ざり、三度目で咎追いに追いつかれる
+  // 足音が二度混ざり、三度目でネリオスに追いつかれる
   const ev = (id) => D.EVENTS.find((e) => e.id === id);
   if (!ev("m3_steps").cond(S) || ev("m3_steps2").cond(S) || ev("m3_togaoi").cond(S)) fail("悪名: 罪の匂い 22 で、はじめの足音から始まらない");
   G.startEvent("m3_steps"); G.chooseEvent(1);
   if (!ev("m3_steps2").cond(S) || ev("m3_togaoi").cond(S)) fail("悪名: 二度目の足音にならない");
   G.startEvent("m3_steps2"); G.chooseEvent(1);
-  if (!ev("m3_togaoi").cond(S)) fail("悪名: 三度目で咎追いが来ない");
+  if (!ev("m3_togaoi").cond(S)) fail("悪名: 三度目でネリオスが来ない");
   if (!(G.loreOf(S).togaoi || []).includes("record")) fail("悪名: 足跡の出来事で用語説明が開かない");
   const neck = ev("m3_togaoi").choices.length - 1;
   G.startEvent("m3_togaoi"); G.chooseEvent(neck);
   if (S.sin !== 0 || S.over) fail(`悪名: 首を差し出しても罪が消えない（${S.sin}）`);
-  if (ev("m3_togaoi").cond(S)) fail("悪名: 罪が消えても咎追いが来る");
+  if (ev("m3_togaoi").cond(S)) fail("悪名: 罪が消えてもネリオスが来る");
   // 酒場のある町でだけ、酒場に逃げ込める
   const tav = ev("m3_togaoi").choices.findIndex((c) => c.cond);
   S.loc = "karna"; if (!ev("m3_togaoi").choices[tav].cond(S)) fail("悪名: ブランデールで酒場に逃げ込めない");
@@ -145,5 +145,5 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   if (S.event !== "m3_castle_g") fail(`悪名: 帝都の城門で ${S.event}`);
   for (const [loc, id] of Object.entries(D.M3_CASTLE)) { if (!D.LOCS[loc]) fail(`D.M3_CASTLE: 場所 ${loc} が無い`); if (!evById[id]) fail(`D.M3_CASTLE: 出来事 ${id} が無い`); }
   if (!D.LORE.togaoi) fail("悪名: 用語説明 togaoi が無い（lore_u3.js より後に読まれていない）");
-  if (failures === 0) ok(`評判と悪名（罪 ${Object.keys(D.CRIMES).length} 種・既存の悪行 ${Object.keys(D.DEEDS).length} 件・出来事 ${m3.length} 件・古いセーブ・手配と解除・位の剥奪・咎追い）`);
+  if (failures === 0) ok(`評判と悪名（罪 ${Object.keys(D.CRIMES).length} 種・既存の悪行 ${Object.keys(D.DEEDS).length} 件・出来事 ${m3.length} 件・古いセーブ・手配と解除・位の剥奪・ネリオス）`);
 };
