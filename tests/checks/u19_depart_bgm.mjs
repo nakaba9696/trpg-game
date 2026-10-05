@@ -3,6 +3,7 @@
 // - 旅立ちの曲は長調で前へ進む速さ、金管が主旋律を持つ（持ち主の注文：高揚感・前へ進むリズム・開けた和音・管の主旋律）
 // - 場面の決め方：導入を出している間は depart、作成画面は title、冒険が始まれば町など
 // - 画面：「この者で旅立つ」を押したらすぐ切り替える。導入の画面（#setup の data-step="prologue"）を見る
+// - 導入（あらすじ）の締めは問いかけずに言い切る
 // - 音はページの中の Web Audio だけ（外の音のファイルを読み込まない・音量ミキサーに触らない）は S4 の決まりのまま（sound_bgm.js）
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
@@ -45,6 +46,11 @@ export default ({ G, fail, ok }) => {
   const setup = readFileSync(new URL("../../src/ui/setup.js", import.meta.url), "utf8");
   const go = setup.slice(setup.indexOf('btn("この者で旅立つ"'), setup.indexOf('"c-go")'));
   if (!/bgmUpdate\(\)/.test(go)) F("「この者で旅立つ」を押してすぐ曲を切り替えていない");
+
+  // 導入の締め：プレイヤーに「さて、どうする」と問いかけない。言い切って終える
+  const close = D.PROLOGUE.close;
+  if (/どうする|[？?]|……\s*$/.test(close)) F(`導入の締めが問いかけか「……」で終わる：${close}`);
+  if (!/。$/.test(close)) F("導入の締めが言い切りで終わらない");
 
   ok(`U19 旅立ちの BGM（${tr.name}・${tr.bpm} BPM・${snd.bgmCompile(tr).len.toFixed(0)} 秒）`);
 };
