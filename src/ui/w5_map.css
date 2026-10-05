@@ -23,6 +23,7 @@
 .w5k.road { width: 16px; height: 0; border-width: 2px 0 0; border-style: solid; }
 .w5k.road.far { border-style: dashed; opacity: .7; }
 .w5k.border { width: 16px; height: 0; border-width: 3px 0 0; border-style: dotted; border-color: rgba(90,40,30,.75); }
+.w5k.gate { width: 16px; height: 0; border-width: 2px 0 0; border-style: solid; border-color: rgba(70,10,20,.75); }
 .w5k.sea { width: 16px; height: 0; border-width: 2px 0 0; border-style: dashed; border-color: #2f5a70; }
 :root[data-theme="dark"] .w5k.sea { border-color: #7fb0c8; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .w5k.sea { border-color: #7fb0c8; } }
