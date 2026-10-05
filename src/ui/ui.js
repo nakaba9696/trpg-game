@@ -95,7 +95,7 @@
     }
     return box;
   }
-  const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" };
+  const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag", quest: "l-quest" };
   function logEntryEl(e) {
     if (e.k === "dice") return checkEl(e);
     return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : "") + (e.tell ? " l-tell" + (e.rage ? " l-rage" : e.brk ? " l-brk" : "") : ""), e.k === "you" ? "▶ " + e.text : e.text);
@@ -219,16 +219,17 @@
     b.append(h("b", "", a.label));
     if (a.sub) b.append(h("span", "", a.sub));
     // U4：依頼への道の印・押せない理由
-    const mark = /^(travel|sail):/.test(a.id || "") ? travelMarks[a.id.split(":")[1]] : "";
+    const mark = actMarks[a.id] || (/^(travel|sail):/.test(a.id || "") ? travelMarks[a.id.split(":")[1]] : ""); // U17：依頼・噂の続きに関係ある選択肢すべて
     if (mark) { b.classList.add("marked"); b.append(h("em", "mark", "◆ " + mark)); }
     const why = a.disabled && !a.locked && G.lockReason ? G.lockReason(a, G.S) : "";
     if (why) { b.append(h("em", "why", why)); b.title = why; }
     b.onclick = () => { if (!busy) { G.act(a.id); after(); } };
     return b;
   }
-  let travelMarks = {};
+  let travelMarks = {}, actMarks = {};
   function renderActions(panel) {
     travelMarks = G.travelMarks ? G.travelMarks(G.S) : {};
+    actMarks = G.actMarks ? G.actMarks(G.S) : {};
     G.actions().forEach((grp) => {
       if (!grp.list.length) return;
       const box = h("div", "agroup");

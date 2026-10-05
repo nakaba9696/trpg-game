@@ -216,12 +216,13 @@
     if (it.type === "ring") return extra * 1.5;
     return 0;
   };
-  const worn = (type) => { const S = G.S; return type === "weapon" ? G.weapon() : type === "armor" ? G.armor() : type === "ring" ? G.ring() : null; };
+  // 比べる相手は、その品が入る枠の今の品（I2 の枠。頭・足・盾・装飾品 2 も）
+  const worn = (type, it) => (G.i2s && G.i2s.against ? G.i2s.against(it) : type === "weapon" ? G.weapon() : type === "armor" ? G.armor() : type === "ring" ? G.ring() : null);
   // { dir: 1 上・0 同じくらい・-1 下, mark, text（変わる数字） }
   API.compare = (id) => {
     const it = D.ITEMS[id];
     if (!it || !SLOT[it.type] || !G.S) return null;
-    const cur = worn(it.type);
+    const cur = worn(it.type, it);
     const a = API.score(it), b = API.score(cur);
     const dir = a > b + 0.25 ? 1 : a < b - 0.25 ? -1 : 0;
     const diff = [];
@@ -240,7 +241,7 @@
   const cmpMemo = new Map();
   API.compareLabel = (id) => {
     const S = G.S;
-    const key = S ? `${id}|${S.weapon}|${S.armor}|${S.ring}` : "";
+    const key = S ? `${id}|${G.i2s ? G.i2s.key(S) : `${S.weapon}|${S.armor}|${S.ring}`}` : "";
     if (key && cmpMemo.has(key)) return cmpMemo.get(key);
     const c = API.compare(id);
     const v = c ? `${c.mark}${c.text ? c.text : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : "";
@@ -456,7 +457,9 @@
   // 鍛冶に出せる品の、今の部品（素の品は、土台そのもの）
   const partsOf = (id) => API.parse(id) || (API.smithable(id) ? { base: id, mat: "", pre: "", suf: "", plus: 0 } : null);
 
-  const where = (id) => { const S = G.S; return S.weapon === id ? "weapon" : S.armor === id ? "armor" : S.ring === id ? "ring" : S.inv[id] ? "inv" : null; };
+  // 品のある所：装備の枠（I2 の 7 つ）か、持ち物か
+  const where = (id) => { const S = G.S; const k = G.i2s ? G.i2s.where(S, id) : S.weapon === id ? "weapon" : S.armor === id ? "armor" : S.ring === id ? "ring" : null; return k || (S.inv[id] ? "inv" : null); };
+  const wornIds = (S) => (G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring]);
   // 品を作り替える（装備中なら装備の枠、持ち物なら持ち物で入れ替える）
   function swap(oldId, newId) {
     const S = G.S;
@@ -474,14 +477,14 @@
     const S = G.S;
     const list = [];
     const max = API.MAX_PLUS(S.loc);
-    [S.weapon, S.armor, S.ring].filter((id) => id && partsOf(id)).forEach((id) => {
+    [...new Set(wornIds(S))].filter((id) => id && partsOf(id)).forEach((id) => {
       const p = partsOf(id);
       const it = D.ITEMS[id];
       if (p.rust || p.pre === "cursed") return;
       if (p.plus < max) { const c = API.upCost(id); list.push({ id: head + ":i3up:" + id, label: `${it.name}を鍛え直す（+${p.plus + 1}）`, sub: `${c}G・うまくいく見込み ${API.upChance(id)}%`, disabled: S.gold < c, kw: ["鍛", "強化", it.name] }); }
       if (!p.pre || !p.suf) { const c = API.nameCost(id); list.push({ id: head + ":i3name:" + id, label: `${it.name}に銘を入れる`, sub: `${c}G・${p.pre ? "後ろ" : "前"}の銘が一つ付く`, disabled: S.gold < c, kw: ["銘", it.name] }); }
     });
-    const mine = [...new Set([S.weapon, S.armor, S.ring, ...Object.keys(S.inv)])].filter((id) => id && isGen(id));
+    const mine = [...new Set([...wornIds(S), ...Object.keys(S.inv)])].filter((id) => id && isGen(id));
     mine.forEach((id) => {
       const p = API.parse(id);
       const it = D.ITEMS[id];

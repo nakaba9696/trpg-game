@@ -91,6 +91,9 @@ export function makeBot(G, goal, opt = {}) {
     if (!a || a.type !== "armor") return 0;
     return a.def * 3 + (a.agi || 0) / 5 + (isMage() ? (a.magic || 0) / 2 : 0);
   };
+  // 防具の入る枠（I2：胴・頭・足・左手の盾）。両手の武器を持っているあいだは盾を買わない・着けない
+  const armorSlot = (id) => ({ head: "head", feet: "feet", off: "off" })[(D.ITEMS[id] || {}).slot] || "armor";
+  const armorFree = (id) => !(armorSlot(id) === "off" && G.i2s && G.i2s.blocked(G.S));
   // 腕前：1 撃の期待値 × 生き延びる手数。仲間の分も足す
   const power = () => {
     const S = G.S;
@@ -273,12 +276,12 @@ export function makeBot(G, goal, opt = {}) {
   const bestShopArmor = () => {
     const S = G.S;
     const list = flat().filter((a) => a.id.startsWith("shop:buy:") && !a.disabled);
-    let best = null, bv = armorValue(S.armor) + 0.5;
+    let best = null, bv = 0;
     for (const a of list) {
       const id = a.id.slice(9);
       const it = D.ITEMS[id];
-      if (it.type !== "armor" || it.price > S.gold - reserve()) continue;
-      const v = armorValue(id);
+      if (it.type !== "armor" || it.price > S.gold - reserve() || !armorFree(id)) continue;
+      const v = armorValue(id) - armorValue(S[armorSlot(id)]) - 0.5;   // 同じ枠（胴・頭・足・盾。I2）の今の品と比べる
       if (v > bv) { bv = v; best = a.id; }
     }
     return best;
@@ -643,7 +646,7 @@ export function makeBot(G, goal, opt = {}) {
       const it = D.ITEMS[id];
       if (!it || it.cursed) continue;
       if (it.type === "weapon" && weaponValue(id) > weaponValue(S.weapon) && !(isMage() && D.ITEMS[S.weapon]?.magic && !it.magic && !it.pierce)) G.equip(id);
-      else if (it.type === "armor" && armorValue(id) > armorValue(S.armor)) G.equip(id);
+      else if (it.type === "armor" && armorFree(id) && armorValue(id) > armorValue(S[armorSlot(id)])) G.equip(id);
     }
   };
   const choose = () => {

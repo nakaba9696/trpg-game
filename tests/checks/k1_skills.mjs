@@ -209,9 +209,11 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     for (const id of ids.filter((x) => SK[x].kind !== "field")) {
       const S = start("merc", 600, 30);
       S.skills = [id];
-      const need = (SK[id].style || []).find((k) => WEAPON[k]);
-      if (SK[id].style && !need) continue;   // 盾・二刀・両手だけの技は、I2 の枠が入るまで試せない
-      if (need) S.weapon = WEAPON[need];
+      const need = (SK[id].style || []).find((k) => WEAPON[k] || k === "盾" || k === "二刀");
+      if (SK[id].style && !need) { fail(`技 ${id}：試せる武器が無い`); continue; }
+      if (need === "盾") { S.weapon = "longsword"; G.give("i2s_buckler"); G.equip("i2s_buckler", "off"); }
+      else if (need === "二刀") { S.weapon = "longsword"; G.give("dagger"); G.equip("dagger", "off"); }
+      else if (need) S.weapon = WEAPON[need];
       S.hp = Math.max(1, S.hp - 5);
       G.startCombat(["orc", "goblin"]);
       const a = find("cb:k1:" + id);
@@ -229,6 +231,14 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (!kind("katana").includes("刀") || !kind("dagger").includes("短剣") || !kind("fists").includes("拳") || !kind("axe").includes("斧")) fail("武器の型が決まらない");
     const bow = Object.keys(D.ITEMS).find((id) => D.ITEMS[id].i3 && D.ITEMS[id].i3.k === "弓");
     if (bow && !kind(bow).includes("弓")) fail("弓が弓の型にならない");
+    // I2 の左手：盾と二刀
+    S.weapon = "longsword"; S.off = "";
+    G.give("i2s_buckler"); G.equip("i2s_buckler", "off");
+    if (!K.styles(S).has("盾")) fail(`左手に盾を持っても盾の型にならない（${[...K.styles(S)]}）`);
+    G.give("dagger"); G.equip("dagger", "off");
+    if (!K.styles(S).has("二刀") || K.styles(S).has("盾")) fail(`左手に短剣を持っても二刀にならない（${[...K.styles(S)]}）`);
+    G.give("axe"); G.equip("axe");
+    if (K.styles(S).has("二刀") || !K.styles(S).has("両手")) fail(`両手の大斧に持ち替えても二刀のまま・両手にならない（${[...K.styles(S)]}）`);
   }
 
   // ---------------------------------------------------------------- 熟練

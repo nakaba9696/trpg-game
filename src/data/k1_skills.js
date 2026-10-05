@@ -197,7 +197,7 @@
     guardmaster: { name: "近衛の師範", fac: "castle", fee: 1.5, days: 2, lock: "位を得るか、この国で慕われていれば、稽古をつけてもらえそうだ",
       cond: (S) => ["騎士", "領主", "国王"].includes(S.title) || (G.c10 && G.c10.trusted ? G.c10.trusted(S) : false),
       line: "近衛の師範は、木剣を二本持ってきて、一本をあなたに放った。「城の中では、刃より先に作法が要る。両方教える」" },
-    bard: { name: "旅の吟遊詩人", fac: "tavern", fee: 1, days: 1, lock: "少し名が知られれば、詩人のほうから寄ってきそうだ",
+    bard: { name: "旅の吟遊詩人", fac: "tavern", fee: 1, days: 1, lock: "名が売れはじめれば、詩人のほうから寄ってくる",
       cond: (S) => (S.fame || 0) >= 20,
       line: "吟遊詩人はあなたの名を聞くと、弦を一本はじいた。「歌になる人には、歌を一つ持っていてほしいのさ」" },
     kensei: { name: "流れの剣客", ev: "k1_kensei", fee: 1.2, days: 2, lock: "",

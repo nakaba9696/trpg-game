@@ -14,7 +14,7 @@
 //   誘い（狙いに大技の気配を出させる）・見切り（◎が付く）。知っている敵の気配に合う技にも ◎ を付ける
 // 戦闘の外：出来事の選択肢（型 D.K1_TPL・手書き D.K1_ADD。印は k1、添え書きは技の名）・施設の「身につけた技で」（D.K1_FAC）・
 //   手当て・追跡・薬草摘み（探索の行動）・野営術（野営の回復）
-// 武器の型は K.styles() ひとつで決める（I2 の二刀・盾が main に入ったら、そこだけ見直せばよい）
+// 武器の型は K.styles() ひとつで決める（右手の武器の型・両手持ち。I2 の左手の枠から二刀と盾）
 // セーブに足す項目（古いセーブで無くても動く）：S.skills（覚えた技の id）・S.k1 = { ki, use, prog, day }。戦闘中の C.k1*・敵の k1bleed / k1lure
 // 名前の頭の z の数は、F1（zzzzzzzzzz_f1_duel.js）より後に読ませるため。DOM には触らない。乱数は G.rand / G.d / G.dice / G.pick。レーン C＋B（K1）
 (function (G) {
@@ -122,10 +122,12 @@
     const w = S === G.S ? G.weapon() : D.ITEMS[S.weapon] || D.ITEMS.fists;
     out.add(K.kindOf(w, S.weapon));
     if (w && (w.hands === 2 || (w.i3 && w.i3.h === 2))) out.add("両手");
+    // 左手（I2 の装備の枠 S.off）：武器なら二刀（右手にも武器があるとき）、防具なら盾。両手持ちで塞がっていれば何も無い
+    const X = G.i2s;
+    const off = X && X.item ? X.item("off", S) : null;
+    if (off && off.type === "weapon" && S.weapon && S.weapon !== "fists") out.add("二刀");
+    if (off && off.type === "armor") out.add("盾");
     if (w && w.dual) out.add("二刀");
-    // 左手の盾（I2 の S.off。まだ無ければ盾は持てない）
-    const off = S.off && D.ITEMS[S.off];
-    if (off && off.type === "armor" && (off.slot === "off" || /盾/.test(off.name || ""))) out.add("盾");
     return out;
   };
   K.styleOk = (id, S) => { const st = SK[id].style; if (!st) return true; const have = K.styles(S); return st.some((k) => have.has(k)); };
@@ -253,7 +255,7 @@
     if (fx.t === "counter") { c.guard = true; c.k1counter = { mul: fx.mul || 1, hit: {} }; G.say("穂先の向こうで、相手が踏み込みをためらった。"); return; }
     if (fx.t === "wall") { c.guard = true; c.k1wall = fx.def || 0; G.say("盾の裏で、体じゅうの力を一つにまとめた。"); return; }
     if (fx.t === "stance") { c.k1stance = { k: fx.k, n: fx.n || 3 }; G.note(`${s.name}（${c.k1stance.n}手番）`); return; }
-    if (fx.t === "read") { c.k1read = true; G.say("相手の手の内が、少しずつ透けて見えてきた。"); return; }
+    if (fx.t === "read") { c.k1read = true; G.say("相手の肩が動く。次に来る手が読めた。"); return; }
     if (fx.t === "focus") { K.gainKi(1, S); c.k1focus = true; G.say("体の芯に、熱が一つ灯った。"); return; }
     if (fx.t === "heal") {
       const r = G.check(K.statOf(id), "易しい", s.name, K.extra(id));
@@ -444,7 +446,7 @@
     if (o.k1scroll) { const id = K.randomScroll(o.k1scroll); if (id && G.give(id)) G.note(`${D.ITEMS[id].name}を手に入れた。`); }
     if (o.k1use) {
       const list = K.list(S).filter((id) => SK[id].kind !== "field");
-      if (list.length) { const id = G.pick(list); K.use(id, o.k1use); G.note(`技「${SK[id].name}」の型が、少し体に馴染んだ。`); }
+      if (list.length) { const id = G.pick(list); K.use(id, o.k1use); G.note(`技「${SK[id].name}」の型が、体に馴染んだ。`); }
     }
     return r;
   };
@@ -500,7 +502,7 @@
     if (r.ok) K.learn(id, camp ? "camp" : "train");
     else {
       S.k1.prog[id] = (S.k1.prog[id] || 0) + 1;
-      G.say(camp ? "焚き火の明かりの中で、同じ動きを何度もなぞった。まだ形にならないが、体は少し覚えた。" : "教官は首を振った。「まだ形だけだ。また来い」──それでも、体は少し覚えた。");
+      G.say(camp ? "焚き火の明かりの中で、同じ動きを何度もなぞった。形にはならない。それでも、手は昨日より迷わなかった。" : "教官は首を振った。「まだ形だけだ。また来い」──積み重ねは残った。次は、その先まで行ける。");
     }
   }
   // 荒野の稽古は、物音と火で魔物を呼ぶことがある（野営と同じくらい）
