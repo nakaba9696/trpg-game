@@ -29,9 +29,15 @@
 /* PC の戦闘：帯が低いので、いつも出す手と開いた一覧は 2 列にして、欄を流さずに収める */
 body.v9pc #panel.u13fight .agroup.u13main .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; }
 body.v9pc #panel .agroup.u13pop .alist { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 14px; }
-body.v9pc #panel .agroup.u13pop { min-height: min-content; }
 body.v9pc #panel .agroup.u13pop h3 { display: none; }
-body.v9pc #panel .agroup.u13pop { max-height: 60%; overflow-y: auto; }
+/* PC の戦闘：手の欄は縦に積む（手 → 開いた一覧 → 札）。高さが足りないときは、開いた一覧の中だけが流れる（札や手と重ならない） */
+body.v9pc.v9combat #panel.u13fight { display: flex; flex-direction: column; gap: 8px; }
+body.v9pc.v9combat #panel.u13fight > * { flex: none; order: 0; }
+body.v9pc.v9combat #panel.u13fight > .u13main { order: 1; }
+body.v9pc.v9combat #panel.u13fight > .u13pop { order: 2; flex: 0 1 auto; min-height: 3.2em; overflow-y: auto; overscroll-behavior: contain; }
+body.v9pc.v9combat #panel.u13fight > .u13drawers { order: 3; }
+/* 一覧を開いている間は、いつも出す手と遊び方の一行を隠して、一覧に高さを渡す（閉じる・Esc・手番が進むと戻る） */
+body.v9pc.v9combat #panel.u13fight:has(> .u13pop) > .u13main, body.v9pc.v9combat #panel.u13fight:has(> .u13pop) > .tip { display: none; }
 body.v9pc.v9combat #panel.u13fight .act { min-height: 34px; padding-block: 4px; }
 
 /* スマホ・狭い窓の戦闘：敵・一行の HP・記録・手が一画面に収まるように詰める */
@@ -57,4 +63,14 @@ body.v9pc.v9combat #panel.u13fight .act { min-height: 34px; padding-block: 4px; 
     padding: 6px 10px 8px; box-shadow: 0 -8px 28px rgba(0, 0, 0, .45); }
   body.u13combat #panel .agroup.u13pop h3 { position: sticky; top: -6px; z-index: 1; background: inherit; padding-block: 4px; }
   body.u13combat .u13close { display: inline-block; }
+}
+
+/* まとめた行（「〇〇」と「〇〇を仲間に」）と、使う相手を選ぶ小さな一覧 */
+.u13whoMark { color: var(--accent); font-weight: 400; }
+.u13who { display: grid; gap: 4px; }
+.u13whoQ { margin: 0; font-size: 13px; color: var(--accent); letter-spacing: .08em; }
+body.v9pc #panel .u13who .alist { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 14px; }
+/* 窓が狭い PC（〜1240px）では、一覧は 2 列（3 列だと補足が折れて行が高くなる） */
+@media (max-width: 1240px) {
+  body.v9pc #panel .agroup.u13pop .alist, body.v9pc #panel .u13who .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

@@ -292,6 +292,11 @@
       hiss(E, t + 0.36, { ft: "highpass", ff: 7000, a: 0.05, d: 0.7, g: 0.04, wet: 0.5 });
       return tone(E, t + 0.36, { f: 196, g: 0.1, a: 0.02, d: 1.2, type: "triangle" }) + 0.6;
     },
+    // U13：主人公が倒れた。遠くで低い鐘がひとつ、長く消えていく
+    fall: (E, t) => {
+      bell(E, t, 98, { g: 0.2, d: 3.2, wet: 0.6, parts: [[1, 1], [2.01, 0.25], [2.76, 0.12]] });
+      return hiss(E, t, { brown: true, ft: "lowpass", ff: 260, ff2: 90, a: 0.4, d: 2.2, g: 0.18, wet: 0.5 }) + 1;
+    },
     // U13：戦闘に勝った。低い和音を一度
     victory: (E, t) => {
       [196, 247, 294].forEach((f, i) => bell(E, t + i * 0.05, f, { g: 0.15, d: 1.8, wet: 0.45 }));
