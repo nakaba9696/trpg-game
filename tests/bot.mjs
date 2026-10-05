@@ -27,7 +27,7 @@ export function makeSmartBot(G) {
     // 成功率は敵の強さとの差（S5。G.foeVs）、ダメージの上乗せは体の目盛り（G.s5Pow）
     const pw = (k, n) => Math.floor(G.s5Pow(s.stats[k]) / n);
     const statBonus = w.stat === "筋力" ? pw("筋力", 15) : pw("敏捷", 20);
-    out.push({ id: "cb:attack", mp: 0, dmg: pierceBlock ? 0 : (G.chance(w.stat, { vs: G.foeVs.eva(e) }, w.hit || 0) / 100) * (avg(w.dmg) + statBonus) });
+    out.push({ id: "cb:attack", mp: 0, dmg: pierceBlock ? 0 : (G.chance(w.stat, { vs: G.foeVs.eva(e, w.stat) }, w.hit || 0) / 100) * (avg(w.dmg) + statBonus) });
     out.push({ id: "cb:vital", mp: 0, dmg: pierceBlock ? 0 : (G.chance("敏捷", { vs: G.foeVs.vital(e) }, w.vital || 0) / 100) * 2 * (avg(w.dmg) + pw("敏捷", 15)) });
     const mb = G.magicBonus();
     out.push({ id: "cb:fire", mp: 3, dmg: pierceBlock ? 0 : (G.chance("魔力", { vs: G.foeVs.mres(e) }, G.gearBonus("fire") + mb) / 100) * (7 + pw("魔力", 8)) });

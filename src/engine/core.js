@@ -193,7 +193,24 @@
   G.diffMod = (diff) => (typeof diff === "number" ? diff : 0);   // 古い呼び出しのため（使っていない）
   G.chance = (stat, diff, extra) => G.clamp(Math.round(G.s5p(G.statEff(stat) + G.s5Mod(extra) - G.s5Target(diff))), 5, 95);
 
-  // 100面ダイスで判定。結果はログに残り、成功すると経験がたまる（相手が自分より強いほど多く、弱いほど少なく）
+  // S6：使い方の偏り。判定・訓練のたびに、その能力値を使った重み（S.s5use。古い分は少しずつ薄れる）を足す。
+  // 同じ能力ばかり使うと伸びが鈍り（最低 0.4 倍）、しばらく使っていない能力は伸びやすい（最高 1.4 倍）。6 つを均等に使えば約 1.3 倍
+  G.s5Fresh = (k, S) => {
+    S = S || G.S;
+    const u = (S && S.s5use) || {};
+    const w = (x) => (u[x] === undefined ? 1 : u[x]);
+    const tot = D.STATS.reduce((a, x) => a + w(x), 0);
+    return G.clamp(1.6 - (2 * w(k)) / Math.max(1e-9, tot), 0.4, 1.4);
+  };
+  G.s5Used = (k) => {
+    const S = G.S;
+    const u = (S.s5use = S.s5use || {});
+    D.STATS.forEach((x) => { u[x] = Math.round((u[x] === undefined ? 1 : u[x]) * 0.97 * 1000) / 1000; });
+    u[k] += 1;
+    return G.s5Fresh(k, S);
+  };
+
+  // 100面ダイスで判定。結果はログに残り、成功すると経験がたまる（相手が自分より強いほど多く、弱いほど少なく。S6：使い込んだ能力ほど少なく）
   G.check = (stat, diff, reason, extra) => {
     const S = G.S;
     const chance = G.chance(stat, diff, extra);
@@ -208,9 +225,10 @@
     const r = { stat, diff: typeof diff === "string" ? diff : (diff && diff.name) || "", reason: reason || "判定", chance, roll, ok, crit, fumble, label };
     // 手ごわさ：相手の点が自分より高いほど伸びる（差 +15 で 2 倍、−11 で 4 分の 1）
     const hard = G.clamp(1 + (G.s5Target(diff) - G.statEff(stat) - G.s5Mod(extra)) / 15, 0.25, 2);
+    const fresh = D.STATS.includes(stat) ? G.s5Used(stat) : 1;
     let g = 0;
-    if (ok) g = G.d(4) * hard;
-    else if (!fumble && G.rand() < 0.2) g = hard;
+    if (ok) g = G.d(4) * hard * fresh;
+    else if (!fumble && G.rand() < 0.2) g = hard * fresh;
     if (g) { const [a, b] = G.grow(stat, g); if (b > a) r.growth = [a, b]; }   // 点が上がったときだけ見せる
     G.log("dice", "", r);
     return r;

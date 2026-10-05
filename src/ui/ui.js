@@ -335,7 +335,8 @@
       const row = h("div", "stat" + (ups && ups[k] ? " up" : ""));
       const bar = h("span", "bar"); const i = h("i"); i.style.width = G.s5Bar(S.stats[k]) + "%"; bar.append(i);   // 99 で満点（S5）
       row.append(h("span", "nm", k), h("span", "v", String(G.pt(S.stats[k]))), bar, h("span", "cap", `${G.s5Plain(S.stats[k])}%`));
-      row.title = `${D.STAT_HINT[k] || k}。普通の判定 ${G.s5Plain(S.stats[k])}％（相手が強い・難しいほど下がる）・次の点まで ${G.s5Progress(k)}％`;
+      const fr = G.s5Fresh ? G.s5Fresh(k) : 1;   // S6：使い方の偏り
+      row.title = `${D.STAT_HINT[k] || k}。普通の判定 ${G.s5Plain(S.stats[k])}％（相手が強い・難しいほど下がる）・次の点まで ${G.s5Progress(k)}％${fr < 0.8 ? "。使い込んで、伸びが鈍っている" : fr > 1.2 ? "。しばらく使っていない。使えば伸びやすい" : ""}`;
       list.append(row);
     });
     return sheetSection("stats", "能力値", list);
