@@ -524,7 +524,7 @@
   function drawHeard() {
     const V = G.v12;
     const boxes = V ? V.boxes() : [];
-    sum.textContent = boxes.length ? "魔物・人・用語の話は、それぞれの項目の「聞いた話」にある。" : "土地や、まだ会っていない相手の噂を聞くと、ここに残る。魔物・人・用語の話は、それぞれの項目の「聞いた話」に。";
+    sum.textContent = boxes.length ? "魔物・人・用語の話は、それぞれの項目の「聞いた話」にある。" : "まだ何も聞いていない。";
     const groups = [["土地の話", (b) => b.id.startsWith("loc:")], ["まだ図鑑に無い相手の話", (b) => b.id.startsWith("un:")]];
     groups.forEach(([name, test]) => {
       const mine = boxes.filter(test);
