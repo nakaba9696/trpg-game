@@ -95,7 +95,7 @@
     }
     return box;
   }
-  const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" };
+  const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag", quest: "l-quest" };
   function logEntryEl(e) {
     if (e.k === "dice") return checkEl(e);
     return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : "") + (e.tell ? " l-tell" + (e.rage ? " l-rage" : e.brk ? " l-brk" : "") : ""), e.k === "you" ? "▶ " + e.text : e.text);

@@ -1,0 +1,21 @@
+/* U17：依頼が増えた・進んだときの印（ui/u17_quest_new.js）。赤い「！」は図鑑（zu11_quick.css）と同じ見た目 */
+#q7Quests { position: relative; }
+#q7Quests.u17fresh::after {
+  content: "！"; position: absolute; top: -7px; right: -7px; margin: 0;
+  display: inline-grid; place-items: center; min-width: 17px; height: 17px; padding: 0 3px; border-radius: 999px;
+  background: var(--u11-bang); color: var(--u11-bang-ink); box-shadow: 0 0 0 1.5px var(--u11-bang-ring);
+  font-family: var(--f-ui); font-size: 11.5px; font-weight: 700; line-height: 1; letter-spacing: 0; }
+/* 赤い「！」が出ているあいだは、報告待ちの小さな「！」は重ねない */
+#q7Quests.u17fresh .q7qmark { display: none; }
+
+/* 一覧の「新」「進展」 */
+.u17tag { display: inline-grid; place-items: center; height: 18px; padding: 0 7px; border-radius: 999px; font-family: var(--f-ui); font-size: 11.5px; font-weight: 700; line-height: 1;
+  background: var(--u11-bang); color: var(--u11-bang-ink); white-space: nowrap; }
+.u17tag.up { background: transparent; color: var(--u11-bang); box-shadow: inset 0 0 0 1.5px var(--u11-bang); }
+.q7q.u17fresh { border-color: var(--u11-bang); }
+
+/* 記録の一行：「依頼『〇〇』を引き受けた」 */
+#log .l-quest, .l-quest { font-family: var(--f-ui); font-size: 14px; font-weight: 700; color: var(--hi, var(--ink)); background: var(--accent-soft);
+  border-left: 3px solid var(--u11-bang); padding: 5px 10px; border-radius: 0 3px 3px 0; }
+.l-quest::before { content: "！"; display: inline-grid; place-items: center; min-width: 17px; height: 17px; margin-right: 6px; border-radius: 999px;
+  background: var(--u11-bang); color: var(--u11-bang-ink); font-size: 11.5px; line-height: 1; vertical-align: 1px; }
