@@ -1,7 +1,7 @@
 // S2：作成画面の能力値（ふつうのとき・初期値が上振れ（20 以上）したとき）を撮る（Playwright。Chromium は PLAYWRIGHT_BROWSERS_PATH のもの）
 // node tools/build.mjs && node tools/shots_s2.mjs
 // docs/shots/s2/<normal|lucky|dark>.jpg・人物の画面 person.jpg・旅立つ前のシート sheet.jpg・導入 prologue.jpg・
-// 長い外見と生い立ちが全部見える traits_pc.jpg・traits_phone.jpg・その人物のシート traits_sheet.jpg を書く
+// を書く
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
@@ -48,28 +48,5 @@ for (const name of ["normal", "lucky", "dark"]) {
   }
   await page.close();
 }
-// 長い外見（60 字）と生い立ち（160 字）を入れて、欄で切れずに全部見えるか（PC 配置とスマホ配置）
-const LOOK = "灰色の髪を後ろで雑に束ね、左の頬に古い刀傷、笑うと八重歯がのぞく。背は高いが猫背で、いつも眠たげな目をしている。";
-const HIST = "港町の網元の三男に生まれたが、十四の冬に兄と喧嘩して家を飛び出した。島の剣術道場で下働きをしながら刀を覚え、師が死んだ夜に形見の打刀だけを持って本土へ渡った。借金が少しと、誰にも言えない約束がひとつある。兄とはまだ口をきいていない。";
-for (const [name, vp] of [["traits_pc", { width: 1280, height: 1000 }], ["traits_phone", { width: 390, height: 844 }]]) {
-  const page = await browser.newPage({ viewport: vp, deviceScaleFactor: 1, reducedMotion: "reduce" });
-  await page.goto(pathToFileURL(new URL("../dist/site/index.html", import.meta.url).pathname).href);
-  await page.waitForFunction(() => window.G && G.setup && G.cre);
-  await page.click('[data-fid="t-start"]');
-  await page.fill("#pf-look", LOOK.slice(0, 60));
-  await page.fill("#pf-history", HIST.slice(0, 160));
-  await page.waitForTimeout(300);
-  const sec = page.locator("section.creSec", { has: page.locator("#pf-history") });
-  await sec.scrollIntoViewIfNeeded();
-  await sec.screenshot({ path: out(name), type: "jpeg", quality: 82 });
-  console.log("wrote", out(name));
-  if (name === "traits_pc") {
-    await page.click('[data-fid="p-next"]');
-    await page.click('[data-fid="s-next"]');
-    await page.waitForTimeout(300);
-    await page.screenshot({ path: out("traits_sheet"), type: "jpeg", quality: 82, fullPage: true });
-    console.log("wrote", out("traits_sheet"));
-  }
-  await page.close();
-}
+// 長い外見と生い立ちの撮影（traits_*）は、欄ごと無くしたのでやめた（U17）
 await browser.close();
