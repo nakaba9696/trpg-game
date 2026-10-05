@@ -15,7 +15,7 @@
   const PEOPLE = { c4_musette: "musette", c5_violaine: "violaine", c5_severin: "severin", c8_graul: "graul", c2_nora: "nora", c2_angelica: "angelica", c2_zork: "zork", w1_konoha: "konoha", e2_berna: "berna" };
   G.V6_PEOPLE = PEOPLE;
   // 使徒（D.E3.FOES。戦いが始まるまで D.ENEMIES にいない）で、人の姿の絵がある者は、その絵で描く（A10）。
-  // 人の姿の無い使徒（ルアマリス・咎追いなど 10 体）は魔物の絵（monsters/<id>）で描く
+  // 人の姿の無い使徒（ルアマリス・ネリオスなど 10 体）は魔物の絵（monsters/<id>）で描く
   const APOSTLE = { e3_mirza: "mirza", e3_zalve: "zalve", e3_aurelia: "aurelia", e3_yoihime: "yoihime", e3_chezar: "chezar", e3_yura: "yura", e3_azlag: "azlag", e3_salphiel: "salphiel", e3_yuzuel: "yuzuel" };
   G.V6_APOSTLE = APOSTLE;
   const A = () => G.ASSETS || {};

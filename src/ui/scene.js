@@ -1329,7 +1329,7 @@
       for (const x of [0.2, 0.33, 0.67, 0.8]) { glow(ctx, w * x, h * 0.6, 40, "#ffb04a", 0.5); ctx.fillStyle = "#e8dcc0"; ctx.fillRect(w * x - 2, h * 0.6, 4, 10); ctx.fillStyle = "#ffcf6e"; ctx.fillRect(w * x - 1, h * 0.58, 2, 3); }
       ctx.fillStyle = "rgba(140,20,20,.6)"; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.ellipse(cx + (R() - 0.5) * w * 0.3, h * (0.86 + R() * 0.1), 3 + R() * 5, 1.5, 0, 0, Math.PI * 2); ctx.fill(); }
     },
-    // 酸の谷の底：緑の雫が落ちる洞、酸の溜まり、膝をついた鉄の巨人（胸の蓋が半分開いている）
+    // 酸の谷の底：緑の雫が落ちる洞、酸の池、膝をついた鉄の巨人（胸の蓋が半分開いている）
     w2_acid_in(ctx, w, h, R) {
       ctx.fillStyle = "#0b100b"; ctx.fillRect(0, 0, w, h);
       glow(ctx, w * 0.45, h * 0.8, w * 0.6, "#6aff4a", 0.16);
