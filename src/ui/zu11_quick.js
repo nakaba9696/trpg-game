@@ -3,7 +3,7 @@
 // - 冒険中は、名前・HP・MP・所持金の帯（#mbar。スマホは上に張り付く帯、PC は左上の札）の下の段に [ステータス][図鑑][地図] を並べる。図鑑には新しい印の赤い「！」
 // - 上の道具の列にも「地図」（図鑑の隣。タイトル画面からも開ける）。世界地図は図鑑の窓から外した（w5_map.js）
 // - キーの近道：Z で図鑑、M で地図（文字を打っている所・ほかの窓が開いているときは効かない。同じキーで閉じる）
-// - 保存は行動のたびに自動（G.main.save）。保存したら帯の右上に「✓ 保存済み」を一瞬出す（prefers-reduced-motion では動かさない）
+// - 保存は行動のたびに自動（G.main.save）。その都度の印は出さない（持ち主の声「保存済みっていちいち出るの気になる」）。手動のセーブ・町のオートセーブのときだけ u11.showSaved(文) で帯の右上に一瞬出す（prefers-reduced-motion では動かさない）
 // 見た目は ui/zu11_quick.css
 (function (G) {
   const u11 = (G.u11 = G.u11 || {});
@@ -86,8 +86,9 @@
   // ---------------------------------------------------------------- 保存の印
   let savedT = 0;
   const still = () => !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  u11.showSaved = () => {
+  u11.showSaved = (text) => {
     if (!G.S || (play && play.hidden)) return;
+    saved.textContent = text || "✓ 保存しました";
     saved.classList.remove("on");
     clearTimeout(savedT);
     // 掛け直しは次のコマの頭で（保存のたびに配置の計算を走らせない。T）
@@ -98,14 +99,4 @@
       savedT = setTimeout(() => saved.classList.remove("on"), still() ? 1600 : 1500);
     });
   };
-  // G.main は main.js（いちばん最後）が作るので、はじめて描くときに包む
-  const wrapSave = () => {
-    const m = G.main;
-    if (!m || !m.save || m.save.u11) return;
-    const base = m.save;
-    m.save = (...a) => { const r = base(...a); try { u11.showSaved(); } catch {} return r; };
-    m.save.u11 = true;
-  };
-  const render0 = ui.render;
-  ui.render = (...a) => { wrapSave(); return render0(...a); };
 })(globalThis.G = globalThis.G || {});
