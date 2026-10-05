@@ -257,7 +257,7 @@
       look: { body: "biped", build: "lanky", skin: "#a8a89a", head: "skull", eyes: "hollow", mouth: "jaw", weapon: "bow", outfit: "rags", cloth: "#3a3a4a", pattern: "ribs", extra: ["cape"], mood: "fierce" },
     },
 
-    // ---------------------------------------------------------------- 鉄喰い（鍛冶の都の外の街道）
+    // ---------------------------------------------------------------- 鉄喰いの使徒ザルガドム（鍛冶の都の外の街道）
     e4k_rustgnaw: {
       name: "錆かじり", tier: 2, hp: 12, dmg: [1, 4, 1], hit: 55, def: 10, agi: 55, will: 40, mres: 0, gold: [3, 15], loot: [["fang", 0.3]], shape: "small", eye: "#ff8a3a",
       kinOf: "tetsukui", where: ["frost"], pack: [2, 3], acts: ["disarm", "rout"],
@@ -273,7 +273,7 @@
       look: { body: "bug", skin: "#5a5a60", skin2: "#9a9aa0", eyes: "glow", eyeN: 2, mouth: "fangs", pattern: "stripes", mood: "fierce" },
     },
 
-    // ---------------------------------------------------------------- 咎追い（懺悔の谷）
+    // ---------------------------------------------------------------- 咎追いの使徒ネリオス（懺悔の谷）
     e4k_bellsinner: {
       name: "鈴振りの罪人", tier: 3, hp: 26, dmg: [1, 8, 1], hit: 55, def: 10, agi: 30, will: 999, mres: 10, undead: true, gold: [5, 25], loot: [["holywater", 0.2]], shape: "humanoid", eye: "#ff8a6a",
       kinOf: "togaoi", where: ["w2_echo"], acts: ["pin"], weak: "holy",
@@ -289,7 +289,7 @@
       look: { body: "quad", head: "wolf", skin: "#3a2a2a", skin2: "#6a4a3a", eyes: "glow", mouth: "fangs", tail: "spike", pattern: "scars", mood: "fierce" },
     },
 
-    // ---------------------------------------------------------------- 緑の御方（麦の都の外の丘陵）
+    // ---------------------------------------------------------------- 芽吹きの使徒リサルナ（麦の都の外の丘陵）
     e4k_scarecrow: {
       name: "動く案山子", tier: 1, hp: 10, dmg: [1, 4, 0], hit: 45, def: 5, agi: 20, will: 999, mres: 0, gold: [0, 6], loot: [["herb", 0.3]], shape: "humanoid", eye: "#e8d44d",
       kinOf: "midori", where: ["plains"], acts: ["guard"], weak: "fire",
@@ -305,7 +305,7 @@
       look: { body: "quad", head: "plain", skin: "#5a4a3a", skin2: "#a88a6a", ears: "round", eyes: "dot", mouth: "o", arms: "claws", tail: "thin", extra: ["nose"], mood: "silly" },
     },
 
-    // ---------------------------------------------------------------- 酸の溜まり（酸の谷）
+    // ---------------------------------------------------------------- 酸溜まりの使徒ゼノバス（酸の谷）
     e4k_acidbud: {
       name: "酸の芽", tier: 3, hp: 28, dmg: [1, 8, 1], hit: 55, def: 15, agi: 15, will: 999, mres: 10, gold: [0, 15], loot: [["gem", 0.1]], shape: "blob", eye: "#b6ff7a",
       kinOf: "sanno", where: ["w2_acid"], acts: ["corrode"], weak: "ice",
