@@ -1,8 +1,8 @@
-// E5：呼び名だけだった使徒（鉄喰い・緑の御方・酸の溜まり・咎追い）に、ほかの使徒と同じ「異名＋の使徒＋カタカナ名」の名前がある
+// E5：呼び名だけだった使徒（鉄喰い・緑の御方・酸の溜まり・咎追い・黒翼・閉じ月）に、ほかの使徒と同じ「異名＋の使徒＋カタカナ名」の名前がある
 // - id と絵のファイル名（e3_tetsukui など）は変えない。骸の素材・図鑑の一覧（docs/art/monsters.json）も同じ名前にそろえる
 import { readFileSync } from "node:fs";
 
-const WANT = { e3_tetsukui: "ザルガドム", e3_togaoi: "ネリオス", e3_midori: "リサルナ", e3_sanno: "ゼノバス" };
+const WANT = { e3_kurobane: "ノクターヴ", e3_tojizuki: "クロフェン", e3_tetsukui: "ザルガドム", e3_togaoi: "ネリオス", e3_midori: "リサルナ", e3_sanno: "ゼノバス" };
 
 export default ({ fail, ok, loadEngine }) => {
   const G = loadEngine();
@@ -18,7 +18,7 @@ export default ({ fail, ok, loadEngine }) => {
     if (!m || m[2] !== kana) bad(`使徒の名前: ${id} が「〇〇の使徒${kana}」の形でない（${foe.name}）`);
     else if (m[2].length < 4 || m[2].length > 5) bad(`使徒の名前: ${id} のカタカナ名が 4〜5 文字でない`);
     const ap = Object.values(E3.LIST).find((a) => a.foe === id);
-    if (ap && ap.drop && /鉄喰い|緑の御方|酸の溜まり|咎追い/.test(ap.drop.name)) bad(`使徒の名前: ${id} の骸の素材が古い呼び名（${ap.drop.name}）`);
+    if (ap && ap.drop && /鉄喰い|緑の御方|酸の溜まり|咎追い|黒翼|閉じ月/.test(ap.drop.name)) bad(`使徒の名前: ${id} の骸の素材が古い呼び名（${ap.drop.name}）`);
     const a = arts.find((x) => x && x.id === id);
     if (a && a.name !== foe.name) bad(`使徒の名前: 絵の一覧の ${id} が「${a.name}」のまま`);
   }

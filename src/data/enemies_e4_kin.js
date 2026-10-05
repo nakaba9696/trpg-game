@@ -225,7 +225,7 @@
       look: { body: "biped", build: "normal", skin: "#7a9aa0", head: "human", hair: "#2a3a3a", eyes: "hollow", mouth: "jaw", arms: "forward", outfit: "rags", cloth: "#3a4a5a", pattern: "ribs", extra: ["bandana"], mood: "fierce" },
     },
 
-    // ---------------------------------------------------------------- 黒翼（影の谷）
+    // ---------------------------------------------------------------- 黒翼の使徒ノクターヴ（影の谷）
     e4k_unsaid: {
       name: "言いかけの影", tier: 3, hp: 26, dmg: [1, 8, 1], hit: 60, def: 5, agi: 50, will: 999, mres: 25, magic: true, gold: [0, 20], loot: [["manawater", 0.3]], shape: "humanoid", eye: "#8a8aff",
       kinOf: "kurobane", where: ["w2_shadow"], acts: ["sleep"], weak: "blade",
@@ -241,7 +241,7 @@
       look: { body: "bug", skin: "#1a1a22", skin2: "#4a4a5a", eyes: "glow", eyeN: 4, mouth: "fangs", wings: "moth", extra: ["float"], mood: "fierce" },
     },
 
-    // ---------------------------------------------------------------- 閉じ月（野。二つ目の月の夜）
+    // ---------------------------------------------------------------- 閉じ月の使徒クロフェン（野。二つ目の月の夜）
     e4k_moonhare: {
       name: "二つ月の兎", tier: 3, hp: 20, dmg: [1, 6, 2], hit: 60, def: 5, agi: 80, will: 999, mres: 20, gold: [0, 15], loot: [["pelt", 0.4]], shape: "beast", eye: "#fff0a0",
       kinOf: "tojizuki", where: ["frost", "w2_echo", "mountains"], when: { night: true }, acts: ["fleecall"],
