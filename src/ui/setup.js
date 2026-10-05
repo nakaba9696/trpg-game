@@ -218,7 +218,7 @@
     const s0 = h("section", "creSec");
     const a3 = h("h3", "", "年齢");
     a3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "age", R); drawAge(); refresh(); }, "p-age-r"));
-    s0.append(a3, eff("age"));
+    s0.append(a3, h("p", "creEff", HN.age || ""));
     const row = h("div", "creRow");
     const bandSeg = segEl("年頃", "age", Object.entries(D.AGES).map(([id, a]) => [id, a.name]), draft.ageBand, (v) => { cre.setAge(draft, v, R); drawAge(); refresh(); });
     row.append(bandSeg);

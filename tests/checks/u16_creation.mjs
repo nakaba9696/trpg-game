@@ -19,6 +19,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         const pool = cre.namePool(dr);
         const cul = D.ORIGINS[oid].culture;
         if (pool.join() !== D.PROFILE.names[cul][sex].join()) no(`${oid}・${sex} の名前の表が違う`);
+        dr.nameOpts = null;   // 作り直した候補には今の名前が入る（「別の候補」のあとは、選んだ名前が並ばなくてもよい）
         const opts = cre.nameOptions(dr, rnd);
         if (!opts.length || opts.length > cre.NAME_N) no(`候補の数がおかしい ${opts.length}`);
         if (opts.some((n) => !pool.includes(n))) no(`表に無い候補 ${opts}`);
