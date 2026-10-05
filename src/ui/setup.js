@@ -84,9 +84,8 @@
   }
 
   // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
-  // おまかせで全部埋まった状態から始める。「今決めること」（職業・目的・名前と性別・年齢・生まれ）を上に、「あとでもよいこと」（外見・生い立ち）は
-  // 畳んで下に置き、開けば直せる。各項目に、ゲームにどう効くかの一行（D.CRE_HINTS）。U15。名前・年齢・生まれを今決めることへ移し、候補から選ぶ形に（U16）
-  let laterOpen = false;   // 「あとでもよいこと」を開いているか（描き直しても保つ）
+  // おまかせで全部埋まった状態から始める。まず「名前と生まれ」（名前と性別・年齢・生まれ）、次に「職業と目的」の順に並べる（U19）。
+  // 「あとでもよいこと」（外見・生い立ち）の欄は、中身ごと無くした（U17）。各項目に、ゲームにどう効くかの一行（D.CRE_HINTS）。U15。名前・年齢・生まれを今決めることへ移し、候補から選ぶ形に（U16）
   function person(root) {
     const HN = D.CRE_HINTS || {}, TX = D.CRE_TEXT || {};
     const eff = (k) => h("p", "creEff", HN[k] || "");
@@ -108,7 +107,6 @@
     const card = h("aside", "whoCard");
     const txt = h("div", "whoTxt");
     card.append(txt);
-    let laterLine = null;
     function refresh() {
       const c = D.CLASSES[draft.cls], a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
       txt.textContent = "";
@@ -118,74 +116,21 @@
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
       if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
       // 畳んであるときも、いま何が入っているかは見える
-      if (laterLine) laterLine.textContent = [draft.profile.look, draft.profile.history].filter(Boolean).join("・");
     }
     lay.append(card);
 
     const form = h("div", "creForm");
     let oBlurb = null, aBlurb = null;
-    const setVal = (k) => { const el = form.querySelector("#pf-" + k); if (el) { el.value = draft.profile[k] || ""; if (el.tagName === "TEXTAREA") fitArea(el); } };
-    const groupHead = (title, sub, tag) => {
+    const groupHead = (title, sub) => {
       const gh = h("div", "creGroupHead");
       const t = h("b", "", title);
-      if (tag) t.append(h("span", "creLaterTag", tag));
       gh.append(t, h("span", "fine", sub));
       return gh;
     };
 
-    // ================= 今決めること（職業・目的・名前）
+    // ================= あなたは誰か（名前と性別・年齢・生まれ。U19：持ち主の決定で、職業・目的より先に）
     const now = h("div", "creGroup creNow");
     now.append(groupHead(TX.now, TX.nowSub));
-
-    // 職業
-    const s3 = h("section", "creSec");
-    s3.append(h("h3", "", "職業"), eff("cls"));
-    const cards = h("div", "cards compact");
-    Object.entries(D.CLASSES).forEach(([id, c]) => {
-      const l = h("label", "card");
-      const inp = h("input"); inp.type = "radio"; inp.name = "cls"; inp.value = id; inp.checked = draft.cls === id;
-      inp.onchange = () => {
-        const oldOrigin = draft.origin;
-        cre.setClass(draft, id, R);
-        drawNames(); setVal("history");
-        if (draft.origin !== oldOrigin) { const r = form.querySelector(`input[name=origin][value=${draft.origin}]`); if (r) r.checked = true; }
-        refresh();
-      };
-      l.append(inp, h("b", "", c.name), h("span", "", c.blurb), h("span", "fine", `得意：${cre.strengths(id).join("・")}`));
-      cards.append(l);
-    });
-    s3.append(cards);
-    now.append(s3);
-
-    // 目的
-    const s4 = h("section", "creSec");
-    const g3 = h("h3", "", "目的");
-    const gFine = h("span", "fine");
-    g3.append(gFine);
-    s4.append(g3, eff("goal"));
-    const gcards = h("div", "cards compact");
-    const cg = h("div", "field");
-    const setGoalFine = () => { gFine.textContent = draft.goal === "custom" ? TX.customFine : TX.goalFine; cg.hidden = draft.goal !== "custom"; };
-    Object.entries(D.GOALS).forEach(([id, g]) => {
-      const l = h("label", "card");
-      const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
-      inp.onchange = () => { draft.goal = id; setGoalFine(); };
-      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text));   // 行き先・手順は出さない（目指すことだけ）
-      gcards.append(l);
-    });
-    s4.append(gcards);
-    const cgl = h("label", "", "自分で決めた目的"); cgl.htmlFor = "customGoal";
-    const cgi = h("input"); cgi.id = "customGoal"; cgi.maxLength = 80; cgi.placeholder = "生き別れの妹を探し出し、村を焼いた男に報いを受けさせる";
-    cgi.value = draft.customGoal || "";
-    cgi.oninput = () => { draft.customGoal = cgi.value; };
-    // ゲームは中身を判定できない。区切りは自分でつける（節目「区切り」・トロフィー「自分で決めた道」に合わせた説明）
-    const cn = h("div", "creCustomNote");
-    cn.setAttribute("role", "note");
-    (TX.custom || []).forEach((t) => cn.append(h("p", "", t)));
-    cg.append(cgl, cgi, cn);
-    s4.append(cg);
-    setGoalFine();
-    now.append(s4);
 
     // 名前（性別と生まれの響きの表から選ぶ。自由入力は無い。「別の候補」で引き直す。U16）
     const s1 = h("section", "creSec creNameSec");
@@ -262,32 +207,61 @@
     now.append(s2);
     form.append(now);
 
-    // ================= あとでもよいこと（畳んでおく。おまかせで埋まっている）
-    const later = h("details", "creGroup creLater");
-    later.open = laterOpen;
-    later.ontoggle = () => { laterOpen = later.open; };
-    const sum = h("summary", "creGroupHead");
-    const st = h("b", "", TX.later);
-    st.append(h("span", "creLaterTag", TX.laterTag));
-    laterLine = h("span", "creLaterLine");
-    sum.append(st, h("span", "fine", TX.laterSub), laterLine);
-    later.append(sum);
-    // 生い立ち・特徴
-    const s5 = h("section", "creSec");
-    const t3 = h("h3", "", "外見・生い立ち");
-    t3.append(btn("特徴をおまかせ", "small", () => { cre.randomTraits(draft, R); cre.TRAITS.forEach(setVal); refresh(); }, "p-traits"));
-    s5.append(t3, eff("traits"));
-    const grid = h("div", "grid2");
-    [["look", "外見", "input"], ["history", "生い立ち", "textarea"]]
-      .forEach(([k, label, type]) => grid.append(fieldEl(k, label, type, refresh)));
-    const hi = grid.querySelector("#pf-history");
-    if (hi) hi.placeholder = "空けておいてもよい（「振る」でおまかせ）";
-    s5.append(grid);
-    later.append(s5);
-    // 畳んだまま描いた textarea は、開いたときに高さを合わせる
-    later.addEventListener("toggle", () => { if (later.open) later.querySelectorAll("textarea.fit").forEach(fitArea); });
-    form.append(later);
-    form.querySelectorAll("textarea.fit").forEach(fitArea);
+    // ================= 何をする者か（職業・目的。U19：誰かを決めてから）
+    const job = h("div", "creGroup creNow");
+    job.append(groupHead(TX.job, TX.jobSub));
+
+    // 職業
+    const s3 = h("section", "creSec");
+    s3.append(h("h3", "", "職業"), eff("cls"));
+    const cards = h("div", "cards compact");
+    Object.entries(D.CLASSES).forEach(([id, c]) => {
+      const l = h("label", "card");
+      const inp = h("input"); inp.type = "radio"; inp.name = "cls"; inp.value = id; inp.checked = draft.cls === id;
+      inp.onchange = () => {
+        const oldOrigin = draft.origin;
+        cre.setClass(draft, id, R);
+        drawNames();
+        if (draft.origin !== oldOrigin) { const r = form.querySelector(`input[name=origin][value=${draft.origin}]`); if (r) r.checked = true; }
+        refresh();
+      };
+      l.append(inp, h("b", "", c.name), h("span", "", c.blurb), h("span", "fine", `得意：${cre.strengths(id).join("・")}`));
+      cards.append(l);
+    });
+    s3.append(cards);
+    job.append(s3);
+
+    // 目的
+    const s4 = h("section", "creSec");
+    const g3 = h("h3", "", "目的");
+    const gFine = h("span", "fine");
+    g3.append(gFine);
+    s4.append(g3, eff("goal"));
+    const gcards = h("div", "cards compact");
+    const cg = h("div", "field");
+    const setGoalFine = () => { gFine.textContent = draft.goal === "custom" ? TX.customFine : TX.goalFine; cg.hidden = draft.goal !== "custom"; };
+    Object.entries(D.GOALS).forEach(([id, g]) => {
+      const l = h("label", "card");
+      const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
+      inp.onchange = () => { draft.goal = id; setGoalFine(); };
+      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text));   // 行き先・手順は出さない（目指すことだけ）
+      gcards.append(l);
+    });
+    s4.append(gcards);
+    const cgl = h("label", "", "自分で決めた目的"); cgl.htmlFor = "customGoal";
+    const cgi = h("input"); cgi.id = "customGoal"; cgi.maxLength = 80; cgi.placeholder = "生き別れの妹を探し出し、村を焼いた男に報いを受けさせる";
+    cgi.value = draft.customGoal || "";
+    cgi.oninput = () => { draft.customGoal = cgi.value; };
+    // ゲームは中身を判定できない。区切りは自分でつける（節目「区切り」・トロフィー「自分で決めた道」に合わせた説明）
+    const cn = h("div", "creCustomNote");
+    cn.setAttribute("role", "note");
+    (TX.custom || []).forEach((t) => cn.append(h("p", "", t)));
+    cg.append(cgl, cgi, cn);
+    s4.append(cg);
+    setGoalFine();
+    job.append(s4);
+    form.append(job);
+
 
     lay.append(form);
     root.append(lay);
@@ -316,36 +290,6 @@
       seg.append(l);
     });
     f.append(seg);
-    return f;
-  }
-
-  // textarea の高さを中身に合わせる（まだ画面に無いときは次の描画で）
-  function fitArea(el) {
-    if (!el.isConnected || !el.offsetWidth) { requestAnimationFrame(() => { if (el.isConnected && el.offsetWidth) fitArea(el); }); return; }
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight + (el.offsetHeight - el.clientHeight)}px`;
-  }
-  addEventListener("resize", () => document.querySelectorAll("#setup textarea.fit").forEach(fitArea));
-
-  function fieldEl(key, label, type, after) {
-    const f = h("div", "field");
-    const lab = h("label", "", label);
-    lab.htmlFor = "pf-" + key;
-    f.append(lab);
-    const row = h("div", "row");
-    // 外見も生い立ちも textarea にして、文の長さに合わせて高さを伸ばす（おまかせの長い文も全部見える。持ち主の要望）
-    const inp = h("textarea", "fit");
-    inp.id = "pf-" + key;
-    inp.rows = 1;
-    inp.maxLength = type === "textarea" ? 160 : 60;
-    inp.value = draft.profile[key] || "";
-    // 外見は一行の文（改行させない。日本語の変換を確定する Enter は止めない）
-    if (type !== "textarea") inp.onkeydown = (e) => { if (e.key === "Enter" && !e.isComposing && e.keyCode !== 229) e.preventDefault(); };
-    inp.oninput = () => { if (type !== "textarea" && inp.value.includes("\n")) inp.value = inp.value.replace(/\n/g, " "); draft.profile[key] = inp.value; fitArea(inp); after(); };
-    const b = btn("振る", "small", () => { inp.value = draft.profile[key] = cre.gen(draft, key, R); fitArea(inp); after(); });
-    b.setAttribute("aria-label", `${label}をおまかせで作り直す`);
-    row.append(inp, b);
-    f.append(row);
     return f;
   }
 
@@ -472,7 +416,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["出発地", D.LOCS[c.start].name], ...rrows, ["外見", p.look], ["生い立ち", p.history]]
+    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["出発地", D.LOCS[c.start].name], ...rrows]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);
@@ -482,7 +426,7 @@
 
     const nav = h("div", "creNav");
     nav.append(btn("人物を直す", "", () => go("person")), btn("能力値を直す", "", () => go("stats")),
-      btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); }, "c-go"));
+      btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); if (G.sound && G.sound.bgmUpdate) G.sound.bgmUpdate(); }, "c-go"));
     root.append(nav);
   }
 

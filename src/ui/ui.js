@@ -95,7 +95,7 @@
     }
     return box;
   }
-  const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag" };
+  const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag", quest: "l-quest" };
   function logEntryEl(e) {
     if (e.k === "dice") return checkEl(e);
     return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : "") + (e.tell ? " l-tell" + (e.rage ? " l-rage" : e.brk ? " l-brk" : "") : ""), e.k === "you" ? "▶ " + e.text : e.text);
@@ -213,21 +213,23 @@
   function actionButton(a) {
     const b = h("button", "act");
     b.type = "button";
+    b.dataset.act = a.id || "";   // W7：旅の行き先の小さな地図が、行き先の選択肢を見つけるため
     b.disabled = !!a.disabled || busy;
     if (a.locked) b.classList.add("locked");   // C10：まだ選べない、状態で現れる選択肢（うっすら見せる）
     b.append(h("b", "", a.label));
     if (a.sub) b.append(h("span", "", a.sub));
     // U4：依頼への道の印・押せない理由
-    const mark = /^(travel|sail):/.test(a.id || "") ? travelMarks[a.id.split(":")[1]] : "";
+    const mark = actMarks[a.id] || (/^(travel|sail):/.test(a.id || "") ? travelMarks[a.id.split(":")[1]] : ""); // U17：依頼・噂の続きに関係ある選択肢すべて
     if (mark) { b.classList.add("marked"); b.append(h("em", "mark", "◆ " + mark)); }
     const why = a.disabled && !a.locked && G.lockReason ? G.lockReason(a, G.S) : "";
     if (why) { b.append(h("em", "why", why)); b.title = why; }
     b.onclick = () => { if (!busy) { G.act(a.id); after(); } };
     return b;
   }
-  let travelMarks = {};
+  let travelMarks = {}, actMarks = {};
   function renderActions(panel) {
     travelMarks = G.travelMarks ? G.travelMarks(G.S) : {};
+    actMarks = G.actMarks ? G.actMarks(G.S) : {};
     G.actions().forEach((grp) => {
       if (!grp.list.length) return;
       const box = h("div", "agroup");
@@ -568,7 +570,7 @@
     $("#profTitle").textContent = `${p.name}（${S.clsName}）`;
     const dl = $("#profBody");
     dl.textContent = "";
-    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["外見", p.look], ["生い立ち", p.history], ["目的", S.goal.text]]
+    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["目的", S.goal.text]]
       .forEach(([k, v]) => { if (v) dl.append(h("dt", "", k), h("dd", "", v)); });
     $("#dlgProfile").showModal();
   };

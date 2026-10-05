@@ -3,7 +3,7 @@
 // - 地図の形は毎回同じ（エンジンを読み直しても同じ海岸線）
 // - 国の名前（主要な国）が初めから出る。どの地方にも名前の置き場所がある
 // - 行った場所だけ名前が出る（行っていない場所は印だけ。今の冒険で行った場所から道がつながる場所は名前だけ薄く）
-// - 行った場所は冒険をまたいで残る（死んでも・新しい冒険でも。今の冒険の分とは見分けがつく）。古い profile・古いセーブでも動く。二つの記録をまとめられる
+// - 行った場所は冒険をまたいで記録に残る（死んでも・新しい冒険でも）が、地図には今の冒険の分だけ出す（前の冒険で行っただけの場所は heard か none）。古い profile・古いセーブでも動く。二つの記録をまとめられる
 // - 道は、両端のどちらかに行ったことがあるものだけ
 // - 画面：冒険の「地図」ボタン（G.ui.openMap）を置き換え、図鑑の隣の「地図」ボタン（U11）からも開ける
 import { readFileSync } from "node:fs";
@@ -97,24 +97,29 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     return { P: JSON.parse(JSON.stringify(G.P)), home, to };
   })();
 
-  // ---- 冒険をまたいで残る
+  // ---- 前の冒険で行った場所は、地図に出さない（持ち主の声「前の冒険で行った場所は表示しなくていい」）。記録（G.P.codex.places）は残る
   {
     const G = loadEngine();
     const D = G.data;
     G.P = P0.P;
     const other = Object.keys(D.CLASSES).find((c) => D.CLASSES[c].start !== P0.home && D.CLASSES[c].start !== P0.to);
     const S = start(G, 12, other);
+    const nearNow = (id) => Object.keys(Object.assign({}, D.LOCS[id].links, D.LOCS[id].sea)).some((to) => S.visited[to]);
     [P0.home, P0.to].forEach((id) => {
+      if (S.visited[id]) return;
       const st = G.w5.status(id);
-      if (st !== "past" && st !== "heard" && st !== "now" && st !== "here") F(`${id}: 前の冒険で行った場所が消えた（${st}）`);
-      if (!S.visited[id] && st !== "past") F(`${id}: 前の冒険で行った場所が「前の冒険」として見分けられない（${st}）`);
+      const want = nearNow(id) ? "heard" : "none";
+      if (st !== want) F(`${id}: 前の冒険で行っただけの場所が、今の冒険の見え方（${want}）にならない（${st}）`);
       const m = G.w5.marks().find((x) => x.id === id);
-      if (!m.name || m.faint) F(`${id}: 前の冒険で行った場所の名前がはっきり出ない`);
-      if (!m.rec || !m.rec.by) F(`${id}: 前の冒険で誰が行ったかが残らない`);
+      if (want === "none" && m.name) F(`${id}: 前の冒険で行っただけの場所の名前が出る`);
+      if (!(G.P.codex.places || {})[id]) F(`${id}: 冒険をまたぐ記録が消えた（地図に出さないだけのはず）`);
     });
-    // 前の冒険で行った場所から出る道は見える
-    if (!G.w5.roads().some((r) => r.a === P0.home || r.b === P0.home)) F("前の冒険で行った場所の道が見えない");
-    if (G.w5.count().been < 2) F("行ったことのある場所の数が数えられない");
+    if (G.w5.marks().some((m) => m.status === "past")) F("地図に「前の冒険」の印が残っている");
+    // 道：今の冒険で行った場所から出る道だけ
+    G.w5.roads().forEach((r) => { if (!S.visited[r.a] && !S.visited[r.b]) F(`今の冒険で行っていない場所どうしの道 ${r.a}–${r.b} が見える`); });
+    if (G.w5.count().been < 2) F("行ったことのある場所の数（記録）が数えられない");
+    const src = readFileSync(new URL("../../src/ui/w5_map.js", import.meta.url), "utf8");
+    if (/前の冒険|"past"|\.past\b/.test(src)) F("地図の画面に「前の冒険」の凡例・文・色が残っている");
   }
 
   // ---- 古いセーブ（今の冒険で行った場所が記録に無い）でも、地図を開くと写る

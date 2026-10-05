@@ -1,0 +1,11 @@
+/* K1：ステータスの「技」 */
+.k1list { display: grid; gap: 6px; font-size: 13px; }
+.k1row { display: grid; grid-template-columns: auto auto 1fr; gap: 2px 8px; align-items: baseline; }
+.k1row .nm { font-weight: 600; }
+.k1row .k1meta { opacity: .7; font-size: 12px; justify-self: end; text-align: right; }
+.k1row .k1fx { grid-column: 1 / -1; font-size: 12px; opacity: .85; line-height: 1.5; }
+.k1row.k1off .nm { opacity: .55; }
+.k1lv { padding: 0 6px; border-radius: 8px; border: 1px solid currentColor; font-size: 11px; opacity: .8; }
+.k1lv2, .k1lv3 { font-weight: 600; opacity: 1; }
+.k1hint { margin: 0; font-size: 12px; opacity: .8; line-height: 1.5; }
+.k1pop { margin-top: 6px; font-weight: 600; font-size: 14px; }

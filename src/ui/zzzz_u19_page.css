@@ -1,0 +1,9 @@
+/* U19：本文の欄を行動ごとに上から書き直す（ui/zzzz_u19_page.js）。前の頁の行は隠すだけ。過去の文は右上の「ログ」で読む */
+#log > .u19gone { display: none !important; }
+/* 直前の手番の要約（戦闘）：一行だけ、薄く */
+#log[data-u19prev]::before { content: attr(data-u19prev); order: -2; display: block; font: 12.5px/1.6 var(--f-ui); color: var(--muted); opacity: .75;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-bottom: 4px; border-bottom: 1px dashed var(--rule); }
+/* 何を選んだか（エンジンが「あなた」の行を書かなかったとき）。見た目は .l-you と同じ */
+#log[data-u19head]::after { content: attr(data-u19head); order: -1; display: block; font-family: var(--f-ui); font-size: 14px; line-height: 1.7;
+  border-left: 3px solid var(--accent); padding-left: 10px; color: var(--hi, var(--ink)); }
+body.v9pc #log[data-u19head]::after { font-size: 13.5px; opacity: .85; }

@@ -74,7 +74,7 @@
       look: { body: "biped", build: "normal", skin: "#8a9a6a", head: "human", hair: "#4a3a22", eyes: "hollow", mouth: "o", arms: "forward", outfit: "rags", cloth: "#5a5040", pattern: "spots", extra: ["sweat", "drool"], mood: "fierce" },
       lines: {
         open: ["「たすけて……ちがう、にげて……ちがう、こっちへ……」声がまとまらない。"],
-        turn: ["頭の花が、ゆっくりとあなたのほうを向いた。", "「水を……水を……」根が、あなたの足首を探っている。", "胸の名札には、エルメシアの町の名前が書いてある。"],
+        turn: ["頭の花が、ゆっくりとあなたのほうを向いた。", "「水を……水を……」根が、あなたの足首を探っている。", "胸の名札には、首都エルメシアの町の名前が書いてある。"],
       },
     },
     e2_rotbloom: {

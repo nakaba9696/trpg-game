@@ -436,7 +436,10 @@ export function makeSmartBot(G) {
         const sc = (w) => avg(w.dmg) * (G.chance(w.stat, 0, w.hit || 0) / 100) + (w.pierce ? 50 : 0);
         if (sc(it) > sc(cur) * 1.1) G.equip(id);
       } else if (it.type === "armor" && !it.cursed) {
-        const cur = G.armor();
+        // 同じ枠（胴・頭・足・左手の盾。I2）の今の品と比べる。両手の武器を持っているあいだは盾を着けない
+        const k = ({ head: "head", feet: "feet", off: "off" })[it.slot] || "armor";
+        if (k === "off" && G.i2s && G.i2s.blocked(s)) continue;
+        const cur = k === "armor" ? (s.armor && D.ITEMS[s.armor]) : (s[k] && D.ITEMS[s[k]]);
         if (!cur || it.def > cur.def) G.equip(id);
       }
     }

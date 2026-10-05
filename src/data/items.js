@@ -14,7 +14,7 @@
     longsword: { name: "鉄の長剣", type: "weapon", dmg: [1, 6, 2], stat: "筋力", hit: 0, price: 50 },
     mace: { name: "錫杖", type: "weapon", dmg: [1, 6, 1], stat: "筋力", hit: 0, magic: 5, price: 40, desc: "神官の杖。癒しの奇跡がわずかに通りやすい。" },
     axe: { name: "大斧", type: "weapon", dmg: [1, 10, 3], stat: "筋力", hit: -10, price: 90, desc: "重いが、当たれば骨まで砕く。" },
-    katana: { name: "打刀", type: "weapon", dmg: [1, 6, 3], stat: "筋力", hit: 5, price: 140, desc: "シェルアークの島の片刃の刀。潮に強く、よく斬れる。" },
+    katana: { name: "打刀", type: "weapon", dmg: [1, 6, 3], stat: "筋力", hit: 5, price: 140, desc: "シェルアーク諸島の島の片刃の刀。潮に強く、よく斬れる。" },
     staff: { name: "樫の杖", type: "weapon", dmg: [1, 4, 0], stat: "筋力", hit: -5, magic: 10, price: 15, desc: "魔法の成功率が上がる。" },
     rapier: { name: "細剣", type: "weapon", dmg: [1, 6, 1], stat: "敏捷", hit: 10, vital: 5, price: 110, desc: "素早い突き。敏捷で戦う。" },
     mithril: { name: "ミスリルの剣", type: "weapon", dmg: [1, 8, 5], stat: "筋力", hit: 10, price: 700, desc: "軽く、鋼より硬い。" },

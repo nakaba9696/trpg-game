@@ -200,9 +200,9 @@
     const p = (D.C2_PEOPLE || {})[id];
     if (!p) return "町と旅で会う人";
     if (p.join) return "仲間になる人";
-    return p.nation ? `${p.nation}の人` : "各地の人";
+    return p.nation ? `${(D.PLACE_COUNTRY || {})[p.nation] || p.nation}の人` : "各地の人"; // 国は「レオネスト王国」のように（D2）
   };
-  F2.PEOPLE_GROUPS = ["仲間になる人", "レオネストの人", "ノルディアの人", "エルメシアの人", "各地の人", "町と旅で会う人"];
+  F2.PEOPLE_GROUPS = ["仲間になる人", "レオネスト王国の人", "ノルディア帝国の人", "エルメシア共和国の人", "各地の人", "町と旅で会う人"];
 
   // ---------------------------------------------------------------- 用語（冒険をまたいで読む）
   // 知っている行：{ id: { key: "now" | "past" } }。今の冒険で開いた行は now、過去の冒険だけの行は past
@@ -264,7 +264,7 @@
   G.codexSeed = (S) => {
     if (!S || S.f2codex) return false;
     S.f2codex = 1;
-    const items = new Set([...Object.keys(S.inv || {}), S.weapon, S.armor, S.ring].filter(Boolean));
+    const items = new Set([...Object.keys(S.inv || {}), ...(G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring])].filter(Boolean));
     items.forEach((id) => G.codexItem(id, true));
     (S.log || []).forEach((l) => {
       if (l.fx === "down" && l.foe) { const id = foeByName(l.foe); if (id) G.codexKill(id, true); }
@@ -310,7 +310,7 @@
   G.newGame = (opt) => {
     const S = baseNewGame(opt);
     S.f2codex = 1;
-    [...Object.keys(S.inv || {}), S.weapon, S.armor, S.ring].filter(Boolean).forEach((id) => G.codexItem(id, true));
+    [...Object.keys(S.inv || {}), ...(G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring])].filter(Boolean).forEach((id) => G.codexItem(id, true));
     return S;
   };
 
