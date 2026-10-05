@@ -15,8 +15,8 @@
     i3a_vestment: A("祭服", { def: 1, magic: 8, bonus: { heal: 10 }, price: 300, i3: { k: "ローブ", lv: 2, from: ["w1_holy"] } }, "聖都の司祭の白い衣。三柱の神を表す三本の金糸。洗濯女は、この金糸のせいで指を切る。"),
     i3a_scholarcoat: A("学院の外套", { def: 0, magic: 8, stats: { 知力: 3 }, price: 120, i3: { k: "ローブ", noun: "学衣", mat: "cloth", lv: 1, gen: true, from: ["zephara"] } }, "学院の生徒の外套。肘のところに、机に突っ伏した跡がある。"),
     i3a_dancer: A("踊り子の衣装", { def: 0, agi: 10, bonus: { talk: 10 }, price: 120, i3: { k: "布", lv: 1, from: ["nerva", "w2_zalgros", "karna"] } }, "鈴のついた薄い衣。鎧の代わりにはならない。視線の代わりにはなる。"),
-    i3a_kosode: A("島の小袖", { def: 0, agi: 5, bonus: { talk: 5 }, price: 60, i3: { k: "布", lv: 0, from: ["yakumo", "w1_oboro"] } }, "シェルアークの普段着。袖の柄で、どこの家の者か分かる。"),
-    i3a_yukata: A("湯上がりの浴衣", { def: 0, agi: 5, stats: { 体力: 2 }, price: 25, i3: { k: "布", lv: 0, from: ["w2_amyrein"] } }, "アミュレインの宿で貸してくれる浴衣。返し忘れて持ってきてしまった。"),
+    i3a_kosode: A("島の小袖", { def: 0, agi: 5, bonus: { talk: 5 }, price: 60, i3: { k: "布", lv: 0, from: ["yakumo", "w1_oboro"] } }, "島の都シェルアークの普段着。袖の柄で、どこの家の者か分かる。"),
+    i3a_yukata: A("湯上がりの浴衣", { def: 0, agi: 5, stats: { 体力: 2 }, price: 25, i3: { k: "布", lv: 0, from: ["w2_amyrein"] } }, "湯の町アミュレインの宿で貸してくれる浴衣。返し忘れて持ってきてしまった。"),
 
     // ---------------------------------------------------------------- 革
     i3a_hardleather: A("硬革の鎧", { def: 2, agi: -5, price: 70, i3: { k: "革", noun: "硬革鎧", mat: "leather", lv: 0, gen: true } }, "煮て固めた革を重ねた鎧。乾くと板のようになる。濡れると匂う。"),

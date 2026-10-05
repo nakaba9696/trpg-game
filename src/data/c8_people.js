@@ -236,7 +236,7 @@
     takimaru: [{ from: "春", to: "冬", loc: "yakumo", note: "島の都の浜の番小屋にいる。いなければ、隣の島" }],
     yurien: [
       { from: "春", to: "夏", loc: "ruins", note: "エル・ナフ遺構で、石碑の刻印を写している" },
-      { from: "秋", to: "冬", loc: "nerva", note: "秋と冬は、ヴァレンツァの古本屋の二階で写しを整えている" },
+      { from: "秋", to: "冬", loc: "nerva", note: "秋と冬は、港町ヴァレンツァの古本屋の二階で写しを整えている" },
     ],
     roswitha: [{ from: "春", to: "冬", loc: "fort", note: "黒鉄の砦の倉の二階で、帳簿をつけている" }],
     izra: [
