@@ -99,6 +99,16 @@
   const cRegion = h("span", "u14region"), cName = h("b", "u14town"), cLine = h("span", "u14line");
   card.append(cRegion, cName, cLine);
   body.append(card);
+  // 戦闘との境目の幕（会話・出来事・旅 → 戦闘、戦闘の結果 → 次の場面）
+  const cut = h("div");
+  cut.id = "u14cut";
+  cut.hidden = true;
+  cut.setAttribute("role", "status");
+  const cutHead = h("span", "u14cuthead"), cutLine = h("b", "u14cutline");
+  cut.append(cutHead, cutLine);
+  body.append(cut);
+  // U13 の結果の場面（「先へ進む」を押すまで）を出しているか。その間は戦闘の見た目のまま、次の場面の文も出さない
+  const holding = () => !!(G.u13 && G.u13.holding && G.u13.holding());
 
   // ---------------------------------------------------------------- 看板と種類
   let lastKind = null, lastRun = null, swapT = 0;
@@ -113,7 +123,7 @@
     s.marks.forEach((m) => sMarks.append(h("span", "", m)));
   }
   function setKind(S) {
-    const kind = U14.kindOf(S);
+    const kind = holding() ? "combat" : U14.kindOf(S);
     const play = $("#play");
     const on = !!(kind && play && !play.hidden);
     if (!on) { delete body.dataset.u14; body.classList.remove("u14arrived"); return; }
@@ -133,13 +143,14 @@
   }
 
   // ---------------------------------------------------------------- 町の見出し
-  let cardT = 0, cardKey = "";
+  let cardT = 0, cardOutT = 0, cardKey = "";
   function hideCard() {
     if (card.hidden) return;
     clearTimeout(cardT);
     card.classList.remove("on");
     card.classList.add("out");
-    setTimeout(() => { card.hidden = true; card.classList.remove("out"); }, calm() ? 0 : 520);
+    clearTimeout(cardOutT);
+    cardOutT = setTimeout(() => { card.hidden = true; card.classList.remove("out"); }, calm() ? 0 : 520);
     toArrival();
   }
   U14.hideCard = hideCard;
@@ -152,6 +163,7 @@
     cLine.textContent = "";
     U14.cardLine(a).forEach((t) => cLine.append(h("span", "", t)));
     cLine.hidden = !cLine.children.length;
+    clearTimeout(cardOutT);
     card.hidden = false;
     card.classList.remove("out");
     if (calm()) card.classList.add("on");
@@ -160,13 +172,41 @@
     cardT = setTimeout(hideCard, calm() ? 2200 : 2800);
   }
   card.addEventListener("click", hideCard);
-  // 見出しが出ている間のキーは、見出しを消すだけ（Enter で選択肢を押してしまわない）
+  // 見出し・幕が出ている間のキーは、それを消すだけ（Enter で選択肢を押してしまわない）
   document.addEventListener("keydown", (ev) => {
-    if (card.hidden || ev.isComposing) return;
+    if ((card.hidden && cut.hidden) || ev.isComposing) return;
     ev.preventDefault();
     ev.stopPropagation();
     hideCard();
+    hideCut();
   }, true);
+
+  // ---------------------------------------------------------------- 境目の幕
+  // 前の場面の話し手の立ち絵は、幕の後ろで消える（CSS：戦闘の見た目では、出ていく立ち絵をすぐ隠す）
+  let cutT = 0, cutOutT = 0, cutRef = null;
+  function hideCut() {
+    if (cut.hidden) return;
+    clearTimeout(cutT);
+    cut.classList.remove("on");
+    cut.classList.add("out");
+    clearTimeout(cutOutT);
+    cutOutT = setTimeout(() => { cut.hidden = true; cut.classList.remove("out"); }, calm() ? 0 : 420);
+  }
+  U14.hideCut = hideCut;
+  function showCut(head, line, kind) {
+    cutHead.textContent = head || "";
+    cutLine.textContent = line || "";
+    cut.dataset.kind = kind || "";
+    clearTimeout(cutOutT); // 消えかけの幕の後始末で、新しい幕を消さない
+    cut.hidden = false;
+    cut.classList.remove("out");
+    if (calm()) cut.classList.add("on");
+    else requestAnimationFrame(() => requestAnimationFrame(() => cut.classList.add("on")));
+    clearTimeout(cutT);
+    cutT = setTimeout(hideCut, calm() ? 1100 : 1700);
+  }
+  U14.showCut = showCut;
+  cut.addEventListener("click", hideCut);
   // 着いたときの語りの頭（場所の見出し）が見えるように送る
   function toArrival() {
     const log = $("#log");
@@ -186,6 +226,17 @@
     });
   }
 
+  // 結果の場面の間に隠す行か（戦闘の見出しより後の、最初の見出しから後ろ）。U13 が順に出す行から外すのに使う
+  U14.later = (el) => {
+    if (!holding() || !el || !el.parentNode) return false;
+    const kids = Array.from(el.parentNode.children);
+    let fight = -1;
+    kids.forEach((k, i) => { if (k.classList.contains("l-title") && k.textContent === "戦闘") fight = i; });
+    if (fight < 0) return false;
+    const start = kids.findIndex((k, i) => i > fight && k.classList.contains("l-title"));
+    return start >= 0 && kids.indexOf(el) >= start;
+  };
+
   // ---------------------------------------------------------------- ログ：区切りと、前の場面を淡く
   function markLog(S) {
     const log = $("#log");
@@ -193,12 +244,23 @@
     const kids = Array.from(log.children);
     const shown = S.log.slice(-kids.length);
     const same = shown.length === kids.length;
+    // 結果の場面を出している間は、戦闘のあとに始まった次の場面（戦闘の見出しより後の、最初の見出しから）を隠す
+    let fight = -1, later = kids.length;
+    if (holding()) {
+      kids.forEach((el, i) => { if (el.classList.contains("l-title") && el.textContent === "戦闘") fight = i; });
+      if (fight >= 0) for (let i = fight + 1; i < kids.length; i++) if (kids[i].classList.contains("l-title")) { later = i; break; }
+    }
     let lastTitle = -1;
-    kids.forEach((el, i) => { if (el.classList.contains("l-title")) lastTitle = i; });
+    kids.forEach((el, i) => { el.classList.toggle("u14later", i >= later); if (i < later && el.classList.contains("l-title")) lastTitle = i; });
+    // 区切りの一行（「――そのとき」）は、すぐ後の見出しと一緒に今の場面の頭
+    kids.forEach((el, i) => { const e = same ? shown[i] : null; el.classList.toggle("u14cutline", !!(e && e.u14cut)); });
+    // 区切りの一行から「戦闘」の見出しまで（旅の襲撃の一文を挟むことがある）は今の場面
+    let head = lastTitle;
+    for (let i = lastTitle - 1; i >= Math.max(0, lastTitle - 3); i--) if (kids[i].classList.contains("u14cutline")) { head = i; break; }
     // 今の場面の頭：最後の見出し。見出しが無ければ全部が今の場面
     let lead = false;
     kids.forEach((el, i) => {
-      el.classList.toggle("u14past", lastTitle > 0 && i < lastTitle);
+      el.classList.toggle("u14past", head > 0 && i < head);
       const e = same ? shown[i] : null;
       const place = !!(e && e.k === "title" && e.u14);
       el.classList.toggle("u14place", place);
@@ -219,10 +281,25 @@
       const S = G.S;
       if (!S) return r;
       const sameRun = lastRun === S.id;
+      const hold = holding();
+      const wasKind = lastKind;
       setKind(S);
-      body.classList.toggle("u14arrived", U14.arrived(S));
-      paintSign(S);
+      body.classList.toggle("u14arrived", !hold && U14.arrived(S));
+      if (!hold) paintSign(S);
       markLog(S);
+      // 会話・出来事・旅から戦闘へ：境目の幕（区切りの一行と、何が襲ってきたか）
+      if (S.combat && S.combat !== cutRef) {
+        const c = S.combat.u14cut;
+        if (c && sameRun) showCut(c.head, c.line, "combat");
+        cutRef = S.combat;
+      }
+      // 戦闘の結果の場面のあと、語りの場面へ：区切りの幕（次の場面の名前）
+      if (!hold && wasKind === "combat" && sameRun && !S.combat && !S.over && U14.kindOf(S) === "story") {
+        const s = U14.signOf(S);
+        const t = Array.from(document.querySelectorAll("#log > .l-title")).pop();
+        showCut(s ? s.tag : "", t ? t.textContent : s ? s.name : "", "story");
+      }
+      if (hold) { lastRun = S.id; return r; } // 町に着いた見出しは、結果の場面を閉じてから
       const key = S.u14arr ? [S.id, S.u14arr.loc, S.u14arr.turn, S.u14arr.day].join("|") : "";
       if (U14.arrived(S) && key !== cardKey) {
         const fresh = sameRun && cardKey !== "";
@@ -236,5 +313,5 @@
   };
   // 冒険の画面を閉じたら（タイトルへ）、種類の印を外す
   const play = $("#play");
-  if (play) new MutationObserver(() => { if (play.hidden) { delete body.dataset.u14; lastKind = null; if (!card.hidden) { card.hidden = true; clearTimeout(cardT); } } }).observe(play, { attributes: true, attributeFilter: ["hidden"] });
+  if (play) new MutationObserver(() => { if (play.hidden) { delete body.dataset.u14; lastKind = null; if (!card.hidden) { card.hidden = true; clearTimeout(cardT); } if (!cut.hidden) { cut.hidden = true; clearTimeout(cutT); } } }).observe(play, { attributes: true, attributeFilter: ["hidden"] });
 })(globalThis.G = globalThis.G || {});

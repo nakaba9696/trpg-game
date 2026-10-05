@@ -1,0 +1,36 @@
+/* S4：戦闘開始の見出し・揺れ・縁の光（ui/zs4_encounter.js）。動きは transform・opacity だけ。動きを減らす設定では見出しだけ */
+#s4enc { position: fixed; left: 50%; top: 18%; z-index: 60; transform: translate(-50%, -8px); opacity: 0; pointer-events: auto; cursor: pointer;
+  display: grid; gap: 4px; justify-items: center; padding: 10px 26px 12px; border-radius: 3px; text-align: center; max-width: calc(100vw - 32px);
+  background: rgba(18, 6, 4, .82); border: 1px solid rgba(212, 82, 58, .85); box-shadow: 0 8px 30px rgba(0, 0, 0, .5), 0 0 24px rgba(190, 40, 20, .35);
+  color: #f3e6d8; transition: opacity .25s ease, transform .25s ease; }
+#s4enc.on { opacity: 1; transform: translate(-50%, 0); }
+#s4enc .s4enc-title { font-size: 13px; letter-spacing: .3em; color: #e8a08e; }
+#s4enc .s4enc-names { font-family: var(--f-display, var(--f-body, serif)); font-weight: 400; font-size: 22px; letter-spacing: .06em; }
+#s4enc[data-level="ambush"] { border-color: rgba(230, 190, 90, .9); box-shadow: 0 8px 30px rgba(0, 0, 0, .5), 0 0 24px rgba(230, 170, 60, .35); }
+#s4enc[data-level="ambush"] .s4enc-title { color: #f0cf7a; }
+#s4enc[data-level="boss"] { padding: 14px 34px 16px; border-width: 2px; }
+#s4enc[data-level="boss"] .s4enc-names { font-size: 28px; }
+#s4enc[data-level="majin"] { padding: 16px 38px 18px; background: rgba(8, 2, 14, .88); border: 2px solid rgba(150, 90, 200, .85); box-shadow: 0 10px 40px rgba(0, 0, 0, .6), 0 0 36px rgba(120, 40, 170, .45); }
+#s4enc[data-level="majin"] .s4enc-title { color: #c9a6ee; letter-spacing: .6em; }
+#s4enc[data-level="majin"] .s4enc-names { font-size: 30px; }
+
+/* 縁の光（一瞬） */
+#s4flash { position: fixed; inset: 0; z-index: 59; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 45%, transparent 45%, rgba(200, 30, 10, .45)); }
+#s4flash[data-level="ambush"] { background: radial-gradient(ellipse 80% 70% at 50% 45%, transparent 45%, rgba(230, 170, 40, .4)); }
+#s4flash[data-level="majin"] { background: radial-gradient(ellipse 80% 70% at 50% 45%, rgba(20, 0, 30, .2) 30%, rgba(90, 20, 140, .6)); }
+#s4flash.on { animation: s4flash .8s ease-out; }
+#s4flash[data-level="boss"].on, #s4flash[data-level="majin"].on { animation-duration: 1.1s; }
+@keyframes s4flash { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
+
+/* 揺れ（わずか）。強敵・使徒・不意を突いたときは大きく長く */
+.s4shake { animation: s4shake .35s ease-out; }
+.s4shake[data-s4lv="ambush"], .s4shake[data-s4lv="boss"] { animation: s4shakeBig .55s ease-out; }
+.s4shake[data-s4lv="majin"] { animation: s4shakeBig .8s ease-out; }
+@keyframes s4shake { 0%, 100% { transform: none; } 20% { transform: translate(-3px, 1px); } 40% { transform: translate(3px, -1px); } 60% { transform: translate(-2px, 0); } 80% { transform: translate(1px, 1px); } }
+@keyframes s4shakeBig { 0%, 100% { transform: none; } 12% { transform: translate(-6px, 2px); } 25% { transform: translate(6px, -2px); } 38% { transform: translate(-5px, 1px); } 50% { transform: translate(4px, -1px); } 65% { transform: translate(-3px, 1px); } 80% { transform: translate(2px, 0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .s4shake, #s4flash.on { animation: none !important; }
+  #s4enc { transition: opacity .2s ease; transform: translate(-50%, 0); }
+}

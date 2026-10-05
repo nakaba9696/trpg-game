@@ -124,9 +124,38 @@ body.u14swap[data-u14from="story"]:not([data-u14="story"]) .tome { transform-ori
 #u14card .u14line span + span::before { content: "◆"; margin-right: 1.4em; font-size: 9px; vertical-align: .25em; color: rgba(227, 194, 124, .8); }
 #u14card .u14line[hidden] { display: none; }
 
+/* ---------------------------------------------------------------- 戦闘との境目（会話・出来事・旅 → 戦闘。持ち主「話していた人が襲ってきたように見える」）
+   戦闘の見た目に替わったら、出ていく立ち絵（話していた人）はフェードを待たずにすぐ消す */
+body[data-u14="combat"] #v9cast .v9fig.out, body[data-u14="combat"] #v9cast .v9fig.speaker,
+body[data-u14="combat"] #stand .standFig:not(.on), body[data-u14="combat"] #who { opacity: 0 !important; visibility: hidden; transition: none !important; }
+/* ログの区切りの一行（「――そのとき」「旅を続けるうちに」） */
+#log .u14cutline { text-align: center; font-family: var(--f-display); letter-spacing: .4em; color: var(--u14-combat); margin-top: .8em !important;
+  display: flex; align-items: center; gap: 14px; font-size: .95em; }
+#log .u14cutline::before, #log .u14cutline::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, currentColor); opacity: .55; }
+#log .u14cutline::after { background: linear-gradient(90deg, currentColor, transparent); }
+#log .u14cutline + .l-title { margin-top: .2em !important; border-top: 0; }
+/* 結果の場面を出している間は、次の場面の文を出さない */
+#log .u14later { display: none !important; }
+/* 境目の幕：画面を暗くして、区切りの一行と、何が襲ってきたか */
+#u14cut { position: fixed; inset: 0; z-index: 29; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 24px 20px; text-align: center; cursor: pointer;
+  background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(8, 2, 2, .9), rgba(4, 2, 2, .78)); color: #f3e8cc; text-shadow: 0 2px 12px #000;
+  opacity: 0; transition: opacity .35s ease; }
+#u14cut[hidden] { display: none; }
+#u14cut.on { opacity: 1; }
+#u14cut.out { opacity: 0; transition-duration: .4s; }
+#u14cut .u14cuthead { font: 400 14px/1.4 var(--f-display); letter-spacing: .5em; color: #e9a089; padding-left: .5em; }
+#u14cut .u14cutline { max-width: 26em; font: 400 clamp(18px, 4.6vw, 28px)/1.6 var(--f-body); letter-spacing: .06em; color: #f6ead0;
+  transform: translateY(6px); transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+#u14cut.on .u14cutline { transform: none; }
+#u14cut .u14cutline::before { content: ""; display: block; width: min(60vw, 360px); height: 1px; margin: 0 auto 14px; background: linear-gradient(90deg, transparent, rgba(212, 82, 58, .9), transparent); }
+#u14cut[data-kind="story"] { background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(10, 8, 4, .9), rgba(6, 5, 3, .78)); }
+#u14cut[data-kind="story"] .u14cuthead { color: #d9c08a; }
+#u14cut[data-kind="story"] .u14cutline::before { background: linear-gradient(90deg, transparent, rgba(227, 194, 124, .85), transparent); }
+
 /* ---------------------------------------------------------------- 動きを減らす */
 @media (prefers-reduced-motion: reduce) {
-  #u14tint > i, body[data-u14] .tome, #u14card, #u14card .u14town, #log .u14past { transition: none; }
+  #u14tint > i, body[data-u14] .tome, #u14card, #u14card .u14town, #log .u14past, #u14cut, #u14cut .u14cutline { transition: none; }
+  #u14cut .u14cutline { transform: none; }
   body.u14swap .tome { animation: none !important; }
   #u14card:not(.on) .u14town { letter-spacing: .12em; transform: none; }
 }
