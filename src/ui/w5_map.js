@@ -39,7 +39,7 @@
   const info = h("p", "w5info");
   info.setAttribute("aria-live", "polite");
   const legend = h("p", "fine w5legend");
-  [["w5k here", "今いる所"], ["w5k now", "この冒険で行った"], ["w5k past", "前の冒険で行った"], ["w5k heard", "道標で名だけ"], ["w5k none", "まだ知らない"], ["w5k road", "陸路"], ["w5k road far", "陸路（先はまだ知らない）"], ["w5k sea", "船"], ["w5k border", "国境（道ではない）"], ["w5k gate", "砦が塞ぐ道"]].forEach(([c, t]) => { const s = h("span", "w5li"); s.append(h("i", c), document.createTextNode(t)); legend.append(s); });
+  [["w5k here", "今いる所"], ["w5k now", "この冒険で行った"], ["w5k heard", "道標で名だけ"], ["w5k none", "まだ知らない"], ["w5k road", "陸路"], ["w5k road far", "陸路（先はまだ知らない）"], ["w5k sea", "船"], ["w5k border", "国境（道ではない）"], ["w5k gate", "砦が塞ぐ道"]].forEach(([c, t]) => { const s = h("span", "w5li"); s.append(h("i", c), document.createTextNode(t)); legend.append(s); });
   const side = h("div", "w5side");
   side.append(info, legend);
   body.append(wrap, side);
@@ -50,8 +50,8 @@
   // ---------------------------------------------------------------- 色
   const isDark = () => { const t = document.documentElement.dataset.theme; if (t) return t === "dark"; return !!(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches); };
   const PAL = {
-    light: { sea: "#b9c3b4", sea2: "#a6b3a6", wave: "rgba(60,78,74,.35)", land: "#e6d6ae", land2: "#d6c294", coast: "#4a3a26", ink: "#2e2416", muted: "#6c5a40", faint: "rgba(80,62,40,.6)", lake: "#a9b8ab", river: "#4f6a72", tint: 0.42, border: "rgba(90,40,30,.75)", road: "#5a4428", roadSoft: "rgba(90,68,40,.55)", seaRoute: "#2f5a70", here: "#a3321f", stamp: "#2e2416", past: "#8a6a44", none: "rgba(70,56,36,.5)", halo: "rgba(240,228,196,.85)", mtn: "#5a4630", mtnShade: "rgba(90,70,48,.45)", tree: "#4e5e34", marsh: "#4f5e46", waste: "#4a2a2a", snow: "#ffffff", vign: "rgba(90,60,25,.38)", regionInk: "rgba(56,40,24,.62)", dreadInk: "rgba(70,10,20,.75)" },
-    dark: { sea: "#121c20", sea2: "#0d1518", wave: "rgba(150,170,160,.18)", land: "#2a271f", land2: "#221f18", coast: "#c9b48a", ink: "#ece0c4", muted: "#b0a48a", faint: "rgba(220,206,170,.55)", lake: "#152227", river: "#6f97a0", tint: 0.5, border: "rgba(230,150,120,.7)", road: "#d8c49a", roadSoft: "rgba(216,196,154,.45)", seaRoute: "#7fb0c8", here: "#ff7a5c", stamp: "#ece0c4", past: "#b89a70", none: "rgba(200,186,150,.45)", halo: "rgba(14,16,14,.85)", mtn: "#cdb894", mtnShade: "rgba(0,0,0,.4)", tree: "#8aa070", marsh: "#7f9478", waste: "#c08080", snow: "#d8e2e8", vign: "rgba(0,0,0,.55)", regionInk: "rgba(236,224,196,.6)", dreadInk: "rgba(255,140,140,.7)" },
+    light: { sea: "#b9c3b4", sea2: "#a6b3a6", wave: "rgba(60,78,74,.35)", land: "#e6d6ae", land2: "#d6c294", coast: "#4a3a26", ink: "#2e2416", muted: "#6c5a40", faint: "rgba(80,62,40,.6)", lake: "#a9b8ab", river: "#4f6a72", tint: 0.42, border: "rgba(90,40,30,.75)", road: "#5a4428", roadSoft: "rgba(90,68,40,.55)", seaRoute: "#2f5a70", here: "#a3321f", stamp: "#2e2416", none: "rgba(70,56,36,.5)", halo: "rgba(240,228,196,.85)", mtn: "#5a4630", mtnShade: "rgba(90,70,48,.45)", tree: "#4e5e34", marsh: "#4f5e46", waste: "#4a2a2a", snow: "#ffffff", vign: "rgba(90,60,25,.38)", regionInk: "rgba(56,40,24,.62)", dreadInk: "rgba(70,10,20,.75)" },
+    dark: { sea: "#121c20", sea2: "#0d1518", wave: "rgba(150,170,160,.18)", land: "#2a271f", land2: "#221f18", coast: "#c9b48a", ink: "#ece0c4", muted: "#b0a48a", faint: "rgba(220,206,170,.55)", lake: "#152227", river: "#6f97a0", tint: 0.5, border: "rgba(230,150,120,.7)", road: "#d8c49a", roadSoft: "rgba(216,196,154,.45)", seaRoute: "#7fb0c8", here: "#ff7a5c", stamp: "#ece0c4", none: "rgba(200,186,150,.45)", halo: "rgba(14,16,14,.85)", mtn: "#cdb894", mtnShade: "rgba(0,0,0,.4)", tree: "#8aa070", marsh: "#7f9478", waste: "#c08080", snow: "#d8e2e8", vign: "rgba(0,0,0,.55)", regionInk: "rgba(236,224,196,.6)", dreadInk: "rgba(255,140,140,.7)" },
   };
   const css = (n, d) => (getComputedStyle(document.documentElement).getPropertyValue(n).trim() || d);
 
@@ -357,14 +357,14 @@
     });
     x.setLineDash([]);
     // 印
-    const ORDER = { none: 0, heard: 1, past: 2, now: 3, here: 4 };
+    const ORDER = { none: 0, heard: 1, now: 3, here: 4 };
     marks.sort((a, b) => ORDER[a.status] - ORDER[b.status]);
     const rad = Math.max(3.5, Math.min(8, view.s * 0.7));
     marks.forEach((m) => {
       const [sx, sy] = pos[m.id];
       const r = m.type === "town" ? rad : rad * 0.85;
       const been = W5.KNOWN[m.status];
-      const fill = m.status === "here" || m.status === "now" ? P.stamp : m.status === "past" ? P.past : null;
+      const fill = m.status === "here" || m.status === "now" ? P.stamp : null;
       x.beginPath();
       if (m.type === "town") x.rect(sx - r, sy - r, r * 2, r * 2);
       else if (m.type === "dungeon") { x.moveTo(sx, sy - r * 1.2); x.lineTo(sx + r * 1.05, sy); x.lineTo(sx, sy + r * 1.2); x.lineTo(sx - r * 1.05, sy); x.closePath(); }
@@ -407,7 +407,7 @@
       if (!at) return;
       placed.push([at[0] - 2, at[1], at[0] + w + 2, at[1] + hh]);
       x.textAlign = "left"; x.textBaseline = "middle";
-      x.fillStyle = m.status === "here" ? P.here : m.status === "now" ? P.ink : m.status === "past" ? P.past : P.faint;
+      x.fillStyle = m.status === "here" ? P.here : m.status === "now" ? P.ink : P.faint;
       haloText(x, P, m.name, at[0], at[1] + hh / 2, m.faint ? 0.5 : 1);
     });
     cv.setAttribute("aria-label", `世界地図。${summary()}`);
@@ -417,11 +417,12 @@
     x.globalAlpha = Math.min(1, a + 0.25); x.fillText(t, sx, sy); x.restore();
   }
   function summary() {
+    // 地図は今の冒険の分だけ数える（W5.count の記録は図鑑用）
     const n = W5.count();
     const S = G.S;
     const now = S && S.visited ? Object.keys(S.visited).filter((id) => D.LOCS[id]).length : 0;
     const L = S && !S.over && D.LOCS[S.loc];
-    return `${L ? `今いる所：${L.name}。` : ""}行ったことのある場所 ${n.been}／${n.all}${S && S.visited ? `（この冒険で ${now}）` : ""}`;
+    return `${L ? `今いる所：${L.name}。` : ""}この冒険で行った場所 ${now}／${n.all}`;
   }
   function showInfo(m) {
     info.textContent = "";
@@ -429,9 +430,8 @@
     const L = D.LOCS[m.id];
     const nm = h("b", "", m.name || "？？？");
     info.append(nm, h("span", "w5tag", `${m.region || ""}・${TYPE[m.type] || ""}${m.type !== "town" && m.name ? " " + "★".repeat(Math.min(6, m.danger)) : ""}`));
-    const st = { here: "今いる所。", now: "この冒険で行った。", past: "前の冒険で行った。", heard: "行ったことはない。道標で名前だけ知っている。", none: "まだ行ったことがない。" }[m.status];
+    const st = { here: "今いる所。", now: "この冒険で行った。", heard: "行ったことはない。道標で名前だけ知っている。", none: "まだ行ったことがない。" }[m.status];
     let more = st;
-    if (m.rec && m.status !== "now" && m.status !== "here") more += `（はじめて行ったのは ${m.rec.by}${m.rec.date ? "、" + m.rec.date : ""}）`;
     if (W5.KNOWN[m.status] || m.status === "heard") {
       const near = Object.entries(Object.assign({}, L.links)).map(([to, d]) => [to, d, "陸"]).concat(Object.entries(L.sea || {}).map(([to, d]) => [to, d, "船"]));
       if (W5.KNOWN[m.status] && near.length) {
