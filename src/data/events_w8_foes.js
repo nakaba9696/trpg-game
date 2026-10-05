@@ -1,6 +1,7 @@
 // W8：その土地の名のある強敵。敵は E4 の強い個体（src/data/enemies_e4_*.js の *_x）をそのまま使う。仕組みは src/engine/w8_explore.js の頭の説明
 // D.W8_FOES[敵] = { loc [出る場所], omen 前触れの題, sign 前触れの文, follow 跡を追う, read 跡を読めた, leave 離れる, meet 出会いの題, face 出会いの文,
 //   avoid やり過ごす, win 倒した, item 良い物, gold, fame, talk { label, stat, ok, ng } 人の強敵だけの話す道 }
+// where に場所も並べる（図鑑の出会う場所のため。w: 0 なので、ふつうの抽選には出ない）
 // ここから、前触れの出来事 w8_omen_<敵> と出会いの出来事 w8_meet_<敵> を作る。出会いは前触れのあとにしか起きない（S.w8.omen）
 // 避けても損しすぎない（やり過ごせば強敵は去り、またいつか前触れから）。倒すと印 w8foe:<敵>、良い物・名声・図鑑
 // 語りは docs/lore/voice.md。レーン W＋V（W8）
@@ -161,7 +162,7 @@
     const win = { text: f.win, item: f.item, gold: f.gold || 0, fame: f.fame || 0, flag: "w8foe:" + foe, w8calm: true, chron: `名のある${(D.ENEMIES && D.ENEMIES[foe] && D.ENEMIES[foe].name) || "強敵"}を倒す` };
     D.EVENTS.push(
       {
-        id: "w8_omen_" + foe, where: ["w8"], w: 0, w8: { w: 3, kind: "omen", foe, loc: f.loc }, title: f.omen, text: f.sign,
+        id: "w8_omen_" + foe, where: ["w8", ...f.loc], w: 0, w8: { w: 3, kind: "omen", foe, loc: f.loc }, title: f.omen, text: f.sign,
         choices: [
           { label: "跡を追う", ok: { text: f.follow, next: meet } },
           { label: "跡をよく調べる", stat: "知力", diff: "普通", ok: { text: f.read, flag: "w8read:" + foe }, ng: { text: "跡は、調べるほどに分からなくなった。ただ、このあたりに何か大きなものがいることだけは分かった。" } },
@@ -169,7 +170,7 @@
         ],
       },
       {
-        id: meet, where: ["w8"], w: 0, w8: { w: 3, kind: "meet", foe, loc: f.loc }, title: f.meet, text: f.face,
+        id: meet, where: ["w8", ...f.loc], w: 0, w8: { w: 3, kind: "meet", foe, loc: f.loc }, title: f.meet, text: f.face,
         choices: [
           { label: "正面から挑む", fight: foe, win },
           { label: "調べた癖を突いて、不意を打つ", cond: (S) => !!S.flags["w8read:" + foe], fight: foe, firstStrike: true, win },
