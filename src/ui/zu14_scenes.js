@@ -104,8 +104,8 @@
   cut.id = "u14cut";
   cut.hidden = true;
   cut.setAttribute("role", "status");
-  const cutHead = h("span", "u14cuthead"), cutLine = h("b", "u14cutline");
-  cut.append(cutHead, cutLine);
+  const cutHead = h("span", "u14cuthead"), cutLine = h("b", "u14cutline"), cutTag = h("span", "u14cuttag");
+  cut.append(cutHead, cutLine, cutTag);
   body.append(cut);
   // U13 の結果の場面（「先へ進む」を押すまで）を出しているか。その間は戦闘の見た目のまま、次の場面の文も出さない
   const holding = () => !!(G.u13 && G.u13.holding && G.u13.holding());
@@ -190,13 +190,18 @@
     cut.classList.remove("on");
     cut.classList.add("out");
     clearTimeout(cutOutT);
-    cutOutT = setTimeout(() => { cut.hidden = true; cut.classList.remove("out"); }, calm() ? 0 : 420);
+    cutOutT = setTimeout(() => { cut.hidden = true; cut.classList.remove("out"); body.classList.remove("u14cutting"); }, calm() ? 0 : 420);
   }
   U14.hideCut = hideCut;
-  function showCut(head, line, kind) {
+  // enc：S4 の戦闘開始の見出し（G.s4enc.cardOf）。幕を出している間は S4 の小さな見出しを隠し、強敵・使徒・不意打ちの言葉は幕の下に添える（音・揺れ・縁の光は S4 のまま）
+  function showCut(head, line, kind, enc) {
     cutHead.textContent = head || "";
     cutLine.textContent = line || "";
+    cutTag.textContent = enc && enc.level !== "normal" ? enc.title : "";
+    cutTag.hidden = !cutTag.textContent;
     cut.dataset.kind = kind || "";
+    cut.dataset.level = enc ? enc.level : "";
+    body.classList.add("u14cutting");
     clearTimeout(cutOutT); // 消えかけの幕の後始末で、新しい幕を消さない
     cut.hidden = false;
     cut.classList.remove("out");
@@ -290,7 +295,7 @@
       // 会話・出来事・旅から戦闘へ：境目の幕（区切りの一行と、何が襲ってきたか）
       if (S.combat && S.combat !== cutRef) {
         const c = S.combat.u14cut;
-        if (c && sameRun) showCut(c.head, c.line, "combat");
+        if (c && sameRun) showCut(c.head, c.line, "combat", G.s4enc && G.s4enc.cardOf ? G.s4enc.cardOf(S) : null);
         cutRef = S.combat;
       }
       // 戦闘の結果の場面のあと、語りの場面へ：区切りの幕（次の場面の名前）
@@ -313,5 +318,5 @@
   };
   // 冒険の画面を閉じたら（タイトルへ）、種類の印を外す
   const play = $("#play");
-  if (play) new MutationObserver(() => { if (play.hidden) { delete body.dataset.u14; lastKind = null; if (!card.hidden) { card.hidden = true; clearTimeout(cardT); } if (!cut.hidden) { cut.hidden = true; clearTimeout(cutT); } } }).observe(play, { attributes: true, attributeFilter: ["hidden"] });
+  if (play) new MutationObserver(() => { if (play.hidden) { delete body.dataset.u14; lastKind = null; if (!card.hidden) { card.hidden = true; clearTimeout(cardT); } if (!cut.hidden) { cut.hidden = true; clearTimeout(cutT); body.classList.remove("u14cutting"); } } }).observe(play, { attributes: true, attributeFilter: ["hidden"] });
 })(globalThis.G = globalThis.G || {});

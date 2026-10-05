@@ -148,6 +148,12 @@ body[data-u14="combat"] #stand .standFig:not(.on), body[data-u14="combat"] #who 
   transform: translateY(6px); transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
 #u14cut.on .u14cutline { transform: none; }
 #u14cut .u14cutline::before { content: ""; display: block; width: min(60vw, 360px); height: 1px; margin: 0 auto 14px; background: linear-gradient(90deg, transparent, rgba(212, 82, 58, .9), transparent); }
+#u14cut .u14cuttag { font: 700 12px/1.4 var(--f-ui); letter-spacing: .3em; padding: 3px 12px 3px calc(12px + .3em); border: 1px solid rgba(212, 82, 58, .85); border-radius: 2px; color: #f0b3a3; }
+#u14cut .u14cuttag[hidden] { display: none; }
+#u14cut[data-level="ambush"] .u14cuttag { border-color: rgba(230, 190, 90, .9); color: #f0cf7a; }
+#u14cut[data-level="majin"] .u14cuttag { border-color: rgba(150, 90, 200, .85); color: #c9a6ee; }
+/* 幕を出している間は、S4 の「敵が現れた」の小さな見出しを重ねない（言葉は幕に添える） */
+body.u14cutting #s4enc { visibility: hidden; }
 #u14cut[data-kind="story"] { background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(10, 8, 4, .9), rgba(6, 5, 3, .78)); }
 #u14cut[data-kind="story"] .u14cuthead { color: #d9c08a; }
 #u14cut[data-kind="story"] .u14cutline::before { background: linear-gradient(90deg, transparent, rgba(227, 194, 124, .85), transparent); }
