@@ -13,7 +13,7 @@
   Object.assign(D.LOCS, {
     // ---------------------------------------------------------------- レオネスト王国
     w7_zaigros: {
-      name: "辺境の都ザイグロス", region: "レオネスト王国", type: "town", danger: 0, scene: "fort", x: 38, y: 36,
+      name: "辺境の都ザイグロス", region: "レオネスト王国", type: "town", danger: 0, scene: "w7_frontier", x: 38, y: 36,
       desc: "丘の上の兵舎を、低い石の町がぐるりと囲んでいる。王国の北の辺境で、帝国の雪が見える最初の町だ。広場の掲示板には、兵の名簿と、掘り出された珍しい石の値段が並んで貼ってある。兵の妻たちは、見張り塔の鐘の数で夫の帰りを知る。",
       fac: ["inn", "tavern", "shop", "guild", "train"],
       shop: ["i3w_spear", "i3w_pike", "longsword", "chain", "i3a_brigandine", "potion", "jerky"],
@@ -22,28 +22,28 @@
 
     // ---------------------------------------------------------------- ノルディア帝国
     w7_brenark: {
-      name: "砦の都ブレイナーク", region: "ノルディア帝国", type: "town", danger: 0, scene: "fort", x: 30, y: 4,
+      name: "砦の都ブレイナーク", region: "ノルディア帝国", type: "town", danger: 0, scene: "w7_clawwall", x: 30, y: 4,
       desc: "帝都の北、凍った海を背に、灰色の城壁が三重に巡っている。外側の壁には、人の背丈より高い所に、大きな爪で掻いた跡が四本、並んで残っている。古い兵たちはその跡を塗り込めず、子どもが悪さをすると、黙ってそこまで連れていく。",
       fac: ["inn", "tavern", "shop", "guild", "train"],
       shop: ["axe", "i3w_imperial", "i3a_blackiron", "chain", "w2_frostfire", "potion"],
       links: {},
     },
     w7_grishaim: {
-      name: "監獄の都グリスハイム", region: "ノルディア帝国", type: "town", danger: 0, scene: "snowcity", x: 18, y: 6,
+      name: "監獄の都グリスハイム", region: "ノルディア帝国", type: "town", danger: 0, scene: "w7_prison", x: 18, y: 6,
       desc: "雪の野に、窓の小さな石の塔が何本も立っている。どれも監獄だ。町はその足もとにしがみつくように建ち、住人の半分は看守か、看守の家族か、面会に来て帰りそびれた者だという。塔の上の小さな窓には、夜になると、一つずつ灯りがともる。",
       fac: ["inn", "tavern", "shop", "alley"],
       shop: ["i3w_club", "i3w_knife", "i3a_gambeson", "w2_frostfire", "jerky", "tools"],
       links: {},
     },
     w7_eisenvan: {
-      name: "北の港アイゼルヴァン", region: "ノルディア帝国", type: "town", danger: 0, scene: "w3_harbor", x: 3, y: 13,
+      name: "北の港アイゼルヴァン", region: "ノルディア帝国", type: "town", danger: 0, scene: "w7_icehaven", x: 3, y: 13,
       desc: "外海に向いた、帝国の北西の港。桟橋の杭は氷でふくらみ、舫い綱は朝ごとに叩いて氷を落とさなければならない。漁に出られる日より出られない日のほうが多く、港の酒場は、いつも海を眺める男たちで埋まっている。南へ下る船は、天気を三日待って一日で出る。",
       fac: ["inn", "tavern", "shop", "guild"],
       shop: ["i3a_oilcoat", "i3w_trident", "i3r_sailorring", "w2_frostfire", "jerky", "longsword"],
       links: {},
     },
     w7_eldenholm: {
-      name: "緑の都エルデンホルム", region: "ノルディア帝国", type: "town", danger: 0, scene: "w3_lake", x: 52, y: 28,
+      name: "緑の都エルデンホルム", region: "ノルディア帝国", type: "town", danger: 0, scene: "w7_greenvale", x: 52, y: 28,
       desc: "帝国にはめずらしく、雪の下から草の色がのぞく谷の町。温かい泉のまわりにだけ森が残り、そこで弓兵が訓練をし、薬草摘みが籠を下げて歩く。市の日には、獣人の弓兵と、薬草の匂いのする娘たちが、同じ屋台の前で長いこと立ち話をしている。",
       fac: ["inn", "tavern", "shop", "train", "church"],
       shop: ["i3w_shortbow", "i3w_longbow", "herb", "potion", "i3a_hunterleather", "jerky"],
@@ -52,21 +52,21 @@
 
     // ---------------------------------------------------------------- エルメシア共和国
     w7_salyues: {
-      name: "芸の町サリュエス", region: "エルメシア共和国", type: "town", danger: 0, scene: "town", x: 57, y: 47,
+      name: "芸の町サリュエス", region: "エルメシア共和国", type: "town", danger: 0, scene: "w7_artstown", x: 57, y: 47,
       desc: "王国から来る街道と、共和国の森の道が交わる所にできた町。広場では毎日どこかで芝居がかかり、壁という壁に絵が描かれ、上から別の絵が描かれている。人間の役者とエルフの楽師と獣人の軽業師が、同じ芝居小屋の板の上で、出番の順番を怒鳴り合っている。",
       fac: ["inn", "tavern", "shop", "guild", "alley"],
       shop: ["lute", "i3a_dancer", "rapier", "i3w_throwknife", "ale", "w2_honeycake"],
       links: {},
     },
     w7_revandel: {
-      name: "隠れ里レヴァンデル", region: "エルメシア共和国", type: "town", danger: 0, scene: "w2_hunt", x: 77, y: 78,
+      name: "隠れ里レヴァンデル", region: "エルメシア共和国", type: "town", danger: 0, scene: "w7_mossvillage", x: 77, y: 78,
       desc: "森に溶けるように建てられた家々の里。屋根に苔が生え、戸口に蔓が垂れ、どこまでが家でどこからが木なのか、はじめて来た者には分からない。子どもたちは、名前を覚えるより先に、森の何かと約束を交わすのだという。里の真ん中の大きな切り株には、毎朝、誰かが水を供えている。",
       fac: ["inn", "shop", "church"],
       shop: ["herb", "manawater", "i3r_leafneck", "staff", "w2_honeycake", "i3w_elfbow"],
       links: {},
     },
     w7_volera: {
-      name: "灯台の港ヴォルエラ", region: "エルメシア共和国", type: "town", danger: 0, scene: "port", x: 74, y: 92,
+      name: "灯台の港ヴォルエラ", region: "エルメシア共和国", type: "town", danger: 0, scene: "w7_lighthouse", x: 74, y: 92,
       desc: "穏やかな湾の奥の、白い灯台の港。南の海は凪いでいる日が多く、外から来た船がゆっくり入ってくる。灯台守は夜ごと灯を絶やさず、ときどき、沖から聞こえる歌に、首をかしげて耳を澄ます。桟橋では、見たことのない模様の布と、見たことのない干し魚が売られている。",
       fac: ["inn", "tavern", "shop", "guild"],
       shop: ["q4_saltfish", "i3a_oilcoat", "i3w_corsair", "i3r_sailorring", "potion", "ale"],

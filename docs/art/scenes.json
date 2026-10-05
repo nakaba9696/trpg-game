@@ -146,7 +146,7 @@
   {
    "id": "w7_zaigros",
    "kind": "place",
-   "scene": "fort",
+   "scene": "w7_frontier",
    "type": "town",
    "region": "レオネスト王国",
    "name": "辺境の都ザイグロス",
@@ -207,7 +207,7 @@
   {
    "id": "w7_eldenholm",
    "kind": "place",
-   "scene": "w3_lake",
+   "scene": "w7_greenvale",
    "type": "town",
    "region": "ノルディア帝国",
    "name": "緑の都エルデンホルム",
@@ -217,7 +217,7 @@
   {
    "id": "w7_eisenvan",
    "kind": "place",
-   "scene": "w3_harbor",
+   "scene": "w7_icehaven",
    "type": "town",
    "region": "ノルディア帝国",
    "name": "北の港アイゼルヴァン",
@@ -227,7 +227,7 @@
   {
    "id": "w7_grishaim",
    "kind": "place",
-   "scene": "snowcity",
+   "scene": "w7_prison",
    "type": "town",
    "region": "ノルディア帝国",
    "name": "監獄の都グリスハイム",
@@ -237,7 +237,7 @@
   {
    "id": "w7_brenark",
    "kind": "place",
-   "scene": "fort",
+   "scene": "w7_clawwall",
    "type": "town",
    "region": "ノルディア帝国",
    "name": "砦の都ブレイナーク",
@@ -419,7 +419,7 @@
   {
    "id": "w7_volera",
    "kind": "place",
-   "scene": "port",
+   "scene": "w7_lighthouse",
    "type": "town",
    "region": "エルメシア共和国",
    "name": "灯台の港ヴォルエラ",
@@ -429,7 +429,7 @@
   {
    "id": "w7_revandel",
    "kind": "place",
-   "scene": "w2_hunt",
+   "scene": "w7_mossvillage",
    "type": "town",
    "region": "エルメシア共和国",
    "name": "隠れ里レヴァンデル",
@@ -439,7 +439,7 @@
   {
    "id": "w7_salyues",
    "kind": "place",
-   "scene": "town",
+   "scene": "w7_artstown",
    "type": "town",
    "region": "エルメシア共和国",
    "name": "芸の町サリュエス",
