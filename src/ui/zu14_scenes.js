@@ -45,7 +45,7 @@
       const talk = !e && S.tk && S.tk.cur;
       return { kind, tag: talk ? "会話" : "出来事", name: L.name ? L.name + (fac ? `・${fac}` : "") : "", marks: [] };
     }
-    if (kind === "town") return { kind, tag: fac || "町", name: L.name || "", marks: [L.region || ""].filter(Boolean) };
+    if (kind === "town") return { kind, tag: fac || "町", name: L.name || "", marks: [(G.regionName ? G.regionName(L.region) : L.region) || ""].filter(Boolean) };
     if (kind === "dungeon") {
       const deep = S.depth > 0 ? `地下${S.depth}階${L.floors ? " / " + L.floors : ""}` : "入口";
       return { kind, tag: "迷宮", name: L.name || "", marks: [deep, danger(L.danger)] };
@@ -157,7 +157,7 @@
   function showCard(S) {
     const a = S.u14arr;
     const L = ((G.data || {}).LOCS || {})[S.loc] || {};
-    cRegion.textContent = L.region || "";
+    cRegion.textContent = (G.regionName ? G.regionName(L.region) : L.region) || "";
     cName.textContent = L.name || "";
     cName.style.setProperty("--n", String(Math.max(4, [...(L.name || "")].length)));
     cLine.textContent = "";

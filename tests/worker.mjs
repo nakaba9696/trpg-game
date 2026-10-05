@@ -1,9 +1,10 @@
-// tests/run.mjs が並べて動かす仕事（tests/checks/<名前>.mjs と、釣り合いの測定）。
+// tests/run.mjs が並べて動かす仕事（tests/core.mjs の節・tests/checks/<名前>.mjs・釣り合いの測定と q2 の遊ぶ回）。
 // 仕事の一覧は共有の数え札（SharedArrayBuffer）で取り合うので、親の手が空いていなくても次の仕事に移れる。
 // 出力は貯めて、失敗の数・かかった時間と一緒に返す。並べ直して出すのは run.mjs（名前順）。
 import { parentPort, workerData, isMainThread } from "node:worker_threads";
 import { loadEngine, seeded } from "./lib.mjs";
 import { playGames } from "./balance.mjs";
+import { runSection } from "./core.mjs";
 
 // 一つの仕事を動かす。console.log を横取りして出力を貯める
 export async function runTask(task) {
@@ -14,7 +15,10 @@ export async function runTask(task) {
   const played = (globalThis.__played = []); // check が tests/balance.mjs の playGames で遊んだ結果（run.mjs が釣り合いの測定に使い回す）
   const t0 = performance.now();
   try {
-    if (task.kind === "check") {
+    if (task.kind === "core") {
+      // run.mjs の 1〜2c と保存の鍵（tests/core.mjs）。例外で止まったら、前は run.mjs ごと止まっていた。今は失敗として数える
+      try { failures += runSection(task.name); } catch (e) { failures++; console.log(`FAIL ${task.name}: 例外 ${e.stack || e}`); }
+    } else if (task.kind === "check") {
       const n = task.name;
       const fail = (msg) => { failures++; console.log("FAIL " + msg); };
       const ok = (msg) => console.log("OK   " + msg);

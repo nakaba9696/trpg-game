@@ -11,11 +11,14 @@ concurrency:
   cancel-in-progress: true
 jobs:
   test:
-    # ルールセットの必須チェックはこのジョブ（"CI result"）だけにする
-    name: CI result
+    # テストを 5 つに分けて同時に動かす（T2。分け方は tests/run.mjs の SHARD と WEIGHT）。1/5〜5/5 で全部の確認が一度ずつ走る
+    name: Test ${{ matrix.shard }}/5
     runs-on: ubuntu-24.04
-    # 内容が増えてテストが 9 分台になったので 20 分に（速くする作業は T1）
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -24,3 +27,17 @@ jobs:
         run: node tools/build.mjs
       - name: Test
         run: node tests/run.mjs
+        env:
+          SHARD: ${{ matrix.shard }}/5
+  result:
+    # ルールセットの必須チェックはこのジョブ（"CI result"）だけにする。分けたテストが全部通ったときだけ成功
+    name: CI result
+    needs: test
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: All tests passed
+        run: test "$RESULT" = success
+        env:
+          RESULT: ${{ needs.test.result }}
