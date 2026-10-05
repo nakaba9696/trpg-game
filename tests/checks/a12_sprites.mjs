@@ -136,7 +136,8 @@ export default ({ G, fail, ok }) => {
     if (!w || !w.rect || !svgs[w.src]) F(`敵 ${id} の絵（${k}）がスプライトの升目でない：${JSON.stringify(w)}`);
     else foeArt++;
   }
-  for (const [e, p] of Object.entries(Object.assign({}, g.V6_PEOPLE, g.V6_APOSTLE))) if (real.map["portraits/" + p] && g.v6ArtKey(e) !== "portraits/" + p) F(`人の姿の敵 ${e} の絵（portraits/${p}）を G.v6ArtKey が引かない（スプライトの升目でも引く）`);
+  // 人に化ける使徒で本性の絵（monsters/<id>）があるものは、戦いでは本性を引く（A15）
+  for (const [e, p] of Object.entries(Object.assign({}, g.V6_PEOPLE, g.V6_APOSTLE))) if (real.map["portraits/" + p] && !real.map["monsters/" + e] && g.v6ArtKey(e) !== "portraits/" + p) F(`人の姿の敵 ${e} の絵（portraits/${p}）を G.v6ArtKey が引かない（スプライトの升目でも引く）`);
   // 人物：絵のある人はすべてスプライトの升目で引ける
   const ids = scan.filter((f) => f.key.startsWith("portraits/")).map((f) => f.key.slice(10));
   for (const id of ids) { const w = g.v4Where(id); if (!w || !w.rect || !svgs[w.src]) F(`人物 ${id} の絵がスプライトの升目で引けない：${JSON.stringify(w)}`); }
