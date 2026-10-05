@@ -75,7 +75,6 @@ const workers = Array.from({ length: Math.min(JOBS - 1, tasks.length) }, () => n
     if (!D.LOCS[c.start]) fail(`職業 ${id}: 出発地 ${c.start} が無い`);
     for (const it of [c.weapon, c.armor, ...Object.keys(c.items)].filter(Boolean)) if (!D.ITEMS[it]) fail(`職業 ${id}: ${it} が無い`);
     for (const k of D.STATS) if (typeof c.base[k] !== "number") fail(`職業 ${id}: 能力値 ${k} が無い`);
-    if (!D.PROFILE.history[id]) fail(`職業 ${id}: 生い立ちの表が無い`);
   }
   const evIds = new Set(D.EVENTS.map((e) => e.id));
   if (evIds.size !== D.EVENTS.length) fail("出来事の id が重複している");

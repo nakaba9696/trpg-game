@@ -613,7 +613,7 @@
     G.chron(`${L.name}にて、${c.name}${S.profile.name}の冒険が始まる。目的は「${S.goal.text}」`, "start");
     G.log("title", L.name);
     G.say(L.desc);
-    G.say(`${S.profile.name}、${S.profile.age}歳。${S.profile.history ? S.profile.history + "。" : ""}今日から、ここで生きていく。`);
+    G.say(`${S.profile.name}、${S.profile.age}歳。今日から、ここで生きていく。`);
     return S;
   };
 

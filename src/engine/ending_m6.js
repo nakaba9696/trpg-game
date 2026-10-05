@@ -208,7 +208,8 @@
     const life = [];
     life.push([
       line(N.open),
-      line(L.history ? T.BIRTH : T.BIRTH_NONE),
+      // 生い立ちは作成から無くした（U17）。古いセーブで書いてあった人だけ一言。無い人は生まれの行ごと出さない
+      L.history ? line(T.BIRTH) : "",
       L.ageN ? line(T.DEPART) : fill(`{start}から歩き出した。目当ては「{goal}」。`),
     ].join(""));
 

@@ -18,19 +18,14 @@
     switch (key) {
       case "name": return pickR(rnd, P.names[culture(dr)][dr.sex]);
       case "age": { const [a, b] = D.AGES[dr.ageBand].range; return String(a + Math.floor(rnd() * (b - a + 1))); }
-      case "look": return `${pickR(rnd, P.hair)}、${pickR(rnd, P.eyes)}、${pickR(rnd, P.build)}`;
-      case "history": return pickR(rnd, P.history[dr.cls]);
     }
     return "";
   };
-  // おまかせで埋めるのは外見だけ。生い立ちは空けておき、欲しい人だけ「振る」で作る（U10：プレイヤーが思い描く余地を残す）。
-  // 性格・口癖・好きなもの・苦手なものは作らない（持ち主の決定）。古いセーブの profile に残っていても表示しない
-  cre.TRAITS = ["look"];
+  // 生い立ちと外見は無くした（どちらもゲームにほとんど効いていなかった。主人公は立ち絵を出さない。持ち主の決定 U17）。
+  // 古いセーブの profile.history は人生の物語の一言にだけ残り、profile.look は読まない。
+  // 性格・口癖・好きなもの・苦手なものも作らない（持ち主の決定）。古いセーブの profile に残っていても表示しない
 
-  // 生い立ち・特徴だけをおまかせで作り直す
-  cre.randomTraits = (dr, rnd) => { cre.TRAITS.forEach((k) => { dr.profile[k] = cre.gen(dr, k, rnd); }); };
-
-  // すべておまかせ（職業・性別・年齢・生まれ・目的・人物設定）。能力値も振る
+  // すべておまかせ（職業・性別・年齢・生まれ・目的・名前）。能力値も振る
   cre.randomAll = (dr, rnd) => {
     dr.cls = pickR(rnd, Object.keys(D.CLASSES));
     dr.sex = pickR(rnd, ["男", "女"]);
@@ -39,7 +34,6 @@
     dr.origin = rnd() < 0.5 ? D.CLASS_ORIGIN[dr.cls] : pickR(rnd, Object.keys(D.ORIGINS));
     dr.goal = pickR(rnd, Object.keys(D.GOALS).filter((g) => g !== "custom"));
     dr.profile = { name: cre.gen(dr, "name", rnd), age: cre.gen(dr, "age", rnd) };
-    cre.randomTraits(dr, rnd);
     dr.bonus = {};
     cre.roll(dr, rnd);
     return dr;
@@ -54,7 +48,6 @@
     if (dr.origin === D.CLASS_ORIGIN[dr.cls]) dr.origin = D.CLASS_ORIGIN[cls];
     dr.cls = cls;
     if (culture(dr) !== oldCul) dr.profile.name = cre.gen(dr, "name", rnd);
-    if (dr.profile.history) dr.profile.history = cre.gen(dr, "history", rnd);
     cre.roll(dr, rnd);
   };
   cre.setOrigin = (dr, id, rnd) => {
@@ -178,7 +171,7 @@
   // G.newGame に渡す形
   cre.options = (dr, rnd) => {
     const p = { ...dr.profile };
-    delete p.personality; delete p.quote; delete p.like; delete p.dislike;
+    delete p.personality; delete p.quote; delete p.like; delete p.dislike; delete p.history; delete p.look;
     p.name = String(p.name || "").trim() || cre.gen(dr, "name", rnd);
     p.age = String(p.age || "").trim() || cre.gen(dr, "age", rnd);
     p.sex = dr.sex;
@@ -199,9 +192,8 @@
     // 作成画面の形（goal: id, goalText）とセーブの形（goal: { id, text }）のどちらでもよい
     const g = o.goal && typeof o.goal === "object" ? o.goal : { id: o.goal, text: o.goalText };
     const text = String(g.text || o.goalText || "").trim().replace(/[。．.]+$/, "");
-    const history = String(p.history || "").trim().replace(/[。．.]+$/, "");
     const fill = (t) => t.replace("{name}", p.name).replace("{age}", p.age).replace("{cls}", c.name).replace("{origin}", org ? org.name : "")
-      .replace("{place}", start.name).replace("{text}", text).replace("{history}", history);
+      .replace("{place}", start.name).replace("{text}", text);
     // 名前から決まる数（同じ人物なら同じ部品）
     const seed = [...String(p.name || "")].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
     const pick = (arr) => (Array.isArray(arr) ? arr[seed % arr.length] : arr);
@@ -212,7 +204,7 @@
     const home = org && org.name === start.name;
     return [
       P.world.slice(),
-      [fill(org ? P.who : P.whoNoOrigin), org ? pick(P.life[p.origin]) : "", past, history ? fill(P.history) : ""].filter(Boolean),
+      [fill(org ? P.who : P.whoNoOrigin), org ? pick(P.life[p.origin]) : "", past].filter(Boolean),
       [fill(home ? P.arriveHome : P.arrive) + (P.place[startId] ? P.place[startId] : ""), fill(g.id !== "custom" && D.GOALS[g.id] ? P.goal : P.custom), P.close],
     ];
   };
