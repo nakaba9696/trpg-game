@@ -5,17 +5,6 @@
 .creGroupHead { display: flex; flex-wrap: wrap; gap: 2px 12px; align-items: baseline; }
 .creGroupHead > b { font-family: var(--f-display); font-weight: 400; font-size: 19px; letter-spacing: .06em; display: inline-flex; gap: 8px; align-items: center; }
 .creNow > .creGroupHead { border-bottom: 2px solid var(--ink); padding-bottom: 4px; }
-.creLaterTag { font-family: var(--f-ui); font-size: 11px; letter-spacing: .04em; color: var(--muted); border: 1px solid var(--rule); border-radius: 999px; padding: 0 8px; line-height: 1.7; }
-.creLater { border: 1px solid var(--rule); border-radius: 3px; padding: 10px 14px; background: var(--sheet); }
-.creLater > summary { cursor: pointer; list-style: none; }
-.creLater > summary::-webkit-details-marker { display: none; }
-.creLater > summary > b::before { content: "▸"; color: var(--accent); font-size: 14px; }
-.creLater[open] > summary > b::before { content: "▾"; }
-.creLater > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.creLaterLine { flex-basis: 100%; font-family: var(--f-body); font-size: 13px; color: var(--muted); min-width: 0; overflow-wrap: anywhere; }
-.creLater[open] .creLaterLine { display: none; }
-.creLater[open] > summary { padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
-.creLater .creSec:first-of-type { border-top: 0; padding-top: 0; }
 p.creEff { margin: 0; font-size: 13px; color: var(--muted); padding-left: 10px; border-left: 2px solid var(--accent-soft); }
 .creEffs { display: grid; gap: 2px; }
 .creCustomNote { margin-top: 6px; border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 8px 12px; border-radius: 0 3px 3px 0; display: grid; gap: 4px; }

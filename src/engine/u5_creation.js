@@ -18,18 +18,14 @@
     switch (key) {
       case "name": return pickR(rnd, P.names[culture(dr)][dr.sex]);
       case "age": { const [a, b] = D.AGES[dr.ageBand].range; return String(a + Math.floor(rnd() * (b - a + 1))); }
-      case "look": return `${pickR(rnd, P.hair)}、${pickR(rnd, P.eyes)}、${pickR(rnd, P.build)}`;
     }
     return "";
   };
-  // おまかせで埋めるのは外見だけ。生い立ちは無くした（ほとんど効いていなかった。持ち主の決定 U17。古いセーブの profile.history は、人生の物語の一言にだけ残る）。
-  // 性格・口癖・好きなもの・苦手なものは作らない（持ち主の決定）。古いセーブの profile に残っていても表示しない
-  cre.TRAITS = ["look"];
+  // 生い立ちと外見は無くした（どちらもゲームにほとんど効いていなかった。主人公は立ち絵を出さない。持ち主の決定 U17）。
+  // 古いセーブの profile.history は人生の物語の一言にだけ残り、profile.look は読まない。
+  // 性格・口癖・好きなもの・苦手なものも作らない（持ち主の決定）。古いセーブの profile に残っていても表示しない
 
-  // 外見だけをおまかせで作り直す
-  cre.randomTraits = (dr, rnd) => { cre.TRAITS.forEach((k) => { dr.profile[k] = cre.gen(dr, k, rnd); }); };
-
-  // すべておまかせ（職業・性別・年齢・生まれ・目的・人物設定）。能力値も振る
+  // すべておまかせ（職業・性別・年齢・生まれ・目的・名前）。能力値も振る
   cre.randomAll = (dr, rnd) => {
     dr.cls = pickR(rnd, Object.keys(D.CLASSES));
     dr.sex = pickR(rnd, ["男", "女"]);
@@ -38,7 +34,6 @@
     dr.origin = rnd() < 0.5 ? D.CLASS_ORIGIN[dr.cls] : pickR(rnd, Object.keys(D.ORIGINS));
     dr.goal = pickR(rnd, Object.keys(D.GOALS).filter((g) => g !== "custom"));
     dr.profile = { name: cre.gen(dr, "name", rnd), age: cre.gen(dr, "age", rnd) };
-    cre.randomTraits(dr, rnd);
     dr.bonus = {};
     cre.roll(dr, rnd);
     return dr;
@@ -176,7 +171,7 @@
   // G.newGame に渡す形
   cre.options = (dr, rnd) => {
     const p = { ...dr.profile };
-    delete p.personality; delete p.quote; delete p.like; delete p.dislike; delete p.history;
+    delete p.personality; delete p.quote; delete p.like; delete p.dislike; delete p.history; delete p.look;
     p.name = String(p.name || "").trim() || cre.gen(dr, "name", rnd);
     p.age = String(p.age || "").trim() || cre.gen(dr, "age", rnd);
     p.sex = dr.sex;

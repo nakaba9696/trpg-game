@@ -11,5 +11,3 @@
 @media (max-width: 720px) {
   .whoCard { position: static; }
 }
-/* U17：外見の欄は見出しと同じ名前なので、入力の札は読み上げだけに残す */
-.creLookSec .field > label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
