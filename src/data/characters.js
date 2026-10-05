@@ -32,7 +32,7 @@
     },
     mage: {
       name: "魔法使い", start: "zephara",
-      blurb: "エルメシアの学院を追われた魔法使い。炎の魔法で敵を焼く。",
+      blurb: "首都エルメシアの学院を追われた魔法使い。炎の魔法で敵を焼く。",
       base: { 筋力: 20, 体力: 36, 敏捷: 35, 知力: 45, 魔力: 55, 魅力: 25 },
       weapon: "staff", armor: "leather", items: { grimoire: 1, herb: 2, manawater: 2 }, gold: 30, culture: "west",
     },
@@ -44,7 +44,7 @@
     },
     samurai: {
       name: "島の剣士", start: "nerva",
-      blurb: "シェルアークの島から本土に渡ったばかりの剣士。本土の常識には疎い。",
+      blurb: "シェルアーク諸島の島から本土に渡ったばかりの剣士。本土の常識には疎い。",
       base: { 筋力: 45, 体力: 35, 敏捷: 45, 知力: 30, 魔力: 10, 魅力: 30 },
       weapon: "katana", armor: "domaru", items: { riceball: 2, herb: 1 }, gold: 20, culture: "yakumo",
     },
