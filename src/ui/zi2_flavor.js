@@ -138,7 +138,7 @@
   function markLog() {
     const S = G.S;
     if (!S) return;
-    const held = new Set([...Object.keys(S.inv || {}), S.weapon, S.armor, S.ring].filter((id) => id && D.ITEMS[id] && G.itemFlavor(id)));
+    const held = new Set([...Object.keys(S.inv || {}), ...(G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring])].filter((id) => id && D.ITEMS[id] && G.itemFlavor(id)));
     if (!held.size) return;
     const names = [...held].map((id) => [D.ITEMS[id].name, id]).filter(([n]) => n.length >= 2).sort((a, b) => b[0].length - a[0].length);
     $$("#log > p").forEach((p) => {
@@ -171,7 +171,7 @@
   let heldSig = null;
   const checkHeld = () => {
     const S = G.S;
-    const sig = S ? [...Object.keys(S.inv || {}), S.weapon, S.armor, S.ring].filter((id) => id && D.ITEMS[id] && G.itemFlavor(id)).sort().join(",") : null;
+    const sig = S ? [...Object.keys(S.inv || {}), ...(G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring])].filter((id) => id && D.ITEMS[id] && G.itemFlavor(id)).sort().join(",") : null;
     if (sig !== heldSig) { heldSig = sig; if (ui.logInvalidate) ui.logInvalidate(); }
   };
   const base = ui.render;
