@@ -491,10 +491,10 @@
       on: "懐の切れた糸の束が、かすかに震えた。若君の指先から伸びる糸が、何本か、垂れたまま動かない。「……靴磨きがいないと、困るなあ」",
     });
 
-    // 薄布の使徒（刻印の環の三十三・国難・友好）。湯の町の湖。子どもの姿なので、倒す場面は場面転換
+    // 薄布の使徒（刻印の環の三十三・A 級・友好）。湯の町の湖。子どもの姿なので、倒す場面は場面転換
     const BASE = { tier: 7, hp: 320, dmg: [3, 10, 8], hit: 85, def: 30, agi: 60, mres: 40, gold: [500, 1000] };
     const a = {
-      id: "salphiel", foe: "e3_salphiel", no: 33, rank: "国難", calm: "友好", flag: "e3:salphiel", home: "w2_amyrein", kid: true,
+      id: "salphiel", foe: "e3_salphiel", no: 33, rank: "A", calm: "友好", flag: "e3:salphiel", home: "w2_amyrein", kid: true,
       keys: [
         { id: "mirror", label: "水鏡の皿", zekkai: true, test: has2("e3_mirror"), on: "懐の銀の皿に、娘の水盤の水が映った。映った水面には、何も見えていない。娘が、はじめて眉を寄せた。「……先が、見えぬ」" },
         { id: "ash", label: "外れた先の灰", test: has2("c4_wrongash"), on: "懐の小袋から、湿った灰の匂いがした。娘の水盤が、一度だけ波立った。外れた先のことを、娘は思い出したらしい。" },

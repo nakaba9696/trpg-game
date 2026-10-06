@@ -466,11 +466,11 @@
     detail.append(foeCanvas(id, 160, false));
     detail.append(h("h3", "f2title", e.name));
     if (apostle) {
-      detail.append(h("p", "fine", "使徒。格が違う。"));
+      detail.append(h("p", "fine", `使徒。${G.gradeOf ? `ギルドの格付けは${G.gradeName(G.gradeOf(id))}。` : ""}格が違う。`));
       detail.append(flavor(G.codexFoeText(id), "foe", id));
       detail.append(h("p", "fine f2first", `初めて出会った：${[rec.by, rec.date].filter(Boolean).join("・") || "—"}`));
     } else {
-      detail.append(h("p", "fine", `${G.codexFoeRegion(id)}・格${e.tier}${e.boss ? "・主" : ""}`));
+      detail.append(h("p", "fine", `${G.codexFoeRegion(id)}・${G.gradeOf ? G.gradeName(G.gradeOf(id)) : `格${e.tier}`}${e.boss ? "・主" : ""}`));
       detail.append(kv(G.codexFoeStats(id)));
       if (!rec.kills) detail.append(h("p", "fine", "倒せば、もっと分かる。"));
       detail.append(where("主な出現場所", G.codexFoeWhere(id)));

@@ -1,12 +1,13 @@
 // E3：すべての使徒を倒せるように。ゲームに出てくる使徒（会える使徒 D.MAJIN の十三と、手引き・出来事に出る七十二の何体か）の戦いの表。
 // 格の違いは「条件」と「強さ」で表す（docs/VISION.md）：
-//   - 天災・国難の格は、正面からではまず勝てない。条件（keys）を満たすほど弱る。zekkai の条件は、剣が無くても絶界を破る
-//   - 討伐の格は、絶界さえ破れば（剣か、zekkai の条件）一流の腕で倒せる
+//   - S 級・A 級は、正面からではまず勝てない。条件（keys）を満たすほど弱る。zekkai の条件は、剣が無くても絶界を破る
+//   - B 級は、絶界さえ破れば（剣か、zekkai の条件）備えた一流の腕で倒せる
+//   格は E8 で S/A/B に改めた（旧「天災・国難・討伐」）。古い呼び名の rank もそのまま読める（D.E3.RANK_OLD・engine/e8_grade.js）
 //   - 無関心の使徒は、こちらから手を出して初めて戦いになる（会う出来事に「手を出す」がある）
 // 欄（D.E3.LIST の一体ずつ）：
 //   foe 敵の id（既存の使徒はそのまま。新しい使徒の戦闘データは D.E3.FOES。絵の一覧〔docs/art/monsters.json〕に載るまでは、
 //       戦いが始まるときに D.ENEMIES へ入れる〔engine/zz_e3_apostles.js〕）
-//   no シートの番号 / rank 格 / calm 態度 / flag 倒したときの印（既存の居城はその reward の印）/ kid 子どもの姿（倒す場面は場面転換）
+//   no シートの番号 / rank 格（"S"・"A"・"B"）/ calm 態度 / flag 倒したときの印（既存の居城はその reward の印）/ kid 子どもの姿（倒す場面は場面転換）
 //   keys [{ id, label, test(S), zekkai?, on }] 条件。label は倒したあと図鑑で見える短い言葉、on は満たして挑んだときの一行
 //   meet 会う出来事（無ければ居城の最奥で会う）/ win 勝ったときの結果 / drop 骸の素材 / after 倒したあとの縄張りの様子
 // 条件の手がかりは、噂（D.RUMORS）・断片の出来事（D.E3.FRAGMENTS）・用語説明の行（D.E3.LORE）に散らしてある。答えは書かない。
@@ -25,24 +26,24 @@
 
   // 格ごとの強さ。FOES は「条件なし」の強さで、条件をすべて満たすと weak の倍率まで落ちる（途中は割合で）
   const BASE = {
-    天災: { tier: 8, hp: 900, dmg: [4, 10, 16], hit: 95, def: 40, agi: 90, mres: 60, gold: [800, 1500] },
-    国難: { tier: 7, hp: 320, dmg: [3, 10, 8], hit: 85, def: 30, agi: 60, mres: 40, gold: [500, 1000] },
-    討伐: { tier: 6, hp: 200, dmg: [2, 10, 5], hit: 78, def: 22, agi: 50, mres: 30, gold: [300, 700] },
+    S: { tier: 8, hp: 900, dmg: [4, 10, 16], hit: 95, def: 40, agi: 90, mres: 60, gold: [800, 1500] },
+    A: { tier: 7, hp: 320, dmg: [3, 10, 8], hit: 85, def: 30, agi: 60, mres: 40, gold: [500, 1000] },
+    B: { tier: 6, hp: 200, dmg: [2, 10, 5], hit: 78, def: 22, agi: 50, mres: 30, gold: [300, 700] },
   };
-  const foe = (rank, o) => Object.assign({ boss: true, majin: true, will: 999 }, BASE[rank], { loot: [["gem", 1]] }, o);
+  const foe = (rank, o) => Object.assign({ boss: true, majin: true, will: 999 }, BASE[rank] || BASE[{ 天災: "S", 国難: "A", 討伐: "B" }[rank]], { loot: [["gem", 1]] }, o);
 
   D.E3 = {
     // 条件をすべて満たしたときの倍率（hp・dmg は掛け算、hit・def・agi は足し算）と、背を向けて逃げる見込みの足し
     WEAK: {
-      天災: { hp: 0.2, dmg: 0.42, hit: -30, def: -25, agi: -50 },
-      国難: { hp: 0.5, dmg: 0.6, hit: -18, def: -12, agi: -25 },
-      討伐: { hp: 0.7, dmg: 0.7, hit: -10, def: -8, agi: -15 },
+      S: { hp: 0.2, dmg: 0.42, hit: -30, def: -25, agi: -50 },
+      A: { hp: 0.5, dmg: 0.6, hit: -18, def: -12, agi: -25 },
+      B: { hp: 0.7, dmg: 0.7, hit: -10, def: -8, agi: -15 },
     },
     // 格の言い方（戦いが始まるときの一行。条件がそろっていないとき）
     DREAD: {
-      天災: ["息が、うまく吸えない。目の前のものは、こちらを敵とも見ていない。人が向き合っていい大きさではなかった。", "膝が勝手に笑っている。剣を握る手のほうが、先に諦めていた。"],
-      国難: ["空気が重い。国が軍を出して、ようやく相手になるもの。ギルドの格付けの言葉が、頭の中で鳴った。"],
-      討伐: ["一流の戦士が集まれば倒せる、とギルドは言う。あなたは、一人だった。"],
+      S: ["息が、うまく吸えない。目の前のものは、こちらを敵とも見ていない。人が向き合っていい大きさではなかった。", "膝が勝手に笑っている。剣を握る手のほうが、先に諦めていた。"],
+      A: ["空気が重い。国が軍を出して、ようやく相手になるもの。A 級、というギルドの格付けの言葉が、頭の中で鳴った。"],
+      B: ["B 級。一流の戦士が備えて集まれば倒せる、とギルドは言う。……その一流が、今ここに何人いるのか。"],
     },
     WALL: "刃が届く手前で、見えない何かに止まる。絶界だ。……破る手立てが、何か要る。",
     LIST: {},
@@ -50,18 +51,21 @@
     FRAGMENTS: [],
     LORE: {},
     TROPHIES: [
-      { key: "e3_saigai", name: "天を落とす", tier: "金", desc: "天災の格の使徒を討ち果たした" },
-      { key: "e3_kokunan", name: "国の代わりに", tier: "銀", desc: "国難の格の使徒を討ち果たした" },
+      { key: "e3_saigai", name: "格付けの外", tier: "金", desc: "S 級の使徒を討ち果たした" },
+      { key: "e3_kokunan", name: "軍の要らない日", tier: "銀", desc: "A 級の使徒を討ち果たした" },
       { key: "e3_five", name: "刻印を削る者", tier: "金", desc: "冒険をまたいで、五体の使徒を倒したことがある" },
     ],
   };
   const E3 = D.E3;
+  // 古い呼び名（E8 より前の rank）。別の作業で足された使徒が古い呼び名でも、倍率と格の言い方が引ける（数えあげには出ない）
+  E3.RANK_OLD = { 天災: "S", 国難: "A", 討伐: "B" };
+  Object.entries(E3.RANK_OLD).forEach(([old, r]) => [E3.WEAK, E3.DREAD].forEach((T) => Object.defineProperty(T, old, { get: () => T[r], enumerable: false })));
   const ap = (id, o) => { E3.LIST[id] = Object.assign({ id }, o); if (o.foeData) { E3.FOES[o.foe] = o.foeData; delete E3.LIST[id].foeData; } };
 
   // ================================================================ 会える使徒（D.MAJIN の十三）
   // ---------------------------------------------------------------- 黒鎧のエンバルダ（居城の最奥。剣が無くても、条件で戦える）
   ap("graw", {
-    foe: "graw", no: 44, rank: "国難", calm: "敵対", flag: "graw", home: "majincastle",
+    foe: "graw", no: 44, rank: "A", calm: "敵対", flag: "graw", home: "majincastle",
     keys: [
       { id: "rize", label: "眷属の女剣士を先に退けた", test: flag("mid:majincastle:3"), on: "城の中ほどで退けた女剣士の血が、まだ刃に残っている。黒い兜が、ほんの少しだけそちらを向いた。" },
       { id: "feather", label: "宿敵の抜け羽", zekkai: true, test: has("e3_bladefeather"), on: "懐の羽が、ひとりでに震えて鳴った。黒い鎧の継ぎ目に、細い光の筋が走る。山の上の鳥の刃は、この鎧を知っている。" },
@@ -72,7 +76,7 @@
 
   // ---------------------------------------------------------------- 灼け口のテルグリス（大厨房の最奥。卓の謁見に挑む道を足す）
   ap("gormore", {
-    foe: "e2_gormoa", no: 20, rank: "討伐", calm: "中立", flag: "e2_gormoa", home: "e2_kitchen", lair: "e2_gormoa_table",
+    foe: "e2_gormoa", no: 20, rank: "B", calm: "中立", flag: "e2_gormoa", home: "e2_kitchen", lair: "e2_gormoa_table",
     keys: [
       { id: "marmit", label: "料理長を先に倒した", test: flag("mid:e2_kitchen:3"), on: "厨房のどこかで、鍋が噴きこぼれている。火を見る者が、もういない。三つの口のひとつが、そちらを気にした。" },
       { id: "honey", label: "蜂蜜の焼き菓子", zekkai: true, test: has("e3_honeycake"), on: "懐の焼き菓子の匂いに、三つの口が同時に迷った。「……甘い。甘い、とも」味わう口の守りが、ゆるんだ。" },
@@ -83,7 +87,7 @@
 
   // ---------------------------------------------------------------- 苔衣のセグリトス（腐れ庭園の最奥）
   ap("mordu", {
-    foe: "e2_mordu", no: 7, rank: "国難", calm: "無関心", flag: "e2_mordu", home: "e2_garden", lair: "e2_mordu_garden",
+    foe: "e2_mordu", no: 7, rank: "A", calm: "無関心", flag: "e2_mordu", home: "e2_garden", lair: "e2_mordu_garden",
     keys: [
       { id: "berna", label: "嘴の医者を先に倒した", test: flag("mid:e2_garden:3"), on: "天幕の医者がいない。庭の花が、薬を待つように首を垂れている。" },
       { id: "winter", label: "冬に挑む", test: season("冬"), on: "冬だ。庭の土は固く、花は眠っている。庭師の動きは、いつもよりさらにのろい。" },
@@ -95,8 +99,8 @@
 
   // ---------------------------------------------------------------- 忘れ水のルアマリス（エル・ナフ遺構の水に沈んだ書庫）
   ap("levian", {
-    foe: "e3_levian", no: 5, rank: "討伐", calm: "中立", flag: "e3:levian", home: "ruins",
-    foeData: foe("討伐", {
+    foe: "e3_levian", no: 5, rank: "B", calm: "中立", flag: "e3:levian", home: "ruins",
+    foeData: foe("B", {
       name: "忘れ水の使徒ルアマリス", magic: true, hp: 190, mres: 45, agi: 60, shape: "humanoid", eye: "#7ad8ff",
       desc: "水の中から上半身だけを出した女。髪は水草のように揺れ、触れた指先から、何かが静かに抜けていく。",
       look: { body: "biped", build: "lanky", skin: "#9ec8d8", skin2: "#d0eef8", head: "human", hair: "#2a5a6a", eyes: "glow", mouth: "smile", outfit: "robe", cloth: "#1a3a4a", extra: ["longhair", "float"], mood: "fierce" },
@@ -119,8 +123,8 @@
 
   // ---------------------------------------------------------------- 微笑のカルマトス（灰の荒野の日傘）
   ap("mirza", {
-    foe: "e3_mirza", no: 28, rank: "討伐", calm: "中立", flag: "e3:mirza", home: "wasteland",
-    foeData: foe("討伐", {
+    foe: "e3_mirza", no: 28, rank: "B", calm: "中立", flag: "e3:mirza", home: "wasteland",
+    foeData: foe("B", {
       name: "微笑の使徒カルマトス", hp: 210, agi: 70, shape: "humanoid", eye: "#e8c0ff",
       desc: "銀髪の若い男。豪奢な衣を荒野の灰で汚しもせず、日傘を差して微笑んでいる。指先から、見えない糸が何本も伸びている。",
       look: { body: "biped", build: "lanky", skin: "#f0e0e8", head: "human", hair: "#e8e4ec", eyes: "glow", mouth: "smirk", weapon: "staff", outfit: "robe", cloth: "#3a1a4a", extra: ["longhair", "cape"], mood: "fierce" },
@@ -143,8 +147,8 @@
 
   // ---------------------------------------------------------------- 砂塵のドレイゼ（ブランデールの両替商）。恋と取引の道は M11 のまま
   ap("zalve", {
-    foe: "e3_zalve", no: 64, rank: "国難", calm: "中立", flag: "e3:zalve", home: "karna",
-    foeData: foe("国難", {
+    foe: "e3_zalve", no: 64, rank: "A", calm: "中立", flag: "e3:zalve", home: "karna",
+    foeData: foe("A", {
       name: "砂塵の使徒ドレイゼ", hp: 340, def: 34, agi: 55, shape: "humanoid", eye: "#e8c878",
       desc: "両替商の帳場の奥にいた男。斬ると砂になって崩れ、すぐに組み直る。袖からこぼれる砂が、床に何かの字を書いている。字は汚い。",
       look: { body: "biped", build: "normal", skin: "#c8a878", skin2: "#e8d8a8", head: "human", hair: "#8a6a3a", eyes: "dot", mouth: "smirk", outfit: "robe", cloth: "#6a5030", pattern: "cracks", extra: ["smoke"], mood: "fierce" },
@@ -167,8 +171,8 @@
 
   // ---------------------------------------------------------------- 蝶翅のユヴァリエ（聖都の生き聖女）
   ap("aurelia", {
-    foe: "e3_aurelia", no: 40, rank: "討伐", calm: "敵対", flag: "e3:aurelia", home: "w1_holy",
-    foeData: foe("討伐", {
+    foe: "e3_aurelia", no: 40, rank: "B", calm: "敵対", flag: "e3:aurelia", home: "w1_holy",
+    foeData: foe("B", {
       name: "蝶翅の使徒ユヴァリエ", magic: true, hp: 200, hit: 82, mres: 50, agi: 65, shape: "humanoid", eye: "#ffe08a",
       desc: "大聖堂の奥の、後光をまとった聖女。後光に見えたものは、大きな蝶の羽だった。慈しむように微笑む目を、見てはいけない。",
       look: { body: "biped", build: "lanky", skin: "#f4e8e0", head: "human", hair: "#f0e0b0", eyes: "glow", mouth: "smile", outfit: "robe", cloth: "#f0ece0", wings: "moth", extra: ["longhair", "float"], mood: "fierce" },
@@ -191,8 +195,8 @@
 
   // ---------------------------------------------------------------- 香煙のベリエラ（朧島の祭り）。恋の道は M11 のまま
   ap("yoihime", {
-    foe: "e3_yoihime", no: 18, rank: "討伐", calm: "友好", flag: "e3:yoihime", home: "w1_oboro",
-    foeData: foe("討伐", {
+    foe: "e3_yoihime", no: 18, rank: "B", calm: "友好", flag: "e3:yoihime", home: "w1_oboro",
+    foeData: foe("B", {
       name: "香煙の使徒ベリエラ", magic: true, hp: 180, dmg: [2, 8, 4], hit: 80, mres: 55, agi: 75, shape: "humanoid", eye: "#ffb0d8",
       desc: "香の煙をまとった女。戦いを嫌う。煙を吸うたびに、剣を握っている理由が、少しずつ遠くなる。",
       look: { body: "biped", build: "lanky", skin: "#f4e0e0", head: "human", hair: "#2a1a2a", eyes: "glow", mouth: "smile", outfit: "robe", cloth: "#4a2a5a", extra: ["longhair", "smoke", "float"], mood: "fierce" },
@@ -215,8 +219,8 @@
 
   // ---------------------------------------------------------------- 百面のディエラン（帝都の宮廷の軍師）
   ap("chezar", {
-    foe: "e3_chezar", no: 23, rank: "国難", calm: "中立", flag: "e3:chezar", home: "garmund",
-    foeData: foe("国難", {
+    foe: "e3_chezar", no: 23, rank: "A", calm: "中立", flag: "e3:chezar", home: "garmund",
+    foeData: foe("A", {
       name: "百面の使徒ディエラン", hp: 330, hit: 88, mres: 50, agi: 65, shape: "humanoid", eye: "#d8d8ff",
       desc: "老将の面をつけた軍師。面を一枚剥がすと、下にまた別の面がある。面ごとに、剣筋が違う。",
       look: { body: "biped", build: "normal", skin: "#d8d0c8", head: "mask", eyes: "glow", mouth: "none", weapon: "staff", outfit: "robe", cloth: "#2a2a4a", extra: ["cape", "runes"], mood: "fierce" },
@@ -240,8 +244,8 @@
 
   // ---------------------------------------------------------------- 逆夢のベルファス（夢の中。眠り続ける幼子。倒す場面は場面転換）
   ap("yura", {
-    foe: "e3_yura", no: 2, rank: "天災", calm: "無関心", flag: "e3:yura", home: "town", kid: true,
-    foeData: foe("天災", {
+    foe: "e3_yura", no: 2, rank: "S", calm: "無関心", flag: "e3:yura", home: "town", kid: true,
+    foeData: foe("S", {
       name: "逆夢の使徒ベルファス", magic: true, shape: "small", eye: "#b0a0ff",
       desc: "夢の底で眠り続ける、小さな子ども。目を開けない。見ているだけで、上と下が分からなくなる。",
       look: { body: "biped", build: "small", skin: "#f0e8f0", head: "human", hair: "#c8c0e8", eyes: "closed", mouth: "o", outfit: "robe", cloth: "#2a2a4a", extra: ["float"], mood: "fierce" },
@@ -265,8 +269,8 @@
 
   // ---------------------------------------------------------------- 剣翼のヴァルグレア（断界山脈の天の巣）
   ap("azlag", {
-    foe: "e3_azlag", no: 62, rank: "国難", calm: "敵対", flag: "e3:azlag", home: "mountains",
-    foeData: foe("国難", {
+    foe: "e3_azlag", no: 62, rank: "A", calm: "敵対", flag: "e3:azlag", home: "mountains",
+    foeData: foe("A", {
       name: "剣翼の使徒ヴァルグレア", hp: 330, dmg: [4, 8, 8], hit: 90, agi: 80, shape: "beast", eye: "#c8e0ff",
       desc: "刃の羽を持つ巨きな鳥。羽ばたくたびに、刃が雨のように降る。着地は、下手だ。",
       look: { body: "wyrm", skin: "#8a9ab0", skin2: "#e0e8f0", horns: "none", eyes: "slit", mouth: "beak", wings: "feather", tail: "fan", extra: ["sword_in"], mood: "fierce" },
@@ -290,8 +294,8 @@
 
   // ---------------------------------------------------------------- 海嘯のガルメド（海の底の蛇竜）
   ap("lugu", {
-    foe: "e3_lugu", no: 3, rank: "天災", calm: "敵対", flag: "e3:lugu", home: "port",
-    foeData: foe("天災", {
+    foe: "e3_lugu", no: 3, rank: "S", calm: "敵対", flag: "e3:lugu", home: "port",
+    foeData: foe("S", {
       name: "海嘯の使徒ガルメド", shape: "beast", eye: "#7ad8c8",
       desc: "海の底から首だけを出した蛇竜。首だけで、船より大きい。うねるたびに、海がせり上がる。調子の外れた歌が、波の下から聞こえる。",
       look: { body: "wyrm", skin: "#2a5a6a", skin2: "#7ab0b0", horns: "long", eyes: "glow", mouth: "fangs", wings: "none", tail: "fin", pattern: "spots", mood: "fierce" },
@@ -315,8 +319,8 @@
 
   // ---------------------------------------------------------------- 白霧のオルネグス（灰の荒野の霧の闇市）
   ap("notari", {
-    foe: "e3_notari", no: 55, rank: "討伐", calm: "中立", flag: "e3:notari", home: "wasteland",
-    foeData: foe("討伐", {
+    foe: "e3_notari", no: 55, rank: "B", calm: "中立", flag: "e3:notari", home: "wasteland",
+    foeData: foe("B", {
       name: "白霧の使徒オルネグス", magic: true, hp: 190, hit: 85, mres: 60, agi: 40, shape: "humanoid", eye: "#e8e8e8",
       desc: "白い霧をまとった老人。こちらが剣を振る前に、もう避けている。避ける先は、いつも正しい。",
       look: { body: "biped", build: "normal", skin: "#e0dcd8", head: "hood", hair: "#f0f0f0", eyes: "glow", mouth: "none", weapon: "staff", outfit: "robe", cloth: "#d8d8d8", extra: ["smoke", "beard", "float"], mood: "fierce" },
@@ -339,8 +343,8 @@
   // ================================================================ 手引き・出来事に出る七十二の使徒
   // ---------------------------------------------------------------- 1 黒翼の使徒ノクターヴ（影の谷の空）
   ap("kurobane", {
-    foe: "e3_kurobane", no: 1, rank: "天災", calm: "無関心", flag: "e3:kurobane", home: "w2_shadow",
-    foeData: foe("天災", {
+    foe: "e3_kurobane", no: 1, rank: "S", calm: "無関心", flag: "e3:kurobane", home: "w2_shadow",
+    foeData: foe("S", {
       name: "黒翼の使徒ノクターヴ", shape: "humanoid", eye: "#1a1a1a",
       desc: "漆黒の羽の翼人。高い空に浮かび、こちらを見もしない。羽ばたきひとつで、谷の影が増える。",
       look: { body: "biped", build: "lanky", skin: "#1a1a22", skin2: "#4a4a5a", head: "plain", hair: "#0a0a0a", eyes: "hollow", mouth: "none", wings: "feather", outfit: "robe", cloth: "#0a0a10", extra: ["float", "smoke"], mood: "fierce" },
@@ -364,8 +368,8 @@
 
   // ---------------------------------------------------------------- 10 閉じ月の使徒クロフェン（月が二つ昇る夜）
   ap("tojizuki", {
-    foe: "e3_tojizuki", no: 10, rank: "天災", calm: "無関心", flag: "e3:tojizuki", home: "wild",
-    foeData: foe("天災", {
+    foe: "e3_tojizuki", no: 10, rank: "S", calm: "無関心", flag: "e3:tojizuki", home: "wild",
+    foeData: foe("S", {
       name: "閉じ月の使徒クロフェン", magic: true, shape: "blob", eye: "#f0f0c0",
       desc: "夜空の、二つ目の月。まぶたを閉じた大きな目。見上げてはいけない。",
       look: { body: "blob", skin: "#e8e4c0", skin2: "#a8a490", eyes: "closed", eyeN: 1, mouth: "none", extra: ["float"], mood: "fierce" },
@@ -389,8 +393,8 @@
 
   // ---------------------------------------------------------------- 4 鉄喰いの使徒ザルガドム（鍛冶の都ドランヘルツの夜）
   ap("tetsukui", {
-    foe: "e3_tetsukui", no: 4, rank: "討伐", calm: "敵対", flag: "e3:tetsukui", home: "w2_dranherz",
-    foeData: foe("討伐", {
+    foe: "e3_tetsukui", no: 4, rank: "B", calm: "敵対", flag: "e3:tetsukui", home: "w2_dranherz",
+    foeData: foe("B", {
       name: "鉄喰いの使徒ザルガドム", hp: 210, def: 30, agi: 40, shape: "beast", eye: "#ff8a3a",
       desc: "土の中から出てきた、錆色の大きな獣。鉄の匂いのするほうへ、鼻を鳴らして寄ってくる。剣を、噛む。",
       look: { body: "quad", skin: "#8a5a3a", skin2: "#c88a5a", head: "lion", eyes: "glow", mouth: "fangs", tail: "spike", pattern: "cracks", extra: ["drool"], mood: "fierce" },
@@ -412,9 +416,9 @@
 
   // ---------------------------------------------------------------- 11 咎追いの使徒ネリオス（罪ある者を追う処刑人。懺悔の谷）
   ap("togaoi", {
-    foe: "e3_togaoi", no: 11, rank: "討伐", calm: "敵対", flag: "e3:togaoi", home: "w2_echo",
+    foe: "e3_togaoi", no: 11, rank: "B", calm: "敵対", flag: "e3:togaoi", home: "w2_echo",
     also: [{ event: "m3_togaoi", label: "数え終わる前に、本気で斬り合う" }], // 罪の匂いで追ってくる出来事（events_m3.js）にも挑む道を足す
-    foeData: foe("討伐", {
+    foeData: foe("B", {
       name: "咎追いの使徒ネリオス", hp: 220, dmg: [2, 12, 6], hit: 80, agi: 45, shape: "humanoid", eye: "#c0c0c0",
       desc: "鉄の仮面と黒い処刑衣の、背の高い何か。大斧の柄に、小さな鈴がひとつ。鈴を鳴らして何かを数え、数え終わるまで斧を振らない。",
       look: { body: "biped", build: "lanky", skin: "#2a2a2a", head: "helm", eyes: "glow", mouth: "none", weapon: "axe", outfit: "robe", cloth: "#0e0e10", extra: ["cape"], mood: "fierce" },
@@ -437,8 +441,8 @@
 
   // ---------------------------------------------------------------- 12 芽吹きの使徒リサルナ（麦の都では「緑の御方」。麦の都の畑を動かすもの）
   ap("midori", {
-    foe: "e3_midori", no: 12, rank: "国難", calm: "友好", flag: "e3:midori", home: "w2_granbel",
-    foeData: foe("国難", {
+    foe: "e3_midori", no: 12, rank: "A", calm: "友好", flag: "e3:midori", home: "w2_granbel",
+    foeData: foe("A", {
       name: "芽吹きの使徒リサルナ", magic: true, hp: 360, dmg: [3, 8, 8], hit: 80, def: 26, agi: 30, shape: "beast", eye: "#8aff8a",
       desc: "畑の向こうから歩いてくる、苔と若木に覆われた大きなもの。麦の都では「緑の御方」と呼ばれる。足跡から、麦が芽吹く。斬った傷から、花が咲く。",
       look: { body: "quad", skin: "#5a8a3a", skin2: "#a8d878", head: "plain", eyes: "dot", mouth: "none", horns: "antler", pattern: "spots", extra: ["float"], mood: "silly" },
@@ -461,8 +465,8 @@
 
   // ---------------------------------------------------------------- 38 酸溜まりの使徒ゼノバス（酸の谷の底）
   ap("sanno", {
-    foe: "e3_sanno", no: 38, rank: "討伐", calm: "敵対", flag: "e3:sanno", home: "w2_acid",
-    foeData: foe("討伐", {
+    foe: "e3_sanno", no: 38, rank: "B", calm: "敵対", flag: "e3:sanno", home: "w2_acid",
+    foeData: foe("B", {
       name: "酸溜まりの使徒ゼノバス", magic: true, hp: 230, dmg: [2, 10, 6], hit: 72, def: 18, agi: 20, shape: "blob", eye: "#a8ff4a",
       desc: "谷の底に溜まった、緑色に光る液。ときどき、人の形に立ち上がる。触れたものは、鉄でも骨でも溶ける。",
       look: { body: "blob", skin: "#7ad84a", skin2: "#c8ff8a", eyes: "glow", eyeN: 2, mouth: "grin", extra: ["bubbles", "bone"], mood: "fierce" },
@@ -485,8 +489,8 @@
 
   // ---------------------------------------------------------------- 41 根の王（世界樹。狩り場の町ナグリスの根の上）
   ap("sekaiju", {
-    foe: "e3_sekaiju", no: 41, rank: "天災", calm: "無関心", flag: "e3:sekaiju", home: "w2_nagris",
-    foeData: foe("天災", {
+    foe: "e3_sekaiju", no: 41, rank: "S", calm: "無関心", flag: "e3:sekaiju", home: "w2_nagris",
+    foeData: foe("S", {
       name: "根の王", magic: true, hp: 1000, agi: 40, shape: "beast", eye: "#c8ffb0",
       desc: "東の空の大樹の、根。根の一本一本が、町より太い。それは、こちらを見ていない。足元の蟻を見ないのと同じように。",
       look: { body: "blob", skin: "#5a4a2a", skin2: "#8a7a4a", eyes: "glow", eyeN: 5, mouth: "none", pattern: "cracks", extra: ["float"], mood: "fierce" },

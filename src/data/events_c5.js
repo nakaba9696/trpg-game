@@ -551,10 +551,10 @@
       on: "懐の燃えさしが、ひとりでに甘く匂った。女の煙が、一瞬、迷うように揺れた。「……あら。その香。港の船宿の娘に、昔、教えた香じゃない」",
     });
 
-    // 伯爵さま（刻印の環の十三・討伐・友好）。断界山脈の館
+    // 伯爵さま（刻印の環の十三・B 級・友好）。断界山脈の館
     const BASE = { tier: 6, hp: 200, dmg: [2, 10, 5], hit: 78, def: 22, agi: 50, mres: 30, gold: [300, 700] };
     const a = {
-      id: "yuzuel", foe: "e3_yuzuel", no: 13, rank: "討伐", calm: "友好", flag: "e3:yuzuel", home: "mountains",
+      id: "yuzuel", foe: "e3_yuzuel", no: 13, rank: "B", calm: "友好", flag: "e3:yuzuel", home: "mountains",
       keys: [
         { id: "debate", label: "負けの印の札", zekkai: true, test: has2("c5_debate"), on: "懐の札が、ひとりでに温かくなった。老紳士の片眼鏡が、かすかに曇る。「……ああ。負けた相手には、どうも、守りが甘くなる」" },
         { id: "night", label: "灯りの消えた夜", test: night, on: "館の灯りが落ちている。老紳士は暗がりで茶を淹れようとして、ほんの少し、手もとを探った。" },

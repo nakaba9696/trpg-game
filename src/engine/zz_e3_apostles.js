@@ -83,8 +83,8 @@
     const old = P.slain[a.foe];
     P.slain[a.foe] = { n: (old ? old.n : 0) + 1, at: Date.now(), by: `${S.clsName || ""} ${(S.profile && S.profile.name) || ""}`.trim(), name: G.e3FoeData(a.id).name, date: G.date() };
     if (a.drop && G.give(a.drop.id)) G.note(`${a.drop.name}を手に入れた。`);
-    if (a.rank === "天災") G.award("e3_saigai");
-    if (a.rank === "国難") G.award("e3_kokunan");
+    if (a.rank === "S") G.award("e3_saigai");
+    if (a.rank === "A") G.award("e3_kokunan");
     if (Object.keys(P.slain).filter((k) => G.e3Of(k)).length >= 5) G.award("e3_five");
     G.award("majin");
     worldChange(a);
@@ -178,7 +178,7 @@
       f.max = Math.max(1, Math.round(D.ENEMIES[f.id].hp * m.hp));
       f.hp = Math.max(1, Math.ceil(f.max * ratio));
       G.e3Keys(a.id).filter((k) => k.met).forEach((k) => G.say(k.on));
-      if (m.frac < 1 && a.rank !== "討伐" || m.frac === 0) G.note(G.pick(E3.DREAD[a.rank]));
+      if (m.frac < 1 && a.rank !== "B" || m.frac === 0) G.note(G.pick(E3.DREAD[a.rank]));
       if (!m.open) G.note(E3.WALL);
     });
     cur = C;
