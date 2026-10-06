@@ -47,6 +47,26 @@
     return r;
   };
 
+  // 学院の講義（術）も「一度に一つ」：術を一つ覚えたら、しばらくは次の講義を受けても身につかないので受けさせない（K3 の追加。持ち主「魔法・スキル・戦技、どれも一緒」）
+  const facActions0 = G.facActions;
+  G.facActions = () => {
+    const g = facActions0();
+    const S = G.S;
+    if (!S || S.fac !== "academy" || !K.lessonWait(S)) return g;
+    g.forEach((grp) => (grp.list || []).forEach((a) => { if (/^academy:/.test(a.id) && !a.disabled) { a.disabled = true; a.sub = K.LESSON_WAIT; } }));
+    return g;
+  };
+  const academyAct0 = G.facAct;
+  G.facAct = (head, arg, a) => {
+    const S = G.S;
+    if (head !== "academy" || !S) return academyAct0(head, arg, a);
+    if (K.lessonWait(S)) return;
+    const n0 = (S.spells || []).length;
+    const r = academyAct0(head, arg, a);
+    if ((S.spells || []).length > n0) K.lessonDone();
+    return r;
+  };
+
   // ギルドの依頼の礼
   const facAct0 = G.facAct;
   G.facAct = (head, arg, a) => {

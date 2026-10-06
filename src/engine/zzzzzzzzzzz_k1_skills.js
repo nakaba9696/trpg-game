@@ -469,6 +469,7 @@
   K.lessonWait = (S) => { S = S || G.S; const d = K.state(S).lesson; return d == null ? 0 : Math.max(0, d + K.PACE.lesson - S.day); };
   K.LESSON_WAIT = "前に教わったことが、まだ体に入りきっていない";
   const lessonDone = () => { K.state().lesson = G.S.day; };
+  K.lessonDone = lessonDone;
   K.teacherOk = (tid, S) => { S = S || G.S; const T = K.teacher(tid); if (!T) return false; if (T.comp) return !!K.compOf(tid, S); return !!(T.cond && T.cond(S)); };
   // 教わる（金・日数を払って、必ず覚える。能力値が目安に届かないと教えてくれない）
   K.teach = (tid, id) => {

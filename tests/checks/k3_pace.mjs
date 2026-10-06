@@ -1,6 +1,7 @@
 // K3：戦技とスキルを簡単に覚えすぎない（持ち主「野営の稽古でめっちゃスキルを覚えるけど、そんな簡単に覚えないで」）
 // - 野営の稽古では新しく覚えない。覚えた戦技の型をなぞると、熟練が少しだけ上がる
 // - 訓練場の教官は、名が知られているか依頼をこなした者にだけ稽古をつける（上の技ほど厳しい）。人に教わるのは一度に一つ（しばらく間を空ける）
+// - 学院の講義（術）も一度に一つ（持ち主「魔法・スキル・戦技、どれも一緒」）
 // - 強敵（ボス・使徒）を倒すと、手にした武器の型に合う戦技を身につけることがある。ギルドの依頼の礼に巻物が付くことがある
 // - ランダムに遊んで、一冒険で覚える数が少ない（序盤〜中盤で数個）
 export default ({ fail: fail0, ok, loadEngine, seeded }) => {
@@ -74,6 +75,30 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     S.day += K.PACE.lesson + 1;
     const k2 = acts().find((x) => /^k1comp:comp:rogue:k2_/.test(x.id) && !x.disabled);
     if (k2) { G.act(k2.id); const id = k2.id.split(":").pop(); if (!K.knows(id)) fail(`仲間からスキル（${id}）を習えない（id の読み違い）`); }
+  }
+
+  // ---------------------------------------------------------------- 学院の講義（術）も一度に一つ
+  {
+    const S = start("priest", 71, 40);
+    S.loc = "zephara"; S.mode = "fac"; S.fac = "academy"; S.gold = 5000;
+    const n0 = (S.spells || []).length;
+    let n = 0;
+    while ((S.spells || []).length === n0 && n++ < 30) {
+      S.mode = "fac"; S.fac = "academy";
+      const a = acts().find((x) => /^academy:/.test(x.id) && !x.disabled);
+      if (!a) break;
+      G.act(a.id);
+    }
+    if ((S.spells || []).length === n0) fail("学院の講義で術を一つも覚えない");
+    else {
+      S.mode = "fac"; S.fac = "academy";
+      const next = acts().filter((x) => /^academy:/.test(x.id) && !/もう覚えて/.test(x.sub || ""));
+      if (next.some((x) => !x.disabled)) fail("術を覚えた直後に、次の講義も受けられる");
+      else if (next.length && !next.every((x) => /体に入りきっていない/.test(x.sub))) fail(`講義を受けられない理由の添え書きが無い（${next.map((x) => x.sub)}）`);
+      S.day += K.PACE.lesson + 1;
+      const later = acts().filter((x) => /^academy:/.test(x.id) && !x.disabled);
+      if (next.length && !later.length) fail("間を空けても、次の講義を受けられない");
+    }
   }
 
   // ---------------------------------------------------------------- 強敵を倒して身につける
