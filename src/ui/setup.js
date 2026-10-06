@@ -220,6 +220,12 @@
         refresh();
       };
       l.append(inp, h("b", "", c.name), h("span", "", c.blurb), h("span", "fine", `得意：${cre.strengths(id).join("・")}`));
+      // 初期装備・持ち物・所持金と、最初の戦技／スキル／魔法（表から作る。U21）
+      if (cre.classLines) {
+        const dl = h("dl", "clsGear");
+        cre.classLines(id).forEach(([k, v]) => { dl.append(h("dt", "", k), h("dd", "", v)); });
+        if (dl.children.length) l.append(dl);
+      }
       cards.append(l);
     });
     s3.append(cards);
