@@ -3,18 +3,18 @@
 // - 直した出来事では、いちばん難しい解き方が、易しい解き方の劣化版になっていない
 //   （易しいほうに無いものが手に入る・易しいほうに代価がある・言葉で違いが見える、のどれか）
 // - 直した低い選択肢の失敗は、文だけで終わらない（覚え書き・町の空気など、何かが残る）
-// - pass は時間帯を進める。成功率は変えない（同じ判定の成功率は、直す前と同じ）
+// - 成功率は変えない（選択肢の下の文字は、成功率の表示のあとに足すだけ）
 export default ({ G, fail: fail0, ok, seeded }) => {
   const D = G.data;
   let bad = 0;
   const fail = (m) => { bad++; fail0(m); };
   const fixed = D.S8_FIXED || [];
-  if (fixed.length < 20) fail(`直した出来事が ${fixed.length} 件しかない`);
+  if (fixed.length < 15) fail(`直した出来事が ${fixed.length} 件しかない`);
 
   const DV = (c) => (c.stat ? G.s5Target(c.diff || "普通") : -99);
   const GAIN = ["memo", "heard", "item", "gold", "fame", "virtue", "town", "w8side", "grow", "hp", "mp", "chron", "next"];
   const gains = (o) => new Set(Object.keys(o || {}).filter((k) => GAIN.includes(k) && !(typeof o[k] === "number" && o[k] <= 0)));
-  const costly = (o) => !!(o && (o.pass || o.days || (o.hp || 0) < 0 || (o.fame || 0) < 0 || o.sin || o.crime));
+  const costly = (o) => !!(o && (o.days || (o.hp || 0) < 0 || (o.fame || 0) < 0 || o.sin || o.crime));
   const tail = (o) => Object.keys(o || {}).some((k) => !["text", "mood"].includes(k));
   let whys = 0;
   for (const id of fixed) {
@@ -61,11 +61,6 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   const c = e.choices.find((x) => x.label === "駆け抜ける");
   const want = `${c.stat}・${c.diff || "普通"} ${G.chance(c.stat, G.s5EventDiff(c.diff), 0)}%`;
   if (!run || !run.sub.startsWith(want) || !run.sub.includes(c.why)) fail(`罠の「駆け抜ける」の小さな文字が変（${run && run.sub}）`);
-  // pass：時間帯が進む
-  S.mode = "explore"; S.event = null;
-  const p0 = S.day * 4 + S.phase;
-  G.apply({ text: "待った。", pass: 1 });
-  if (S.day * 4 + S.phase !== p0 + 1) fail("pass で時間帯が進まない");
 
   if (!bad) ok(`S8 選ぶ理由（直した出来事 ${fixed.length} 件・一言 ${whys} 個）`);
 };

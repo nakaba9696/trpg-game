@@ -1,6 +1,5 @@
 // S8：出来事の選択肢に「選ぶ理由」の一言を添える（src/data/zz_s8_reasons.js）
-// - 選択肢に why: "時間がかかる" のような言葉があれば、成功率のあとに小さく足す（成功率は変えない・隠さない。数字は出さない）
-// - 結果に pass: n があれば、時間帯を n だけ進める（「確かだが時間を食う」の代価）
+// - 選択肢に why: "名が落ちる" のような言葉があれば、成功率のあとに小さく足す（成功率は変えない・隠さない。数字は出さない）
 // 名前の頭の z は、ほかの包み（C10・K1 など）より外側にするため。DOM には触らない。レーン C＋V（S8）
 (function (G) {
   const D = G.data;
@@ -17,12 +16,5 @@
       if (c && c.why && !String(a.sub || "").includes(c.why)) a.sub = a.sub ? `${a.sub}・${c.why}` : c.why;
     }));
     return g;
-  };
-
-  const apply0 = G.apply;
-  G.apply = (o) => {
-    apply0(o);
-    const S = G.S;
-    if (o && o.pass > 0 && S && !S.over) G.pass(o.pass);
   };
 })(globalThis.G = globalThis.G || {});
