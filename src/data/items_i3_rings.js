@@ -27,7 +27,7 @@
     i3r_strawcharm: R("麦わらの護符", { stats: { 体力: 2, 魅力: 2 }, price: 15, i3: { k: "護符", lv: 0, from: ["w2_granbel"] } }, "体力+2・魅力+2。収穫の祭りで子どもが編む人形。旅に出る者の鞄に黙って入れておく。"),
     i3r_forgering: R("火床の指輪", { stats: { 筋力: 3 }, bonus: { fire: 10 }, price: 200, i3: { k: "指輪", lv: 2, from: ["w2_dranherz"] } }, "筋力+3・炎の魔法+10。鍛冶の都の親方が、火床の灰の中から拾い上げた指輪。熱が抜けない。"),
     i3r_lockring: R("鍵開けの指輪", { bonus: { trap: 15, steal: 5 }, price: 160, i3: { k: "指輪", lv: 1, from: ["karna", "garmund", "w1_holy"] } }, "罠+15・盗み+5。台座の裏に細い針金が一本仕込んである。"),
-    i3r_mirrorpend: R("小鏡の首飾り", { magic: 8, bonus: { talk: 5 }, price: 200, i3: { k: "首飾り", lv: 2, from: ["nerva", "zephara"] } }, "魔法+8・話術+5。親指の爪ほどの丸い鏡。覗き込むと、自分の顔が少し遅れて動く。"),
+    i3r_mirrorpend: R("小鏡の首飾り", { magic: 8, bonus: { talk: 5 }, price: 200, i3: { k: "首飾り", lv: 2, from: ["nerva", "zephara"] } }, "魔法+8・話術+5。親指の爪ほどの丸い鏡。覗き込むと自分の顔が少し遅れて動く。"),
     i3r_hunterwhistle: R("狩人の骨笛", { stats: { 敏捷: 3 }, first: 15, price: 90, i3: { k: "首飾り", lv: 1, from: ["w2_nagris"] } }, "敏捷+3・先手+15。首から下げた骨の笛。吹くと獣より先に人が振り向く。"),
     i3r_widowring: R("寡婦の指輪", { stats: { 魅力: 8, 体力: -3 }, price: 50, i3: { k: "指輪", lv: 1, from: ["leavel", "w1_holy"] } }, "魅力+8・体力-3。黒い石の指輪。三度嫁いで、三度喪服を着た女の持ち物だったと質屋は言う。"),
 

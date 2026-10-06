@@ -43,8 +43,8 @@
       weapon: "mace", armor: "leather", items: { holysymbol: 1, herb: 3, ale: 1 }, gold: 30, culture: "west",
     },
     samurai: {
-      name: "島の剣士", start: "nerva",
-      blurb: "シェルアーク諸島の島から本土に渡ったばかりの剣士。本土の常識には疎い。",
+      name: "武士", start: "nerva",
+      blurb: "シェルアーク諸島の島から本土に渡ったばかりの武士。腰に刀を差し、礼と名乗りを重んじるが、本土の常識には疎い。",
       base: { 筋力: 45, 体力: 35, 敏捷: 45, 知力: 30, 魔力: 10, 魅力: 30 },
       weapon: "katana", armor: "domaru", items: { riceball: 2, herb: 1 }, gold: 20, culture: "yakumo",
     },
