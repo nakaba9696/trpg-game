@@ -1,0 +1,4 @@
+/* S7：ステータスの能力値の横の印（職業柄、伸びやすい ▲／伸びにくい ▽） */
+.statlist .nm .apt { margin-left: .25em; font-size: .75em; vertical-align: .1em; }
+.statlist .nm .aptUp { color: var(--plus, #3d7a3a); }
+.statlist .nm .aptDown { color: var(--minus, #9a3b2e); }

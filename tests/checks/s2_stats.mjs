@@ -100,6 +100,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   if (/%$/.test(G.statModText("筋力", 6)) || G.statModText("筋力", 6) !== "筋力+2") fail(`装備の能力値の補正が点で書かれていない（${G.statModText("筋力", 6)}）`);
 
   // ---------------------------------------------------------------- 成長
+  const cls0 = S.cls; S.cls = "__neutral";   // 職業の向き不向き（S7）の無い形で、成長そのものを見る
   S.stats.筋力 = 12; S.caps.筋力 = 14; S.s5exp = {};   // 古いセーブの caps：効かない
   let g = G.grow("筋力", 1);
   if (g[0] !== 12 || g[1] !== 12 || g[2] !== 1) fail(`1 だけの成長で点が上がった（${g}）`);
@@ -126,6 +127,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     const r = G.check("敏捷", "易しい", "テスト");
     if (r.growth && !(r.growth[1] > r.growth[0])) { fail(`判定の成長が点でない（${r.growth}）`); break; }
   }
+  S.cls = cls0;
   // 訓練場の表示は点
   const fac = S.mode; S.mode = "fac"; S.fac = "train";
   const tr = G.facActions ? G.facActions().flatMap((x) => x.list).find((a) => a.id === "train:魅力") : null;
