@@ -14,22 +14,22 @@
   const E4 = (D.E4 = D.E4 || {});
   // 地域の鍵 → 場所の region に当てる正規表現（W3・W4 の新しい地域も名前で当てる）
   E4.RG = {
-    自由都市: "自由都市", 王国: "王国", 教会領: "教会", 島: "シェルアーク|島々", 帝国: "帝国",
+    王国: "王国", 教会領: "教会", 島: "シェルアーク|島々", 帝国: "帝国",
     共和国: "共和国", 境: "人と魔の境|^境", 最前線: "最前線", 使徒領: "使徒領",
   };
 
   Object.assign(D.ENEMIES, {
-    // ================================================================ 自由都市（迷いの森・エル・ナフ遺構）
+    // ================================================================ 王国の南（迷いの森・エル・ナフ遺構・鐘撞きの丘。王国のほかの野にも出る）
     e4_mosswisp: {
       name: "苔灯り", tier: 1, hp: 7, dmg: [1, 3, 0], hit: 45, def: 0, agi: 40, will: 999, mres: 10, gold: [0, 6], loot: [["herb", 0.4]], shape: "blob", eye: "#b8ff8a",
-      rg: "自由都市", when: { night: true }, acts: ["sleep"], weak: "fire",
+      rg: "王国", when: { night: true }, acts: ["sleep"], weak: "fire",
       desc: "夜の森を漂う、光る苔の玉。近づいた者に眠りの胞子をかける。眠った者がどうなるかは、苔の厚さを見れば分かる。",
       look: { body: "blob", skin: "#6aa04a", skin2: "#c8f08a", eyes: "dot", mouth: "o", pattern: "spots", extra: ["float", "bubbles"], mood: "silly" },
       lines: { turn: ["苔灯りがふわりと揺れた。甘い匂いがしてまぶたが重くなる。"] },
     },
     e4_satchelrat: {
       name: "鞄ネズミ", tier: 1, hp: 5, dmg: [1, 3, 0], hit: 45, def: 0, agi: 60, will: 25, mres: 0, gold: [1, 6], loot: [["jerky", 0.2]], shape: "small", eye: "#e8c87a",
-      rg: "自由都市", pack: [2, 3], acts: ["steal", "rout"],
+      rg: "王国", pack: [2, 3], acts: ["steal", "rout"],
       desc: "旅人の鞄に潜り込み、中身を一つずつ巣へ運ぶネズミ。群れで来て一番重い物から持っていく。",
       look: { body: "biped", build: "small", size: 0.8, skin: "#8a7a6a", head: "plain", ears: "round", eyes: "dot", mouth: "o", tail: "thin", arms: "stubs", extra: ["nose", "pouch"], mood: "silly" },
       fleeAt: 0.5,
@@ -38,27 +38,27 @@
     },
     e4_thornboar: {
       name: "棘猪", tier: 1, hp: 12, dmg: [1, 6, 0], hit: 50, def: 5, agi: 35, will: 40, mres: 0, gold: [0, 0], loot: [["pelt", 0.4], ["jerky", 0.3]], shape: "beast", eye: "#e8a04a",
-      rg: "自由都市", acts: ["enrage"],
+      rg: "王国", acts: ["enrage"],
       desc: "背中に茨の棘を生やした猪。茨の茂みで寝るうちに、棘が毛に根を張ったらしい。怒ると棘が逆立つ。",
       look: { body: "quad", head: "pig", skin: "#5a4a3a", skin2: "#8a7a5a", eyes: "slit", mouth: "tusks", tail: "thin", pattern: "stripes", extra: ["fur"], mood: "fierce" },
       elder: { id: "e4_thornboar_x", name: "年経た棘猪", desc: "茨が背中で藪になった、大きな猪。猟師の折れた矢が、何本も茨に絡まっている。", item: ["茨の牙", "年経た棘猪の牙。根元に茨の蔓が巻きついていて、乾いても、まだかすかに緑色だ。森の猟師は、これを戸口に吊るして猪除けにする。", 50] },
     },
     e4_relicmole: {
       name: "遺構モグラ", tier: 2, hp: 18, dmg: [1, 6, 1], hit: 55, def: 10, agi: 30, will: 40, mres: 0, gold: [5, 25], loot: [["gem", 0.12]], shape: "beast", eye: "#ffd84a",
-      rg: "自由都市", acts: ["steal"], weak: "ice",
+      rg: "王国", acts: ["steal"], weak: "ice",
       desc: "遺構の床下を掘り進む大モグラ。光る物が好きで、発掘人の道具袋をよく狙う。巣には、古い金貨と新しい財布が並んでいる。",
       look: { body: "quad", head: "plain", skin: "#4a3a3a", skin2: "#8a6a6a", ears: "round", eyes: "dot", eyeN: 2, mouth: "o", arms: "claws", tail: "thin", extra: ["nose"], mood: "silly" },
     },
     e4_lampghost: {
       name: "灯し番の亡霊", tier: 2, hp: 16, dmg: [1, 6, 1], hit: 55, def: 5, agi: 35, will: 999, mres: 20, undead: true, gold: [2, 18], loot: [["manawater", 0.2]], shape: "humanoid", eye: "#ffe08a",
-      rg: "自由都市", acts: ["drain"], weak: "holy",
+      rg: "王国", acts: ["drain"], weak: "holy",
       desc: "遺構の通路で、消えた灯りに火を入れて回る亡霊。火の代わりに人の温もりを使う。",
       look: { body: "biped", build: "lanky", skin: "#a8b0b8", head: "hood", eyes: "glow", mouth: "none", weapon: "staff", outfit: "robe", cloth: "#4a4a5a", extra: ["float", "smoke"], mood: "fierce" },
       lines: { turn: ["亡霊の手があなたの肩に触れた。指先から温かさが抜けていく。", "「……灯りが足りない……」"] },
     },
     e4_rustwatch: {
       name: "錆びた見張り", tier: 2, hp: 22, dmg: [1, 8, 0], hit: 50, def: 20, agi: 15, will: 999, mres: 0, gold: [0, 12], loot: [["relic", 0.04]], shape: "humanoid", eye: "#ff8a4a",
-      rg: "自由都市", acts: ["guard"], weak: "bolt",
+      rg: "王国", acts: ["guard"], weak: "bolt",
       desc: "遺構の門を守り続ける鉄の人形。錆びて関節が鳴るが、通る者があれば、まだ槍を下ろす。仲間の人形が打たれると、身を挺して前に出る。",
       look: { body: "biped", build: "stubby", skin: "#8a6a5a", skin2: "#b08a6a", head: "helm", eyes: "goggle", eyeN: 1, mouth: "none", weapon: "spear", pattern: "cracks", extra: ["pauldron"], mood: "fierce" },
       lines: { open: ["ぎし、と首が回った。「……トオル、モノ、ナシ」"] },

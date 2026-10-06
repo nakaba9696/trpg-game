@@ -178,7 +178,8 @@
     const L = D.LOCS[S.loc];
     const n = G.nationOf(S.loc);
     const rep = n && S.repute && S.repute[n] ? S.repute[n].rep : 0;
-    const bias = Q.NATION_BIAS[L.nation || L.region] || {};
+    const market = ((D.M4 && D.M4.MARKET) || []).includes(S.loc) && Q.MARKET_BIAS;
+    const bias = market || Q.NATION_BIAS[L.nation || L.region] || {};
     const types = Q.TYPES.filter((t) => S.fame >= (t.fame || 0) && rep >= (t.rep || 0));
     const size = Q5.boardSize(S);
     const dist = Q5.distFrom(S.loc);

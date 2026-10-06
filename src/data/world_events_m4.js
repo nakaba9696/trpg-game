@@ -18,7 +18,9 @@
 
   // ---------------------------------------------------------------- 国と前線
   // 町がどの国に属するか。無い町は region の文字から決める（engine の nationOf）
-  M.NATION = { leavel: "kingdom", w1_holy: "kingdom", garmund: "empire", fort: "front", zephara: "republic", karna: "free", nerva: "free", yakumo: "yakumo", w1_oboro: "yakumo" };
+  M.NATION = { leavel: "kingdom", w1_holy: "kingdom", garmund: "empire", fort: "front", zephara: "republic", karna: "kingdom", nerva: "kingdom", yakumo: "yakumo", w1_oboro: "yakumo" };
+  // 王国の南の商いの町（D10：前は自由都市連合という別の国だった）。王国が戦をしていないときは、どちらの側にも売る
+  M.MARKET = ["karna", "nerva", "w7_russen", "w7_glatz", "w7_durm", "w7_vinale"];
   M.NATION_NAMES = { kingdom: "王国", republic: "共和国", empire: "帝国" };
   // 戦で兵が行き来する野外
   M.FRONT = { kingdom: ["plains", "frost"], republic: ["frost", "swamp", "mountains"] };
@@ -270,7 +272,7 @@
     "広場の徴兵の机の前で、獣人の若者が耳を帽子に押し込んでいる。「獣人も可」と張り紙にはあるのに。",
     "宿の女将が、帳場の裏で、戦に行った客の荷物を数えている。取りに来る者がいない荷物が、棚一つ分になった。",
   ];
-  // 戦の最中の、自由都市（どちらにも売る）
+  // 戦の最中の、南の商いの町（王国が戦をしていないとき。どちらにも売る）
   M.FREE_LINES = [
     "ギルドの前に、傭兵の募集が二枚並んで貼ってある。帝国と相手方。報酬の額が、一日ごとに書き換えられている。",
     "両替商の窓口に、帝国の兵と、相手方の兵が並んでいる。互いに目を合わせない。両替商だけがどちらにも愛想がいい。",

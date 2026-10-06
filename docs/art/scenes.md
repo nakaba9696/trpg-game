@@ -11,7 +11,7 @@
 
 | id | 名前 | 種類 |
 |---|---|---|
-| `karna` | 自由都市ブランデール | 場所 |
+| `karna` | 商都ブランデール | 場所 |
 | `nerva` | 港町ヴァレンツァ | 場所 |
 | `forest` | 迷いの森 | 場所 |
 | `in_tavern` | 酒場 | 施設の中 |
@@ -23,15 +23,15 @@
 
 | id | 名前 | 絵 | まとめ | 特徴のタグ |
 |---|---|---|---|---|
-| `karna` | 自由都市ブランデール（自由都市連合・町）・**試し** | `town` | west | medieval fantasy town, cobblestone main street, half-timbered houses, money changer signboards, large guild hall with banners, stone town gate, grassy low hills beyond the town wall |
-| `w7_vinale` | 葡萄の町ヴィナレ（自由都市連合・町） | `w7_vineyard` | west | vineyard town on gentle south-facing slopes, terraced grape trellises, wooden wine barrels, press house, warm sunlight |
-| `w7_durm` | 発掘人の町ドゥルム（自由都市連合・町） | `w7_diggers` | west | diggers' town grown from tents, canvas tents beside rough stone houses, broken white ancient pillars in the distance, shovels and carts |
-| `w7_glatz` | 傭兵の町グラッツ（自由都市連合・町） | `w7_mercs` | west | mercenary town around a fenced drill yard, wooden palisade, large notice board covered with paper postings, inns, taverns and smithy |
-| `w7_russen` | 渡しの町リュッセン（自由都市連合・町） | `w7_ferry` | west | river ferry town, wide river with a flat ferry boat, wooden landing piers, small toll booth hut, half-timbered houses on the bank |
-| `nerva` | 港町ヴァレンツァ（自由都市連合・町）・**試し** | `port` | west | harbor town, wooden piers, moored sailing ships with heavy wet sails, fishing nets, warehouses, misty sea, lighthouse, seagulls |
-| `forest` | 迷いの森（自由都市連合・荒野）・**試し** | `forest` | west | dense dark forest, branches interlocking overhead, thick moss on the ground, gnarled old trees, dim light through the canopy, narrow overgrown path, old barrel by the path |
-| `ruins` | エル・ナフ遺構（自由都市連合・迷宮） | `ruins` | west | ancient ruins, broken white stone pillars standing in tall grass like ribs, crumbling stone stairs leading underground, huge circular stone tablet carved with symbols, overgrown |
-| `w3_bells` | 鐘撞きの丘（自由都市連合・荒野） | `w3_bells` | west | low grassy hills, an old stone watchtower on each hilltop, bronze bell hanging in each tower, bell ropes, windy grassland |
+| `karna` | 商都ブランデール（レオネスト王国・町）・**試し** | `town` | west | medieval fantasy town, cobblestone main street, half-timbered houses, money changer signboards, large guild hall with banners, stone town gate, grassy low hills beyond the town wall |
+| `w7_vinale` | 葡萄の町ヴィナレ（レオネスト王国・町） | `w7_vineyard` | west | vineyard town on gentle south-facing slopes, terraced grape trellises, wooden wine barrels, press house, warm sunlight |
+| `w7_durm` | 発掘人の町ドゥルム（レオネスト王国・町） | `w7_diggers` | west | diggers' town grown from tents, canvas tents beside rough stone houses, broken white ancient pillars in the distance, shovels and carts |
+| `w7_glatz` | 傭兵の町グラッツ（レオネスト王国・町） | `w7_mercs` | west | mercenary town around a fenced drill yard, wooden palisade, large notice board covered with paper postings, inns, taverns and smithy |
+| `w7_russen` | 渡しの町リュッセン（レオネスト王国・町） | `w7_ferry` | west | river ferry town, wide river with a flat ferry boat, wooden landing piers, small toll booth hut, half-timbered houses on the bank |
+| `nerva` | 港町ヴァレンツァ（レオネスト王国・町）・**試し** | `port` | west | harbor town, wooden piers, moored sailing ships with heavy wet sails, fishing nets, warehouses, misty sea, lighthouse, seagulls |
+| `forest` | 迷いの森（レオネスト王国・荒野）・**試し** | `forest` | west | dense dark forest, branches interlocking overhead, thick moss on the ground, gnarled old trees, dim light through the canopy, narrow overgrown path, old barrel by the path |
+| `ruins` | エル・ナフ遺構（レオネスト王国・迷宮） | `ruins` | west | ancient ruins, broken white stone pillars standing in tall grass like ribs, crumbling stone stairs leading underground, huge circular stone tablet carved with symbols, overgrown |
+| `w3_bells` | 鐘撞きの丘（レオネスト王国・荒野） | `w3_bells` | west | low grassy hills, an old stone watchtower on each hilltop, bronze bell hanging in each tower, bell ropes, windy grassland |
 | `w1_holy` | 聖都エルヴィナ（光天教会領・町） | `w1_holy` | west | holy city, white stone pavement, golden spires, grand cathedral, many bell towers, pilgrim road lined with candles and flowers |
 | `w7_norve` | 祈りの浜ノルヴェ（光天教会領・町） | `w7_prayerbeach` | west | fishing beach village, small boats pulled up on sand, fishing nets drying on poles, tiny wooden shrine on the beach |
 | `w7_serena` | 泉の町セレナ（光天教会領・町） | `w7_spring` | west | small town on a seaside cliff around a little sacred spring, stone basin, chapel, sea below |

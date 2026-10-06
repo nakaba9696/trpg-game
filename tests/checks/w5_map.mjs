@@ -8,7 +8,7 @@
 // - 画面：冒険の「地図」ボタン（G.ui.openMap）を置き換え、図鑑の隣の「地図」ボタン（U11）からも開ける
 import { readFileSync } from "node:fs";
 
-const MAJOR = ["レオネスト王国", "ノルディア帝国", "エルメシア共和国", "自由都市連合", "光天教会領", "シェルアーク", "人と魔の境", "使徒領"];
+const MAJOR = ["レオネスト王国", "ノルディア帝国", "エルメシア共和国", "光天教会領", "シェルアーク", "人と魔の境", "使徒領"];
 
 export default ({ fail, ok, loadEngine, seeded }) => {
   let bad = 0;

@@ -7,9 +7,10 @@
 //   w6: { w 重み, on "land"|"sea"|"any"（既定 land）, reg [地方]（出発地か行き先のどちらかが当たれば）, dmin / dmax 危険度, days 何日以上の旅,
 //         season [季節], weather [天候]（行き先の空）, tod [時間帯]（その出来事が起きる時。旅の中で引く）, comp 仲間がいるとき, fame 名声がこれ以上,
 //         flag この印があるとき, noflag この印が無いとき }
-//   地方：free 自由都市連合・leo レオネスト王国・nord ノルディア帝国・elm エルメシア共和国・holy 光天教会領・front 人類の最前線と断界山脈・isle シェルアーク・realm 使徒領
+//   地方：leo レオネスト王国（商都ブランデール・港町ヴァレンツァのあたりも）・nord ノルディア帝国・elm エルメシア共和国・holy 光天教会領・front 人類の最前線と断界山脈・isle シェルアーク・realm 使徒領
 // 結果（G.apply）に足せるもの：heard "話"（図鑑の聞いた話。G.heard が無ければ覚え書き）・detour true（寄り道。近くの別の場所に着く）・banter "camp"|"road"（仲間の掛け合いを一つ）
 // セーブに足すもの：S.w6 = { dest, from, sea, days, danger, left 残りの回数, raid 襲撃が残っているか, seen [この旅で起きた出来事], tod }（着いたら null）
+//   reg の "free"（前の地方。D10 で王国に入った）は "leo" として読む（ほかの枝から来た出来事のため）
 //   S.w6recent = [最近の旅の出来事]（同じ出来事が続かないように）。古いセーブに無くても動く。旅の途中の古いセーブ（S.travel だけある）は、次の手番で着く
 // 乱数は G.rand だけ。レーン W＋V（W6）
 (function (G) {
@@ -20,9 +21,9 @@
   W6.MAX = 2;          // 一つの旅で起きる出来事の数の上限（襲撃を含む）
   W6.RAID = 0.85;      // 襲撃の割合は今まで（explore.js）の何倍か。道中の出来事にも戦いがあるので、少しだけ下げる
   W6.RECENT = 16;      // 最近の出来事として覚えておく数
-  W6.REGIONS = ["free", "leo", "nord", "elm", "holy", "front", "isle", "realm"];
+  W6.REGIONS = ["leo", "nord", "elm", "holy", "front", "isle", "realm"];
   W6.TODS = ["朝", "昼", "夕", "夜"];
-  const NATION = { 自由都市連合: "free", レオネスト王国: "leo", ノルディア帝国: "nord", エルメシア共和国: "elm", 光天教会領: "holy", 人類の最前線: "front", シェルアーク: "isle" };
+  const NATION = { レオネスト王国: "leo", ノルディア帝国: "nord", エルメシア共和国: "elm", 光天教会領: "holy", 人類の最前線: "front", シェルアーク: "isle" };
   const REALM = ["wasteland", "majincastle", "w4_canopy", "e2_kitchen"];
 
   W6.regionOf = (id) => {
@@ -55,7 +56,7 @@
     if (!r || !(r.w > 0)) return false;
     const on = r.on || "land";
     if (on !== "any" && (on === "sea") !== c.sea) return false;
-    if (r.reg && !as(r.reg).some((x) => c.reg.includes(x))) return false;
+    if (r.reg && !as(r.reg).some((x) => c.reg.includes(x === "free" ? "leo" : x))) return false;
     if (r.dmin != null && c.danger < r.dmin) return false;
     if (r.dmax != null && c.danger > r.dmax) return false;
     if (r.days != null && c.days < r.days) return false;

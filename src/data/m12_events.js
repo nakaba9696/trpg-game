@@ -300,7 +300,7 @@
         ],
       },
       {
-        id: "w6_m12_dragon", where: ["w6"], w: 0, title: "空き家の牧場", w6: { w: 4, reg: ["leo", "free", "front"] }, cond: (S) => { const s = G.m12Stage ? G.m12Stage("dragon", S) : -1; return s >= 0 && s <= 2; },
+        id: "w6_m12_dragon", where: ["w6"], w: 0, title: "空き家の牧場", w6: { w: 4, reg: ["leo", "front"] }, cond: (S) => { const s = G.m12Stage ? G.m12Stage("dragon", S) : -1; return s >= 0 && s <= 2; },
         text: "街道沿いの牧場に人も羊もいない。柵だけがきれいに残っている。囲いの真ん中の地面が、丸く、黒く焦げている。焦げた跡のまわりに、毛が一本も落ちていない。",
         choices: [
           { label: "焦げた跡を調べる", stat: "知力", diff: "普通", ok: { text: "黒い跡の縁を指でなぞると、まだ少し温かかった。跡の中に大きな鱗が一枚落ちていた。錆びた鉄の色。拾おうとしてやめた。持てないほど熱い。", heard: "街道の牧場に、錆びた鉄の色の大きな鱗が落ちていた" }, ng: { text: "跡はただ黒かった。空を見上げそうになってやめた。" } },
