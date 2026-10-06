@@ -1,6 +1,6 @@
 // M7: 判定の振り直し（engine/reroll_m7.js・data/m7_reroll.js）
 // - 古いセーブ（S.rerolls が無い）でも動き、振り直しは出ない
-// - 失敗した判定のあとに「振り直す」が出て、使うと 1 減り、同じ場面で出目だけが振り直される。二度目は振り直せない
+// - 失敗した判定のあとに「振り直す」が出て、使うと 1 減り、同じ場面で出目だけが振り直される。二度目は振り直せない。戦闘中は振り直せない
 // - 上限を超えない。欠けた賽子・賽の夜・祠・瀕死から立ち上がる、で増える
 // - ランダムプレイ：振り直しを使う遊び方と使わない遊び方で、同じ種の 150 回を比べる（数字を出すだけ）
 export default ({ G, fail, ok, seeded }) => {
@@ -75,19 +75,17 @@ export default ({ G, fail, ok, seeded }) => {
   G.act(acts().find((a) => a.id !== "rr:go").id);
   if (hasRR()) bad("ほかの行動をしたのに、前の判定を振り直せる");
 
-  // 戦闘の判定も振り直せる
+  // 戦闘の判定は振り直せない（持ち主の決定。戦闘の前後は tests/checks/f1_no_reroll.mjs）
   S = start("merc", 6);
   S.maxHp = S.hp = 999;
   G.startCombat(["dogu"], {});
   G.rand = script([0.97]); // 大失敗
   G.act("cb:attack");
-  if (!hasRR()) bad("戦闘の攻撃の失敗を振り直せない");
-  const foeHp = G.S.combat && G.S.combat.foes[0].hp;
+  if (hasRR()) bad("戦闘の攻撃の失敗に、振り直しが出る");
+  if (!G.rerollBlocked()) bad("戦闘の失敗した判定に「戦闘中は振り直せない」の印が無い");
   G.rand = seeded(66);
-  G.act("rr:go");
-  if (S.counters.rerolls !== 1) bad("戦闘の振り直しが数えられない");
-  if (!(S.log.filter((e) => e.k === "dice" && e.rr).length === 1)) bad("戦闘の振り直しが記録に残らない");
-  if (foeHp === undefined) bad("戦闘が用意できていない");
+  if (G.reroll()) bad("戦闘の判定を振り直せてしまう");
+  if (S.counters.rerolls || S.rerolls !== 1) bad("戦闘中に振り直しの回数が動いた");
 
   // 上限と増やし方
   S = start("merc", 7);
