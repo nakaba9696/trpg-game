@@ -1,0 +1,7 @@
+/* U21：職業の札に出す初期装備・持ち物・所持金と、最初の戦技／スキル／魔法。狭い画面でも札からはみ出さない */
+/* 中身が増えたので、職業の札は少し広く取る */
+.cards.compact:has(.clsGear) { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.clsGear { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 1px 8px; margin: 6px 0 0; padding-top: 6px; border-top: 1px solid var(--rule); font-size: 12px; line-height: 1.5; }
+.clsGear dt { color: var(--muted); white-space: nowrap; }
+.clsGear dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.cards.compact .card .clsGear dd { font-size: 12px; }
