@@ -101,9 +101,9 @@
   // 表と違って見えるが、そのままにする台詞（who 話し手・has 台詞に含まれる文字・why 理由）
   // src は台詞の置き場所（tests/k10_lines.mjs の src の頭）
   D.K10_VOICE_EXCEPT = [
-    { who: "felix", src: "R2.felix.steps", has: "{you}", why: "告白の段（一人分の点呼）。帳面の名を、はじめて「さん」を付けずに読み上げる場面そのもの" },
-    { who: "izra", has: "あなたが持っていてくれ", why: "首の輪を、恩のある男に返す場面。イズラがいちど限り改まった言い方をする" },
-    { who: "celestin", has: "あら、あんた。今年も来たのかい", why: "湯の町の湯番の婆さんの台詞（地の文で話し手を書いていない）" },
+    { who: "felix", src: "R2.felix.steps", has: "{you}", why: "告白の段（一人分の点呼）。帳面の名をはじめて「さん」を付けずに読み上げる場面そのもの" },
+    { who: "izra", has: "あなたが持っていてくれ", why: "首の輪を恩のある男に返す場面。イズラがいちど限り改まった言い方をする" },
+    { who: "celestin", has: "あらあんた。今年も来たのかい", why: "湯の町の湯番の婆さんの台詞（地の文で話し手を書いていない）" },
     { who: "ilse", src: "TALK.ilse.ilse_a1_done", has: "あんた", why: "イルゼの下宿のおかみの台詞" },
     { who: "noeris", src: "TALK.noeris.noeris_a1_done", has: "あんた", why: "手紙を受け取った娘の台詞" },
     { who: "solenne", src: "TALK.solenne.solenne_l_zalgros", has: "あんた", why: "闘技場の呼び込みの台詞" },

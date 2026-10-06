@@ -19,29 +19,29 @@
       { from: "春", to: "秋", loc: "forest", note: "迷いの森で、村を潰したものの匂いを追っている" },
       { from: "冬", to: "冬", loc: "karna", note: "雪で匂いが消える冬は、森の入口の町に下りてくる" },
     ],
-    sheila: [{ from: "春", to: "冬", loc: "leavel", note: "王都の役所の裏で、傭兵の面接をしている" }],
-    rui: [{ from: "春", to: "冬", loc: "ruins", note: "遺跡の奥の石の部屋で、眠っている" }],
+    sheila: [{ from: "春", to: "冬", loc: "leavel", note: "王都の役所の裏で傭兵の面接をしている" }],
+    rui: [{ from: "春", to: "冬", loc: "ruins", note: "遺跡の奥の石の部屋で眠っている" }],
     // ゼリナは市の立つ町を渡る。秋は麦の都の収穫市
     zerina: [
       { from: "春", to: "春", loc: "karna", note: "春は自由都市の市場で店を出す" },
-      { from: "夏", to: "夏", loc: "nerva", note: "夏は港町で、船の荷を買い叩いている" },
+      { from: "夏", to: "夏", loc: "nerva", note: "夏は港町で船の荷を買い叩いている" },
       { from: "秋", to: "秋", loc: "w2_granbel", note: "秋は麦の都の収穫市に出る" },
-      { from: "冬", to: "冬", loc: "karna", note: "冬は自由都市に戻って、帳面をつけている" },
+      { from: "冬", to: "冬", loc: "karna", note: "冬は自由都市に戻って帳面をつけている" },
     ],
     elnea: [{ from: "春", to: "冬", loc: "w2_dranherz", note: "鍛冶ギルドの炉の前で、精晶の設備を見ている" }],
     // ナタリアは酒と腕試しを追って、季節ごとに町を変える
     natalia: [
       { from: "春", to: "春", loc: "leavel", note: "春は王都の古い道場に顔を出す" },
-      { from: "夏", to: "夏", loc: "w2_zalgros", note: "夏は闘技の都で、腕試しと祝い酒" },
-      { from: "秋", to: "秋", loc: "karna", note: "秋は自由都市の酒場で、新酒を飲み歩く" },
-      { from: "冬", to: "冬", loc: "w1_holy", note: "冬は聖都で、酒を断つと言っては破っている" },
+      { from: "夏", to: "夏", loc: "w2_zalgros", note: "夏は闘技の都で腕試しと祝い酒" },
+      { from: "秋", to: "秋", loc: "karna", note: "秋は自由都市の酒場で新酒を飲み歩く" },
+      { from: "冬", to: "冬", loc: "w1_holy", note: "冬は聖都で酒を断つと言っては破っている" },
     ],
     bertrand: [{ from: "春", to: "冬", loc: "karna", note: "自由都市の酒場の二階で、付けを溜めて絵を描いている" }],
-    ilse: [{ from: "春", to: "冬", loc: "nerva", note: "港町の宿の屋根裏で、策を練っている" }],
+    ilse: [{ from: "春", to: "冬", loc: "nerva", note: "港町の宿の屋根裏で策を練っている" }],
     // トゥーラは雪の季節に街道で荷運びをし、雪の無い季節は帝都の長屋で母の看病
     tula: [
       { from: "秋", to: "冬", loc: "frost", note: "秋から冬は、凍てつく街道で荷車を押している" },
-      { from: "春", to: "夏", loc: "garmund", note: "春と夏は、帝都の外れの坑夫長屋にいる" },
+      { from: "春", to: "夏", loc: "garmund", note: "春と夏は帝都の外れの坑夫長屋にいる" },
     ],
     // ミルレーネは夏だけ、湯の町の湖畔の別荘へ
     mirlene: [
@@ -65,7 +65,7 @@
     always: [
       "{name}なら、いつ行っても{place}にいるよ。",
       "{name}？ {place}に行けば会える。年じゅうそこだ。",
-      "{place}の{title}な。あれは、あそこから動かないね。",
+      "{place}の{title}な。あれはあそこから動かないね。",
     ],
     gone: ["{name}？ この頃、とんと噂を聞かないね。", "{name}なら、もうどこにもいないって話だ。"],
     none: ["目ぼしい尋ね人の貼り紙はなかった。", "貼り紙は、迷い猫と借金取りのものばかりだった。"],
