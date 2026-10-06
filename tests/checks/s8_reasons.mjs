@@ -12,7 +12,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   if (fixed.length < 15) fail(`直した出来事が ${fixed.length} 件しかない`);
 
   const DV = (c) => (c.stat ? G.s5Target(c.diff || "普通") : -99);
-  const GAIN = ["memo", "heard", "item", "gold", "fame", "virtue", "town", "w8side", "grow", "hp", "mp", "chron", "next"];
+  const GAIN = ["memo", "heard", "item", "gold", "fame", "virtue", "town", "w8side", "grow", "hp", "mp", "chron", "next", "lore"];
   const gains = (o) => new Set(Object.keys(o || {}).filter((k) => GAIN.includes(k) && !(typeof o[k] === "number" && o[k] <= 0)));
   const costly = (o) => !!(o && (o.days || (o.hp || 0) < 0 || (o.fame || 0) < 0 || o.sin || o.crime));
   const tail = (o) => Object.keys(o || {}).some((k) => !["text", "mood"].includes(k));
@@ -32,6 +32,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     const stat = cs.filter((c) => c.stat);
     if (!stat.length) continue;
     const hard = [...stat].sort((a, b) => DV(b) - DV(a))[0];
+    if (!hard.s8) continue;   // いちばん難しい選択肢に手を入れていない出来事は、既に理由があるとみなした所（S6 など）
     const others = cs.filter((c) => c !== hard && DV(c) < DV(hard));
     for (const easy of others) {
       const mine = gains(hard.ok), theirs = gains(easy.ok);
