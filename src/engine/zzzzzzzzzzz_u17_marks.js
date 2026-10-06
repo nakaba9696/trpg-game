@@ -9,7 +9,7 @@
   const D = G.data;
   const U = (G.q17 = G.q17 || {});
   const arr = (v) => (Array.isArray(v) ? v : []);
-  const locName = (id) => (id && D.LOCS[id] ? D.LOCS[id].name : "");
+  const locName = (id) => (G.placeName ? G.placeName(id) : id && D.LOCS[id] ? D.LOCS[id].name : ""); // 地名は種類つき（D2）
   const q = (t) => `依頼『${t}』`;
   U.RUMOR_MARKS = 3; // 印にする噂の数（新しいものから）
 
