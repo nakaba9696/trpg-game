@@ -145,7 +145,10 @@
       const sg = G.sanityStage(G.sanityOf(S));
       if (sg >= 2 && G.rand() < (sg >= 3 ? 0.45 : 0.2)) text = warp(text);
     }
-    return baseLog(k, text, extra);
+    const r = baseLog(k, text, extra);
+    // 崩れかけで行動が入れ替わったとき：その行動の「あなた」の行のすぐ後に（下の G.act を見る）
+    if (k === "you" && S && S.m5 && S.m5.swap) swapLines(S).forEach(([k2, t2]) => baseLog(k2, t2));
+    return r;
   };
   function warp(t) {
     const faces = M.WARP_FACE.filter(([a]) => t.includes(a));
@@ -397,15 +400,38 @@
   }
 
   // ---------------------------------------------------------------- 崩れかけ：選んだ行動が勝手に入れ替わる
+  // 押し間違いと思われないように、入れ替わった行動の「あなた」の行のすぐ後に、何をするつもりだったか（地の文）と、正気のせいだという一行（M.SWAP）を出す。
+  // 「あなた」の行より前に置くと、本文の欄の頁（ui/v9_pc.js・ui/zzzz_u19_page.js）に出ないため。
+  // 入れ替わりの印（S.m5.swap）は行動の前に付けるので、判定の振り直し（M7）でやり直しても同じ行が出る。古いセーブには無い
+  const swapLines = (S) => {
+    const w = st(S).swap;
+    st(S).swap = null;
+    return [["nar", G.pick(M.SWAP_SAY).replace("{want}", w.want)], ["sys", M.SWAP]];
+  };
   const baseAct = G.act;
   G.act = (id) => {
     const S = G.S;
+    let swapped = false;
     if (S && !S.over && S.mode !== "combat" && G.sanityStage(G.sanityOf(S)) >= 3 && G.rand() < 0.12) {
       const group = G.actions().find((g) => g.list.some((x) => x.id === id));
       const others = group ? group.list.filter((x) => x.id !== id && !x.disabled) : [];
-      if (others.length) { G.log("sys", M.SWAP); id = G.pick(others).id; }
+      if (others.length) {
+        const want = group.list.find((x) => x.id === id).label;
+        id = G.pick(others).id;
+        st(S).swap = { want, did: group.list.find((x) => x.id === id).label };
+        swapped = true;
+      }
     }
-    return baseAct(id);
+    const last = swapped ? S.log[S.log.length - 1] : null;
+    const r = baseAct(id);
+    // 「あなた」の行を書かない行動だった：その行動の頭に、した行動の名前と一緒に置く
+    const S2 = G.S;
+    if (swapped && S2 && S2.m5 && S2.m5.swap) {
+      const did = S2.m5.swap.did;
+      const at = S2.log.lastIndexOf(last) + 1;
+      S2.log.splice(at, 0, ...[["you", did], ...swapLines(S2)].map(([k, text]) => ({ k, text })));
+    }
+    return r;
   };
 
   // ---------------------------------------------------------------- 画面に出す行（src/ui/ui.js の人物の表）
