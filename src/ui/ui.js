@@ -92,6 +92,13 @@
       b.type = "button";
       b.onclick = () => { if (!busy) { G.act("rr:go"); after(); } };
       box.append(b);
+    } else if (G.rerollBlockedTarget && G.rerollBlockedTarget(e) && !busy) {
+      // 戦闘中は振り直せない：ボタンを薄くして理由を添える
+      const b = h("button", "btn small", `振り直す（残り ${G.rerolls()}）`);
+      b.type = "button";
+      b.disabled = true;
+      b.title = G.REROLL_NO_COMBAT;
+      box.append(b, h("span", "fine", G.REROLL_NO_COMBAT));
     }
     return box;
   }
