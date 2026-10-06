@@ -3,7 +3,7 @@
 // - 古いセーブ（S.skills・S.k1 が無い）でも動く。職業ごとのはじめの技
 // - 戦闘：技は「技」の組に出る。型が合わない・気力が足りない技は理由つきで押せない。気力が減り、身を守る・眠ると戻る
 //   F1 の読み合いとつながる：抜き打ちが溜めを潰す・受け流しが大技を崩して斬り返す・誘いで大技の気配が出る・見切りで ◎・毒・型
-// - 覚え方：訓練場（金と日数。しくじっても積み重ね）・師（条件が足りないとうっすら）・仲間（打ち解けると）・巻物（読めない条件）・野営の稽古
+// - 覚え方：訓練場（教官の条件・金と日数。しくじっても積み重ね）・師（条件が足りないとうっすら）・仲間（打ち解けると）・巻物（読めない条件）。野営の稽古では覚えない（K3。tests/checks/k3_pace.mjs）
 // - 熟練：使うと数え、段が上がる。戦闘の外：技で現れる選択肢（技が無ければ出ない）・施設の「身につけた技で」は一日に一度
 export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   let bad = 0;
@@ -257,7 +257,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   {
     const S = start("merc", 701, 16);
     const town = Object.keys(D.LOCS).find((id) => (D.LOCS[id].fac || []).includes("train") && D.LOCS[id].type === "town");
-    S.loc = town; S.mode = "fac"; S.fac = "train";
+    S.loc = town; S.mode = "fac"; S.fac = "train"; S.fame = 40;   // 教官は名が知られた者にだけ稽古をつける（K3）
     const a = acts().find((x) => x.id === "k1train:k1_twinfang");
     if (!a || a.disabled) fail(`訓練場で返し刃を稽古できない（${a && a.sub}）`);
     else {
@@ -325,8 +325,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   {
     const S = start("merc", 1101, 30);
     S.loc = Object.keys(D.LOCS).find((id) => D.LOCS[id].type === "wild");
-    const a = acts().find((x) => /^k1camp:k1_/.test(x.id));
-    if (!a) fail("荒野で野営の稽古ができない");
+    if (acts().some((x) => /^k1camp:k1_/.test(x.id))) fail("荒野の野営の稽古で、新しい戦技を覚えられる（K3 で覚えないことにした）");
+    if (!acts().some((x) => x.id === "k1camp:drill")) fail("荒野で覚えた戦技の型をなぞれない");
     S.loc = Object.keys(D.LOCS).find((id) => D.LOCS[id].type === "town");
     if (acts().some((x) => /^k1camp:/.test(x.id))) fail("町の中で野営の稽古ができる");
   }
