@@ -97,8 +97,12 @@
     b.querySelectorAll(".f2bang").forEach((x) => x.remove());
     if (n) b.append(bang(n));
   });
+  // 入口の「！」は、図鑑を開いた時点で見た印として消す（中の項目の印は、その項目を見るまで残す）。開いた時の印を c.ack に覚える
+  const ackOf = () => { const c = G.codex && G.codex(); return (c && c.ack) || {}; };
+  const ackAll = () => { const c = G.codex && G.codex(); if (!c) return; c.ack = {}; freshOf().forEach((k) => { c.ack[k] = 1; }); };
   const markBtn = () => {
-    const n = freshOf().length;
+    const ack = ackOf();
+    const n = freshOf().filter((k) => !ack[k]).length;
     document.querySelectorAll("[data-codex-open]").forEach((b) => {
       b.classList.toggle("fresh", !!n);
       if (n) b.setAttribute("aria-description", `新しく載った項目が ${n} ある`); else b.removeAttribute("aria-description");
@@ -618,7 +622,8 @@
     if (!key) key = freshOf(cur).length ? cur : (TABS.map((b) => b.dataset.tab).find((k) => freshOf(k).length) || cur);
     show(key);
     if (!dlg.open) dlg.showModal();
-    markBtn();
+    ackAll();
+    if (G.onCodexChange) G.onCodexChange(); else markBtn();
     const first = list.querySelector(".f2cell.fresh") || list.querySelector("button.f2cell") || list.querySelector(".f2cell");
     if (first) first.focus();
   };
