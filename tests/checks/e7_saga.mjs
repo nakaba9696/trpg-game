@@ -2,7 +2,8 @@
 // - 表の形：章の入口と小さな段の出来事があり、出来事の続き（next）がある出来事を指している。長編の出来事は C10 の型を足されない
 // - 通しで遊ぶ：行動の欄の「使徒を追う」から選ぶだけで、章が順につながって最後の章まで届く（結末ごとに。決戦の前後で保存と読み込み）
 //   結末：誰も払わない・ベルトラン・フィーネ・ミュゼット・自分の顔（五つ）と、裏道（別の手で）。どの道でも、行き止まり（選べる選択肢が無い・先へ進まない）が無い
-// - 一度目の対面は勝てないが死なない（糸が倒れることを許さず、何手かで終わる）。決戦から逃げたら備え直す章に戻る
+// - 一度目の対面は勝てない（主人公は糸が倒れることを許さず、何手かで終わる。ただし先に行かせた仲間は死ぬ）。決戦から逃げたら備え直す章に戻る
+// - 名前のある人物は、選んだことしだいで道中でも死ぬ。死んだ人は戻らない（仲間から外れ、以後の選択肢に出てこない・年表に残る）
 // - 備えなしの決戦は勝てない強さ（絶界に刃が届かない。剣で破っても強い）。備えと仲間で弱る
 // - 依頼の一覧（Q7）に今の章が出る／終わった長編が出る。古いセーブ（S.e7 が無い）でも動く
 // - 文：見せない言葉が無い・置き換え忘れが無い・AI っぽい癖が多すぎない（V3 と同じ上限）・物語に数値を出さない（V12 の確認に任せる）
@@ -97,6 +98,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   };
   // 出来事で選ぶ：好みの順に名前を当て、無ければ逃げ道でない最初の選択肢
   const AVOID = /背を向け|やめておく|聞き流す|引き返す|備え直す|黙って見る|会釈して/;
+  let failNext = null; // この出来事では、判定をしくじったことにする（道中で人が死ぬ道を通すため）
   const play = (prefer, how, log) => {
     const S = G.S;
     let n = 0;
@@ -104,6 +106,12 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       if (S.mode === "combat") { settle(how, log); continue; }
       const list = G.eventChoices();
       if (!list.length) { fail(`${S.event}：選べる選択肢が無い（${log}）`); return; }
+      // 死んだ人は戻らない：死んだあとの選択肢に、その人が出てこない
+      const sf = (G.e7.peek("mirza", S) || { f: {} }).f;
+      for (const [k, nm] of [["bert", "ベルトラン"], ["fine", "フィーネ"], ["mus", "ミュゼット"], ["ans", "鉄鍋団"]]) {
+        if (sf["ally_" + k] === "dead") list.forEach(({ c }) => { if (c.label.includes(nm)) fail(`${S.event}：死んだ${nm}の選択肢「${c.label}」が出る（${log}）`); });
+      }
+      if (failNext && failNext.test(S.event || "")) { const c0 = G.check; G.check = () => ({ ok: false, roll: 100, chance: 0 }); try { G.act("ev:" + (list.find(({ c }) => c.stat) || list[0]).i); } finally { G.check = c0; } continue; }
       let pick = null;
       for (const re of prefer) { pick = list.find(({ c }) => re.test(c.label) && !(c.cost && S.gold < c.cost)); if (pick) break; }
       if (!pick) pick = list.find(({ c }) => !AVOID.test(c.label) && !(c.cost && S.gold < c.cost)) || list[0];
@@ -160,7 +168,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     }
     const st = G.e7.peek("mirza", G.S);
     if (want === null) return st; // 判定しだいの道を試すとき（呼んだ側が結末を見る）
-    if (!st || st.end !== want) fail(`結末が ${st && st.end}（${want} のはず・${log}）`);
+    if (!st || st.end !== want) fail(`結末が ${st && st.end}（${want} のはず・${log}・${JSON.stringify(st && st.f)}）`);
     if (want !== "back" && st && !st.closed) fail(`後日談の章で閉じない（${log}）`);
     if (want !== "back") {
       if (!G.S.flags["e3:mirza"]) fail(`使徒を倒した印が無い（${log}）`);
@@ -193,6 +201,23 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     }
     if (st) ends.push(st.end);
   }
+  // 名前のある人物が道中で死ぬ道（持ち主の決定）：一度目の対面でベルトラン、決戦の綱の上でフィーネ、人形師でミュゼット、踊り手の列で鉄鍋団の団長
+  {
+    failNext = /^e7m_9a2$/;
+    const st = runSaga({ seed: 909, prefer: [/付けを全部払う/, /^連れていく/, /会釈して/, /ベルトランに、先に踏みこませる/, /鉄鍋団に、合図/, /綱に登って/, /人形を斬る/, /自分の顔で/],
+      preps: ["ward", "arms", "host"] }, "face");
+    failNext = null;
+    const f = (st && st.f) || {};
+    const want = { ally_bert: "dead", ally_fine: "dead", ally_mus: "dead", ally_ans: "dead" };
+    for (const [k, v] of Object.entries(want)) if (f[k] !== v) fail(`道中で死ぬはずの人が死んでいない：${k}=${f[k]}`);
+    if (G.c2In && G.c2In("bertrand", G.S)) fail("死んだベルトランが、まだ仲間にいる");
+    if (G.c2Gone && !G.c2Gone("bertrand", G.S)) fail("死んだベルトランが、もういない人になっていない");
+    if (G.c2Gone && !G.c2Gone("musette", G.S)) fail("死んだミュゼットが、もういない人になっていない");
+    const deaths = G.S.chronicle.filter((x) => /が死ぬ/.test(x.text)).length;
+    if (deaths < 4) fail(`年表に、道中で死んだ人の行が足りない（${deaths}）`);
+    if (st && st.end !== "face") fail(`死んだ人の結末が選べてしまった（${st.end}）`);
+  }
+
   // 裏道：庭の奥で、笑わない面をつけて挑む（E3 の戦い）
   {
     const st = runSaga({ seed: 606, prefer: [/笑わない面をつけて/], mask: true }, "back");
