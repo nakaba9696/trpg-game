@@ -1,5 +1,5 @@
 // K4：野営の稽古は、一人では伸びない（持ち主「野営の稽古は巻物を入手してたり、スキルを教えられるキャラと仲がよく同行している状態などの場合のみにして。一人で野営しても稼ぐのがいやなので」）
-// - 一人の野営：稽古の行動は押せず、理由が一言で分かる。四十日野営しても何も伸びない
+// - 一人の野営：稽古の選択肢そのものを出さない（持ち主「稽古の選択肢すらださないで。意味ある行為に見えるから」）。何日野営しても何も伸びない
 // - その技の巻物を持っていれば、その技だけ磨ける。教えられる仲間と打ち解けて同行していれば、その仲間が教えられる技だけ磨ける
 // - 古いセーブ（S.k1 が無い）でも動く
 export default ({ fail: fail0, ok, loadEngine, seeded }) => {
@@ -29,9 +29,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   {
     const S = start(11);
     const list = camp();
-    if (list.some((a) => !a.disabled)) fail(`一人の野営で稽古が押せる（${list.filter((a) => !a.disabled).map((a) => a.label)}）`);
-    const none = list.find((a) => a.id === "k1camp:none");
-    if (!none || !/巻物|仲間/.test(none.sub || "")) fail(`一人で稽古できない理由が分からない（${none && none.sub}）`);
+    if (list.length) fail(`一人の野営で稽古の選択肢が出る（押せなくても出さない決まり：${list.map((a) => a.label)}）`);
+    if (acts().some((a) => /稽古|型を/.test(a.label || "") && /^k1/.test(a.id))) fail("一人の野営で、稽古らしい選択肢が出る");
     const u0 = JSON.stringify(uses(S));
     for (const id of S.skills) drill(S, id, 15);
     G.act("k1camp:k1_parry");
@@ -51,7 +50,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   {
     const S = start(31);
     S.companions = [{ id: "t1", name: "弓使いのイオ", cls: "弓使い", power: 45, dmg: 1, desc: "目がいい", bond: 30 }];
-    if (camp().some((a) => !a.disabled)) fail("打ち解けていない仲間がいるだけで、稽古ができる");
+    if (camp().length) fail("打ち解けていない仲間がいるだけで、稽古の選択肢が出る");
     S.companions[0].bond = 80;
     const ids = camp().filter((a) => !a.disabled).map((a) => a.id);
     if (!ids.includes("k1camp:k1_aim")) fail(`打ち解けた弓使いがいるのに、狙い撃ちを磨けない（${ids}）`);
@@ -60,7 +59,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (!(K.uses("k1_aim", S) > 0)) fail("仲間に見てもらっても狙い撃ちの熟練が上がらない");
     if (K.uses("k1_parry", S)) fail("仲間の教えられない技まで伸びた");
     S.companions = [];
-    if (camp().some((a) => !a.disabled)) fail("仲間が去ったあとも稽古ができる");
+    if (camp().length) fail("仲間が去ったあとも稽古の選択肢が出る");
   }
   // 古いセーブ
   {

@@ -534,7 +534,6 @@
     }
   }
   // K4：野営の稽古の手引き。その技の巻物を持っている（{ kind: "scroll", item }）か、その技を教えられる仲間と打ち解けて同行している（{ kind: "comp", c }）。無ければ null
-  K.DRILL_ALONE = "一人では型が崩れる（その技の巻物か、教えられる仲間がいれば）";
   K.drillGuide = (id, S) => {
     S = S || G.S;
     if (!SK[id] || !S) return null;
@@ -580,7 +579,8 @@
       if (K.knows("k1_herb")) list.push({ id: "k1herb:", label: "薬草を摘む", sub: K.dayUsed("herb") ? "今日はもう摘んだ" : `${SK.k1_herb.stat} ${K.fieldChance("k1_herb", "易しい")}%`, disabled: K.dayUsed("herb"), kw: ["薬草", "摘"] });
     }
     if (list.length) groups.push({ title: "身につけたスキルで", list });
-    // 野営の稽古（荒野で。一日かかる）。K4：一人では伸びない。その技の巻物を持っているか、教えられる仲間と打ち解けて同行しているときだけ、その技の熟練が上がる
+    // 野営の稽古（荒野で。一日かかる）。K4：一人では伸びない。その技の巻物を持っているか、教えられる仲間と打ち解けて同行しているときだけ、その技の熟練が上がる。
+    //   条件を満たさないときは、稽古の選択肢そのものを出さない（持ち主「稽古の選択肢すらださないで。意味ある行為に見えるから」）
     if (K.canCamp(S)) {
       const known = K.list(S).filter((id) => SK[id].kind !== "passive" && K.lv(id, S) < 3);
       const ok = known.filter((id) => K.drillGuide(id, S)).slice(0, 4);
@@ -588,7 +588,6 @@
         const g = K.drillGuide(id, S);
         return { id: "k1camp:" + id, label: `「${SK[id].name}」の型を磨く`, sub: `一日・${g.kind === "scroll" ? `${D.ITEMS[g.item].name}を見ながら` : `${G.m2Short ? G.m2Short(g.c) : g.c.name}に見てもらう`}・熟練が少し上がる`, kw: ["型", "稽古", SK[id].name] };
       });
-      if (!list.length && known.length) list.push({ id: "k1camp:none", label: "覚えた技の型をなぞる", sub: K.DRILL_ALONE, disabled: true, kw: ["型", "稽古"] });
       if (list.length) groups.push({ title: "野営の稽古", list });
     }
     // 打ち解けた仲間に習う
