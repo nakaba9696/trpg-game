@@ -1,8 +1,8 @@
-// K1：スキル（技）。魔法とは別の、鍛えて覚える腕前。仕組みは src/engine/zzzzzzzzzzz_k1_skills.js、画面は src/ui/zk1_skills.js。
+// K1：戦技とスキル。魔法とは別の、鍛えて覚える腕前。気力を使って出す戦闘の技が「戦技」（kind combat・both）、持っているだけで効く・選択肢が現れるものが「スキル」（kind field・passive。passive は src/data/k2_passives.js）。仕組みは src/engine/zzzzzzzzzzz_k1_skills.js、画面は src/ui/zk1_skills.js。
 // 持ち主「魔法以外にスキルも実装してほしい。スキルは鍛錬したり、人から教えてもらったり、巻物を拾ったりなどで覚えることができる」
 //
 // D.SKILLS = { id: {
-//   name, kind: "combat"（戦闘の技）| "field"（戦闘の外の技）| "both"（どちらでも使える）,
+//   name, kind: "combat"（戦技）| "both"（戦闘でも外でも使える戦技）| "field"（スキル：持っていると選択肢が現れる）| "passive"（スキル：常に効く。k2_passives.js）,
 //   style: 使える武器の型（"剣" "刀" "短剣" "斧" "槌" "槍" "弓" "杖" "鞭" "投げ物" "拳" "盾" "二刀" "両手"。どれか一つを持てばよい。無ければどの武器でも）,
 //   stat: 判定に使う能力値（"武器" は持っている武器の能力値）,
 //   need: 覚えるのに要る能力値の目安（鍛錬・師・巻物のどれで覚えるときも見る）,
@@ -216,19 +216,22 @@
   D.K1_BOND = 55;   // 仲間が教えてくれる好感度（「打ち解けている」）
 
   // ---------------------------------------------------------------- 技の巻物（読むと覚える。覚えると巻物は崩れる）
-  const KAN = { combat: "技の巻物", both: "技の巻物", field: "心得の巻物" };
+  const KAN = { combat: "戦技の巻物", both: "戦技の巻物", field: "心得の巻物", passive: "心得の巻物" };
   const DESC = {
     combat: ["汗の染みた紙に、足の運びが墨で描いてある。描いた者は、絵より剣のほうがうまかったらしい。", "道場の壁から剥がしたらしい。四隅に釘の穴がある。", "刃の角度を示す線が、何度も引き直されている。"],
     both: ["包帯の巻き方が順に描いてある。余白に、血の指の跡がある。"],
     field: ["細かい字でびっしりと書いてある。読む者が覚えたら燃やせ、と最後の行にある。", "誰かの覚え書きを、別の誰かが写したもの。写し間違いを直した跡が多い。"],
   };
+  DESC.passive = DESC.field;
   const TAIL = {
     combat: ["読んで分かる技ではない。読んでから、体で分かる技だ。", "持ち主は、この巻物を何度も開いては閉じたらしい。折り目が擦り切れている。", "最後の行だけ、別の者の筆で書き足してある。「自分より強い相手にだけ使え」"],
     both: ["教会の施療院で使われていたものらしい。端に、薬草の汁の染みがある。"],
     field: ["剣の技ではないから、と安く売られることが多い。命を拾うのは、たいていこちらのほうだ。", "書いた者の名は無い。名を残さないのが、この手の心得の作法らしい。"],
   };
-  Object.entries(D.SKILLS).forEach(([id, s], i) => {
-    if (!s.learn.scroll) return;
+  TAIL.passive = TAIL.field;
+  // 巻物を一本作る（あとから足すスキルの表 k2_passives.js も使う）
+  D.K1_MAKE_SCROLL = (id, i) => {
+    const s = D.SKILLS[id];
     const old = !!s.learn.old;
     const fee = (s.learn.train && s.learn.train.gold) || 60;
     D.ITEMS["k1s_" + id.slice(3)] = {
@@ -237,7 +240,8 @@
     };
     // 図鑑の説明（I2 のフレーバー。二文以上）
     D.ITEMS["k1s_" + id.slice(3)].flavor = `${D.ITEMS["k1s_" + id.slice(3)].desc}巻きの外に、細い字で「${s.name}」と題がある。${TAIL[s.kind][i % TAIL[s.kind].length]}`;
-  });
+  };
+  Object.entries(D.SKILLS).forEach(([id, s], i) => { if (s.learn.scroll) D.K1_MAKE_SCROLL(id, i); });
   D.K1_SCROLL = (id) => "k1s_" + id.slice(3);
 
   // 町の店の掘り出し物（巻物）と、敵の落とし物。場所と敵のデータはこのあとにも足されるので、当てはめるのはエンジン（読み込みの最後）
