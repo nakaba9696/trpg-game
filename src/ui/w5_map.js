@@ -429,7 +429,7 @@
     if (!m) { info.append(h("span", "fine", summary() + "。印を押すと、その場所のことが出る。")); return; }
     const L = D.LOCS[m.id];
     const nm = h("b", "", m.name || "？？？");
-    info.append(nm, h("span", "w5tag", `${m.region || ""}・${TYPE[m.type] || ""}${m.type !== "town" && m.name ? " " + "★".repeat(Math.min(6, m.danger)) : ""}`));
+    info.append(nm, h("span", "w5tag", `${G.regionName ? G.regionName(m.region) : m.region || ""}・${TYPE[m.type] || ""}${m.type !== "town" && m.name ? " " + "★".repeat(Math.min(6, m.danger)) : ""}`));
     const st = { here: "今いる所。", now: "この冒険で行った。", heard: "行ったことはない。道標で名前だけ知っている。", none: "まだ行ったことがない。" }[m.status];
     let more = st;
     if (W5.KNOWN[m.status] || m.status === "heard") {
@@ -525,6 +525,10 @@
   };
   UI.draw = () => draw();
   UI.view = view;
+  // 旅の行き先の小さな地図（ui/w7_travelmap.js）が、同じ下絵と色を使う
+  UI.base = () => baseFor();
+  UI.palette = () => (isDark() ? PAL.dark : PAL.light);
+  UI.haloText = (x, P, t, sx, sy, a) => haloText(x, P, t, sx, sy, a);
   // 明暗が変わったら描き直す
   new MutationObserver(() => { if (dlg.open) draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 

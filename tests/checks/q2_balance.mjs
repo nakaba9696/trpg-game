@@ -14,7 +14,8 @@ const LIMIT = 1.5;
 export default async ({ fail, ok }) => {
   const mean = (a) => Math.round(a.reduce((x, y) => x + y, 0) / Math.max(1, a.length));
   const show = (rows) => rows.map((r) => `${r.cls} ${mean(r.turns)}`).join("・");
-  for (const mode of ["random", "smart"]) {
+  // tests/run.mjs が SHARD で分けるときは、遊び方ごとに別のジョブで確かめる（globalThis.__q2modes。T2）
+  for (const mode of globalThis.__q2modes || ["random", "smart"]) {
     const { games, steps } = CHECK_PLAN[mode];
     const rows = await playSplit({ mode, games, steps, seed: CHECK_PLAN.seed });
     const errs = rows.reduce((a, r) => a + r.errors, 0);

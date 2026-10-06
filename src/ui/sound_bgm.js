@@ -27,10 +27,12 @@
   if (snd.DEF) Object.assign(snd.DEF, snd.BGM_DEF);
 
   // ---------------------------------------------------------------- 場面
-  snd.bgmScenes = ["title", "town", "town_night", "tavern", "inn", "road", "dungeon", "abyss", "battle", "boss", "apostle", "death", "epilogue"];
+  snd.bgmScenes = ["title", "depart", "town", "town_night", "tavern", "inn", "road", "dungeon", "abyss", "battle", "boss", "apostle", "death", "epilogue"];
   const DREAD = { majin: 1, realm: 1, e2_kitchen: 1 };
-  // view：{ title: タイトル・人物づくりの画面を出しているか }
+  // view：{ title: タイトル・人物づくりの画面を出しているか, depart: 「この者で旅立つ」のあとの導入（あらすじ）を出しているか }
+  // 旅立ちの導入は作成画面の曲から切り替える（持ち主の要望 U19。最初の町に着けば、町の曲へ）
   snd.bgmScene = (S, view) => {
+    if (view && view.depart) return "depart";
     if ((view && view.title) || !S) return "title";
     if (S.over === "dead") return "death";
     if (S.over) return "epilogue";
@@ -608,7 +610,7 @@
   setInterval(pump, 100);
 
   // 今の画面から場面を決めて切り替える
-  const view = () => { const s = document.getElementById("setup"); return { title: !!(s && !s.hidden) || !G.S }; };
+  const view = () => { const s = document.getElementById("setup"); const on = !!(s && !s.hidden); return { title: on || !G.S, depart: on && s.dataset.step === "prologue" }; };
   snd.bgmUpdate = () => { if (B) snd.bgm(snd.bgmScene(G.S, view())); };
   function wakeBgm() {
     if (!ensure()) return;

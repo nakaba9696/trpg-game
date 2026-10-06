@@ -84,7 +84,7 @@
   }
 
   // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
-  // おまかせで全部埋まった状態から始める。「今決めること」（職業・目的・名前と性別・年齢・生まれ）だけを並べる。
+  // おまかせで全部埋まった状態から始める。まず「名前と生まれ」（名前と性別・年齢・生まれ）、次に「職業と目的」の順に並べる（U19）。
   // 「あとでもよいこと」（外見・生い立ち）の欄は、中身ごと無くした（U17）。各項目に、ゲームにどう効くかの一行（D.CRE_HINTS）。U15。名前・年齢・生まれを今決めることへ移し、候補から選ぶ形に（U16）
   function person(root) {
     const HN = D.CRE_HINTS || {}, TX = D.CRE_TEXT || {};
@@ -128,59 +128,9 @@
       return gh;
     };
 
-    // ================= 今決めること（職業・目的・名前）
+    // ================= あなたは誰か（名前と性別・年齢・生まれ。U19：持ち主の決定で、職業・目的より先に）
     const now = h("div", "creGroup creNow");
     now.append(groupHead(TX.now, TX.nowSub));
-
-    // 職業
-    const s3 = h("section", "creSec");
-    s3.append(h("h3", "", "職業"), eff("cls"));
-    const cards = h("div", "cards compact");
-    Object.entries(D.CLASSES).forEach(([id, c]) => {
-      const l = h("label", "card");
-      const inp = h("input"); inp.type = "radio"; inp.name = "cls"; inp.value = id; inp.checked = draft.cls === id;
-      inp.onchange = () => {
-        const oldOrigin = draft.origin;
-        cre.setClass(draft, id, R);
-        drawNames();
-        if (draft.origin !== oldOrigin) { const r = form.querySelector(`input[name=origin][value=${draft.origin}]`); if (r) r.checked = true; }
-        refresh();
-      };
-      l.append(inp, h("b", "", c.name), h("span", "", c.blurb), h("span", "fine", `得意：${cre.strengths(id).join("・")}`));
-      cards.append(l);
-    });
-    s3.append(cards);
-    now.append(s3);
-
-    // 目的
-    const s4 = h("section", "creSec");
-    const g3 = h("h3", "", "目的");
-    const gFine = h("span", "fine");
-    g3.append(gFine);
-    s4.append(g3, eff("goal"));
-    const gcards = h("div", "cards compact");
-    const cg = h("div", "field");
-    const setGoalFine = () => { gFine.textContent = draft.goal === "custom" ? TX.customFine : TX.goalFine; cg.hidden = draft.goal !== "custom"; };
-    Object.entries(D.GOALS).forEach(([id, g]) => {
-      const l = h("label", "card");
-      const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
-      inp.onchange = () => { draft.goal = id; setGoalFine(); };
-      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text));   // 行き先・手順は出さない（目指すことだけ）
-      gcards.append(l);
-    });
-    s4.append(gcards);
-    const cgl = h("label", "", "自分で決めた目的"); cgl.htmlFor = "customGoal";
-    const cgi = h("input"); cgi.id = "customGoal"; cgi.maxLength = 80; cgi.placeholder = "生き別れの妹を探し出し、村を焼いた男に報いを受けさせる";
-    cgi.value = draft.customGoal || "";
-    cgi.oninput = () => { draft.customGoal = cgi.value; };
-    // ゲームは中身を判定できない。区切りは自分でつける（節目「区切り」・トロフィー「自分で決めた道」に合わせた説明）
-    const cn = h("div", "creCustomNote");
-    cn.setAttribute("role", "note");
-    (TX.custom || []).forEach((t) => cn.append(h("p", "", t)));
-    cg.append(cgl, cgi, cn);
-    s4.append(cg);
-    setGoalFine();
-    now.append(s4);
 
     // 名前（性別と生まれの響きの表から選ぶ。自由入力は無い。「別の候補」で引き直す。U16）
     const s1 = h("section", "creSec creNameSec");
@@ -256,6 +206,61 @@
     s2.append(oBlurb);
     now.append(s2);
     form.append(now);
+
+    // ================= 何をする者か（職業・目的。U19：誰かを決めてから）
+    const job = h("div", "creGroup creNow");
+    job.append(groupHead(TX.job, TX.jobSub));
+
+    // 職業
+    const s3 = h("section", "creSec");
+    s3.append(h("h3", "", "職業"), eff("cls"));
+    const cards = h("div", "cards compact");
+    Object.entries(D.CLASSES).forEach(([id, c]) => {
+      const l = h("label", "card");
+      const inp = h("input"); inp.type = "radio"; inp.name = "cls"; inp.value = id; inp.checked = draft.cls === id;
+      inp.onchange = () => {
+        const oldOrigin = draft.origin;
+        cre.setClass(draft, id, R);
+        drawNames();
+        if (draft.origin !== oldOrigin) { const r = form.querySelector(`input[name=origin][value=${draft.origin}]`); if (r) r.checked = true; }
+        refresh();
+      };
+      l.append(inp, h("b", "", c.name), h("span", "", c.blurb), h("span", "fine", `得意：${cre.strengths(id).join("・")}`));
+      cards.append(l);
+    });
+    s3.append(cards);
+    job.append(s3);
+
+    // 目的
+    const s4 = h("section", "creSec");
+    const g3 = h("h3", "", "目的");
+    const gFine = h("span", "fine");
+    g3.append(gFine);
+    s4.append(g3, eff("goal"));
+    const gcards = h("div", "cards compact");
+    const cg = h("div", "field");
+    const setGoalFine = () => { gFine.textContent = draft.goal === "custom" ? TX.customFine : TX.goalFine; cg.hidden = draft.goal !== "custom"; };
+    Object.entries(D.GOALS).forEach(([id, g]) => {
+      const l = h("label", "card");
+      const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
+      inp.onchange = () => { draft.goal = id; setGoalFine(); };
+      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text));   // 行き先・手順は出さない（目指すことだけ）
+      gcards.append(l);
+    });
+    s4.append(gcards);
+    const cgl = h("label", "", "自分で決めた目的"); cgl.htmlFor = "customGoal";
+    const cgi = h("input"); cgi.id = "customGoal"; cgi.maxLength = 80; cgi.placeholder = "生き別れの妹を探し出し、村を焼いた男に報いを受けさせる";
+    cgi.value = draft.customGoal || "";
+    cgi.oninput = () => { draft.customGoal = cgi.value; };
+    // ゲームは中身を判定できない。区切りは自分でつける（節目「区切り」・トロフィー「自分で決めた道」に合わせた説明）
+    const cn = h("div", "creCustomNote");
+    cn.setAttribute("role", "note");
+    (TX.custom || []).forEach((t) => cn.append(h("p", "", t)));
+    cg.append(cgl, cgi, cn);
+    s4.append(cg);
+    setGoalFine();
+    job.append(s4);
+    form.append(job);
 
 
     lay.append(form);
@@ -426,7 +431,7 @@
 
     const nav = h("div", "creNav");
     nav.append(btn("人物を直す", "", () => go("person")), btn("能力値を直す", "", () => go("stats")),
-      btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); }, "c-go"));
+      btn("この者で旅立つ", "primary", () => { opts = o; page = 0; go("prologue"); if (G.sound && G.sound.bgmUpdate) G.sound.bgmUpdate(); }, "c-go"));
     root.append(nav);
   }
 

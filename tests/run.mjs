@@ -2,42 +2,79 @@
 // 1. データの整合（存在しない場所・敵・アイテムを参照していないか）
 // 2. ランダムに遊び続けるテスト（例外が出ないか、数値が範囲に収まるか）
 // 3. 釣り合いの測定（職業ごとの数字を出すだけ。失敗にはしない）。tests/balance.mjs
+// 1〜2c と保存の鍵の確認は tests/core.mjs に書いてある（T2 で切り出した。出力はこれまでどおり checks より先、この順）。
 // 新しい確認は tests/checks/<id>.mjs に置けば名前順に自動で読まれる（export default ({ G, fail, ok, loadEngine, seeded }) => {...}）
-// 速さ：tests/checks と釣り合いの測定は node:worker_threads で並べて動かす（下の 2z）。出力は名前順のまま、最後に遅いものの一覧を出す。
+// 速さ：tests/core.mjs の節・tests/checks・q2 の遊ぶ回・釣り合いの測定は、どれも一つずつの仕事として node:worker_threads で並べて動かす。
+//   出力は名前順のまま、最後に遅いものの一覧を出す。
 //   JOBS=1 node tests/run.mjs   … 並べずに一つずつ（既定はコアの数）
 //   ONLY=q2,q4 node tests/run.mjs … 名前にその文字を含む checks だけ（手元で直すとき。CI では使わない。釣り合いの測定は ONLY に balance を含めたときだけ）
+//   SHARD=2/2 node tests/run.mjs … 仕事を 2 つに分けた 2 つ目だけ（CI の「CI result」。1/2 は「Test 1/2」。.github/workflows/ci.yml）。
+//     分け方は下の WEIGHT（かかる秒の目安）で決まり、どの番号でも同じ。1/N〜N/N を全部動かすと、SHARD なしと同じ確認が一度ずつ走る。
 // checks は別々の働き手で、ほかの checks と同時に動く。ほかの check の後始末やグローバルの状態に頼らないこと（今までも順番には頼れなかった）
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { Worker } from "node:worker_threads";
-import vm from "node:vm";
-import { loadEngine, seeded } from "./lib.mjs";
-import { drain } from "./worker.mjs";
-import { balancePlan, checkPlan, measureBalance } from "./balance.mjs";
+import { loadEngine } from "./lib.mjs";
+import { drain, runTask } from "./worker.mjs";
+import { SECTIONS } from "./core.mjs";
+import { assignShards } from "./shard.mjs";
+import { balancePlan, checkPlan, measureBalance, splitTasks, splitKey, CHECK_PLAN } from "./balance.mjs";
 
 let failures = 0;
 const fail = (msg) => { failures++; console.log("FAIL " + msg); };
-const ok = (msg) => console.log("OK   " + msg);
 
-// ---------------------------------------------------------------- 並べて動かす仕事（tests/checks/*.mjs と釣り合いの測定）
-// 先に働き手を起こしておき、下の 1〜2c を親が動かしているあいだに checks を進めさせる。
-// 重いものから取らせると早く終わる（HEAVY は目安。載っていない check は名前順で後ろに続く）
-const HEAVY = ["q2_balance.mjs", "e3_apostles.mjs", "balance", "balance_random"];
+// ---------------------------------------------------------------- 仕事の一覧
+// かかる秒の目安（コアの数だけ並べて動かしたときの、一つずつの時間。TIMES=all で全部出る。載っていない check は 5 秒とみなす）。
+// 重いものから取らせると早く終わる。SHARD の分け方にも使う（目安がずれても、確認が抜けたり二度走ったりはしない。遅くなるだけ）
+const WEIGHT = {
+  "core:2. ランダムに遊ぶ": 150,
+  "e3_apostles.mjs": 270, "c2_people.mjs": 160, "m4_world.mjs": 120, "m10_love.mjs": 90, "m2_companions.mjs": 65, "m6_ending.mjs": 65,
+  "m7_reroll.mjs": 55, "m9_plague.mjs": 45, "q4_goals.mjs": 45, "u7_glossary.mjs": 35,
+  "balance:random": 0.36, "balance:smart": 1.9, // 遊ぶ一回あたり
+};
+const weightOf = (t) => t.kind === "balance" ? (t.games - (t.start || 0)) * (WEIGHT["balance:" + t.mode] || 1) : WEIGHT[t.kind === "core" ? "core:" + t.name : t.name] ?? 5;
+
+function shardSpec() {
+  if (!process.env.SHARD) return null;
+  const m = /^(\d+)\/(\d+)$/.exec(process.env.SHARD);
+  if (!(m && +m[1] >= 1 && +m[1] <= +m[2])) throw new Error(`SHARD は 1/6 のように書く（${process.env.SHARD}）`);
+  return m;
+}
 const timings = [];
-let lap = performance.now();
-const timed = (name) => { const t = performance.now(); timings.push([name, t - lap]); lap = t; };
 const checkDir = new URL("./checks/", import.meta.url);
 const checkNames = readdirSync(checkDir).filter((n) => n.endsWith(".mjs")).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
   .filter((n) => !process.env.ONLY || process.env.ONLY.split(",").some((k) => n.includes(k)));
-// 釣り合いの表は、tests/checks/q2_balance.mjs が働き手に分けて遊んだ回（tests/balance.mjs の CHECK_PLAN）をそのまま使う（同じ回を二度遊ばない）。
+const Q2 = "q2_balance.mjs";
+const q2On = checkNames.includes(Q2);
+const classes = Object.keys(loadEngine().data.CLASSES);
+// q2 が遊ぶ回（tests/balance.mjs の CHECK_PLAN を playSplit と同じに小分けしたもの）は、ほかの仕事と同じ並びで先に遊んでおき、
+// 最後に親が q2 を動かす（playSplit は先に遊んだ回を使う。働き手の中で働き手を起こさないので、コアの数より多く動かない）
+// SHARD で分けるときは、遊び方ごと（random・smart）に別のまとまりにする（q2 は遊び方ごとに確かめるので、別のジョブで動かせる）
+const q2Modes = !q2On ? [] : shardSpec() ? [["random"], ["smart"]] : [["random", "smart"]];
+const q2Parts = (modes) => modes.flatMap((mode) => splitTasks({ mode, ...CHECK_PLAN[mode], seed: CHECK_PLAN.seed, classes }).map((t) => ({ ...t, name: `q2 の回 ${mode} ${t.cls} ${t.start}〜${t.games}` })));
+// 釣り合いの表は、q2 が遊んだ回（tests/balance.mjs の CHECK_PLAN）をそのまま使う（同じ回を二度遊ばない）。
 // q2 を動かさないとき（ONLY=balance など）や、回数を変えたとき（BALANCE_GAMES など）だけ、遊び方ごと・職業ごとに分けてここで並べて遊ぶ
 // （種は職業ごと・回ごとに決まっているので、分けても数字は同じ）
-const fromQ2 = checkNames.includes("q2_balance.mjs") && JSON.stringify(balancePlan()) === JSON.stringify(checkPlan());
+const fromQ2 = q2On && JSON.stringify(balancePlan()) === JSON.stringify(checkPlan());
 const balanceOn = !(process.env.BALANCE === "0" || (process.env.ONLY && !process.env.ONLY.includes("balance") && !fromQ2));
-const balanceParts = !balanceOn || fromQ2 ? [] : balancePlan().flatMap((p, _, __, classes = Object.keys(loadEngine().data.CLASSES)) => classes.map((cls) => ({ kind: "balance", name: `釣り合いの測定 ${p.mode} ${cls}`, ...p, cls })));
-const shown = [...checkNames.map((name) => ({ kind: "check", name })), ...balanceParts];
-const rank = (t) => { const i = HEAVY.indexOf(t.kind === "balance" ? (t.mode === "smart" ? "balance" : "balance_random") : t.name); return i < 0 ? HEAVY.length : i; };
-const tasks = shown.map((t, at) => ({ ...t, at })).sort((a, b) => rank(a) - rank(b) || a.at - b.at);
+const balanceParts = !balanceOn || fromQ2 ? [] : balancePlan().flatMap((p) => classes.map((cls) => ({ kind: "balance", name: `釣り合いの測定 ${p.mode} ${cls}`, ...p, cls })));
+
+// 仕事のまとまり。SHARD で分けるときは、まとまりごとに一つの番号へ（q2 は遊ぶ回と一緒、釣り合いの測定は全部で一つ）
+const groups = [
+  ...SECTIONS.map(([name]) => ({ key: "core:" + name, tasks: [{ kind: "core", name }] })),
+  ...checkNames.filter((n) => n !== Q2).map((name) => ({ key: name, tasks: [{ kind: "check", name }] })),
+  ...q2Modes.map((modes) => ({ key: modes.length > 1 ? Q2 : `${Q2} ${modes[0]}`, tasks: q2Parts(modes), q2: modes })),
+  ...(balanceParts.length ? [{ key: "balance", tasks: balanceParts, balance: true }] : []),
+].map((g) => ({ ...g, weight: g.tasks.reduce((a, t) => a + weightOf(t), 0) }));
+let mine = groups;
+const shard = shardSpec();
+if (shard) {
+  const N = +shard[2], { parts, load } = assignShards(groups, N);
+  mine = parts[+shard[1] - 1];
+  console.log(`SHARD ${shard[1]}/${N}（目安 ${Math.round(load[+shard[1] - 1])}s・全体 ${load.map(Math.round).join("/")}s）：${mine.map((g) => g.key).join("・")}`);
+}
+const shown = mine.flatMap((g) => g.tasks);
+const tasks = shown.map((t, at) => ({ ...t, at })).sort((a, b) => weightOf(b) - weightOf(a) || a.at - b.at);
 const results = new Array(tasks.length);
 const counter = new Int32Array(new SharedArrayBuffer(4));
 const JOBS = Math.max(1, Number(process.env.JOBS || availableParallelism()));
@@ -49,510 +86,75 @@ const workers = Array.from({ length: Math.min(JOBS - 1, tasks.length) }, () => n
   w.on("exit", () => resolve(died));
 }));
 
-// ---------------------------------------------------------------- 1. データの整合
-{
-  const G = loadEngine();
-  const D = G.data;
-  const before = failures;
-  for (const [id, L] of Object.entries(D.LOCS)) {
-    for (const [to, days] of Object.entries(L.links || {})) {
-      if (!D.LOCS[to]) fail(`${id}: 道の行き先 ${to} が無い`);
-      else if (D.LOCS[to].links?.[id] !== days) fail(`${id}→${to}: 道が片道か、日数が食い違う`);
-    }
-    for (const to of Object.keys(L.sea || {})) if (!D.LOCS[to]?.sea?.[id]) fail(`${id}→${to}: 船が片道`);
-    for (const e of L.pool || []) if (!D.ENEMIES[e]) fail(`${id}: 敵 ${e} が無い`);
-    for (const it of L.shop || []) if (!D.ITEMS[it]) fail(`${id}: 店の品 ${it} が無い`);
-    if (L.boss && !D.ENEMIES[L.boss]) fail(`${id}: ボス ${L.boss} が無い`);
-    if (L.reward?.item && !D.ITEMS[L.reward.item]) fail(`${id}: 報酬 ${L.reward.item} が無い`);
-    for (const m of Object.values(L.midboss || {})) if (!D.ENEMIES[m]) fail(`${id}: 中ボス ${m} が無い`);
-    if (L.type === "town" && !(L.fac || []).length) fail(`${id}: 町なのに施設が無い`);
-    if (L.type === "dungeon" && !(L.floors > 0 && L.boss)) fail(`${id}: 迷宮の階数かボスが無い`);
-    if (L.type !== "town" && !(L.pool || []).length) fail(`${id}: 敵が出ない`);
-  }
-  for (const it of D.SHOP_BASE) if (!D.ITEMS[it]) fail(`SHOP_BASE: ${it} が無い`);
-  for (const [id, e] of Object.entries(D.ENEMIES)) for (const [it] of e.loot || []) if (!D.ITEMS[it]) fail(`敵 ${id}: 落とし物 ${it} が無い`);
-  for (const [id, c] of Object.entries(D.CLASSES)) {
-    if (!D.LOCS[c.start]) fail(`職業 ${id}: 出発地 ${c.start} が無い`);
-    for (const it of [c.weapon, c.armor, ...Object.keys(c.items)].filter(Boolean)) if (!D.ITEMS[it]) fail(`職業 ${id}: ${it} が無い`);
-    for (const k of D.STATS) if (typeof c.base[k] !== "number") fail(`職業 ${id}: 能力値 ${k} が無い`);
-  }
-  const evIds = new Set(D.EVENTS.map((e) => e.id));
-  if (evIds.size !== D.EVENTS.length) fail("出来事の id が重複している");
-  const checkOutcome = (where, o) => {
-    if (!o) return;
-    const items = typeof o.item === "string" ? [o.item] : Object.keys(o.item || {});
-    for (const it of items) if (!D.ITEMS[it]) fail(`${where}: アイテム ${it} が無い`);
-    for (const k of Object.keys(o.grow || {})) if (!D.STATS.includes(k)) fail(`${where}: 能力値 ${k} が無い`);
-    const foes = o.fight ? (Array.isArray(o.fight) ? o.fight : [o.fight]) : [];
-    for (const f of foes) if (f !== "@pool" && !D.ENEMIES[f]) fail(`${where}: 敵 ${f} が無い`);
-    if (o.next && !evIds.has(o.next)) fail(`${where}: 続きの出来事 ${o.next} が無い`);
-    if (o.trophy && !D.TROPHIES.some((t) => t.key === o.trophy)) fail(`${where}: トロフィー ${o.trophy} が無い`);
-    checkOutcome(where + ".win", o.win);
-  };
-  for (const e of D.EVENTS) {
-    if (!e.choices?.length) fail(`出来事 ${e.id}: 選択肢が無い`);
-    e.choices.forEach((c, i) => {
-      const w = `出来事 ${e.id}[${i}]`;
-      if (c.stat && !D.STATS.includes(c.stat)) fail(`${w}: 能力値 ${c.stat} が無い`);
-      if (c.diff && D.DIFF[c.diff] === undefined) fail(`${w}: 難易度 ${c.diff} が無い`);
-      checkOutcome(w + ".ok", c.ok);
-      checkOutcome(w + ".ng", c.ng);
-      checkOutcome(w, { fight: c.fight, next: c.next, win: c.win });
-    });
-  }
-  for (const [id, L] of Object.entries(D.LOCS)) if (L.reward?.trophy && !D.TROPHIES.some((t) => t.key === L.reward.trophy)) fail(`${id}: トロフィー ${L.reward.trophy} が無い`);
-  if (failures === before) ok(`データの整合（場所 ${Object.keys(D.LOCS).length}・敵 ${Object.keys(D.ENEMIES).length}・アイテム ${Object.keys(D.ITEMS).length}・出来事 ${D.EVENTS.length}）`);
-}
-timed("1. データの整合");
-
-// ---------------------------------------------------------------- 1a. どの場所にも、どの出発地からも道か船で行ける
-{
-  const G = loadEngine();
-  const D = G.data;
-  const before = failures;
-  for (const [cls, c] of Object.entries(D.CLASSES)) {
-    const seen = new Set([c.start]), queue = [c.start];
-    while (queue.length) {
-      const L = D.LOCS[queue.shift()];
-      for (const to of [...Object.keys(L?.links || {}), ...Object.keys(L?.sea || {})]) if (!seen.has(to)) { seen.add(to); queue.push(to); }
-    }
-    for (const id of Object.keys(D.LOCS)) if (!seen.has(id)) fail(`職業 ${cls}: 出発地 ${c.start} から ${id} へ行けない`);
-    for (const [id, L] of Object.entries(D.LOCS)) if (!(L.x >= 0 && L.x <= 100 && L.y >= 0 && L.y <= 100)) fail(`${id}: 地図の位置が無い`);
-  }
-  if (failures === before) ok(`どの場所にも行ける（場所 ${Object.keys(D.LOCS).length}）`);
-}
-timed("1a. どの場所にも、どの出発地からも道か船で行ける");
-
-// ---------------------------------------------------------------- 1b. 敵の台詞と逃げ方（engine/foe_quirks.js）
-{
-  const G = loadEngine();
-  const D = G.data;
-  const before = failures;
-  for (const [id, e] of Object.entries(D.ENEMIES)) {
-    if (e.fleeAt !== undefined && !(e.fleeAt > 0 && e.fleeAt < 1)) fail(`敵 ${id}: fleeAt は 0〜1`);
-    if (e.fleeAt && e.boss) fail(`敵 ${id}: ボスは逃げない`);
-    for (const k of Object.keys(e.lines || {})) {
-      if (k === "flee") { if (typeof e.lines.flee !== "string") fail(`敵 ${id}: lines.flee は文字列`); }
-      else if (k === "open" || k === "turn") { if (!Array.isArray(e.lines[k]) || !e.lines[k].every((s) => typeof s === "string" && s)) fail(`敵 ${id}: lines.${k} は文字列の配列`); }
-      else fail(`敵 ${id}: lines.${k} は使われない`);
-    }
-  }
-  // 深手の臆病者が逃げると、倒したことにならず戦闘が終わる
-  G.rand = seeded(7);
-  G.P = { trophies: {}, graves: [] };
-  const cls = Object.keys(D.CLASSES)[0];
-  const stats = {}, caps = {};
-  D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 60; });
-  G.newGame({ cls, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
-  G.S.maxHp = G.S.hp = 999;
-  G.startCombat(["e1_crowngob"], {});
-  const kills = G.S.counters.kills;
-  let fled = false;
-  for (let i = 0; i < 20 && G.S.combat; i++) {
-    G.S.combat.foes[0].hp = 1;
-    G.combatAct("guard");
-    if (!G.S.combat) fled = G.S.counters.kills === kills;
-  }
-  if (!fled) fail("王冠ゴブリンが深手を負っても逃げない");
-  if (G.S.mode !== "explore") fail(`敵が逃げたあとの mode が変 ${G.S.mode}`);
-  if (failures === before) ok(`敵の台詞と逃げ方（台詞あり ${Object.values(D.ENEMIES).filter((e) => e.lines).length} 種・逃げる ${Object.values(D.ENEMIES).filter((e) => e.fleeAt).length} 種）`);
-}
-timed("1b. 敵の台詞と逃げ方");
-
-// ---------------------------------------------------------------- 1c. 装飾品の枠（I1）
-{
-  const G = loadEngine();
-  const D = G.data;
-  const before = failures;
-  // データ：装飾品の効き目の欄が正しいか、I1 の品に入手先があるか
-  const sources = new Set([...D.SHOP_BASE]);
-  for (const L of Object.values(D.LOCS)) for (const it of L.shop || []) sources.add(it);
-  for (const e of Object.values(D.ENEMIES)) for (const [it] of e.loot || []) sources.add(it);
-  const addOut = (o) => { if (!o) return; for (const it of typeof o.item === "string" ? [o.item] : Object.keys(o.item || {})) sources.add(it); addOut(o.win); };
-  for (const e of D.EVENTS) for (const c of e.choices) { addOut(c.ok); addOut(c.ng); addOut(c.win); }
-  const i1 = Object.keys(D.ITEMS).filter((id) => id.startsWith("i1_"));
-  if (i1.length !== 15) fail(`I1 の品が ${i1.length} 種（15 種のはず）`);
-  for (const id of i1) if (!sources.has(id)) fail(`${id}: 入手先（店・落とし物・出来事）が無い`);
-  for (const [id, it] of Object.entries(D.ITEMS)) {
-    if (it.type !== "ring") continue;
-    for (const k of Object.keys(it.stats || {})) if (!D.STATS.includes(k)) fail(`装飾品 ${id}: 能力値 ${k} が無い`);
-    for (const k of Object.keys(it.bonus || {})) if (!["fire", "heal", "steal", "trap", "talk"].includes(k)) fail(`装飾品 ${id}: 補正の種類 ${k} が無い`);
-  }
-  // 付け外しと効き目
-  G.rand = seeded(11);
-  G.P = { trophies: {}, graves: [] };
-  const stats = {}, caps = {};
-  D.STATS.forEach((k) => { stats[k] = 10; caps[k] = 15; });   // 点（S5）
-  G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
-  const S = G.S;
-  const M = G.s5Mod;   // 装飾品の補正は％で書いてあり、3 で 1 点（S5）
-  delete S.ring; // 古いセーブには枠が無い
-  const base = { str: G.chance("筋力", 0), steal: G.gearBonus("steal"), magic: G.magicBonus(), agi: G.statEff("敏捷") };
-  if (G.ring() !== null) fail("古いセーブで装飾品があることになっている");
-  if (G.unequip("ring")) fail("何も付けていないのに外せた");
-  G.give("i1_fangring");
-  if (!G.equip("i1_fangring") || S.ring !== "i1_fangring" || S.inv.i1_fangring) fail("装飾品を装備できない");
-  if (!(G.chance("筋力", 0) > base.str + 3) || G.statEff("筋力") !== 10 + M(5)) fail(`牙の指輪で筋力の判定が上がらない（${base.str}→${G.chance("筋力", 0)}）`);
-  if (!G.has("i1_fangring")) fail("装備中の装飾品を持っていないことになる");
-  G.give("i1_slipring");
-  G.equip("i1_slipring");
-  if (S.ring !== "i1_slipring" || S.inv.i1_fangring !== 1) fail("装飾品を付け替えると前の物が持ち物に戻らない");
-  if (G.gearBonus("steal") !== base.steal + 10 || G.statEff("敏捷") !== base.agi + M(5)) fail("すり抜けの指輪の補正が効かない");
-  G.give("i1_foxring");
-  G.equip("i1_foxring");
-  if (G.magicBonus() !== base.magic + 5 || G.gearBonus("fire") < 10) fail("狐火の指輪の魔法の補正が効かない");
-  if (!G.unequip("ring") || S.ring || S.inv.i1_foxring !== 1) fail("装飾品を外せない");
-  if (G.chance("筋力", 0) !== base.str || G.magicBonus() !== base.magic) fail("外したのに補正が残る");
-  // 呪われた指輪は外すと HP が減るが、それで死にはしない
-  G.give("i1_eyering");
-  G.equip("i1_eyering");
-  if (G.statEff("知力") !== 10 + M(10) || G.statEff("魅力") !== 10 - M(10)) fail("覗き目の指輪の補正が効かない");
-  S.hp = 2;
-  G.unequip("ring");
-  if (S.hp !== 1 || S.over) fail(`呪われた指輪を外したあとの HP が変 ${S.hp}`);
-  S.hp = S.maxHp;
-  G.equip("i1_eyering");
-  G.unequip("ring");
-  if (S.hp !== S.maxHp - 3) fail("呪われた指輪を外しても HP が減らない");
-  if (G.equip("herb")) fail("薬草を装備できた");
-  if (failures === before) ok(`装飾品の枠（装飾品 ${Object.values(D.ITEMS).filter((it) => it.type === "ring").length} 種・I1 の品 ${i1.length} 種すべてに入手先あり）`);
-}
-timed("1c. 装飾品の枠");
-
-// ---------------------------------------------------------------- 1d. 魔法の種類と習得（M1）
-{
-  const G = loadEngine();
-  const D = G.data;
-  const before = failures;
-  const NEW = ["ice", "bolt", "curse", "ward"];
-  // データ：術の表、魔導書、覚え方があるか
-  for (const id of NEW) if (!D.SPELLS[id] || D.SPELLS[id].base) fail(`術 ${id} が無いか、はじめから誰でも使える`);
-  for (const [id, sp] of Object.entries(D.SPELLS)) {
-    if (!sp.name || !(sp.mp > 0)) fail(`術 ${id}: 名前か MP が無い`);
-    if (!sp.base && G.diffMod(sp.diff) === undefined) fail(`術 ${id}: 難しさが変`);
-    if (sp.school && D.DIFF[sp.school.diff] === undefined) fail(`術 ${id}: 講義の難しさ ${sp.school.diff} が無い`);
-  }
-  for (const [cls, ids] of Object.entries(D.SPELL_START)) { if (!D.CLASSES[cls]) fail(`SPELL_START: 職業 ${cls} が無い`); for (const id of ids) if (!D.SPELLS[id]) fail(`SPELL_START: 術 ${id} が無い`); }
-  const tomes = Object.entries(D.ITEMS).filter(([, it]) => it.type === "tome");
-  for (const [id, it] of tomes) { if (!D.SPELLS[it.teach] || D.SPELLS[it.teach].base) fail(`魔導書 ${id}: 覚える術 ${it.teach} が無い`); if (D.DIFF[it.learn || "普通"] === undefined) fail(`魔導書 ${id}: 難しさが変`); }
-  const sources = new Set(D.SHOP_BASE);
-  for (const L of Object.values(D.LOCS)) for (const it of L.shop || []) sources.add(it);
-  for (const e of Object.values(D.ENEMIES)) for (const [it] of e.loot || []) sources.add(it);
-  const addOut = (o) => { if (!o) return; for (const it of typeof o.item === "string" ? [o.item] : Object.keys(o.item || {})) sources.add(it); addOut(o.win); };
-  for (const e of D.EVENTS) for (const c of e.choices) { addOut(c.ok); addOut(c.ng); addOut(c.win); }
-  for (const [id] of tomes) if (!sources.has(id)) fail(`魔導書 ${id}: 入手先が無い`);
-  for (const id of NEW) if (!D.SPELLS[id].school && !tomes.some(([tid, it]) => it.teach === id && sources.has(tid))) fail(`術 ${id}: 覚える手段が無い`);
-  if (!D.LOCS.zephara.fac.includes("academy")) fail("エルメシアに学院が無い");
-
-  const start = (cls, seed) => {
-    G.rand = seeded(seed);
-    G.P = { trophies: {}, graves: [] };
-    const stats = {}, caps = {};
-    D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 60; });
-    G.newGame({ cls, stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
-    return G.S;
-  };
-  const acts = () => G.actions().flatMap((g) => g.list);
-  // 古いセーブ（S.spells が無い）でも動き、新しい術は出ない。炎と癒しは今までどおり
-  let S = start("merc", 21);
-  delete S.spells;
-  G.startCombat(["goblin"], {});
-  if (NEW.some((id) => G.knows(id)) || acts().some((a) => NEW.includes(a.id.slice(3)))) fail("古いセーブで覚えていない術が出る");
-  if (!acts().some((a) => a.id === "cb:fire") || !acts().some((a) => a.id === "cb:heal")) fail("炎と癒しが出ない");
-  G.S.combat = null; G.S.mode = "explore";
-  // はじめから覚えている術
-  start("mage", 22);
-  if (!G.knows("ice")) fail("魔法使いが氷の魔法を覚えていない");
-  if (!start("priest", 23).spells.includes("ward")) fail("破戒神官が加護を覚えていない");
-  // 学院で覚える（成功するまで通う）
-  S = start("merc", 24);
-  S.loc = "zephara"; S.gold = 5000; S.stats.知力 = 95;
-  if (!acts().some((a) => a.id === "fac:academy")) fail("エルメシアの町に学院が出ない");
-  G.act("fac:academy");
-  if (S.mode !== "fac" || S.fac !== "academy") fail("学院に入れない");
-  const lec = acts().find((a) => a.id === "academy:ward");
-  if (!lec || lec.disabled || !/知力 \d+%/.test(lec.sub)) fail("学院の講義に成功率が出ない");
-  if (acts().some((a) => a.id === "academy:curse")) fail("呪いを学院で教えている");
-  for (let i = 0; i < 10 && !G.knows("ward"); i++) G.act("academy:ward");
-  if (!G.knows("ward")) fail("学院で加護を覚えられない");
-  if (!acts().find((a) => a.id === "academy:ward")?.disabled) fail("覚えた術の講義をまた受けられる");
-  G.act("back");
-  if (S.mode !== "explore") fail("学院から出られない");
-  // 魔導書で覚える（読んでも本は残る）
-  G.give("m1_tome_curse");
-  const read = acts().find((a) => a.id === "tome:m1_tome_curse");
-  if (!read || !/知力 \d+%/.test(read.sub)) fail("魔導書を読み解く行動が出ない");
-  for (let i = 0; i < 20 && !G.knows("curse"); i++) G.act("tome:m1_tome_curse");
-  if (!G.knows("curse") || !S.inv.m1_tome_curse) fail("魔導書で呪いを覚えられない（か、本が消えた）");
-  if (acts().some((a) => a.id === "tome:m1_tome_curse")) fail("覚えたのに魔導書を読む行動が残る");
-  G.give("m1_tome_ice");
-  if (!G.useItem("m1_tome_ice")) fail("持ち物から魔導書を読めない");
-  // 戦闘：成功率が出て、効き目がある
-  G.learnSpell("ice"); G.learnSpell("bolt");
-  S.stats.魔力 = 95; S.maxMp = S.mp = 99; S.maxHp = S.hp = 999;
-  G.startCombat(["goblin", "goblin"], {});
-  for (const id of NEW) {
-    const a = acts().find((x) => x.id === "cb:" + id);
-    if (!a || !/魔力 \d+%・MP\d/.test(a.sub)) fail(`戦闘に ${id} が成功率つきで出ない`);
-  }
-  const always = (fn) => { const r = G.rand; G.rand = () => 0.01; try { fn(); } finally { G.rand = r; } };
-  // 雷：敵すべてに当たる
-  always(() => G.combatAct("bolt"));
-  if (G.S.combat && G.S.combat.foes.some((f) => f.hp === f.max)) fail("雷の魔法が全員に当たらない");
-  // 氷：凍った敵は次の番に攻めてこない
-  G.startCombat(["orc"], {});
-  const hp0 = S.hp;
-  always(() => G.combatAct("ice"));
-  if (G.S.combat) { if (S.hp !== hp0) fail("凍った敵が攻撃してきた"); }
-  // 加護：受けるダメージが減る。呪い：命中が落ち、蝕まれる
-  G.startCombat(["orc"], {});
-  always(() => G.combatAct("ward"));
-  if (!(G.S.combat?.ward > 0)) fail("加護がかからない");
-  const hitWith = (ward) => {
-    G.startCombat(["orc"], {});
-    G.S.combat.ward = ward;
-    const h = S.hp, hit = D.ENEMIES.orc.hit, r = G.rand;
-    D.ENEMIES.orc.hit = 999; G.rand = () => 0.9;
-    try { G.combatAct("guard"); } finally { G.rand = r; D.ENEMIES.orc.hit = hit; }
-    return h - S.hp;
-  };
-  if (!(hitWith(3) < hitWith(0))) fail("加護で受けるダメージが減らない");
-  G.startCombat(["orc"], {});
-  const foe = G.S.combat.foes[0];
-  always(() => G.combatAct("curse"));
-  if (G.S.combat && !(foe.hex > 0 && foe.hp < foe.max)) fail("呪いで敵が蝕まれない");
-  // 呪いで最後の敵が倒れたら、戦闘が終わる
-  G.startCombat(["goblin"], {});
-  G.S.combat.foes[0].hex = 3; G.S.combat.foes[0].hp = 1;
-  G.combatAct("guard");
-  if (G.S.combat || G.S.mode !== "explore") fail("呪いで敵が倒れても戦闘が終わらない");
-  // 使徒には絶界で効かない
-  const majin = Object.keys(D.ENEMIES).find((id) => D.ENEMIES[id].majin);
-  G.startCombat([majin], {});
-  const m = G.S.combat.foes[0];
-  always(() => { G.combatAct("curse"); G.combatAct("ice"); });
-  if (G.S.combat && (m.hex || m.frozen || m.hp < m.max)) fail("使徒に術が効いた");
-  G.S.combat = null; G.S.mode = "explore";
-  // 大失敗で借りを返す
-  G.startCombat(["goblin"], {});
-  const debt = S.magicDebt || 0;
-  { const r = G.rand; G.rand = () => 0.99; try { G.combatAct("ward"); } finally { G.rand = r; } }
-  if (!((S.magicDebt || 0) > debt)) fail("術の大失敗で借りが増えない");
-  if (failures === before) ok(`魔法の種類と習得（術 ${Object.keys(D.SPELLS).length} 種・魔導書 ${tomes.length} 冊・古いセーブ・学院・魔導書・戦闘の効き目）`);
-}
-timed("1d. 魔法の種類と習得");
-
-// ---------------------------------------------------------------- 2. ランダムに遊ぶ
-{
-  const G = loadEngine();
-  const D = G.data;
-  const GAMES = Number(process.env.GAMES || 150);
-  const STEPS = Number(process.env.STEPS || 500);
-  let deaths = 0, maxDay = 0, totalTurns = 0, bossKills = 0;
-  const before = failures;
-  // I1 の品が手に入った回数（G.give を数える）
-  const gains = {};
-  const learned = {}; // M1：遊んでいるうちに覚えた術
-  const codexAll = {}; // F2：図鑑は冒険をまたいで残る（150 回のあいだ同じ図鑑を使う）
-  const give0 = G.give;
-  G.give = (id, n) => { if (String(id).startsWith("i1_") && G.S.turn > 0) gains[id] = (gains[id] || 0) + (n || 1); return give0(id, n); };
-  for (let g = 0; g < GAMES; g++) {
-    G.rand = seeded(1000 + g);
-    G.P = { trophies: {}, graves: [], codex: codexAll };
-    const cls = Object.keys(D.CLASSES)[g % 5];
-    const stats = {}, caps = {};
-    D.STATS.forEach((k) => { stats[k] = D.CLASSES[cls].base[k] + 5; caps[k] = stats[k] + 30; });
-    const goal = Object.keys(D.GOALS)[g % 4];
-    G.newGame({ cls, stats, caps, goal, profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
-    // 一部は金持ちや強者で始めて、奥の場所や王城も通るようにする
-    if (g % 3 === 0) { G.S.gold = 5000; G.S.fame = 700; }
-    if (g % 4 === 0) {
-      D.STATS.forEach((k) => { G.S.stats[k] = 80; G.S.caps[k] = 95; });
-      G.S.maxHp = G.maxHpOf(G.S.stats); G.S.hp = G.S.maxHp; G.S.maxMp = G.maxMpOf(G.S.stats); G.S.mp = G.S.maxMp;
-      G.give("volgrim"); G.equip("volgrim");
-    }
-    try {
-      for (let step = 0; step < STEPS && !G.S.over; step++) {
-        const acts = G.actions().flatMap((x) => x.list).filter((a) => !a.disabled);
-        if (!acts.length) { fail(`game ${g} step ${step}: できる行動が無い（mode=${G.S.mode} fac=${G.S.fac} loc=${G.S.loc}）`); break; }
-        if (step % 17 === 0) {
-          const a = acts[Math.floor(G.rand() * acts.length)];
-          if (!a.label || !String(a.label).trim()) fail(`game ${g}: 名前の無い選択肢（${a.id}）`);
-        }
-        // ときどき持ち物の装備・装飾品の付け外しもする（画面の持ち物欄の代わり）
-        if (step % 23 === 11 && G.S.mode !== "combat") {
-          const gear = Object.keys(G.S.inv).filter((id) => ["weapon", "armor", "ring"].includes(G.itemInfo(id).type));
-          if (G.S.ring && G.rand() < 0.3) G.unequip("ring");
-          else if (gear.length) G.equip(gear[Math.floor(G.rand() * gear.length)]);
-        }
-        const a = acts[Math.floor(G.rand() * acts.length)];
-        G.act(a.id);
-        const S = G.S;
-        if (!(S.hp >= 0 && S.hp <= S.maxHp)) fail(`game ${g} step ${step}: HP が範囲外 ${S.hp}/${S.maxHp}（${a.id}）`);
-        if (!(S.mp >= 0 && S.mp <= S.maxMp)) fail(`game ${g} step ${step}: MP が範囲外 ${S.mp}/${S.maxMp}（${a.id}）`);
-        if (S.gold < 0 || !Number.isFinite(S.gold)) fail(`game ${g} step ${step}: 所持金が変 ${S.gold}（${a.id}）`);
-        for (const k of D.STATS) if (!(Number.isFinite(S.stats[k]) && S.stats[k] >= 0)) fail(`game ${g}: ${k} が数でない（${S.stats[k]}）`);   // 能力値に上限は無い（S2）
-        if (!["explore", "fac", "event", "combat", "over"].includes(S.mode)) fail(`game ${g}: mode が変 ${S.mode}`);
-        if (S.mode === "combat" && !S.combat) fail(`game ${g}: 戦闘中なのに combat が無い`);
-        if (S.mode === "event" && !S.event) fail(`game ${g}: 出来事中なのに event が無い`);
-        if (!D.LOCS[S.loc]) fail(`game ${g}: 場所が変 ${S.loc}`);
-        if (failures - before > 20) throw new Error("失敗が多すぎるので打ち切り");
-      }
-    } catch (e) {
-      fail(`game ${g}: 例外 ${e.stack || e}`);
-      if (failures - before > 20) break;
-    }
-    for (const id of G.S.spells || []) if (!(D.SPELL_START[G.S.cls] || []).includes(id)) learned[id] = (learned[id] || 0) + 1;
-    if (G.S.over === "dead") deaths++;
-    maxDay = Math.max(maxDay, G.S.day);
-    totalTurns += G.S.turn;
-    bossKills += G.S.counters.bosses;
-  }
-  G.give = give0;
-  const gained = Object.entries(gains).sort((a, b) => b[1] - a[1]).map(([id, n]) => `${D.ITEMS[id].name} ${n}`);
-  console.log(`NOTE ランダムプレイで I1 の品が手に入った回数（${Object.keys(gains).length}/15 種）: ${gained.join("・") || "なし"}`);
-  if (G.codexCount) {
-    const cc = G.codexCount();
-    console.log(`NOTE ランダムプレイのあとの図鑑：アイテム ${cc.items}/${cc.itemsAll}・魔物 ${cc.foes}/${cc.foesAll}（倒した ${cc.kills}）`);
-    if (cc.items < 20 || cc.foes < 20 || cc.kills < 10) fail(`図鑑があまり埋まらない（アイテム ${cc.items}・魔物 ${cc.foes}・倒した ${cc.kills}）`);
-  }
-  console.log(`NOTE ランダムプレイで覚えた術: ${Object.entries(learned).map(([id, n]) => `${D.SPELLS[id].name} ${n}`).join("・") || "なし"}`);
-  if (failures === before) ok(`ランダムに ${GAMES} 回遊ぶ（死亡 ${deaths}・最長 ${maxDay} 日・平均 ${Math.round(totalTurns / GAMES)} 手番・ボス撃破 ${bossKills}）`);
-}
-timed("2. ランダムに遊ぶ");
-
-// ---------------------------------------------------------------- 2b. モンスターの絵（A10：canvas では描かない。画像が無ければ何も描かない）
-{
-  const G = loadEngine();
-  const before = failures;
-  const vmc = vm.createContext({ G });
-  for (const f of ["art_monsters.js", "v6_monsters.js"]) vm.runInContext(readFileSync(new URL("../src/ui/" + f, import.meta.url), "utf8"), vmc);
-  const calls = [];
-  const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : (...a) => calls.push(k)), set: (t, k, v) => ((t[k] = v), true) });
-  for (const [id, e] of Object.entries(G.data.ENEMIES)) {
-    try { G.paintMonster(ctx, 200, 240, 120, { id, shape: e.shape, eye: e.eye, boss: !!e.boss }); } catch (err) { fail(`絵 ${id}: 描くと例外 ${err.message}`); }
-  }
-  try { G.paintMonster(ctx, 200, 240, 120, { id: "zz_unknown", shape: "dragon" }); } catch (err) { fail(`絵: データに無い敵で例外 ${err.message}`); }
-  if (calls.length) fail(`絵: 画像が無いのに canvas に描いた（${[...new Set(calls)].join(",")}）`);
-  if (failures === before) ok(`モンスターの絵（${Object.keys(G.data.ENEMIES).length} 種。画像が無ければ何も描かない）`);
-}
-timed("2b. モンスターの絵");
-
-// ---------------------------------------------------------------- 2c. 人物（誰を描くか。A10：canvas では描かない）
-{
-  const G = loadEngine();
-  const before = failures;
-  const vmc = vm.createContext({ G });
-  for (const f of ["art_monsters.js", "art_people.js"]) vm.runInContext(readFileSync(new URL("../src/ui/" + f, import.meta.url), "utf8"), vmc);
-  G.rand = () => { throw new Error("絵が G.rand を使った"); };
-  const kinds = Object.keys(G.PEOPLE);
-  if (kinds.length < 8) fail(`人物の絵: 種類が ${kinds.length} しかない（8 以上）`);
-  const draw = (who, label) => { try { G.personLook(who); } catch (err) { fail(`人物の絵 ${label}: 見た目を決めると例外 ${err.message}`); } };
-  const sig = (who) => JSON.stringify(Object.assign({}, G.personLook(who), { seed: 0 }));
-  // 種類ごとに、同じ種は同じ見た目・種が違えば違う見た目
-  for (const k of kinds) {
-    if (!G.PEOPLE[k].name) fail(`人物の絵 ${k}: name が無い`);
-    for (const sex of ["男", "女", undefined]) for (let i = 0; i < 4; i++) draw({ kind: k, seed: "t" + i, sex }, `${k}/${sex}/${i}`);
-    if (sig({ kind: k, seed: "a" }) !== sig({ kind: k, seed: "a" })) fail(`人物の絵 ${k}: 同じ種なのに見た目が変わる`);
-    if (sig({ kind: k, seed: "a" }) === sig({ kind: k, seed: "b" })) fail(`人物の絵 ${k}: 種が違っても同じ見た目`);
-  }
-  // 主人公は絵を出さない（A10）。who は作れる
-  for (const cls of Object.keys(G.data.CLASSES)) if (G.heroWho({ name: "テスト" }, cls).kind !== "hero") fail(`人物: 主人公 ${cls} の who が作れない`);
-  // 出来事の who は、ある種類（か、ある敵）を指す
-  let withWho = 0;
-  const evIds = new Set(G.data.EVENTS.map((e) => e.id));
-  for (const id of Object.keys(G.data.EVENT_WHO || {})) if (!evIds.has(id)) fail(`events_who.js: 出来事 ${id} が無い`);
-  for (const e of G.data.EVENTS) {
-    if (!G.eventWho(e)) continue;
-    withWho++;
-    const w = G.eventWho(e);
-    if (w.kind === "foe") { if (!G.data.ENEMIES[w.foe]) fail(`出来事 ${e.id}: who の敵 ${w.foe} が無い`); continue; }
-    if (!G.PEOPLE[w.kind]) fail(`出来事 ${e.id}: who の種類 ${w.kind} が無い（${kinds.join(", ")}）`);
-    draw(w, `出来事 ${e.id}`);
-  }
-  if (G.eventWho({ id: "x" }) !== null) fail("人物の絵: who の無い出来事で絵を出そうとする");
-  // 仲間（名前と職業から）
-  for (const c of [{ name: "傭兵のラグナ", cls: "傭兵" }, { name: "僧侶のセラ", cls: "僧侶" }, { name: "謎の人", cls: "謎" }, { name: "樽ゴブリンのダル", cls: "ゴブリン" }]) {
-    const w = G.companionWho(c);
-    if (w.kind === "foe") { if (!G.data.ENEMIES[w.foe]) fail(`仲間 ${c.name}: 敵 ${w.foe} が無い`); } else draw(w, `仲間 ${c.name}`);
-  }
-  if (G.companionWho({ name: "僧侶のセラ", cls: "僧侶" }).sex !== "女") fail("人物の絵: 仲間の名前から性別を拾えない");
-  if (failures === before) ok(`人物（${kinds.length} 種・who のある出来事 ${withWho} 件）`);
-}
-timed("2c. 人物の絵");
-
-// ---------------------------------------------------------------- 保存の鍵の移し替え（古い名前 → Morsveld）
-{
-  const G = loadEngine();
-  const before = failures;
-  const mem = (init) => {
-    const m = new Map(Object.entries(init));
-    return { m, getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
-  };
-  const K = G.SAVE_KEYS;
-  if (!K || !/^morsveld-/.test(K.save) || !/^morsveld-/.test(K.profile)) fail("保存の鍵: 新しい鍵が Morsveld になっていない");
-  const save = JSON.stringify({ v: 1, chron: [{ day: 1, text: "旅立ち" }] });
-  const prof = JSON.stringify({ trophies: { first: 1 }, graves: [{ id: "g1", name: "名無し" }] });
-  // 古い鍵だけ → 新しい鍵へ移り、古い鍵は消える（冒険・年表・トロフィー・墓碑）
-  const OLD = { save: "koto" + "dama3-save", profile: "koto" + "dama3-profile" }; // 古い鍵（git grep に掛からないように分けて書く）
-  const a = mem({ [OLD.save]: save, [OLD.profile]: prof });
-  const moved = G.migrateSaveKeys(a);
-  if (a.getItem(K.save) !== save) fail("保存の鍵: 古い冒険（年表）が移らない");
-  if (a.getItem(K.profile) !== prof) fail("保存の鍵: 古いトロフィー・墓碑が移らない");
-  if (a.m.has(OLD.save) || a.m.has(OLD.profile)) fail("保存の鍵: 古い鍵が残る");
-  if (moved.length !== 2) fail("保存の鍵: 移したものの数が違う");
-  // 新しい鍵が既にある → 上書きしない
-  const b = mem({ [OLD.save]: save, [K.save]: "新しい" });
-  G.migrateSaveKeys(b);
-  if (b.getItem(K.save) !== "新しい") fail("保存の鍵: 新しいセーブを古いもので上書きする");
-  // 二度目は何もしない・保存できない環境でも落ちない
-  if (G.migrateSaveKeys(a).length) fail("保存の鍵: 二度目にも移し替える");
-  G.migrateSaveKeys(null);
-  G.migrateSaveKeys({ getItem() { throw new Error("blocked"); } });
-  if (failures === before) ok("保存の鍵の移し替え（古い鍵 → " + K.save + "・" + K.profile + "）");
-}
-timed("保存の鍵の移し替え");
-
-// ---------------------------------------------------------------- 2z. tests/checks/*.mjs（置くだけで読まれる確認）と 3. 釣り合いの測定（失敗にはしない）
-// 働き手と一緒に親も残りの仕事を取る。終わったら名前順に出す（釣り合いの表は最後）
+// ---------------------------------------------------------------- 動かす
+// 働き手と一緒に親も残りの仕事を取る。終わったら、tests/core.mjs の節 → checks の名前順に出す（釣り合いの表は最後）
 await drain(tasks, counter, (i, r) => { results[i] = r; });
 for (const e of await Promise.all(workers)) if (e) fail(`働き手が止まった: ${e.stack || e}`);
+const resultOf = (t) => results[tasks.findIndex((x) => x.at === shown.indexOf(t))];
+// q2：先に遊んだ回を渡して、親が動かす（遊び方を分けたときは、受け持った遊び方だけ確かめる）
+const q2Results = new Map();
+for (const g of mine.filter((x) => x.q2)) {
+  const pre = new Map();
+  let ms = 0;
+  for (const t of g.tasks) {
+    const r = resultOf(t);
+    if (!r) { fail(`${t.name}: 結果が返ってこなかった（働き手が途中で止まった）`); continue; }
+    ms += r.ms;
+    if (r.data && !r.data.error) pre.set(splitKey(t), r.data); // 止まった回は q2 の中で遊び直す（そこで例外として出る）
+  }
+  globalThis.__preplayed = pre;
+  globalThis.__q2modes = g.q2;
+  let r;
+  try { r = await runTask({ kind: "check", name: Q2 }); } finally { globalThis.__preplayed = null; globalThis.__q2modes = null; }
+  r.ms += ms;
+  q2Results.set(g, r);
+}
 const played = {};
-for (const [at, t] of shown.entries()) {
-  const r = results[tasks.findIndex((x) => x.at === at)];
-  if (!r) { fail(`${t.name}: 結果が返ってこなかった（働き手が途中で止まった）`); continue; }
-  for (const l of r.lines) console.log(l);
-  failures += r.failures;
-  timings.push([t.kind === "check" ? `tests/checks/${t.name}` : t.name, r.ms]);
-  if (t.kind === "balance") {
-    const p = (played[t.mode] ||= { rows: [], ms: 0, error: null });
-    p.ms += r.ms;
-    if (r.data?.error) { p.error = r.data.error; continue; }
-    const rows = r.data;
-    p.rows.push(...rows);
+const out = [
+  ...mine.filter((g) => g.tasks[0].kind === "core"),
+  ...mine.filter((g) => g.tasks[0].kind === "check" || g.q2).sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0)),
+  ...mine.filter((g) => g.balance),
+];
+for (const g of out) {
+  for (const t of g.q2 ? [{ kind: "check", name: Q2 }] : g.tasks) {
+    const r = g.q2 ? q2Results.get(g) : resultOf(t);
+    if (!r) { fail(`${t.name}: 結果が返ってこなかった（働き手が途中で止まった）`); continue; }
+    for (const l of r.lines) console.log(l);
+    failures += r.failures;
+    timings.push([t.kind === "check" ? `tests/checks/${t.name}` : t.name, r.ms]);
+    if (t.kind === "balance") {
+      const p = (played[t.mode] ||= { rows: [], ms: 0, error: null });
+      p.ms += r.ms;
+      if (r.data?.error) { p.error = r.data.error; continue; }
+      p.rows.push(...r.data);
+    }
   }
 }
-// 3. 釣り合いの測定（失敗にはしない）
+// 3. 釣り合いの測定（失敗にはしない）。SHARD で分けたときは、q2 か釣り合いの測定を受け持った番号だけが、受け持った遊び方の表を出す
+const modesHere = shard ? [...mine.flatMap((g) => g.q2 || []), ...(mine.some((g) => g.balance) ? balancePlan().map((p) => p.mode) : [])] : balancePlan().map((p) => p.mode);
 if (fromQ2 && balanceOn) {
   // q2 が遊んだ回（同じ遊び方・回数・行動の上限・種で、全部の職業）を使う。q2 が途中で止まったときは表を出さない（q2 の失敗で分かる）
-  const all = results.flatMap((x) => x?.played || []);
+  // 表の秒は、q2 の回を遊んだ時間の合計（働き手ごとの時間を足したもの）
+  const all = [...q2Results.values()].flatMap((r) => r.played || []);
   for (const { mode, games, steps, seed } of balancePlan()) {
     const pre = all.find((x) => x.mode === mode && x.start === 0 && x.games === games && x.steps === steps && x.seed === seed && !x.classes);
-    if (pre) played[mode] = { rows: pre.rows, ms: pre.ms };
+    const ms = mine.filter((g) => g.q2).flatMap((g) => g.tasks).filter((t) => t.mode === mode).reduce((a, t) => a + (resultOf(t)?.ms || 0), 0);
+    if (pre) played[mode] = { rows: pre.rows, ms };
   }
 }
-if (balanceOn) {
+if (balanceOn && modesHere.length) {
   const bad = Object.values(played).find((p) => p.error);
-  const missing = balancePlan().filter((p) => !played[p.mode]);
+  const missing = balancePlan({ modes: modesHere }).filter((p) => !played[p.mode]);
   try {
     if (bad) throw new Error(bad.error);
     if (missing.length) throw new Error(`q2 が遊んだ回が見つからない（${missing.map((p) => p.mode).join("・")}）`);
-    measureBalance({ played });
+    measureBalance({ played, modes: modesHere });
   } catch (e) {
     console.log("NOTE 釣り合いの測定を出せなかった（失敗にはしない）: " + (e.stack || e));
   }
 }
 
+if (process.env.TIMES === "all") console.log("TIMES " + JSON.stringify(Object.fromEntries([...timings].sort((a, b) => b[1] - a[1]).map(([n, ms]) => [n, Math.round(ms / 100) / 10]))));
 const slow = timings.sort((a, b) => b[1] - a[1]).slice(0, 12).map(([n, ms]) => `${n} ${(ms / 1000).toFixed(1)}s`);
 console.log(`TIME 全体 ${(performance.now() / 1000).toFixed(1)}s（働き手 ${workers.length}＋親）。遅い順：${slow.join("・")}`);
 console.log(failures ? `DONE failures=${failures}` : "DONE failures=0");

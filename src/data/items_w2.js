@@ -5,7 +5,7 @@
   const D = (G.data = G.data || {});
 
   Object.assign(D.ITEMS, {
-    w2_whitebread: { name: "白パン", type: "use", hp: 7, price: 6, desc: "誓いの日にだけ焼く白いパン。グランベールでは、麦の穫れすぎた年だけ、ふだんの日にも売る。" },
+    w2_whitebread: { name: "白パン", type: "use", hp: 7, price: 6, desc: "誓いの日にだけ焼く白いパン。麦の都グランベールでは、麦の穫れすぎた年だけ、ふだんの日にも売る。" },
     w2_sausage: { name: "腸詰め", type: "use", hp: 9, price: 8, desc: "祭りの日のごちそう。旅人に売るのは、祭りの残り。" },
     w2_kilnpie: { name: "鉱夫の石窯包み", type: "use", hp: 14, price: 12, desc: "肉と芋を生地で包んで焼いた、帝国の鉱夫の弁当。冷めると石のように硬い。温かいうちは、石より少し柔らかい。" },
     w2_frostfire: { name: "凍り火", type: "use", hp: 3, mp: 6, price: 10, desc: "帝国の強い蒸留酒。一口で喉が燃え、二口で足が凍る。飲まない奴も、これしか飲まない奴も、信用されない。" },

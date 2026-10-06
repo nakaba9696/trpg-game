@@ -22,7 +22,7 @@
     i3w_knightsword: W("王国騎士の剣", { dmg: [1, 8, 3], stat: "筋力", hit: 5, stats: { 魅力: 3 }, price: 280, i3: { k: "剣", h: 1, lv: 2, from: ["leavel", "w1_holy"] } }, "鍔に王家の獅子。騎士が身を持ち崩すと、まず質に入るのがこれだ。"),
     i3w_imperial: W("帝国の軍刀", { dmg: [1, 8, 2], stat: "筋力", hit: 5, price: 160, i3: { k: "剣", h: 1, lv: 1, from: ["garmund", "fort"] } }, "帝国の兵に一本ずつ渡される。刀身の根元に、持ち主の番号が打刻してある。削った跡がある。"),
     i3w_corsair: W("海賊の舶刀", { dmg: [1, 6, 3], stat: "敏捷", hit: 5, price: 140, i3: { k: "剣", h: 1, lv: 1, from: ["nerva", "yakumo"] } }, "短く、幅広く、潮に錆びにくい。船の上では長い刃は邪魔になる。"),
-    i3w_gladius: W("闘士の剣", { dmg: [1, 6, 2], stat: "筋力", hit: 10, price: 100, i3: { k: "剣", h: 1, lv: 1, from: ["w2_zalgros"] } }, "ザルグロスの闘技場で使う短い剣。柄に、勝った試合の数だけ釘が打ってある。七本。"),
+    i3w_gladius: W("闘士の剣", { dmg: [1, 6, 2], stat: "筋力", hit: 10, price: 100, i3: { k: "剣", h: 1, lv: 1, from: ["w2_zalgros"] } }, "闘技の都ザルグロスの闘技場で使う短い剣。柄に、勝った試合の数だけ釘が打ってある。七本。"),
     i3w_holyblade: W("聖堂騎士の剣", { dmg: [1, 8, 2], stat: "筋力", hit: 5, magic: 5, bonus: { heal: 5 }, price: 320, i3: { k: "剣", h: 1, lv: 2, from: ["w1_holy"] } }, "聖都の騎士が誓いの日に受け取る剣。抜くたびに、指で三つの印を切る癖がつく。"),
     i3w_elfblade: W("葉刃", { dmg: [1, 6, 3], stat: "敏捷", hit: 15, vital: 5, price: 420, i3: { k: "剣", h: 1, lv: 3, from: ["zephara"] } }, "エルフの剣。木の葉の形をしていて、驚くほど軽い。三百年前の型だと店の主は言う。"),
 
