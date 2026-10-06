@@ -1,0 +1,15 @@
+/* F1：戦闘の手番を一段ずつ見せる（u13_battle.js）。サイコロの行は、目が転がる間は成否を隠し、止まったら成否を出す */
+#log > .check.f1roll > :nth-child(n+4) { visibility: hidden; }
+#log > .check.f1roll .die { animation: f1shake .09s linear infinite alternate; }
+@keyframes f1shake { from { transform: translateY(-1px) rotate(-6deg); } to { transform: translateY(1px) rotate(6deg); } }
+#log > .check.f1land .die { animation: f1land .22s ease-out; }
+@keyframes f1land { from { transform: scale(1.25); } }
+#log > .check.f1land .verdict { animation: f1verdict .3s ease-out both; }
+@keyframes f1verdict { from { opacity: 0; transform: scale(1.4); } }
+#log > .check.f1crit { box-shadow: 0 0 0 2px var(--crit, #c89b2c); }
+#log > .check.f1crit .verdict { font-size: 1.15em; }
+#log > .check.f1fumble { box-shadow: 0 0 0 2px var(--ng, #a3321f); }
+#log > .check.f1fumble .verdict { font-size: 1.15em; }
+@media (prefers-reduced-motion: reduce) {
+  #log > .check.f1roll .die, #log > .check.f1land .die, #log > .check.f1land .verdict { animation: none; }
+}

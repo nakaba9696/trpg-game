@@ -27,7 +27,7 @@
     const all = K.view(S);
     const arts = all.filter((r) => K.isArt(r.id));
     const skills = all.filter((r) => !K.isArt(r.id));
-    const a = section("k1arts", `戦技（${arts.length}）・気力 ${K.ki(S)}/${K.kiMax(S)}`, arts, "まだ戦技を覚えていない。訓練場で稽古する・人に教わる・戦技の巻物を読むと覚えられる。", (r) => {
+    const a = section("k1arts", `戦技（${arts.length}）・気力 ${K.ki(S)}/${K.kiMax(S)}`, arts, "まだ戦技を覚えていない。教官や師に稽古をつけてもらう・巻物を読む・強敵を倒すと覚えることがある。", (r) => {
       const row = el("div", "k1row" + (r.usable ? "" : " k1off"));
       row.append(el("span", "nm", r.name), el("span", "k1lv k1lv" + r.lv, r.lvName));
       const meta = [r.ki ? `気力${r.ki}` : "気力いらず"];
@@ -36,7 +36,7 @@
       row.append(el("span", "k1meta", meta.join("・")), el("span", "k1fx", r.hint));
       return row;
     });
-    const b = section("k1skills2", `スキル（${skills.length}）`, skills, "まだスキルを持っていない。稽古・師・巻物のほか、判定で大成功してコツをつかむと身につくこともある。", (r) => {
+    const b = section("k1skills2", `スキル（${skills.length}）`, skills, "まだスキルを持っていない。師や仲間に教わる・巻物を読むほか、判定で大成功してコツをつかむと身につくこともある。", (r) => {
       const row = el("div", "k1row");
       row.append(el("span", "nm", r.name), el("span", "k1lv", r.kind === "passive" ? "常に効く" : "選択肢"), el("span", "k1meta", ""), el("span", "k1fx", r.hint));
       return row;
@@ -66,7 +66,7 @@
           const name = s ? `「${s.name}」` : "";
           const art = K.isArt(e.k1);
           if (e.lv != null) ui.toast(art ? "戦技の熟練" : "スキルの熟練", `${name}が${G.data.K1_LV_NAMES[e.lv] || ""}に`);
-          else ui.toast(e.learn === "crit" ? "コツをつかんだ" : e.learn === "suffer" ? "耐え抜いて身につけた" : art ? "戦技を覚えた" : "スキルを身につけた", s ? `${name}──${s.hint}` : text);
+          else ui.toast(e.learn === "crit" ? "コツをつかんだ" : e.learn === "foe" ? "強敵から盗んだ" : e.learn === "suffer" ? "耐え抜いて身につけた" : art ? "戦技を覚えた" : "スキルを身につけた", s ? `${name}──${s.hint}` : text);
         }
       });
     }, 0);
