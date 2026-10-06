@@ -1,5 +1,5 @@
 // U17：噂を「受けている依頼」の横に（engine/zzzzzzzzzzz_u17_rumors.js・ui/u17_rumors.js）
-// - 酒場の「噂を聞く」で入った噂が、この冒険の噂（G.q17.rumors）に並ぶ。新しい噂には「新」と右上の「！」（S.q17.bang）。一覧を閉じたら「新」は消える
+// - 酒場の「噂を聞く」で入った噂が、この冒険の噂（G.q17.rumors）に並ぶ。新しい噂には「新」と右上の「！」（S.q17.bang）と記録の一行（一つの行動で一度）。一覧を閉じたら「新」は消える
 // - 一つ一つに、続きがありそうな所（地名は LOCS の名）か、まだ分からないことを添える
 // - 続きが依頼になったら（噂の場所が受けている依頼の行き先）「依頼になった」として下へ
 // - 知っている魔物の「聞いた話」（知識）は噂に入れない（図鑑に残す）。図鑑の入口の「！」に噂の印を数えない
@@ -24,7 +24,11 @@ export default ({ G, fail, seeded }) => {
   const acts = G.actions().flatMap((g) => g.list);
   if (acts.some((a) => a.id === "tavern:rumor" && !a.disabled)) {
     S.q17.bang = false;
+    const at = S.log.length;
     G.act("tavern:rumor");
+    // その場で分かる一行（U19 の書き直す本文でも、その行動の頁に出る）。一つの行動で一度だけ
+    const lines = S.log.slice(at).filter((e) => e.k === "quest" && e.text === G.q17.RUMOR_LINE);
+    if (lines.length !== 1) F(`噂を聞いた行動で、書き留めた一行が ${lines.length} 回出る`);
     const R = G.q17.rumors(S);
     if (!R.length) F("酒場で聞いた噂が、依頼の窓の噂に入らない");
     else {
