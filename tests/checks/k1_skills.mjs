@@ -325,8 +325,11 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   {
     const S = start("merc", 1101, 30);
     S.loc = Object.keys(D.LOCS).find((id) => D.LOCS[id].type === "wild");
-    if (acts().some((x) => /^k1camp:k1_/.test(x.id))) fail("荒野の野営の稽古で、新しい戦技を覚えられる（K3 で覚えないことにした）");
-    if (!acts().some((x) => x.id === "k1camp:drill")) fail("荒野で覚えた戦技の型をなぞれない");
+    if (acts().some((x) => /^k1camp:k\d_/.test(x.id) && !K.knows(x.id.slice(7)))) fail("荒野の野営の稽古で、新しい戦技を覚えられる（K3 で覚えないことにした）");
+    const none = acts().find((x) => x.id === "k1camp:none");
+    if (!none || !none.disabled) fail("一人の野営で、覚えた技の型をなぞる稽古が押せる（K4：巻物か仲間が要る）");
+    G.give("k1s_parry");
+    if (!acts().some((x) => x.id === "k1camp:k1_parry" && !x.disabled)) fail("受け流しの巻物を持っても、野営で型を磨けない");
     S.loc = Object.keys(D.LOCS).find((id) => D.LOCS[id].type === "town");
     if (acts().some((x) => /^k1camp:/.test(x.id))) fail("町の中で野営の稽古ができる");
   }
