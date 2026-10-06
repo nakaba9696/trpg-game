@@ -36,7 +36,7 @@
       row.append(el("span", "k1meta", meta.join("・")), el("span", "k1fx", r.hint));
       return row;
     });
-    const b = section("k1skills2", `スキル（${skills.length}）`, skills, "まだスキルを持っていない。稽古・師・巻物のほか、しくじった経験から身につくこともある。", (r) => {
+    const b = section("k1skills2", `スキル（${skills.length}）`, skills, "まだスキルを持っていない。稽古・師・巻物のほか、判定で大成功してコツをつかむと身につくこともある。", (r) => {
       const row = el("div", "k1row");
       row.append(el("span", "nm", r.name), el("span", "k1lv", r.kind === "passive" ? "常に効く" : "選択肢"), el("span", "k1meta", ""), el("span", "k1fx", r.hint));
       return row;
@@ -66,7 +66,7 @@
           const name = s ? `「${s.name}」` : "";
           const art = K.isArt(e.k1);
           if (e.lv != null) ui.toast(art ? "戦技の熟練" : "スキルの熟練", `${name}が${G.data.K1_LV_NAMES[e.lv] || ""}に`);
-          else ui.toast(e.learn === "fumble" ? "しくじりから身につけた" : art ? "戦技を覚えた" : "スキルを身につけた", s ? `${name}──${s.hint}` : text);
+          else ui.toast(e.learn === "crit" ? "コツをつかんだ" : e.learn === "suffer" ? "耐え抜いて身につけた" : art ? "戦技を覚えた" : "スキルを身につけた", s ? `${name}──${s.hint}` : text);
         }
       });
     }, 0);

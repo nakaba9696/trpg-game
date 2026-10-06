@@ -1,5 +1,6 @@
 // K2：パッシブスキル（持っているだけで常に効く）。持ち主「パッシブスキルも欲しい。正気度が下がりにくいとか。取得方法はスキルと同じで。
 //   例えばドアを解錠するときにファンブルが出たら、解錠時に＋補正がかかるスキルも手に入るとか。スキルと区別するために、スキルは『戦技』にしましょう」
+//   訂正「大失敗ではなく大成功でスキルは覚えてください」
 // 仕組みは src/engine/zzzzzzzzzzzz_k2_passives.js。表は K1 の D.SKILLS に kind "passive" で足す（覚え方・巻物・師・稽古・図鑑は K1 と同じ口を使う）。
 //   fx：効き目（どれか一つか二つ。強すぎないように補正は小さく）
 //     check: { re, n }        … 判定の理由（選択肢の文・「逃走」「威圧」など）が re に合えば、判定に n（％で書く。G.s5Mod で点にする）
@@ -13,7 +14,7 @@
 //     kiMax: n … 気力の最大に足す
 //     rest: 割合 … 宿・野営で眠ったとき、最大 HP のこの割合だけ余分に戻る
 //   learn：K1 と同じ（train・camp・teach・scroll）に加えて
-//     fumble: { why } … check.re に合う判定で大失敗したとき、低い見込みで身につく（同じ種類で失敗を重ねるほど見込みが上がる）。why は覚えたわけの一文
+//     crit: { why } … check.re に合う判定で大成功したとき、低い見込みで身につく（同じ種類で大成功を重ねるほど見込みが上がる）。why はコツをつかんだと分かる一文。大失敗では覚えない（持ち主の訂正）
 //     suffer: { kind, why } … その目に遭ったとき（sanity 正気が削れた・poison 毒・beast 獣の病が進んだ）、同じように低い見込みで身につく
 // 物語の文に数は書かない（hint は画面の案内なので書いてよい）。レーン C（K2）
 (function (G) {
@@ -29,25 +30,25 @@
       fx: { sanity: 0.8 }, learn: { teach: ["sister"], scroll: true, suffer: { kind: "sanity", why: "見てはいけないものを見るのにも、手順がある。目を逸らす場所を、体が先に覚えた。" } } }),
     k2_coldhead: P({ name: "冷えた頭", stat: "知力", need: { 知力: 10 }, hint: "恐れ・怯え・踏みとどまる判定に +10%",
       fx: { check: { re: /恐|怯|震え|踏みとどま|耐え|こらえ|正気/, n: 10 } },
-      learn: { train: { gold: 60, days: 2 }, scroll: true, fumble: { why: "足がすくんだ自分を、あとで思い出して腹が立った。次は、腹が立つほうが先に来る。" } } }),
+      learn: { train: { gold: 60, days: 2 }, scroll: true, crit: { why: "震えが来る前に、息を一つ長く吐いた。それで足が止まらなかった。この吐き方は、もう体が覚えた。" } } }),
     k2_badluck: P({ name: "悪運", stat: "体力", need: { 体力: 8 }, hint: "瀕死で踏みとどまる判定に +15%",
       fx: { check: { re: /瀕死で踏みとどまる/, n: 15 } }, learn: { scroll: true, suffer: { kind: "brink", why: "死にかけたのは、これで何度目か。死に損ねるのにも、癖がつく。" } } }),
     // ---------------------------------------------------------------- 手先
     k2_keyfeel: P({ name: "鍵穴の勘", stat: "敏捷", need: { 敏捷: 8 }, hint: "錠・鍵・宝箱の判定に +10%",
       fx: { check: { re: LOCK, n: 10 }, bonus: { kinds: ["k1:k1_lockpick"], n: 10 } },
-      learn: { teach: ["fence"], scroll: true, fumble: { why: "しくじった錠の手応えが、指先に残っている。次は、どこで引っかかるか分かる。" } } }),
+      learn: { teach: ["fence"], scroll: true, crit: { why: "三つ目のばねが、指の腹で鳴った。錠の中が、目で見るように分かった。この手応えは忘れない。" } } }),
     k2_trapnose: P({ name: "罠の匂い", stat: "知力", need: { 知力: 8 }, hint: "罠と仕掛けの判定に +10%",
       fx: { check: { re: TRAP, n: 10 }, bonus: { kinds: ["trap", "k1:k1_trapsense"], n: 5 } },
-      learn: { teach: ["hunter"], scroll: true, camp: true, fumble: { why: "罠にかかった足首が、まだ疼く。あの糸の張り方は、もう二度と見逃さない。" } } }),
+      learn: { teach: ["hunter"], scroll: true, camp: true, crit: { why: "踏む前に、足が止まっていた。床の埃の流れが、一筋だけ乱れていた。罠を張る者の手つきが見えた。" } } }),
     k2_lightfingers: P({ name: "掏摸の指", stat: "敏捷", need: { 敏捷: 10 }, hint: "盗み・スリ・イカサマの判定に +10%",
       fx: { check: { re: STEAL, n: 10 }, bonus: { kinds: ["steal"], n: 5 } },
-      learn: { teach: ["fence", "comp:rogue"], scroll: true, fumble: { why: "手首をつかまれた痛みで、指の抜き方が分かった。つかまれる前に抜けばいい。" } } }),
+      learn: { teach: ["fence", "comp:rogue"], scroll: true, crit: { why: "相手は最後まで気づかなかった。抜く瞬間、指が勝手に相手の呼吸に合っていた。このこつは、もう手から離れない。" } } }),
     k2_firstaidhand: P({ name: "血止めの手", stat: "知力", need: { 知力: 8 }, hint: "手当て・看病の判定に +10%",
       fx: { check: { re: /手当|看病|止血|応急|治療|縛/, n: 10 } },
-      learn: { teach: ["sister", "comp:heal"], scroll: true, fumble: { why: "巻き損ねた包帯から血が滲むのを、黙って見ていた。結び目の位置を、指が覚え直した。" } } }),
+      learn: { teach: ["sister", "comp:heal"], scroll: true, crit: { why: "結び目が一度で決まり、血がぴたりと止まった。どこを押さえればいいか、指が先に知っていた。" } } }),
     k2_gambler: P({ name: "博打の目", stat: "知力", need: { 知力: 10 }, hint: "博打・賭けの判定に +10%",
       fx: { check: { re: /博打|賭|骰子|札/, n: 10 } },
-      learn: { scroll: true, fumble: { why: "すった銀貨の数だけ、相手の指の癖が見えるようになった。高い授業料だった。" } } }),
+      learn: { scroll: true, crit: { why: "三度続けて読み通した。骰子を振る男の手首の返しで、出目が分かる。賭場の流れが見えた。" } } }),
     // ---------------------------------------------------------------- 体
     k2_poisonblood: P({ name: "毒慣れ", stat: "体力", need: { 体力: 10 }, hint: "毒に冒されても、半分の見込みで振り払う",
       fx: { poison: 0.5 }, learn: { teach: ["hunter"], scroll: true, suffer: { kind: "poison", why: "何度も毒を食らううちに、腹のほうが慣れた。吐き気が来る前に、体が勝手に追い出す。" } } }),
@@ -63,20 +64,20 @@
       fx: { rest: 0.1 }, learn: { camp: true, teach: ["comp:scout"], scroll: true } }),
     k2_runner: P({ name: "逃げ足", stat: "敏捷", need: { 敏捷: 8 }, hint: "戦闘から逃げる判定に +15%",
       fx: { check: { re: /^逃走$|逃げる/, n: 15 } },
-      learn: { train: { gold: 40, days: 1 }, scroll: true, fumble: { why: "回り込まれて背中を斬られかけた。あの時、右へ跳べばよかった。次は右へ跳ぶ。" } } }),
+      learn: { train: { gold: 40, days: 1 }, scroll: true, crit: { why: "追っ手の足音が、角を一つ曲がるたびに遠くなった。どこで右へ跳べばいいか、体が知っている。" } } }),
     // ---------------------------------------------------------------- 戦いの目
     k2_glare: P({ name: "睨み", stat: "魅力", need: { 魅力: 10 }, hint: "威圧の判定に +10%",
       fx: { check: { re: /^威圧$/, n: 10 } },
-      learn: { teach: ["veteran"], scroll: true, fumble: { why: "鼻で笑われた顔を、あとで水桶に映してみた。眉の寄せ方が、半端だった。" } } }),
+      learn: { teach: ["veteran"], scroll: true, crit: { why: "睨んだだけで、相手が一歩下がった。眉と顎の角度が、ぴたりと決まった。この顔は、使える。" } } }),
     k2_vitaleye: P({ name: "急所の目", stat: "敏捷", need: { 敏捷: 12 }, hint: "急所を狙う判定に +10%",
       fx: { check: { re: /^急所狙い$/, n: 10 } },
-      learn: { train: { gold: 70, days: 2 }, teach: ["fence"], scroll: true, fumble: { why: "外した切っ先の行き先を、何度も思い返した。急所は、思っていたより指一本ぶん内側にあった。" } } }),
+      learn: { train: { gold: 70, days: 2 }, teach: ["fence"], scroll: true, crit: { why: "切っ先が、骨と骨の隙間にまっすぐ入った。急所は指一本ぶん内側にある。手がそれを覚えた。" } } }),
     k2_spellhand: P({ name: "術の手癖", stat: "魔力", need: { 魔力: 12 }, hint: "炎・氷・雷・呪いの術に +5%",
       fx: { check: { re: /^(炎の魔法|氷の魔法|雷の魔法|呪いの言葉)$/, n: 5 } },
-      learn: { teach: ["comp:magic"], scroll: true, fumble: { why: "暴れた術の熱が、手のひらにまだ残っている。どこで力を入れすぎたのか、火傷の形が教えてくれた。" } } }),
+      learn: { teach: ["comp:magic"], scroll: true, crit: { why: "術の熱が、指先から余さず出ていった。力の入れどころが、手のひらで分かった。" } } }),
     k2_pious: P({ name: "祈り慣れ", stat: "魔力", need: { 魔力: 8 }, hint: "祈り・癒し・加護に +5%",
       fx: { check: { re: /祈/, n: 10 }, bonus: { kinds: ["heal", "ward"], n: 5 } },
-      learn: { teach: ["sister"], scroll: true, fumble: { why: "届かなかった祈りの言葉を、一つずつ言い直してみた。どこで息を継ぐかで、届き方が違う。" } } }),
+      learn: { teach: ["sister"], scroll: true, crit: { why: "祈りの言葉が、詰まらずに最後まで出た。息継ぎの場所が、ようやく分かった。" } } }),
     // ---------------------------------------------------------------- 野と道
     k2_nighteye: P({ name: "夜目", stat: "知力", need: { 知力: 8 }, hint: "夜の判定すべてに +5%",
       fx: { chance: { when: "night", n: 5 } }, learn: { camp: true, teach: ["hunter", "comp:scout"], scroll: true } }),
@@ -84,37 +85,37 @@
       fx: { chance: { when: "wild", stats: ["体力", "敏捷"], n: 5 } }, learn: { camp: true, teach: ["hunter"], scroll: true } }),
     k2_climbhand: P({ name: "岩登りの手", stat: "筋力", need: { 筋力: 8 }, hint: "登る・よじ登る判定に +10%",
       fx: { check: { re: /登|よじ|崖|岩壁|塀を越/, n: 10 } },
-      learn: { camp: true, scroll: true, fumble: { why: "滑り落ちた岩肌の、手をかけてはいけない色を覚えた。苔の緑は、乾いて見えても濡れている。" } } }),
+      learn: { camp: true, scroll: true, crit: { why: "指が、見ないうちに次の割れ目を探り当てていた。岩の乾いた色と濡れた色の違いが、手で分かる。" } } }),
     k2_swimmer: P({ name: "泳ぎ達者", stat: "体力", need: { 体力: 8 }, hint: "泳ぐ・水に入る判定に +10%",
       fx: { check: { re: /泳|川を渡|溺|潜って|水に飛び込|岸まで/, n: 10 } },
-      learn: { scroll: true, fumble: { why: "水を飲みながら、手足の動かし方を覚えた。覚えるには、だいぶ飲んだ。" } } }),
+      learn: { scroll: true, crit: { why: "水が体を持ち上げる。逆らわずに掻くと、岸がみるみる近づいた。泳ぎ方が、体に入った。" } } }),
     k2_footprints: P({ name: "足跡読み", stat: "知力", need: { 知力: 8 }, hint: "足跡・痕跡を追う判定に +10%",
       fx: { check: { re: /足跡|痕跡|追跡|追う|手がかり/, n: 10 }, bonus: { kinds: ["k1:k1_track"], n: 5 } },
-      learn: { teach: ["hunter", "comp:scout"], scroll: true, fumble: { why: "見失った足跡の消えた所に、もう一度立った。消えたのではなく、跳んでいた。" } } }),
+      learn: { teach: ["hunter", "comp:scout"], scroll: true, crit: { why: "消えたと思った足跡の先に、跳んだ跡があった。読めた。痕跡の読み方が、目に馴染んだ。" } } }),
     k2_shadowmelt: P({ name: "影に溶ける", stat: "敏捷", need: { 敏捷: 10 }, hint: "隠れる・忍び込む判定に +10%",
       fx: { check: { re: /隠れ|忍び|潜り込|息を殺|物陰|こっそり|気づかれ/, n: 10 }, bonus: { kinds: ["k1:k1_stealth"], n: 5 } },
-      learn: { teach: ["fence", "comp:rogue"], scroll: true, fumble: { why: "見つかった時に鳴った床板の場所を、今も足の裏が覚えている。" } } }),
+      learn: { teach: ["fence", "comp:rogue"], scroll: true, crit: { why: "見張りの目の前を、気づかれずに横切った。どこに影が落ちるか、体が先に知っていた。" } } }),
     k2_beastfriend: P({ name: "獣好き", stat: "魅力", need: { 魅力: 8 }, hint: "獣・馬・犬に関わる判定に +10%",
       fx: { check: { re: /獣|馬|犬|狼|猪|熊|山羊|牛/, n: 10 }, bonus: { kinds: ["k1:k1_beast"], n: 5 } },
-      learn: { camp: true, teach: ["hunter"], scroll: true, fumble: { why: "噛まれた腕の歯形を見ながら考えた。あの犬は、怒っていたのではなく怖がっていた。" } } }),
+      learn: { camp: true, teach: ["hunter"], scroll: true, crit: { why: "唸っていた犬が、鼻を鳴らして手を舐めた。怖がっている獣の目が、分かるようになった。" } } }),
     // ---------------------------------------------------------------- 人と町
     k2_haggler: P({ name: "値切り上手", stat: "魅力", need: { 魅力: 10 }, hint: "値切り・交渉・商いの判定に +10%",
       fx: { check: { re: /値切|交渉|商い|値を|仕入/, n: 10 }, bonus: { kinds: ["k1:k1_haggle"], n: 5 } },
-      learn: { teach: ["comp:trade"], scroll: true, fumble: { why: "言い値の倍で買わされた夜、帳面に商人の言い回しを書き写した。次は、あの言い回しを使う側に回る。" } } }),
+      learn: { teach: ["comp:trade"], scroll: true, crit: { why: "商人が先に溜息をついた。値を下げさせる言い回しが、口から自然に出た。商いの呼吸をつかんだ。" } } }),
     k2_silvertongue: P({ name: "口八丁", stat: "魅力", need: { 魅力: 12 }, hint: "説得・言いくるめの判定に +10%、話術に +5%",
       fx: { check: { re: /説得|言いくるめ|ごまか|丸め込|口車|嘘/, n: 10 }, bonus: { kinds: ["talk"], n: 5 } },
-      learn: { teach: ["bard", "fence"], scroll: true, fumble: { why: "言い訳が途中で詰まった。詰まった所から先を、寝床で三通り考えた。" } } }),
+      learn: { teach: ["bard", "fence"], scroll: true, crit: { why: "言葉が、相手の顔色より一歩先を行った。言いくるめる間合いが、つかめた。" } } }),
     k2_townface: P({ name: "人あしらい", stat: "魅力", need: { 魅力: 8 }, hint: "町の中での魅力の判定に +5%",
       fx: { chance: { when: "town", stats: ["魅力"], n: 5 } }, learn: { teach: ["veteran", "bard"], scroll: true } }),
     k2_reader: P({ name: "読み癖", stat: "知力", need: { 知力: 10 }, hint: "読む・書く・古い字の判定に +10%",
       fx: { check: { re: /読|字|碑|書き|記す|写/, n: 10 } },
-      learn: { teach: ["archivist", "comp:magic"], scroll: true, fumble: { why: "読み違えた一行を、ほかの頁と突き合わせて読み直した。癖のある字の書き手は、たいてい同じ所を間違える。" } } }),
+      learn: { teach: ["archivist", "comp:magic"], scroll: true, crit: { why: "癖の強い字が、すらすらと頭に入ってきた。書き手の手の動きごと読めた。" } } }),
     k2_etiquette2: P({ name: "場慣れ", stat: "魅力", need: { 魅力: 10 }, hint: "貴族・王城・儀礼の場の判定に +10%",
       fx: { check: { re: /貴族|謁見|王|領主|作法|礼|晩餐|侍従/, n: 10 } },
-      learn: { teach: ["guardmaster"], scroll: true, fumble: { why: "広間で笑われた所作を、宿の鏡の前で十回やり直した。十一回目は、笑えなかった。" } } }),
+      learn: { teach: ["guardmaster"], scroll: true, crit: { why: "広間の誰も、あなたの所作に目を留めなかった。目を留められないのが、作法の上手だ。こつをつかんだ。" } } }),
     k2_drinker: P({ name: "酒に強い", stat: "体力", need: { 体力: 8 }, hint: "飲み交わす・酒の判定に +10%",
       fx: { check: { re: /飲み|酒|杯/, n: 10 } },
-      learn: { teach: ["veteran"], scroll: true, fumble: { why: "床で目を覚ました朝、酒の飲み方を一から考え直した。考えたのは、主に水の飲み方だった。" } } }),
+      learn: { teach: ["veteran"], scroll: true, crit: { why: "最後まで座っていたのは、あなた一人だった。杯の合間に水を挟む呼吸を、体が覚えた。" } } }),
   };
   Object.assign(D.SKILLS, LIST);
   const base = Object.keys(D.SKILLS).length - Object.keys(LIST).length;
@@ -139,7 +140,7 @@
     e4k_smiler: [["k2_silvertongue", 0.05]], e4k_puppet: [["k2_badluck", 0.05]], e4k_greenwatch: [["k2_beastfriend", 0.05]], w3_drowned: [["k2_gambler", 0.04], ["k2_haggler", 0.04]],
   }).forEach(([eid, list]) => add(D.K1_DROPS, eid, list));
 
-  // 失敗から覚えるときの見込み：はじめの見込み・同じ種類で失敗を重ねるごとに足す分・上限
-  D.K2_FUMBLE = { base: 0.08, step: 0.06, max: 0.4 };
+  // 大成功から覚えるときの見込み：はじめの見込み・同じ種類で大成功を重ねるごとに足す分・上限
+  D.K2_CRIT = { base: 0.08, step: 0.06, max: 0.4 };
   D.K2_SUFFER = { base: 0.03, step: 0.02, max: 0.15 };
 })(globalThis.G = globalThis.G || {});

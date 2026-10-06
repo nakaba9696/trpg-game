@@ -5,9 +5,9 @@
 //   G.gearBonus を包んで fx.bonus（盗み・罠・話術・術の種類、K1 の戦技の判定）
 //   減り方：G.addSanity（正気の減りを軽くするだけ。正気の段の仕組みは M13 に任せて触らない）・G.beastUp（獣の病）・毒（行動のあとで振り払う）
 //   装備：G.armor（鎧の重さ）・G.weapon（二刀）。気力の最大（G.k1.kiMax）・眠ったときの回復（G.sleep）
-//   失敗から覚える：fx.check.re に合う判定で大失敗した・正気が削れた・毒を受けた・獣の病が進んだ・瀕死になった とき、低い見込みで身につく。
-//     同じ種類で重ねるほど見込みが上がる（D.K2_FUMBLE・D.K2_SUFFER）。覚えたわけの一文（learn.fumble.why / learn.suffer.why）と、目立つ一行（K1 の learn）
-// セーブに足す項目（古いセーブで無くても動く）：S.k1.k2 = { fum: { スキル: 失敗の数 }, suf: { 種類: 目に遭った数 } }
+//   経験から覚える：fx.check.re に合う判定で大成功した（コツをつかむ。大失敗では覚えない）・正気が大きく削れた・毒を受けた・獣の病が進んだ・瀕死になった とき、
+//     低い見込みで身につく。同じ種類で重ねるほど見込みが上がる（D.K2_CRIT・D.K2_SUFFER）。覚えたわけの一文（learn.crit.why / learn.suffer.why）と、目立つ一行（K1 の learn）
+// セーブに足す項目（古いセーブで無くても動く）：S.k1.k2 = { crit: { スキル: 大成功の数 }, suf: { 種類: 目に遭った数 } }
 // 名前の頭の z の数は、K1（11 個）より後に読ませるため。DOM には触らない。乱数は G.rand。レーン C（K2）
 (function (G) {
   const D = G.data;
@@ -19,7 +19,7 @@
   K2.ids = Object.keys(SK).filter((id) => SK[id].kind === "passive");
   K2.list = (S) => K.list(S).filter((id) => SK[id].kind === "passive");
   const owned = (S) => K2.list(S || G.S).map((id) => [id, SK[id].fx || {}]);
-  K2.state = (S) => { const x = K.state(S || G.S); x.k2 = x.k2 || {}; x.k2.fum = x.k2.fum || {}; x.k2.suf = x.k2.suf || {}; return x.k2; };
+  K2.state = (S) => { const x = K.state(S || G.S); x.k2 = x.k2 || {}; x.k2.crit = x.k2.crit || {}; x.k2.suf = x.k2.suf || {}; return x.k2; };
 
   // ---------------------------------------------------------------- 判定の補正
   // 理由に合う補正の合計と、効いたスキルの名
@@ -52,7 +52,7 @@
     const add = S ? K2.checkBonus(reason, S).n : 0;
     const r = check0(stat, diff, reason, (extra || 0) + add);
     if (S && !S.over && G.S === S) {
-      if (r && r.fumble) learnFrom("fumble", String(reason || ""));
+      if (r && r.crit) learnFrom(String(reason || ""));   // 大成功でコツをつかむ（大失敗では覚えない）
       if (/瀕死で踏みとどまる/.test(String(reason || ""))) K2.suffer("brink");
     }
     return r;
@@ -160,23 +160,23 @@
     return r;
   };
 
-  // ---------------------------------------------------------------- 失敗から覚える
-  function tryLearn(id, cnt, P, why) {
+  // ---------------------------------------------------------------- 経験から覚える
+  function tryLearn(id, cnt, P, why, how) {
     const p = Math.min(P.max, P.base + P.step * Math.max(0, cnt - 1));
     if (G.rand() >= p) return false;
     if (why) G.say(why);
-    K.learn(id, "fumble");
+    K.learn(id, how);
     return true;
   }
-  // 判定の大失敗：理由に合うスキル（まだ持っていないもの）から、失敗を重ねたものを先に
-  function learnFrom(kind, reason) {
+  // 判定の大成功：理由に合うスキル（まだ持っていないもの）から、大成功を重ねたものを先に
+  function learnFrom(reason) {
     const S = G.S;
-    const cands = K2.ids.filter((id) => !K.knows(id, S) && SK[id].learn.fumble && SK[id].fx.check && SK[id].fx.check.re.test(reason));
+    const cands = K2.ids.filter((id) => !K.knows(id, S) && SK[id].learn.crit && SK[id].fx.check && SK[id].fx.check.re.test(reason));
     if (!cands.length) return;
     const st = K2.state(S);
-    cands.forEach((id) => { st.fum[id] = (st.fum[id] || 0) + 1; });
-    const id = cands.slice().sort((a, b) => st.fum[b] - st.fum[a])[0];
-    tryLearn(id, st.fum[id], D.K2_FUMBLE, SK[id].learn.fumble.why);
+    cands.forEach((id) => { st.crit[id] = (st.crit[id] || 0) + 1; });
+    const id = cands.slice().sort((a, b) => st.crit[b] - st.crit[a])[0];
+    tryLearn(id, st.crit[id], D.K2_CRIT, SK[id].learn.crit.why, "crit");
   }
   K2.learnFrom = learnFrom;
   // ひどい目に遭った（sanity・poison・beast・brink）
@@ -188,6 +188,6 @@
     const st = K2.state(S);
     st.suf[kind] = (st.suf[kind] || 0) + 1;
     const id = cands[0];
-    tryLearn(id, st.suf[kind], D.K2_SUFFER, SK[id].learn.suffer.why);
+    tryLearn(id, st.suf[kind], D.K2_SUFFER, SK[id].learn.suffer.why, "suffer");
   };
 })(globalThis.G = globalThis.G || {});

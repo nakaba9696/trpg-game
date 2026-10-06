@@ -1,7 +1,7 @@
 // K2：パッシブスキル（持っているだけで常に効く）と、呼び名の整理（気力を使う技は「戦技」、持っているだけで効くものは「スキル」）
 // - データ：25〜40 種。どれにも効き目と覚え方がある（稽古・師・巻物・失敗から）。巻物は店か落とし物で手に入る
 // - 効き目：判定の理由の補正（画面の成功率にも出る）・状況の補正（夜）・行動の補正（gearBonus）・正気の減り・獣の病・毒・鎧の重さ・二刀・気力・眠り
-// - 失敗から覚える：理由に合う判定の大失敗を重ねると身につく。覚えたわけの一文と目立つ一行。ひどい目に遭っても身につく（正気）
+// - 大成功から覚える：理由に合う判定で大成功を重ねると身につく（コツをつかんだ一文と目立つ一行）。大失敗では覚えない（持ち主の訂正）。ひどい目に遭っても身につく（正気）
 // - 呼び名：戦闘の組は「戦技」、覚えた一行は戦技とスキルで言い分ける。古いセーブ（S.k1.k2 が無い）でも動く
 export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   let bad = 0;
@@ -18,7 +18,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const FX = ["check", "bonus", "chance", "sanity", "beast", "poison", "armorAgi", "dual", "kiMax", "rest"];
   const SUFFER = ["sanity", "poison", "beast", "brink"];
   const scrolls = new Set([...Object.values(D.LOCS).flatMap((L) => L.shop || []), ...Object.values(D.ENEMIES).flatMap((e) => (e.loot || []).map(([id]) => id))]);
-  let fumbleN = 0;
+  let critN = 0;
   for (const id of ids) {
     const s = SK[id];
     if (!/^k2_/.test(id)) fail(`${id}：id の頭が k2_ でない`);
@@ -30,11 +30,12 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (s.fx.chance && !(s.fx.chance.n > 0 && s.fx.chance.n <= 5)) fail(`${id}：状況の補正が強すぎる`);
     if (s.fx.sanity && !(s.fx.sanity >= 0.5 && s.fx.sanity < 1)) fail(`${id}：正気の減りの倍率が変`);
     const L = s.learn || {};
-    if (!L.train && !L.camp && !(L.teach || []).length && !L.scroll && !L.fumble && !L.suffer) fail(`${id}：覚え方が無い`);
+    if (!L.train && !L.camp && !(L.teach || []).length && !L.scroll && !L.crit && !L.suffer) fail(`${id}：覚え方が無い`);
     for (const t of L.teach || []) if (!D.K1_TEACHERS[t]) fail(`${id}：教える人 ${t} が無い`);
-    if (L.fumble) { fumbleN++; if (!s.fx.check || !L.fumble.why) fail(`${id}：失敗から覚えるのに、判定の補正か覚えたわけの文が無い`); }
+    if (L.fumble) fail(`${id}：大失敗から覚える（fumble）が残っている`);
+    if (L.crit) { critN++; if (!s.fx.check || !L.crit.why) fail(`${id}：大成功から覚えるのに、判定の補正かコツをつかむ文が無い`); }
     if (L.suffer && (!SUFFER.includes(L.suffer.kind) || !L.suffer.why)) fail(`${id}：ひどい目の種類か覚えたわけの文が変`);
-    const why = (L.fumble && L.fumble.why) || (L.suffer && L.suffer.why) || "";
+    const why = (L.crit && L.crit.why) || (L.suffer && L.suffer.why) || "";
     if (/(気がする|気がした|少しだけ|どこか|……)/.test(why)) fail(`${id}：覚えたわけの文に避ける癖（${why}）`);
     if (L.scroll) {
       const it = D.ITEMS[D.K1_SCROLL(id)];
@@ -42,9 +43,9 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       else if (!scrolls.has(D.K1_SCROLL(id))) fail(`${id}：巻物が店にも落とし物にも無い`);
     }
   }
-  if (fumbleN < 10) fail(`失敗から覚えるスキルが ${fumbleN} しかない（10 以上）`);
+  if (critN < 10) fail(`大成功から覚えるスキルが ${critN} しかない（10 以上）`);
   if (!SK.k2_steadymind || SK.k2_steadymind.fx.sanity == null) fail("正気が下がりにくいスキルが無い");
-  if (!SK.k2_keyfeel || !SK.k2_keyfeel.learn.fumble || !SK.k2_keyfeel.fx.check.re.test("錠をこじ開ける")) fail("解錠の失敗から覚える「鍵穴の勘」が無い");
+  if (!SK.k2_keyfeel || !SK.k2_keyfeel.learn.crit || !SK.k2_keyfeel.fx.check.re.test("錠をこじ開ける")) fail("解錠の大成功から覚える「鍵穴の勘」が無い");
 
   // ---------------------------------------------------------------- 遊びの準備
   const st = (n) => Object.fromEntries(D.STATS.map((k) => [k, n]));
@@ -160,26 +161,33 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (!(held > 2 && held < 25)) fail(`獣の病への抗いの踏みとどまりが極端（${held}/30）`);
   }
 
-  // ---------------------------------------------------------------- 失敗から覚える
+  // ---------------------------------------------------------------- 大成功から覚える（大失敗では覚えない）
   {
-    const S = start("thief", 601, 10);
+    const S = start("thief", 601, 14);
     S.skills = S.skills.filter((id) => id !== "k2_keyfeel");
-    let n = 0, fumbles = 0;
-    while (!K.knows("k2_keyfeel") && n++ < 4000) { const r = G.check("敏捷", "難しい", "錠をこじ開ける"); if (r.fumble) fumbles++; }
-    if (!K.knows("k2_keyfeel")) fail(`解錠で何度大失敗しても鍵穴の勘を覚えない（大失敗 ${fumbles}）`);
+    // 大失敗だけを続けても覚えない（出目を 100 に固定）
+    const d0 = G.d;
+    G.d = (n) => (n === 100 ? 100 : d0(n));
+    for (let i = 0; i < 300 && !S.over; i++) { S.sanity = 100; G.check("敏捷", "普通", "錠をこじ開ける"); }   // 大失敗は正気を削るので、毎回戻す
+    G.d = d0;
+    if (S.over) fail("大失敗を続ける試しの途中で冒険が終わった");
+    if (K.knows("k2_keyfeel")) fail("錠の判定の大失敗で鍵穴の勘を覚えた（大成功で覚える決まり）");
+    let n = 0, crits = 0;
+    while (!K.knows("k2_keyfeel") && n++ < 4000) { const r = G.check("敏捷", "易しい", "錠をこじ開ける"); if (r.crit) crits++; }
+    if (!K.knows("k2_keyfeel")) fail(`解錠で何度大成功しても鍵穴の勘を覚えない（大成功 ${crits}）`);
     else {
-      if (fumbles < 1) fail("大失敗していないのに鍵穴の勘を覚えた");
+      if (crits < 1) fail("大成功していないのに鍵穴の勘を覚えた");
       const line = S.log.find((l) => l.k === "grow" && l.k1 === "k2_keyfeel");
-      if (!line || line.learn !== "fumble" || !/^スキル「鍵穴の勘」を身につけた/.test(line.text)) fail(`失敗から覚えた一行が変（${line && line.text}）`);
+      if (!line || line.learn !== "crit" || !/^スキル「鍵穴の勘」を身につけた/.test(line.text)) fail(`大成功から覚えた一行が変（${line && line.text}）`);
       const i = S.log.indexOf(line);
-      if (!S.log.slice(Math.max(0, i - 3), i).some((l) => l.text === SK.k2_keyfeel.learn.fumble.why)) fail("失敗から覚えたわけの一文が無い");
-      if (!(K2.state(S).fum.k2_keyfeel >= 1)) fail("解錠の失敗が数えられていない");
+      if (!S.log.slice(Math.max(0, i - 3), i).some((l) => l.text === SK.k2_keyfeel.learn.crit.why)) fail("コツをつかんだ一文が無い");
+      if (!(K2.state(S).crit.k2_keyfeel >= 1)) fail("解錠の大成功が数えられていない");
     }
-    // 理由が合わない判定の失敗では覚えない
-    const S2 = start("thief", 602, 10);
+    // 理由が合わない判定の大成功では覚えない
+    const S2 = start("thief", 602, 14);
     S2.skills = [];
-    for (let i = 0; i < 1500; i++) G.check("魅力", "難しい", "歌を歌う");
-    if (K.knows("k2_keyfeel") || K.knows("k2_trapnose")) fail("関係の無い判定の失敗で、錠や罠のスキルを覚えた");
+    for (let i = 0; i < 1500; i++) G.check("魅力", "易しい", "歌を歌う");
+    if (K.knows("k2_keyfeel") || K.knows("k2_trapnose")) fail("関係の無い判定の大成功で、錠や罠のスキルを覚えた");
   }
   // ひどい目に遭って覚える（正気）
   {
@@ -190,5 +198,5 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (n < 2) fail("正気を一度削られただけで据わった肝を覚えた（見込みが高すぎる）");
   }
 
-  if (!bad) ok(`パッシブスキル（${ids.length} 種・失敗から覚える ${fumbleN}／戦技とスキルの呼び分け・効き目・失敗から覚える）`);
+  if (!bad) ok(`パッシブスキル（${ids.length} 種・大成功から覚える ${critN}／戦技とスキルの呼び分け・効き目・大成功から覚える・大失敗では覚えない）`);
 };
