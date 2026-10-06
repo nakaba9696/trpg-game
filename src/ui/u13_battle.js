@@ -13,12 +13,39 @@
   const D = () => G.data;
 
   // ---------------------------------------------------------------- 速さ（DOM なしで使える。テストもこれを読む）
-  u13.SPEEDS = { slow: { name: "ゆっくり", ms: 800 }, normal: { name: "ふつう", ms: 420 }, instant: { name: "すぐ", ms: 0 } };
-  u13.SPEED_ORDER = ["slow", "normal", "instant"];
+  // F1：速さは 4 段（ゆっくり・ふつう・速い・一気に）。k は段の重さに掛ける倍率。古い記録の "instant"（すぐ）は「一気に」として読む
+  u13.SPEEDS = { slow: { name: "ゆっくり", ms: 700, k: 1.5 }, normal: { name: "ふつう", ms: 470, k: 1 }, fast: { name: "速い", ms: 260, k: 0.55 }, instant: { name: "一気に", ms: 0, k: 0 } };
+  u13.SPEED_ORDER = ["slow", "normal", "fast", "instant"];
   u13.speed = (P) => (P && u13.SPEEDS[P.u13speed] ? P.u13speed : "normal");
   u13.delay = (P) => u13.SPEEDS[u13.speed(P)].ms;
-  // 順に出す行の段取り：n 行それぞれを何ミリ秒後に出すか。行が 1 つ以下、または「すぐ」なら全部 0
-  u13.revealPlan = (n, P) => { const d = n < 2 ? 0 : u13.delay(P); return Array.from({ length: n }, (_, i) => i * d); };
+  // F1：段の重さ（「ふつう」で、その行を出してから次の行までの間。ミリ秒）。サイコロは転がる間を含む。大成功・大失敗・気配・倒れる・深手は長め
+  u13.beatOf = (e) => {
+    if (!e) return 470;
+    if (e.k === "dice") return e.crit || e.fumble ? 1050 : 820;
+    if (e.k === "you") return 400;
+    if (e.tell) return e.rage ? 900 : 760;
+    if (e.fx === "down") return e.boss ? 1000 : 720;
+    if (e.fx === "hurt") return e.heavy ? 820 : 600;
+    if (e.fx === "hit" || e.fx === "ally" || e.fx === "wall") return 560;
+    if (e.fx === "crit") return 420;
+    if (e.k === "sys") return 330;
+    return 470;
+  };
+  // サイコロが転がる長さ（「ふつう」で。速さの倍率を掛ける）と、戦闘が終わってから結果の場面までの一拍
+  u13.ROLL_MS = 460;
+  u13.END_BEAT = 650;
+  // 順に出す行の段取り：n 行それぞれを何ミリ秒後に出すか。行が 1 つ以下、または「一気に」なら全部 0。
+  // entries（その行の記録）を渡すと、行ごとの重さ（u13.beatOf）で間を変える
+  u13.revealPlan = (n, P, entries) => {
+    const sp = u13.SPEEDS[u13.speed(P)];
+    if (n < 2 || !sp.k) return Array.from({ length: n }, () => 0);
+    const out = [];
+    let t = 0;
+    for (let i = 0; i < n; i++) { out.push(Math.round(t)); t += entries ? u13.beatOf(entries[i]) * sp.k : sp.ms; }
+    return out;
+  };
+  // サイコロの転がる途中の目（乱数は使わない。出目から決まる並び）。最後は本当の出目
+  u13.rollFrames = (roll, n) => Array.from({ length: n }, (_, i) => (i === n - 1 ? roll : (roll * 7 + (i + 1) * 37) % 100));
   // 順に出す係。show(i) を段取りの時刻に呼ぶ。finish() で残りをすぐ全部出す。timer は setTimeout と同じ形（テストで差し替える）
   u13.makeReveal = (delays, show, done, timer) => {
     const set = timer || ((fn, ms) => setTimeout(fn, ms));
@@ -94,7 +121,7 @@
       options: u13.SPEED_ORDER.map((k) => [k, u13.SPEEDS[k].name]),
       get: () => u13.speed(G.P),
       set: (v) => { if (G.P && u13.SPEEDS[v]) { G.P.u13speed = v; if (G.main && G.main.saveProfile) G.main.saveProfile(); } },
-      hint: "戦闘の一手を一行ずつ出す間。「すぐ」は一度に出す。出している間に画面を押すと、残りをすぐ出す",
+      hint: "戦闘の一手を、サイコロ → あなたの一撃 → 仲間 → 敵の順に一段ずつ出す間。「一気に」は一度に出す。出している間に画面を押すかキーを押すと、残りをすぐ出す",
     });
   }
   setTimeout(registerSetting, 0);
@@ -108,7 +135,7 @@
   let pendingFx = null;
   const fxPlay = G.fx && G.fx.play;
   if (G.fx && fxPlay) G.fx.play = (entries, S) => { pendingFx = { entries: entries || [], S }; };
-  const flushFx = (entries, S) => { if (fxPlay && entries && entries.length) fxPlay(entries, S); };
+  const flushFx = (entries, S, keep) => { if (fxPlay && entries && entries.length) fxPlay(entries, S, keep); };
 
   // 「能力値が伸びた」の小さな通知は、この演出に置き換える
   const toast0 = ui.toast;
@@ -126,22 +153,57 @@
     cands.forEach(([n, c]) => { const i = text.indexOf(n); if (i >= 0 && i < at) { at = i; best = c; } });
     if (best && at < 12) { best.classList.remove("u13act"); void best.offsetWidth; best.classList.add("u13act"); setTimeout(() => best.classList.remove("u13act"), 700); }
   }
-  function startReveal(S, fresh, entries) {
+  // F1：サイコロの行は、目が転がってから止まり、そのあと成否が出る（大成功・大失敗は目立たせる）
+  function rollDice(el, e, ms) {
+    const dies = el.querySelectorAll(".die");
+    if (dies.length < 2 || calm() || ms < 120) { land(el, e); return; }
+    el.classList.add("f1roll");
+    const frames = u13.rollFrames(e.roll % 100, Math.max(3, Math.round(ms / 70)));
+    let i = 0;
+    const tick = () => {
+      if (!el.isConnected || !el.classList.contains("f1roll")) return;
+      const r = frames[i++];
+      dies[0].textContent = String(Math.floor(r / 10)); dies[1].textContent = String(r % 10);
+      if (i < frames.length) el.f1t = setTimeout(tick, ms / frames.length); else land(el, e);
+    };
+    tick();
+  }
+  function land(el, e) {
+    clearTimeout(el.f1t);
+    const dies = el.querySelectorAll(".die");
+    const r = e.roll % 100;
+    if (dies.length >= 2) { dies[0].textContent = String(Math.floor(r / 10)); dies[1].textContent = String(r % 10); }
+    el.classList.remove("f1roll");
+    el.classList.add("f1land");
+    if (e.crit || e.fumble) el.classList.add(e.crit ? "f1crit" : "f1fumble");
+  }
+  function startReveal(S, fresh, entries, ended) {
     const panel = $("#panel"), log = $("#log");
-    const delays = u13.revealPlan(fresh.length, G.P);
+    const sp = u13.SPEEDS[u13.speed(G.P)];
+    // 戦闘が終わった手番は、最後の行のあと一拍おいて結果の場面へ（何も出さない一段を足す）
+    const beat = ended ? 1 : 0;
+    const delays = u13.revealPlan(fresh.length + beat, G.P, beat ? [...entries, null] : entries);
+    if (beat) delays[delays.length - 1] = delays[delays.length - 2] + Math.round((u13.beatOf(entries[entries.length - 1]) + u13.END_BEAT) * sp.k);
     fresh.forEach((el) => el.classList.add("u13hide"));
     panel.classList.add("u13wait");
+    // 札と HP の欄を手番の前の値に戻し、当たった行が出るたびに減らす（fx.js）
+    if (G.fx && G.fx.freeze) G.fx.freeze(S);
+    const rolling = [];
     const show = (i) => {
       const el = fresh[i];
+      if (!el) return; // 終わりの一拍
       el.classList.remove("u13hide");
       el.classList.add("u13in");
       flashActor(el);
       const e = entries[i];
-      if (e && e.fx) flushFx([e], S);
+      if (e && e.k === "dice") { rolling.push([el, e]); rollDice(el, e, u13.ROLL_MS * sp.k); }
+      if (e && e.fx) flushFx([e], S, true);
       if (log && log.scrollHeight > log.clientHeight) log.scrollTop = log.scrollHeight;
     };
     const st = {};
     const done = () => {
+      rolling.forEach(([el, e]) => { if (el.classList.contains("f1roll")) land(el, e); });
+      if (G.fx && G.fx.remember) { G.fx.remember(G.S); G.fx.sync(G.S); }
       panel.classList.remove("u13wait");
       if (reveal === st) reveal = null;
       if (dead && !dead.shown) showDead(G.S);
@@ -302,8 +364,10 @@
     const all = Array.from(log.querySelectorAll(":scope > .new"));
     const fresh = G.u14 && G.u14.later ? all.filter((el) => !G.u14.later(el)) : all;
     const entries = pend ? pend.entries.slice(0, pend.entries.length - (all.length - fresh.length)).slice(-fresh.length) : [];
-    if ((turn || ended) && fresh.length >= 2 && u13.delay(G.P) > 0) startReveal(S, fresh, entries);
+    if ((turn || ended) && fresh.length >= 2 && u13.delay(G.P) > 0) startReveal(S, fresh, entries, ended);
     else if (pend) flushFx(pend.entries, pend.S);
+    // F1：見えている HP を覚える（次の手番を順に見せるとき、ここへ戻してから減らす）
+    if (!reveal && G.fx && G.fx.remember) G.fx.remember(S);
     // 死の場面：今この描き直しで死んだとき。ui.after が年表を自動で開かないよう印を付け、押されたら開く
     const justDied = prevOver.id === S.id && !prevOver.over && S.over === "dead";
     prevOver = { id: S.id, over: S.over };

@@ -3,6 +3,8 @@
 // 判定が失敗したら「振り直す」を出す。選ぶと G.S を行動の前に戻し、同じ乱数で同じ行動をやり直して、
 // 失敗した判定の出目のところから新しい乱数にする（同じ場面で、賽の目だけが転がり直る）。二度目の結果は受け入れる。
 // 写しと記録は画面を開いているあいだだけ（セーブには入れない）。古いセーブには S.rerolls が無い（0 として扱う）。
+// 戦闘中は振り直せない（持ち主の決定。巻き戻ると急に場面が変わって分かりにくい）。戦闘の手番・戦闘が始まった行動・戦闘を終えた行動の判定は振り直しに出さず、
+//   失敗した判定の横に薄い「振り直す」と「戦闘中は振り直せない」だけを出す（G.rerollBlocked）。戦闘が終わったあとの行動の判定は、今まで通り振り直せる。
 // core.js・combat.js・explore.js は書き換えず、ここで包む。レーン C（M7）
 (function (G) {
   const D = G.data;
@@ -31,6 +33,7 @@
   let cand = null;      // この行動で最初に失敗した判定
   let pending = null;   // 振り直せる判定（次の行動をするまで）
   let replay = null;    // やり直し中 { k: 振り直す出目の位置, pos: 今の位置 }
+  let blocked = null;   // 戦闘中で振り直せない、失敗した判定（画面の説明だけ）
 
   const check0 = G.check;
   G.check = (stat, diff, reason, extra) => {
@@ -62,13 +65,33 @@
   };
   // 画面用：記録の中で、振り直せる判定の1件か
   G.rerollTarget = (e) => { const p = G.rerollPending(); return !!p && p.entry === e; };
+  // 戦闘中で振り直せない、失敗した判定（次の行動をするまで）。画面は薄いボタンと理由を出す
+  G.rerollBlocked = () => {
+    const S = G.S;
+    const b = blocked;
+    if (!b || !S || S.over || b.S !== S || b.turn !== S.turn || G.rerolls(S) <= 0 || S.log[S.log.length - 1] !== b.last) return null;
+    return b;
+  };
+  G.rerollBlockedTarget = (e) => { const b = G.rerollBlocked(); return !!b && b.entry === e; };
+  G.REROLL_NO_COMBAT = "戦闘中は振り直せない";
+  const fighting = (S) => !!(S && (S.combat || S.mode === "combat"));
 
   const act0 = G.act;
   G.act = (id) => {
     const S = G.S;
     if (id === "rr:go") { G.reroll(); return; }
     pending = null;
+    blocked = null;
     if (!S || S.over || G.rerolls(S) <= 0 || recording || replay) { act0(id); return; }
+    // 戦闘の手番は記録しない（振り直せない）。失敗した判定だけ覚えて、画面に理由を出す
+    if (fighting(S)) {
+      const mark = S.log[S.log.length - 1];
+      act0(id);
+      const from = S.log.lastIndexOf(mark) + 1;
+      const e = S.log.slice(from).find((x) => x.k === "dice" && !x.ok);
+      if (e && !S.over) blocked = { S, turn: S.turn, last: S.log[S.log.length - 1], entry: e, reason: e.reason, roll: e.roll };
+      return;
+    }
     const snap = JSON.stringify(S);
     const base = G.rand;
     const tape = [];
@@ -78,7 +101,11 @@
     try { act0(id); } finally { G.rand = base; recording = null; }
     const c = cand;
     cand = null;
-    if (c && !S.over && G.rerolls(S) > 0) pending = Object.assign({ S, turn: S.turn, last: S.log[S.log.length - 1], snap, tape, id }, c);
+    if (c && !S.over && G.rerolls(S) > 0) {
+      // この行動で戦闘が始まったら、その前の判定も振り直せない（巻き戻ると戦闘が消える）
+      if (fighting(S)) blocked = { S, turn: S.turn, last: S.log[S.log.length - 1], entry: c.entry, reason: c.reason, roll: c.roll };
+      else pending = Object.assign({ S, turn: S.turn, last: S.log[S.log.length - 1], snap, tape, id }, c);
+    }
   };
 
   // 振り直す：行動の前に戻し、失敗した判定の出目から先だけ新しく振る

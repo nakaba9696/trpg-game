@@ -49,12 +49,60 @@
   // 背景に並んでいた敵（scene.js が描いた順）と、札の HP を覚えておく
   let shown = [];
   let hpSeen = {};
+  let youSeen = null; // あなたの HP（画面に見えている値。手番を順に見せる間は、受けた分ずつ減らす）
   function remember(S) {
     const C = S && S.combat;
     shown = C ? C.foes.filter((f) => f.hp > 0).map((f) => ({ name: f.name, id: f.id, hp: f.hp, max: f.max })) : [];
     hpSeen = {};
     if (C) C.foes.forEach((f) => { hpSeen[f.name] = f.hp; });
+    youSeen = S ? { hp: S.hp, max: S.maxHp } : null;
   }
+  fx.remember = remember;
+
+  // ---------------------------------------------------------------- 手番を順に見せる間の HP の表示（F1）
+  // 描き直した直後の札と HP の欄は手番の後の値なので、順に見せ始めるときに前の値へ戻し（freeze）、
+  // 当たった行・受けた行が出るたびにその分だけ減らし、出し終えたら今の値にそろえる（sync）
+  const setCard = (card, hp, max) => {
+    if (!card) return;
+    const i = card.querySelector(".g > i");
+    if (i) i.style.width = (Math.max(0, hp) / max) * 100 + "%";
+    const n = card.querySelector(".num");
+    if (n) n.textContent = `HP ${Math.max(0, hp)}/${max}`;
+  };
+  const youPools = () => Array.from(document.querySelectorAll(".pool")).filter((p) => (p.firstElementChild || {}).textContent === "HP");
+  const setYou = (hp, max) => youPools().forEach((p) => {
+    const i = p.querySelector(".g > i");
+    if (i) i.style.width = (max ? (Math.max(0, hp) / max) * 100 : 0) + "%";
+    const n = p.querySelector(".n");
+    if (n) n.textContent = `${Math.max(0, hp)} / ${max}`;
+  });
+  // この手番で倒れた敵は、倒れた行が出るまで背景に立たせておく（背景は今の状態から描くので、描くあいだだけ前の HP を見せる）
+  let standing = new Set();
+  const paintStanding = (S) => {
+    const C = S && S.combat;
+    if (!C || !G.ui || !G.ui.repaint) return;
+    const back = [];
+    C.foes.forEach((f) => { if (standing.has(f.name) && f.hp <= 0) { back.push([f, f.hp]); f.hp = Math.max(1, hpSeen[f.name] || 1); } });
+    try { G.ui.repaint(); } finally { back.forEach(([f, hp]) => { f.hp = hp; }); }
+  };
+  fx.freeze = (S) => {
+    const C = S && S.combat;
+    standing = new Set();
+    (C ? C.foes : []).forEach((f) => {
+      if (hpSeen[f.name] === undefined) return;
+      const card = cardOf(f.name);
+      setCard(card, hpSeen[f.name], f.max);
+      if (f.hp <= 0 && hpSeen[f.name] > 0) { standing.add(f.name); if (card) card.classList.remove("down"); }
+    });
+    if (standing.size) paintStanding(S);
+    if (youSeen) setYou(youSeen.hp, S ? S.maxHp : youSeen.max);
+  };
+  fx.sync = (S) => {
+    const C = S && S.combat;
+    (C ? C.foes : []).forEach((f) => { const card = cardOf(f.name); setCard(card, f.hp, f.max); if (card && f.hp <= 0) card.classList.add("down"); });
+    if (standing.size) { standing = new Set(); if (C && G.ui && G.ui.repaint) G.ui.repaint(); }
+    if (S) setYou(S.hp, S.maxHp);
+  };
 
   // ---------------------------------------------------------------- 背景の上の層
   function layer() {
@@ -264,11 +312,12 @@
   }
 
   // ---------------------------------------------------------------- 入口
-  fx.play = (entries, S) => {
+  // keep：手番を一行ずつ見せている途中（U13）。見えている HP を手番の終わりまで覚えたままにする（終わりに fx.remember）
+  fx.play = (entries, S, keep) => {
     const plan = fx.plan(entries);
-    const hpBefore = hpSeen;
+    const run = keep ? hpSeen : Object.assign({}, hpSeen);
+    const you = keep ? youSeen : youSeen && Object.assign({}, youSeen);
     const was = shown;
-    const drained = {};
     plan.forEach((p) => {
       later(p.at, () => {
         if (p.fx === "hit") {
@@ -276,10 +325,16 @@
           pulse(card, "hit", 380);
           popNumber(card, String(p.n));
           slash(p.foe, false, was);
-          if (card && !drained[p.foe]) {
-            drained[p.foe] = true;
-            const f = S && S.combat && S.combat.foes.find((x) => x.name === p.foe);
-            if (f && hpBefore[p.foe] !== undefined) drainBar(card, hpBefore[p.foe], f.hp, f.max);
+          // 当たった分だけ減らす（一手番に何度当たっても、一つずつ見える）
+          const f = S && S.combat && S.combat.foes.find((x) => x.name === p.foe);
+          const max = f ? f.max : 0;
+          if (card && max && run[p.foe] !== undefined && run[p.foe] > (keep ? -1 : f.hp)) {
+            // 一度に出すとき（keep でない）は、今まで通り最初の一撃で今の値まで減らす
+            const from = run[p.foe], to = keep ? Math.max(0, from - p.n) : f.hp;
+            drainBar(card, from, to, max);
+            const n = card.querySelector(".num");
+            if (n) n.textContent = `HP ${to}/${max}`;
+            run[p.foe] = to;
           }
         } else if (p.fx === "crit") {
           pulse($(".scene"), "flash", 260);
@@ -293,14 +348,16 @@
           const card = cardOf(p.foe) || ghostCard(p.foe, was);
           if (card) card.classList.add("dying");
           collapse(p.foe, was);
+          if (keep && standing.delete(p.foe)) { if (card) card.classList.add("down"); paintStanding(S); }
           if (p.boss) pulse($(".scene"), "flash", 420);
         } else if (p.fx === "hurt") {
           hurtScreen(p.n, p.heavy);
+          if (keep && you) { you.hp = Math.max(0, you.hp - p.n); setYou(you.hp, S ? S.maxHp : you.max); }
         } else if (p.fx === "boss") {
           banner(p.name, p.text);
         }
       });
     });
-    remember(S);
+    if (!keep) remember(S);
   };
 })(globalThis.G = globalThis.G || {});

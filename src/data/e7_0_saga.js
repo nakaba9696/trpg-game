@@ -75,8 +75,8 @@
         subs: {
           lib: { title: "写本の町の古い記録", at: ["w7_melvi"], start: "e7m_3_lib", line: "写本の町メルヴィの書庫で、昔の踊りの記録を探す" },
           old: { title: "峠の庵の老婆", at: ["w7_hermitage"], start: "e7m_3_old", line: "峠の庵ザレムに、昔の踊りの生き残りがいるという" },
-          rope: { title: "糸屋の婆さん", at: ["karna"], start: "e7m_3_rope", line: "自由都市ブランデールの糸屋に、広場の糸を見せる" },
-          bert: { title: "付けの利く剣", at: ["karna"], start: "e7m_4", line: "自由都市ブランデールの酒場の二階の絵描きに、剣を頼む", cond: (S, st) => !!(st.sub.rope || st.sub.lib || st.sub.old) },
+          rope: { title: "糸屋の婆さん", at: ["karna"], start: "e7m_3_rope", line: "{place:karna}の糸屋に、広場の糸を見せる" },
+          bert: { title: "付けの利く剣", at: ["karna"], start: "e7m_4", line: "{place:karna}の酒場の二階の絵描きに、剣を頼む", cond: (S, st) => !!(st.sub.rope || st.sub.lib || st.sub.old) },
         },
         chron: "日傘の若君の糸の出どころを調べる" },
       { title: "灰の荒野へ", line: "断界山脈を越えて使徒領・灰の荒野へ。日傘の庭の奥で、若君が待っている。", at: ["mountains"], start: "e7m_5",
