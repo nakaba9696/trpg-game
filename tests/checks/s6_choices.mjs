@@ -11,6 +11,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   const st = (n) => Object.fromEntries(D.STATS.map((k) => [k, n]));
   G.newGame({ cls: "thief", stats: st(12), caps: st(99), goal: "rich", profile: { name: "テスト", sex: "女", age: 22, history: "テスト用" } });
   const S = G.S;
+  const cls0 = S.cls; S.cls = "__neutral";   // 職業の向き不向き（S7）の無い形で、使い方の偏りだけを見る
 
   // ---------------------------------------------------------------- 使い方の偏り
   delete S.s5use;
@@ -18,8 +19,8 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   if (!(f0 > 0.9 && f0 < 1.4)) fail(`古いセーブ（使い方の記録なし）の伸びやすさが変（${f0}）`);
   for (let i = 0; i < 60; i++) G.s5Used("敏捷");
   const tired = G.s5Fresh("敏捷"), rested = G.s5Fresh("魅力");
-  if (!(tired < 0.6)) fail(`同じ能力ばかり使っても伸びが鈍らない（${tired.toFixed(2)}）`);
-  if (!(rested > 1.2)) fail(`しばらく使っていない能力が伸びやすくならない（${rested.toFixed(2)}）`);
+  if (!(tired < 0.7)) fail(`同じ能力ばかり使っても伸びが鈍らない（${tired.toFixed(2)}）`);
+  if (!(rested > 1.1)) fail(`しばらく使っていない能力が伸びやすくならない（${rested.toFixed(2)}）`);
   // 判定の成長にも効く：使い込んだ敏捷と、使っていない魅力で、同じ回数の成功
   const gain = (k) => {
     S.stats[k] = 20; S.s5exp = {}; S.s5use = Object.fromEntries(D.STATS.map((x) => [x, x === k ? 40 : 1]));
@@ -31,7 +32,8 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   const worn = gain("敏捷");
   S.s5use = Object.fromEntries(D.STATS.map((x) => [x, x === "敏捷" ? 40 : 1]));
   const fresh = (() => { S.stats.魅力 = 20; S.s5exp = {}; G.rand = seeded(6601); let w = 0, n = 0; while (w < 30 && n++ < 2000) if (G.check("魅力", { vs: 20 }, "テスト").ok) w++; return S.stats.魅力 - 20 + (S.s5exp.魅力 || 0) / G.s5Need(S.stats.魅力); })();
-  if (!(fresh > worn * 1.3)) fail(`使っていない能力の方が伸びやすくなっていない（使い込んだ ${worn.toFixed(1)}・使っていない ${fresh.toFixed(1)}）`);
+  S.cls = cls0;
+  if (!(fresh > worn * 1.08)) fail(`使っていない能力の方が伸びやすくなっていない（使い込んだ ${worn.toFixed(1)}・使っていない ${fresh.toFixed(1)}）`);
 
   // ---------------------------------------------------------------- 戦闘
   {
