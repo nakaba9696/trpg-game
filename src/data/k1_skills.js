@@ -24,7 +24,7 @@
     k1_twinfang: sk({
       name: "返し刃", style: ["剣", "刀", "短剣"], need: { 敏捷: 10 }, ki: 2, hint: "二度斬りつける（一太刀ずつは浅い）",
       fx: { t: "hit", times: 2, mul: 0.7 }, learn: { train: { gold: 60, days: 2 }, teach: ["veteran", "comp:fighter"], scroll: true },
-      say: "振り抜いた刃を、手首だけで返す。", kw: ["返し", "二度"],
+      say: "振り抜いた刃を手首だけで返す。", kw: ["返し", "二度"],
     }),
     k1_helmsplit: sk({
       name: "兜割り", style: ["剣", "刀", "斧", "槌"], need: { 筋力: 14 }, ki: 2, hint: "重い一撃（1.6倍・当たりにくい）。待ちの構えを叩き崩す",
@@ -34,12 +34,12 @@
     k1_drawcut: sk({
       name: "抜き打ち", style: ["刀", "剣"], need: { 敏捷: 14 }, ki: 2, hint: "溜めや詠唱に割り込んで技を潰す。割り込むより深く斬る",
       fx: { t: "hit", mul: 1, hit: 10, cut: true }, learn: { train: { gold: 90, days: 3, towns: ["yakumo"] }, teach: ["kensei"], scroll: true },
-      say: "鞘走りの音が、相手の息より先に鳴った。", kw: ["抜き打", "居合", "抜刀"],
+      say: "鞘走りの音が相手の息より先に鳴った。", kw: ["抜き打", "居合", "抜刀"],
     }),
     k1_flurry: sk({
       name: "乱れ打ち", style: ["剣", "短剣", "拳"], need: { 敏捷: 18 }, ki: 3, hint: "浅い打ち込みを三度（当たりやすい）",
       fx: { t: "hit", times: 3, mul: 0.5, hit: 5 }, learn: { train: { gold: 150, days: 3, mark: ["敏捷", 0] }, teach: ["kensei"], scroll: true },
-      say: "考えるより先に、腕が三度動いた。", kw: ["乱れ", "連撃"],
+      say: "考えるより先に腕が三度動いた。", kw: ["乱れ", "連撃"],
     }),
     k1_parry: sk({
       name: "受け流し", style: ["剣", "刀", "短剣", "槍", "盾"], stat: "敏捷", need: { 敏捷: 12 }, ki: 1, hint: "最初の一撃を受け流して斬り返す。大技なら相手が崩れる",
@@ -50,7 +50,7 @@
     k1_sweepspear: sk({
       name: "石突き払い", style: ["槍", "杖"], need: { 筋力: 12 }, ki: 2, hint: "敵すべてを払う（一体ずつは浅い）",
       fx: { t: "hit", all: true, mul: 0.6 }, learn: { train: { gold: 70, days: 2 }, teach: ["veteran"], scroll: true },
-      say: "柄の尻で、足もとを薙ぎ払う。", kw: ["払", "薙"],
+      say: "柄の尻で足もとを薙ぎ払う。", kw: ["払", "薙"],
     }),
     k1_spearwall: sk({
       name: "槍衾", style: ["槍"], stat: "体力", need: { 体力: 12 }, ki: 1, hint: "身を守りながら構え、打ちかかってきた敵に穂先で返す",
@@ -71,7 +71,7 @@
     k1_twoarrows: sk({
       name: "二の矢", style: ["弓"], need: { 敏捷: 16 }, ki: 2, hint: "続けざまに二射。二体いれば別々に狙う",
       fx: { t: "hit", times: 2, mul: 0.8, spread: true }, learn: { train: { gold: 100, days: 3, mark: ["敏捷", 0] }, teach: ["hunter"], scroll: true },
-      say: "一の矢が届く前に、二の矢をつがえていた。", kw: ["二の矢", "連射"],
+      say: "一の矢が届く前に二の矢をつがえていた。", kw: ["二の矢", "連射"],
     }),
     k1_pin: sk({
       name: "牽制の一射", style: ["弓", "投げ物"], need: { 敏捷: 12 }, ki: 1, hint: "相手の仕掛け（大技・連撃・詠唱・構え）を潰す。必殺は止まらない",
@@ -82,7 +82,7 @@
     k1_shieldbash: sk({
       name: "盾打ち", style: ["盾"], stat: "筋力", need: { 筋力: 12 }, ki: 2, hint: "盾で殴る。何か仕掛けてくる相手を崩す",
       fx: { t: "hit", mul: 0.6, brk: ["heavy", "chant", "quick", "brace"] }, learn: { train: { gold: 70, days: 2 }, teach: ["guardmaster"], scroll: true },
-      say: "盾の縁ごと、体当たりする。", kw: ["盾打", "体当たり"],
+      say: "盾の縁ごと体当たりする。", kw: ["盾打", "体当たり"],
     }),
     k1_ironwall: sk({
       name: "鉄壁", style: ["盾"], stat: "体力", need: { 体力: 12 }, ki: 1, hint: "身を守る。この手番、鎧がさらに硬くなる",
@@ -119,7 +119,7 @@
     k1_venom: sk({
       name: "毒刃", style: ["短剣", "弓", "投げ物"], stat: "知力", need: { 知力: 10 }, ki: 1, hint: "浅い傷に毒を入れ、三手番のあいだ蝕む",
       fx: { t: "hit", mul: 0.8, bleed: 3 }, learn: { teach: ["fence"], scroll: true },
-      say: "刃先に、懐の小瓶の中身を一滴落とす。", kw: ["毒"],
+      say: "刃先に懐の小瓶の中身を一滴落とす。", kw: ["毒"],
     }),
     // ---------------------------------------------------------------- どの武器でも
     k1_focus: sk({
@@ -140,7 +140,7 @@
     k1_read: sk({
       name: "見切り", stat: "知力", need: { 知力: 12 }, ki: 1, hint: "この戦いのあいだ、敵の気配に合う手に◎が付く（倒したことが無い敵でも）",
       fx: { t: "read" }, learn: { train: { gold: 60, days: 2 }, teach: ["kensei", "comp:scout"], scroll: true },
-      say: "相手の肩と足の運びを、黙って見る。", kw: ["見切", "読"],
+      say: "相手の肩と足の運びを黙って見る。", kw: ["見切", "読"],
     }),
     k1_feint: sk({
       name: "誘いの隙", stat: "敏捷", need: { 敏捷: 12 }, ki: 1, hint: "わざと隙を見せ、狙いに大技を誘う（強敵は乗らない）。受けるか躱せば崩せる",
@@ -155,7 +155,7 @@
     }),
 
     // ---------------------------------------------------------------- 戦闘の外の技（効き目は出来事と施設の選択肢。src/data/k1_field.js）
-    k1_lockpick: sk({ kind: "field", stat: "敏捷", name: "鍵開け", need: { 敏捷: 8 }, hint: "錠前・宝箱・閂を、壊さずに開ける", learn: { teach: ["fence", "comp:rogue"], scroll: true }, kw: ["鍵", "錠"] }),
+    k1_lockpick: sk({ kind: "field", stat: "敏捷", name: "鍵開け", need: { 敏捷: 8 }, hint: "錠前・宝箱・閂を壊さずに開ける", learn: { teach: ["fence", "comp:rogue"], scroll: true }, kw: ["鍵", "錠"] }),
     k1_trapsense: sk({ kind: "field", stat: "知力", name: "罠読み", need: { 知力: 10 }, hint: "罠と仕掛けに先に気づき、外す", learn: { camp: true, teach: ["fence", "hunter", "comp:rogue"], scroll: true }, kw: ["罠"] }),
     k1_track: sk({ kind: "field", stat: "知力", name: "追跡", need: { 知力: 8 }, hint: "足跡と痕跡を読む。荒野で獲物や隠れ家を探せる", learn: { camp: true, teach: ["hunter", "comp:scout"], scroll: true }, kw: ["足跡", "追"] }),
     k1_haggle: sk({ kind: "field", stat: "魅力", name: "値切り", need: { 魅力: 10 }, hint: "商いの場で値を下げさせ、払いを引き上げる", learn: { teach: ["comp:trade", "fence"], scroll: true }, kw: ["値切", "交渉"] }),
@@ -182,10 +182,10 @@
   // fac：その施設にいる（町の施設の「教わる」）・ev：出来事で出会う・comp：その得意の仲間（好感度が「打ち解けている」から）
   // cond(S)：教えてくれる条件・lock：条件が足りないときの添え書き（数は書かない）・fee：教わる礼（技の鍛錬の値段に掛ける。0 なら礼は要らない）・days：かかる日数
   D.K1_TEACHERS = {
-    veteran: { name: "片目の老傭兵", fac: "tavern", fee: 1, days: 2, lock: "名が知られていれば、話を聞いてくれそうだ",
+    veteran: { name: "片目の老傭兵", fac: "tavern", fee: 1, days: 2, lock: "名が知られていれば話を聞いてくれそうだ",
       cond: (S) => (S.fame || 0) >= 60 || S.cls === "merc",
       line: "老傭兵は片方だけの目であなたの手を見て、樽の上の杯をどけた。「口で言っても分からん。立て」" },
-    fence: { name: "裏路地の元締め", fac: "alley", fee: 0.8, days: 2, lock: "手を汚した者なら、声がかかりそうだ",
+    fence: { name: "裏路地の元締め", fac: "alley", fee: 0.8, days: 2, lock: "手を汚した者なら声がかかりそうだ",
       cond: (S) => (S.sin || 0) >= 8 || S.cls === "thief",
       line: "元締めは帳場の奥から出てこずに、声だけで言った。「教えるのは一度だけだ。二度目は金を取る。三度目は指を取る」" },
     hunter: { name: "ギルドの古株の狩人", fac: "guild", fee: 0.5, days: 2, lock: "依頼を重ねて顔を覚えられれば、教えてもらえそうだ",
@@ -193,16 +193,16 @@
       line: "古株の狩人は、あなたの片づけた依頼の札を指でなぞった。「礼の代わりだ。森の歩き方くらいは教えてやる」" },
     sister: { name: "施療院の修道女", fac: "church", fee: 0.5, days: 1, lock: "施しを重ねた者なら、手ほどきを受けられそうだ",
       cond: (S) => ((S.virtue || 0) >= 4 && (S.sin || 0) < 4) || S.cls === "priest",
-      line: "修道女は袖をまくり、洗いたての布を山ほど抱えてきた。「祈るより先に、手を動かせる人が要るのです」" },
+      line: "修道女は袖をまくり、洗いたての布を山ほど抱えてきた。「祈るより先に手を動かせる人が要るのです」" },
     guardmaster: { name: "近衛の師範", fac: "castle", fee: 1.5, days: 2, lock: "位を得るか、この国で慕われていれば、稽古をつけてもらえそうだ",
       cond: (S) => ["騎士", "領主", "国王"].includes(S.title) || (G.c10 && G.c10.trusted ? G.c10.trusted(S) : false),
-      line: "近衛の師範は、木剣を二本持ってきて、一本をあなたに放った。「城の中では、刃より先に作法が要る。両方教える」" },
+      line: "近衛の師範は、木剣を二本持ってきて、一本をあなたに放った。「城の中では刃より先に作法が要る。両方教える」" },
     bard: { name: "旅の吟遊詩人", fac: "tavern", fee: 1, days: 1, lock: "名が売れはじめれば、詩人のほうから寄ってくる",
       cond: (S) => (S.fame || 0) >= 20,
       line: "吟遊詩人はあなたの名を聞くと、弦を一本はじいた。「歌になる人には、歌を一つ持っていてほしいのさ」" },
     kensei: { name: "流れの剣客", ev: "k1_kensei", fee: 1.2, days: 2, lock: "",
       cond: (S) => Math.max((S.stats || {}).筋力 || 0, (S.stats || {}).敏捷 || 0) >= 16,
-      line: "剣客は焚き火越しに、あなたの剣だこを見た。「その手なら、教え甲斐がある」" },
+      line: "剣客は焚き火越しに、あなたの剣だこを見た。「その手なら教え甲斐がある」" },
     archivist: { name: "古書庫の番人", ev: "k1_archive", fee: 1, days: 3, lock: "",
       cond: (S) => ((S.stats || {}).知力 || 0) >= 12,
       line: "番人は、埃の積もった書見台をあなたのために一つ空けた。「読めない字はない。読める人がいなくなった字があるだけだ」" },
@@ -219,14 +219,14 @@
   const KAN = { combat: "戦技の巻物", both: "戦技の巻物", field: "心得の巻物", passive: "心得の巻物" };
   const DESC = {
     combat: ["汗の染みた紙に、足の運びが墨で描いてある。描いた者は、絵より剣のほうがうまかったらしい。", "道場の壁から剥がしたらしい。四隅に釘の穴がある。", "刃の角度を示す線が、何度も引き直されている。"],
-    both: ["包帯の巻き方が順に描いてある。余白に、血の指の跡がある。"],
-    field: ["細かい字でびっしりと書いてある。読む者が覚えたら燃やせ、と最後の行にある。", "誰かの覚え書きを、別の誰かが写したもの。写し間違いを直した跡が多い。"],
+    both: ["包帯の巻き方が順に描いてある。余白に血の指の跡がある。"],
+    field: ["細かい字でびっしりと書いてある。読む者が覚えたら燃やせ、と最後の行にある。", "誰かの覚え書きを別の誰かが写したもの。写し間違いを直した跡が多い。"],
   };
   DESC.passive = DESC.field;
   const TAIL = {
-    combat: ["読んで分かる技ではない。読んでから、体で分かる技だ。", "持ち主は、この巻物を何度も開いては閉じたらしい。折り目が擦り切れている。", "最後の行だけ、別の者の筆で書き足してある。「自分より強い相手にだけ使え」"],
-    both: ["教会の施療院で使われていたものらしい。端に、薬草の汁の染みがある。"],
-    field: ["剣の技ではないから、と安く売られることが多い。命を拾うのは、たいていこちらのほうだ。", "書いた者の名は無い。名を残さないのが、この手の心得の作法らしい。"],
+    combat: ["読んで分かる技ではない。読んでから体で分かる技だ。", "持ち主は、この巻物を何度も開いては閉じたらしい。折り目が擦り切れている。", "最後の行だけ、別の者の筆で書き足してある。「自分より強い相手にだけ使え」"],
+    both: ["教会の施療院で使われていたものらしい。端に薬草の汁の染みがある。"],
+    field: ["剣の技ではないから、と安く売られることが多い。命を拾うのはたいていこちらのほうだ。", "書いた者の名は無い。名を残さないのが、この手の心得の作法らしい。"],
   };
   TAIL.passive = TAIL.field;
   // 巻物を一本作る（あとから足すスキルの表 k2_passives.js も使う）

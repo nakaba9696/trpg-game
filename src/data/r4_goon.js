@@ -5,11 +5,11 @@
   const D = (G.data = G.data || {});
   D.R4_GOON = {
     MAX: 3, // 出す行の数（仲間の一行を含む）
-    thread: "「{title}」には、まだ片がついていない。続きは{place}のほうにある。",
-    threadNoPlace: "「{title}」には、まだ片がついていない。",
+    thread: "「{title}」にはまだ片がついていない。続きは{place}のほうにある。",
+    threadNoPlace: "「{title}」にはまだ片がついていない。",
     echo: "{name}。あの件がどうなったのか、あなたはまだ知らない。",
     world: "{place}では、{name}の話がまだ続いている。",
-    worldNoPlace: "{name}は、まだ決着していない。",
+    worldNoPlace: "{name}はまだ決着していない。",
     quest: "受けたままの頼みごとがある。「{title}」。",
     mate: ["{n}は何も聞かずに、あなたの荷の半分を担いだ。", "{n}が地図を広げて、次の町の名を指でたどっている。"],
     none: "地図の端には、名前しか知らない土地がまだいくつもある。",

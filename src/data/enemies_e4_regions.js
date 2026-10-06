@@ -25,15 +25,15 @@
       rg: "自由都市", when: { night: true }, acts: ["sleep"], weak: "fire",
       desc: "夜の森を漂う、光る苔の玉。近づいた者に眠りの胞子をかける。眠った者がどうなるかは、苔の厚さを見れば分かる。",
       look: { body: "blob", skin: "#6aa04a", skin2: "#c8f08a", eyes: "dot", mouth: "o", pattern: "spots", extra: ["float", "bubbles"], mood: "silly" },
-      lines: { turn: ["苔灯りがふわりと揺れた。甘い匂いがして、まぶたが重くなる。"] },
+      lines: { turn: ["苔灯りがふわりと揺れた。甘い匂いがしてまぶたが重くなる。"] },
     },
     e4_satchelrat: {
       name: "鞄ネズミ", tier: 1, hp: 5, dmg: [1, 3, 0], hit: 45, def: 0, agi: 60, will: 25, mres: 0, gold: [1, 6], loot: [["jerky", 0.2]], shape: "small", eye: "#e8c87a",
       rg: "自由都市", pack: [2, 3], acts: ["steal", "rout"],
-      desc: "旅人の鞄に潜り込み、中身を一つずつ巣へ運ぶネズミ。群れで来て、一番重い物から持っていく。",
+      desc: "旅人の鞄に潜り込み、中身を一つずつ巣へ運ぶネズミ。群れで来て一番重い物から持っていく。",
       look: { body: "biped", build: "small", size: 0.8, skin: "#8a7a6a", head: "plain", ears: "round", eyes: "dot", mouth: "o", tail: "thin", arms: "stubs", extra: ["nose", "pouch"], mood: "silly" },
       fleeAt: 0.5,
-      elder: { id: "e4_satchelrat_x", name: "鞄ネズミの頭目", desc: "盗んだ財布を首から三つ下げた、大きなネズミ。群れは、こいつの指図で鞄を選ぶ。", item: ["頭目の財布", "鞄ネズミの頭目が首から下げていた、小さな革の財布。中には、どこかの町の古い通行証が入っている。持ち主の名前は、かじられて読めない。", 60] },
+      elder: { id: "e4_satchelrat_x", name: "鞄ネズミの頭目", desc: "盗んだ財布を首から三つ下げた、大きなネズミ。群れはこいつの指図で鞄を選ぶ。", item: ["頭目の財布", "鞄ネズミの頭目が首から下げていた、小さな革の財布。中には、どこかの町の古い通行証が入っている。持ち主の名前はかじられて読めない。", 60] },
       lines: { turn: ["一匹があなたの腰の袋に鼻を突っ込んだ。", "ネズミたちは、あなたの鞄の重さを測るように、じっと見ている。"], flee: "ネズミたちは、ちゅうちゅう鳴きながら散っていった。" },
     },
     e4_thornboar: {
@@ -52,9 +52,9 @@
     e4_lampghost: {
       name: "灯し番の亡霊", tier: 2, hp: 16, dmg: [1, 6, 1], hit: 55, def: 5, agi: 35, will: 999, mres: 20, undead: true, gold: [2, 18], loot: [["manawater", 0.2]], shape: "humanoid", eye: "#ffe08a",
       rg: "自由都市", acts: ["drain"], weak: "holy",
-      desc: "遺構の通路で、消えた灯りに火を入れて回る亡霊。火の代わりに、人の温もりを使う。",
+      desc: "遺構の通路で、消えた灯りに火を入れて回る亡霊。火の代わりに人の温もりを使う。",
       look: { body: "biped", build: "lanky", skin: "#a8b0b8", head: "hood", eyes: "glow", mouth: "none", weapon: "staff", outfit: "robe", cloth: "#4a4a5a", extra: ["float", "smoke"], mood: "fierce" },
-      lines: { turn: ["亡霊の手が、あなたの肩に触れた。指先から、温かさが抜けていく。", "「……灯りが、足りない……」"] },
+      lines: { turn: ["亡霊の手があなたの肩に触れた。指先から温かさが抜けていく。", "「……灯りが足りない……」"] },
     },
     e4_rustwatch: {
       name: "錆びた見張り", tier: 2, hp: 22, dmg: [1, 8, 0], hit: 50, def: 20, agi: 15, will: 999, mres: 0, gold: [0, 12], loot: [["relic", 0.04]], shape: "humanoid", eye: "#ff8a4a",
@@ -79,15 +79,15 @@
       desc: "領主の森で鹿を獲る男。見つかれば首が飛ぶので、見た者の口をふさぎにくる。仲間を口笛で呼ぶ。",
       look: { body: "biped", build: "lanky", skin: "#c89878", head: "human", hair: "#5a4030", eyes: "dot", mouth: "frown", weapon: "bow", outfit: "rags", cloth: "#4a5a3a", extra: ["cap", "stubble", "pouch"] },
       fleeAt: 0.3,
-      elder: { id: "e4_poacher_x", name: "密猟者の頭目", desc: "領主の猟番を三人まいたという、白髪まじりの男。弓の弦は、鹿の腱で張ってある。", item: ["鹿の腱の弦", "密猟者の頭目が弓に張っていた弦。よく乾いていて、指で弾くと低い音がする。領主の森の鹿の腱で作ったものだと、猟番なら見ただけで分かる。", 55] },
-      lines: { open: ["「見たな。……見ちまったなら、しょうがねえ」"], flee: "「覚えてろ、口外したら森で会うぞ」男は藪に消えた。" },
+      elder: { id: "e4_poacher_x", name: "密猟者の頭目", desc: "領主の猟番を三人まいたという、白髪まじりの男。弓の弦は鹿の腱で張ってある。", item: ["鹿の腱の弦", "密猟者の頭目が弓に張っていた弦。よく乾いていて指で弾くと低い音がする。領主の森の鹿の腱で作ったものだと、猟番なら見ただけで分かる。", 55] },
+      lines: { open: ["「見たな。……見ちまったならしょうがねえ」"], flee: "「覚えてろ、口外したら森で会うぞ」男は藪に消えた。" },
     },
     e4_mudhound: {
       name: "泥浴び犬", tier: 1, hp: 7, dmg: [1, 4, 0], hit: 50, def: 0, agi: 50, will: 30, mres: 0, gold: [0, 0], loot: [["pelt", 0.2]], shape: "beast", eye: "#e8d44d",
       rg: "王国", pack: [2, 3], acts: ["rout"],
-      desc: "丘陵の泥沼で転げ回る野良犬の群れ。泥で毛が固まり、刃が滑る。一匹が鳴いて逃げると、群れは散る。",
+      desc: "丘陵の泥沼で転げ回る野良犬の群れ。泥で毛が固まり、刃が滑る。一匹が鳴いて逃げると群れは散る。",
       look: { body: "quad", head: "wolf", skin: "#6a5a4a", skin2: "#8a7a5a", eyes: "slit", mouth: "tongue", tail: "thin", pattern: "spots", mood: "silly" },
-      elder: { id: "e4_mudhound_x", name: "泥浴び犬の頭目", desc: "片耳の欠けた、大きな泥まみれの犬。群れは、こいつが走った方へ走る。", item: ["泥の首輪", "泥浴び犬の頭目の首にあった、古い革の首輪。泥の下から、どこかの屋敷の紋章が出てくる。昔は、誰かの飼い犬だったらしい。", 40] },
+      elder: { id: "e4_mudhound_x", name: "泥浴び犬の頭目", desc: "片耳の欠けた、大きな泥まみれの犬。群れはこいつが走った方へ走る。", item: ["泥の首輪", "泥浴び犬の頭目の首にあった、古い革の首輪。泥の下から、どこかの屋敷の紋章が出てくる。昔は誰かの飼い犬だったらしい。", 40] },
     },
     e4_rainslug: {
       name: "雨の大なめくじ", tier: 1, hp: 14, dmg: [1, 3, 0], hit: 40, def: 15, agi: 5, will: 999, mres: 0, gold: [0, 5], loot: [["herb", 0.3]], shape: "blob", eye: "#c8e8ff",
@@ -112,7 +112,7 @@
     e4_cinderhound: {
       name: "火口の犬", tier: 3, hp: 26, dmg: [1, 8, 2], hit: 60, def: 10, agi: 55, will: 60, mres: 15, gold: [0, 20], loot: [["fang", 0.4], ["gem", 0.06]], shape: "beast", eye: "#ffb03a",
       rg: "王国", acts: ["enrage"], weak: "ice",
-      desc: "王国の南の火山の斜面に棲む、炭のような毛の犬。走った跡の草が焦げる。冷やされると、毛の火が消えて縮こまる。",
+      desc: "王国の南の火山の斜面に棲む、炭のような毛の犬。走った跡の草が焦げる。冷やされると毛の火が消えて縮こまる。",
       look: { body: "quad", head: "wolf", skin: "#2a2220", skin2: "#ff8a3a", eyes: "glow", mouth: "fangs", tail: "spike", pattern: "lava", extra: ["smoke"], mood: "fierce" },
     },
 
@@ -122,7 +122,7 @@
       rg: "教会領", acts: ["regen"],
       desc: "罪を清めるために、自分の背を鞭で打ちながら歩く巡礼。打たれるほど信心が深まると信じていて、傷がふさがるのも早い。",
       look: { body: "biped", build: "lanky", skin: "#d8a888", head: "hood", eyes: "dot", mouth: "frown", weapon: "club", outfit: "robe", cloth: "#6a5a4a", pattern: "scars", extra: ["blood"] },
-      lines: { turn: ["「痛みは祈り。祈りは痛み」巡礼は、自分の背を一度打った。", "巡礼の傷が、見る間にふさがっていく。"] },
+      lines: { turn: ["「痛みは祈り。祈りは痛み」巡礼は自分の背を一度打った。", "巡礼の傷が見る間にふさがっていく。"] },
     },
     e4_bellbat: {
       name: "鐘楼の蝙蝠", tier: 2, hp: 9, dmg: [1, 4, 1], hit: 55, def: 0, agi: 70, will: 999, mres: 0, gold: [0, 4], loot: [], shape: "winged", eye: "#ff5a5a",
@@ -133,10 +133,10 @@
     e4_relicthief: {
       name: "聖遺物盗り", tier: 3, hp: 24, dmg: [1, 8, 2], hit: 65, def: 15, agi: 70, will: 45, mres: 5, gold: [15, 50], loot: [["relic", 0.08], ["smoke", 0.3]], shape: "humanoid", eye: "#d9d9d9", bribe: 50,
       rg: "教会領", acts: ["steal"],
-      desc: "地下墓地の聖人の骨を盗んで売る男。信者の財布も、骨と同じくらい好きだ。",
+      desc: "地下墓地の聖人の骨を盗んで売る男。信者の財布も骨と同じくらい好きだ。",
       look: { body: "biped", build: "lanky", skin: "#c8a080", head: "human", hair: "#2a2a2a", eyes: "slit", mouth: "smirk", weapon: "dagger", outfit: "garb", cloth: "#2a2a3a", extra: ["scarf", "pouch"] },
       fleeAt: 0.35,
-      lines: { open: ["「おっと、お参りかい。こっちは仕事中でね」"], flee: "「聖人さまは返さねえよ」男は骨の袋を抱えて、闇へ消えた。" },
+      lines: { open: ["「おっとお参りかい。こっちは仕事中でね」"], flee: "「聖人さまは返さねえよ」男は骨の袋を抱えて闇へ消えた。" },
     },
     e4_waxsaint: {
       name: "蝋の聖人像", tier: 3, hp: 34, dmg: [2, 6, 0], hit: 55, def: 20, agi: 10, will: 999, mres: 20, gold: [0, 20], loot: [["gem", 0.1]], shape: "humanoid", eye: "#ffe8a0",
@@ -153,18 +153,18 @@
     e4_candlewidow: {
       name: "蝋燭売りの寡婦", tier: 3, hp: 28, dmg: [1, 8, 1], hit: 60, def: 5, agi: 40, will: 999, mres: 25, undead: true, magic: true, gold: [5, 30], loot: [["holywater", 0.2]], shape: "humanoid", eye: "#ffb86a",
       rg: "教会領", when: { night: true }, acts: ["drain"], weak: "holy",
-      desc: "夜の参道で蝋燭を売る女。買った者の蝋燭は、その者の命の分だけ長く燃える。売れ残ると、自分で灯しにくる。",
+      desc: "夜の参道で蝋燭を売る女。買った者の蝋燭は、その者の命の分だけ長く燃える。売れ残ると自分で灯しにくる。",
       look: { body: "biped", build: "lanky", skin: "#c8c0b8", head: "hood", eyes: "hollow", mouth: "smile", weapon: "staff", outfit: "robe", cloth: "#2a2224", extra: ["float", "longhair"], mood: "fierce" },
-      lines: { open: ["「蝋燭はいかが。あなたの分は、まだ長いわね」"], turn: ["寡婦の蝋燭の火が、あなたの方へ傾いた。", "「短くなったわね。あと少し」"] },
+      lines: { open: ["「蝋燭はいかが。あなたの分はまだ長いわね」"], turn: ["寡婦の蝋燭の火があなたの方へ傾いた。", "「短くなったわね。あと少し」"] },
     },
 
     // ================================================================ 島（島の都シェルアークと南西の島々）
     e4_tidecrab: {
       name: "磯の大蟹", tier: 2, hp: 20, dmg: [1, 6, 1], hit: 55, def: 25, agi: 25, will: 999, mres: 0, gold: [0, 10], loot: [["gem", 0.06]], shape: "beast", eye: "#ffb03a",
       rg: "島", acts: ["disarm"], weak: "bolt",
-      desc: "岩の島の磯に棲む、荷車ほどの蟹。鋏で武器を挟んで、ひねって取り上げる。甲羅は硬いが、雷が通る。",
+      desc: "岩の島の磯に棲む、荷車ほどの蟹。鋏で武器を挟んでひねって取り上げる。甲羅は硬いが雷が通る。",
       look: { body: "bug", skin: "#c8503a", skin2: "#f0a080", eyes: "googly", eyeN: 2, mouth: "o", pattern: "spots", mood: "silly" },
-      elder: { id: "e4_tidecrab_x", name: "年経た大蟹", desc: "甲羅に藤壺と難破船の板が貼りついた、家ほどの蟹。鋏の傷は、銛の跡だ。", item: ["藤壺の甲羅片", "年経た大蟹の甲羅の欠片。藤壺がびっしり貼りつき、潮の匂いが抜けない。島の漁師は、これを舟の舳先に打ちつけて、嵐除けにする。", 70] },
+      elder: { id: "e4_tidecrab_x", name: "年経た大蟹", desc: "甲羅に藤壺と難破船の板が貼りついた、家ほどの蟹。鋏の傷は銛の跡だ。", item: ["藤壺の甲羅片", "年経た大蟹の甲羅の欠片。藤壺がびっしり貼りつき、潮の匂いが抜けない。島の漁師は、これを舟の舳先に打ちつけて、嵐除けにする。", 70] },
     },
     e4_reedimp: {
       name: "葦の小鬼", tier: 2, hp: 12, dmg: [1, 4, 1], hit: 55, def: 5, agi: 65, will: 30, mres: 10, gold: [3, 15], loot: [["smoke", 0.15]], shape: "small", eye: "#a8ff6a",
@@ -177,29 +177,29 @@
     e4_seafog: {
       name: "沖の黒坊主", tier: 3, hp: 34, dmg: [2, 6, 1], hit: 55, def: 10, agi: 20, will: 999, mres: 20, gold: [0, 20], loot: [["manawater", 0.25]], shape: "giant", eye: "#e8f0ff",
       rg: "島", when: { weather: ["霧", "雨"] }, acts: ["sleep"], weak: "fire",
-      desc: "霧の日に浜へ上がってくる、黒くて大きな坊主頭。何もしゃべらず、ただ立っている。見上げていると、眠くなる。",
+      desc: "霧の日に浜へ上がってくる、黒くて大きな坊主頭。何もしゃべらず、ただ立っている。見上げていると眠くなる。",
       look: { body: "biped", build: "giant", skin: "#2a2a34", skin2: "#4a4a5a", head: "plain", eyes: "glow", eyeN: 2, mouth: "none", arms: "hands", extra: ["smoke", "float"], mood: "calm" },
     },
     e4_drumbadger: {
       name: "腹鼓の狸", tier: 2, hp: 16, dmg: [1, 4, 1], hit: 50, def: 5, agi: 45, will: 35, mres: 15, gold: [5, 20], loot: [["ale", 0.3]], shape: "beast", eye: "#ffd84a",
       rg: "島", acts: ["sleep"],
-      desc: "月夜に腹を叩いて鳴らす、太った狸。その音を聞くと、どんな夜でも眠たくなる。起きると、財布が軽い。",
+      desc: "月夜に腹を叩いて鳴らす、太った狸。その音を聞くとどんな夜でも眠たくなる。起きると財布が軽い。",
       look: { body: "quad", head: "plain", skin: "#7a5a3a", skin2: "#d8c0a0", ears: "round", eyes: "dot", mouth: "grin", tail: "thin", pattern: "stripes", extra: ["blush", "gourd"], mood: "silly" },
       fleeAt: 0.3,
-      lines: { turn: ["ぽん、ぽこ、ぽん。腹鼓の音が、のどかに響いた。", "狸は腹を叩きすぎて、自分で痛がっている。"], flee: "狸は、ぽんと一つ鳴らして、煙のように消えた。" },
+      lines: { turn: ["ぽん、ぽこ、ぽん。腹鼓の音がのどかに響いた。", "狸は腹を叩きすぎて自分で痛がっている。"], flee: "狸は、ぽんと一つ鳴らして、煙のように消えた。" },
     },
     e4_islepirate: {
       name: "島荒らしの海賊", tier: 3, hp: 24, dmg: [1, 8, 2], hit: 60, def: 10, agi: 50, will: 45, mres: 0, gold: [15, 45], loot: [["ale", 0.3], ["gem", 0.08]], shape: "humanoid", eye: "#d9d9d9", bribe: 45,
       rg: "島", pack: [2, 2], acts: ["call"],
-      desc: "島々の入り江に船を隠す海賊。一人倒すと、指笛で次を呼ぶ。",
+      desc: "島々の入り江に船を隠す海賊。一人倒すと指笛で次を呼ぶ。",
       look: { body: "biped", build: "normal", skin: "#b88058", head: "human", hair: "#2a1a10", eyes: "dot", mouth: "grin", weapon: "sword", outfit: "rags", cloth: "#6a2a2a", extra: ["bandana", "eyepatch", "stubble"] },
-      elder: { id: "e4_islepirate_x", name: "海賊の頭目", desc: "三つの島から賞金をかけられた、片腕の女頭目。義手の鉤に、敵の帆の切れ端を巻いている。", item: ["頭目の鉤爪", "海賊の頭目の義手の先についていた鉄の鉤。よく研がれていて、柄には三つの島の賞金の額が刻んである。どれも、桁が一つずつ違う。", 90] },
-      lines: { open: ["「お宝の匂いがするねえ。陸の人間は、懐に隠すからいけねえ」"] },
+      elder: { id: "e4_islepirate_x", name: "海賊の頭目", desc: "三つの島から賞金をかけられた、片腕の女頭目。義手の鉤に敵の帆の切れ端を巻いている。", item: ["頭目の鉤爪", "海賊の頭目の義手の先についていた鉄の鉤。よく研がれていて、柄には三つの島の賞金の額が刻んである。どれも桁が一つずつ違う。", 90] },
+      lines: { open: ["「お宝の匂いがするねえ。陸の人間は懐に隠すからいけねえ」"] },
     },
     e4_shellwitch: {
       name: "海女の亡霊", tier: 3, hp: 26, dmg: [1, 8, 1], hit: 60, def: 5, agi: 55, will: 999, mres: 20, undead: true, gold: [5, 25], loot: [["gem", 0.12]], shape: "humanoid", eye: "#7ad8ff",
       rg: "島", when: { night: true }, acts: ["drain"], weak: "holy",
-      desc: "嵐の夜に戻らなかった海女。今も夜の磯で、拾えなかった真珠を探している。人の手を、真珠と間違えてつかむ。",
+      desc: "嵐の夜に戻らなかった海女。今も夜の磯で、拾えなかった真珠を探している。人の手を真珠と間違えてつかむ。",
       look: { body: "biped", build: "lanky", skin: "#a8c8d0", head: "human", hair: "#1a2a3a", eyes: "hollow", mouth: "frown", arms: "forward", outfit: "garb", cloth: "#e8e8e0", extra: ["longhair", "float"], mood: "fierce" },
       lines: { turn: ["「……あと一つ……あと一つで、娘の嫁入り道具が……」"] },
     },
@@ -208,9 +208,9 @@
     e4_snowwolf: {
       name: "雪狼", tier: 2, hp: 12, dmg: [1, 6, 0], hit: 55, def: 5, agi: 65, will: 50, mres: 0, gold: [0, 0], loot: [["pelt", 0.5]], shape: "beast", eye: "#bfe8ff",
       rg: "帝国", when: { season: ["冬"], weather: ["雪"] }, pack: [2, 3], acts: ["call"],
-      desc: "雪の日にだけ街道へ降りてくる白い狼。遠吠えで群れを集める。雪がやむと、足跡ごと消える。",
+      desc: "雪の日にだけ街道へ降りてくる白い狼。遠吠えで群れを集める。雪がやむと足跡ごと消える。",
       look: { body: "quad", head: "wolf", skin: "#d8e0e8", skin2: "#ffffff", eyes: "glow", mouth: "fangs", tail: "thin", extra: ["fur"], mood: "fierce" },
-      elder: { id: "e4_snowwolf_x", name: "雪狼の頭目", desc: "銀色の毛に古い矢傷が何本も走る、大きな雌の雪狼。群れは、この遠吠えで動く。", item: ["銀の狼皮", "雪狼の頭目の毛皮。銀色で、雪の光を吸ったように淡く光る。帝国の将校が外套の襟に欲しがるが、持っている者は少ない。", 100] },
+      elder: { id: "e4_snowwolf_x", name: "雪狼の頭目", desc: "銀色の毛に古い矢傷が何本も走る、大きな雌の雪狼。群れはこの遠吠えで動く。", item: ["銀の狼皮", "雪狼の頭目の毛皮。銀色で雪の光を吸ったように淡く光る。帝国の将校が外套の襟に欲しがるが、持っている者は少ない。", 100] },
     },
     e4_iciclewraith: {
       name: "氷柱の霊", tier: 3, hp: 22, dmg: [1, 8, 1], hit: 55, def: 10, agi: 50, will: 999, mres: 10, undead: true, gold: [0, 20], loot: [["manawater", 0.2]], shape: "winged", eye: "#bfe8ff",
@@ -228,20 +228,20 @@
     e4_minerghost: {
       name: "坑夫の亡者", tier: 3, hp: 26, dmg: [1, 8, 1], hit: 55, def: 10, agi: 25, will: 999, mres: 10, undead: true, gold: [5, 30], loot: [["gem", 0.12]], shape: "humanoid", eye: "#ffd84a",
       rg: "帝国", acts: ["disarm"], weak: "holy",
-      desc: "落盤で埋まった坑道の坑夫。つるはしで、行く手の物を何でも叩き落とす。腰の袋には、まだ鉱石が入っている。",
+      desc: "落盤で埋まった坑道の坑夫。つるはしで、行く手の物を何でも叩き落とす。腰の袋にはまだ鉱石が入っている。",
       look: { body: "biped", build: "stubby", skin: "#8a8a7a", head: "human", hair: "#3a3a3a", eyes: "hollow", mouth: "jaw", weapon: "axe", outfit: "rags", cloth: "#4a4038", pattern: "ribs", extra: ["cap", "pouch"], mood: "fierce" },
     },
     e4_frostbear: {
       name: "霜熊", tier: 3, hp: 30, dmg: [2, 6, 0], hit: 50, def: 10, agi: 30, will: 60, mres: 5, gold: [0, 0], loot: [["pelt", 0.6], ["fang", 0.3]], shape: "beast", eye: "#e8f0ff",
       rg: "帝国", acts: ["enrage"], weak: "fire",
-      desc: "毛に霜をまとった大熊。冬眠し損ねた年は気が立っていて、深手を負うと手がつけられなくなる。火を見ると、霜が溶けてひるむ。",
+      desc: "毛に霜をまとった大熊。冬眠し損ねた年は気が立っていて、深手を負うと手がつけられなくなる。火を見ると霜が溶けてひるむ。",
       look: { body: "quad", head: "plain", skin: "#c8d0d8", skin2: "#f0f4f8", ears: "round", eyes: "slit", mouth: "fangs", arms: "claws", tail: "none", extra: ["fur"], mood: "fierce" },
-      elder: { id: "e4_frostbear_x", name: "年経た霜熊", desc: "背の毛が氷の鎧になった、小屋ほどの熊。猟師の村では、この熊の名で子どもを叱る。", item: ["氷の熊爪", "年経た霜熊の爪。冷たくて、握っていると手がしびれる。帝国の北の村では、婚礼の贈り物にする。熊より強い婿だという印だ。", 110] },
+      elder: { id: "e4_frostbear_x", name: "年経た霜熊", desc: "背の毛が氷の鎧になった、小屋ほどの熊。猟師の村ではこの熊の名で子どもを叱る。", item: ["氷の熊爪", "年経た霜熊の爪。冷たくて握っていると手がしびれる。帝国の北の村では婚礼の贈り物にする。熊より強い婿だという印だ。", 110] },
     },
     e4_warcrow: {
       name: "戦場鴉", tier: 2, hp: 8, dmg: [1, 4, 1], hit: 55, def: 0, agi: 70, will: 40, mres: 0, gold: [0, 6], loot: [], shape: "winged", eye: "#ff5a5a",
       rg: "帝国", pack: [2, 4], acts: ["pin", "rout"],
-      desc: "帝国の戦場を渡り歩く鴉の群れ。弱った者を見分けて、群れで取り囲む。",
+      desc: "帝国の戦場を渡り歩く鴉の群れ。弱った者を見分けて群れで取り囲む。",
       look: { body: "wyrm", skin: "#1a1a22", skin2: "#3a3a4a", eyes: "glow", mouth: "beak", wings: "feather", tail: "fan", mood: "fierce" },
     },
 
@@ -258,14 +258,14 @@
       desc: "学院を追われ、沼の小屋で一人で術を学ぶ娘。眠りの術だけは上手い。精霊と契約していないので、使うたびに何かを払っている。",
       look: { body: "biped", build: "small", skin: "#e0c0a8", head: "hood", eyes: "dot", mouth: "smirk", weapon: "staff", outfit: "robe", cloth: "#3a4a2a", extra: ["runes", "pouch"] },
       fleeAt: 0.4,
-      lines: { open: ["「ちょうどいい。新しい術を試したかったの」"], turn: ["「おかしいな、本だとここで眠るはずなのに」"], flee: "「次は、ちゃんと予習してくる！」娘は箒で……走って逃げた。" },
+      lines: { open: ["「ちょうどいい。新しい術を試したかったの」"], turn: ["「おかしいな、本だとここで眠るはずなのに」"], flee: "「次はちゃんと予習してくる！」娘は箒で……走って逃げた。" },
     },
     e4_brokenspirit: {
       name: "契約を破られた精霊", tier: 2, hp: 14, dmg: [1, 6, 2], hit: 60, def: 0, agi: 60, will: 999, mres: 40, magic: true, gold: [0, 15], loot: [["manawater", 0.4]], shape: "winged", eye: "#8affd8",
       rg: "共和国", when: { night: true }, acts: ["drain"], weak: "blade",
-      desc: "共和国の術士に契約を破られた小さな精霊。術は効かないが、刃にはもろい。人を見ると、借りを取り立てにくる。",
+      desc: "共和国の術士に契約を破られた小さな精霊。術は効かないが刃にはもろい。人を見ると借りを取り立てにくる。",
       look: { body: "biped", build: "small", size: 0.8, skin: "#8ad8c8", skin2: "#d0fff0", head: "plain", ears: "pointy", eyes: "glow", mouth: "frown", wings: "moth", outfit: "none", extra: ["float", "runes"], mood: "fierce" },
-      lines: { turn: ["「返せ。借りたものは、返せ」"] },
+      lines: { turn: ["「返せ。借りたものは返せ」"] },
     },
     e4_mudcroc: {
       name: "泥鰐", tier: 2, hp: 24, dmg: [1, 8, 1], hit: 55, def: 15, agi: 25, will: 60, mres: 0, gold: [0, 10], loot: [["pelt", 0.3], ["fang", 0.4]], shape: "beast", eye: "#e8d44d",
@@ -277,13 +277,13 @@
     e4_poisonfrog: {
       name: "毒蛙", tier: 1, hp: 6, dmg: [1, 3, 0], hit: 50, def: 0, agi: 50, will: 999, mres: 0, gold: [0, 3], loot: [["herb", 0.2]], shape: "blob", eye: "#ffe04a",
       rg: "共和国", pack: [2, 4], acts: ["poison"],
-      desc: "鮮やかな色の小さな蛙。群れで跳ねてきて、皮の毒をなすりつける。色が派手なほど毒が強い。",
+      desc: "鮮やかな色の小さな蛙。群れで跳ねてきて皮の毒をなすりつける。色が派手なほど毒が強い。",
       look: { body: "blob", size: 0.7, skin: "#e05a2a", skin2: "#ffd84a", eyes: "googly", mouth: "grin", pattern: "spots", mood: "silly" },
     },
     e4_dustmoth: {
       name: "鱗粉蛾", tier: 1, hp: 8, dmg: [1, 3, 0], hit: 45, def: 0, agi: 55, will: 999, mres: 0, gold: [0, 4], loot: [["silk", 0.3]], shape: "winged", eye: "#ffd8a0",
       rg: "共和国", when: { night: true }, acts: ["sleep"], weak: "fire",
-      desc: "灯りに寄ってくる、皿ほどの蛾。羽の鱗粉を吸うと、ひどく眠くなる。",
+      desc: "灯りに寄ってくる、皿ほどの蛾。羽の鱗粉を吸うとひどく眠くなる。",
       look: { body: "bug", skin: "#a89878", skin2: "#e8d8b8", eyes: "googly", eyeN: 2, mouth: "none", wings: "moth", pattern: "spots", extra: ["float"], mood: "silly" },
     },
 
@@ -293,33 +293,33 @@
       rg: "境", acts: ["disarm"], weak: "bolt",
       desc: "山の岩を砕いて食べる大きな鳥。嘴で金物をつまみ上げ、谷へ放る癖がある。",
       look: { body: "wyrm", skin: "#6a5a4a", skin2: "#a89070", horns: "nubs", eyes: "slit", mouth: "beak", wings: "feather", tail: "fan", pattern: "cracks", mood: "fierce" },
-      elder: { id: "e4_rockeater_x", name: "年経た岩喰い鳥", desc: "翼を広げると谷が暗くなる、灰色の大鳥。嘴は、砦の石壁にも穴を開ける。", item: ["石の砂嚢", "年経た岩喰い鳥の腹にあった、こぶし大の石。表面がつるつるに磨かれていて、どんな宝石より滑らかだ。山の民は、これを婚約の印に贈る。", 140] },
+      elder: { id: "e4_rockeater_x", name: "年経た岩喰い鳥", desc: "翼を広げると谷が暗くなる、灰色の大鳥。嘴は砦の石壁にも穴を開ける。", item: ["石の砂嚢", "年経た岩喰い鳥の腹にあった、こぶし大の石。表面がつるつるに磨かれていて、どんな宝石より滑らかだ。山の民はこれを婚約の印に贈る。", 140] },
     },
     e4_hillorc: {
       name: "境の山オーク", tier: 3, hp: 24, dmg: [1, 8, 2], hit: 55, def: 10, agi: 30, will: 50, mres: 0, gold: [8, 30], loot: [["fang", 0.4]], shape: "humanoid", eye: "#e05a3a",
       rg: "境", pack: [2, 3], acts: ["call"],
       desc: "山の洞穴に棲みつき、砦への荷を襲うオーク。角笛で仲間を呼ぶ。",
       look: { body: "biped", build: "brute", skin: "#7a8a6a", skin2: "#a8b08a", head: "pig", eyes: "glow", mouth: "tusks", weapon: "axe", outfit: "loin", cloth: "#4a3a2a", extra: ["fur", "pauldron"], mood: "fierce" },
-      elder: { id: "e4_hillorc_x", name: "山オークの頭目", desc: "人の騎士の兜を三つ重ねてかぶった大オーク。角笛は、人の大腿骨でできている。", item: ["骨の角笛", "山オークの頭目が首から下げていた角笛。人の骨を削って作ってあり、吹くと低く濁った音がする。砦の兵は、この音を聞くと門を閉める。", 120] },
+      elder: { id: "e4_hillorc_x", name: "山オークの頭目", desc: "人の騎士の兜を三つ重ねてかぶった大オーク。角笛は人の大腿骨でできている。", item: ["骨の角笛", "山オークの頭目が首から下げていた角笛。人の骨を削って作ってあり、吹くと低く濁った音がする。砦の兵はこの音を聞くと門を閉める。", 120] },
     },
     e4_gravejackal: {
       name: "墓荒らし山犬", tier: 3, hp: 20, dmg: [1, 8, 1], hit: 60, def: 5, agi: 65, will: 45, mres: 0, gold: [0, 15], loot: [["pelt", 0.4], ["relic", 0.03]], shape: "beast", eye: "#ffd84a",
       rg: "境", pack: [2, 3], acts: ["rout", "pin"],
-      desc: "竜の墓場で骨をあさる山犬の群れ。生きた獲物は囲んで押さえる。一匹が倒れると、残りはすぐに尻尾を巻く。",
+      desc: "竜の墓場で骨をあさる山犬の群れ。生きた獲物は囲んで押さえる。一匹が倒れると残りはすぐに尻尾を巻く。",
       look: { body: "quad", head: "wolf", skin: "#8a6a4a", skin2: "#c8a878", ears: "pointy", eyes: "slit", mouth: "fangs", tail: "thin", pattern: "spots", mood: "fierce" },
     },
     e4_oldlegion: {
       name: "古戦場の亡兵", tier: 4, hp: 44, dmg: [2, 6, 2], hit: 60, def: 20, agi: 25, will: 999, mres: 10, undead: true, gold: [10, 40], loot: [["chain", 0.06], ["relic", 0.05]], shape: "swarm", eye: "#7dffb0",
       rg: "境", acts: ["guard"], weak: "holy",
-      desc: "昔の戦で山に倒れた兵たちが、隊列を組んだまま歩いている。誰かが打たれると、隣の者が盾を出す。",
+      desc: "昔の戦で山に倒れた兵たちが、隊列を組んだまま歩いている。誰かが打たれると隣の者が盾を出す。",
       look: { body: "swarm", count: 4, build: "normal", skin: "#8a8a78", head: "skull", eyes: "hollow", mouth: "jaw", weapon: "spear", outfit: "armor", cloth: "#3a3a2a", pattern: "ribs", extra: ["helmet"], mood: "fierce" },
     },
     e4_stonetroll: {
       name: "石肌の巨人", tier: 4, hp: 54, dmg: [2, 8, 1], hit: 50, def: 25, agi: 15, will: 999, mres: 10, gold: [10, 40], loot: [["gem", 0.2]], shape: "giant", eye: "#ffcf7a",
       rg: "境", acts: ["regen"], weak: "bolt",
-      desc: "岩のような肌の巨人。割れた肌は、見る間に石でふさがる。雷に打たれると、石の継ぎ目からほどける。",
+      desc: "岩のような肌の巨人。割れた肌は見る間に石でふさがる。雷に打たれると石の継ぎ目からほどける。",
       look: { body: "biped", build: "giant", skin: "#8a8a80", skin2: "#b0b0a8", head: "ogre", eyes: "dot", mouth: "tusks", weapon: "club", outfit: "loin", cloth: "#5a4a3a", pattern: "cracks", mood: "fierce" },
-      elder: { id: "e4_stonetroll_x", name: "年経た石肌の巨人", desc: "肩に小さな木が生え、鳥が巣をかけている巨人。眠っている間に、山の一部だと思われていた。", item: ["巨人の心石", "年経た石肌の巨人の胸の奥にあった、温かい丸い石。耳を当てると、遅い鼓動のような音がする。石工たちは、これを礎石の下に埋めたがる。", 160] },
+      elder: { id: "e4_stonetroll_x", name: "年経た石肌の巨人", desc: "肩に小さな木が生え、鳥が巣をかけている巨人。眠っている間に、山の一部だと思われていた。", item: ["巨人の心石", "年経た石肌の巨人の胸の奥にあった、温かい丸い石。耳を当てると遅い鼓動のような音がする。石工たちはこれを礎石の下に埋めたがる。", 160] },
     },
     e4_cliffharpy: {
       name: "崖の鳥女", tier: 3, hp: 22, dmg: [1, 8, 2], hit: 65, def: 5, agi: 70, will: 40, mres: 10, gold: [5, 25], loot: [["gem", 0.1]], shape: "winged", eye: "#ff8a4a",
@@ -327,7 +327,7 @@
       desc: "崖の上に巣をかける、腕が翼の女。光り物を盗んで巣を飾る。歌は下手だ。",
       look: { body: "biped", build: "lanky", skin: "#d8b090", head: "human", hair: "#6a3a2a", eyes: "slit", mouth: "grin", arms: "claws", wings: "feather", outfit: "rags", cloth: "#6a5a3a", extra: ["longhair"], mood: "fierce" },
       fleeAt: 0.3,
-      lines: { turn: ["鳥女は、あなたの耳飾りばかり見ている。", "「キラキラ、ちょうだい」"], flee: "鳥女は、甲高く笑いながら崖の上へ舞い上がった。" },
+      lines: { turn: ["鳥女はあなたの耳飾りばかり見ている。", "「キラキラ、ちょうだい」"], flee: "鳥女は、甲高く笑いながら崖の上へ舞い上がった。" },
     },
 
     // ================================================================ 最前線（黒鉄の砦の外。W4 の場所が来るまでは断界山脈にも）
@@ -336,12 +336,12 @@
       rg: "最前線", also: ["mountains"], pack: [2, 3], acts: ["call", "rout"],
       desc: "攻め梯子を担いで砦へ押し寄せるゴブリンの隊。一人が叫ぶと、梯子の後ろから次が湧いてくる。",
       look: { body: "biped", build: "small", skin: "#6f8a3a", head: "plain", ears: "pointy", eyes: "slit", mouth: "grin", weapon: "spear", outfit: "armor", cloth: "#5a4a3a", extra: ["helmet", "nose"], mood: "fierce" },
-      elder: { id: "e4_ladderGob_x", name: "ゴブリン隊の頭目", desc: "人の将校の外套を引きずる、背の高いゴブリン。号令だけは、人の将校より上手い。", item: ["盗まれた指揮杖", "ゴブリン隊の頭目が振っていた指揮杖。もとは砦の将校の物で、握りに帝国の紋が彫ってある。返しに行けば、礼の一つも言われるかもしれない。", 130] },
+      elder: { id: "e4_ladderGob_x", name: "ゴブリン隊の頭目", desc: "人の将校の外套を引きずる、背の高いゴブリン。号令だけは人の将校より上手い。", item: ["盗まれた指揮杖", "ゴブリン隊の頭目が振っていた指揮杖。もとは砦の将校の物で、握りに帝国の紋が彫ってある。返しに行けば、礼の一つも言われるかもしれない。", 130] },
     },
     e4_ashogre: {
       name: "灰被りのオーガ", tier: 4, hp: 50, dmg: [2, 8, 2], hit: 55, def: 10, agi: 20, will: 60, mres: 0, gold: [10, 40], loot: [["fang", 0.5]], shape: "giant", eye: "#ff6a3a",
       rg: "最前線", also: ["mountains"], acts: ["enrage"],
-      desc: "焼けた村の灰を浴びて、真っ白になったオーガ。深手を負うと、灰を撒き散らして暴れる。",
+      desc: "焼けた村の灰を浴びて、真っ白になったオーガ。深手を負うと灰を撒き散らして暴れる。",
       look: { body: "biped", build: "giant", skin: "#a8a8a0", skin2: "#d8d8d0", head: "ogre", eyes: "glow", mouth: "tusks", weapon: "club", outfit: "loin", cloth: "#4a4a44", extra: ["smoke", "wildhair"], mood: "fierce" },
     },
     e4_scoutbird: {
@@ -353,9 +353,9 @@
     e4_deadsentry: {
       name: "砦の亡霊兵", tier: 4, hp: 40, dmg: [2, 6, 2], hit: 60, def: 20, agi: 30, will: 999, mres: 15, undead: true, gold: [5, 30], loot: [["chain", 0.05], ["potion", 0.3]], shape: "humanoid", eye: "#7dffb0",
       rg: "最前線", also: ["mountains"], when: { night: true }, acts: ["guard"], weak: "holy",
-      desc: "砦の外で死んだ兵が、交代の鐘を待って夜の見張りを続けている。味方を守る癖が、死んでも抜けない。",
+      desc: "砦の外で死んだ兵が、交代の鐘を待って夜の見張りを続けている。味方を守る癖が死んでも抜けない。",
       look: { body: "biped", build: "normal", skin: "#8a9a8a", head: "helm", eyes: "hollow", mouth: "none", weapon: "spear", shield: true, outfit: "armor", cloth: "#3a4a3a", pattern: "ribs", extra: ["cape", "float"], mood: "fierce" },
-      lines: { open: ["「……交代は、まだか……」"], turn: ["亡霊兵は、遠くの鐘に耳を澄ませている。"] },
+      lines: { open: ["「……交代はまだか……」"], turn: ["亡霊兵は遠くの鐘に耳を澄ませている。"] },
     },
     e4_warbeast: {
       name: "鎖付きの魔獣", tier: 4, hp: 36, dmg: [2, 6, 2], hit: 60, def: 15, agi: 55, will: 999, mres: 5, gold: [0, 10], loot: [["fang", 0.5], ["pelt", 0.4]], shape: "beast", eye: "#ff3a3a",
@@ -367,14 +367,14 @@
     e4_firearrowimp: {
       name: "火矢の小鬼", tier: 3, hp: 16, dmg: [1, 6, 2], hit: 60, def: 5, agi: 60, will: 40, mres: 5, gold: [5, 20], loot: [["smoke", 0.2]], shape: "small", eye: "#ff8a3a",
       rg: "最前線", pack: [2, 2], acts: ["rout"], weak: "ice",
-      desc: "見張り塔に火矢を射かける小鬼の二人組。片方が倒れると、残った方は弓を捨てて逃げる。矢の火は、冷やせばすぐ消える。",
+      desc: "見張り塔に火矢を射かける小鬼の二人組。片方が倒れると、残った方は弓を捨てて逃げる。矢の火は冷やせばすぐ消える。",
       look: { body: "biped", build: "small", skin: "#8a6a3a", head: "plain", ears: "pointy", eyes: "slit", mouth: "grin", weapon: "bow", outfit: "rags", cloth: "#5a3a2a", extra: ["smoke", "nose"], mood: "fierce" },
       lines: { turn: ["小鬼の火矢が、あなたの足元の草を焦がした。"] },
     },
     e4_runawaywatch: {
       name: "持ち場を捨てた見張り", tier: 3, hp: 24, dmg: [1, 8, 1], hit: 60, def: 15, agi: 45, will: 40, mres: 0, gold: [10, 35], loot: [["potion", 0.3], ["jerky", 0.3]], shape: "humanoid", eye: "#d9d9d9", bribe: 35,
       rg: "最前線", acts: ["fleecall"], call: "deserter",
-      desc: "鐘を鳴らす役を放り出して逃げた見張り。見つかれば首が飛ぶので、見た者を口封じにくる。深手を負うと、同じ逃げ仲間を呼びに走る。",
+      desc: "鐘を鳴らす役を放り出して逃げた見張り。見つかれば首が飛ぶので、見た者を口封じにくる。深手を負うと同じ逃げ仲間を呼びに走る。",
       look: { body: "biped", build: "normal", skin: "#d0a888", head: "human", hair: "#5a4a3a", eyes: "dot", mouth: "frown", weapon: "spear", outfit: "armor", cloth: "#3a3a3a", extra: ["helmet", "stubble"] },
       lines: { open: ["「鐘なんか鳴らしたって、誰も来やしねえんだよ」"], flee: "見張りは塔の陰へ走っていった。仲間を呼ぶ声がする。" },
     },
@@ -385,14 +385,14 @@
       rg: "使徒領", acts: ["corrode"], weak: "ice",
       desc: "翼を持たない、灰色の竜。灰の中を泳ぐように進み、熱い息で鎧の留め金を焼き切る。",
       look: { body: "wyrm", skin: "#5a5048", skin2: "#9a8a78", horns: "long", eyes: "glow", mouth: "fangs", wings: "none", tail: "spike", pattern: "lava", mood: "fierce" },
-      elder: { id: "e4_ashwyrm_x", name: "年経た灰の地竜", desc: "背の鱗が溶岩のように赤く光る、丘ほどの地竜。通った後の灰は、三日冷めない。", item: ["燃える竜鱗", "年経た灰の地竜の鱗。いつまでも内側が赤く、触ると温かい。鍛冶の都では、これを炉に入れると火が三日もつと言う。", 220] },
+      elder: { id: "e4_ashwyrm_x", name: "年経た灰の地竜", desc: "背の鱗が溶岩のように赤く光る、丘ほどの地竜。通った後の灰は三日冷めない。", item: ["燃える竜鱗", "年経た灰の地竜の鱗。いつまでも内側が赤く、触ると温かい。鍛冶の都では、これを炉に入れると火が三日もつと言う。", 220] },
     },
     e4_bonecarter: {
       name: "骨車引き", tier: 5, hp: 56, dmg: [2, 8, 3], hit: 65, def: 20, agi: 25, will: 80, mres: 15, gold: [20, 70], loot: [["relic", 0.08], ["potion", 0.3]], shape: "giant", eye: "#e8e0c8",
       rg: "使徒領", acts: ["call"], call: "zombie",
-      desc: "骨を山と積んだ荷車を引いて荒野を行く大男。荷台の骨は、呼べば起き上がる。",
+      desc: "骨を山と積んだ荷車を引いて荒野を行く大男。荷台の骨は呼べば起き上がる。",
       look: { body: "biped", build: "brute", skin: "#7a6a5a", head: "hood", eyes: "glow", mouth: "none", weapon: "club", outfit: "rags", cloth: "#3a3028", extra: ["bone", "pouch"], mood: "fierce" },
-      lines: { turn: ["骨車引きが車輪を蹴った。荷台の骨が、かたかたと鳴った。"] },
+      lines: { turn: ["骨車引きが車輪を蹴った。荷台の骨がかたかたと鳴った。"] },
     },
     e4_shadewalker: {
       name: "影歩き", tier: 5, hp: 48, dmg: [2, 8, 3], hit: 70, def: 20, agi: 80, will: 70, mres: 20, gold: [20, 60], loot: [["smoke", 0.4], ["gem", 0.15]], shape: "humanoid", eye: "#c77dff",
@@ -403,14 +403,14 @@
     e4_redscorpion: {
       name: "赤砂の蠍", tier: 4, hp: 30, dmg: [2, 6, 1], hit: 60, def: 20, agi: 40, will: 999, mres: 5, gold: [0, 15], loot: [["fang", 0.3]], shape: "beast", eye: "#ff4d4d",
       rg: "使徒領", pack: [2, 3], acts: ["poison"], weak: "ice",
-      desc: "荒野の赤い砂に潜む大蠍。尾の毒は、刺された所から体を重くする。群れで巣を守る。",
+      desc: "荒野の赤い砂に潜む大蠍。尾の毒は刺された所から体を重くする。群れで巣を守る。",
       look: { body: "bug", skin: "#a83a2a", skin2: "#e07a5a", eyes: "glow", eyeN: 4, mouth: "fangs", tail: "spike", pattern: "stripes", mood: "fierce" },
-      elder: { id: "e4_redscorpion_x", name: "赤砂の女王蠍", desc: "背に数十の子蠍を乗せた、荷車ほどの蠍。巣の群れは、すべてこの腹から出てきた。", item: ["女王の毒針", "赤砂の女王蠍の尾の針。根元に毒の袋がついたまま乾いている。学院の薬学の教授が、喉から手が出るほど欲しがる品だ。", 180] },
+      elder: { id: "e4_redscorpion_x", name: "赤砂の女王蠍", desc: "背に数十の子蠍を乗せた、荷車ほどの蠍。巣の群れはすべてこの腹から出てきた。", item: ["女王の毒針", "赤砂の女王蠍の尾の針。根元に毒の袋がついたまま乾いている。学院の薬学の教授が、喉から手が出るほど欲しがる品だ。", 180] },
     },
     e4_hollowknight: {
       name: "抜け殻の騎士", tier: 5, hp: 58, dmg: [2, 8, 3], hit: 65, def: 25, agi: 30, will: 999, mres: 20, gold: [20, 60], loot: [["plate", 0.04], ["potion", 0.3]], shape: "humanoid", eye: "#ff3a3a",
       rg: "使徒領", acts: ["regen"], weak: "bolt",
-      desc: "中身の無い鎧が、騎士の型どおりに剣を振るう。へこみは、ひとりでに戻る。雷が鳴ると、継ぎ目がばらける。",
+      desc: "中身の無い鎧が、騎士の型どおりに剣を振るう。へこみはひとりでに戻る。雷が鳴ると継ぎ目がばらける。",
       look: { body: "biped", build: "brute", skin: "#4a4a54", head: "helm", eyes: "glow", mouth: "none", weapon: "sword", shield: true, outfit: "armor", cloth: "#2a2a30", pattern: "cracks", extra: ["smoke", "plume"], mood: "fierce" },
     },
     e4_vulture: {
@@ -449,6 +449,6 @@
   if (Array.isArray(D.TROPHIES)) D.TROPHIES.push(
     { key: "e4_elder", name: "年経たものを狩る", tier: "銀", desc: "まれに出る強い個体を倒した" },
     { key: "e4_elder5", name: "古傷の目録", tier: "金", desc: "冒険をまたいで、五種の強い個体を倒したことがある" },
-    { key: "e4_core", name: "縄張りを崩す", tier: "銀", desc: "使徒の縄張りの眷属を退けて、主を弱らせた" },
+    { key: "e4_core", name: "縄張りを崩す", tier: "銀", desc: "使徒の縄張りの眷属を退けて主を弱らせた" },
   );
 })(globalThis.G = globalThis.G || {});
