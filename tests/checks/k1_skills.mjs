@@ -16,7 +16,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const ids = Object.keys(SK);
 
   // ---------------------------------------------------------------- データ
-  if (ids.length < 30 || ids.length > 50) fail(`技の数が ${ids.length}（30〜50）`);
+  const k1ids = ids.filter((id) => SK[id].kind !== "passive");   // パッシブ（K2）は tests/checks/k2_passives.mjs
+  if (k1ids.length < 30 || k1ids.length > 50) fail(`戦技と戦闘の外のスキルの数が ${k1ids.length}（30〜50）`);
   const STYLES = new Set(["剣", "刀", "短剣", "斧", "槌", "槍", "弓", "杖", "鞭", "投げ物", "拳", "盾", "二刀", "両手"]);
   const FX = new Set(["hit", "parry", "counter", "stance", "wall", "read", "heal", "focus", "feint"]);
   const facs = new Set(Object.values(D.LOCS).flatMap((L) => L.fac || []));
@@ -24,16 +25,16 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   for (const id of ids) {
     const s = SK[id];
     kinds[s.kind] = (kinds[s.kind] || 0) + 1;
-    if (!/^k1_/.test(id)) fail(`技 ${id}：id の頭が k1_ でない`);
+    if (!/^k[12]_/.test(id)) fail(`技 ${id}：id の頭が k1_・k2_ でない`);
     if (!s.name || !s.hint) fail(`技 ${id}：名前か効き目が無い`);
-    if (!["combat", "field", "both"].includes(s.kind)) fail(`技 ${id}：種類が変（${s.kind}）`);
+    if (!["combat", "field", "both", "passive"].includes(s.kind)) fail(`技 ${id}：種類が変（${s.kind}）`);
     if (s.stat !== "武器" && !D.STATS.includes(s.stat)) fail(`技 ${id}：判定の能力値が無い（${s.stat}）`);
     if (s.kind === "field" && s.stat === "武器") fail(`技 ${id}：戦闘の外の技が武器で判定する`);
     for (const k of Object.keys(s.need || {})) if (!D.STATS.includes(k)) fail(`技 ${id}：目安の能力値 ${k} が無い`);
     if (!Object.keys(s.need || {}).length) fail(`技 ${id}：必要な能力値の目安が無い`);
     for (const k of s.style || []) if (!STYLES.has(k)) fail(`技 ${id}：知らない武器の型 ${k}`);
-    if (s.kind !== "field" && (!s.fx || !FX.has(s.fx.t))) fail(`技 ${id}：戦闘の効き目が無い`);
-    if (s.kind !== "field" && !Number.isFinite(s.ki)) fail(`技 ${id}：気力が無い`);
+    if (K.isArt(id) && (!s.fx || !FX.has(s.fx.t))) fail(`技 ${id}：戦闘の効き目が無い`);
+    if (K.isArt(id) && !Number.isFinite(s.ki)) fail(`技 ${id}：気力が無い`);
     const L = s.learn || {};
     if (!L.train && !L.camp && !(L.teach || []).length && !L.scroll) fail(`技 ${id}：覚え方が無い`);
     for (const t of L.teach || []) if (!D.K1_TEACHERS[t]) fail(`技 ${id}：教える人 ${t} が無い`);
@@ -112,7 +113,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     S.skills = ["k1_parry", "k1_aim", "k1_drawcut", "k1_guardform", "k1_read", "k1_feint", "k1_venom", "k1_focus"];
     S.weapon = "longsword";
     G.startCombat(["bandit"]);
-    const grp = G.actions().find((g) => /^技（気力/.test(g.title || ""));
+    const grp = G.actions().find((g) => /^戦技（気力/.test(g.title || ""));
     if (!grp) fail("戦闘に「技」の組が無い");
     else {
       const aim = grp.list.find((a) => a.id === "cb:k1:k1_aim");
@@ -206,7 +207,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   // すべての戦闘の技を、合う武器で一度ずつ使っても壊れない
   {
     const WEAPON = { 剣: "longsword", 刀: "katana", 短剣: "dagger", 斧: "axe", 槌: "mace", 槍: Object.keys(D.ITEMS).find((id) => D.ITEMS[id].i3 && D.ITEMS[id].i3.k === "槍"), 弓: Object.keys(D.ITEMS).find((id) => D.ITEMS[id].i3 && D.ITEMS[id].i3.k === "弓"), 杖: "staff", 拳: "fists", 投げ物: Object.keys(D.ITEMS).find((id) => D.ITEMS[id].i3 && D.ITEMS[id].i3.k === "投げ物") };
-    for (const id of ids.filter((x) => SK[x].kind !== "field")) {
+    for (const id of ids.filter((x) => K.isArt(x))) {
       const S = start("merc", 600, 30);
       S.skills = [id];
       const need = (SK[id].style || []).find((k) => WEAPON[k] || k === "盾" || k === "二刀");
@@ -362,5 +363,5 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     }
   }
 
-  if (!bad) ok(`スキル（技 ${ids.length}：戦闘 ${kinds.combat}・外 ${kinds.field}・両方 ${kinds.both}／師 ${Object.keys(D.K1_TEACHERS).length}・巻物 ${scrolls.length}（店 ${inShop.size}・落とし物 ${inLoot.size}）・技の選択肢のある出来事 ${withK1.length}）`);
+  if (!bad) ok(`戦技とスキル（K1 ${k1ids.length}：戦闘 ${kinds.combat}・外 ${kinds.field}・両方 ${kinds.both}／師 ${Object.keys(D.K1_TEACHERS).length}・巻物 ${scrolls.length}（店 ${inShop.size}・落とし物 ${inLoot.size}）・技の選択肢のある出来事 ${withK1.length}）`);
 };

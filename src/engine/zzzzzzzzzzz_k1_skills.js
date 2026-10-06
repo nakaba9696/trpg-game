@@ -52,6 +52,9 @@
   };
   K.list = (S) => { S = S || G.S; return ((S && S.skills) || []).filter((id) => SK[id]); };
   K.knows = (id, S) => K.list(S).includes(id);
+  // 戦技（気力を使って出す。戦闘の技）と、スキル（持っているだけで効く・選択肢が現れる）。内部の種類：combat・both が戦技、field・passive がスキル
+  K.isArt = (id) => !!SK[id] && (SK[id].kind === "combat" || SK[id].kind === "both");
+  K.label = (id) => (K.isArt(id) ? "戦技" : "スキル");
   K.ki = (S) => K.state(S).ki;
   K.gainKi = (n, S) => { S = S || G.S; const x = K.state(S); x.ki = G.clamp(x.ki + n, 0, K.kiMax(S)); };
 
@@ -68,7 +71,7 @@
     const a = K.lv(id);
     x.use[id] = (x.use[id] || 0) + (n || 1);
     const b = K.lv(id);
-    if (b > a) G.log("grow", `技「${SK[id].name}」が${D.K1_LV_NAMES[b]}の域に達した。`, { k1: id, lv: b });
+    if (b > a) G.log("grow", `${K.label(id)}「${SK[id].name}」が${D.K1_LV_NAMES[b]}の域に達した。`, { k1: id, lv: b });
   };
 
   // 覚える
@@ -84,8 +87,8 @@
     S.skills.push(id);
     delete S.k1.prog[id];
     const s = SK[id];
-    G.log("grow", `技「${s.name}」を覚えた──${s.hint}`, { k1: id, learn: how || "" });
-    if (G.chron) G.chron(`技「${s.name}」を覚える`);
+    G.log("grow", K.isArt(id) ? `戦技「${s.name}」を覚えた──${s.hint}` : `スキル「${s.name}」を身につけた──${s.hint}`, { k1: id, learn: how || "" });
+    if (G.chron) G.chron(K.isArt(id) ? `戦技「${s.name}」を覚える` : `スキル「${s.name}」を身につける`);
     return true;
   };
   // 新しい冒険：職業ごとにはじめから覚えている技
@@ -197,7 +200,7 @@
       if (!tg) break;
       const r = G.check(stat, { vs: G.foeVs.eva(G.foeData(tg), stat) }, s.name, (w.hit || 0) + (fx.hit || 0) + K.extra(id));
       if (!r.ok) {
-        G.say(fx.all ? `${tg.name}には届かなかった。` : "技は空を切った。");
+        G.say(fx.all ? `${tg.name}には届かなかった。` : "刃は空を切った。");
         if (r.fumble) c.exposed = true;
         continue;
       }
@@ -242,7 +245,7 @@
     const x = K.state(S);
     x.ki -= K.cost(id, S);
     K.use(id);
-    G.log("you", `技「${s.name}」${s.say ? "──" + s.say.replace(/\{t\}/g, t.name) : ""}`);
+    G.log("you", `戦技「${s.name}」${s.say ? "──" + s.say.replace(/\{t\}/g, t.name) : ""}`);
     const fx = s.fx;
     if (fx.t === "hit") return strike(id, t);
     if (fx.t === "parry") {
@@ -346,7 +349,7 @@
     const c = C();
     const t = G.target();
     if (!c || !t || S.over) return groups;
-    const ids = K.list(S).filter((id) => SK[id].kind !== "field" && SK[id].fx);
+    const ids = K.list(S).filter((id) => K.isArt(id));
     if (!ids.length) return groups;
     const want = new Set();
     G.alive().forEach((f) => { if (f.f1i && G.f1 && G.f1.known(f.id)) (ANSWER[f.f1i.k] || []).forEach((id) => want.add(id)); });
@@ -359,7 +362,7 @@
       return { id: "cb:k1:" + id, label: s.name, sub: !why && want.has(id) ? `◎読み・${sub}` : sub, disabled: !!why, kw: s.kw || [s.name] };
     });
     const at = groups.findIndex((g) => g.title === "賭け");
-    const grp = { title: `技（気力 ${K.ki(S)}/${K.kiMax(S)}）`, list };
+    const grp = { title: `戦技（気力 ${K.ki(S)}/${K.kiMax(S)}）`, list };
     groups.splice(at >= 0 ? at + 1 : Math.min(1, groups.length), 0, grp);
     return groups;
   };
@@ -427,8 +430,8 @@
       if (!it || it.type !== "k1scroll") return false;
       const s = SK[it.skill];
       if (kind === "old") return !!it.old;
-      if (kind === "combat") return s.kind !== "field";
-      if (kind === "field") return s.kind === "field";
+      if (kind === "combat") return s.kind === "combat" || s.kind === "both";
+      if (kind === "field") return s.kind === "field" || s.kind === "passive";
       return true;
     }).sort();
     const fresh = all.filter((id) => !K.knows(D.ITEMS[id].skill));
@@ -445,8 +448,8 @@
     if (o.skill && SK[o.skill]) K.learn(o.skill, "teach");
     if (o.k1scroll) { const id = K.randomScroll(o.k1scroll); if (id && G.give(id)) G.note(`${D.ITEMS[id].name}を手に入れた。`); }
     if (o.k1use) {
-      const list = K.list(S).filter((id) => SK[id].kind !== "field");
-      if (list.length) { const id = G.pick(list); K.use(id, o.k1use); G.note(`技「${SK[id].name}」の型が、体に馴染んだ。`); }
+      const list = K.list(S).filter((id) => K.isArt(id));
+      if (list.length) { const id = G.pick(list); K.use(id, o.k1use); G.note(`戦技「${SK[id].name}」の型が、体に馴染んだ。`); }
     }
     return r;
   };
@@ -533,7 +536,7 @@
     // 巻物
     const scrolls = Object.keys(S.inv).filter((id) => { const it = D.ITEMS[id]; return it && it.type === "k1scroll" && !K.knows(it.skill); });
     if (scrolls.length) {
-      groups.push({ title: "技の巻物", list: scrolls.map((id) => {
+      groups.push({ title: "巻物", list: scrolls.map((id) => {
         const why = K.scrollWhy(id, S);
         const s = SK[D.ITEMS[id].skill];
         return { id: "k1scroll:" + id, label: `${D.ITEMS[id].name}を読む`, sub: why || `知力 ${K.scrollChance(id)}%・${s.hint}`, disabled: !!why, kw: ["巻物", "読", s.name] };
@@ -546,12 +549,12 @@
       if (K.knows("k1_track")) list.push({ id: "k1track:", label: "足跡を追う", sub: K.dayUsed("track:" + S.loc) ? "今日はもう追った" : `${SK.k1_track.stat} ${K.fieldChance("k1_track")}%・獲物か隠れ家を探す`, disabled: K.dayUsed("track:" + S.loc), kw: ["足跡", "追跡"] });
       if (K.knows("k1_herb")) list.push({ id: "k1herb:", label: "薬草を摘む", sub: K.dayUsed("herb") ? "今日はもう摘んだ" : `${SK.k1_herb.stat} ${K.fieldChance("k1_herb", "易しい")}%`, disabled: K.dayUsed("herb"), kw: ["薬草", "摘"] });
     }
-    if (list.length) groups.push({ title: "身につけた技で", list });
+    if (list.length) groups.push({ title: "身につけたスキルで", list });
     // 野営の稽古（荒野で。一日かかる）
     if (K.canCamp(S)) {
       const learnable = K.campList(S).slice(0, 4).map((id) => ({ id: "k1camp:" + id, label: `焚き火のそばで「${SK[id].name}」を磨く`, sub: `一日・${K.statOf(id) === "武器" ? "筋力" : K.statOf(id)} ${K.trainChance(id, true)}%・${SK[id].hint}`, kw: ["稽古", "磨", SK[id].name] }));
-      const drillable = K.list(S).filter((id) => SK[id].kind !== "field" && K.lv(id) < 3);
-      if (drillable.length) learnable.push({ id: "k1camp:drill", label: "覚えた技の型を、繰り返しなぞる", sub: "一日・熟練が上がる", kw: ["型", "稽古"] });
+      const drillable = K.list(S).filter((id) => K.isArt(id) && K.lv(id) < 3);
+      if (drillable.length) learnable.push({ id: "k1camp:drill", label: "覚えた戦技の型を、繰り返しなぞる", sub: "一日・熟練が上がる", kw: ["型", "稽古"] });
       if (learnable.length) groups.push({ title: "野営の稽古", list: learnable });
     }
     // 打ち解けた仲間に習う
@@ -616,9 +619,9 @@
     if (head === "k1camp") {
       if (!K.canCamp(S)) return;
       if (arg === "drill") {
-        const list = K.list(S).filter((id) => SK[id].kind !== "field" && K.lv(id) < 3);
+        const list = K.list(S).filter((id) => K.isArt(id) && K.lv(id) < 3);
         if (!list.length) return;
-        G.log("you", "焚き火のそばで、覚えた技の型をなぞる");
+        G.log("you", "焚き火のそばで、覚えた戦技の型をなぞる");
         G.passDays(1);
         list.slice(0, 3).forEach((id) => K.use(id, 2));
         G.say("同じ動きを、何度も何度も繰り返す。最後のほうは、考える前に体が動いていた。");
@@ -668,7 +671,7 @@
         const st = K.statOf(id) === "武器" ? "筋力" : K.statOf(id);
         return { id: "k1train:" + id, label: `「${SK[id].name}」を稽古する`, sub: why || `${tr.gold}G・${tr.days}日・${st} ${K.trainChance(id)}%・${SK[id].hint}`, disabled: !!why, kw: ["技", "稽古", SK[id].name] };
       });
-      if (list.length) add.push({ title: "技の稽古（訓練場）", list });
+      if (list.length) add.push({ title: "戦技とスキルの稽古（訓練場）", list });
     }
     Object.keys(D.K1_TEACHERS).forEach((tid) => {
       const T = D.K1_TEACHERS[tid];
@@ -685,7 +688,7 @@
     const fl = K.facList(S);
     if (fl.length) {
       const used = K.dayUsed("fac:" + S.fac);
-      add.push({ title: "身につけた技で", list: fl.map(({ f, i }) => {
+      add.push({ title: "身につけたスキルで", list: fl.map(({ f, i }) => {
         const sub = [SK[f.sk].name];
         if (f.diff) sub.push(`${SK[f.sk].stat} ${K.fieldChance(f.sk, f.diff)}%`);
         if (used) sub.push("今日はもうした");
@@ -832,15 +835,15 @@
 
   // ---------------------------------------------------------------- 遊び方の一行（U4。画面の分類 U13 は src/ui/zk1_skills.js）
   if (G.PLAY_TIPS && G.playTip) {
-    G.PLAY_TIPS.k1 = "技：戦闘の「技」の組は気力を使う。気力は眠ると戻り、身を守る・読み勝つ・勝つと一つ戻る。技は訓練場・師・巻物で覚え、使うほど熟練が上がる。";
+    G.PLAY_TIPS.k1 = "戦技：戦闘の「戦技」の組は気力を使う。気力は眠ると戻り、身を守る・読み勝つ・勝つと一つ戻る。戦技とスキルは訓練場・師・巻物で覚える。戦技は使うほど熟練が上がり、スキルは持っているだけで効く。";
     const tip0 = G.playTip;
     G.playTip = (S, P) => {
       const seen = (P && P.tips) || {};
-      if (S && !S.over && S.mode === "combat" && seen.combat && !seen.k1 && K.list(S).some((id) => SK[id].kind !== "field")) return { key: "k1", text: G.PLAY_TIPS.k1 };
+      if (S && !S.over && S.mode === "combat" && seen.combat && !seen.k1 && K.list(S).some((id) => K.isArt(id))) return { key: "k1", text: G.PLAY_TIPS.k1 };
       return tip0(S, P);
     };
   }
-  if (G.l1 && G.l1.ACTS) G.l1.ACTS.k1 = "技";
+  if (G.l1 && G.l1.ACTS) G.l1.ACTS.k1 = "戦技";
 
   // ---------------------------------------------------------------- 画面のシート用の一覧
   K.view = (S) => {
