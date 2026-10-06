@@ -12,14 +12,14 @@
     goblin: { name: "ゴブリン", tier: 1, hp: 8, dmg: [1, 4, 1], hit: 50, def: 0, agi: 30, will: 30, mres: 0, gold: [2, 8], loot: [["fang", 0.3]], shape: "small", eye: "#e8d44d", desc: "汚い短剣を振り回す小鬼。群れると厄介。" },
     wolf: { name: "飢えた野犬", tier: 1, hp: 10, dmg: [1, 6, 0], hit: 55, def: 5, agi: 55, will: 35, mres: 0, gold: [0, 0], loot: [["pelt", 0.3]], shape: "beast", eye: "#e8d44d", desc: "痩せこけた野犬。脅せば逃げる。" },
     barrelgob: { name: "樽ゴブリン", tier: 1, hp: 6, dmg: [1, 3, 0], hit: 40, def: 0, agi: 20, will: 20, mres: 0, gold: [5, 15], loot: [["ale", 0.8]], shape: "small", eye: "#f09a3e", desc: "酒樽をかぶったゴブリン。だいたい酔っている。" },
-    dogu: { name: "ドグー", tier: 1, hp: 14, dmg: [1, 3, 0], hit: 35, def: 25, agi: 10, will: 25, mres: 0, gold: [1, 5], loot: [["gem", 0.05]], shape: "blob", eye: "#9fd6ff", desc: "泥でできた丸い人形。硬いが、のろい。" },
+    dogu: { name: "ドグー", tier: 1, hp: 14, dmg: [1, 3, 0], hit: 35, def: 25, agi: 10, will: 25, mres: 0, gold: [1, 5], loot: [["gem", 0.05]], shape: "blob", eye: "#9fd6ff", desc: "泥でできた丸い人形。硬いがのろい。" },
     bandit: { name: "街道の盗賊", tier: 1, hp: 12, dmg: [1, 6, 1], hit: 55, def: 5, agi: 40, will: 40, mres: 0, gold: [5, 20], loot: [["herb", 0.3]], shape: "humanoid", eye: "#d9d9d9", bribe: 20, desc: "食い詰めた元農民。金を払えば見逃す。" },
 
     // 段 2
     orc: { name: "オーク", tier: 2, hp: 18, dmg: [1, 8, 1], hit: 55, def: 5, agi: 30, will: 45, mres: 0, gold: [5, 25], loot: [["fang", 0.5]], shape: "humanoid", eye: "#e05a3a", desc: "豚面の大男。力任せに斧を振るう。" },
     werewolf: { name: "人狼", tier: 2, hp: 22, dmg: [2, 4, 1], hit: 60, def: 10, agi: 60, will: 60, mres: 5, gold: [0, 10], loot: [["pelt", 0.6]], shape: "beast", eye: "#f2e14a", desc: "昼は人、夜は獣。" },
     spider: { name: "大蜘蛛", tier: 2, hp: 16, dmg: [1, 6, 2], hit: 60, def: 5, agi: 55, will: 999, mres: 0, gold: [0, 0], loot: [["silk", 0.6]], shape: "swarm", eye: "#ff4d4d", desc: "牛ほどもある蜘蛛。毒の牙を持つ。" },
-    slime: { name: "酸のスライム", tier: 2, hp: 22, dmg: [1, 4, 2], hit: 50, def: 25, agi: 10, will: 999, mres: -20, gold: [0, 15], loot: [["gem", 0.08]], shape: "blob", eye: "#b6ff7a", desc: "刃が通りにくいが、魔法に弱い。" },
+    slime: { name: "酸のスライム", tier: 2, hp: 22, dmg: [1, 4, 2], hit: 50, def: 25, agi: 10, will: 999, mres: -20, gold: [0, 15], loot: [["gem", 0.08]], shape: "blob", eye: "#b6ff7a", desc: "刃が通りにくいが魔法に弱い。" },
     banditboss: { name: "山賊の頭", tier: 2, hp: 26, dmg: [1, 8, 2], hit: 60, def: 10, agi: 45, will: 55, mres: 0, gold: [20, 60], loot: [["potion", 0.5]], shape: "humanoid", eye: "#d9d9d9", bribe: 60, desc: "片目の大男。手下より話は分かる。" },
     guard: { name: "町の衛兵", tier: 2, hp: 20, dmg: [1, 6, 2], hit: 60, def: 15, agi: 40, will: 50, mres: 0, gold: [5, 20], loot: [], shape: "humanoid", eye: "#d9d9d9", bribe: 40, desc: "職務には忠実。賄賂にも忠実。" },
 

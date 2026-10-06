@@ -35,19 +35,19 @@
     },
     w2_echo: {
       name: "懺悔の谷", region: "ノルディア帝国", type: "wild", danger: 3, scene: "w2_echo", x: 4, y: 28,
-      desc: "崩れた城壁と屋根のない家々が、谷底に埋もれている。何か言えば、こだまが返ってくる。言っていないことも、返ってくる。",
+      desc: "崩れた城壁と屋根のない家々が、谷底に埋もれている。何か言えばこだまが返ってくる。言っていないことも返ってくる。",
       pool: ["deserter", "zombie", "werewolf", "e1_frostgrave"], links: { w2_zalgros: 2, leavel: 3 },
     },
     w2_shadow: {
       name: "影の谷", region: "ノルディア帝国", type: "wild", danger: 3, scene: "w2_shadow", x: 50, y: 8,
-      desc: "町の跡とだけ地図にある。石畳にも壁にも、人の影だけが黒く焼き付いている。洗濯物を干す影、走る子どもの影、振り返る女の影。影の持ち主は、どこにもいない。",
+      desc: "町の跡とだけ地図にある。石畳にも壁にも、人の影だけが黒く焼き付いている。洗濯物を干す影、走る子どもの影、振り返る女の影。影の持ち主はどこにもいない。",
       pool: ["zombie", "wolf", "warlock", "e1_ashhound"], links: { garmund: 3 },
     },
     w2_acid: {
       name: "酸の谷", region: "ノルディア帝国", type: "dungeon", danger: 3, scene: "w2_acid", x: 50, y: 38,
       desc: "谷がまだ溶けている。緑の湯気の底に、錆びた鉄の巨人たちが膝をついたまま並んでいる。谷の底のほうで、何かがゆっくり脈打つ音がする。",
       pool: ["slime", "e1_sweeper", "spider", "mimic", "e1_melted"], floors: 4, boss: "w2_ironwarden",
-      reward: { flag: "w2_ironwarden", item: "w2_acidcore", fame: 45, chron: "酸の谷の底で、溶けかけた機械兵を止める。脈打つ緑の石を持ち帰る", text: "鉄の巨人が膝をつき、胸の蓋が外れた。中には誰も乗っていなかった。操る席の背もたれに、小刀で刻んだ字。「八六二年　交代はまだか」巨人の足元の酸の池から、握りこぶしほどの緑の石を掬い上げた。温かい。手のひらの上で、脈を打っている。" },
+      reward: { flag: "w2_ironwarden", item: "w2_acidcore", fame: 45, chron: "酸の谷の底で溶けかけた機械兵を止める。脈打つ緑の石を持ち帰る", text: "鉄の巨人が膝をつき、胸の蓋が外れた。中には誰も乗っていなかった。操る席の背もたれに小刀で刻んだ字。「八六二年　交代はまだか」巨人の足元の酸の池から、握りこぶしほどの緑の石を掬い上げた。温かい。手のひらの上で脈を打っている。" },
       links: { frost: 2 },
     },
 

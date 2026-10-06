@@ -19,7 +19,7 @@
     },
     w7_glatz: {
       name: "傭兵の町グラッツ", region: "自由都市連合", type: "town", danger: 0, scene: "w7_mercs", x: 50, y: 48, marks: ["mercs", "market"],
-      desc: "柵で囲った練兵場のまわりに、宿と酒場と鍛冶屋だけが並ぶ町。広場の大きな板には、雇い主の名と日当と「命の保証なし」の札が、隙間なく貼られている。傭兵たちは昼まで寝て、昼から札の前で値切り、夜は誰が明日死ぬかを賭ける。",
+      desc: "柵で囲った練兵場のまわりに、宿と酒場と鍛冶屋だけが並ぶ町。広場の大きな板には、雇い主の名と日当と「命の保証なし」の札が隙間なく貼られている。傭兵たちは昼まで寝て、昼から札の前で値切り、夜は誰が明日死ぬかを賭ける。",
       fac: ["inn", "tavern", "shop", "guild", "train", "alley"],
       shop: ["i3w_broadsword", "i3w_halberd", "i3w_crossbow", "i3a_studded", "chain", "potion"],
       links: {},
@@ -33,7 +33,7 @@
     },
     w7_vinale: {
       name: "葡萄の町ヴィナレ", region: "自由都市連合", type: "town", danger: 0, scene: "w7_vineyard", x: 36, y: 74, marks: ["farm", "market"],
-      desc: "南向きのなだらかな斜面いっぱいに、葡萄の棚が段になって続いている。樽を転がす音と、搾り場の甘酸っぱい匂い。この町の酒は三つの国に売られ、どの国の王も、自分の国の酒だと思って飲んでいる。",
+      desc: "南向きのなだらかな斜面いっぱいに、葡萄の棚が段になって続いている。樽を転がす音と搾り場の甘酸っぱい匂い。この町の酒は三つの国に売られ、どの国の王も、自分の国の酒だと思って飲んでいる。",
       fac: ["inn", "tavern", "shop", "church"],
       shop: ["ale", "w2_whitebread", "w2_sausage", "i3w_sickle", "leather", "lute"],
       links: {},
@@ -56,21 +56,21 @@
     },
     w7_lumie: {
       name: "蝋燭の町リュミエ", region: "光天教会領", type: "town", danger: 0, scene: "w7_candles", x: 14, y: 66, marks: ["holy", "craft"],
-      desc: "大聖堂で灯す蝋燭を、すべてこの町で作っている。蜜蝋の甘い匂いが通りに満ち、どの家の窓辺にも、吊るされて冷えるのを待つ白い蝋燭が、簾のように並んでいる。夜になっても、町は少しも暗くならない。",
+      desc: "大聖堂で灯す蝋燭を、すべてこの町で作っている。蜜蝋の甘い匂いが通りに満ち、どの家の窓辺にも、吊るされて冷えるのを待つ白い蝋燭が、簾のように並んでいる。夜になっても町は少しも暗くならない。",
       fac: ["inn", "tavern", "shop", "church"],
       shop: ["q4_candles", "holywater", "holysymbol", "w2_honeycake", "herb", "i3r_holyamulet"],
       links: {},
     },
     w7_serena: {
       name: "泉の町セレナ", region: "光天教会領", type: "town", danger: 0, scene: "w7_spring", x: 5, y: 64, marks: ["holy"],
-      desc: "海を見下ろす崖の上の、小さな泉を囲んだ町。泉の水は冷たく、少しだけ塩の味がする。病を抱えた巡礼が、泉の縁に順番に並んで、黙って手を浸している。泉の底には、祈りと一緒に投げ込まれた銅貨が、青く錆びて沈んでいる。",
+      desc: "海を見下ろす崖の上の、小さな泉を囲んだ町。泉の水は冷たく、少し塩の味がする。病を抱えた巡礼が、泉の縁に順番に並んで、黙って手を浸している。泉の底には、祈りと一緒に投げ込まれた銅貨が、青く錆びて沈んでいる。",
       fac: ["inn", "shop", "church"],
       shop: ["herb", "potion", "holywater", "elixir", "i3r_charm"],
       links: {},
     },
     w7_norve: {
       name: "祈りの浜ノルヴェ", region: "光天教会領", type: "town", danger: 0, scene: "w7_prayerbeach", x: 17, y: 75, marks: ["port", "holy"],
-      desc: "小舟が浜に引き上げられた、漁師の村。獲れた魚の最初の一尾は、浜の小さな祠に供えられ、それから聖都の厨房へ運ばれていく。網を繕う女たちは、繕い目ごとに短い祈りを口の中で唱える。だから網は、いつも少し長くかかる。",
+      desc: "小舟が浜に引き上げられた、漁師の村。獲れた魚の最初の一尾は、浜の小さな祠に供えられ、それから聖都の厨房へ運ばれていく。網を繕う女たちは、繕い目ごとに短い祈りを口の中で唱える。だから網はいつも少し長くかかる。",
       fac: ["inn", "tavern", "shop"],
       shop: ["q4_saltfish", "i3a_oilcoat", "i3w_trident", "jerky", "ale"],
       links: {},
