@@ -26,7 +26,6 @@ body.u21pc #u21side > * { position: relative; z-index: 1; }
 body.u21pc #u21side #panel, body.u21pc.u14arrived #u21side #panel { display: flex; flex-direction: column; gap: 8px; min-height: 0; max-height: none; flex: 0 1 auto;
   overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 0; border-top: 0; }
 body.u21pc #u21side #panel > * { flex: none; margin: 0; }
-body.u21pc #u21side .alist { grid-template-columns: minmax(0, 1fr); }
 body.u21pc #u21side .agroup h3 { margin: 2px 0 2px; }
 body.u21pc #u21side .tip { font-size: 12.5px; line-height: 1.6; padding: 6px 10px; }
 
@@ -75,7 +74,6 @@ body.u21pc #u21side #panel .w7tmap canvas { height: clamp(120px, 20vh, 220px); }
 @media (max-height: 760px) {
   body.u21pc #u21side { padding: 12px 12px 10px; }
   body.u21pc #u21side .u13tab { min-height: 38px; padding-block: 4px; }
-  body.u21pc #u21side .act { min-height: 38px; padding-block: 5px; }
   body.u21pc .tome { padding-bottom: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
