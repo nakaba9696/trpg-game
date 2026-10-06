@@ -1,6 +1,6 @@
 // A13・A14：白い無地の背景で作った絵（人物の絵：docs/art/style.json、魔物の絵：docs/art/style_monsters.json）の背景を消して透明にし、背景の絵になじませる。
-// 消すのは、絵の外周からつながった、背景の色（縁の白に近い升の色）にごく近い所だけ（A14）。線画に囲まれた白（白い服・白い毛皮・白目・歯・光の反射、
-// 腕と体のあいだの背景も）は、背景と見分けられないので残す（迷うなら消さない）。
+// 消すのは、絵の外周からつながった、背景の色（縁の白に近い升の色）にごく近い所（A14）と、線画に囲まれた背景（腕と体のあいだ・脚のあいだなど。
+// むらの無い背景の色で、大きく、縁に触れず、まわりがすぐ線画になる所。A15）。白い服・白い毛皮・白目・歯・光の反射は残す（迷うなら消さない）。
 // 境目は 0/1 で切らず、半透明にする（ソフトマット）：境目の数 px は、その画素の色が「背景の色」と「すぐ内側の絵の色」のどこにあるかで透け具合を決め、
 // 白と混ざった分を取り除いて色を戻す（色のにじみ抜き。白い縁取りを残さない）。
 // 人物は v4_assets.js、魔物（人の姿の敵も）は v6_monsters.js が使う。同じ鍵は一度だけ処理して覚えておく（G.a13.cutout）。
@@ -75,6 +75,67 @@
         if (x < W - 1) seed(i + 1);
         if (i >= W) seed(i - W);
         if (i < n - W) seed(i + W);
+      }
+      // 囲まれた背景（A15）：腕と体のあいだ・脚のあいだなど、線画に囲まれて外周とつながらない背景も消す。消すのは、
+      // ・背景の色にごく近く（HOLE_TOL 未満の点から、圧縮のむら HOLE_GROW 未満まで広げた所）、むらが無い（平均の差が HOLE_FLAT 未満）
+      // ・ある程度大きい（HOLE_MIN 以上。白目・歯・光の点は消さない）
+      // ・まわりがすぐ線画や濃い色になる（縁から HOLE_REACH px 以内に背景から HOLE_EDGE 以上離れた色がある）。白い服・帯・白い毛皮は
+      //   縁に薄い影の色が広がっているので、縁の HOLE_SOFT 以上が「薄い色のまま」なら残す
+      // ・線の向こうがまた白くない（縁から外へ HOLE_PAST px 見て、線を越えた先が背景の色に近い縁が HOLE_WHITE 以上なら残す）。
+      //   白い服の折り目・襟・旗などは、線を越えてもまた白い。腕と体のあいだの背景は、線の向こうが肌や服の色になる
+      // ・下の縁に触れるもの（脚や腕と服のあいだが絵の下まで続く所）は、条件を厳しくする（胸から下で切れた白い服を守る）。迷うなら消さない
+      // ・背景が真っ白（明るい。251 を超える）の絵ではしない。真っ白な背景と白い服は同じ色で見分けられない（生成の背景が少し灰色の絵だけ）
+      if (opt.holes !== false && refs.every((r) => Math.max(r[0], r[1], r[2]) <= 251)) {
+        const HOLE_TOL = 8, HOLE_GROW = 20, HOLE_FLAT = 3, HOLE_MIN = Math.max(150, Math.round(n * 0.0012));
+        const HOLE_REACH = 4, HOLE_EDGE = 60, HOLE_SOFT = 0.2, HOLE_PAST = 12, HOLE_WHITE = 0.15;
+        const mark = new Int32Array(n), comp = [];
+        let id = 0;
+        // i から step の向きに歩く。返り値：1＝HOLE_REACH 以内に線画・濃い色が無い（薄い色のまま）、2＝線を越えた先がまた白い、0＝そのほか
+        const look = (i, step) => {
+          let hard = false;
+          for (let s = 1, j = i; s <= HOLE_PAST; s++) {
+            const px = j % W;
+            j += step;
+            if (j < 0 || j >= n || (step === 1 && px === W - 1) || (step === -1 && px === 0)) break;
+            if (mark[j] === id) continue;
+            if (dist[j] >= HOLE_EDGE) hard = true;
+            else if (hard && dist[j] < HOLE_GROW) return 2;
+            if (s === HOLE_REACH && !hard) return 1;
+          }
+          return 0;
+        };
+        for (let s0 = 0; s0 < n; s0++) {
+          if (bg[s0] || mark[s0] || dist[s0] >= HOLE_TOL) continue;
+          id++;
+          comp.length = 0;
+          let qh = 0, sum = 0, edge = false;
+          mark[s0] = id; comp.push(s0);
+          while (qh < comp.length) {
+            const i = comp[qh++], x = i % W;
+            sum += dist[i];
+            if (x === 0 || x === W - 1 || i < W || i >= n - W) edge = true;
+            const go = (j) => { if (!bg[j] && !mark[j] && dist[j] < HOLE_GROW) { mark[j] = id; comp.push(j); } };
+            if (x > 0) go(i - 1);
+            if (x < W - 1) go(i + 1);
+            if (i >= W) go(i - W);
+            if (i < n - W) go(i + W);
+          }
+          if (comp.length < HOLE_MIN || sum / comp.length >= (edge ? HOLE_FLAT - 1 : HOLE_FLAT)) continue;
+          let rim = 0, soft = 0, white = 0;
+          for (const i of comp) {
+            const x = i % W;
+            for (const st of [-1, 1, -W, W]) {
+              const j = i + st;
+              if (j < 0 || j >= n || (st === -1 && x === 0) || (st === 1 && x === W - 1) || mark[j] === id) continue;
+              rim++;
+              const r = look(i, st);
+              if (r === 1) soft++; else if (r === 2) white++;
+            }
+          }
+          const k = edge ? 0.5 : 1;
+          if (!rim || soft / rim >= HOLE_SOFT * k || white / rim >= HOLE_WHITE * k) continue;
+          for (const i of comp) bg[i] = 1;
+        }
       }
       // 境目からの深さ（絵の側に 1..BAND）。背景の側の、絵に接する画素（深さ 0 だが背景の色から少し離れたもの）も半透明の候補
       const depth = new Uint8Array(n);

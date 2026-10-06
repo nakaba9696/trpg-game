@@ -39,7 +39,8 @@
   const tabs = h("div", "tabs");
   tabs.setAttribute("role", "tablist");
   const tab = (key, label) => { const b = h("button", "btn", label); b.type = "button"; b.setAttribute("role", "tab"); b.dataset.tab = key; b.onclick = () => show(key); return b; };
-  const TABS = [tab("item", "アイテム"), tab("foe", "魔物"), tab("person", "人物"), tab("lore", "用語"), tab("heard", "噂")];
+  // 噂のタブは「受けている依頼」の窓へ移した（U17。ui/u17_rumors.js）。drawHeard は残すが、タブは出さない
+  const TABS = [tab("item", "アイテム"), tab("foe", "魔物"), tab("person", "人物"), tab("lore", "用語")];
   tabs.append(...TABS);
   const sum = h("p", "fine f2sum");
   const panes = h("div", "f2panes");
@@ -88,7 +89,7 @@
 
   // 新しい印の数え方：種類ごと（タブ）と全体（入口）
   const TAB_KIND = { item: "item", foe: "foe", person: "person", lore: "lore", heard: "heard" };
-  const freshOf = (kind) => (G.codexFresh ? G.codexFresh(kind) : []);
+  const freshOf = (kind) => (G.codexFresh ? G.codexFresh(kind) : []).filter((k) => kind || !String(k).startsWith("heard:")); // 噂の印は依頼の窓が持つ（U17）
   const bang = (n) => { const b = h("span", "f2bang", "！"); b.setAttribute("aria-label", `新しく載った ${n}`); b.title = `新しく載った項目 ${n}`; return b; };
   const markTabs = () => TABS.forEach((b) => {
     const n = freshOf(TAB_KIND[b.dataset.tab]).length;
@@ -244,7 +245,7 @@
     F2.regions().forEach((r) => {
       const mine = ids.filter((id) => G.codexFoeRegion(id) === r).sort((a, b) => (F2.foe(a).tier || 0) - (F2.foe(b).tier || 0) || !!F2.foe(a).boss - !!F2.foe(b).boss);
       if (!mine.length) return;
-      const grid = group(r, mine.filter((id) => c.foes[id]).length, mine.length, mine.filter((id) => G.codexIsFresh("foe", id)).length);
+      const grid = group(G.regionName ? G.regionName(r) : r, mine.filter((id) => c.foes[id]).length, mine.length, mine.filter((id) => G.codexIsFresh("foe", id)).length);
       mine.forEach((id) => {
         const e = F2.foe(id);
         const rec = c.foes[id];
@@ -335,7 +336,7 @@
     const add = (sec, row) => { if (row && row[0] && row[1] && !out.some((x) => x.id === "w:" + row[0])) out.push({ id: "w:" + row[0], title: row[0], sec, lines: [["0", row[1], "now"]], known: true }); };
     // 出発の町（data/world.js の homeRow と同じ決め方）
     const S = G.S, homeId = S && D.CLASSES && D.CLASSES[S.cls] ? D.CLASSES[S.cls].start : S && S.loc, L = homeId && D.LOCS && D.LOCS[homeId];
-    if (L && !Object.values(D.LORE || {}).some((e) => e.title === L.name)) add((start[0] || ["大陸と国"])[0], [L.name, (D.WORLD.home || {})[homeId] || `冒険を始めた場所。${L.region}にある。`]);
+    if (L && !Object.values(D.LORE || {}).some((e) => e.title === L.name)) add((start[0] || ["大陸と国"])[0], [L.name, (D.WORLD.home || {})[homeId] || `冒険を始めた場所。${G.regionName ? G.regionName(L.region) : L.region}にある。`]);
     start.forEach(([sec, rows]) => (rows || []).forEach((r) => add(sec, r)));
     Object.entries(D.LORE || {}).forEach(([id, e]) => {
       const k = known[id];

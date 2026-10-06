@@ -65,7 +65,7 @@
       },
     }),
     elnea: P({
-      name: "エルネア", full: "エルネア・クラウセ", nation: "エルメシア", role: "ドランヘルツの鍛冶ギルド・精晶設備管理課の技師。エルフの娘。鉱石おたくで、鉱石の話になると早口で早歩き。エルフの目では不器量らしく、容姿に自信がない。おどおどして語尾に「〜っす」", sex: "女", age: 19, race: "elf",
+      name: "エルネア", full: "エルネア・クラウセ", nation: "エルメシア", role: "鍛冶の都ドランヘルツの鍛冶ギルド・精晶設備管理課の技師。エルフの娘。鉱石おたくで、鉱石の話になると早口で早歩き。エルフの目では不器量らしく、容姿に自信がない。おどおどして語尾に「〜っす」", sex: "女", age: 19, race: "elf",
       who: { kind: "villager", sex: "女", age: 19, seed: "c2:elnea", look: { hair: "#7a5230", hairStyle: "bob", eyes: "round", mouth: "open", brows: "worried", outfit: "apron", head: "none", gear: "none", chest: "keys", cloth: "#5a4a3a", build: "normal", ears: "pointy", marks: ["dirt", "blush"], bg: "#7a5a3a" } },
       join: {
         cls: "鍛冶ギルドの技師", desc: "鉱石の話になると早口になる", power: 36, dmg: 1, trait: "coward", bond: 55, home: ["w2_dranherz"],
@@ -134,7 +134,7 @@
       who: { kind: "mage", sex: "女", age: 28, seed: "c2:malvina", look: { hair: "#dcbc62", hairStyle: "long", eyes: "glow", iris: "#7affd8", mouth: "flat", brows: "calm", outfit: "cloak", head: "none", gear: "staff", chest: "none", cloth: "#14141a", build: "slim", marks: ["bandage"], bg: "#2a2a3a" } } }),
     katia: P({ name: "カティア", full: "カティア・ノルディア", nation: "ノルディア", role: "皇帝の一人娘。十九。金髪碧眼。正義感が強く真面目でまっすぐな努力家。剣も一通り修めた。平民にも丁寧で、軍で慕われる。四騎士を押し切る胆力があるが、恋やおしゃれには疎い。父の冷たい判断に疑問を抱きつつ、尊敬と忠誠のあいだで揺れる", sex: "女", age: 19, race: "human",
       who: { kind: "knight", sex: "女", age: 19, seed: "c2:katia", look: { hair: "#dcbc62", hairStyle: "ponytail", eyes: "round", iris: "#2a4a6a", mouth: "flat", brows: "angry", outfit: "plate", head: "none", gear: "sword", chest: "crest", cloth: "#e0dcd0", build: "slim", marks: [], bg: "#5a6a7a" } } }),
-    alicia: P({ name: "アリシア", full: "アリシア・セレイン＝ロスティア", nation: "エルメシア", role: "エルメシア共和国の最高議長。ハイエルフの女。見た目は二十代前半、三百歳を超える。人を射抜く目。冷静沈着で高圧的、すべてに女王のような圧がある。精霊契約の都レヴァンデルの生まれで、術も剣も一流。世界樹の根源に一度だけ触れたと言われる", sex: "女", age: 22, race: "elf",
+    alicia: P({ name: "アリシア", full: "アリシア・セレイン＝ロスティア", nation: "エルメシア", role: "エルメシア共和国の最高議長。ハイエルフの女。見た目は二十代前半、三百歳を超える。人を射抜く目。冷静沈着で高圧的、すべてに女王のような圧がある。精霊契約の都隠れ里レヴァンデルの生まれで、術も剣も一流。世界樹の根源に一度だけ触れたと言われる", sex: "女", age: 22, race: "elf",
       who: { kind: "noble", sex: "女", age: 22, seed: "c2:alicia", look: { hair: "#dcbc62", hairStyle: "long", eyes: "sharp", iris: "#3a8aca", mouth: "flat", brows: "calm", outfit: "noble", head: "circlet", gear: "sword", chest: "gem", cloth: "#e8e4ec", build: "slim", ears: "pointy", marks: [], bg: "#3a5a4a" } } }),
   };
 

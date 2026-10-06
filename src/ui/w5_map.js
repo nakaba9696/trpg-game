@@ -429,7 +429,7 @@
     if (!m) { info.append(h("span", "fine", summary() + "。印を押すと、その場所のことが出る。")); return; }
     const L = D.LOCS[m.id];
     const nm = h("b", "", m.name || "？？？");
-    info.append(nm, h("span", "w5tag", `${m.region || ""}・${TYPE[m.type] || ""}${m.type !== "town" && m.name ? " " + "★".repeat(Math.min(6, m.danger)) : ""}`));
+    info.append(nm, h("span", "w5tag", `${G.regionName ? G.regionName(m.region) : m.region || ""}・${TYPE[m.type] || ""}${m.type !== "town" && m.name ? " " + "★".repeat(Math.min(6, m.danger)) : ""}`));
     const st = { here: "今いる所。", now: "この冒険で行った。", heard: "行ったことはない。道標で名前だけ知っている。", none: "まだ行ったことがない。" }[m.status];
     let more = st;
     if (W5.KNOWN[m.status] || m.status === "heard") {

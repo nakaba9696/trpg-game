@@ -13,7 +13,9 @@
   const RAW = D.ITEMS;
 
   const hash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h >>> 0; };
-  const held = (S, id) => !!((S.inv && S.inv[id] > 0) || S.weapon === id || S.armor === id || S.ring === id);
+  // 身に着けている品（I2 の 7 つの枠。I2 が無ければ前の 3 つ）
+  const wornIds = (S) => (G.i2s ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring]);
+  const held = (S, id) => !!((S.inv && S.inv[id] > 0) || wornIds(S).includes(id));
 
   // ---------------------------------------------------------------- 条件
   API.POOR = 50;
@@ -87,7 +89,7 @@
   const GEAR_Q = Object.keys(RAW).filter((id) => RAW[id].type === "gear" && RAW[id].quirk);
   const quirkItems = (S) => {
     let out = null;
-    for (const id of [S.weapon, S.armor, S.ring]) { const it = id && RAW[id]; if (it && it.quirk) (out = out || []).push(it); }
+    for (const id of wornIds(S)) { const it = id && RAW[id]; if (it && it.quirk) (out = out || []).push(it); }
     for (const id of GEAR_Q) if (S.inv && S.inv[id] > 0) (out = out || []).push(RAW[id]);
     return out;
   };
@@ -117,7 +119,7 @@
     if (!S || S.over) return;
     const x = (S.f3i = S.f3i || { on: {} });
     x.on = x.on || {};
-    [S.weapon, S.armor, S.ring].forEach((id) => {
+    wornIds(S).forEach((id) => {
       const it = id && RAW[id];
       if (!it || !it.quirk) return;
       const now = API.active(it, S);
