@@ -120,7 +120,7 @@
   // 遺跡の品（D.ITEMS の relic: true も lore_u7.js が見る）
   add("item", "relic", ["u7_relic", "u7_relic:market"]);
 
-  // 会った人物の国（C2 の人物の nation）・会った人の種族（自分・仲間・C2 の人物）・職業（島の剣士は海を渡ってきた。魔法使いは術を学んだ）
+  // 会った人物の国（C2 の人物の nation）・会った人の種族（自分・仲間・C2 の人物）・職業（武士は海を渡ってきた。魔法使いは術を学んだ）
   D.LORE_ON.nation = Object.assign(D.LORE_ON.nation || {}, { "レオネスト": "u7_leonest", "ノルディア": "u7_nordia", "エルメシア": "u7_elmesia" });
   D.LORE_ON.race = Object.assign(D.LORE_ON.race || {}, { elf: "u7_races:elf", beast: "u7_races:beast" });
   D.LORE_ON.cls = Object.assign(D.LORE_ON.cls || {}, { samurai: ["u7_yakumo", "u7_yakumo:land"], mage: "u7_jutsu" });
