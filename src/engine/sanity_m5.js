@@ -412,7 +412,9 @@
   G.act = (id) => {
     const S = G.S;
     let swapped = false;
-    if (S && !S.over && S.mode !== "combat" && G.sanityStage(G.sanityOf(S)) >= 3 && G.rand() < 0.12) {
+    // 命や仲間に関わる重い出来事（R4 の G.heavyEvent）では入れ替わらない（持ち主の決定）
+    const heavy = S && S.mode === "event" && G.heavyEvent && G.heavyEvent(S.event);
+    if (S && !S.over && S.mode !== "combat" && !heavy && G.sanityStage(G.sanityOf(S)) >= 3 && G.rand() < 0.12) {
       const group = G.actions().find((g) => g.list.some((x) => x.id === id));
       const others = group ? group.list.filter((x) => x.id !== id && !x.disabled) : [];
       if (others.length) {
