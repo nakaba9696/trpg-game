@@ -13,7 +13,7 @@
     dagger: { name: "短剣", type: "weapon", dmg: [1, 4, 1], stat: "敏捷", hit: 5, vital: 10, price: 20, desc: "急所を狙いやすい。" },
     longsword: { name: "鉄の長剣", type: "weapon", dmg: [1, 6, 2], stat: "筋力", hit: 0, price: 50 },
     mace: { name: "錫杖", type: "weapon", dmg: [1, 6, 1], stat: "筋力", hit: 0, magic: 5, price: 40, desc: "神官の杖。癒しの奇跡がわずかに通りやすい。" },
-    axe: { name: "大斧", type: "weapon", dmg: [1, 10, 3], stat: "筋力", hit: -10, price: 90, desc: "重いが、当たれば骨まで砕く。" },
+    axe: { name: "大斧", type: "weapon", dmg: [1, 10, 3], stat: "筋力", hit: -10, price: 90, desc: "重いが当たれば骨まで砕く。" },
     katana: { name: "打刀", type: "weapon", dmg: [1, 6, 3], stat: "筋力", hit: 5, price: 140, desc: "シェルアーク諸島の島の片刃の刀。潮に強く、よく斬れる。" },
     staff: { name: "樫の杖", type: "weapon", dmg: [1, 4, 0], stat: "筋力", hit: -5, magic: 10, price: 15, desc: "魔法の成功率が上がる。" },
     rapier: { name: "細剣", type: "weapon", dmg: [1, 6, 1], stat: "敏捷", hit: 10, vital: 5, price: 110, desc: "素早い突き。敏捷で戦う。" },
@@ -26,7 +26,7 @@
     leather: { name: "革の鎧", type: "armor", def: 1, agi: 0, price: 30 },
     domaru: { name: "胴丸", type: "armor", def: 2, agi: 0, price: 100 },
     chain: { name: "鎖帷子", type: "armor", def: 2, agi: -5, price: 120 },
-    plate: { name: "板金鎧", type: "armor", def: 4, agi: -15, price: 500, desc: "重いが、並の刃は通さない。" },
+    plate: { name: "板金鎧", type: "armor", def: 4, agi: -15, price: 500, desc: "重いが並の刃は通さない。" },
     robe: { name: "魔導衣", type: "armor", def: 1, agi: 0, magic: 10, price: 250, desc: "魔法の成功率が上がる。" },
     dragonmail: { name: "竜鱗の鎧", type: "armor", def: 5, agi: -5, price: 1500, desc: "竜の鱗を綴った鎧。" },
 
