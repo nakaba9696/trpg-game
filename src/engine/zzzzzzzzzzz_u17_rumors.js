@@ -10,9 +10,10 @@
   const D = G.data;
   const U = (G.q17 = G.q17 || {});
   U.RUMOR_MAX = 40;
+  U.RUMOR_LINE = "噂を書き留めた。続きの手がかりは、右上の「依頼」の噂の欄に。";
   const arr = (v) => (Array.isArray(v) ? v : []);
   const V = () => G.v12 || null;
-  const locName = (id) => (id && D.LOCS[id] ? D.LOCS[id].name : "");
+  const locName = (id) => (G.placeName ? G.placeName(id) : id && D.LOCS[id] ? D.LOCS[id].name : ""); // 地名は種類つき（D2）
   const RUMOR_HEAD = /^(噂|手がかり|貼り紙)：/;
   const plain = (t) => String(t || "").replace(RUMOR_HEAD, "").replace(/^「(.*)」$/, "$1").trim();
 
@@ -52,6 +53,8 @@
     st.list.push({ t: text, day: S.day || 0, loc: loc || "", key: key || "", n: quiet ? 0 : 1 });
     while (st.list.length > U.RUMOR_MAX) st.list.shift();
     if (!quiet && U.state) { const q = U.state(S); if (q) q.bang = true; }
+    // その場で分かるように、記録に一行（一つの行動で一度だけ。U19 の書き直す本文でも、その行動の頁に出る）
+    if (!quiet && G.log && S.turn !== st.lineTurn) { st.lineTurn = S.turn; G.log("quest", U.RUMOR_LINE); }
     return true;
   };
   // 古いセーブ：覚え書きと、図鑑の「噂」のタブにあった話を移す
@@ -112,7 +115,7 @@
       const who = subjectName(x.key);
       const kind = (x.key || "").split(":")[0];
       const hint = x.loc ? `続きがありそうな所：${locName(x.loc)}`
-        : who ? (kind === "person" ? `${who}に会えば、続きがありそう` : `${who}に出会えば、何か分かりそう`)
+        : who ? (kind === "person" ? `続きを知っていそうな人：${who}` : `続きに関わる魔物：${who}`)
         : "どこで続きがあるかは、まだ分からない";
       return { i, text: x.t, date: x.day && G.dateOf ? G.dateOf(x.day) : "", day: x.day || 0, loc: x.loc || "", who, hint, quest, fresh: !!x.n };
     });

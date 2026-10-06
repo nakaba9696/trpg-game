@@ -1,6 +1,6 @@
 // U17：依頼が増えたときの印を撮る（Playwright。Chromium は PLAYWRIGHT_BROWSERS_PATH のもの）
 // node tools/build.mjs && node tools/shots_u17.mjs
-// docs/shots/u17/<pc|phone>_<bang|list|rumors|marks>.jpg を書く
+// docs/shots/u17/<pc|phone>_<bang|list|rumors|marks|rumorline>.jpg を書く
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -56,6 +56,13 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   await page.evaluate(() => { const t = document.querySelector('#panel .u13tab[data-u13="adv"]'); if (t) t.click(); });
   await page.evaluate(() => { const b = document.querySelector("#panel .act.marked"); if (b) b.scrollIntoView({ block: "center" }); });
   await shot("marks");
+  // 酒場で噂を聞く（ボタンを押す。U19 の書き直す本文に「噂を書き留めた」の一行）
+  await page.evaluate(() => { const S = G.S; S.mode = "fac"; S.fac = "tavern"; S.gold = 100; S.turn += 1; G.ui.render(); });
+  await page.evaluate(() => { const b = [...document.querySelectorAll("#panel .act")].find((x) => /噂を聞く/.test(x.textContent)); if (b) b.click(); });
+  await page.waitForTimeout(1500);
+  await hideToast();
+  await page.evaluate(() => { const l = document.querySelector("#log"); if (l) l.scrollIntoView(); });
+  await shot("rumorline");
   console.log(vn, "errors:", errs.length ? errs : "none");
   await ctx.close();
 }
