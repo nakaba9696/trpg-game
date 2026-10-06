@@ -246,7 +246,7 @@
     // E3 の条件（裏道の鍵）も効く。zekkai の条件か、絶界を破る剣なら、刃が届く
     if (G.e3Keys) {
       const ks = G.e3Keys(sg.apostle, S);
-      const met = ks.filter((k) => k.met && !/^e7/.test(k.id));
+      const met = ks.filter((k) => k.met);
       if (met.some((k) => k.zekkai)) m.open = true;
       if (met.length) { m.hp -= F.keyHp * met.length; m.hit -= 3 * met.length; }
     }
@@ -259,6 +259,10 @@
     m.agi = Math.max(0, m.agi);
     return m;
   };
+
+  // 決戦を始めるあいだは、長編の備え（陣・顔）で絶界が破れていれば、E3 にも刃が届くと答える（「絶界だ」の一行を出さない）
+  const open0 = G.e3Open;
+  if (open0) G.e3Open = (id, S) => open0(id, S) || !!(pending && pending.kind === "final" && SAGAS[pending.id].apostle === id && X.mods(pending.id, S || G.S).open);
 
   const start0 = G.startCombat;
   G.startCombat = (ids, opt) => {
