@@ -117,7 +117,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   // A・S 級の使徒：絶界を破る剣だけ持ち、条件・仲間の使徒・弱点なしで挑む鍛えた冒険者は、まず勝てない
   // （黒鎧・苔衣は、目的「使徒を討つ」の居城の主として、剣そのものが条件として書かれてきた。数だけ出して落とさない）
   const SWORD_KEY = new Set(["graw", "mordu"]);
-  for (const a of Object.values(D0.E3.LIST).filter((x) => x.rank !== "B")) {
+  for (const a of Object.values(D0.E3.LIST).filter((x) => x.rank !== "B" && !x.noslay)) { // 倒せない使徒は戦いにならない（e8_unslay）
     let w = 0;
     for (let i = 0; i < N; i++) {
       const G = loadEngine();

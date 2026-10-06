@@ -66,7 +66,7 @@
     const rec = (prof().slain || {})[foeId] || null;
     const e = G.e3FoeData(a.id);
     return {
-      apostle: a.id, foe: a.foe, no: a.no, rank: a.rank, calm: a.calm, slain: rec, tries: G.e3Tries(a.id),
+      apostle: a.id, foe: a.foe, no: a.no, rank: a.rank, calm: a.calm, noslay: !!a.noslay, slain: rec, tries: G.e3Tries(a.id),
       stats: rec && e ? { hp: e.hp, dmg: e.dmg, hit: e.hit, def: e.def, agi: e.agi, mres: e.mres, magic: !!e.magic } : null,
       keys: rec ? a.keys.map((k) => k.label) : null,
     };
@@ -85,7 +85,7 @@
     if (a.drop && G.give(a.drop.id)) G.note(`${a.drop.name}を手に入れた。`);
     if (a.rank === "S") G.award("e3_saigai");
     if (a.rank === "A") G.award("e3_kokunan");
-    if (Object.keys(P.slain).filter((k) => G.e3Of(k)).length >= 5) G.award("e3_five");
+    if (Object.keys(P.slain).filter((k) => G.e3Of(k) && !G.e3Of(k).noslay).length >= 5) G.award("e3_five"); // 討伐できる使徒だけ（E8）
     G.award("majin");
     worldChange(a);
     if (G.onProfile) G.onProfile();
