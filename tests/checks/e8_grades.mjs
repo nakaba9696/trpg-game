@@ -114,20 +114,27 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   };
   const N = 8;
   const rows = [];
-  // A・S 級の使徒：絶界を破る剣だけ持ち、条件・仲間の使徒・弱点なしで挑む鍛えた冒険者は、まず勝てない
-  // （黒鎧・苔衣は、目的「使徒を討つ」の居城の主として、剣そのものが条件として書かれてきた。数だけ出して落とさない）
-  const SWORD_KEY = new Set(["graw", "mordu"]);
+  // A・S 級の使徒（討伐できるもの）：絶界を破る剣だけ持ち、条件・仲間の使徒・弱点なしで挑む鍛えた冒険者は、まず勝てない
+  // 持ち主の決定「A 級は基本的に国を挙げないと倒せない」（黒鎧・苔衣も含めて。engine/zz_e8_arank.js）。条件をそろえれば勝てる道は残る
+  const keysAll = (G, on) => Object.values(G.data.E3.LIST).forEach((x) => x.keys.forEach((k) => { k.test = () => on; }));
   for (const a of Object.values(D0.E3.LIST).filter((x) => x.rank !== "B" && !x.noslay)) { // 倒せない使徒は戦いにならない（e8_unslay）
-    let w = 0;
+    let w = 0, k = 0;
     for (let i = 0; i < N; i++) {
       const G = loadEngine();
       party(G, 4000 + i, STRONG, true);
-      Object.values(G.data.E3.LIST).forEach((x) => x.keys.forEach((k) => { k.test = () => false; }));
+      keysAll(G, false);
       if (fight(G, () => G.apply({ e3fight: a.id })) && G.S.flags[a.flag]) w++;
     }
-    rows.push(`${a.id}(${a.rank}) ${w}/${N}`);
-    const max = a.rank === "S" ? 0 : 2;
-    if (w > max && !SWORD_KEY.has(a.id)) fail(`${a.rank} 級の使徒 ${a.id}: 条件なし・剣だけの冒険者に ${w}/${N} 勝てる（${a.rank} 級は基本は勝てない）`);
+    for (let i = 0; i < 4; i++) {
+      const G = loadEngine();
+      party(G, 6000 + i, STRONG, false);
+      keysAll(G, true);
+      if (fight(G, () => G.apply({ e3fight: a.id })) && G.S.flags[a.flag]) k++;
+    }
+    rows.push(`${a.id}(${a.rank}) 剣だけ ${w}/${N}・条件そろえて ${k}/4`);
+    const max = a.rank === "S" ? 0 : 1;
+    if (w > max) fail(`${a.rank} 級の使徒 ${a.id}: 条件なし・剣だけの冒険者に ${w}/${N} 勝てる（${a.rank} 級は基本は勝てない）`);
+    if (k < 1) fail(`${a.rank} 級の使徒 ${a.id}: 条件をそろえても勝てない（勝てる道が無い）`);
   }
   // 魔物の B 級（ボス・迷宮の主・強敵）：その相手の点より 15 高い、備えた冒険者（良い装備・仲間三人・薬）なら倒せる
   for (const id of Object.keys(D0.ENEMIES).filter((x) => !G0.e3Of(x) && G0.gradeOf(x) === "B")) {
@@ -140,5 +147,5 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
     if (w < 2) fail(`B 級の魔物 ${id}（${D0.ENEMIES[id].name}）: 備えた冒険者でも ${w}/4 しか勝てない`);
   }
-  console.log("NOTE E8 A・S 級の使徒に、剣だけ（条件なし）で挑んだ勝ち数: " + rows.join(" ／ "));
+  console.log("NOTE E8 A・S 級の使徒の勝ち数: " + rows.join(" ／ "));
 };

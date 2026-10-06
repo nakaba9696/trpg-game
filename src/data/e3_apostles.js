@@ -30,6 +30,7 @@
     A: { tier: 7, hp: 320, dmg: [3, 10, 8], hit: 85, def: 30, agi: 60, mres: 40, gold: [500, 1000] },
     B: { tier: 6, hp: 200, dmg: [2, 10, 5], hit: 78, def: 22, agi: 50, mres: 30, gold: [300, 700] },
   };
+  D.E3_BASE = BASE; // 格ごとの基準の強さ（E8 で A 級の下限に使う。engine/zz_e8_arank.js）
   const foe = (rank, o) => Object.assign({ boss: true, majin: true, will: 999 }, BASE[rank] || BASE[{ 天災: "S", 国難: "A", 討伐: "B" }[rank]], { loot: [["gem", 1]] }, o);
 
   D.E3 = {
