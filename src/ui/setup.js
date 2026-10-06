@@ -51,10 +51,14 @@
     if (fine) h2.append(h("span", "fine", fine));
     root.append(h2);
   }
-  function steps(root, i) {
+  // 作成の段（人物／能力値／確認）。extra を渡すと、段の並びの右端に小さく置く（人物の「全部おまかせ」。U20）
+  function steps(root, i, extra) {
     const ol = h("ol", "creSteps");
     ["人物", "能力値", "確認"].forEach((s, j) => { const li = h("li", j === i ? "on" : j < i ? "done" : "", s); if (j === i) li.setAttribute("aria-current", "step"); ol.append(li); });
-    root.append(ol);
+    if (!extra) { root.append(ol); return; }
+    const row = h("div", "creStepsRow");
+    row.append(ol, extra);
+    root.append(row);
   }
 
   // ---------------------------------------------------------------- 1. タイトル
@@ -89,11 +93,10 @@
   function person(root) {
     const HN = D.CRE_HINTS || {}, TX = D.CRE_TEXT || {};
     const eff = (k) => h("p", "creEff", HN[k] || "");
-    steps(root, 0);
-    const top = h("div", "creHead");
-    head(top, "あなたは何者か", "おまかせで全部埋まっている。変えたい所だけ変えればよい");
-    top.append(btn("全部おまかせ", "primary", () => { const s = draft.customGoal; draft = cre.fresh(R); draft.customGoal = s; sfx("dice", "coin"); setup.show(); }, "p-all"));
-    root.append(top);
+    // 上の見出しと人物の札は外した（札の中身は「確認」で見られる。持ち主の決定 U20）。「全部おまかせ」は段の並びの右端に小さく
+    const all = btn("全部おまかせ", "small", () => { const s = draft.customGoal; draft = cre.fresh(R); draft.customGoal = s; sfx("dice", "coin"); setup.show(); }, "p-all");
+    all.title = "名前・年齢・生まれ・職業・目的を全部おまかせで決め直す";
+    steps(root, 0, all);
 
     // 初めて遊ぶ人（トロフィーも墓碑も無い）には、おまかせで旅立つのを勧める（強制しない）
     if (cre.firstTime && cre.firstTime()) {
@@ -103,21 +106,12 @@
     }
 
     const lay = h("div", "cre2");
-    // 姿と短い説明（スマホでは上）
-    const card = h("aside", "whoCard");
-    const txt = h("div", "whoTxt");
-    card.append(txt);
+    // 年齢と生まれの説明の一行を、選び直すたびに書き換える
     function refresh() {
-      const c = D.CLASSES[draft.cls], a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
-      txt.textContent = "";
-      txt.append(h("b", "whoName", draft.profile.name || "（名無し）"));
-      txt.append(h("span", "whoLine", `${c.name}・${draft.sex}・${a.name}（${draft.profile.age || "?"}歳）・${o.short}生まれ`));
-      // 職業の紹介と得意な能力値・はじめの町は札に出さない（職業のカードと、最後のシートに出る。持ち主の決定）
+      const a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
       if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
       if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
-      // 畳んであるときも、いま何が入っているかは見える
     }
-    lay.append(card);
 
     const form = h("div", "creForm");
     let oBlurb = null, aBlurb = null;
