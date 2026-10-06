@@ -33,7 +33,13 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   });
   starts.forEach((id) => { if (!evOf(id)) fail(`入口の出来事 ${id} が無い`); });
   [sg.toy.after, sg.final.flee].forEach((id) => { if (!evOf(id)) fail(`出来事 ${id} が無い`); });
-  if (sg.chapters.length < 8 || sg.chapters.length > 12) fail(`章の数が ${sg.chapters.length}（8〜12）`);
+  // 分量は格で変える（持ち主の決定）：S 級 十〜十二章・A 級 六〜八章・B 級 三〜五章（後日談の終章は数えない）
+  const RANGE = { S: [10, 12], A: [6, 8], B: [3, 5] }[sg.grade] || [3, 12];
+  const nCh = G.e7.count("mirza");
+  if (nCh < RANGE[0] || nCh > RANGE[1]) fail(`${sg.grade} 級の長編の章の数が ${nCh}（${RANGE.join("〜")}）`);
+  if (sg.opener && !evOf(sg.opener.start)) fail(`入口の出来事 ${sg.opener.start} が無い`);
+  const PREP = sg.chapters.findIndex((c) => c.subs && c.subs.train);
+  const FINAL = PREP + 1;
   // 格は G.e7.grade を通して読む。長編の表の格と、使徒の格が食い違わない
   if (G.e7.grade(sg.apostle) !== sg.grade) fail(`長編の格 ${sg.grade} と、使徒の格 ${G.e7.grade(sg.apostle)} が違う`);
   let chars = 0;
@@ -104,7 +110,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     }
   };
   const PLACES = { town: "nerva" };
-  const runSaga = ({ seed, prefer = [], preps = ["ward", "arms", "train", "host"], flee = false, mask = false, cls }, want) => {
+  const runSaga = ({ seed, prefer = [], preps = ["ward", "arms", "train", "host"], investigate = ["rope", "bert"], flee = false, mask = false, cls }, want) => {
     const S = start(seed, cls);
     if (mask) S.inv.e3_mask = 1;
     const log = `結末 ${want}・種 ${seed}`;
@@ -121,9 +127,9 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       if (!st || !st.on) loc = PLACES.town;
       else if (c && c.subs) {
         const done = Object.keys(c.subs).filter((k) => st.sub[k]).length;
-        const want2 = c === sg.chapters[7] ? preps : Object.keys(c.subs);
+        const want2 = ch === PREP ? preps : investigate;
         const k = want2.find((x) => !st.sub[x]);
-        if (k && (done < (c.need || 1) || c === sg.chapters[7])) loc = c.subs[k].at[0];
+        if (k && (done < (c.need || 1) || ch === PREP)) loc = c.subs[k].at[0];
         else loc = sg.chapters[ch + 1].at[0];
       } else loc = c.at === "town" ? PLACES.town : c.at[0];
       goTo(loc);
@@ -134,15 +140,15 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       // 段の行動を選ぶ（次の章があれば、備えをそろえてから）
       const nx = acts.find((a) => /:n$/.test(a.id));
       const sub = acts.find((a) => /:s:/.test(a.id));
-      const a = c === sg.chapters[7] && sub ? sub : nx || acts[0];
+      const a = ch === PREP && sub ? sub : nx || acts[0];
       const before = JSON.stringify([st && st.ch, st && st.sub, st && st.prep]);
       G.act(a.id);
-      const fleeNow = flee && !fled && G.e7.peek("mirza").ch === 8;
+      const fleeNow = flee && !fled && G.e7.peek("mirza").ch === FINAL;
       play(prefer, fleeNow ? "flee" : "win", log);
       if (fleeNow) {
         fled = true;
         if (G.S.mode === "event") play([/備え直しに戻る/], "win", log);
-        if (G.e7.peek("mirza").ch !== 7) fail(`決戦から逃げても、備え直す章に戻らない（${log}）`);
+        if (G.e7.peek("mirza").ch !== PREP) fail(`決戦から逃げても、備え直す章に戻らない（${log}）`);
         if (!G.e7.peek("mirza").retreats) fail(`決戦から逃げた数が残らない（${log}）`);
       }
       const st2 = G.e7.peek("mirza", G.S);
@@ -205,6 +211,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     // 剣で絶界を破っても、備えなしなら正面の強さ（裏道の E3 の戦いよりずっと強い）
     const e3 = G.e3FoeData("mirza");
     if (!(sg.final.hp > e3.hp * 1.5)) fail("正面からの決戦が、裏道の戦いと変わらない強さ");
+    // 開いた見出し：章の呼び名
+    if (G.e7.chName("mirza", 0) !== "第一章" || G.e7.chName("mirza", sg.chapters.length - 1) !== "終章") fail("章の呼び名が違う");
   }
 
   // ---------------------------------------------------------------- 古いセーブ・ほかの冒険
@@ -233,5 +241,5 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (r.rate > 2.5) fail(`文の癖が多い ${f}：千字あたり ${r.rate.toFixed(2)} ${JSON.stringify(r.counts)}`);
     if (r.dots > 2.0) fail(`「……」が多い ${f}：千字あたり ${r.dots.toFixed(2)}`);
   }
-  if (failures === 0) ok(`E7 長編「${sg.title}」（${sg.chapters.length} 章・出来事 ${E7.EVENTS.length}・結末 ${[...new Set(ends)].join("・")}・裏道・文 ${chars} 字）`);
+  if (failures === 0) ok(`E7 長編「${sg.title}」（${sg.grade} 級・${nCh} 章と終章・出来事 ${E7.EVENTS.length}・結末 ${[...new Set(ends)].join("・")}・裏道・文 ${chars} 字）`);
 };

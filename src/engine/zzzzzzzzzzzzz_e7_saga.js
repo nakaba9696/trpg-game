@@ -77,15 +77,21 @@
     return !!(sg.open && sg.open(S));
   };
 
+  // 章の数（後日談の終章は数えない）と、章の呼び名（「第三章」「終章」）
+  const KAN = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
+  X.count = (id) => SAGAS[id].chapters.filter((c) => !c.after).length;
+  X.chName = (id, i) => { const c = SAGAS[id].chapters[i]; return c && c.after ? "終章" : `第${KAN[i] || i + 1}章`; };
+
   // 行動の欄に出す段：[{ key, label, sub, ev, kind: "open"|"ch"|"sub"|"next" }]
   X.here = (S) => {
     S = S || G.S;
     if (!S || S.over || S.travel || S.mode !== "explore" || S.combat || S.event) return [];
     const out = [];
     Object.entries(SAGAS).forEach(([id, sg]) => {
-      const c0 = sg.chapters[0];
+      // 入口（opener。章に数えない噂の場面。無ければ一章目）
+      const c0 = sg.opener || sg.chapters[0];
       if (X.canOpen(id, S) && c0 && atOk(c0.at, S) && (!c0.cond || c0.cond(S, X.peek(id, S) || { f: {} }))) {
-        out.push({ key: `${id}:open`, label: sg.openLabel || `${sg.title}：${sg.chapters[0].title}`, sub: sg.openSub || "噂をたどる", ev: sg.chapters[0].start, kind: "open", id });
+        out.push({ key: `${id}:open`, label: sg.openLabel || `${sg.title}：${c0.title}`, sub: sg.openSub || "噂をたどる", ev: c0.start, kind: "open", id });
         return;
       }
       const st = X.peek(id, S);
@@ -93,19 +99,19 @@
       const cur = X.cur(id, S);
       if (!cur) return;
       const { i, c } = cur;
-      const N = sg.chapters.length;
+      const N = X.count(id);
       if (c.subs) {
         Object.entries(c.subs).forEach(([k, s]) => {
           if (st.sub[k] || !atOk(s.at, S) || (s.cond && !s.cond(S, st))) return;
-          out.push({ key: `${id}:s:${k}`, label: `${sg.title}：${s.title}`, sub: `第${i + 1}章・${c.title}`, ev: s.start, kind: "sub", id });
+          out.push({ key: `${id}:s:${k}`, label: `${sg.title}：${s.title}`, sub: `${X.chName(id, i)}・${c.title}`, ev: s.start, kind: "sub", id });
         });
         const nx = sg.chapters[i + 1];
         if (nx && subsDone(st, c) >= (c.need || 1) && atOk(nx.at, S) && (!nx.cond || nx.cond(S, st)))
-          out.push({ key: `${id}:n`, label: `${sg.title}：${nx.title}`, sub: `第${i + 2}章／全${N}章`, ev: nx.start, kind: "next", id });
+          out.push({ key: `${id}:n`, label: `${sg.title}：${nx.title}`, sub: `${X.chName(id, i + 1)}／全${N}章`, ev: nx.start, kind: "next", id });
         return;
       }
       if (!atOk(c.at, S) || !gapOk(c, st, S) || (c.cond && !c.cond(S, st))) return;
-      out.push({ key: `${id}:c`, label: `${sg.title}：${c.title}`, sub: `第${i + 1}章／全${N}章`, ev: c.start, kind: "ch", id });
+      out.push({ key: `${id}:c`, label: `${sg.title}：${c.title}`, sub: `${X.chName(id, i)}／全${N}章`, ev: c.start, kind: "ch", id });
     });
     return out;
   };
@@ -355,7 +361,7 @@
         } else if (c.at !== "town") desc.push(`行き先：${lines(c.at).map(locName).join("か")}`);
         out.unshift({
           key: "e7:" + id, src: "e7", kind: sg.kind || "使徒を追う", title: `${sg.title}：${c.title}`, client: sg.client || "", from: locName(st.from || sg.home),
-          state: "active", stateLabel: G.q7.STATE.active, desc: desc.filter(Boolean), progress: `第${i + 1}章／全${sg.chapters.length}章`,
+          state: "active", stateLabel: G.q7.STATE.active, desc: desc.filter(Boolean), progress: `${X.chName(id, i)}／全${X.count(id)}章`,
           reward: "", deadline: null, report: null,
         });
       });

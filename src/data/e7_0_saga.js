@@ -62,29 +62,25 @@
     title: "微笑の糸を断つ", kind: "使徒を追う", client: "芸の町サリュエスの人々",
     // 日傘の若君に会ったか、踊りの町の話を聞いたら、町で噂をたどれる
     open: (S) => !!(S.flags.mirza || S.flags["ev:e3_meet_mirza"] || S.flags["ev:m4_here_dance"] || lore(S, "m4_dance") || lore(S, "mirza")) && (S.day || 0) >= 10,
-    openLabel: "微笑の糸を断つ：踊りの町の噂をたどる",
+    openLabel: "微笑の糸を断つ：広場の音楽",
     openSub: "酒場で、日傘の話を聞く",
 
+    // 入口（章に数えない）：町の酒場で噂を聞く。噂を聞いた人は行動の欄から、ほかは町の出来事 e7m_1 で
+    opener: { at: "town", start: "e7m_1", cond: (S) => S.loc !== "w7_salyues" },
+    // B 級は「そこそこ」：噂 → 調べる → 備え → 決戦 → その後 を五章と終章で（持ち主の決定。A 級は六〜八章、S 級は十〜十二章）
     chapters: [
-      { title: "広場の音楽", line: "旅の靴売りが、芸の町サリュエスで三日三晩の踊りがあったと言っていた。", at: "town", start: "e7m_1", gap: 0, cond: (S) => S.loc !== "w7_salyues",
-        chron: "旅の靴売りから、芸の町サリュエスが三日三晩踊ったと聞く" },
-      { title: "踊りのあと", line: "芸の町サリュエスへ行き、広場で何があったのかを見る。", at: ["w7_salyues"], start: "e7m_2",
+      { title: "踊りのあと", line: "芸の町サリュエスで三日三晩の踊りがあったという。行って、広場で何があったのかを見る。", at: ["w7_salyues"], start: "e7m_2", gap: 0,
         chron: "芸の町サリュエスで、踊りのあとの広場を見る" },
-      { title: "糸の出どころ", line: "日傘の若君のことを調べる。人に聞き、書庫を読み、昔の踊りの生き残りを探す。", at: ["w7_melvi", "w7_hermitage", "karna"], need: 2,
+      { title: "糸の出どころ", line: "日傘の若君のことを調べ、手を貸す者を探す。書庫・生き残り・糸屋・酒場の二階の絵描きのうち、二つ以上。", at: ["w7_melvi", "w7_hermitage", "karna"], need: 2,
         subs: {
           lib: { title: "写本の町の古い記録", at: ["w7_melvi"], start: "e7m_3_lib", line: "写本の町メルヴィの書庫で、昔の踊りの記録を探す" },
           old: { title: "峠の庵の老婆", at: ["w7_hermitage"], start: "e7m_3_old", line: "峠の庵ザレムに、昔の踊りの生き残りがいるという" },
           rope: { title: "糸屋の婆さん", at: ["karna"], start: "e7m_3_rope", line: "自由都市ブランデールの糸屋に、広場の糸を見せる" },
+          bert: { title: "付けの利く剣", at: ["karna"], start: "e7m_4", line: "自由都市ブランデールの酒場の二階の絵描きに、剣を頼む", cond: (S, st) => !!(st.sub.rope || st.sub.lib || st.sub.old) },
         },
         chron: "日傘の若君の糸の出どころを調べる" },
-      { title: "付けの利く剣", line: "自由都市ブランデールの酒場の二階に、糸の匂いを知っている絵描きがいるという。", at: ["karna"], start: "e7m_4",
-        chron: "自由都市ブランデールの酒場の二階で、絵描きに剣を頼む" },
-      { title: "灰の道", line: "断界山脈を越えて、使徒領・灰の荒野へ向かう。", at: ["mountains"], start: "e7m_5",
-        chron: "断界山脈で、糸に吊られた村を越える" },
-      { title: "日傘の庭", line: "使徒領・灰の荒野に、糸に吊られた人形の庭がある。", at: ["wasteland"], start: "e7m_6",
-        chron: "灰の荒野の日傘の庭に踏み込む" },
-      { title: "一度目の対面", line: "庭の奥で、日傘の若君が待っている。", at: ["wasteland"], start: "e7m_7",
-        chron: "日傘の若君に正面から挑み、退く" },
+      { title: "灰の荒野へ", line: "断界山脈を越えて使徒領・灰の荒野へ。日傘の庭の奥で、若君が待っている。", at: ["mountains"], start: "e7m_5",
+        chron: "断界山脈を越え、灰の荒野の日傘の庭で若君に挑み、退く" },
       { title: "備え直す", line: "正面から勝つための備えをする。備えを二つ以上そろえたら、灰の荒野へ戻れる。", at: "town", need: 2,
         subs: {
           train: { title: "左手の稽古", at: ["w2_zalgros"], start: "e7m_8_train", line: "闘技の都ザルグロスの稽古場で、糸を見る目を鍛える" },
