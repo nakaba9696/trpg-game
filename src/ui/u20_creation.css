@@ -1,0 +1,4 @@
+/* U20：作成の段の並び（人物／能力値／確認）の右端に、小さな「全部おまかせ」。人物の画面は「名前と生まれ」からすぐ始まる */
+.creStepsRow { display: flex; align-items: center; gap: 10px; }
+.creStepsRow .creSteps { flex: 1 1 auto; min-width: 0; }
+.creStepsRow > .btn.small { flex: 0 0 auto; white-space: nowrap; }
