@@ -25,8 +25,8 @@
 
   const LIST = {
     // ---------------------------------------------------------------- 心
-    k2_steadymind: P({ name: "据わった肝", stat: "体力", need: { 体力: 10 }, hint: "正気の減りが三割軽い",
-      fx: { sanity: 0.7 }, learn: { teach: ["sister"], scroll: true, suffer: { kind: "sanity", why: "見てはいけないものを見るのにも、手順がある。目を逸らす場所を、体が先に覚えた。" } } }),
+    k2_steadymind: P({ name: "据わった肝", stat: "体力", need: { 体力: 10 }, hint: "正気の減りが二割軽い",
+      fx: { sanity: 0.8 }, learn: { teach: ["sister"], scroll: true, suffer: { kind: "sanity", why: "見てはいけないものを見るのにも、手順がある。目を逸らす場所を、体が先に覚えた。" } } }),
     k2_coldhead: P({ name: "冷えた頭", stat: "知力", need: { 知力: 10 }, hint: "恐れ・怯え・踏みとどまる判定に +10%",
       fx: { check: { re: /恐|怯|震え|踏みとどま|耐え|こらえ|正気/, n: 10 } },
       learn: { train: { gold: 60, days: 2 }, scroll: true, fumble: { why: "足がすくんだ自分を、あとで思い出して腹が立った。次は、腹が立つほうが先に来る。" } } }),
@@ -140,6 +140,6 @@
   }).forEach(([eid, list]) => add(D.K1_DROPS, eid, list));
 
   // 失敗から覚えるときの見込み：はじめの見込み・同じ種類で失敗を重ねるごとに足す分・上限
-  D.K2_FUMBLE = { base: 0.12, step: 0.08, max: 0.5 };
-  D.K2_SUFFER = { base: 0.08, step: 0.05, max: 0.35 };
+  D.K2_FUMBLE = { base: 0.08, step: 0.06, max: 0.4 };
+  D.K2_SUFFER = { base: 0.03, step: 0.02, max: 0.15 };
 })(globalThis.G = globalThis.G || {});

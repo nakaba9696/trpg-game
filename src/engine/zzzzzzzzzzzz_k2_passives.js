@@ -92,7 +92,7 @@
       const m = owned(S).reduce((a, [, fx]) => (fx.sanity ? a * fx.sanity : a), 1);
       if (m < 1) n = -Math.max(1, Math.round(-n * m));
       const r = san0(n, quiet, cap);
-      if (G.S === S && !S.over && n <= -3) K2.suffer("sanity");
+      if (G.S === S && !S.over && n <= -5) K2.suffer("sanity");   // 大きく削られたときだけ数える
       return r;
     }
     return san0(n, quiet, cap);
