@@ -1,13 +1,7 @@
-/* U16：作成画面の人物の札を、ほかの欄と同じ一列にそろえる（PC で左にはみ出して浮いて見えていた）。
-   札は欄の上に横長で置き、下へ読み進めても見えるように上に貼りつける。名前の候補と「別の候補」、歳の選び */
+/* U16：作成画面の欄を一列にそろえる（人物の札は U20 で外した）。名前の候補と「別の候補」、歳の選び */
 .cre2 { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-.whoCard { position: sticky; top: 0; z-index: 3; grid-template-columns: minmax(0, 1fr); justify-items: start; text-align: left; padding: 10px 14px; }
-.whoTxt { gap: 2px; }
 .creNames { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
 .creNames .chips { flex: 0 1 auto; }
 .creSec h3 > .btn.small { font-family: var(--f-ui); }
 .ageNum { width: auto; }
 .ageNum select { min-width: 5.5em; border: 1px solid var(--rule); background: var(--field); border-radius: 3px; padding: 6px 8px; }
-@media (max-width: 720px) {
-  .whoCard { position: static; }
-}
