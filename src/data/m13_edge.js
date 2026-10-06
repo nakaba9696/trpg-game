@@ -175,6 +175,8 @@
       ],
     },
   );
+  // 人の姿は出さない（誰にも見えない客も、絵にしない。tests/checks/a4_art.mjs）
+  D.EVENT_NOBODY = (D.EVENT_NOBODY || []).concat(["m13_voice", "m13_door", "m13_stranger", "m13_relic"]);
   add("m13_voice", [
     { on: "mad1", label: "「誰だ」と答える", ok: { text: "「誰だ」\n\n声は少し黙った。それから、あなたの答え方をそっくり真似して、笑った。「誰だ」。", sanity: -3, lore: "m13_voice:answer" } },
     { on: "mad2", label: "声の言うとおりに、角を曲がる", ok: { text: "「右」と声が言った。曲がった。「次も右」曲がった。四つ曲がったら、来た道の三つ先の角に出ていた。足もとに、誰かの落とし物があった。", sanity: -4, lore: "m13_voice:path", m13: { find: true } } },
