@@ -30,7 +30,7 @@ button.f2cell:hover, .f2cell.on { background: var(--item-hover); border-color: v
 .f2detail .f2first { margin: 2px 0; font-size: 12px; }
 @media (max-width: 760px) {
   .f2panes { grid-template-columns: 1fr; }
-  .f2detail { position: static; order: -1; max-height: none; }
+  .f2detail { position: static; max-height: none; scroll-margin-top: 70px; }
   .f2grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
 }
 /* 人物・用語 */
@@ -59,3 +59,13 @@ button.f2cell:hover, .f2cell.on { background: var(--item-hover); border-color: v
 .f2heard ul { list-style: none; padding-left: 0; }
 .f2heard li { padding: 6px 0; border-top: 1px solid var(--rule); line-height: 1.7; }
 .f2heard li:first-child { border-top: 0; }
+/* 一覧の見せ方（見つけたものだけ／すべて）と、まとめた「まだ見ぬもの」の札 */
+.f2view { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.f2view .btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--box); }
+.f2rest { display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 6px 8px;
+  border: 1px dashed var(--rule); border-radius: 2px; background: transparent; color: var(--muted); font-size: 12px; cursor: pointer; }
+.f2rest:hover, .f2rest:focus-visible { border-color: var(--accent); color: var(--ink); }
+.f2words .f2rest { min-height: 0; }
+.f2cell .f2name { font-size: 13px; }
+.f2back { display: none; }
+@media (max-width: 760px) { .f2back { display: inline-block; margin-bottom: 8px; } }

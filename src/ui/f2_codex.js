@@ -58,7 +58,23 @@
   const detail = h("div", "f2detail");
   detail.setAttribute("aria-live", "polite");
   panes.append(list, detail);
-  body.append(tabs, sum, find, panes);
+  // 一覧の見せ方：見つけたものだけ（はじめ）／すべて（まだ見ていない「？？？」も並べる）。見る人ごとに覚える
+  const VIEW_KEY = "morsveld-f2-view";
+  let knownOnly = true;
+  try { knownOnly = localStorage.getItem(VIEW_KEY) !== "all"; } catch {}
+  const view = h("div", "f2view");
+  view.setAttribute("role", "group");
+  view.setAttribute("aria-label", "一覧の見せ方");
+  const viewBtn = (label, only) => {
+    const b = h("button", "btn small", label);
+    b.type = "button";
+    b.onclick = () => { knownOnly = only; try { localStorage.setItem(VIEW_KEY, only ? "known" : "all"); } catch {} show(cur); };
+    return b;
+  };
+  const VIEWS = [viewBtn("見つけたものだけ", true), viewBtn("すべて並べる", false)];
+  view.append(...VIEWS);
+  const COMPACT_TABS = ["item", "foe", "person", "lore"];
+  body.append(tabs, sum, view, find, panes);
   dlg.append(head, body);
   dlg.addEventListener("click", (ev) => { if (ev.target === dlg) dlg.close(); });
   document.body.append(dlg);
@@ -175,10 +191,18 @@
 
   // ---------------------------------------------------------------- 一覧
   let cur = "item";
+  // 狭い画面（一覧の下に説明が来る）では、選んだ説明の頭に「一覧へ戻る」を置く（narrow は下で決める）
+  const toDetail = (from) => {
+    if (!narrow()) return;
+    const back = h("button", "btn small f2back", "一覧へ戻る");
+    back.type = "button";
+    back.onclick = () => { from.scrollIntoView({ block: "center" }); from.focus({ preventScroll: true }); };
+    detail.prepend(back);   // 説明まで動くのは各 show* の reveal()
+  };
   const cells = () => [...list.querySelectorAll(".f2cell")];
   const cell = (label, known, fresh, onPick) => {
     const b = h(known ? "button" : "div", "f2cell" + (known ? "" : " unknown") + (fresh ? " fresh" : ""));
-    if (known) { b.type = "button"; b.onclick = () => { cells().forEach((x) => x.classList.remove("on")); b.classList.add("on"); onPick(b); }; }
+    if (known) { b.type = "button"; b.onclick = () => { cells().forEach((x) => x.classList.remove("on")); b.classList.add("on"); onPick(b); toDetail(b); }; }
     else { b.tabIndex = 0; b.setAttribute("aria-label", "まだ見ていない"); b.onclick = () => showUnknown(); }
     if (label) b.append(h("span", "f2name", label));
     return b;
@@ -565,7 +589,26 @@
     // U9：？の人の見つけ方（まだ会っていない人は押せないので、ここに書く）
     if (key === "person") detail.append(h("p", "fine", "？の人には、まだ会っていない。"));
     ({ item: drawItems, foe: drawFoes, person: drawPeople, lore: drawLore, heard: drawHeard })[key]();
+    compact(key);
     markTabs();
+  }
+  // 見つけたものだけのとき：まだ見ていない「？？？」のマスは、区分ごとに「まだ見ぬもの ×数」の札一つにまとめる
+  function compact(key) {
+    const on = COMPACT_TABS.includes(key);
+    view.hidden = !on;
+    VIEWS.forEach((b, i) => b.setAttribute("aria-pressed", String(i === 0 ? knownOnly : !knownOnly)));
+    if (!on || !knownOnly) return;
+    list.querySelectorAll(".f2group").forEach((g) => {
+      const grid = g.querySelector(".f2grid");
+      const unk = grid ? [...grid.querySelectorAll(".f2cell.unknown")] : [];
+      if (!unk.length) return;
+      unk.forEach((x) => x.remove());
+      const rest = h("button", "f2rest", `まだ見ぬもの ×${unk.length}`);
+      rest.type = "button";
+      rest.title = "押すと、まだ見ていないものも並べる";
+      rest.onclick = () => VIEWS[1].click();
+      grid.append(rest);
+    });
   }
   F2.open = (key) => {
     if (G.S && G.codexSeed) G.codexSeed(G.S);
