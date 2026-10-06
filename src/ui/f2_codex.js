@@ -466,7 +466,7 @@
     detail.append(foeCanvas(id, 160, false));
     detail.append(h("h3", "f2title", e.name));
     if (apostle) {
-      detail.append(h("p", "fine", `使徒。${G.gradeOf ? `ギルドの格付けは${G.gradeName(G.gradeOf(id))}。` : ""}格が違う。`));
+      detail.append(h("p", "fine", `使徒。${G.gradeOf ? `ギルドの格付けは${G.gradeName(G.gradeOf(id))}。` : ""}${G.gradeOf && G.gradeOf(id) === "S" ? "何を考えているのか、人には分からない。" : "格が違う。"}`));
       detail.append(flavor(G.codexFoeText(id), "foe", id));
       detail.append(h("p", "fine f2first", `初めて出会った：${[rec.by, rec.date].filter(Boolean).join("・") || "—"}`));
     } else {

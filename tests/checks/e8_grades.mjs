@@ -81,6 +81,10 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   if (!notAll.test(vision)) fail("docs/VISION.md の用語集に「言葉を解する化け物がみな使徒とは限らない」が無い");
   if (!(D0.LORE_GM || []).some((t) => notAll.test(t))) fail("GM 向けの設定に「みな使徒とは限らない」が無い");
   if (!((D0.LORE.majin || {}).lines || []).some((l) => notAll.test(l[1]))) fail("用語説明「使徒」に「みな使徒とは限らない」が無い");
+  // S 級は物理法則にすら影響を与える格。その言葉（意思）を人は理解できないことがある
+  if (!/物理法則/.test(vision) || !(D0.LORE_GM || []).some((t) => /物理法則/.test(t))) fail("S 級の説明（物理法則にすら影響を与える格）が VISION か GM 向けの設定に無い");
+  if (!/理解できないことがある|理解できるとは限らない/.test(vision)) fail("VISION に、S 級の言葉を人は理解できないことがある、が無い");
+  if (!/物の理/.test(D0.E8.WORD.S)) fail("格の言い方（D.E8.WORD.S）に S 級の性質が無い");
 
   // ---------------------------------------------------------------- 格と強さ（ボット）
   const STRONG = { 筋力: 67, 体力: 67, 敏捷: 57, 知力: 42, 魔力: 30, 魅力: 42 };
