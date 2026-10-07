@@ -1,5 +1,5 @@
 // E11：絶界は特定の使徒の固有の守り（src/data/zz_e11_wall.js・src/engine/zz_e3y_e11_wall.js）
-// - 絶界を持つのは一体か二体だけ。ほかの使徒には、はじめから刃が届く（剣が無くても弾かれない）。挑んだときに固有の守りの一行が出る
+// - 絶界を持つのはちょうど一体（持ち主の決定「絶界は使徒1名だけの能力にして」）。ほかの使徒には、はじめから刃が届く（剣が無くても弾かれない）。挑んだときに固有の守りの一行が出る
 // - 絶界を持つ使徒は、伝説の刃かその使徒の伝承の条件（zekkai）が無いと刃が弾かれる
 // - 長編の若君（カルマトス）の決戦の守りは「糸」と書く（絶界と書かない）
 // - 文から「使徒はみな絶界」「二振りの剣でしか斬れない」を消した
@@ -13,7 +13,7 @@ export default ({ fail, loadEngine, seeded }) => {
   const D0 = G0.data;
   const E11 = D0.E11;
   if (!E11 || !G0.hasWall) return fail("絶界の表（D.E11・G.hasWall）が無い");
-  if (!(E11.WALL.length >= 1 && E11.WALL.length <= 2)) fail(`絶界を持つ使徒が ${E11.WALL.length} 体（一体か二体）`);
+  if (E11.WALL.length !== 1) fail(`絶界を持つ使徒が ${E11.WALL.length} 体（持ち主の決定「絶界は使徒1名だけの能力」。ちょうど一体）`);
   for (const id of E11.WALL) if (!D0.E3.LIST[id] || !D0.E3.LIST[id].keys.some((k) => k.zekkai)) fail(`絶界を持つ ${id} に、伝承の破り方（zekkai の条件）が無い`);
   for (const a of Object.values(D0.E3.LIST).filter((x) => !x.noslay && !G0.hasWall(x.id))) if (!E11.GUARD[a.id]) fail(`絶界を持たない使徒 ${a.id} に固有の守りの一行が無い`);
 
