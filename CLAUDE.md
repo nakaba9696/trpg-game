@@ -28,7 +28,7 @@ node tools/build.mjs && node tests/run.mjs
 | `src/ui/scene.js` | 背景の絵（canvas） | A |
 | `src/ui/art_monsters.js`・`src/ui/art_people.js` | 魔物・人物の入口（canvas では描かない。人物の「誰か」を決める表。A10） | A |
 | `assets/`・`src/ui/v4_assets.js` | 持ち主が作った画像（ビルドで `dist/site/` に別ファイルとして置き、HTML から相対パスで読む。`tools/assets.mjs`・`tools/site.mjs`・[docs/publish.md](docs/publish.md)。描く物の一覧は `docs/art/portraits.md`） | A |
-| `src/ui/ui.js`, `src/ui/setup.js`, `src/main.js`, `src/style.css`, `src/index.html` | 画面（`src/ui/*.css` は style.css のあとに名前順で足される。PC 向けの配置は `src/ui/v9_pc.*` と、右の列に行動の組を並べる `src/ui/zzzzz_u21_side.*`、図鑑の一画面の形は `src/ui/zu22_codex_pc.*`） | U |
+| `src/ui/ui.js`, `src/ui/setup.js`, `src/main.js`, `src/style.css`, `src/index.html` | 画面（`src/ui/*.css` は style.css のあとに名前順で足される。PC 向けの配置は `src/ui/v9_pc.*` と、右の列に行動の組を並べる `src/ui/zzzzz_u21_side.*`、図鑑の探す・絞る・並べ替えと読みやすい説明は `src/ui/zu24_codex_read.*`） | U |
 | `src/manifest.json` | 読み込む順番（順番を決めたいファイルだけ。無いものは `tools/files.mjs` が自動で足す） | 追記だけ |
 
 ## 決まり
