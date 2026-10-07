@@ -74,3 +74,21 @@ body.v9pc #panel .u13who .alist { grid-template-columns: repeat(3, minmax(0, 1fr
 @media (max-width: 1240px) {
   body.v9pc #panel .agroup.u13pop .alist, body.v9pc #panel .u13who .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* F4：戦闘の 5 つの見出し。開いた見出しの中の小見出し（作戦・仲間ごとの指示）と、「前と同じ」 */
+#panel .agroup.u13main .u13sub { margin-top: 6px; }
+#panel .agroup.u13main .u13subt { margin: 6px 0 2px; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .04em; border-top: 1px dashed var(--rule); padding-top: 4px; }
+#panel .agroup.u13main .u13chips .alist { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+#panel .agroup.u13main .u13chips .act { min-height: 34px; width: auto; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 3px; align-content: center; }
+#panel .agroup.u13main .u13chips .act > span { display: none; }
+#panel .agroup.u13main .u13chips .act b { font-size: 13.5px; }
+body.v9pc #panel .agroup.u13main .u13chips .act:has(.v9key) { padding-left: 26px; }
+body.v9pc #panel .agroup.u13main .u13chips .v9key { top: 8px; left: 4px; }
+#panel .u13drawers .u13again { flex: 0 1 auto; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 6px; }
+#panel .u13drawers .u13tab:disabled { opacity: .45; cursor: default; }
+body.v9pc #panel.u13fight .agroup.u13main.u13many .alist { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 14px; }
+body.v9pc.v9combat #panel.u13fight > .u13main { flex: 0 1 auto; min-height: 3.2em; overflow-y: auto; overscroll-behavior: contain; }
+@media (max-width: 880px) {
+  body.u13combat #panel .u13drawers .u13again { position: fixed; left: 8px; right: 8px; bottom: calc(58px + env(safe-area-inset-bottom, 0px)); max-width: none; z-index: 13; }
+  body.u13combat #panel .agroup.u13main .u13chips .act { min-height: 44px; }
+}
