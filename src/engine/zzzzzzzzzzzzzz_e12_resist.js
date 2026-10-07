@@ -1,0 +1,257 @@
+// E12：魔物の耐性と弱点、武器の物理の種類（表は data/e12_affinity.js）。
+// 名前の頭の z は、F1（zzzzzzzzzz_f1_duel.js）・K1（zzzzzzzzzzz_k1_skills.js）が G.cbDmgMod を置き換えたあとに包むため。
+//   1. 読み込み：敵に e.aff = { 種類: 倍率 }・e.atk（攻め手）、武器に it.dtype = [種類] を付ける。E4 の weak は aff に合わせる
+//   2. 倍率の入口：G.dmgMod(敵, 種類) → 倍率（1 等倍・1.5/2 弱点・0.5 耐性・0 無効）。敵は戦闘中の敵・データ・id のどれでもよい
+//      こちらの一撃（G.cbDamage(f, n, how)）の how を種類に読み替えて掛ける（G.e12.typeOf）：
+//        "blade" → 今の武器の dtype（二つあれば効くほう）/ "fire"・"ice"・"bolt"・"wind"・"earth"・"light"・"dark"・"slash"・"blunt"・"pierce" → そのまま /
+//        "holy"（聖水）→ 光 / "curse"（呪いの蝕み・毒）→ 掛けない
+//      M14 の術は G.cbDamage(f, n, "<属性>") を通せばそのまま効く。仲間の一撃（G.cbAllyDmg）と銃（刺突）も掛ける
+//   3. ひとこと：弱点なら「よく効いている」、耐性なら「通りが悪い」、無効なら「まるで効かない」（数は見せない）
+//   4. 図鑑：分かった効き目だけを言葉で載せる（G.e12.known）。当てて確かめた種類／倒した数 1 で目立つ弱点一つ・3 で弱点すべて・5 ですべて（使徒は一度倒せばすべて）
+//      記録は profile（G.P.codex.foes[id].e12 = { 種類: 1 }）。冒険をまたいで残る
+//   5. 画面の文：武器の説明に「斬」「打」「突」、戦闘の攻撃の札に種類と、分かっていれば効き目
+// 古いセーブ・古い profile（e12 が無い）でも動く。乱数は使わない。DOM には触らない。レーン E＋B
+(function (G) {
+  const D = G.data;
+  const X = D.E12;
+  if (!X) return;
+  const API = (G.e12 = G.e12 || {});
+  const TYPE = Object.fromEntries(X.TYPES.map((t) => [t.id, t]));
+  API.TYPE = TYPE;
+  API.ELEMS = X.TYPES.filter((t) => t.kind === "elem").map((t) => t.id);
+  API.PHYS = X.TYPES.filter((t) => t.kind === "phys").map((t) => t.id);
+
+  // ---------------------------------------------------------------- 1. 読み込み
+  API.parse = (str) => {
+    const aff = {};
+    let atk = null;
+    String(str || "").split(/\s+/).filter(Boolean).forEach((tok) => {
+      if (tok[0] === "@") { if (TYPE[tok.slice(1)]) atk = tok.slice(1); return; }
+      const m = /^([a-z]+)(\+\+|\+|-|!)$/.exec(tok);
+      if (!m || !TYPE[m[1]]) throw new Error(`E12: 読めない印 ${tok}`);
+      aff[m[1]] = X.MARK[m[2]];
+    });
+    return { aff, atk };
+  };
+  const E4W = { fire: ["fire"], ice: ["ice"], bolt: ["bolt"], holy: ["light"], blade: ["slash", "blunt", "pierce"] };
+  const ruled = (e) => {
+    const R = X.RULES;
+    return [R.shape[e.shape] || "", e.undead ? R.undead : "", e.magic ? R.magic : ""].join(" ");
+  };
+  API.setup = (id, e) => {
+    if (!e || (e.aff && e.e12set)) return e;
+    const src = X.FOES[id] != null ? X.FOES[id] : e.elderOf && X.FOES[e.elderOf] != null ? X.FOES[e.elderOf] : null;
+    const p = API.parse(src != null ? src : ruled(e));
+    (E4W[e.weak] || []).forEach((t) => { if (!(p.aff[t] >= 1.5)) p.aff[t] = 1.5; });
+    e.aff = p.aff;
+    e.atk = p.atk || e.atk || X.ATK_BY_SHAPE[e.shape] || "slash";
+    e.e12set = true;
+    return e;
+  };
+  API.setupAll = () => {
+    Object.entries(D.ENEMIES).forEach(([id, e]) => API.setup(id, e));
+    Object.entries((D.E3 && D.E3.FOES) || {}).forEach(([id, e]) => API.setup(id, e));
+  };
+  API.setupAll();
+
+  API.weaponTypes = (it) => {
+    if (!it) return ["blunt"];
+    if (Array.isArray(it.dtype) && it.dtype.length) return it.dtype;
+    if (typeof it.dtype === "string") return [it.dtype];
+    const t = X.WEAPONS[it.id] || (it.base && X.WEAPONS[it.base]);
+    if (t) return t;
+    const r = X.WEAPON_RX.find(([rx]) => rx.test(it.name || ""));
+    return r ? r[1] : ["slash"];
+  };
+  Object.entries(D.ITEMS).forEach(([id, it]) => {
+    if (it && it.type === "weapon" && !it.dtype) it.dtype = (X.WEAPONS[id] || API.weaponTypes(Object.assign({ id }, it))).slice();
+  });
+
+  // ---------------------------------------------------------------- 2. 倍率の入口
+  // 戦闘中の敵（{ id, max, ... }）・id・データのどれからでも、データ（aff つき）を引く
+  const dataOf = (foe) => {
+    if (!foe) return null;
+    const id = typeof foe === "string" ? foe : foe.max != null || !foe.aff ? foe.id : null;
+    const e = id ? D.ENEMIES[id] || ((D.E3 && D.E3.FOES) || {})[id] : null;
+    if (e) return API.setup(id, e);
+    return typeof foe === "object" ? foe : null;
+  };
+  API.affOf = (foe) => { const e = dataOf(foe); return (e && e.aff) || {}; };
+  G.dmgMod = (foe, type) => {
+    if (!type || !TYPE[type]) return 1;
+    const m = API.affOf(foe)[type];
+    return m == null ? 1 : m;
+  };
+  // how（cbDamage の三つ目）→ 掛ける種類。武器は効くほうの種類を選ぶ
+  API.typeOf = (how, foe) => {
+    if (!how) return null;
+    if (how === "holy") return "light";
+    if (TYPE[how]) return how;
+    if (how === "blade") {
+      const ts = API.weaponTypes(G.weapon());
+      return foe ? ts.slice().sort((a, b) => G.dmgMod(foe, b) - G.dmgMod(foe, a))[0] : ts[0];
+    }
+    return null;
+  };
+
+  // ---------------------------------------------------------------- 3. ひとこと・覚える
+  const rec = (id) => (G.codex ? G.codex().foes[id] : null);
+  API.learn = (id, type) => {
+    if (!G.codex || !type) return;
+    if (G.codexMeet) G.codexMeet(id, true);
+    const r = rec(id);
+    if (!r) return;
+    const k = (r.e12 = r.e12 || {});
+    if (!k[type]) { k[type] = 1; if (G.onCodexChange) try { G.onCodexChange(); } catch {} }
+  };
+  API.line = (name, type, m) => {
+    const w = TYPE[type].word;
+    if (m === 0) return `${name}には、${w}がまるで効かない。`;
+    if (m > 1) return `${name}に${w}がよく効いている。`;
+    return `${name}には、${w}の通りが悪い。`;
+  };
+  // n に倍率を掛けて、ひとことを出し、覚える。返すのは掛けたあとの数
+  API.hit = (f, n, type) => {
+    if (!f || !type || !n) return n;
+    const m = G.dmgMod(f, type);
+    if (m === 1) return n;
+    if (G.S && G.S.log) G.note(API.line(f.name || (dataOf(f) || {}).name || "", type, m));
+    API.learn(f.id, type);
+    if (G.openLore && G.S) G.openLore(`e12_aff:${m === 0 ? "immune" : m > 1 ? "weak" : "res"}`);
+    return m === 0 ? 0 : Math.max(1, Math.round(n * m));
+  };
+  const dmgMod0 = G.cbDmgMod;
+  G.cbDmgMod = (f, n, how) => {
+    const t = API.typeOf(how, f);
+    if (t && n > 0) {
+      n = API.hit(f, n, t);
+      if (n <= 0) return 0;
+    }
+    return dmgMod0 ? dmgMod0(f, n, how) : n;
+  };
+  // 仲間の一撃（combat.js の companionsTurn が呼ぶ）。術を使う仲間（c.fire）は属性を持たない
+  API.allyType = (c) => {
+    if (!c || c.fire) return null;
+    if (c.dtype && TYPE[c.dtype]) return c.dtype;
+    const s = `${c.cls || ""} ${c.desc || ""}`;
+    const r = X.ALLY_RX.find(([rx]) => rx.test(s));
+    return r ? r[1] : "slash";
+  };
+  G.cbAllyDmg = (c, f, n) => API.hit(f, n, API.allyType(c));
+  // 銃は刺突（relics_c1.js が呼ぶ）
+  G.cbGunDmg = (f, n) => API.hit(f, n, "pierce");
+
+  // E4 の弱点の上乗せ（zzz_e4_foes.js）は、aff に合わせたので止める（二重に掛けない）
+  if (D.E4) D.E4.weakByE12 = true;
+
+  // ---------------------------------------------------------------- 4. 図鑑
+  const killsOf = (id) => {
+    const r = rec(id);
+    const k = (r && r.kills) || 0;
+    return k > 0 ? k : G.f2 && G.f2.killed && G.f2.killed(id) ? 1 : 0;
+  };
+  // [{ type, m, known }]（倍率の目立つ順）
+  API.known = (id) => {
+    const e = dataOf(id);
+    if (!e) return [];
+    const r = rec(id) || {};
+    const learned = r.e12 || {};
+    const kills = killsOf(id);
+    const all = kills >= (e.majin ? 1 : 5);
+    const list = Object.entries(e.aff || {}).map(([type, m]) => ({ type, m })).filter((x) => x.m !== 1)
+      .sort((a, b) => Math.abs(b.m - 1) - Math.abs(a.m - 1) || (b.m > 1) - (a.m > 1));
+    const weak = list.filter((x) => x.m > 1);
+    return list.map((x) => ({ ...x, known: !!learned[x.type] || all || (kills >= 3 && x.m > 1) || (kills >= 1 && weak[0] === x) }));
+  };
+  API.words = (list) => list.map((x) => TYPE[x.type].name + (x.m >= 2 ? "（ことに）" : "")).join("・");
+  API.rows = (id) => {
+    const e = dataOf(id);
+    if (!e) return [];
+    const k = API.known(id);
+    const rest = k.some((x) => !x.known);
+    const part = (f) => k.filter((x) => x.known && f(x));
+    const weak = part((x) => x.m > 1), res = part((x) => x.m > 0 && x.m < 1), imm = part((x) => x.m === 0);
+    const rows = [];
+    if (!weak.length && !res.length && !imm.length) return [["効き目", "？"]];
+    rows.push(["よく効く", weak.length ? API.words(weak) + (rest ? "・？" : "") : "？"]);
+    if (res.length || imm.length || !rest) rows.push(["効きにくい", res.length ? API.words(res) + (rest ? "・？" : "") : rest ? "？" : "なし"]);
+    if (imm.length) rows.push(["効かない", API.words(imm)]);
+    return rows;
+  };
+  if (G.codexFoeStats) {
+    const stats0 = G.codexFoeStats;
+    G.codexFoeStats = (id) => {
+      const rows = stats0(id);
+      const e = dataOf(id);
+      if (!rows.length || !e) return rows;
+      const add = API.rows(id);
+      const at = rows.findIndex((r) => r[0] === "弱点");
+      rows.splice(at >= 0 ? at + 1 : rows.length, 0, ...add, ["攻め手", TYPE[e.atk] ? TYPE[e.atk].name + (e.magic ? "・呪い" : "") : "？"]);
+      return rows;
+    };
+  }
+  // 図鑑をまとめるとき、覚えた効き目も両方から残す
+  if (G.codexMerge) {
+    const merge0 = G.codexMerge;
+    G.codexMerge = (a, b) => {
+      const out = merge0(a, b);
+      [a, b].forEach((c) => Object.entries((c && c.foes) || {}).forEach(([id, r]) => {
+        if (r && r.e12 && out.foes[id]) out.foes[id].e12 = Object.assign({}, out.foes[id].e12 || {}, r.e12);
+      }));
+      return out;
+    };
+  }
+
+  // ---------------------------------------------------------------- 5. 画面の文
+  // 攻撃の言い方（斬りかかる・打ちかかる・突きかかる。素手は殴りかかる）
+  API.verb = (w) => (w && (w === D.ITEMS.fists || w.name === D.ITEMS.fists.name) ? "殴りかかる" : { slash: "斬りかかる", blunt: "打ちかかる", pierce: "突きかかる" }[API.weaponTypes(w)[0]] || "斬りかかる");
+  API.short = (it) => API.weaponTypes(it).map((t) => TYPE[t].short).join("・");
+  if (G.itemEffect) {
+    const eff0 = G.itemEffect;
+    G.itemEffect = (it) => { const s = eff0(it); return it && it.type === "weapon" ? [API.short(it), s].filter(Boolean).join("・") : s; };
+  }
+  if (G.i3 && G.i3.effectText) {
+    const eff1 = G.i3.effectText;
+    G.i3.effectText = (it) => { const s = eff1(it); return it && it.type === "weapon" ? [API.short(it), s].filter(Boolean).join("・") : s; };
+  }
+  if (G.codexItemStats) {
+    const st0 = G.codexItemStats;
+    G.codexItemStats = (id) => {
+      const rows = st0(id);
+      const it = D.ITEMS[id];
+      if (it && it.type === "weapon") rows.unshift(["種類", API.weaponTypes(it).map((t) => TYPE[t].name).join("・")]);
+      return rows;
+    };
+  }
+  // 戦闘の札：攻撃・急所・術に種類と、分かっていれば今の狙いへの効き目
+  API.feel = (foe, type) => {
+    if (!foe || !type) return "";
+    const k = API.known(foe.id).find((x) => x.type === type);
+    if (!k || !k.known) return "";
+    return k.m === 0 ? "効かない" : k.m > 1 ? "よく効く" : "通りが悪い";
+  };
+  API.spellType = (id) => {
+    const sp = D.SPELLS && D.SPELLS[id];
+    const t = sp && (sp.elem || sp.element || sp.attr);
+    return TYPE[t] ? t : TYPE[id] ? id : null;
+  };
+  if (G.combatActions) {
+    const acts0 = G.combatActions;
+    G.combatActions = () => {
+      const groups = acts0();
+      const t = G.target && G.target();
+      if (!t) return groups;
+      groups.forEach((g) => (g.list || []).forEach((a) => {
+        const kind = String(a.id || "").replace(/^cb:/, "");
+        let type = null, tag = "";
+        if (kind === "attack" || kind === "vital") { type = API.typeOf("blade", t); tag = API.short(G.weapon()); }
+        else type = API.spellType(kind);
+        if (!type) return;
+        const feel = API.feel(t, type);
+        const add = [tag, feel].filter(Boolean).join("・");
+        if (add && !String(a.sub || "").includes(add)) a.sub = [a.sub, add].filter(Boolean).join("・");
+      }));
+      return groups;
+    };
+  }
+})(globalThis.G = globalThis.G || {});

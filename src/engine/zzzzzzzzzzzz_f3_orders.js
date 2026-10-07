@@ -23,7 +23,9 @@
   // 指示の組の見出しに使う呼び名（呼び名が重なる仲間がいれば、元の名前で見分ける）
   F3.label = (c, s) => {
     const list = ((s || G.S) || {}).companions || [];
-    return list.some((x) => x !== c && short(x) === short(c)) ? c.name : short(c);
+    if (!list.some((x) => x !== c && short(x) === short(c))) return short(c);
+    if (!list.some((x) => x !== c && x.name === c.name)) return c.name;
+    return `${short(c)}${"①②③④⑤"[list.indexOf(c)] || list.indexOf(c) + 1}`; // 名前まで同じなら、並びの番号を添える
   };
   F3.tactic = (s) => { const t = ((s || G.S) || {}).f3tactic; return D.F3_TACTICS[t] ? t : "free"; };
   F3.orderOf = (c) => { const c0 = C(); const o = c0 && c0.f3ord && c0.f3ord[c.id]; return D.F3_ORDERS[o] ? o : "auto"; };

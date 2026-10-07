@@ -1,7 +1,7 @@
 // U13：戦闘の見せ方（src/ui/u13_battle.js の DOM を使わない部分、G.u13）と、戦闘の手の札（u13_menu.js の戦闘のまとめ方）
 // - 一手の記録は一行ずつ間をおいて出る。早送り（finish）で残りが全部出る。速さ「すぐ」は今まで通り一度に出る。古い記録（速さが無い）は「ふつう」
 // - 結果の場面：勝ち方の見出し・得た金と品・伸びた能力値（表示の点）・仲間の伸び・一行の HP
-// - 戦闘の手：攻撃・急所・身を守る・逃げるはいつも出し、魔法・口と頭・道具は押すと開く組。どの組もこぼれない
+// - 戦闘の手：攻撃・戦技・魔法・その他・道具の 5 つの見出し（F4）。攻撃・急所は「攻撃」、身を守る・逃げるは「その他」。どの組もこぼれない
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
@@ -87,13 +87,17 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const p = u.plan(gs, S);
   if (!p || p.kind !== "combat") fail("U13: 戦闘の手をまとめない");
   else {
-    const ids = (is) => is.flatMap((i) => gs.filter((g) => g.list.length)[i].list.map((a) => a.id));
-    const main = ids(p.main);
-    for (const id of ["cb:attack", "cb:vital", "cb:guard", "cb:flee"]) if (!main.includes(id)) fail(`U13: ${id} がいつも出す手にない`);
+    // F4：戦闘の手は 5 つの見出し（攻撃・戦技・魔法・その他・道具）。押すと開く（一度に一つ）
+    const gl = gs.filter((g) => g.list.length);
+    const ids = (is) => is.flatMap((i) => gl[i].list.map((a) => a.id));
+    const tab = (l) => p.drawers.find((d) => d.label === l);
     const labels = p.drawers.map((d) => d.label);
-    for (const l of ["魔法", "道具"]) if (!labels.includes(l)) fail(`U13: 「${l}」が押すと開く組にない（${labels}）`);
-    const n = gs.filter((g) => g.list.length).length;
-    if (p.main.length + p.top.length + p.drawers.reduce((a, d) => a + d.groups.length, 0) !== n) fail("U13: 戦闘の組がこぼれる・重なる");
+    const order = ["攻撃", "戦技", "魔法", "その他", "道具"];
+    if (labels.some((l) => !order.includes(l)) || labels.join() !== order.filter((l) => labels.includes(l)).join()) fail(`U13: 戦闘の見出しが 5 つの順になっていない（${labels}）`);
+    for (const id of ["cb:attack", "cb:vital"]) if (!tab("攻撃") || !ids(tab("攻撃").groups).includes(id)) fail(`U13: ${id} が「攻撃」にない`);
+    for (const id of ["cb:guard", "cb:flee"]) if (!tab("その他") || !ids(tab("その他").groups).includes(id)) fail(`U13: ${id} が「その他」にない`);
+    for (const l of ["魔法", "道具"]) if (!labels.includes(l)) fail(`U13: 「${l}」が見出しにない（${labels}）`);
+    if (p.main.length + p.top.length + p.drawers.reduce((a, d) => a + d.groups.length, 0) !== gl.length) fail("U13: 戦闘の組がこぼれる・重なる");
   }
   // 誰に使うかを選んでいる途中（問いだけ）はまとめない
   if (u.plan([{ title: "薬草を誰に使う？", list: [{ id: "cb:item:herb:x", label: "x" }, { id: "b5:cancel", label: "やめる" }] }], S)) fail("U13: 誰に使うかの問いだけなのにまとめる");
