@@ -111,6 +111,9 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const FLOWS = {
     ortensia: ["swamp", [["c12_ort_doll", ["拾い上げて", "真ん中の茶碗"]], ["c12_ort_seven", ["答えずに", "連れていく"]]]],
     ismene: ["w7_melvi", [["c12_ism_ladder", ["梯子を押さえる", "旅の途中", "連れていく"]]]],
+    shano: ["w7_salyues", [["c12_sha_roof", ["拍手する", "連れていく"]]]],
+    otose: ["w7_pearlisle", [["c12_oto_bet", ["賭けない", "連れていく"]]]],
+    guido: ["w7_volera", [["c12_gui_oil", ["明日にすれば", "連れていく"]]]],
   };
   for (const id of mates) if (!FLOWS[id]) F(`${id} の出会いの流れを確かめていない`);
   for (const [id, [loc, parts]] of Object.entries(FLOWS)) {
@@ -120,7 +123,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     if (!c) { F(`${id} が出会いの流れで仲間にならない`); continue; }
     if (c.trait !== P[id].join.trait || c.who.seed !== "c2:" + id) F(`${id} の仲間の欄が表のままでない`);
     if (!(typeof (g.S.aff || {})[id] === "number")) F(`${id} の好感度が入っていない`);
-    if (!g.m10Can || !g.m10Can(c)) F(`${id} が恋の相手になれない`);
+    if (P[id].romance && (!g.m10Can || !g.m10Can(c))) F(`${id} が恋の相手になれない`);
   }
   // 好感度の始まり（魔女は −10 から）
   start("swamp");

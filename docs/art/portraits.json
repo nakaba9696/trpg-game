@@ -2581,6 +2581,66 @@
    "memo": "C12・仲間（恋の相手）。光天教会領の写本の町メルヴィの修道院の書庫番のエルフ。本が何より好きで、理屈っぽく淡々と話す。白い長い髪、知的な目、学者の長衣、いつも本を抱えている"
   },
   {
+   "id": "shano",
+   "group": "c2",
+   "type": "bishonen",
+   "name": "シャノ",
+   "file": "assets/portraits/shano.webp",
+   "identity": "1boy, male focus, young man, 26 years old, cat boy, orange cat ears, orange striped cat tail, lean, slim, fair skin, orange hair, medium hair, low ponytail, green eyes, slit pupils, sharp eyes, thin eyebrows, single earring, red sash, dark red acrobat vest, loose black trousers, bare forearms, bandaged wrists",
+   "tags": "crouching on a wooden beam, tail curled",
+   "face": "cocky grin",
+   "variants": {
+    "joy": "wide grin, sparkling eyes, tail raised",
+    "anger": "hissing, bared fangs, ears flattened, fur bristling",
+    "sorrow": "looking down, ears drooping, tail wrapped around legs",
+    "fun": "laughing, upside down, hanging from beam",
+    "smug": "smug, half-closed eyes, smirk, tail swaying",
+    "shy": "blush, looking away, ears down, tail twitching",
+    "surprise": "wide-eyed, ears perked, tail puffed up",
+    "troubled": "troubled, hunched, ears back, awkward smile"
+   },
+   "memo": "C12・仲間（恋の相手）。エルメシア共和国の芸の町サリュエスの芝居小屋の猫の獣人の軽業師。綱の上は大胆、降りると猫背で人見知り。水が嫌い。黒い猫耳と尻尾、赤い帯、赤い綱の切れ端"
+  },
+  {
+   "id": "otose",
+   "group": "c2",
+   "name": "オトセ",
+   "file": "assets/portraits/otose.webp",
+   "identity": "1girl, mature female, adult woman, 44 years old, tall, broad shoulders, sturdy, tan skin, dark brown hair, short hair, wet hair, dark brown eyes, round eyes, thick eyebrows, sun-weathered face, scar on forearm, white diving kimono, rolled-up sleeves, white headband with small seashells, rope coiled on shoulder",
+   "tags": "hands on hips, standing on a wooden boat",
+   "face": "big hearty laugh, open mouth",
+   "variants": {
+    "joy": "laughing, closed eyes, open mouth",
+    "anger": "angry, shouting, v-shaped eyebrows",
+    "sorrow": "sad, looking out to sea, closed mouth",
+    "fun": "grin, holding a closed shell to ear",
+    "smug": "smug grin, arms crossed",
+    "serious": "serious, holding breath, puffed cheeks, focused eyes",
+    "faint_smile": "slight smile, soft eyes, looking at a seashell headband"
+   },
+   "memo": "C12・仲間。シェルアーク諸島の真珠採りの島ヨナの海女の頭。豪快な島言葉、殻の賭けに負ける。浮かない体で沈むように潜る。白い潜り着、貝殻の鉢巻き、命綱"
+  },
+  {
+   "id": "guido",
+   "group": "c2",
+   "type": "ojisan",
+   "name": "グィド",
+   "file": "assets/portraits/guido.webp",
+   "identity": "1boy, male focus, old man, 61 years old, stocky, tan skin, wrinkled skin, orange hair, short hair, receding hairline, long sideburns, blue eyes, droopy eyes, bushy eyebrows, oil-stained knit cap, yellow oilskin jacket, oil stains on hands, brass oil can",
+   "tags": "sitting on stone steps of a lighthouse, holding an oil can",
+   "face": "gentle tired smile",
+   "variants": {
+    "joy": "warm smile, crinkled eyes",
+    "anger": "stern, frown, tight lips",
+    "sorrow": "sad, looking down, holding cap",
+    "fun": "chuckling, closed eyes",
+    "serious": "serious, listening, head tilted toward the sea",
+    "troubled": "troubled, scratching head, awkward smile",
+    "faint_smile": "slight smile, looking out to sea"
+   },
+   "memo": "C12・仲間。エルメシア共和国の灯台の港ヴォルエラの白い灯台の灯台守。何でも明日にする。沖の歌に歌い返すか迷う。油の染みた帽子、紺の外套、油の缶"
+  },
+  {
    "id": "kind_villager_m",
    "group": "people",
    "name": "町の人（男）",
