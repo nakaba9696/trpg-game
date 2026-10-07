@@ -84,7 +84,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const { loadEngine } = await import("../tests/lib.mjs");
   const G = loadEngine();
   const changed = refreshPlaces(data, G.data.LOCS);
-  const miss = missingScenes(data, { LOCS: G.data.LOCS });
+  // 町の特色の場所（W9）：専用の絵（D.W9_ART の w9s_*）があればそれ、無ければ借りる絵（D.FAC_SCENE）
+  const miss = missingScenes(data, { LOCS: G.data.LOCS, facScene: { ...FAC_SCENE, ...(G.data.FAC_SCENE || {}), ...(G.data.W9_ART || {}) } });
   if (changed.length) { writeFileSync(JSON_PATH, JSON.stringify(data, null, 1) + "\n"); console.log(`場所のデータから取り直した：${changed.join("・")}`); }
   writeFileSync(MD_PATH, renderScenesMd(data) + "\n");
   console.log(`${path.relative(process.cwd(), MD_PATH)} を書き直した（${data.scenes.length} 枚）`);

@@ -1,7 +1,8 @@
 // W9：町の特色の場所（大聖堂の奥・写字室・島の道場・真珠の入り江など）。宿・酒場・店のほかに、その町でしかできないことを一つ（大きな都は二つまで）。
 // 担当：エルメシア共和国・光天教会領・シェルアークの町。中身は src/data/w9_spots_*.js の D.W9_SPOTS に書く。
 // explore.js・explore_w2.js は書き換えず、G.exploreActions・G.exploreAct・G.facActions・G.facAct を包む（explore_w2.js と同じやり方）。
-// 町の施設の一覧（L.fac）へは、ここで D.W9_SPOTS の town に足す。施設の名前は G.FAC_NAMES、背景の絵の名前は D.FAC_SCENE（src/ui/w9_spots.js が使う）
+// 町の施設の一覧（L.fac）へは、ここで D.W9_SPOTS の town に足す。施設の名前は G.FAC_NAMES、背景の絵の名前は D.FAC_SCENE（借りる絵：室内の絵か町の外の景色）。
+// 専用の絵の名前は D.W9_ART（施設 → w9s_*。画像は docs/art/scenes.json の in_w9s_*。無いあいだは借りる絵。src/ui/w9_spots.js・scene_v2_zw9s.js・scene_v3z_w9s.js）
 //
 // D.W9_SPOTS = { 施設の id（w9_ で始める）: {
 //   town 町の id, name 施設の名前（町の画面のボタン）, kw 言葉, scene 背景の絵（室内の絵の名前か、"@town" で町の外の景色）,
@@ -38,6 +39,7 @@
   // ---------------------------------------------------------------- 町に置く
   W9.install = () => {
     D.FAC_SCENE = D.FAC_SCENE || {};
+    D.W9_ART = D.W9_ART || {};
     Object.entries(spots()).forEach(([id, sp]) => {
       const L = D.LOCS[sp.town];
       if (!L) return;
@@ -45,6 +47,7 @@
       L.fac = L.fac || [];
       if (!L.fac.includes(id)) L.fac.push(id);
       D.FAC_SCENE[id] = sp.scene === "@town" ? L.scene : sp.scene || "church";
+      D.W9_ART[id] = "w9s_" + id.replace(/^w9_/, "");
     });
   };
   W9.install();
