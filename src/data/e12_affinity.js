@@ -9,7 +9,8 @@
 //   ++ 大きな弱点（2 倍）/ + 弱点（1.5 倍）/ - 耐性（半分）/ ! 無効（0）。書かない種類は等倍
 //   <種類>= は等倍に戻す（身なりの印を打ち消すとき）
 //   =<身なり> は人間の敵の装備（GEAR）。身なりの印を先に置き、あとに書いた印で上書きする。図鑑に「身なり」として出る
-//   @<種類> は敵の攻め手（図鑑に出すだけ。書かなければ形から決める）
+//   @<種類> は敵の攻め手（物理一つと、属性があれば一つ）。こちらの防具の効き目で受けるダメージが変わる（E12b）。
+//     書かなければ物理は形から（呪いの攻撃〔magic〕は物理なし）、属性は効かない属性・呪いから決める（ATK_ELEM）
 // 敵には読み込みのあと e.aff = { 種類: 倍率 } が付く。E4 の weak（一つの属性の弱点）は aff に 1.5 倍として合わせる。
 // 強い個体（elderOf）は書かなければ元の種と同じ。表に無い敵（あとから足された敵）は形・不死・魔法から決める（RULES）。
 // 使徒（E3）は、討伐の目安（tests/checks/e8_power.mjs）が剣で測るので斬撃は等倍のまま。弱点は伝承・眷属の弱点・弱る条件に合わせる。
@@ -51,7 +52,10 @@
     general: "pierce- bolt+", kin: "dark- light+ pierce+",
     kain: "=robe fire+ dark-", shuten: "light+ pierce-", bonedragon: "slash- blunt+ light+ dark!", rize: "=leather bolt+ dark-", royalguard: "=plate",
     // 使徒（D.ENEMIES にいる三体）
-    graw: "pierce- blunt+ bolt+ dark-", e2_gormoa: "fire! ice+ pierce-", e2_mordu: "fire+ ice+ earth! blunt-",
+    // 使徒は一体ずつ（E12b。姿・伝承・固有の守り〔data/zz_e11_wall.js〕・弱らせる出来事に合わせる。斬撃も使徒ごと）
+    graw: "slash- pierce- blunt+ bolt+ dark- @blunt",                      // 黒鎧：板金の巨体。叩くか雷。大剣は抜かず、鎧ごとぶつかってくる
+    e2_gormoa: "fire! ice+ slash+ pierce- @blunt @fire", // 灼け口：熱い肉の獣。刃はよく通るが、突きは脂に滑る。重い体でのしかかり、熱い息を吐く
+    e2_mordu: "slash- blunt- fire++ ice+ earth! @blunt @earth",            // 苔衣：斬っても苔が這い出す。焼き払いと冬に弱い
     // enemies_2.js
     e1_crowngob: "blunt+ fire+", e1_bowshroom: "fire+ slash+ blunt-", e1_tollrat: "fire+ slash+ pierce-", e1_frostgrave: "fire++ ice! light+",
     e1_frogprophet: "bolt+ ice+ blunt-", e1_sweeper: "slash- pierce- blunt+ bolt+", e1_lantern: "fire+ wind+ pierce-", e1_melted: "blunt- bolt+",
@@ -98,11 +102,22 @@
     w4_borermother: "earth! blunt+ fire+", w4_gatekeeper: "slash- pierce- blunt+ bolt+",
     m3_hunter: "=leather", w2_ironwarden: "slash- blunt+ bolt+",
     // 使徒（D.E3.FOES。戦いが始まるときに D.ENEMIES に入る）
-    e3_levian: "bolt+ fire- pierce-", e3_mirza: "fire+ dark-", e3_zalve: "earth! fire+ pierce-", e3_aurelia: "light! fire+",
-    e3_yoihime: "wind+ fire- pierce-", e3_chezar: "bolt+ pierce- dark-", e3_yura: "dark! light+ blunt-", e3_azlag: "wind! bolt+ pierce+",
-    e3_lugu: "bolt+ fire- ice-", e3_notari: "wind+ pierce-", e3_kurobane: "dark! light+ pierce+", e3_tojizuki: "dark! light+ pierce-",
-    e3_tetsukui: "bolt+ pierce- earth-", e3_togaoi: "light+ dark!", e3_midori: "fire+ earth! ice+", e3_sanno: "ice+ earth- pierce-",
-    e3_sekaiju: "fire+ earth! wind-", e3_salphiel: "dark+ light-", e3_yuzuel: "dark+ pierce-",
+    e3_levian: "slash- pierce- bolt+ fire- @blunt @ice",                    // 忘れ水：水の体。刃も穂先も抜けていく。雷が水を走る
+    e3_mirza: "fire+ pierce- dark- @blunt @dark", // 微笑：糸の守り。糸は燃える。穂先は糸に絡む。糸で引き寄せて叩きつける
+    e3_zalve: "slash- pierce- blunt+ ice+ fire+ earth! @blunt @earth",     // 砂塵：斬れば砂に崩れる。叩き固め、水気で固め、焼いて硝子に
+    e3_aurelia: "light! dark+ fire+ @slash @light", // 蝶翅：後光の羽は火に弱い。光は効かない
+    e3_chezar: "bolt+ pierce- dark- @pierce", // 百面：面ごとに得物が替わり、穂先は面に逸らされる。雷が面の継ぎ目を走る
+    e3_azlag: "wind! slash- pierce- bolt+ @blunt @wind", // 剣翼：刃の羽が刃と穂先を払う。降り立つ巨体を叩く。雨の日の雷。風は効かない
+    e3_lugu: "pierce+ blunt- bolt+ fire- ice- @blunt @ice",                // 海嘯：鱗と海。銛で突く。雷が海を走る
+    e3_notari: "wind++ slash- pierce- fire+ @blunt @wind",                 // 白霧：剣も穂先も霧を払うだけ。風が霧を晴らす
+    e3_kurobane: "dark! light+ slash- @slash @dark", // 黒翼：高い空の翼に刃は届きにくい。影の力は効かない
+    e3_tojizuki: "dark! light+ slash- blunt- @dark", // 閉じ月：見上げた先の目に、刃も槌も届きにくい。闇は効かない
+    e3_tetsukui: "slash- pierce- blunt+ bolt+ earth- @blunt @earth", // 鉄喰い：刃と穂先は齧り取られる。鉄でない棍棒で殴る。雷は鉄の腹を走る
+    e3_togaoi: "light+ dark! @blunt", // 咎追い：鉄の仮面と処刑衣。大斧の重みで打ち据える。闇は効かない、光に弱い
+    e3_sanno: "slash- pierce- ice++ earth- @blunt @earth",                  // 酸溜まり：刃も穂先も溶ける。凍らせれば固まる
+    // 討てない使徒（会える・挑んでも戦いにならない）
+    e3_yoihime: "wind+ fire- pierce- @dark", e3_yura: "dark! light+ blunt- @dark",
+    e3_midori: "fire+ earth! ice+ slash- @earth", e3_sekaiju: "fire+ earth! wind- slash- @earth", e3_salphiel: "dark+ light- @wind", e3_yuzuel: "dark+ pierce- @slash",
   };
 
   // 表に無い敵の決め方（あとから足された敵にも、何か一つは特徴が付くように）
@@ -113,6 +128,43 @@
   };
   // 攻め手（敵の武器の物理の種類）を形から決める
   E12.ATK_BY_SHAPE = { humanoid: "slash", beast: "pierce", small: "pierce", giant: "blunt", blob: "blunt", winged: "slash", swarm: "pierce", dragon: "slash" };
+  // 攻め手の属性（書かなければ）：その属性が効かない敵はその属性で攻める（火の獣は火を吐く）。呪いの攻撃は闇
+  E12.ATK_ELEM = ["fire", "ice", "bolt", "wind", "earth", "light"];
+
+  // ---------------------------------------------------------------- こちらの防具（E12b）
+  // 受けるダメージの倍率。印は -- 0.5 / - 0.75 / + 1.25 / ++ 1.5（敵の段より穏やか。着ている物すべてを掛け合わせ、0.5〜1.5 に収める）
+  // 鎖帷子＝斬に強く突に弱い／板金＝斬突に強く打と雷に弱い／革＝控えめ（打を少し和らげる）だが軽い／毛皮＝氷に強く炎に弱い／
+  // 布の衣＝刃に弱い（術師の衣は属性に少し強い）／聖別した衣と盾＝闇に強い
+  E12.ARMOR_MARK = { "--": 0.5, "-": 0.75, "+": 1.25, "++": 1.5 };
+  E12.ARMOR = {
+    // 胴
+    leather: "blunt-", i3a_hardleather: "blunt- slash-", i3a_studded: "blunt- slash-", i3a_nightleather: "blunt-", i3a_hunterleather: "blunt-",
+    i3a_gladiator: "blunt-", i3a_beastvest: "blunt- ice-", i3a_gambeson: "blunt- pierce+", i3a_wyvernleather: "slash- wind-", i1_potlid: "pierce- bolt+",
+    chain: "slash- pierce+", i3a_chainshirt: "slash- pierce+", i3a_hauberk: "slash-- pierce+ bolt+", f3i_brinkmail: "slash- pierce+", f3i_saintmail: "slash- pierce+ dark-",
+    domaru: "slash- blunt+", i3a_scale: "slash- pierce- blunt+", i3a_brigandine: "slash- pierce- blunt+", i3a_yoroi: "slash- pierce- blunt+ fire-",
+    plate: "slash- pierce- blunt+ bolt+", i3a_breastplate: "slash- pierce- blunt+ bolt+", i3a_halfplate: "slash- pierce- blunt+ bolt+",
+    i3a_fullplate: "slash-- pierce- blunt+ bolt+", i3a_knightplate: "slash- pierce- blunt+ bolt+", i3a_blackiron: "slash- pierce- blunt+ bolt+ ice-",
+    i1_mirrorplate: "slash- pierce- bolt+ light-", dragonmail: "fire-- slash- ice+", i1_onihaori: "slash- fire-", i1_majincoat: "dark- fire-",
+    i3a_wolfpelt: "ice- fire+", i3a_bearhide: "ice-- blunt- fire+",
+    robe: "fire- ice- bolt- slash+ pierce+", i3a_silkrobe: "fire- ice- bolt- slash+ pierce+", i3a_scholarcoat: "fire- slash+",
+    i3a_vestment: "dark-- slash+ pierce+", i3a_monkrobe: "dark- slash+", i3l_thousandstitch: "dark- slash-",
+    i3a_tunic: "slash+ pierce+", i3a_kosode: "slash+ pierce+", i3a_yukata: "slash+ pierce+", i3a_dancer: "slash+ pierce+",
+    i3a_travelcloak: "ice- wind-", i3a_oilcoat: "ice- wind- fire+", i3a_leafmail: "earth- fire+", i3a_kinhide: "dark- light+",
+    i3a_ashmantle: "fire- dark-", i3a_bonemail: "slash- dark- blunt+ light+", i3l_ashshell: "slash- pierce- fire-",
+    // 頭
+    i2s_hood: "wind-", i2s_furcap: "ice-", i2s_leathercap: "blunt-", i2s_ironhelm: "slash- bolt+", i2s_hachigane: "slash-", i2s_circlet: "dark-",
+    i2s_wizardhat: "bolt-", i2s_greathelm: "slash- blunt- bolt+", i2s_kabuto: "slash- blunt+",
+    // 足
+    i2s_sandals: "fire+", i2s_shoes: "earth-", i2s_leatherboots: "pierce-", i2s_softboots: "ice-", i2s_greaves: "blunt-", i2s_sabaton: "pierce- bolt+", i2s_elfboots: "wind-",
+    // 盾
+    i2s_buckler: "slash-", i2s_woodshield: "pierce- fire+", i2s_roundshield: "pierce-", i2s_kiteshield: "pierce- slash-",
+    i2s_holyshield: "dark-- pierce-", i2s_towershield: "pierce-- slash- blunt+",
+  };
+  // 表に無い防具は名前から
+  E12.ARMOR_RX = [
+    [/鎖/, "slash- pierce+"], [/板金|甲冑|甲|鉄/, "slash- pierce- blunt+ bolt+"], [/毛皮|皮衣/, "ice- fire+"], [/革|皮/, "blunt-"],
+    [/聖|祭|司祭/, "dark-"], [/術|魔導|学院/, "fire- slash+"], [/衣|服|着|外套|帽|頭巾|袖/, "slash+"], [/盾/, "pierce-"],
+  ];
 
   // ---------------------------------------------------------------- 武器（dtype。二つ持つ武器は配列）
   // 剣・刀・斧＝斬 / 槌・棍棒・杖・素手＝打 / 槍・弓・細剣・錐＝突。短剣は突きと斬り
