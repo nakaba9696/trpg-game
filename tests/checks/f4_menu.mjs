@@ -143,7 +143,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       const order = CATS.map((c) => F4.NAME[c]).filter((l) => labels.includes(l));
       if (labels.join() !== order.join()) fail(`見出しの札の順が違う（${labels}）`);
       const misc = p.drawers.find((d) => d.cat === "misc");
-      if (!misc || misc.groups.length < 2 || !misc.ids.includes("f3:tac:guard")) fail("作戦・仲間への指示が「その他」の見出しに入らない");
+      if (!misc || misc.groups.length < 2 || !misc.ids.includes("f3:tac:shield")) fail("作戦・仲間への指示が「その他」の見出しに入らない");
     }
   }
 
@@ -156,7 +156,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     G.act("cb:guard");
     const a = F4.lastAction(S);
     if (!a || a.id !== "cb:guard") fail(`身を守ったあと「前と同じ」が身を守るにならない（${a && a.id}）`);
-    G.act("f3:tac:guard");
+    G.act("f3:tac:shield");
     const b = F4.lastAction(S);
     if (!b || b.id !== "cb:guard") fail("作戦を変えると「前と同じ」が変わる");
     const save = JSON.parse(JSON.stringify(S));

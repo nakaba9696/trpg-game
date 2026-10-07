@@ -7,9 +7,11 @@
 //        "holy"（聖水）→ 光 / "curse"（呪いの蝕み・毒）→ 掛けない
 //      M14 の術は G.cbDamage(f, n, "<属性>") を通せばそのまま効く。仲間の一撃（G.cbAllyDmg）と銃（刺突）も掛ける
 //   3. ひとこと：弱点なら「よく効いている」、耐性なら「通りが悪い」、無効なら「まるで効かない」（数は見せない）
-//   4. 図鑑：分かった効き目だけを言葉で載せる（G.e12.known）。当てて確かめた種類／倒した数 1 で目立つ弱点一つ・3 で弱点すべて・5 ですべて（使徒は一度倒せばすべて）
+//   4. 図鑑：その敵に一度でも当てた種類の効き目を、その場で言葉で載せる（G.e12.known。E12b：倒した数の段階はやめた）。当てていない種類は「？」
 //      記録は profile（G.P.codex.foes[id].e12 = { 種類: 1 }）。冒険をまたいで残る
 //   5. 画面の文：武器の説明に「斬」「打」「突」、戦闘の攻撃の札に種類と、分かっていれば効き目
+//   6. こちらの防具（E12b）：防具に効き目（D.E12.ARMOR）。敵の攻め手（e.atk 物理・e.atkEl 属性）に、着ている物すべての効き目を掛ける（G.cbHurtMod。combat.js の敵の一撃）。
+//      呪いの攻撃（magic）は鎧を素通りするので属性だけ。防具の説明・図鑑・店に「斬に強い・突に弱い」と言葉で出す
 // 古いセーブ・古い profile（e12 が無い）でも動く。乱数は使わない。DOM には触らない。レーン E＋B
 (function (G) {
   const D = G.data;
@@ -24,14 +26,28 @@
   // ---------------------------------------------------------------- 1. 読み込み
   API.parse = (str) => {
     const aff = {};
-    let atk = null;
-    String(str || "").split(/\s+/).filter(Boolean).forEach((tok) => {
-      if (tok[0] === "@") { if (TYPE[tok.slice(1)]) atk = tok.slice(1); return; }
-      const m = /^([a-z]+)(\+\+|\+|-|!)$/.exec(tok);
+    let atk = null, atkEl = null, gear = null;
+    const put = (tok) => {
+      if (tok[0] === "@") {
+        const t = tok.slice(1);
+        if (!TYPE[t]) throw new Error(`E12: 知らない攻め手 ${tok}`);
+        if (TYPE[t].kind === "phys") atk = t; else atkEl = t;
+        return;
+      }
+      if (tok[0] === "=") {
+        const g = (X.GEAR || {})[tok.slice(1)];
+        if (!g) throw new Error(`E12: 知らない身なり ${tok}`);
+        gear = tok.slice(1);
+        g.aff.split(/\s+/).filter(Boolean).forEach(put);
+        return;
+      }
+      const m = /^([a-z]+)(\+\+|\+|-|!|=)$/.exec(tok);
       if (!m || !TYPE[m[1]]) throw new Error(`E12: 読めない印 ${tok}`);
-      aff[m[1]] = X.MARK[m[2]];
-    });
-    return { aff, atk };
+      if (m[2] === "=") delete aff[m[1]];
+      else aff[m[1]] = X.MARK[m[2]];
+    };
+    String(str || "").split(/\s+/).filter(Boolean).forEach(put);
+    return { aff, atk, atkEl, gear };
   };
   const E4W = { fire: ["fire"], ice: ["ice"], bolt: ["bolt"], holy: ["light"], blade: ["slash", "blunt", "pierce"] };
   const ruled = (e) => {
@@ -45,6 +61,8 @@
     (E4W[e.weak] || []).forEach((t) => { if (!(p.aff[t] >= 1.5)) p.aff[t] = 1.5; });
     e.aff = p.aff;
     e.atk = p.atk || e.atk || X.ATK_BY_SHAPE[e.shape] || "slash";
+    e.atkEl = p.atkEl || (X.ATK_ELEM || []).find((t) => p.aff[t] === 0) || (e.magic ? "dark" : null);
+    if (p.gear) e.gear = p.gear;
     e.e12set = true;
     return e;
   };
@@ -93,6 +111,18 @@
     }
     return null;
   };
+  // 戦技の種類（物理一つ＋属性）。技が当て方を決めるので、武器の種類より先
+  API.skillTypes = (id) => {
+    const t = (X.SKILL_TYPES || {})[id];
+    return t ? t.split(/\s+/).filter((x) => TYPE[x]) : [];
+  };
+  API.cur = null; // いま出している戦技（その一撃のあいだだけ）
+  // how → 掛ける種類の並び。"blade" は戦技の最中なら技の種類、そうでなければ武器の効くほう。"slash+fire" のようにつないでもよい
+  API.typesOf = (how, foe) => {
+    if (!how) return [];
+    if (how === "blade" && API.cur && API.skillTypes(API.cur).length) return API.skillTypes(API.cur);
+    return String(how).split("+").map((h) => API.typeOf(h, foe)).filter(Boolean);
+  };
 
   // ---------------------------------------------------------------- 3. ひとこと・覚える
   const rec = (id) => (G.codex ? G.codex().foes[id] : null);
@@ -110,25 +140,64 @@
     if (m > 1) return `${name}に${w}がよく効いている。`;
     return `${name}には、${w}の通りが悪い。`;
   };
-  // n に倍率を掛けて、ひとことを出し、覚える。返すのは掛けたあとの数
-  API.hit = (f, n, type) => {
-    if (!f || !type || !n) return n;
-    const m = G.dmgMod(f, type);
+  // 二つ以上の種類を持つ一撃の倍率：掛け合わせる。片方が無効でも、もう片方の分は届く（無効を 0.5 とみなす）。大きくても 2.25 倍まで
+  API.mulOf = (f, types) => {
+    const ms = types.map((t) => G.dmgMod(f, t));
+    if (ms.length === 1) return ms[0];
+    return Math.min(2.25, ms.reduce((a, m) => a * (m === 0 ? 0.5 : m), 1));
+  };
+  // n に倍率を掛けて、効き目の違う種類ごとにひとことを出し、覚える。返すのは掛けたあとの数
+  API.hitMany = (f, n, types) => {
+    types = (types || []).filter((t) => TYPE[t]);
+    if (!f || !types.length || !n) return n;
+    const m = API.mulOf(f, types);
+    types.forEach((t) => {
+      const mt = G.dmgMod(f, t);
+      API.learn(f.id, t); // 当てた種類は、効き目がふつうでも図鑑に載る
+      if (mt === 1) return;
+      if (G.S && G.S.log) G.note(API.line(f.name || (dataOf(f) || {}).name || "", t, mt));
+      if (G.openLore && G.S) G.openLore(`e12_aff:${mt === 0 ? "immune" : mt > 1 ? "weak" : "res"}`);
+    });
     if (m === 1) return n;
-    if (G.S && G.S.log) G.note(API.line(f.name || (dataOf(f) || {}).name || "", type, m));
-    API.learn(f.id, type);
-    if (G.openLore && G.S) G.openLore(`e12_aff:${m === 0 ? "immune" : m > 1 ? "weak" : "res"}`);
     return m === 0 ? 0 : Math.max(1, Math.round(n * m));
   };
+  API.hit = (f, n, type) => API.hitMany(f, n, type ? [type] : []);
   const dmgMod0 = G.cbDmgMod;
   G.cbDmgMod = (f, n, how) => {
-    const t = API.typeOf(how, f);
-    if (t && n > 0) {
-      n = API.hit(f, n, t);
+    const ts = API.typesOf(how, f);
+    if (ts.length && n > 0) {
+      n = API.hitMany(f, n, ts);
       if (n <= 0) return 0;
     }
     return dmgMod0 ? dmgMod0(f, n, how) : n;
   };
+  // 戦技：出しているあいだ API.cur に技を置く。受け流し・構えて返すは、敵の手番の返しの一撃にも技の種類を使う
+  if (G.cbActs && G.cbActs.k1) {
+    const k1act = G.cbActs.k1;
+    G.cbActs.k1 = (t, id, tgt) => {
+      API.cur = id;
+      try { return k1act(t, id, tgt); } finally {
+        API.cur = null;
+        const c = G.S && G.S.combat;
+        if (c && c.k1parry && !c.k1parry.e12) c.k1parry.e12 = id;
+        if (c && c.k1counter && !c.k1counter.e12) c.k1counter.e12 = id;
+      }
+    };
+    const struck0 = G.cbStruck;
+    G.cbStruck = (f, e, mv, who, dmg, how) => {
+      const c = G.S && G.S.combat;
+      const id = c && !who ? (how === "dodged" && c.k1parry ? c.k1parry.e12 : c.k1counter ? c.k1counter.e12 : null) : null;
+      API.cur = id || null;
+      try { return struck0 ? struck0(f, e, mv, who, dmg, how) : undefined; } finally { API.cur = null; }
+    };
+  }
+  // 戦技の説明（hint）の頭に種類を出す（戦闘の札・技の一覧）
+  Object.entries(D.SKILLS || {}).forEach(([id, sk]) => {
+    const ts = API.skillTypes(id);
+    if (!ts.length || sk.e12tag) return;
+    sk.e12tag = ts.map((t) => TYPE[t].short).join("・");
+    sk.hint = `${sk.e12tag}・${sk.hint || ""}`;
+  });
   // 仲間の一撃（combat.js の companionsTurn が呼ぶ）。術を使う仲間（c.fire）は属性を持たない
   API.allyType = (c) => {
     if (!c || c.fire) return null;
@@ -145,37 +214,26 @@
   if (D.E4) D.E4.weakByE12 = true;
 
   // ---------------------------------------------------------------- 4. 図鑑
-  const killsOf = (id) => {
-    const r = rec(id);
-    const k = (r && r.kills) || 0;
-    return k > 0 ? k : G.f2 && G.f2.killed && G.f2.killed(id) ? 1 : 0;
-  };
-  // [{ type, m, known }]（倍率の目立つ順）
+  // [{ type, m, known }]：十の種類すべて（並びは表の順）。known はその敵に一度でも当てたか
   API.known = (id) => {
     const e = dataOf(id);
     if (!e) return [];
-    const r = rec(id) || {};
-    const learned = r.e12 || {};
-    const kills = killsOf(id);
-    const all = kills >= (e.majin ? 1 : 5);
-    const list = Object.entries(e.aff || {}).map(([type, m]) => ({ type, m })).filter((x) => x.m !== 1)
-      .sort((a, b) => Math.abs(b.m - 1) - Math.abs(a.m - 1) || (b.m > 1) - (a.m > 1));
-    const weak = list.filter((x) => x.m > 1);
-    return list.map((x) => ({ ...x, known: !!learned[x.type] || all || (kills >= 3 && x.m > 1) || (kills >= 1 && weak[0] === x) }));
+    const learned = (rec(id) || {}).e12 || {};
+    return X.TYPES.map((t) => ({ type: t.id, m: G.dmgMod(id, t.id), known: !!learned[t.id] }));
   };
   API.words = (list) => list.map((x) => TYPE[x.type].name + (x.m >= 2 ? "（ことに）" : "")).join("・");
   API.rows = (id) => {
     const e = dataOf(id);
     if (!e) return [];
     const k = API.known(id);
-    const rest = k.some((x) => !x.known);
     const part = (f) => k.filter((x) => x.known && f(x));
-    const weak = part((x) => x.m > 1), res = part((x) => x.m > 0 && x.m < 1), imm = part((x) => x.m === 0);
     const rows = [];
-    if (!weak.length && !res.length && !imm.length) return [["効き目", "？"]];
-    rows.push(["よく効く", weak.length ? API.words(weak) + (rest ? "・？" : "") : "？"]);
-    if (res.length || imm.length || !rest) rows.push(["効きにくい", res.length ? API.words(res) + (rest ? "・？" : "") : rest ? "？" : "なし"]);
-    if (imm.length) rows.push(["効かない", API.words(imm)]);
+    [["よく効く", (x) => x.m > 1], ["ふつう", (x) => x.m === 1], ["効きにくい", (x) => x.m > 0 && x.m < 1], ["効かない", (x) => x.m === 0]].forEach(([name, f]) => {
+      const l = part(f);
+      if (l.length) rows.push([name, API.words(l)]);
+    });
+    const rest = k.filter((x) => !x.known);
+    rows.push(["？", rest.length ? `まだ当てていない（${rest.map((x) => TYPE[x.type].short).join("・")}）` : "すべて試した"]);
     return rows;
   };
   if (G.codexFoeStats) {
@@ -186,7 +244,9 @@
       if (!rows.length || !e) return rows;
       const add = API.rows(id);
       const at = rows.findIndex((r) => r[0] === "弱点");
-      rows.splice(at >= 0 ? at + 1 : rows.length, 0, ...add, ["攻め手", TYPE[e.atk] ? TYPE[e.atk].name + (e.magic ? "・呪い" : "") : "？"]);
+      const gear = e.gear && X.GEAR && X.GEAR[e.gear] ? [["身なり", X.GEAR[e.gear].name]] : [];
+      const atk = [e.magic ? "呪い" : TYPE[e.atk] ? TYPE[e.atk].name : "", TYPE[e.atkEl] ? TYPE[e.atkEl].name : ""].filter(Boolean).join("・") || "？";
+      rows.splice(at >= 0 ? at + 1 : rows.length, 0, ...add, ...gear, ["攻め手", atk]);
       return rows;
     };
   }
@@ -202,17 +262,76 @@
     };
   }
 
+  // ---------------------------------------------------------------- 6. こちらの防具
+  API.parseArmor = (str) => {
+    const aff = {};
+    String(str || "").split(/\s+/).filter(Boolean).forEach((tok) => {
+      const m = /^([a-z]+)(\+\+|\+|--|-)$/.exec(tok);
+      if (!m || !TYPE[m[1]]) throw new Error(`E12: 防具の読めない印 ${tok}`);
+      aff[m[1]] = X.ARMOR_MARK[m[2]];
+    });
+    return aff;
+  };
+  // 防具の効き目（受けるダメージの倍率）。表 → 名前 → なし
+  const armorMemo = new Map();
+  API.armorAff = (it) => {
+    if (!it || it.type !== "armor") return {};
+    if (it.e12armor) return it.e12armor;
+    const key = it.name || "";
+    if (armorMemo.has(key)) return armorMemo.get(key);
+    const r = (X.ARMOR_RX || []).find(([rx]) => rx.test(key));
+    const aff = API.parseArmor(r ? r[1] : "");
+    armorMemo.set(key, aff);
+    return aff;
+  };
+  Object.entries(D.ITEMS).forEach(([id, it]) => {
+    if (it && it.type === "armor" && X.ARMOR && X.ARMOR[id] != null && !it.e12armor) it.e12armor = API.parseArmor(X.ARMOR[id]);
+  });
+  // 言葉で（数は出さない）：「斬に強い・突に弱い」。ことに強い・弱いは「とても」
+  API.armorWords = (it) => {
+    const a = API.armorAff(it);
+    const strong = Object.keys(a).filter((t) => a[t] < 1).sort((x, y) => a[x] - a[y]);
+    const weak = Object.keys(a).filter((t) => a[t] > 1).sort((x, y) => a[y] - a[x]);
+    const w = (t, good) => `${TYPE[t].short}に${(good ? a[t] <= 0.5 : a[t] >= 1.5) ? "とても" : ""}${good ? "強い" : "弱い"}`;
+    return [...strong.map((t) => w(t, true)), ...weak.map((t) => w(t, false))].join("・");
+  };
+  // 着ている物（胴・頭・足・盾）
+  API.worn = (S) => {
+    S = S || G.S;
+    if (!S) return [];
+    const X2 = G.i2s;
+    const list = X2 && X2.item ? ["armor", "head", "feet", "off"].map((k) => X2.item(k, S)) : [D.ITEMS[S.armor]];
+    return list.filter((it) => it && it.type === "armor");
+  };
+  // 受ける一撃の種類への倍率（着ている物すべてを掛け合わせ、0.5〜1.5）
+  API.guardMul = (types, S) => {
+    const worn = API.worn(S);
+    let m = 1;
+    (types || []).forEach((t) => worn.forEach((it) => { const v = API.armorAff(it)[t]; if (v != null) m *= v; }));
+    return Math.max(0.5, Math.min(1.5, m));
+  };
+  // 敵の一撃の種類：呪い（magic）は鎧を素通りするので属性だけ
+  API.atkTypes = (e) => (e ? [e.magic ? null : e.atk, e.atkEl].filter((t) => TYPE[t]) : []);
+  G.cbHurtMod = (f, e, dmg, mv) => {
+    const ts = API.atkTypes(e);
+    const m = API.guardMul(ts);
+    if (m === 1 || !(dmg > 0)) return dmg;
+    const w = ts.map((t) => TYPE[t].word).join("と");
+    G.note(m < 1 ? `身につけた守りが、${w}を和らげた。` : `${w}が、守りの隙を抜けてくる。`);
+    return Math.max(1, Math.round(dmg * m));
+  };
+
   // ---------------------------------------------------------------- 5. 画面の文
   // 攻撃の言い方（斬りかかる・打ちかかる・突きかかる。素手は殴りかかる）
   API.verb = (w) => (w && (w === D.ITEMS.fists || w.name === D.ITEMS.fists.name) ? "殴りかかる" : { slash: "斬りかかる", blunt: "打ちかかる", pierce: "突きかかる" }[API.weaponTypes(w)[0]] || "斬りかかる");
   API.short = (it) => API.weaponTypes(it).map((t) => TYPE[t].short).join("・");
   if (G.itemEffect) {
     const eff0 = G.itemEffect;
-    G.itemEffect = (it) => { const s = eff0(it); return it && it.type === "weapon" ? [API.short(it), s].filter(Boolean).join("・") : s; };
+    G.itemEffect = (it) => { const s = eff0(it); return it && it.type === "weapon" ? [API.short(it), s].filter(Boolean).join("・") : it && it.type === "armor" ? [s, API.armorWords(it)].filter(Boolean).join("・") : s; };
   }
   if (G.i3 && G.i3.effectText) {
     const eff1 = G.i3.effectText;
-    G.i3.effectText = (it) => { const s = eff1(it); return it && it.type === "weapon" ? [API.short(it), s].filter(Boolean).join("・") : s; };
+    G.i3.effectText = (it) => { const s = eff1(it); return it && it.type === "weapon" ? [API.short(it), s].filter(Boolean).join("・") : it && it.type === "armor" ? [s, API.armorWords(it)].filter(Boolean).join("・") : s; };
   }
   if (G.codexItemStats) {
     const st0 = G.codexItemStats;
@@ -220,6 +339,7 @@
       const rows = st0(id);
       const it = D.ITEMS[id];
       if (it && it.type === "weapon") rows.unshift(["種類", API.weaponTypes(it).map((t) => TYPE[t].name).join("・")]);
+      if (it && it.type === "armor" && API.armorWords(it)) rows.push(["守り", API.armorWords(it)]);
       return rows;
     };
   }
@@ -245,6 +365,12 @@
         const kind = String(a.id || "").replace(/^cb:/, "");
         let type = null, tag = "";
         if (kind === "attack" || kind === "vital") { type = API.typeOf("blade", t); tag = API.short(G.weapon()); }
+        else if (/^k1:/.test(kind)) {
+          const ts = API.skillTypes(kind.slice(3));
+          const feel = ts.map((x) => API.feel(t, x)).find(Boolean);
+          if (feel && !String(a.sub || "").includes(feel)) a.sub = [a.sub, feel].filter(Boolean).join("・");
+          return;
+        }
         else type = API.spellType(kind);
         if (!type) return;
         const feel = API.feel(t, type);
