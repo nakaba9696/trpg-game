@@ -3,7 +3,8 @@
 // - 絶界を持つ使徒は、伝説の刃かその使徒の伝承の条件（zekkai）が無いと刃が弾かれる
 // - 長編の若君（カルマトス）の決戦の守りは「糸」と書く（絶界と書かない）
 // - 文から「使徒はみな絶界」「二振りの剣でしか斬れない」を消した
-import { readFileSync } from "node:fs";
+// - 伝説の武具（id volgrim・byakuya）は、しゃべらない・剣でも刀でもない形（鉤槍ヴォルグリム・明けの鎖）。古いセーブの id のまま新しい姿で読める
+import { readFileSync, readdirSync } from "node:fs";
 
 const PROFILE = { name: "テスト", sex: "女", age: 30, history: "テスト用", personality: "無口" };
 
@@ -70,4 +71,33 @@ export default ({ fail, loadEngine, seeded }) => {
   Object.values(D0.ITEMS).forEach((it) => texts.push(it.desc));
   (D0.RUMORS || []).forEach((r) => texts.push(typeof r === "string" ? r : r && r.text));
   for (const t of texts) if (typeof t === "string" && BAD.test(t)) fail(`「使徒はみな絶界」の書き方が残っている：${t.slice(0, 40)}…`);
+  // 伝説の武具：しゃべらない・剣でも刀でもない
+  for (const id of ["volgrim", "byakuya"]) {
+    const it = D0.ITEMS[id];
+    if (!it) { fail(`伝説の武具 ${id} が無い`); continue; }
+    if (/剣|刀/.test(it.name)) fail(`伝説の武具 ${id} の名が剣・刀のまま：${it.name}`);
+    if (/しゃべ|口が悪|意思を持つ/.test(it.desc)) fail(`伝説の武具 ${id} の説明がしゃべる武器のまま`);
+    const K = G0.k1;
+    const kind = K && K.kindOf ? K.kindOf(it, id) : null;
+    if (kind && /^(剣|刀)$/.test(kind)) fail(`伝説の武具 ${id} の型が ${kind}`);
+  }
+  const SPEAK = /しゃべる剣|白く光る刀|魔剣ヴォルグリム|聖刀白夜|白夜を抜|ヴォルグリム「|剣がしゃべ/;
+  const root = new URL("../../src/", import.meta.url);
+  for (const dir of ["data", "engine", "ui"]) {
+    for (const f of readdirSync(new URL(dir + "/", root))) {
+      if (!f.endsWith(".js") || f === "changelog.js") continue;
+      const src = readFileSync(new URL(`${dir}/${f}`, root), "utf8");
+      const m = src.match(SPEAK);
+      if (m) fail(`src/${dir}/${f} に、しゃべる剣・白い刀の書き方が残っている：${m[0]}`);
+    }
+  }
+  // 古いセーブ：id はそのまま、新しい姿で読める
+  {
+    const G = loadEngine();
+    start(G, 4);
+    G.S.inv.byakuya = 1; G.S.weapon = "byakuya";
+    const S2 = JSON.parse(JSON.stringify(G.S));
+    G.S = S2;
+    if (!G.weapon() || G.weapon().name !== D0.ITEMS.byakuya.name) fail("古いセーブの byakuya が新しい姿で読めない");
+  }
 };

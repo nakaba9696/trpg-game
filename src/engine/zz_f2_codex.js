@@ -462,7 +462,7 @@
     if (t === "weapon") {
       rows.push(["攻撃", dice(it.dmg)], ["命中", `${it.stat || "筋力"}${it.hit ? "・" + G.sign(it.hit) : ""}`]);
       if (it.vital) rows.push(["急所", G.sign(it.vital)]);
-      if (it.pierce) rows.push(["特性", "絶界さえ斬り裂く"]);
+      if (it.pierce) rows.push(["特性", "黒鎧の絶界にも届く"]);
     }
     if (t === "armor") { rows.push(["防御", String(it.def || 0)]); if (it.agi) rows.push(["敏捷", G.sign(it.agi)]); }
     if (it.magic && t !== "ring") rows.push(["魔法", G.sign(it.magic)]);

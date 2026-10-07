@@ -107,7 +107,7 @@
   G.sleep = () => { const r = sleep0(); if (G.S) K.state(G.S).ki = K.kiMax(G.S); return r; };
 
   // ---------------------------------------------------------------- 武器の型（ここだけ見れば型が決まる）
-  K.WEAPON_KIND = { fists: "拳", dagger: "短剣", longsword: "剣", mace: "槌", axe: "斧", katana: "刀", staff: "杖", rapier: "剣", mithril: "剣", oniclub: "槌", volgrim: "剣", byakuya: "刀" };
+  K.WEAPON_KIND = { fists: "拳", dagger: "短剣", longsword: "剣", mace: "槌", axe: "斧", katana: "刀", staff: "杖", rapier: "剣", mithril: "剣", oniclub: "槌", volgrim: "槍", byakuya: "鞭" };
   K.I3_KIND = { 拳具: "拳", 鎌: "剣", 鎖: "鞭" };
   const BY_NAME = [[/弓/, "弓"], [/槍|矛|薙刀|鉾|銛/, "槍"], [/短剣|ナイフ|鎧通し|匕首|鉤/, "短剣"], [/刀/, "刀"], [/斧|鉈/, "斧"],
     [/槌|棍|金棒|フレイル|鎚|メイス|錫杖|匙/, "槌"], [/杖|指揮棒/, "杖"], [/鞭/, "鞭"], [/籠手|拳|素手/, "拳"], [/礫|投げ|手裏剣|筒/, "投げ物"], [/剣|刃|鎌/, "剣"]];
