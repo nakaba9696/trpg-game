@@ -2539,6 +2539,48 @@
    }
   },
   {
+   "id": "ortensia",
+   "group": "c2",
+   "name": "オルテンシア",
+   "file": "assets/portraits/ortensia.webp",
+   "identity": "1girl, mature female, adult woman, 38 years old, tall, slender, pale skin, wine red hair, very long hair, wavy hair, side-swept bangs, violet eyes, half-closed eyes, long eyelashes, thin eyebrows, silver earrings, wide-brimmed pointed witch hat, purple witch hat with a silver band, elegant loose purple robe, silver embroidery, long wide sleeves",
+   "tags": "sitting cross-legged in a high-backed chair, holding a teacup, small wooden clockwork doll on shoulder",
+   "face": "calm amused smile, looking down at viewer",
+   "variants": {
+    "joy": "gentle smile, closed eyes, happy",
+    "anger": "cold stare, narrowed eyes, closed mouth, shadowed face",
+    "sorrow": "sad, looking away, holding the hat brim, downturned mouth",
+    "fun": "laughing, open mouth, hand near mouth",
+    "smug": "smug, half-closed eyes, smirk, chin up",
+    "surprise": "surprised, wide-eyed, slightly open mouth",
+    "shy": "embarrassed, light blush, pulling hat brim down over eyes",
+    "wicked": "mischievous smile, one eye closed, finger on lips",
+    "faint_smile": "slight smile, soft eyes, closed mouth"
+   },
+   "memo": "C12・仲間（恋の相手）。エルメシア共和国の毒沼の湿地の奥の離れに住む伝説の魔女。天才肌で気まぐれ、人を試すのが好き。背の高い大人の女、広いつばのとんがり帽子、紫と銀の衣、木のからくりの小さな留守番"
+  },
+  {
+   "id": "ismene",
+   "group": "c2",
+   "name": "イスメネ",
+   "file": "assets/portraits/ismene.webp",
+   "identity": "1girl, elf, pointy ears, adult woman, 26 years old, slender, fair skin, snow white hair, very long hair, single braid, braid over shoulder, hair between eyes, grey eyes, calm eyes, thin eyebrows, ink stains on fingers, dark green scholar coat with gold trim, high collar, ink bottle on belt",
+   "tags": "holding a thick old book with both arms, standing beside a tall bookshelf",
+   "face": "expressionless, calm, looking at viewer",
+   "variants": {
+    "joy": "slight smile, soft eyes, holding book close",
+    "anger": "frown, narrowed eyes, closed mouth",
+    "sorrow": "sad, looking down at an open book, downturned mouth",
+    "fun": "small smile, sparkling eyes, pen in hand",
+    "surprise": "surprised, wide-eyed, book slipping",
+    "shy": "blush, red pointy ears, hiding mouth behind book",
+    "serious": "serious, focused eyes, reading by candlelight",
+    "sparkle": "sparkling eyes, slight smile, leaning forward",
+    "fear": "scared, pale, wide eyes, gripping book tightly"
+   },
+   "memo": "C12・仲間（恋の相手）。光天教会領の写本の町メルヴィの修道院の書庫番のエルフ。本が何より好きで、理屈っぽく淡々と話す。白い長い髪、知的な目、学者の長衣、いつも本を抱えている"
+  },
+  {
    "id": "kind_villager_m",
    "group": "people",
    "name": "町の人（男）",
