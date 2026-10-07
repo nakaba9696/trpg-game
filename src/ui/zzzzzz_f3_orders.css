@@ -1,0 +1,4 @@
+/* F3：一行の札から仲間への指示を開く */
+#panel .b5mem.f3pick { cursor: pointer; }
+#panel .b5mem.f3pick:hover, #panel .b5mem.f3pick:focus-visible { border-color: var(--accent); }
+#panel .b5mem .f3now { display: block; color: var(--accent); }
