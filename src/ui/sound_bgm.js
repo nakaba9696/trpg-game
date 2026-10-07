@@ -400,7 +400,7 @@
       if (B.white) { const nz = B.ctx.createBufferSource(); nz.buffer = B.white; nz.loop = true; const bp = lp(B, f * 1.5, 2, "bandpass"); const ng = gain(B, 0); nz.connect(bp); bp.connect(ng); ng.connect(out); adsr(ng.gain, t, Math.min(dur, 0.12), 0.02 * v, 0.02, 0.06, 0.3, 0.06); nz.start(t, jr() * 0.5); nz.stop(end); }
     },
     // ピッツィカート（弦をはじく）
-    pizz:(B, t, f, dur, v, out) => {
+    pizz: (B, t, f, dur, v, out) => {
       const end = t + 0.6;
       const g = gain(B, 0); const fl = lp(B, 1600, 1);
       osc(B, "triangle", f, t, end).connect(fl); osc(B, "sawtooth", f, t, end, 5).connect(fl);
