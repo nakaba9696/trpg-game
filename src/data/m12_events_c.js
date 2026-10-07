@@ -253,7 +253,7 @@
         ],
       },
       {
-        id: "w6_m12_mig", where: ["w6"], w: 0, title: "同じ方角へ", w6: { w: 5, reg: ["leo"] }, cond: (S) => { const s = G.m12Stage ? G.m12Stage("migration", S) : -1; return s >= 0 && s <= 2; },
+        id: "w6_m12_mig", where: ["w6"], w: 0, title: "同じ方角へ", w6: { w: 5, reg: ["south", "leo"] }, cond: (S) => { const s = G.m12Stage ? G.m12Stage("migration", S) : -1; return s >= 0 && s <= 2; },
         text: "街道の脇の草むらが揺れて、小鬼が三匹、飛び出してきた。武器を構えるあなたの前を、小鬼たちは、こちらを見もせずに横切っていく。背中に、鍋と、寝具と、小さな小鬼を背負っている。",
         choices: [
           { label: "道を譲る", ok: { text: "あなたは一歩下がった。いちばん後ろの小鬼が、通りすがりに、ちょっとだけ頭を下げた。気のせいかもしれない。", heard: "森の小鬼が、鍋と寝具と子どもを背負って、西へ歩いていった" } },

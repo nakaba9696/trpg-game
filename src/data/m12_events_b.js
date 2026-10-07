@@ -266,7 +266,7 @@
         ],
       },
       {
-        id: "w6_m12_cough", where: ["w6"], w: 0, title: "門の外の三日", w6: { w: 4, reg: ["leo", "isle"] }, cond: (S) => { const s = G.m12Stage ? G.m12Stage("cough", S) : -1; return s >= 1 && s <= 2; },
+        id: "w6_m12_cough", where: ["w6"], w: 0, title: "門の外の三日", w6: { w: 4, reg: ["south", "leo", "isle"] }, cond: (S) => { const s = G.m12Stage ? G.m12Stage("cough", S) : -1; return s >= 1 && s <= 2; },
         text: "道の先の町の門が閉じている。門の外の草地に、旅人が何十人も天幕を張っている。門番が、竿の先の籠で食べ物を下ろしている。「三日だ。三日、咳をしなければ入れる」",
         choices: [
           { label: "天幕の旅人たちの顔色を見て、病の出ていない一角に移る", stat: "知力", diff: "普通", ok: { text: "咳をする者の天幕は風上に固まっていた。あなたは風下の端に寝床を移した。三日目、門番があなたを通した。風上の天幕の何人かはまだ待っていた。", days: 2 }, ng: { text: "移った先の隣の天幕で、夜中に咳が始まった。", days: 2, hp: -3 } },

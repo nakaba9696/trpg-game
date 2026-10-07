@@ -23,7 +23,7 @@
     const e = E()[id], L = D.LOCS[lid];
     if (!e || !L || !(L.pool || []).length || e.boss || e.elderOf) return false;
     if ((e.where || []).includes(lid) || (e.also || []).includes(lid)) return true;
-    return !e.kinOf && !!e.rg && !!RG[e.rg] && RG[e.rg].test(L.region || "") && E4.fitTier(e.tier, L.danger || 0);
+    return !e.kinOf && !!e.rg && !!RG[e.rg] && RG[e.rg].test(L.area || L.region || "") && E4.fitTier(e.tier, L.danger || 0);
   };
   E4.spread = () => {
     const ids = Object.keys(E()).filter(isE4);

@@ -37,7 +37,7 @@
 
     // ---------------------------------------------------------------- レオネスト王国（ブランデールの周り）
     w3_bells: {
-      name: "鐘撞きの丘", region: "レオネスト王国", type: "wild", danger: 1, scene: "w3_bells", x: 34, y: 62,
+      name: "鐘撞きの丘", region: "レオネスト王国", area: "南の野", type: "wild", danger: 1, scene: "w3_bells", x: 34, y: 62,
       desc: "低い丘の頂ごとに、古い見張り塔が一本ずつ立っている。どの塔にも鐘が吊ってあり、どの塔にも、鐘の綱を握ったまま居眠りする番人がいる。風が吹くと鐘が少し鳴る。",
       pool: ["bandit", "wolf", "e1_tollrat", "w3_smuggler"],
       links: { karna: 1, nerva: 2 },

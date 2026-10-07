@@ -46,7 +46,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   if (D.LOCS.nerva && D.LOCS.nerva.name !== "港町ヴァレンツァ") F(`nerva の名前が「${D.LOCS.nerva.name}」`);
   if (G.nationOf("karna") !== LEO) F(`ブランデールの国が ${G.nationOf("karna")}`);
   if (G.w6 && G.w6.REGIONS.includes("free")) F("旅の地方に free が残っている");
-  if (G.w6 && G.w6.regionOf("karna") !== "leo") F(`ブランデールの旅の地方が ${G.w6.regionOf("karna")}`);
+  if (G.w6 && G.w6.regionOf("karna") !== "south") F(`ブランデールの旅の地方が ${G.w6.regionOf("karna")}（王国の南の道 south のはず）`);
   if (G.m4Nation && G.m4Nation("karna") !== "kingdom") F(`ブランデールの戦の国が ${G.m4Nation("karna")}`);
 
   // ---- 古いセーブ
@@ -86,9 +86,14 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   if (G.w6) {
     const S = start();
     const ev = { id: "d10_test", w6: { w: 1, reg: ["free"] } };
-    const c = { sea: false, days: 1, danger: 0, tod: "昼", reg: ["leo", "leo"] };
-    if (!G.w6.fits(ev, S, c)) F("旅の出来事の reg: [\"free\"] が王国の道で当たらない");
+    const c = { sea: false, days: 1, danger: 0, tod: "昼", reg: ["south", "leo"] };
+    if (!G.w6.fits(ev, S, c)) F("旅の出来事の reg: [\"free\"] が王国の南の道で当たらない");
+    if (G.w6.fits(ev, S, { ...c, reg: ["leo", "leo"] })) F("旅の出来事の reg: [\"free\"] が王都のあたりの道で当たる");
     if (G.w6.fits(ev, S, { ...c, reg: ["nord", "nord"] })) F("旅の出来事の reg: [\"free\"] が帝国の道で当たる");
+    S.w6 = { from: "karna", dest: "leavel", days: 2 };
+    const reg = G.w6.ctx(S).reg;
+    if (reg.join() !== "south,leo") F(`ブランデールから王都への旅の地方が ${reg.join("・")}`);
+    S.w6 = null;
     const leoEv = D.EVENTS.filter((e) => e.w6 && e.w6.reg && [].concat(e.w6.reg).includes("free"));
     if (leoEv.length) F(`旅の出来事の地方に free が残っている：${leoEv.map((e) => e.id).join("・")}`);
   }

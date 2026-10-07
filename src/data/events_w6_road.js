@@ -262,7 +262,7 @@
       ],
     },
     {
-      id: "w6r_poacher", where: ["w6"], w: 0, w6: { w: 2, reg: ["leo", "elm"] }, title: "罠に掛かった鹿",
+      id: "w6r_poacher", where: ["w6"], w: 0, w6: { w: 2, reg: ["leo", "south", "elm"] }, title: "罠に掛かった鹿",
       who: { kind: "foe", foe: "e4_poacher" },
       text: "街道沿いの森の縁で、若い鹿が針金の罠に後ろ足を取られて暴れている。鹿の目は白目ばかりだ。そのとき、木陰から男が一人出てきた。弓を持ち、帽子を目深にかぶっている。男はあなたを見て口笛を短く一度吹いた。",
       choices: [
