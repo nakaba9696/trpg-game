@@ -25,27 +25,55 @@
   // 本文の欄は画面の下に寄せ、高さは中身に合わせて tome.min〜tome.h（CSS の min-height・max-height）。戦闘は V9 のまま
   const v9Layout = v9.layout;
   u21.v9Layout = v9Layout;
+  // U23：立ち絵が小さくなった（持ち主「UI変えてもらったら立ち絵が小さくなった」）。本文の欄を 1 行 32 字ほどに、右の列を少し細くし、
+  // 本文の欄と右の列のあいだを立ち絵の場所にする。話している人は画面の高さの 9 割ほどで、足元まで見える（欄の後ろに沈めない）
+  u21.CHARS = 32; // 本文の 1 行の字数（広い画面でもこれまで）
+  u21.FIG = 0.9; // 立ち絵の高さ（見出しの帯より下の高さに対して）
+  u21.CORE = 0.42; // 立ち絵の幅のうち、ぼかさずに見える真ん中の割合（高さに対して。v9_pc.css の .v9fig.img の覆い：幅 0.8×高さの 52%）
   u21.layout = (vw, vh) => {
     const base = v9Layout(vw, vh, false);
     const { head, m, fs } = base;
     vw = base.vw; vh = base.vh;
     const gap = Math.round(Math.max(14, m * 0.8));
-    const sw = Math.round(Math.max(360, Math.min(500, vw * 0.33)));
+    const sw = Math.round(Math.max(340, Math.min(480, vw * 0.29)));
     const side = { x: vw - m - sw, y: head + 8, w: sw, h: vh - head - 8 - m };
     const leftW = side.x - gap - m;
     const width = (c) => c * fs + v9.PAD * 2 + 10;
-    let chars = 40;
+    let chars = u21.CHARS;
     while (chars > 28 && width(chars) > leftW) chars--;
     const tw = Math.min(leftW, width(chars));
     const avail = vh - m - head;
     const tmax = Math.max(200, avail - u21.TOP_GAP);
     const tmin = Math.round(Math.min(tmax, Math.max(240, Math.min(520, avail * 0.5))));
     const tome = { x: m, y: vh - m - tmax, w: tw, h: tmax, min: tmin };
-    // 立ち絵は左の広い所に。足元は本文の欄の後ろへ沈める（顔と肩が欄の上に見える）
-    const low = vh - m - tmin;
-    const cast = { x: 0, y: head, w: Math.max(0, side.x - gap), h: Math.round(low + tmin * 0.35 - head) };
-    return Object.assign({}, base, { chars, tome, cast, side, stage: null, side21: true });
+    // 立ち絵の場所：左の広い所（見出しの帯の下から画面の下まで）。人は本文の欄と右の列のあいだ（stand）に立つ
+    const cast = { x: 0, y: head, w: Math.max(0, side.x - 4), h: vh - head };
+    const stand = { x0: tome.x + tome.w, x1: side.x };
+    return Object.assign({}, base, { chars, tome, cast, side, stand, stage: null, side21: true });
   };
+  // 立ち絵の置き場所（V9 の placeCast と同じ形）。本文の欄と右の列のあいだの真ん中に、話している人を大きく。
+  // 高さは、見えている真ん中（CORE）がそのあいだに入る大きさまで。後ろの人は少し小さく暗く、左右にずらす（欄の後ろに隠れてもよい）
+  const v9Place = v9.placeCast;
+  u21.v9Place = v9Place;
+  u21.placeCast = (L, list) => {
+    const n = (list || []).length;
+    if (!L || !L.side21 || !L.stand || !n) return v9Place ? v9Place(L, list) : [];
+    const C = L.cast;
+    const room = Math.max(0, L.stand.x1 - L.stand.x0);
+    // 右の列を入れる前（V9）の大きさより小さくはしない（狭い画面では、人の端が本文の欄の後ろに隠れてもよい）
+    const was = v9Place ? (v9Place(v9Layout(L.vw, L.vh, false), [{ role: "speaker" }])[0] || {}).h || 0 : 0;
+    const H = Math.round(Math.min(C.h, Math.max(was, C.h * 0.6, Math.min(C.h * u21.FIG, room / u21.CORE))));
+    const mid = Math.round((L.stand.x0 + L.stand.x1) / 2 - C.x);
+    const off = Math.round(H * 0.3);
+    const speaker = list[0] && list[0].role === "speaker";
+    if (speaker) {
+      const xs = [mid, mid - off, mid + off];
+      return list.map((c, i) => ({ x: xs[i], h: i ? Math.round(H * 0.82) : H, front: i === 0, dim: i ? 0.45 : 0, z: i ? 1 : 3 }));
+    }
+    const xs = n === 1 ? [mid] : n === 2 ? [mid - off / 2, mid + off / 2] : [mid, mid - off, mid + off];
+    return list.map((c, i) => ({ x: Math.round(xs[i]), h: Math.round(H * (n === 3 && i ? 0.86 : 0.94)), front: false, dim: 0.22, z: n === 3 && !i ? 2 : 1 }));
+  };
+  if (v9Place) v9.placeCast = (L, list) => (L && L.side21 ? u21.placeCast(L, list) : v9Place(L, list));
   v9.layout = (vw, vh, combat) => (combat ? v9Layout(vw, vh, true) : u21.layout(vw, vh));
 
   // 右の列のまとめ方：U13 と同じ組で、まとめる数だけ下げる

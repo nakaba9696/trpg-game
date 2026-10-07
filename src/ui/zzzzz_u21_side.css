@@ -63,9 +63,8 @@ body.u21pc[data-u14="town"] #u21side { --orn: var(--u14-town); --win-edge: rgba(
 body.u21pc[data-u14="wild"] #u21side { --orn: var(--u14-wild); --win-edge: rgba(122, 146, 116, .7); }
 body.u21pc[data-u14="dungeon"] #u21side { --orn: var(--u14-dungeon); --win-edge: rgba(112, 124, 156, .7); }
 
-/* 立ち絵の名前は本文の欄の上に（欄の後ろに沈んだ足元ではなく、肩の辺り） */
-body.u21pc .v9fig .v9name { bottom: 42%; }
-body.u21pc .v9fig.card .v9name { bottom: -34px; }
+/* 立ち絵（U23）：本文の欄と右の列のあいだに、足元まで立つ。名前は腰の辺り */
+body.u21pc .v9fig .v9name { bottom: 22%; left: 50%; transform: translateX(-50%); max-width: 70%; }
 
 /* 旅の行き先の小さな地図（W7）：右の列では、画面の低さに合わせて低くする（行き先の選択肢を多く見せる） */
 body.u21pc #u21side #panel .w7tmap canvas { height: clamp(120px, 20vh, 220px); }

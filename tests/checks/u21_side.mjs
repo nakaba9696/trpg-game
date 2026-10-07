@@ -17,7 +17,7 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
   const vmc = vm.createContext({ console, G, globalThis: { G }, Image: class { addEventListener() {} } });
   for (const f of ["art_monsters.js", "art_people.js", "r1_race.js", "v4_assets.js", "v5_stand.js", "v9_pc.js", "u13_menu.js", "zf2_opening.js", "zzzzz_u21_side.js"]) vm.runInContext(src("ui/" + f), vmc, { filename: "ui/" + f });
   const u = G.u21, v9 = G.v9, u13 = G.u13;
-  for (const k of ["layout", "plan", "afterOrder", "v9Layout"]) if (!u || typeof u[k] !== "function") return fail(`G.u21.${k} が無い`);
+  for (const k of ["layout", "plan", "afterOrder", "v9Layout", "placeCast", "v9Place"]) if (!u || typeof u[k] !== "function") return fail(`G.u21.${k} が無い`);
 
   // ---------------------------------------------------------------- 配置
   const inside = (r, vw, vh) => r && r.x >= 0 && r.y >= 0 && r.x + r.w <= vw + 0.5 && r.y + r.h <= vh + 0.5 && r.w > 0 && r.h > 0;
@@ -35,6 +35,17 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
     if (per < 28 || per > 40.5) fail(`${at}：本文の 1 行が ${per.toFixed(1)} 字`);
     if (L.fs < 16) fail(`${at}：本文の字が小さい`);
     if (L.cast.x + L.cast.w > L.side.x || L.cast.h <= 0) fail(`${at}：立ち絵の場所が右の列に掛かるか、無い`);
+    // U23：話している人の立ち絵は、右の列を入れる前（V9 の配置）より小さくしない。ぼかさずに見える真ん中は、本文の欄と右の列のあいだに入る
+    const sp = [{ role: "speaker" }], ally = [{ role: "speaker" }, { role: "ally" }];
+    const was = u.v9Place(u.v9Layout(vw, vh, false), sp)[0];
+    const now = v9.placeCast(L, sp)[0];
+    if (!now || now.h < was.h) fail(`${at}：立ち絵が前（${was.h}px）より小さい（${now ? now.h : 0}px）`);
+    else {
+      const core = now.h * u.CORE / 2;
+      if (vw >= 1280 && (now.x - core < L.stand.x0 - 2 || now.x + core > L.stand.x1 + 2)) fail(`${at}：立ち絵の真ん中が本文の欄か右の列に隠れる`);
+      if (now.h > L.cast.h + 0.5) fail(`${at}：立ち絵が見出しの帯に掛かる`);
+    }
+    if (v9.placeCast(L, ally).length !== 2 || !v9.placeCast(L, ally)[0].front) fail(`${at}：話している人が前に出ない`);
     const C = v9.layout(vw, vh, true), B = u.v9Layout(vw, vh, true);
     if (JSON.stringify(C) !== JSON.stringify(B)) fail(`${at}：戦闘の配置が V9 のままでない`);
   }
