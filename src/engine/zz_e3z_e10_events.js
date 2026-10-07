@@ -1,5 +1,6 @@
 // E10：使徒を弱らせる出来事（表は src/data/zz_e10_events.js の D.E10）
-// - 出来事の表がある使徒は、弱り方の割合 frac を「弱点の品・条件の割合 × KEY_W ＋ 起こした出来事の割合 × (1 − KEY_W)」にする
+// - 出来事の表がある使徒は、弱り方の割合 frac を「弱点の品・条件の割合 × KEY_W ＋ 起こした出来事の重みの割合 × (1 − KEY_W)」にする
+//   （出来事の重みは D.E10.W。内容しだいで、国を挙げる・重い犠牲を払う出来事ほど重い）
 //   （表の無い使徒は今までどおり、弱点の品・条件だけで決まる）。frac から先の弱り方は E3 と同じ（D.E3.WEAK の倍率）
 // - 挑んだとき、起こした出来事の一行（on）が出る
 // - 図鑑：倒した使徒の「弱る条件」に、出来事の短い言葉も並ぶ
@@ -25,7 +26,10 @@
     const a = D.E3.LIST[id];
     S = S || G.S;
     if (!L || !L.length || !a || !S) return m;
-    const ev = G.e10Done(id, S).length / L.length;
+    // 出来事は内容しだいの重み（D.E10.W[使徒][key]、無ければ 1）。国を挙げる・重い犠牲を払う出来事ほど大きく弱る
+    const wOf = (x) => x.w || ((E10.W || {})[id] || {})[x.key] || 1;
+    const doneSet = new Set(G.e10Done(id, S));
+    const ev = L.reduce((a, x) => a + (doneSet.has(x.key) ? wOf(x) : 0), 0) / L.reduce((a, x) => a + wOf(x), 0);
     const frac = E10.KEY_W * m.frac + (1 - E10.KEY_W) * ev;
     const W = D.E3.WEAK[a.rank];
     const mul = (v) => 1 - frac * (1 - v);

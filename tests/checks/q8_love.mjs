@@ -108,14 +108,12 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (G.q8LoveOk(mar, S)) F("罪のない人を殺したのに、マルゴの条件がそろう");
   }
   {
-    // 難しい道の人（ギグラ）：恋の筋の告白の条件を、M10 の告白にも当てる
+    // ギグラ（ゴブリン）は C11 で恋の相手から外した：身の上の最後まで聞いても、告白は起きない
     const G = start(5, ["gigra"]);
     const S = G.S, c = S.companions[0];
     c.bond = 95;
-    if (confessable(G, c)) F("身の上の最後を聞かずに、ギグラの告白が起きる");
     G.tkState(S).heard.gigra_p6 = { day: S.day, k: "" }; quest(S, "gigra", 9);
-    c.m10.cool = 0;
-    if (!confessable(G, c)) F(`身の上の最後を聞いたのに、ギグラの告白が起きない（${G.q8LoveMissing(c, S).join("・")}）`);
+    if (confessable(G, c)) F("身の上の最後を聞いたら、ギグラ（ゴブリン）の告白が起きる");
     // 名の無い仲間は、一緒に旅した日数
     G.addCompanion({ name: "槍兵のテス", cls: "傭兵", power: 40, dmg: 1 });
     const m = S.companions[S.companions.length - 1];

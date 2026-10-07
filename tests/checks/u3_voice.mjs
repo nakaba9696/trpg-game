@@ -104,7 +104,7 @@ export default ({ fail, loadEngine, seeded }) => {
     if (S.log.length !== before) fail("開いた行を二度書き足す");
     delete S.lore; // 古いセーブ
     S.memos = ["占い師：赤い月の晩は窓に布を掛けろ。竜の骨の中で誰かがしゃべっている"];
-    if (!rows().includes("赤い月") || !rows().includes("しゃべる剣と白い刀")) fail("古いセーブ（S.lore なし）で、覚えていることから用語説明が開かない");
+    if (!rows().includes("赤い月") || !rows().includes(D.LORE.swords.title)) fail("古いセーブ（S.lore なし）で、覚えていることから用語説明が開かない");
     const m = D.WORLD.all.length;
     D.WORLD.sections.push(["テストの節", [["テスト", "テスト"]]]);
     if (D.WORLD.all.length !== m + 1 || !rows().includes("テスト")) fail("D.WORLD.sections.push が元の表に足されない");

@@ -69,7 +69,7 @@
 | `assets/monsters/oni.webp` | 鬼 | oni, red skin, two horns, huge, muscular, fangs, wild black hair, tiger skin loincloth, holding kanabo, sake gourd | 沖の島の鬼。酒と人肉を好む |
 | `assets/monsters/chimera.webp` | キメラ | chimera, lion body, lion head, goat head, snake tail, snake head, mane, fangs, four legs, stitches | 獅子と山羊と蛇の継ぎ合わせ |
 | `assets/monsters/blackknight.webp` | 黒騎士 | living armor, black knight, full armor, black armor, closed helmet, glowing eyes in helmet, holding greatsword, tattered black cape, no face | 使徒に仕える黒い鎧。中身は見えない |
-| `assets/monsters/general.webp` | 魔物将軍 | demon general, giant, horned helmet, heavy armor, spiked armor, red skin, tusks, muscular, holding halberd, war banner, cape | 魔物の軍勢を率いる将。威圧 |
+| `assets/monsters/general.webp` | 角兜の将 | demon general, giant, horned helmet, heavy armor, spiked armor, red skin, tusks, muscular, holding halberd, war banner, cape | 魔物の軍勢を率いる将。威圧 |
 | `assets/monsters/kin.webp` | 使徒の眷属 | demon, gargoyle, winged demon, bat wings, black skin, horns, long claws, glowing red eyes, slender, long tail | 使徒が生み出した翼ある僕 |
 | `assets/monsters/e1_crowngob.webp` | 王冠ゴブリン | goblin, green skin, pointy ears, big nose, googly eyes, grin, paper crown, red cape, holding dagger, sweat, short, proud | 紙の王冠のゴブリン王。家来はいない。まぬけ |
 | `assets/monsters/e1_bowshroom.webp` | おじぎ茸 | mushroom monster, giant mushroom, pink spotted cap, bowing, dot eyes, blush, spores, stubby legs | おじぎする茸。まぬけで憎めない |

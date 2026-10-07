@@ -1,0 +1,67 @@
+/* U24：図鑑を見やすく・探しやすく（ui/zu24_codex_read.js）。窓はスクロールしてよい（一画面に収める縛りは外した） */
+#dlgCodex { width: min(1180px, calc(100vw - 32px)); }
+
+/* ---------------------------------------------------------------- 探す・絞る・並べる の帯 */
+.u24bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--box); }
+.u24bar[hidden] { display: none; }
+.u24q { flex: 1 1 200px; min-width: 160px; min-height: 34px; padding: 4px 10px; font: inherit; font-size: 14px; color: var(--ink); background: var(--field); border: 1px solid var(--rule); border-radius: 2px; }
+.u24q:focus-visible, .u24sel:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.u24sel { min-height: 34px; max-width: 15em; padding: 3px 6px; font: inherit; font-size: 13px; color: var(--ink); background: var(--field); border: 1px solid var(--rule); border-radius: 2px; }
+.u24sel[hidden] { display: none; }
+.u24sel:disabled { opacity: .55; }
+.u24fresh[aria-pressed="true"] { background: var(--ng); border-color: var(--ng); color: #fff; }
+.u24clear[hidden] { display: none; }
+.u24count { margin-left: auto; font-variant-numeric: tabular-nums; }
+.f2list .u24hide { display: none !important; }
+.u24none { margin: 8px 0; }
+
+/* ---------------------------------------------------------------- 一覧のマス：名前と小さな絵と格が見える大きさ */
+#dlgCodex .f2grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+#dlgCodex .f2words { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+#dlgCodex .f2cell { min-height: 72px; padding: 6px 5px 7px; }
+#dlgCodex .f2cell .f2name { font-size: 13px; line-height: 1.35; }
+#dlgCodex .f2cell[data-grade] .f2tier { font-weight: 700; letter-spacing: .04em; }
+#dlgCodex .f2cell[data-grade="S"] .f2tier { color: #a3321f; }
+#dlgCodex .f2cell[data-grade="A"] .f2tier { color: #a35a12; }
+#dlgCodex .f2cell[data-grade="B"] .f2tier { color: var(--accent); }
+
+/* ---------------------------------------------------------------- 説明：要点の札・性能の表・文章 */
+.u24sum { display: flex; flex-wrap: wrap; gap: 5px; margin: 4px 0 10px; }
+/* 要点の札と同じこと（地方・格）を書いた一行は隠す */
+#dlgCodex .f2detail .u24sum + p.fine { display: none; }
+.u24chip { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 9px; font-size: 12.5px; border: 1px solid var(--rule); border-radius: 12px; background: var(--field); color: var(--ink); }
+.u24chip.u24ok { border-color: color-mix(in srgb, var(--ok) 55%, transparent); color: var(--ok); }
+.u24chip.u24muted { color: var(--muted); }
+.u24chip.u24g { font-weight: 700; border-color: var(--accent); color: var(--head); }
+.u24chip.u24g-S { background: #a3321f; border-color: #a3321f; color: #fff; }
+.u24chip.u24g-A { background: #a35a12; border-color: #a35a12; color: #fff; }
+
+#dlgCodex .f2detail .f2kv { grid-template-columns: max-content minmax(0, 1fr); gap: 0; margin: 8px 0 10px; border: 1px solid var(--rule); border-radius: 2px; font-size: 13.5px; }
+#dlgCodex .f2detail .f2kv dt, #dlgCodex .f2detail .f2kv dd { padding: 5px 10px; border-top: 1px solid var(--rule); line-height: 1.55; }
+#dlgCodex .f2detail .f2kv dt:first-of-type, #dlgCodex .f2detail .f2kv dt:first-of-type + dd { border-top: 0; }
+#dlgCodex .f2detail .f2kv dt { background: color-mix(in srgb, var(--rule) 22%, transparent); white-space: nowrap; }
+#dlgCodex .f2detail .f2kv dd[data-u24="good"] { color: var(--ok); font-weight: 700; }
+#dlgCodex .f2detail .f2kv dd[data-u24="bad"] { color: var(--ng); font-weight: 700; }
+#dlgCodex .f2detail .f2kv dd[data-u24="loot"] { color: var(--head); }
+#dlgCodex .f2detail .f2kv dd[data-u24="grade"] { font-weight: 700; }
+#dlgCodex .f2detail .f2kv dt[data-u24="good"] { color: var(--ok); }
+#dlgCodex .f2detail .f2kv dt[data-u24="bad"] { color: var(--ng); }
+#dlgCodex .f2detail .f2flavor, #dlgCodex .f2detail .f2line { font-size: 15px; line-height: 1.95; }
+#dlgCodex .f2detail .f2where ul { line-height: 1.75; }
+
+/* ---------------------------------------------------------------- PC：一覧と説明を左右に。説明は画面の高さに合わせて、長ければ説明の中だけ流れる（途中で切らない） */
+@media (min-width: 761px) {
+  #dlgCodex .f2panes { grid-template-columns: minmax(0, 1fr) clamp(320px, 34vw, 420px); }
+  #dlgCodex .f2detail { top: 64px; max-height: calc(100vh - 120px); padding: 14px 16px; overscroll-behavior: contain; scrollbar-width: thin; }
+}
+/* ---------------------------------------------------------------- スマホ：一覧 → 説明の切り替え（選ぶと説明だけ、「一覧へ戻る」で一覧へ） */
+@media (max-width: 760px) {
+  .u24bar { padding: 6px; }
+  .u24q { flex-basis: 100%; min-height: 44px; font-size: 16px; }
+  .u24sel { flex: 1 1 calc(50% - 4px); max-width: none; min-height: 44px; font-size: 14px; }
+  .u24fresh, .u24clear { min-height: 44px; }
+  .u24count { flex-basis: 100%; margin-left: 0; }
+  #dlgCodex .f2grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); }
+  #dlgCodex .f2panes.u24det .f2list { display: none; }
+  #dlgCodex .f2panes:not(.u24det) .f2detail { display: none; }
+}

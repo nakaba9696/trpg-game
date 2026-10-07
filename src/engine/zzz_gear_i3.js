@@ -52,7 +52,7 @@
     if (!/^u?r?(\+[1-5])?$/.test(f)) return null;
     return { base: a[1], mat: a[2], pre: a[3], suf: a[4], unk: f.includes("u"), rust: f.includes("r"), plus: Number((f.match(/\+(\d)/) || [])[1] || 0) };
   };
-  // 土台にしてよい品（大事な物・絶界を破る二振り・伝説・代償つき・銃は鍛冶に出さない）
+  // 土台にしてよい品（大事な物・絶界に届く伝説の武具・伝説・代償つき・銃は鍛冶に出さない）
   API.smithable = (id) => { const b = RAW[id]; return !!(b && SLOT[b.type] && id !== "fists" && !b.key && !b.pierce && !b.legend && !b.toll && !b.gun); };
   const matOf = (b, m) => (m && b.i3 && I3.MATS[b.i3.mat] ? I3.MATS[b.i3.mat][m] : null);
   const fxOf = (part, type) => (part ? part[SLOT[type]] : null);

@@ -53,6 +53,26 @@ export default ({ fail, loadEngine, seeded }) => {
       if (e.cond(G.S)) fail(`${ap}:${x.key} の出来事が、その使徒を知らないうちに起きる`);
     }
   }
+  // 出来事の重み（E10-3。内容しだい）：重い出来事だけを起こしたほうが、軽い出来事だけより弱る。A・S 級の国を挙げる出来事は一番重い
+  {
+    G.rand = seeded(3);
+    G.P = { trophies: {}, graves: [] };
+    const stats = {}, caps = {};
+    D.STATS.forEach((k) => { stats[k] = 40; caps[k] = 99; });
+    G.newGame({ cls: "merc", stats, caps, goal: "majin", profile: { ...PROFILE } });
+    const S = G.S;
+    const wOf = (ap, x) => x.w || ((E10.W || {})[ap] || {})[x.key] || 1;
+    for (const [ap, L] of Object.entries(E10.LIST)) {
+      if (L.length < 2 || L.some((x) => x.test)) continue;
+      const ws = L.map((x) => wOf(ap, x));
+      if (Math.max(...ws) === Math.min(...ws)) { if (D.E3.LIST[ap].rank !== "B") fail(`${ap} の出来事の重みがみな同じ（内容しだいにする）`); continue; }
+      const heavy = L[ws.indexOf(Math.max(...ws))], light = L[ws.indexOf(Math.min(...ws))];
+      const only = (x) => { L.forEach((y) => { S.flags[`e10:${ap}:${y.key}`] = y === x; }); return G.e3Mods(ap, S); };
+      const mh = only(heavy), ml = only(light);
+      if (!(mh.hp < ml.hp && mh.frac > ml.frac)) fail(`${ap}: 重い出来事（${heavy.key}）だけのほうが、軽い出来事（${light.key}）だけより弱らない`);
+      L.forEach((y) => { delete S.flags[`e10:${ap}:${y.key}`]; });
+    }
+  }
   if ((E10.RUMORS || []).length < Object.keys(E10.LIST).length - 1) fail("弱らせる出来事の手がかりの噂が足りない");
   for (const r of E10.RUMORS) if (!D.RUMORS.includes(r)) fail("手がかりの噂が D.RUMORS に入っていない");
 
