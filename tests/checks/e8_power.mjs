@@ -4,6 +4,8 @@
 //   S 級：正面（絶界を破る剣だけ・条件なし）0%／弱点＋出来事で 1〜2 割（0〜30%）
 //   A 級：正面ほぼ 0%（1 割まで）／弱点＋出来事で約 3 割（10 回の測りなので幅 10〜50%）。B 級より勝ちにくい（E10-3）
 //   B 級：正面ほぼ勝てない（2 割まで）／弱点＋出来事で約 5 割（10 回の測りなので幅 20〜80%）／弱点だけ 25% まで
+// E12b からは使徒ごとに斬打突・属性の効き目が違う（src/data/e12_affinity.js）。「弱点をそろえる」ときは、その使徒にいちばん効く物理の種類の刃で斬る
+//   （ミスリルの剣の種類だけを替えて測る。剣の強さは同じ）。正面は伝説の武具（斬）のまま。防具（王国騎士の甲冑）の効き目も使徒の攻め手に効く
 export default ({ fail, loadEngine, seeded }) => {
   const G = loadEngine();
   const D = G.data;
@@ -18,6 +20,8 @@ export default ({ fail, loadEngine, seeded }) => {
     D.STATS.forEach((k) => { S.stats[k] = Math.max(S.stats[k], 55); });
     S.maxHp = S.hp = G.maxHpOf(S.stats);
     S.weapon = allKeys ? "mithril" : "volgrim";
+    const dt0 = D.ITEMS.mithril.dtype;
+    if (allKeys && G.dmgMod) { const a = D.E3.LIST[id]; D.ITEMS.mithril.dtype = [["slash", "blunt", "pierce"].sort((x, y) => G.dmgMod(a.foe, y) - G.dmgMod(a.foe, x))[0]]; }
     S.armor = "i3a_knightplate";
     S.inv.potion = 5;
     if (evs && G.e10Fill) G.e10Fill(S);
@@ -34,6 +38,7 @@ export default ({ fail, loadEngine, seeded }) => {
       G.act(ids.includes(act) ? act : ids[0]);
     }
     G.e3Keys = keys0;
+    D.ITEMS.mithril.dtype = dt0;
     return !!(S.e3 && S.e3.done && S.e3.done.includes(id));
   };
   const RANGE = { S: { front: 0, keys: [0, 0.3], only: 0.1 }, A: { front: 0.1, keys: [0.1, 0.5], only: 0.2 }, B: { front: 0.2, keys: [0.2, 0.8], only: 0.25 } };
