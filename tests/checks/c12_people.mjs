@@ -1,6 +1,6 @@
 // C12：手薄な地域（光天教会領・エルメシア共和国・シェルアーク諸島）の名のある人物（src/data/cz_c12_people.js・events_cz_c12.js・zcz_c12_people.js・zcz_c12_voice.js）
 // - どの人も、手薄な地域のどれかにいる（会う場所・誘う町・予定の場所が、その地域の場所）。特色の場所（W9 の施設）か場所の主
-// - 仲間は 2〜6 人。恋の筋（R2）の相手は 2〜3 人で、全員が 18 歳以上の人の姿（子どもの姿でない・Q8 の一覧にいる）。獣人かエルフを含む
+// - 10〜15 人。仲間は 2〜6 人。恋の筋（R2）の相手は 2〜3 人で、全員が 18 歳以上の人の姿（子どもの姿でない・Q8 の一覧にいる）。獣人かエルフを含む
 // - 持ち主の指定の二人（沼の魔女・書庫番のエルフ）がいて、仲間・恋の相手
 // - どの人にも、混ぜた型・ギャップ・過去・好感度の始まり・死や裏切りの扱い・名前と役職の札・人物図鑑・立ち絵のタグ
 // - 仲間は会話の量（話題 20 以上・身の上 5 段以上・場所 5・出来事 5・仲間 2・恋 2・信頼 2・冷たい 2・夜 2）と、その人だけの話が二つ以上
@@ -21,7 +21,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const love = mates.filter((id) => P[id].romance === true);
 
   // ---------------------------------------------------------------- 顔ぶれ
-  if (ids.length < 2) F(`人が少なすぎる：${ids.length}`);
+  if (ids.length < 10 || ids.length > 15) F(`人が 10〜15 人でない：${ids.length}`);
   if (mates.length < 2 || mates.length > 6) F(`仲間が 2〜6 人でない：${mates.length}`);
   if (love.length < 2 || love.length > 3) F(`恋の筋の相手が 2〜3 人でない：${love.join("・")}`);
   if (!love.some((id) => ["elf", "beast"].includes(P[id].race))) F("恋の筋の相手に、エルフも獣人もいない");
@@ -129,6 +129,9 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   start("swamp");
   g.c2Meet("ortensia");
   if (g.S.aff.ortensia !== C.ortensia.aff0) F(`会ったときの好感度が始まりの数でない：${g.S.aff.ortensia}`);
+
+  // 手薄な三つの地域に、それぞれ二人以上
+  for (const r of REGIONS) if (ids.filter((id) => C[id].region === r).length < 2) F(`${r} の人が二人未満`);
 
   if (!n) ok(`C12：${ids.length} 人（仲間 ${mates.join("・")}／恋の筋 ${love.join("・")}）・出来事 ${evs.length}・すべて手薄な地域`);
 };
