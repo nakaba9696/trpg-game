@@ -1,4 +1,4 @@
-// F1：戦闘の読み合い・賭けの技・山場・手応え。名前の頭の z の数で、ほかの戦闘の包み（E4・L1・F2・U6 など）より後に読ませる。
+// F1：戦闘の読み合い・賭けの技・山場。名前の頭の z の数で、ほかの戦闘の包み（E4・L1・F2・U6 など）より後に読ませる。
 // combat.js のつなぎ目（G.cbActs・G.cbDmgMod・G.cbMove・G.cbStruck・C.f1dodge）に中身を入れ、G.combatAct・G.combatActions・G.startCombat を包む。DOM には触らない。
 //
 // 読み合い：敵は手番の終わりに、次の手番にすることの気配を見せる（f.f1i = { k }。文は data/f1_tells.js）。気配のとおりに動く（はったりは無い）。
@@ -11,8 +11,8 @@
 // 知っている敵（図鑑で倒したことがある・覚え書きがある）は、気配のあとに一言（D.F1_HINT）が添い、合う手に「◎」が付く。成功率は変わらない（L1 と同じ考え）
 // 賭けの技：捨て身（当たりにくいが 2.5 倍、外すと無防備）・身を削る（HP を払って当てやすく 1.8 倍。HP が半分あるうち）・目つぶし（狙いが気配を見せているとき、道具をひとつ投げ捨てて、気配を潰して崩す）
 // 雑魚戦を長引かせない：ボスでない敵は、こちらの一撃で HP が 2 割を切るなら、そのまま倒れる（とどめ）
-// 手応え：勝った戦いの読み勝ち・崩し・いちばん重い一撃を記録に一行（S.f1last。結果の場面 U13 が読む）
-// セーブに足すもの：S.combat.f1（数え）・敵の f1i / f1stun / f1open / f1rage / f1struck・S.f1last。古いセーブに無くても動く
+// 手応え（勝った戦いの読み勝ち・崩しなどの一行）は、持ち主「意味あるようにみえて意味不明なので表示ごとやめて」でやめた（F5。古いセーブの S.f1last は読まない）
+// セーブに足すもの：S.combat.f1（数え）・敵の f1i / f1stun / f1open / f1rage / f1struck。古いセーブに無くても動く
 // 乱数は G.rand / G.d / G.dice / G.pick だけ。レーン B（F1）
 (function (G) {
   const D = G.data;
@@ -337,32 +337,7 @@
       rally();
       return;
     }
-    if (S.combat !== c) after(c);
   };
-
-  // 戦いの終わり：勝ったなら手応えを一行
-  function after(c) {
-    const S = G.S;
-    const won = !c.foes.some((f) => f.hp > 0);
-    if (!won) return;
-    const s = c.f1 || {};
-    const big = c.boss || c.foes.some((f) => isBig(f));
-    S.f1last = { turn: S.turn, reads: s.reads || 0, breaks: s.breaks || 0, best: s.best || 0, gwin: s.gwin || 0, glose: s.glose || 0, rounds: c.round || 1, big };
-    const text = F1.summary(S.f1last);
-    if (text) G.note(`手応え：${text}`);
-    if (big && (s.reads || 0) >= 2) G.say("相手の手は、最後にはすべて見えていた。");
-  }
-  F1.summary = (r) => {
-    if (!r) return "";
-    const parts = [];
-    if (r.reads) parts.push(`読み勝ち ${r.reads}`);
-    if (r.breaks) parts.push(`崩し ${r.breaks}`);
-    if (r.gwin || r.glose) parts.push(`賭け ${r.gwin}勝${r.glose}敗`);
-    if (r.best) parts.push(`いちばん重い一撃 ${r.best}`);
-    if (!parts.length) return "";
-    return `${parts.join("・")}（${r.rounds} 手番）`;
-  };
-  G.f1Summary = (S) => { S = S || G.S; return S && S.f1last && S.f1last.turn === S.turn ? F1.summary(S.f1last) : ""; };
 
   // ---------------------------------------------------------------- 遊び方の一行（U4）：気配が初めて見えたとき
   if (G.PLAY_TIPS && G.playTip) {
