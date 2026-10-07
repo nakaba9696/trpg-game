@@ -666,7 +666,8 @@
     tl.textContent = "";
     all.forEach((t) => {
       const el = h("div", "tro" + (t.got ? "" : " locked"));
-      el.append(h("span", "medal " + t.tier, t.tier), h("b", "", t.got ? t.name : "？？？"), h("span", "", t.desc), h("span", "", t.got ? `${t.got.by || ""} ${t.got.date || ""}` : "未獲得"));
+      const v = G.r7 && G.r7.trophyView ? G.r7.trophyView(t, t.got) : { name: t.got ? t.name : "？？？", desc: t.got ? t.desc : "" }; // まだなら説明も伏せる（R7）
+      el.append(h("span", "medal " + t.tier, t.tier), h("b", "", v.name), h("span", "", v.desc), h("span", "", t.got ? `${t.got.by || ""} ${t.got.date || ""}` : "未獲得"));
       tl.append(el);
     });
     const gl = $("#graveList");
