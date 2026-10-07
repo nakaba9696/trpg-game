@@ -188,7 +188,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   }
 
   // ---------------------------------------------------------------- 釣り合い：正気を低く保つ遊び方 と ふつうのランダムプレイ
-  const GAMES = 40, STEPS = 400;
+  // 40 回だと、内容を足すたびに乱数の並びが変わるだけで比が 0.9〜1.7 倍まで揺れた（C12）。80 回で平均をならす
+  const GAMES = 80, STEPS = 400;
   const RESTORE = /^(m5:confess|inn:rest|tavern:drink)$/;
   const run = (low) => {
     const r = { turns: 0, dead: 0, mad: 0, gold: 0, lore: 0, names: 0, weak: 0, scar: 0, madPicks: 0 };
