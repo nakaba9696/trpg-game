@@ -6,6 +6,7 @@
 //   G.cbActs[kind](t, a, b)   こちらの手を足す（"cb:<kind>"。この手番の中で行うので、図鑑・依頼・弱点の上乗せがそのまま数える）
 //   G.cbDmgMod(f, n, how)     こちらの一撃のダメージを変える（構え・隙・とどめ・E12 の耐性と弱点）。返した数を与える
 //   G.cbAllyDmg(c, f, n)      仲間の一撃のダメージを変える（E12 の耐性と弱点）。返した数を与える
+//   G.cbHurtMod(f, e, n, mv)  あなたが受ける一撃のダメージを変える（E12b：敵の攻め手と、こちらの防具の効き目）。返した数を受ける
 //   G.cbMove(f, e)            敵がこの手番にすること { skip, times, mul, hit, through（身を守っても避けにくくならない）, guardDiv, pierce, you, name, text, f1 }。null ならふつうに一撃
 //   G.cbStruck(f, e, mv, who, dmg)  敵の一撃が当たった・外れた（who は仲間か null＝あなた、dmg は与えた数か 0）のあと
 //   C.f1dodge                 「躱す」が決まった：あなたへの最初の一撃を丸ごと外す
@@ -448,6 +449,7 @@
           if (C.guard) dmg = Math.floor(dmg / ((mv && mv.guardDiv) || 2));
           if (C.ward > 0) dmg -= wardCut();
           dmg = Math.max(1, dmg);
+          if (G.cbHurtMod) dmg = Math.max(1, G.cbHurtMod(f, e, dmg, mv)); // E12b：敵の攻め手の種類と、こちらの防具の効き目
           if (G.cbCover) dmg = Math.max(1, G.cbCover(f, e, dmg, mv)); // F2：仲間が庇って一部を受ける
           G.log("nar", `${f.name}の${e.magic ? "呪い" : (mv && mv.name) || "攻撃"}！ ${dmg} のダメージ。`, { fx: "hurt", n: dmg, heavy: dmg >= S.maxHp / 4 });
           G.hurt(dmg, `${f.name}に倒された`);
