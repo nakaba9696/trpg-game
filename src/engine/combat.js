@@ -152,7 +152,7 @@
   function damageFoe(f, n, how) {
     const e = G.foeData(f);
     if (e.majin && !G.weapon().pierce && how !== "holy") {
-      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
+      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い", wind: "風", earth: "石", light: "光", dark: "闇", burn: "炎" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
       return;
     }
     if (G.cbDmgMod) n = Math.max(0, Math.round(G.cbDmgMod(f, n, how)));
@@ -337,7 +337,7 @@
       if (G.d(100) <= chance) {
         const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
         f.hp = Math.max(0, f.hp - dmg);
-        G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
+        G.log("sys", `${c.name}の${c.fire ? (G.m14AllyMagic ? G.m14AllyMagic(c) : "魔法") : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
         if (f.hp <= 0) onFoeDown(f);
       } else G.note(`${c.name}の攻撃は外れた。`);
     });
@@ -393,7 +393,7 @@
         damageFoe(f, G.d(4) + pow("魔力", 20), "curse");
         if (f.hp <= 0) return;
       }
-      if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は凍りついたまま動けない。`); return; }
+      if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は${f.stunText || "凍りついたまま"}動けない。`); if (!f.frozen) f.stunText = ""; return; }
       // F1：この手番の動き（溜め・構え・連撃・大技）。skip なら殴ってこない
       const mv = G.cbMove ? G.cbMove(f, e) : null;
       if (mv && mv.text) G.say(mv.text);
