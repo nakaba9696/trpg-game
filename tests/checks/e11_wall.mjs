@@ -59,6 +59,22 @@ export default ({ fail, loadEngine, seeded }) => {
       if (walls(G)) fail(`絶界を持つ ${a.id} に、伝承の条件をそろえても刃が弾かれる`);
     }
   }
+  // 仲間の一撃も G.wallOf で言う：黒鎧なら絶界に弾かれる。絶界を持たない使徒には弾かれない
+  if (G0.cbAllyStrike) {
+    for (const [id, walled] of [[E11.WALL[0], true], ["levian", false]]) {
+      const G = loadEngine();
+      start(G, 5);
+      G.data.E3.LIST[id].keys.forEach((k) => { k.test = () => false; });
+      G.apply({ e3fight: id });
+      const f = G.S.combat && G.S.combat.foes[0];
+      if (!f) { fail(`${id} に挑んでも戦いにならない（仲間の一撃の確認）`); continue; }
+      const n0 = G.S.log.length;
+      G.cbAllyStrike({ name: "仲間", dmg: 3 }, f, G.foeData(f));
+      const got = G.S.log.slice(n0).filter((l) => l.fx === "wall");
+      if (walled && !got.some((l) => l.text.includes(`${G.wallOf(f).name}に弾かれた`))) fail(`仲間の一撃が、絶界を持つ ${id} に弾かれない（G.wallOf の言い方で）`);
+      if (!walled && got.length) fail(`仲間の一撃が、絶界を持たない ${id} に弾かれる`);
+    }
+  }
   // 若君の糸
   if (G0.wallOf({ id: "e3_mirza" }).name === "絶界") fail("長編の若君の守りが絶界のまま");
   // 文
