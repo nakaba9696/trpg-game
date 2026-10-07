@@ -1,5 +1,5 @@
 // F3：戦闘で仲間に指示を出す（engine/zzzzzzzzzzzz_f3_orders.js・data/f3_orders.js）
-// - 任せる（作戦も指示も出さない）と、今まで通り：指示の仕組みを外したときと、同じ乱数でまったく同じ記録になる
+// - 機を見て（既定。前の「任せる」。作戦も指示も出さない）と、今まで通り：指示の仕組みを外したときと、同じ乱数でまったく同じ記録になる
 // - 指示どおり動く：狙いを攻める（あなたの狙いへ）・手当て（少しの傷でも）・庇う（あなたの受ける傷が減り、仲間が受ける）・下がる（受ける傷が半分）・薬を使う
 // - 作戦が効く：守り重視なら大技の気配で庇う・早めに手当て。全力ならあなたの狙いを攻める。作戦は戦いをまたいで残り、指示は手番の終わりに消える
 // - 指示・作戦を変えても手番は進まない。仲間が持っていない手（回復役でない者の手当てなど）は出ない
@@ -47,17 +47,17 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const S = begin(12, [mk(0), mk(1, { heal: true, cls: "僧侶" })]);
     G.startCombat(["orc", "goblin"], {});
     const list = ids();
-    if (!list.includes("f3:tac:guard")) F("作戦の選択肢が無い");
+    if (!list.includes("f3:tac:shield")) F("作戦の選択肢が無い");
     if (!list.includes("f3:ord:f3c0:cover") || !list.includes("f3:ord:f3c1:heal")) F("仲間ごとの指示が出ない");
     if (list.includes("f3:ord:f3c0:heal")) F("回復役でない仲間に「手当て」が出る");
     const turn = S.turn, round = S.combat.round, logN = S.log.length;
-    G.act("f3:tac:guard");
+    G.act("f3:tac:shield");
     G.act("f3:ord:f3c0:back");
     if (S.turn !== turn || S.combat.round !== round || S.log.length !== logN) F("作戦・指示を変えると手番が進む（か、記録が増える）");
-    if (S.f3tactic !== "guard" || S.combat.f3ord.f3c0 !== "back") F("作戦・指示が覚えられない");
+    if (S.f3tactic !== "shield" || S.combat.f3ord.f3c0 !== "back") F("作戦・指示が覚えられない");
     G.act("cb:guard");
     if (S.combat && S.combat.f3ord && S.combat.f3ord.f3c0) F("指示が手番の終わりに消えない");
-    if (S.f3tactic !== "guard") F("作戦が手番のあとに消えた");
+    if (S.f3tactic !== "shield") F("作戦が手番のあとに消えた");
   }
 
   // 呼び名が重なる仲間でも、指示の組の見出しは重ならない（押すと開く組の鍵になる）
@@ -146,36 +146,36 @@ export default ({ fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 作戦が効く
   {
-    // 守り重視：大技の気配で庇う
+    // 盾となれ：大技の気配で庇う
     const S = begin(18, [mk(0)]);
     G.startCombat(["orc"], {});
     S.combat.foes[0].hp = S.combat.foes[0].max = 500;
-    G.act("f3:tac:guard");
+    G.act("f3:tac:shield");
     S.combat.foes[0].f1i = { k: "heavy" };
     const from = S.log.length;
     G.act("cb:guard");
-    if (!S.log.slice(from).some((l) => /あなたの前に出て/.test(l.text || ""))) F("作戦「守り重視」で、大技の気配に仲間が庇わない");
-    // 回復優先：少しの傷で手当て。任せるでは手当てしない
+    if (!S.log.slice(from).some((l) => /あなたの前に出て/.test(l.text || ""))) F("作戦「盾となれ」で、大技の気配に仲間が庇わない");
+    // 生き延びろ：少しの傷で手当て。機を見て（今までの任せる）では手当てしない
     const healed = (tac) => {
       const s2 = begin(19, [mk(0, { heal: true, cls: "僧侶" })]);
       G.startCombat(["goblin"], {});
       s2.combat.foes[0].hp = s2.combat.foes[0].max = 500;
-      s2.hp = 800; // 8 割：回復優先（85% 未満）なら治し、任せる（50% 未満）なら治さない
+      s2.hp = 800; // 8 割：生き延びろ（85% 未満）なら治し、機を見て（50% 未満）なら治さない
       if (tac) G.act("f3:tac:" + tac);
       const hp0 = s2.hp;
       const r0 = G.rand; G.rand = () => 0.99;
       try { G.act("cb:guard"); } finally { G.rand = r0; }
       return s2.hp > hp0;
     };
-    if (!healed("heal")) F("作戦「回復優先」で、少しの傷を手当てしない");
-    if (healed(null)) F("任せるのに、少しの傷で手当てした（今までと違う）");
+    if (!healed("live")) F("作戦「生き延びろ」で、少しの傷を手当てしない");
+    if (healed(null)) F("機を見て（既定）なのに、少しの傷で手当てした（今までと違う）");
     // 作戦は戦いをまたいで残る
     const s3 = begin(20, [mk(0)]);
     s3.f3tactic = "all";
     G.startCombat(["goblin"], {});
     G.S.combat = null; G.S.mode = "explore";
     G.startCombat(["goblin"], {});
-    if (G.f3.tactic(s3) !== "all") F("作戦が次の戦いに残らない");
+    if (G.f3.tactic(s3) !== "press") F("作戦が次の戦いに残らない（古いセーブの「全力」が「押し切れ」に読み替わらない）");
   }
 
   // ---------------------------------------------------------------- 渋る
@@ -195,5 +195,5 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (G.f3.balkChance({ bond: 90, trait: "loyal", hp: 30 }, "attack") !== 0) F("好感度の高い仲間が、ふつうの攻めを渋ることがある");
   }
 
-  if (!bad) ok("F3 仲間への指示（作戦 4・指示 8。任せると今まで通り・指示どおり・作戦が効く・手番は進まない・渋る）");
+  if (!bad) ok("F3 仲間への指示（作戦 6・指示 9。機を見てなら今まで通り・指示どおり・作戦が効く・手番は進まない・渋る）");
 };
