@@ -1,14 +1,15 @@
 // E8：討伐できる使徒の強さの目標（持ち主の決定。src/engine/zz_e8_power.js・docs/VISION.md の「格ごとの勝率の目安」）
 // やりこんだ主人公（能力値の点 55・王国騎士の甲冑・回復薬 5。大技の気配が見えたら守る）が一人で挑む。乱数は固定、幅を持たせて確かめる
-//   S 級：正面（絶界を破る剣だけ・条件なし）0%／条件をすべてそろえて 1〜2 割（0〜30%）
-//   A 級：正面ほぼ 0%（1 割まで）／条件をそろえて 5〜8 割（40〜90%）
-//   B 級：正面ほぼ勝てない（2 割まで）／条件をそろえて約 5 割（25〜75%）
+// E10 からは「弱点の品・条件をそろえる（当たり前の備え）＋弱らせる出来事を起こす」で目安を測る。出来事の表がある使徒は、弱点だけでは目安より明らかに低い
+//   S 級：正面（絶界を破る剣だけ・条件なし）0%／弱点＋出来事で 1〜2 割（0〜30%）
+//   A 級：正面ほぼ 0%（1 割まで）／弱点＋出来事で 5〜8 割（40〜90%）
+//   B 級：正面ほぼ勝てない（2 割まで）／弱点＋出来事で約 5 割（10 回の測りなので幅 20〜80%）／弱点だけ 25% まで
 export default ({ fail, loadEngine, seeded }) => {
   const G = loadEngine();
   const D = G.data;
   if (!D.E8_POWER) return fail("使徒の強さの表（D.E8_POWER）が無い");
   const keys0 = G.e3Keys;
-  const fight = (id, seed, allKeys) => {
+  const fight = (id, seed, allKeys, evs) => {
     G.rand = seeded(seed);
     G.P = { trophies: {}, graves: [] };
     const { stats, caps } = G.cre.quickStats("merc", G.rand);
@@ -19,6 +20,7 @@ export default ({ fail, loadEngine, seeded }) => {
     S.weapon = allKeys ? "mithril" : "volgrim";
     S.armor = "i3a_knightplate";
     S.inv.potion = 5;
+    if (evs && G.e10Fill) G.e10Fill(S);
     G.e3Keys = allKeys ? (a, s) => keys0(a, s).map((k) => Object.assign(k, { met: true })) : keys0;
     G.apply({ e3fight: id });
     let n = 0;
@@ -34,16 +36,22 @@ export default ({ fail, loadEngine, seeded }) => {
     G.e3Keys = keys0;
     return !!(S.e3 && S.e3.done && S.e3.done.includes(id));
   };
-  const RANGE = { S: { front: 0, keys: [0, 0.3] }, A: { front: 0.1, keys: [0.4, 0.9] }, B: { front: 0.2, keys: [0.25, 0.75] } };
+  const RANGE = { S: { front: 0, keys: [0, 0.3], only: 0.1 }, A: { front: 0.1, keys: [0.4, 0.9], only: 0.3 }, B: { front: 0.2, keys: [0.2, 0.8], only: 0.25 } };
   const N = 10;
   const rows = [];
   for (const a of Object.values(D.E3.LIST).filter((x) => !x.noslay)) {
-    let f = 0, k = 0;
-    for (let i = 0; i < N; i++) { if (fight(a.id, 300 + i, false)) f++; if (fight(a.id, 600 + i, true)) k++; }
+    let f = 0, k = 0, o = 0;
+    const hasEv = !!(G.e10Of && G.e10Of(a.id));
+    for (let i = 0; i < N; i++) {
+      if (fight(a.id, 300 + i, false)) f++;
+      if (fight(a.id, 600 + i, true, true)) k++;
+      if (hasEv && fight(a.id, 600 + i, true, false)) o++;
+    }
     const R = RANGE[a.rank];
-    rows.push(`${a.id}(${a.rank}) 正面 ${f}/${N}・条件 ${k}/${N}`);
+    rows.push(`${a.id}(${a.rank}) 正面 ${f}/${N}・弱点＋出来事 ${k}/${N}${hasEv ? `・弱点だけ ${o}/${N}` : ""}`);
+    if (hasEv && o / N > R.only) fail(`${a.rank} 級の使徒 ${a.id}: 出来事を起こさず弱点だけで ${o}/${N} 勝てる（${Math.round(R.only * 100)}% まで。弱らせる本体は出来事）`);
     if (f / N > R.front) fail(`${a.rank} 級の使徒 ${a.id}: 正面（剣だけ）で ${f}/${N} 勝てる（${Math.round(R.front * 100)}% まで）`);
-    if (k / N < R.keys[0] || k / N > R.keys[1]) fail(`${a.rank} 級の使徒 ${a.id}: 条件をそろえた勝率 ${k}/${N} が目安（${R.keys.map((x) => Math.round(x * 100)).join("〜")}%）から外れる`);
+    if (k / N < R.keys[0] || k / N > R.keys[1]) fail(`${a.rank} 級の使徒 ${a.id}: 弱点＋出来事の勝率 ${k}/${N} が目安（${R.keys.map((x) => Math.round(x * 100)).join("〜")}%）から外れる`);
   }
   console.log("NOTE E8 使徒の強さ（やりこんだ主人公が一人）: " + rows.join(" ／ "));
 };
