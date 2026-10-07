@@ -24,14 +24,23 @@
   // ---------------------------------------------------------------- 1. 読み込み
   API.parse = (str) => {
     const aff = {};
-    let atk = null;
-    String(str || "").split(/\s+/).filter(Boolean).forEach((tok) => {
+    let atk = null, gear = null;
+    const put = (tok) => {
       if (tok[0] === "@") { if (TYPE[tok.slice(1)]) atk = tok.slice(1); return; }
-      const m = /^([a-z]+)(\+\+|\+|-|!)$/.exec(tok);
+      if (tok[0] === "=") {
+        const g = (X.GEAR || {})[tok.slice(1)];
+        if (!g) throw new Error(`E12: 知らない身なり ${tok}`);
+        gear = tok.slice(1);
+        g.aff.split(/\s+/).filter(Boolean).forEach(put);
+        return;
+      }
+      const m = /^([a-z]+)(\+\+|\+|-|!|=)$/.exec(tok);
       if (!m || !TYPE[m[1]]) throw new Error(`E12: 読めない印 ${tok}`);
-      aff[m[1]] = X.MARK[m[2]];
-    });
-    return { aff, atk };
+      if (m[2] === "=") delete aff[m[1]];
+      else aff[m[1]] = X.MARK[m[2]];
+    };
+    String(str || "").split(/\s+/).filter(Boolean).forEach(put);
+    return { aff, atk, gear };
   };
   const E4W = { fire: ["fire"], ice: ["ice"], bolt: ["bolt"], holy: ["light"], blade: ["slash", "blunt", "pierce"] };
   const ruled = (e) => {
@@ -45,6 +54,7 @@
     (E4W[e.weak] || []).forEach((t) => { if (!(p.aff[t] >= 1.5)) p.aff[t] = 1.5; });
     e.aff = p.aff;
     e.atk = p.atk || e.atk || X.ATK_BY_SHAPE[e.shape] || "slash";
+    if (p.gear) e.gear = p.gear;
     e.e12set = true;
     return e;
   };
@@ -93,6 +103,18 @@
     }
     return null;
   };
+  // 戦技の種類（物理一つ＋属性）。技が当て方を決めるので、武器の種類より先
+  API.skillTypes = (id) => {
+    const t = (X.SKILL_TYPES || {})[id];
+    return t ? t.split(/\s+/).filter((x) => TYPE[x]) : [];
+  };
+  API.cur = null; // いま出している戦技（その一撃のあいだだけ）
+  // how → 掛ける種類の並び。"blade" は戦技の最中なら技の種類、そうでなければ武器の効くほう。"slash+fire" のようにつないでもよい
+  API.typesOf = (how, foe) => {
+    if (!how) return [];
+    if (how === "blade" && API.cur && API.skillTypes(API.cur).length) return API.skillTypes(API.cur);
+    return String(how).split("+").map((h) => API.typeOf(h, foe)).filter(Boolean);
+  };
 
   // ---------------------------------------------------------------- 3. ひとこと・覚える
   const rec = (id) => (G.codex ? G.codex().foes[id] : null);
@@ -110,25 +132,64 @@
     if (m > 1) return `${name}に${w}がよく効いている。`;
     return `${name}には、${w}の通りが悪い。`;
   };
-  // n に倍率を掛けて、ひとことを出し、覚える。返すのは掛けたあとの数
-  API.hit = (f, n, type) => {
-    if (!f || !type || !n) return n;
-    const m = G.dmgMod(f, type);
+  // 二つ以上の種類を持つ一撃の倍率：掛け合わせる。片方が無効でも、もう片方の分は届く（無効を 0.5 とみなす）。大きくても 2.25 倍まで
+  API.mulOf = (f, types) => {
+    const ms = types.map((t) => G.dmgMod(f, t));
+    if (ms.length === 1) return ms[0];
+    return Math.min(2.25, ms.reduce((a, m) => a * (m === 0 ? 0.5 : m), 1));
+  };
+  // n に倍率を掛けて、効き目の違う種類ごとにひとことを出し、覚える。返すのは掛けたあとの数
+  API.hitMany = (f, n, types) => {
+    types = (types || []).filter((t) => TYPE[t]);
+    if (!f || !types.length || !n) return n;
+    const m = API.mulOf(f, types);
+    types.forEach((t) => {
+      const mt = G.dmgMod(f, t);
+      if (mt === 1) return;
+      if (G.S && G.S.log) G.note(API.line(f.name || (dataOf(f) || {}).name || "", t, mt));
+      API.learn(f.id, t);
+      if (G.openLore && G.S) G.openLore(`e12_aff:${mt === 0 ? "immune" : mt > 1 ? "weak" : "res"}`);
+    });
     if (m === 1) return n;
-    if (G.S && G.S.log) G.note(API.line(f.name || (dataOf(f) || {}).name || "", type, m));
-    API.learn(f.id, type);
-    if (G.openLore && G.S) G.openLore(`e12_aff:${m === 0 ? "immune" : m > 1 ? "weak" : "res"}`);
     return m === 0 ? 0 : Math.max(1, Math.round(n * m));
   };
+  API.hit = (f, n, type) => API.hitMany(f, n, type ? [type] : []);
   const dmgMod0 = G.cbDmgMod;
   G.cbDmgMod = (f, n, how) => {
-    const t = API.typeOf(how, f);
-    if (t && n > 0) {
-      n = API.hit(f, n, t);
+    const ts = API.typesOf(how, f);
+    if (ts.length && n > 0) {
+      n = API.hitMany(f, n, ts);
       if (n <= 0) return 0;
     }
     return dmgMod0 ? dmgMod0(f, n, how) : n;
   };
+  // 戦技：出しているあいだ API.cur に技を置く。受け流し・構えて返すは、敵の手番の返しの一撃にも技の種類を使う
+  if (G.cbActs && G.cbActs.k1) {
+    const k1act = G.cbActs.k1;
+    G.cbActs.k1 = (t, id, tgt) => {
+      API.cur = id;
+      try { return k1act(t, id, tgt); } finally {
+        API.cur = null;
+        const c = G.S && G.S.combat;
+        if (c && c.k1parry && !c.k1parry.e12) c.k1parry.e12 = id;
+        if (c && c.k1counter && !c.k1counter.e12) c.k1counter.e12 = id;
+      }
+    };
+    const struck0 = G.cbStruck;
+    G.cbStruck = (f, e, mv, who, dmg, how) => {
+      const c = G.S && G.S.combat;
+      const id = c && !who ? (how === "dodged" && c.k1parry ? c.k1parry.e12 : c.k1counter ? c.k1counter.e12 : null) : null;
+      API.cur = id || null;
+      try { return struck0 ? struck0(f, e, mv, who, dmg, how) : undefined; } finally { API.cur = null; }
+    };
+  }
+  // 戦技の説明（hint）の頭に種類を出す（戦闘の札・技の一覧）
+  Object.entries(D.SKILLS || {}).forEach(([id, sk]) => {
+    const ts = API.skillTypes(id);
+    if (!ts.length || sk.e12tag) return;
+    sk.e12tag = ts.map((t) => TYPE[t].short).join("・");
+    sk.hint = `${sk.e12tag}・${sk.hint || ""}`;
+  });
   // 仲間の一撃（combat.js の companionsTurn が呼ぶ）。術を使う仲間（c.fire）は属性を持たない
   API.allyType = (c) => {
     if (!c || c.fire) return null;
@@ -186,7 +247,8 @@
       if (!rows.length || !e) return rows;
       const add = API.rows(id);
       const at = rows.findIndex((r) => r[0] === "弱点");
-      rows.splice(at >= 0 ? at + 1 : rows.length, 0, ...add, ["攻め手", TYPE[e.atk] ? TYPE[e.atk].name + (e.magic ? "・呪い" : "") : "？"]);
+      const gear = e.gear && X.GEAR && X.GEAR[e.gear] ? [["身なり", X.GEAR[e.gear].name]] : [];
+      rows.splice(at >= 0 ? at + 1 : rows.length, 0, ...add, ...gear, ["攻め手", TYPE[e.atk] ? TYPE[e.atk].name + (e.magic ? "・呪い" : "") : "？"]);
       return rows;
     };
   }
@@ -245,6 +307,12 @@
         const kind = String(a.id || "").replace(/^cb:/, "");
         let type = null, tag = "";
         if (kind === "attack" || kind === "vital") { type = API.typeOf("blade", t); tag = API.short(G.weapon()); }
+        else if (/^k1:/.test(kind)) {
+          const ts = API.skillTypes(kind.slice(3));
+          const feel = ts.map((x) => API.feel(t, x)).find(Boolean);
+          if (feel && !String(a.sub || "").includes(feel)) a.sub = [a.sub, feel].filter(Boolean).join("・");
+          return;
+        }
         else type = API.spellType(kind);
         if (!type) return;
         const feel = API.feel(t, type);
