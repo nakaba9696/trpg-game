@@ -72,7 +72,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   // VISION の方針
   const vision = readFileSync(new URL("../../docs/VISION.md", import.meta.url), "utf8");
   // E8 で「討伐できる使徒は S 3・A 5・B 8」に改めた（それより前は「すべての使徒は倒せる」）
-  if (!/討伐できる使徒は S 級 3・A 級 5・B 級 8/.test(vision)) fail("docs/VISION.md に「討伐できる使徒は S 級 3・A 級 5・B 級 8」の方針が無い");
+  if (!/討伐できる使徒は S 級 2・A 級 6・B 級 8/.test(vision)) fail("docs/VISION.md に「討伐できる使徒は S 級 2・A 級 6・B 級 8」の方針が無い");
   if (/無関心の使徒には戦う選択肢を出さず/.test(vision)) fail("docs/VISION.md に古い方針（無関心の使徒には戦う選択肢を出さない）が残っている");
 
   // ---------------------------------------------------------------- 条件はどれも満たせる（品・印・仲間・季節・時刻・天候・回数をそろえた状態で）
@@ -177,7 +177,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
     // S 級を倒すとトロフィー
     let wonS = null;
-    for (let i = 0; i < 8 && !wonS; i++) { const g = loadEngine(); strong(g, 50 + i, "all"); if (fight(g, "lugu")) wonS = g; }
+    for (let i = 0; i < 8 && !wonS; i++) { const g = loadEngine(); strong(g, 50 + i, "all"); if (fight(g, "kurobane")) wonS = g; } // S 級（E9 で海嘯は A に移った）
     if (wonS && !wonS.P.trophies.e3_saigai) fail("S 級を倒しても「格付けの外」が付かない");
   }
   {

@@ -1,4 +1,4 @@
-// E8：討伐できる使徒は S 3・A 5・B 8（持ち主の決定。src/data/e8_unslay.js・src/engine/zz_e8_unslay.js）
+// E8：討伐できる使徒は S 2・A 6・B 8（持ち主の決定。E9 で海嘯を S から A に。src/data/e8_unslay.js・src/engine/zz_e8_unslay.js）
 // - 倒せない使徒には勝つ道が無い：挑む結果（e3fight）も、直接の戦いも、戦いにならず一行が出る。会う出来事はそのまま残る
 // - 「五体倒した」は討伐できる使徒だけで数える。古いセーブの倒した記録は残る（図鑑も壊れない）
 const PROFILE = { name: "テスト", sex: "女", age: 30, history: "テスト用", personality: "無口" };
@@ -11,7 +11,7 @@ export default ({ fail, loadEngine, seeded }) => {
   if (!U || !G0.e3Slayable) return fail("倒せない使徒の表（D.E8.UNSLAY・G.e3Slayable）が無い");
   const slay = Object.values(LIST).filter((a) => G0.e3Slayable(a.id));
   const n = (r) => slay.filter((a) => a.rank === r).length;
-  if (n("S") !== 3 || n("A") !== 5 || n("B") !== 8) fail(`討伐できる使徒の数が S3・A5・B8 でない：S${n("S")}・A${n("A")}・B${n("B")}`);
+  if (n("S") !== 2 || n("A") !== 6 || n("B") !== 8) fail(`討伐できる使徒の数が S2・A6・B8 でない（E9 で海嘯を A に）：S${n("S")}・A${n("A")}・B${n("B")}`);
   const WANT = ["kurobane", "tojizuki", "lugu", "graw", "mordu", "zalve", "chezar", "azlag", "gormore", "levian", "mirza", "aurelia", "notari", "tetsukui", "togaoi", "sanno"];
   for (const id of WANT) if (!LIST[id] || !G0.e3Slayable(id)) fail(`持ち主が選んだ討伐できる使徒 ${id} が倒せない`);
   for (const id of ["sekaiju", "yura", "midori", "yoihime", "yuzuel"]) if (!LIST[id] || G0.e3Slayable(id)) fail(`倒せない使徒 ${id} が倒せる`);

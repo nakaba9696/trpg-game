@@ -295,8 +295,8 @@
 
   // ---------------------------------------------------------------- 海嘯のガルメド（海の底の蛇竜）
   ap("lugu", {
-    foe: "e3_lugu", no: 3, rank: "S", calm: "敵対", flag: "e3:lugu", home: "port",
-    foeData: foe("S", {
+    foe: "e3_lugu", no: 3, rank: "A", calm: "敵対", flag: "e3:lugu", home: "port", // E9：A に（持ち主の決定。シート〔docs/lore/igyo.md〕でも A。ゲームの表だけ S になっていた）
+    foeData: foe("A", {
       name: "海嘯の使徒ガルメド", shape: "beast", eye: "#7ad8c8",
       desc: "海の底から首だけを出した蛇竜。首だけで船より大きい。うねるたびに海がせり上がる。調子の外れた歌が波の下から聞こえる。",
       look: { body: "wyrm", skin: "#2a5a6a", skin2: "#7ab0b0", horns: "long", eyes: "glow", mouth: "fangs", wings: "none", tail: "fin", pattern: "spots", mood: "fierce" },
@@ -314,7 +314,7 @@
       { id: "tries", label: "何度も沖へ出て、うねりの癖を覚えた", test: tries("lugu", 2), on: "三つ目の波の前に蛇竜は息を吸う。前にも見た。" },
     ],
     win: { text: "蛇竜は最後にひと声だけ歌った。今までで一番、音が合っていた。長い体がゆっくりと沈んでいき、しばらくして、海の底から鐘の音が、ひとつ、ふたつと上がってきた。腹の中の町の鐘だった。港の船乗りたちは、帽子を取って、その音を数えた。", fame: 250, trophy: "majin", chron: "港の沖で歌う海の底のものを討つ。沈んだ町の鐘が海の底から鳴った" },
-    drop: { id: "e3_d_lugu", name: "海嘯の鱗", price: 1500, desc: "戸板ほどもある鱗。耳を当てると調子の外れた歌が聞こえる。" },
+    drop: { id: "e3_d_lugu", name: "海嘯の鱗", price: 900, desc: "戸板ほどもある鱗。耳を当てると調子の外れた歌が聞こえる。" },
     after: { where: ["port"], title: "凪の港", text: "港の船乗りたちが沖の歌の話をしている。「もう歌い返さなくていいんだと。……つまらねえな」そう言って、誰からともなく、下手な歌を歌い出した。" },
   });
 
