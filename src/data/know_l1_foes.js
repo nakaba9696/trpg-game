@@ -28,7 +28,7 @@
   foe("warlock", "blade", "呪術師：詠唱中は杖を持つ手が空く。");
   foe("chimera", "habit", "キメラ：首同士で揉める。どの首が噛むか、目でわかる。");
   foe("blackknight", "magic", "黒騎士：鎧の中は暑いらしい。熱に弱い。");
-  foe("general", "habit", "魔物将軍：号令の前に必ず咳払いをする。");
+  foe("general", "habit", "角兜の将：号令の前に必ず咳払いをする。");
   foe("kin", "blade", "使徒の眷属：血の印の上だけ、刃が通りやすい。");
   foe("e1_crowngob", "talk", "王冠ゴブリン：王冠を褒めると、隙だらけになる。");
   foe("e1_bowshroom", "magic", "おじぎ茸：乾くと縮む。火にかけると深々とおじぎをした。");
