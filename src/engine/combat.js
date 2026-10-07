@@ -18,10 +18,16 @@
   G.cbActs = G.cbActs || {};
 
   const VOLGRIM_LINES = [
-    "ヴォルグリム「おい、腰が引けてるぞ。もっと深く踏み込め」",
-    "ヴォルグリム「雑魚に手こずってんじゃねえ。俺が泣くぞ」",
-    "ヴォルグリム「……血の味が薄いな。もっとマシな獲物はいねえのか」",
-    "ヴォルグリム「死ぬなよ。お前が死んだら、次の持ち主を探すのが面倒だ」",
+    "ヴォルグリムの鉤が、ひとりでに、いちばん強い相手の方へ向く。",
+    "槍が手の中で重くなる。弱い相手には、振るのを渋るように。",
+    "鉤が相手の肉に掛かって外れない。槍は黙ったまま、引き寄せる。",
+    "骨の柄が、手のひらに吸い付くように馴染む。槍は何も言わない。次の獲物を探している。",
+  ];
+  // 明けの鎖もしゃべらない。鳴るだけ
+  const BYAKUYA_LINES = [
+    "鎖の輪が触れ合って、澄んだ音が一つ鳴る。相手が、ほんの一瞬たじろぐ。",
+    "投げた鎖が、相手の腕に巻きついて離れない。",
+    "鎖が、手首の上で静かに締まり直す。まだ終わっていない、というふうに。",
   ];
 
   G.alive = () => (G.S.combat ? G.S.combat.foes.filter((f) => f.hp > 0) : []);
@@ -156,7 +162,8 @@
   function damageFoe(f, n, how) {
     const e = G.foeData(f);
     if (e.majin && !G.weapon().pierce && how !== "holy") {
-      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
+      const W = (G.wallOf ? G.wallOf(f) : { what: "見えない壁", name: "絶界" }); // E11：絶界は黒鎧だけ。長編の若君は糸の守り
+      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、${W.what}に弾かれた。${W.name}だ。`, { fx: "wall", foe: f.name });
       return;
     }
     if (G.cbDmgMod) n = Math.max(0, Math.round(G.cbDmgMod(f, n, how)));
@@ -273,6 +280,7 @@
     if (S.over) return;
     if (!G.alive().length) return endCombat("win"); // 呪いで倒れることがある
     if (S.weapon === "volgrim" && G.rand() < 0.2) G.say(G.pick(VOLGRIM_LINES));
+    else if (S.weapon === "byakuya" && G.rand() < 0.2) G.say(G.pick(BYAKUYA_LINES));
     C.round++;
   };
 
@@ -306,7 +314,7 @@
       G.log("you", `${t.name}に呪いの言葉を吐く`);
       const r = G.check("魔力", spellVs(sp, G.foeVs.mres(G.foeData(t))), sp.name, bonus);
       if (r.ok) {
-        if (G.foeData(t).majin && !G.weapon().pierce) G.say(`呪いの言葉は、${t.name}の手前で霧のように散った。絶界だ。`);
+        if (G.foeData(t).majin && !G.weapon().pierce) G.say(`呪いの言葉は、${t.name}の手前で霧のように散った。${(G.wallOf ? G.wallOf(t) : { name: "絶界" }).name}だ。`);
         else { t.hex = r.crit ? 5 : 3; G.say(`${t.name}の影が、ぐにゃりと歪んだ。`); G.note(`${t.name}は呪われた（${t.hex}手番・命中が落ち、少しずつ蝕まれる）`); }
       } else G.say(r.fumble ? "言葉が口の中で裏返り、自分の舌を噛んだ。" : "言葉は届かなかった。");
       if (r.fumble) { if (!S.conds.includes("呪い")) { S.conds.push("呪い"); G.note("状態：呪い"); } G.payDebt(sp.debt); }
@@ -333,7 +341,7 @@
   }
   // 仲間の一撃（絶界に弾かれる・当たる・外れる）
   function allyStrike(c, f, e) {
-    if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
+    if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は${(G.wallOf ? G.wallOf(f) : { what: "見えない壁", name: "絶界" }).name}に弾かれた。`, { fx: "wall", foe: f.name }); return; }
     const chance = G.allyHitChance(c, e);
     if (G.d(100) <= chance) {
       const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
