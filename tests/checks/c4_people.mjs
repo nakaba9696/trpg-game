@@ -174,7 +174,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 使徒の側（E3）
   const E3 = D.E3 || { LIST: {} };
   const sal = E3.LIST.salphiel;
-  if (!sal || sal.no !== 33 || sal.rank !== "国難" || sal.calm !== "友好") F("薄布の娘が E3 の表（刻印の環の三十三・国難・友好）に無い");
+  if (!sal || sal.no !== 33 || sal.rank !== "A" || sal.calm !== "友好") F("薄布の娘が E3 の表（刻印の環の三十三・A 級・友好）に無い");
   if (!evIds.has("e3_meet_salphiel") || !evIds.has("e3_after_salphiel")) F("薄布の娘に会う出来事か、倒したあとの出来事が無い");
   if (!(E3.LIST.mirza && E3.LIST.mirza.keys.some((k) => k.id === "c4_musette"))) F("眷属の糸を断つことが、微笑の使徒の条件に無い");
   for (const it of ["c4_wrongash", "c4_cutstring", "e3_d_salphiel"]) if (!D.ITEMS[it] || !D.ITEMS[it].flavor) F(`アイテム ${it} が無いか、説明（flavor）が無い`);

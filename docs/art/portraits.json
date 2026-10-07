@@ -1111,7 +1111,7 @@
     "serious": "serious, faintly glowing eyes",
     "cold": "cold eyes, glowing eyes, expressionless"
    },
-   "memo": "C4・使徒（刻印の環の三十三・国難・友好）。湯の町の湖の、薄布で顔を隠した小さな娘。年寄りの口ぶりで人を子ら扱いする。白い衣と金の刺繍、銀の水盤。人ではない気配は目の淡い光だけで"
+   "memo": "C4・使徒（刻印の環の三十三・A 級・友好）。湯の町の湖の、薄布で顔を隠した小さな娘。年寄りの口ぶりで人を子ら扱いする。白い衣と金の刺繍、銀の水盤。人ではない気配は目の淡い光だけで"
   },
   {
    "id": "musette",
@@ -2324,7 +2324,7 @@
    "identity": "1boy, male focus, old man, 60 years old, tall, slender, pale skin, dark red hair, wine red hair, long hair, tied back hair, red eyes, monocle, clean-shaven, wrinkles, black aristocratic tailcoat, deep purple waistcoat, white cravat with red gem pin, white gloves",
    "tags": "holding a teacup and saucer, slight bow",
    "face": "polite smile, calm",
-   "memo": "C5・使徒（刻印の環の十三・討伐・友好）。断界山脈の古い館で問答を挑む上品な老紳士。負けると喜ぶ。葡萄酒色の長髪を後ろで束ね、片眼鏡、灯りを映さない赤い目、燕尾服。人ではない気配は赤い目だけで",
+   "memo": "C5・使徒（刻印の環の十三・B 級・友好）。断界山脈の古い館で問答を挑む上品な老紳士。負けると喜ぶ。葡萄酒色の長髪を後ろで束ね、片眼鏡、灯りを映さない赤い目、燕尾服。人ではない気配は赤い目だけで",
    "variants": {
     "joy": "warm smile, closed eyes",
     "anger": "polite smile, cold eyes",
