@@ -376,8 +376,31 @@
       adsr(g.gain, t, dur, 0.13 * v, 0.06, 0.2, 0.85, 0.15);
       if (B.white) { const n = B.ctx.createBufferSource(); n.buffer = B.white; n.loop = true; const bp = lp(B, f * 2, 1.5, "bandpass"); const ng = gain(B, 0); n.connect(bp); bp.connect(ng); ng.connect(out); adsr(ng.gain, t, dur, 0.025 * v, 0.04, 0.1, 0.5, 0.1); n.start(t, jr() * 0.5); n.stop(end); }
     },
+    // S6：マンドリン（二本ずつ張った弦をはじく）。長い音は細かく弾き直す（トレモロ）
+    mandolin: (B, t, f, dur, v, out) => {
+      const n = dur > 0.3 ? Math.max(2, Math.round(dur * 12.5)) : 1;
+      const step = dur / n, end = t + dur + 0.5;
+      const g = gain(B, 0); const fl = lp(B, 2600 + 1200 * v, 0.9);
+      osc(B, "sawtooth", f, t, end, -5).connect(fl); osc(B, "triangle", f, t, end, 6).connect(fl);
+      fl.connect(g); g.connect(out);
+      const p = g.gain, pk = 0.06 * v;
+      for (let i = 0; i < n; i++) {
+        const s = t + i * step, k = i ? 0.72 + 0.22 * jr() : 1;
+        p.setValueAtTime(i ? pk * 0.3 : 0, s); p.linearRampToValueAtTime(pk * k, s + 0.004); p.setTargetAtTime(pk * 0.3, s + 0.005, 0.025);
+      }
+      p.setTargetAtTime(0, t + (n > 1 ? dur : 0.01), n > 1 ? 0.06 : 0.22);
+    },
+    // S6：オカリナ（土の笛）：丸い正弦に、ほんの少しの三倍音と息
+    ocarina: (B, t, f, dur, v, out) => {
+      const end = t + dur + 0.3;
+      const g = gain(B, 0); const o = osc(B, "sine", f, t, end); const o3 = osc(B, "sine", f * 3, t, end); const g3 = gain(B, 0.035);
+      vibr(B, [o, o3], t, end, 4.6, 9, 0.35);
+      o.connect(g); o3.connect(g3); g3.connect(g); g.connect(out);
+      adsr(g.gain, t, dur, 0.15 * v, 0.045, 0.2, 0.88, 0.12);
+      if (B.white) { const nz = B.ctx.createBufferSource(); nz.buffer = B.white; nz.loop = true; const bp = lp(B, f * 1.5, 2, "bandpass"); const ng = gain(B, 0); nz.connect(bp); bp.connect(ng); ng.connect(out); adsr(ng.gain, t, Math.min(dur, 0.12), 0.02 * v, 0.02, 0.06, 0.3, 0.06); nz.start(t, jr() * 0.5); nz.stop(end); }
+    },
     // ピッツィカート（弦をはじく）
-    pizz: (B, t, f, dur, v, out) => {
+    pizz:(B, t, f, dur, v, out) => {
       const end = t + 0.6;
       const g = gain(B, 0); const fl = lp(B, 1600, 1);
       osc(B, "triangle", f, t, end).connect(fl); osc(B, "sawtooth", f, t, end, 5).connect(fl);

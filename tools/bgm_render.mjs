@@ -2,7 +2,7 @@
 // 音の大きさ（最大・実効値）・音割れ（クリップ）・無音を見る。CI では動かさない（Playwright と Chromium が要る）。
 // node tools/bgm_render.mjs                 … すべての曲の数字を出す（一巡りの長さぶん鳴らす）
 // node tools/bgm_render.mjs --out docs/sound/bgm [秒] [曲の id…]  … 曲の頭から［秒］（既定 24）を mp3（ffmpeg があれば。無ければ wav）に書き出す
-import { readFileSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
@@ -13,6 +13,8 @@ const require = createRequire(import.meta.url);
 let pw;
 try { pw = require("playwright"); } catch { pw = require(path.join(process.execPath, "../../lib/node_modules/playwright")); }
 const src = (f) => readFileSync(path.join(here, "..", "src", f), "utf8");
+// 曲の表：S4 の曲と、S6 で足した曲（src/data/s6_tracks*.js）
+const tracks = () => ["data/s4_tracks.js", ...readdirSync(path.join(here, "..", "src", "data")).filter((f) => /^s6_tracks.*\.js$/.test(f)).sort().map((f) => "data/" + f)].map(src).join("\n");
 
 const args = process.argv.slice(2);
 const oi = args.indexOf("--out");
@@ -24,7 +26,7 @@ const only = rest;
 const browser = await pw.chromium.launch(process.env.PLAYWRIGHT_BROWSERS_PATH ? {} : { executablePath: "/opt/pw-browsers/chromium" });
 const page = await browser.newPage();
 await page.setContent("<!doctype html><title>BGM</title>");
-await page.addScriptTag({ content: "globalThis.G = { data: { LOCS: {}, ENEMIES: {} } };\n" + src("data/s4_tracks.js") + "\n;delete globalThis.AudioContext;\n" });
+await page.addScriptTag({ content: "globalThis.G = { data: { LOCS: {}, ENEMIES: {} } };\n" + tracks() + "\n;delete globalThis.AudioContext;\n" });
 // 鳴らす係の作りだけ使う（ブラウザの中の自動の再生は動かさない）
 await page.addScriptTag({ content: src("ui/sound_bgm.js") });
 const ids = await page.evaluate(() => Object.keys(G.data.BGM.TRACKS));
