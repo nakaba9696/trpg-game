@@ -83,6 +83,9 @@
       fx: { t: "all", d: [2, 4, 0], pw: 12, hex: 3, self: 0.5 } },
   });
 
+  // 属性の id は E12（敵の属性の耐性と弱点）と共有：fire・ice・bolt・wind・earth・light・dark。E12 の読み方に合わせて elem にも置く
+  Object.values(S).forEach((sp) => { if (sp.el) sp.elem = sp.el; });
+
   // 職業ごとに、はじめから覚えている術（M1 の表を書き換える。魔法使い・破戒神官は術の才を持って生まれた者だけがなる）
   D.SPELL_START = { mage: ["fire", "ice"], priest: ["heal", "ward"] };
 
