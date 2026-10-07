@@ -29,8 +29,9 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     const S = start("merc", 41, 30);
     S.loc = wild; S.mode = "explore";
     const n0 = K.list(S).length;
-    if (acts().some((a) => /^k1camp:k\d_/.test(a.id))) fail("野営の稽古に、新しく覚える行動が出る");
-    for (let i = 0; i < 40 && !S.over; i++) { S.mode = "explore"; S.combat = null; S.loc = wild; const a = acts().find((x) => x.id === "k1camp:drill"); if (a) G.act(a.id); }
+    G.give("k1s_parry");   // K4：野営の稽古は、その技の巻物か仲間がいるときだけ
+    if (acts().some((a) => /^k1camp:k\d_/.test(a.id) && !K.knows(a.id.slice(7)))) fail("野営の稽古に、新しく覚える行動が出る");
+    for (let i = 0; i < 40 && !S.over; i++) { S.mode = "explore"; S.combat = null; S.loc = wild; const a = acts().find((x) => x.id === "k1camp:k1_parry"); if (a) G.act(a.id); }
     if (K.list(S).length !== n0) fail(`野営の稽古を重ねたら技が増えた（${n0} → ${K.list(S).length}）`);
     const u = K.uses("k1_parry", S);
     if (!(u >= 1)) fail("覚えた戦技の型をなぞっても熟練が上がらない");

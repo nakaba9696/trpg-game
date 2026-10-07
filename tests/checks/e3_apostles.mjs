@@ -1,7 +1,7 @@
 // E3：すべての使徒を倒せるように（src/data/e3_apostles.js・src/engine/zz_e3_apostles.js）
 // - ゲームに出る使徒（D.MAJIN の十三と、D.E3.LIST のほか）すべてに、戦闘データと倒す道（会う出来事か居城）がある
 // - 条件の品・印は、どれも出来事で手に入る。条件はどれも満たせる
-// - 天災の格は、条件なしだと勝率がごく低い。条件を満たせば、鍛えた冒険者に勝てる見込みがある（全員）
+// - S 級（旧「天災」）は、条件なしだと勝率がごく低い。条件を満たせば、鍛えた冒険者に勝てる見込みがある（全員）
 // - 倒すと：印・骸の素材・トロフィー・図鑑の記録（G.P.slain）。「使徒を討つ」の目的に数える。挑んで逃げると回数が残る
 // - 筋のよい遊び方の bot は、使徒に挑む選択肢を選ばない
 import { readFileSync } from "node:fs";
@@ -31,11 +31,11 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const e = D0.ENEMIES[a.foe] || E3.FOES[a.foe];
     if (!e) { fail(`${w}: 戦闘データ ${a.foe} が無い`); continue; }
     if (!e.majin || !e.boss) fail(`${w}: 絶界（majin）かボスの印が無い`);
-    if (!["天災", "国難", "討伐"].includes(a.rank)) fail(`${w}: 格 ${a.rank} が無い`);
+    if (!["S", "A", "B"].includes(a.rank)) fail(`${w}: 格 ${a.rank} が無い`);
     if (!E3.WEAK[a.rank]) fail(`${w}: 格の倍率が無い`);
     if (!a.keys.length) fail(`${w}: 条件が無い`);
     if (!a.keys.some((k) => k.zekkai)) fail(`${w}: 剣が無くても絶界を破る条件が無い`);
-    if (a.rank !== "討伐" && a.keys.length < 2) fail(`${w}: ${a.rank}の格なのに条件が一つしかない`);
+    if (a.rank !== "B" && a.keys.length < 2) fail(`${w}: ${a.rank} 級なのに条件が一つしかない`);
     if (!a.flag) fail(`${w}: 倒した印が無い`);
     if (!a.drop || !D0.ITEMS[a.drop.id]) fail(`${w}: 骸の素材が無い`);
     if (!a.after || !evIds.has("e3_after_" + a.id)) fail(`${w}: 倒したあとの縄張りの様子が無い`);
@@ -71,7 +71,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const id of Object.keys(E3.FOES)) if (D0.ENEMIES[id]) fail(`新しい使徒 ${id} が読み込み時から D.ENEMIES にいる`);
   // VISION の方針
   const vision = readFileSync(new URL("../../docs/VISION.md", import.meta.url), "utf8");
-  if (!/すべての使徒は倒せる/.test(vision)) fail("docs/VISION.md に「すべての使徒は倒せる」の方針が無い");
+  // E8 で「討伐できる使徒は S 3・A 5・B 8」に改めた（それより前は「すべての使徒は倒せる」）
+  if (!/討伐できる使徒は S 級 3・A 級 5・B 級 8/.test(vision)) fail("docs/VISION.md に「討伐できる使徒は S 級 3・A 級 5・B 級 8」の方針が無い");
   if (/無関心の使徒には戦う選択肢を出さず/.test(vision)) fail("docs/VISION.md に古い方針（無関心の使徒には戦う選択肢を出さない）が残っている");
 
   // ---------------------------------------------------------------- 条件はどれも満たせる（品・印・仲間・季節・時刻・天候・回数をそろえた状態で）
@@ -137,14 +138,15 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   };
   const N = 24;
   const rows = [];
-  for (const a of Object.values(LIST)) {
+  // 倒せない使徒（E8。src/data/e8_unslay.js）は戦いにならないので測らない（tests/checks/e8_unslay.mjs）
+  for (const a of Object.values(LIST).filter((x) => !x.noslay)) {
     const all = rate(a.id, "all", N);
     const none = rate(a.id, "none", N, true); // 絶界を破る剣だけ持って、条件なしで
     rows.push(`${a.id}(${a.rank}) 剣だけ ${Math.round(none * 100)}%・条件そろえて ${Math.round(all * 100)}%`);
     if (all < 0.3) fail(`使徒 ${a.id}: 条件をそろえても、鍛えた冒険者の勝率が低すぎる（${Math.round(all * 100)}%）`);
-    if (a.rank === "天災" && none > 0.04) fail(`使徒 ${a.id}: 天災の格なのに、剣だけで勝ててしまう（${Math.round(none * 100)}%）`);
+    if (a.rank === "S" && none > 0.04) fail(`使徒 ${a.id}: S 級なのに、剣だけで勝ててしまう（${Math.round(none * 100)}%）`);
     // もとからいる居城の主（黒鎧・苔衣）は、絶界を破る剣そのものが条件として書かれていた（目的「使徒を討つ」）。新しい使徒だけ測る
-    if (a.rank === "国難" && E3.FOES[a.foe] && none > 0.2) fail(`使徒 ${a.id}: 国難の格なのに、剣だけで勝ちやすい（${Math.round(none * 100)}%）`);
+    if (a.rank === "A" && E3.FOES[a.foe] && none > 0.2) fail(`使徒 ${a.id}: A 級なのに、剣だけで勝ちやすい（${Math.round(none * 100)}%）`);
   }
   console.log("NOTE E3 鍛えた冒険者（仲間三人・薬あり）の勝率: " + rows.join(" ／ "));
 
@@ -173,10 +175,10 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (!g.e3EverSlain("e3_levian")) fail("次の冒険で、倒したことがある記録が消えている");
       if (!g.data.EVENTS.find((e) => e.id === "e3_meet_levian").cond(g.S)) fail("次の冒険で、その使徒に会えない");
     }
-    // 天災の格を倒すとトロフィー
+    // S 級を倒すとトロフィー
     let wonS = null;
     for (let i = 0; i < 8 && !wonS; i++) { const g = loadEngine(); strong(g, 50 + i, "all"); if (fight(g, "lugu")) wonS = g; }
-    if (wonS && !wonS.P.trophies.e3_saigai) fail("天災の格を倒しても「天を落とす」が付かない");
+    if (wonS && !wonS.P.trophies.e3_saigai) fail("S 級を倒しても「格付けの外」が付かない");
   }
   {
     // 背を向けて逃げる：出る・逃げ切れば回数が残る
