@@ -56,6 +56,14 @@
     m14_scroll_light: sc("light2", "術の巻物『癒しの雨』", 160, "教会が売っている巻物。誰が書いたのかは、教会も知らない。"),
     m14_scroll_earth: sc("earth2", "術の巻物『石つぶて』", 120, "重い。紙なのに、小石を一つ包んだくらいの重さがある。"),
   });
+  const FL = {
+    m14_scroll_fire: "封蝋で閉じた細い巻物。封を割ると、紙の中で何かが目を覚まして、一度だけ火の槍になってくれる。",
+    m14_scroll_ice: "巻いてあるだけなのに、紙の端に霜がついている。封を切ると冷気がほどけ、狙った相手の足を凍りつかせる。",
+    m14_scroll_bolt: "持っていると腕の毛が逆立つ巻物。湿った日には売れ残る。封を切れば、まわりの敵すべてに雷が落ちる。",
+    m14_scroll_light: "教会の売店に並ぶ巻物。誰が書いたのかは教会も知らない。封を切ると、仲間の上にも温かい雨が降る。",
+    m14_scroll_earth: "紙なのに、小石を一つ包んだくらいの重さがある。封を切ると、中の石が飛び出して相手の足を噛む。",
+  };
+  Object.entries(FL).forEach(([id, t]) => { if (D.ITEMS[id]) D.ITEMS[id].flavor = t; });
   const stock = { zephara: ["m14_scroll_fire", "m14_scroll_ice", "m14_scroll_bolt"], leavel: ["m14_scroll_light"], garmund: ["m14_scroll_earth", "m14_scroll_ice"], nerva: ["m14_scroll_fire"] };
   Object.entries(stock).forEach(([loc, ids]) => { const L = D.LOCS[loc]; if (L) L.shop = [...(L.shop || []), ...ids]; });
 })(globalThis.G = globalThis.G || {});

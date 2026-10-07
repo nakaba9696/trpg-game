@@ -34,9 +34,12 @@
     ] },
   ];
 
+  // 人の姿が出ない出来事（A4）
+  D.EVENT_NOBODY = (D.EVENT_NOBODY || []).concat(["m14_deeplore"]);
+
   D.EVENTS.push(
     {
-      id: "m14_wanderer", where: ["wild"], w: 2, title: "焚き火の術師",
+      id: "m14_wanderer", where: ["wild"], w: 2, who: { kind: "mage", sex: "男", age: 52 }, title: "焚き火の術師",
       text: "街道から外れた木立で、ひとりの旅人が焚き火をしている。火の色がおかしい。薪の上で、青と白が交互に揺れている。",
       choices: [
         { label: "術を見せて、教えを乞う", cond: (S) => !!(G.m14 && G.m14.canAny(2, S)), stat: "魔力", diff: "普通",
