@@ -38,7 +38,7 @@
     blackknight: { name: "黒騎士", tier: 4, hp: 52, dmg: [1, 12, 3], hit: 70, def: 25, agi: 35, will: 80, mres: 10, gold: [30, 100], loot: [["plate", 0.1], ["potion", 0.4]], shape: "humanoid", eye: "#ff3a3a", desc: "使徒に仕える黒い鎧の騎士。中身を見た者はいない。" },
 
     // 段 5
-    general: { name: "魔物将軍", tier: 5, hp: 72, dmg: [2, 10, 3], hit: 70, def: 25, agi: 45, will: 85, mres: 15, gold: [60, 150], loot: [["gem", 0.4], ["elixir", 0.1]], shape: "giant", eye: "#ff3a3a", desc: "魔物の軍勢を率いる将。" },
+    general: { name: "角兜の将", tier: 5, hp: 72, dmg: [2, 10, 3], hit: 70, def: 25, agi: 45, will: 85, mres: 15, gold: [60, 150], loot: [["gem", 0.4], ["elixir", 0.1]], shape: "giant", eye: "#ff3a3a", desc: "魔物の軍勢を率いる将。" },
     kin: { name: "使徒の眷属", tier: 5, hp: 58, dmg: [2, 8, 4], hit: 70, def: 20, agi: 55, will: 90, mres: 25, gold: [40, 120], loot: [["manawater", 0.5]], shape: "winged", eye: "#c77dff", desc: "使徒が生み出した翼ある僕。" },
 
     // ボス
