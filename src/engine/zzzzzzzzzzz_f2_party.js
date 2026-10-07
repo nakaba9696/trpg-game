@@ -19,7 +19,7 @@
   const C = () => (G.S && G.S.combat) || null;
   const walled = (e) => !!(e && e.majin && !G.weapon().pierce);
   // あなたに向かってくる大きな気配があるか
-  const threat = () => G.alive().find((f) => f.f1i && BIG.includes(f.f1i.k) && !f.f1stun) || null;
+  const threat = (F2.threat = () => G.alive().find((f) => f.f1i && BIG.includes(f.f1i.k) && !f.f1stun) || null);
 
   G.cbAllyAssist = (c, f, e) => {
     const S = G.S;
@@ -28,20 +28,30 @@
     const chance = walled(e) ? 0 : G.allyHitChance(c, e);
     if (chance > F2.OUTCLASSED) return false;
     const t = threat();
-    const cover = c0.f2cover || (c0.f2cover = []);
-    if (t && cover.length * F2.COVER < F2.COVER_MAX) {
-      cover.push(c.name);
-      G.note(`${c.name}があなたの前に出て、${t.name}の${t.f1i.k === "chant" ? "術" : "一撃"}に備えた。`);
-      return true;
-    }
-    // 使徒は、弱点・条件をそろえた割合（E3 の frac）の分だけ隙が見える（備えなしの一行で A 級を崩せないように。E8 の格の決まり）
-    const seen = f.e3 ? Math.max(0, Math.min(1, f.e3.frac || 0)) : 1;
-    if (!walled(e) && !f.f1open && !f.f1stun && seen > 0 && G.d(100) <= Math.min(F2.FEINT_MAX, chance + F2.FEINT) * seen) {
-      f.f1open = true;
-      G.log("sys", `${c.name}の牽制で、${f.name}の構えが揺らいだ。次の一撃が深く入る。`, { tell: f.name, brk: 1 });
-      return true;
-    }
+    if (t && F2.cover(c, t)) return true;
+    if (F2.feint(c, f, e, chance)) return true;
     G.note(`${c.name}は${f.name}のまわりを動き回り、気を引いている。`);
+    return true;
+  };
+  // 牽制（F3 の指示からも使う）。決まって構えが揺らいだら true
+  //   使徒は、弱点・条件をそろえた割合（E3 の frac）の分だけ隙が見える（備えなしの一行で A 級を崩せないように。E8 の格の決まり）
+  F2.feint = (c, f, e, chance) => {
+    if (chance == null) chance = walled(e) ? 0 : G.allyHitChance(c, e);
+    const seen = f.e3 ? Math.max(0, Math.min(1, f.e3.frac || 0)) : 1;
+    if (walled(e) || f.f1open || f.f1stun || seen <= 0) return false;
+    if (G.d(100) > Math.min(F2.FEINT_MAX, chance + F2.FEINT) * seen) return false;
+    f.f1open = true;
+    G.log("sys", `${c.name}の牽制で、${f.name}の構えが揺らいだ。次の一撃が深く入る。`, { tell: f.name, brk: 1 });
+    return true;
+  };
+  // 庇う（F3 の指示からも使う）。庇えたら true（多くても二人分）
+  F2.cover = (c, t) => {
+    const c0 = C();
+    if (!c0) return false;
+    const cover = c0.f2cover || (c0.f2cover = []);
+    if (cover.includes(c.name) || cover.length * F2.COVER >= F2.COVER_MAX) return false;
+    cover.push(c.name);
+    G.note(t ? `${c.name}があなたの前に出て、${t.name}の${t.f1i && t.f1i.k === "chant" ? "術" : "一撃"}に備えた。` : `${c.name}があなたの前に出て、盾になる構えを取った。`);
     return true;
   };
 
