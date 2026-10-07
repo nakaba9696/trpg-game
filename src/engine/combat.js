@@ -10,6 +10,8 @@
 //   C.f1dodge                 「躱す」が決まった：あなたへの最初の一撃を丸ごと外す
 //   G.cbAllyAssist(c, f, e)   仲間がこの手番に斬りかからずに援護した（true なら攻撃しない。F2）
 //   G.cbCover(f, e, dmg, mv)  あなたへの一撃のうち、仲間が庇って受けた分を引いた数を返す（F2）
+//   G.cbAllyOrder(c, foes)    あなたの指示・作戦で仲間が動いた（true なら、この仲間のふだんの手番は行わない。F3）
+//   G.cbAllyHurt(c, dmg)      仲間が受ける傷を変える（下がっている仲間。F3）／G.cbAllyHeal・G.cbAllyStrike 仲間の手当てと一撃
 //   G.cbAfterAct(kind, t)     こちらの手のあと、仲間と敵の手番の前（I2：二刀の左手の一撃）
 (function (G) {
   const D = G.data;
@@ -320,30 +322,41 @@
 
   // ---------------------------------------------------------------- 仲間と敵の番
   // B5：戦闘不能（HP 0）の仲間は動かない。回復役は、いちばん減っている味方（戦闘不能を先に）を治す
+  // 仲間の手当て：いちばん減っている味方（戦闘不能を先に）が ratio を下回っていれば治す。治したら true
+  function allyHeal(c, ratio) {
+    const need = c.heal ? G.b5Neediest() : null;
+    if (!need || !(need.ratio < ratio)) return false;
+    const n = G.d(6) + 2;
+    if (need.who === "you") { G.heal(n); G.note(`${c.name}の治療 HP +${n}`); }
+    else G.b5Heal(need.who, n, need.who === c ? `${c.name}の手当て` : `${c.name}の治療`);
+    return true;
+  }
+  // 仲間の一撃（絶界に弾かれる・当たる・外れる）
+  function allyStrike(c, f, e) {
+    if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
+    const chance = G.allyHitChance(c, e);
+    if (G.d(100) <= chance) {
+      const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
+      f.hp = Math.max(0, f.hp - dmg);
+      G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
+      if (f.hp <= 0) onFoeDown(f);
+    } else G.note(`${c.name}の攻撃は外れた。`);
+  }
+  G.cbAllyHeal = allyHeal;
+  G.cbAllyStrike = allyStrike;
   function companionsTurn() {
     const S = G.S;
     S.companions.forEach((c) => {
       const foes = G.alive();
       if (!foes.length || G.b5Down(c)) return;
-      const need = c.heal ? G.b5Neediest() : null;
-      if (need && need.ratio < 0.5) {
-        const n = G.d(6) + 2;
-        if (need.who === "you") { G.heal(n); G.note(`${c.name}の治療 HP +${n}`); }
-        else G.b5Heal(need.who, n, need.who === c ? `${c.name}の手当て` : `${c.name}の治療`);
-        return;
-      }
+      // F3：あなたの指示・作戦（engine/zzzzzzzzzzzz_f3_orders.js）。true ならこの仲間の手番は済んだ
+      if (G.cbAllyOrder && G.cbAllyOrder(c, foes)) return;
+      if (allyHeal(c, 0.5)) return;
       const f = G.pick(foes);
       const e = G.foeData(f);
       // F2：まるで歯が立たない相手には、斬りかからずに援護する（庇う・牽制。engine/zzzzzzzzzzz_f2_party.js）
       if (G.cbAllyAssist && G.cbAllyAssist(c, f, e)) return;
-      if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
-      const chance = G.allyHitChance(c, e);
-      if (G.d(100) <= chance) {
-        const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
-        f.hp = Math.max(0, f.hp - dmg);
-        G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
-        if (f.hp <= 0) onFoeDown(f);
-      } else G.note(`${c.name}の攻撃は外れた。`);
+      allyStrike(c, f, e);
     });
   }
 
@@ -364,6 +377,7 @@
     if (G.d(100) > chance) { G.note(`${c.name}は${f.name}の攻撃をかわした。`); if (mv && G.cbStruck) G.cbStruck(f, e, mv, c, 0); return; }
     let dmg = Math.round(G.dice(e.dmg) * ((mv && mv.mul) || 1)) - (e.magic || (mv && mv.pierce) ? 0 : G.b5Def(c));
     if (C.ward > 0) dmg -= wardCut();
+    if (G.cbAllyHurt) dmg = G.cbAllyHurt(c, dmg); // F3：下がっている仲間は受ける傷が減る
     dmg = Math.max(1, dmg);
     c.hp = Math.max(0, c.hp - dmg);
     G.log("nar", `${f.name}の${e.magic ? "呪い" : "攻撃"}！ ${c.name}に ${dmg} のダメージ（残り ${c.hp}/${G.b5Max(c)}）`, { fx: "ally", who: c.name, n: dmg });
@@ -376,7 +390,9 @@
     G.say(`${f.name}の一撃の余波が、一行をなぎ払った！`);
     G.b5Standing(G.S).forEach((c) => {
       if (G.d(100) > G.foeHitAlly(e, c)) { G.note(`${c.name}は身を伏せて、余波をかわした。`); return; }
-      const dmg = Math.max(1, Math.ceil(G.dice(e.dmg) * 0.6) - G.b5Def(c));
+      let dmg = Math.ceil(G.dice(e.dmg) * 0.6) - G.b5Def(c);
+      if (G.cbAllyHurt) dmg = G.cbAllyHurt(c, dmg);
+      dmg = Math.max(1, dmg);
       c.hp = Math.max(0, c.hp - dmg);
       G.log("nar", `${c.name}に ${dmg} のダメージ（残り ${c.hp}/${G.b5Max(c)}）`, { fx: "ally", who: c.name, n: dmg });
       if (c.hp <= 0) G.b5Fall(c, f);
