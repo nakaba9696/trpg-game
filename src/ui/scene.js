@@ -1527,6 +1527,8 @@
 
   // ---------------------------------------------------------------- 入口
   // 迷宮の中の絵：「<場所の絵>_in」があればそれ、墓場・洞窟・使徒の城は外と同じ絵、ほかは石の通路（dungeon）
+  // W8：町の特色の場所（G.data.W8S_SPOTS）は、データの scene に書いた近い室内の絵を借りる（画像は docs/art/scenes.json の in_w8s_*）
+  Object.entries((G.data && G.data.W8S_SPOTS) || {}).forEach(([k, s]) => { if (s.scene && IN[s.scene] && !IN[k]) IN[k] = IN[s.scene]; });
   G.dungeonScene = (L) => (L && IN[L.scene + "_in"] ? L.scene + "_in" : L && ["bones", "cave", "majin"].includes(L.scene) ? L.scene : "dungeon");
   // 描ける絵の名前（tests/checks/a4_art.mjs が、汎用の絵に落ちている場所を探すのに使う）
   G.sceneNames = () => ({ out: Object.keys(OUT), inside: Object.keys(IN) });

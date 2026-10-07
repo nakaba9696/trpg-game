@@ -10,26 +10,26 @@
 
   D.LOCS = {
     karna: {
-      name: "自由都市ブランデール", region: "自由都市連合", type: "town", danger: 0, scene: "town", x: 44, y: 55,
+      name: "商都ブランデール", region: "レオネスト王国", type: "town", danger: 0, scene: "town", x: 44, y: 55,
       desc: "石畳に金貨の音が跳ねる町。呼び込みの声はどれも値段から始まる。両替商の看板には三つの国の金貨の刻印が並び、冒険者ギルドの本部の前では、今朝も登録の列が角を曲がっている。商人と傭兵と詐欺師の見分けは、財布を出したあとでしかつかない。",
       fac: ["inn", "tavern", "shop", "guild", "church", "train", "alley"],
       shop: ["dagger", "longsword", "axe", "rapier", "leather", "chain", "holywater", "lute"],
       links: { nerva: 2, forest: 1, plains: 2, swamp: 2, zephara: 4 },
     },
     nerva: {
-      name: "港町ヴァレンツァ", region: "自由都市連合", type: "town", danger: 0, scene: "port", x: 22, y: 70,
+      name: "港町ヴァレンツァ", region: "レオネスト王国", type: "town", danger: 0, scene: "port", x: 22, y: 70,
       desc: "潮と魚の脂の匂い。霧の向こうで霧笛が鳴り、シェルアーク諸島の島々へ渡る船の帆が濡れて重く垂れている。昼間から酒を飲んでいるのが海賊なのか密輸屋なのか、聞く者はいない。桟橋では、耳の尖った船乗りと獣の耳の荷揚げ人足が、同じ樽に腰かけて同じ魚を焼いている。",
       fac: ["inn", "tavern", "shop", "guild", "alley"],
       shop: ["dagger", "longsword", "leather", "katana"],
       links: { karna: 2, ruins: 2 }, sea: { yakumo: { days: 5, cost: 40 } },
     },
     forest: {
-      name: "迷いの森", region: "自由都市連合", type: "wild", danger: 1, scene: "forest", x: 55, y: 68,
+      name: "迷いの森", region: "レオネスト王国", area: "南の野", type: "wild", danger: 1, scene: "forest", x: 55, y: 68,
       desc: "昼でも薄暗い。枝が頭の上で組み合わさり、足もとの苔が足音を吸う。奥のほうから、調子の外れた歌と、樽を転がす音が聞こえてくる。ゴブリンの臭いには慣れるまでが長い。",
       pool: ["goblin", "wolf", "barrelgob", "dogu"], links: { karna: 1, ruins: 2 },
     },
     ruins: {
-      name: "エル・ナフ遺構", region: "自由都市連合", type: "dungeon", danger: 2, scene: "ruins", x: 40, y: 84,
+      name: "エル・ナフ遺構", region: "レオネスト王国", area: "南の野", type: "dungeon", danger: 2, scene: "ruins", x: 40, y: 84,
       desc: "崩れた柱が、草の中に白い肋骨のように並んでいる。神々の時代のものだと言われる遺跡だ。入口の石段は数えるたびに段の数が違う。近ごろ奥に使徒とは違う何かが住みついたと、発掘人たちは嫌がって、日が傾く前に引き上げていく。",
       pool: ["goblin", "orc", "spider", "slime", "zombie", "mimic"], floors: 4, boss: "kain",
       reward: { flag: "kain", fame: 40, chron: "エル・ナフ遺構の最奥で、眷属カインを討ち取る", text: "カインの体が崩れ、遺跡の奥に古い壁画が現れた。三柱の神と、それを見下ろす巨大な目が描かれている。" },

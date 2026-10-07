@@ -1,4 +1,4 @@
-// C6：レオネスト王国と自由都市連合の人物（src/data/c6_people.js・events_c6.js・zc6_people.js・engine/zzzz_c6_people.js）
+// C6：レオネスト王国（王都・地方・商都ブランデール・港町ヴァレンツァ）の人物（src/data/c6_people.js・events_c6.js・zc6_people.js・engine/zzzz_c6_people.js）
 // - 仲間になる人 10 人と、その周りの名のある人 4〜6 人。仲間は性別・年齢・種族・男の型が散っている。名前が他の人と被らない
 // - 仲間の全員に romance（恋と結婚ができるか。R1 #182 の印）。true はちょうど 4 人で、みな 18 歳以上・子どもの姿でない。false の人は恋の相手にならない
 // - どの人にも、混ぜた型（mix）・ギャップ・過去・好感度の始まり・名前と役職の札・人物図鑑の説明・立ち絵のタグ（男は type。仲間は差分）
@@ -208,5 +208,5 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   if (begin("c6_ber_debt")) choose("黙っている");
   if (!(g.S.aff.berangere > C6.berangere.aff0)) F(`次席の騎士の好感度が上がらない：${g.S.aff.berangere}`);
 
-  if (!n) ok(`C6：王国と自由都市の人物 ${ids.length} 人（仲間 ${comp.length}・恋と結婚 ${roman.length}・周りの人 ${others.length}）・出来事 ${evs.length}・出会いから仲間になる流れ・好感度の始まり`);
+  if (!n) ok(`C6：王国の人物 ${ids.length} 人（仲間 ${comp.length}・恋と結婚 ${roman.length}・周りの人 ${others.length}）・出来事 ${evs.length}・出会いから仲間になる流れ・好感度の始まり`);
 };

@@ -1,6 +1,6 @@
 // C5：持ち主の好きな型から作った人物の続き（src/data/c5_people.js・events_c5.js・zc5_people.js・engine/zzzz_c5_people.js）
 // - 20 人前後。仲間 6〜7（今までの仲間と型・種族・職業・性別がかぶらないよう男を多めに）・宿敵 2〜3・使徒の側 2〜3・ほかは町。
-//   国と町に散っている（王国・帝国・共和国・自由都市連合・島・聖都・遺構・使徒領の境）。男は ojisan が多い
+//   国と町に散っている（王国・帝国・共和国・王国の南〔ブランデール・ヴァレンツァ〕・島・聖都・遺構・使徒領の境）。男は ojisan が多い
 // - どの人にも、混ぜた型（mix・二つ以上）・ギャップ・過去・好感度の始まり（−100〜+100）・会える場所・会話を書く子のためのメモ（口調・好き・嫌い・話題）
 // - どの人にも、名前と役職の札（D.C3_NAMES）・人物図鑑の説明（D.F2_PEOPLE）・立ち絵のタグ（docs/art/portraits.json の identity。男は type。仲間は差分）
 // - 出来事は 2〜4 個（ふつうに起きる出会いがある）。存在しない場所・人・続き・アイテム・トロフィー・用語の行を指していない
@@ -19,7 +19,7 @@ const BANNED = /見世物|観客|客席|舞台|台本|神々|魔王|魔人|正�
 const PROFILE = { name: "テスト", sex: "女", age: 24, history: "テスト用", personality: "無口だが義理堅い" };
 // 散らす先（場所の id → 地方）
 const REGION = {
-  leavel: "王国", w2_granbel: "王国", karna: "自由都市連合", nerva: "自由都市連合", garmund: "帝国", w2_zalgros: "帝国", frost: "帝国",
+  leavel: "王国", w2_granbel: "王国", karna: "王国の南", nerva: "王国の南", garmund: "帝国", w2_zalgros: "帝国", frost: "帝国",
   zephara: "共和国", w2_nagris: "共和国", w2_amyrein: "共和国", yakumo: "島", w1_oboro: "島", w1_holy: "聖都", ruins: "遺構",
   fort: "使徒領の境", mountains: "使徒領の境", wasteland: "使徒領の境", forest: "共和国",
 };
@@ -62,7 +62,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   if (new Set(joiners.map((id) => P[id] && P[id].join && P[id].join.trait)).size !== joiners.length) F("新しい仲間どうしで性格がかぶっている");
   if (new Set(joiners.map((id) => P[id] && (P[id].beast || P[id].race))).size < 4) F("新しい仲間の種族がばらけていない");
   const regions = new Set(ids.flatMap((id) => (C5[id].meet || []).map((l) => REGION[l]).filter(Boolean)));
-  for (const r of ["王国", "帝国", "共和国", "自由都市連合", "島", "聖都", "遺構", "使徒領の境"]) if (!regions.has(r)) F(`${r}で会える人がいない`);
+  for (const r of ["王国", "帝国", "共和国", "王国の南", "島", "聖都", "遺構", "使徒領の境"]) if (!regions.has(r)) F(`${r}で会える人がいない`);
 
   // ---------------------------------------------------------------- 一人ずつ
   const portraits = JSON.parse(readFileSync(path.join(ROOT, "docs/art/portraits.json"), "utf8")).portraits;

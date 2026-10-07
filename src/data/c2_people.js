@@ -61,7 +61,7 @@
       who: { kind: "merchant", sex: "女", age: 23, seed: "c2:zerina", look: { hair: "#9a3a22", hairStyle: "ponytail", eyes: "smile", mouth: "grin", brows: "raised", outfit: "vest", head: "kerchief", gear: "none", chest: "coins", cloth: "#6a2a2a", build: "normal", marks: ["freckles"], bg: "#8a7446" } },
       join: {
         cls: "商人", desc: "がめつい。けど、気前もいい", power: 34, dmg: 0, trait: "greedy", bond: 50, home: ["karna", "nerva"],
-        life: { home: "自由都市の市場の裏", kin: "商いを仕込んだおかん", food: "砂糖をまぶした揚げ菓子", habit: "銅貨を一枚、指の背の上で転がしている", secret: "最初の商いで騙されて全部なくした。騙した相手の顔は、帳面の最後の頁に描いてある", keep: "角の擦り切れた帳面" },
+        life: { home: "商都ブランデールの市場の裏", kin: "商いを仕込んだおかん", food: "砂糖をまぶした揚げ菓子", habit: "銅貨を一枚、指の背の上で転がしている", secret: "最初の商いで騙されて全部なくした。騙した相手の顔は、帳面の最後の頁に描いてある", keep: "角の擦り切れた帳面" },
       },
     }),
     elnea: P({

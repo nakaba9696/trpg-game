@@ -5,7 +5,7 @@
 // - 古いセーブ（S.u7lore が無い）は、訪れた場所から静かに開き直す
 // - 150 回のランダムな遊びの終わりには、いくつも開いている
 const PROFILE = { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" };
-const MOVED = ["大陸", "レオネスト王国", "ノルディア帝国", "エルメシア共和国", "自由都市連合", "シェルアーク", "三国の協定", "人と種族", "光天教会", "遺跡の品", "格", "術", "凶暴な魔物", "間の抜けた魔物"];
+const MOVED = ["大陸", "レオネスト王国", "ノルディア帝国", "エルメシア共和国", "南の商いの町", "シェルアーク", "三国の協定", "人と種族", "光天教会", "遺跡の品", "格", "術", "凶暴な魔物", "間の抜けた魔物"];
 
 export default ({ fail, loadEngine, seeded }) => {
   const start = (G, cls, goal) => {
@@ -77,8 +77,9 @@ export default ({ fail, loadEngine, seeded }) => {
     const has = (k) => rows(G).includes(k);
     const noted = (k) => S.log.some((e) => e.text === `手引きに書き足された：${k}`);
     G.endTurn();
-    if (!has("自由都市連合") || !noted("自由都市連合")) fail("出発の町（ブランデール）で一手番すぎても「自由都市連合」が開かない／書き足されたと出ない");
-    if (has("レオネスト王国")) fail("王国の町に着く前に「レオネスト王国」が見える");
+    if (!has("南の商いの町") || !noted("南の商いの町")) fail("出発の町（ブランデール）で一手番すぎても「南の商いの町」が開かない／書き足されたと出ない");
+    if (!has("レオネスト王国")) fail("出発の町（ブランデール。王国の町）で一手番すぎても「レオネスト王国」が開かない");
+    if ((S.lore.u7_leonest || []).includes("king")) fail("王都に着く前に「レオネスト王国」の王の行が見える");
     G.arrive("leavel"); G.endTurn();
     if (!has("レオネスト王国") || !(S.lore.u7_leonest || []).includes("king")) fail("王都に着いても「レオネスト王国」（王の行）が開かない");
     if (!has("大陸") && S.counters.travels) fail("旅をしても「大陸」が開かない");
@@ -128,7 +129,7 @@ export default ({ fail, loadEngine, seeded }) => {
     delete S.lore;
     const before = S.log.length;
     const r = rows(G);
-    for (const k of ["自由都市連合", "ノルディア帝国", "光天教会", "三国の協定"]) if (!r.includes(k)) fail(`古いセーブで「${k}」が開き直らない`);
+    for (const k of ["南の商いの町", "レオネスト王国", "ノルディア帝国", "光天教会", "三国の協定"]) if (!r.includes(k)) fail(`古いセーブで「${k}」が開き直らない`);
     if (S.log.length !== before) fail("古いセーブの開き直しで、書き足されたと出てしまう");
     if (!S.u7lore) fail("開き直したあとに S.u7lore が付かない");
   }

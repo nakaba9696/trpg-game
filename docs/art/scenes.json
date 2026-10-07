@@ -15,8 +15,8 @@
    "kind": "place",
    "scene": "town",
    "type": "town",
-   "region": "自由都市連合",
-   "name": "自由都市ブランデール",
+   "region": "レオネスト王国",
+   "name": "商都ブランデール",
    "pack": "west",
    "tags": "medieval fantasy town, cobblestone main street, half-timbered houses, money changer signboards, large guild hall with banners, stone town gate, grassy low hills beyond the town wall",
    "trial": true
@@ -26,7 +26,7 @@
    "kind": "place",
    "scene": "w7_vineyard",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "葡萄の町ヴィナレ",
    "pack": "west",
    "tags": "vineyard town on gentle south-facing slopes, terraced grape trellises, wooden wine barrels, press house, warm sunlight"
@@ -36,7 +36,7 @@
    "kind": "place",
    "scene": "w7_diggers",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "発掘人の町ドゥルム",
    "pack": "west",
    "tags": "diggers' town grown from tents, canvas tents beside rough stone houses, broken white ancient pillars in the distance, shovels and carts"
@@ -46,7 +46,7 @@
    "kind": "place",
    "scene": "w7_mercs",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "傭兵の町グラッツ",
    "pack": "west",
    "tags": "mercenary town around a fenced drill yard, wooden palisade, large notice board covered with paper postings, inns, taverns and smithy"
@@ -56,7 +56,7 @@
    "kind": "place",
    "scene": "w7_ferry",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "渡しの町リュッセン",
    "pack": "west",
    "tags": "river ferry town, wide river with a flat ferry boat, wooden landing piers, small toll booth hut, half-timbered houses on the bank"
@@ -66,7 +66,7 @@
    "kind": "place",
    "scene": "port",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "港町ヴァレンツァ",
    "pack": "west",
    "tags": "harbor town, wooden piers, moored sailing ships with heavy wet sails, fishing nets, warehouses, misty sea, lighthouse, seagulls",
@@ -77,7 +77,7 @@
    "kind": "place",
    "scene": "forest",
    "type": "wild",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "迷いの森",
    "pack": "west",
    "tags": "dense dark forest, branches interlocking overhead, thick moss on the ground, gnarled old trees, dim light through the canopy, narrow overgrown path, old barrel by the path",
@@ -88,7 +88,7 @@
    "kind": "place",
    "scene": "ruins",
    "type": "dungeon",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "エル・ナフ遺構",
    "pack": "west",
    "tags": "ancient ruins, broken white stone pillars standing in tall grass like ribs, crumbling stone stairs leading underground, huge circular stone tablet carved with symbols, overgrown"
@@ -98,7 +98,7 @@
    "kind": "place",
    "scene": "w3_bells",
    "type": "wild",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "鐘撞きの丘",
    "pack": "west",
    "tags": "low grassy hills, an old stone watchtower on each hilltop, bronze bell hanging in each tower, bell ropes, windy grassland"
@@ -852,6 +852,182 @@
    "name": "狩り場（ナグリス）",
    "pack": "special_in",
    "tags": "hunting ground in a deep forest, morning mist, animal tracks, hunting blind, giant trees"
+  },
+  {
+   "id": "in_w8s_karna_bourse",
+   "kind": "facility",
+   "scene": "w8s_karna_bourse",
+   "name": "金貨の取引所（ブランデール）",
+   "pack": "special_in",
+   "tags": "grand exchange hall, chalkboards of coin rates, giant brass balance scale, merchants crowding, gold coins"
+  },
+  {
+   "id": "in_w8s_nerva_horn",
+   "kind": "facility",
+   "scene": "w8s_nerva_horn",
+   "name": "霧笛小屋（ヴァレンツァ）",
+   "pack": "special_in",
+   "tags": "small hut on a foggy cape, huge brass foghorn, names carved on wooden wall, sea mist through window"
+  },
+  {
+   "id": "in_w8s_carmel_yard",
+   "kind": "facility",
+   "scene": "w8s_carmel_yard",
+   "name": "造船所（カルメラント）",
+   "pack": "special_in",
+   "tags": "shipyard on a slope by a harbor, ship keels like ribs, shipwrights with mallets, wood shavings"
+  },
+  {
+   "id": "in_w8s_lignoa_lake",
+   "kind": "facility",
+   "scene": "w8s_lignoa_lake",
+   "name": "湖の舟着き場（リグノア）",
+   "pack": "special_in",
+   "tags": "wooden pier on a misty forest lake, flat-bottomed boats moored, small island with a stone shrine in the distance"
+  },
+  {
+   "id": "in_w8s_frosleia_crater",
+   "kind": "facility",
+   "scene": "w8s_frosleia_crater",
+   "name": "火口の祭壇（フロスレイア）",
+   "pack": "special_in",
+   "tags": "rim of a volcanic crater, black stone altar, rising steam and ash, rope path with stakes"
+  },
+  {
+   "id": "in_w8s_zaigros_tower",
+   "kind": "facility",
+   "scene": "w8s_zaigros_tower",
+   "name": "北の見張り塔（ザイグロス）",
+   "pack": "special_in",
+   "tags": "top of a stone watchtower, bell with colored cloth ribbons, snowy plain on the northern horizon, telescope"
+  },
+  {
+   "id": "in_w8s_russen_isle",
+   "kind": "facility",
+   "scene": "w8s_russen_isle",
+   "name": "渡し舟の中洲（リュッセン）",
+   "pack": "special_in",
+   "tags": "sandbar in a wide river, ferrymen's hut, ferry boats, driftwood and a shield drying on the sand"
+  },
+  {
+   "id": "in_w8s_glatz_post",
+   "kind": "facility",
+   "scene": "w8s_glatz_post",
+   "name": "傭兵の詰所（グラッツ）",
+   "pack": "special_in",
+   "tags": "mercenary guardhouse, wall covered with hundreds of wooden name tags, chalkboard of bouts, fireplace"
+  },
+  {
+   "id": "in_w8s_durm_shed",
+   "kind": "facility",
+   "scene": "w8s_durm_shed",
+   "name": "欠片の鑑定小屋（ドゥルム）",
+   "pack": "special_in",
+   "tags": "appraiser's shed full of strange ancient fragments on shelves, gears and glass shards, rope ladders, muddy boots"
+  },
+  {
+   "id": "in_w8s_vinale_cellar",
+   "kind": "facility",
+   "scene": "w8s_vinale_cellar",
+   "name": "醸造所の酒蔵（ヴィナレ）",
+   "pack": "special_in",
+   "tags": "stone wine cellar, barrels stacked to the ceiling with three different brand marks, grape pressing vat"
+  },
+  {
+   "id": "in_w8s_kaes_shaft",
+   "kind": "facility",
+   "scene": "w8s_kaes_shaft",
+   "name": "古い坑道（カースヴェルグ）",
+   "pack": "special_in",
+   "tags": "old mine entrance, wooden tags hanging on nails, mine cart rails, lanterns, snow outside"
+  },
+  {
+   "id": "in_w8s_valm_pillar",
+   "kind": "facility",
+   "scene": "w8s_valm_pillar",
+   "name": "石の柱の広場（ヴァルミリア）",
+   "pack": "special_in",
+   "tags": "snowy market square, tall black stone pillar circled by stakes, colorful tribal tents, cooking pot"
+  },
+  {
+   "id": "in_w8s_brenark_wall",
+   "kind": "facility",
+   "scene": "w8s_brenark_wall",
+   "name": "爪痕の城壁（ブレイナーク）",
+   "pack": "special_in",
+   "tags": "top of a grey triple city wall, four huge claw marks gouged in the stone, frozen sea beyond"
+  },
+  {
+   "id": "in_w8s_gris_visit",
+   "kind": "facility",
+   "scene": "w8s_gris_visit",
+   "name": "塔の面会所（グリスハイム）",
+   "pack": "special_in",
+   "tags": "prison tower visiting room, iron bars, two stools facing each other, chalk line on the floor, small window"
+  },
+  {
+   "id": "in_w8s_eisen_ice",
+   "kind": "facility",
+   "scene": "w8s_eisen_ice",
+   "name": "氷の漁場（アイゼルヴァン）",
+   "pack": "special_in",
+   "tags": "frozen bay, ice fishing huts around holes, fishermen with lines, rope path on the ice, whale ribs far away"
+  },
+  {
+   "id": "in_w8s_elden_garden",
+   "kind": "facility",
+   "scene": "w8s_elden_garden",
+   "name": "泉の森の薬草園（エルデンホルム）",
+   "pack": "special_in",
+   "tags": "herb garden around a steaming warm spring, green rows amid snow, archery target on the fence, baskets"
+  },
+  {
+   "id": "in_w8s_fort_wall",
+   "kind": "facility",
+   "scene": "w8s_fort_wall",
+   "name": "黒い壁の上（黒鉄の砦）",
+   "pack": "special_in",
+   "tags": "walkway atop a black iron fortress wall, soldiers of three nations looking at the sky, mountain pass beyond"
+  },
+  {
+   "id": "in_w8s_kern_well",
+   "kind": "facility",
+   "scene": "w8s_kern_well",
+   "name": "深い井戸（ケルン）",
+   "pack": "special_in",
+   "tags": "deep stone well in a town square, rope with countless knots, big porridge cauldron, soldiers' wives"
+  },
+  {
+   "id": "in_w8s_rine_field",
+   "kind": "facility",
+   "scene": "w8s_rine_field",
+   "name": "鐘待ちの畑（リーネ）",
+   "pack": "special_in",
+   "tags": "village field with women and children hoeing, graveyard beside the field, distant watchtower bell"
+  },
+  {
+   "id": "in_w8s_velt_beacon",
+   "kind": "facility",
+   "scene": "w8s_velt_beacon",
+   "name": "烽火台（ヴェルト）",
+   "pack": "special_in",
+   "tags": "three stone beacon platforms with stacked firewood, northern sea on one side and mountains on the other, smoke"
+  },
+  {
+   "id": "in_w8s_halt_carver",
+   "kind": "facility",
+   "scene": "w8s_halt_carver",
+   "name": "像彫りの小屋（ハルト）",
+   "pack": "special_in",
+   "tags": "stone carver's hut, dozens of small faceless stone statues, all facing away from the mountains, window on the far side"
+  },
+  {
+   "id": "in_w8s_zalem_altar",
+   "kind": "facility",
+   "scene": "w8s_zalem_altar",
+   "name": "庵の奥の祭壇（ザレム）",
+   "pack": "special_in",
+   "tags": "inside a crumbling mountain hermitage, mossy stone altar with plates of bread, pile of walking staffs, candles"
   },
   {
    "id": "in_dungeon",
