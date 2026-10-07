@@ -23,20 +23,20 @@
     rui: [{ from: "春", to: "冬", loc: "ruins", note: "遺跡の奥の石の部屋で眠っている" }],
     // ゼリナは市の立つ町を渡る。秋は麦の都の収穫市
     zerina: [
-      { from: "春", to: "春", loc: "karna", note: "春は自由都市の市場で店を出す" },
+      { from: "春", to: "春", loc: "karna", note: "春は商都ブランデールの市場で店を出す" },
       { from: "夏", to: "夏", loc: "nerva", note: "夏は港町で船の荷を買い叩いている" },
       { from: "秋", to: "秋", loc: "w2_granbel", note: "秋は麦の都の収穫市に出る" },
-      { from: "冬", to: "冬", loc: "karna", note: "冬は自由都市に戻って帳面をつけている" },
+      { from: "冬", to: "冬", loc: "karna", note: "冬は商都ブランデールに戻って帳面をつけている" },
     ],
     elnea: [{ from: "春", to: "冬", loc: "w2_dranherz", note: "鍛冶ギルドの炉の前で、精晶の設備を見ている" }],
     // ナタリアは酒と腕試しを追って、季節ごとに町を変える
     natalia: [
       { from: "春", to: "春", loc: "leavel", note: "春は王都の古い道場に顔を出す" },
       { from: "夏", to: "夏", loc: "w2_zalgros", note: "夏は闘技の都で腕試しと祝い酒" },
-      { from: "秋", to: "秋", loc: "karna", note: "秋は自由都市の酒場で新酒を飲み歩く" },
+      { from: "秋", to: "秋", loc: "karna", note: "秋は商都ブランデールの酒場で新酒を飲み歩く" },
       { from: "冬", to: "冬", loc: "w1_holy", note: "冬は聖都で酒を断つと言っては破っている" },
     ],
-    bertrand: [{ from: "春", to: "冬", loc: "karna", note: "自由都市の酒場の二階で、付けを溜めて絵を描いている" }],
+    bertrand: [{ from: "春", to: "冬", loc: "karna", note: "商都ブランデールの酒場の二階で、付けを溜めて絵を描いている" }],
     ilse: [{ from: "春", to: "冬", loc: "nerva", note: "港町の宿の屋根裏で策を練っている" }],
     // トゥーラは雪の季節に街道で荷運びをし、雪の無い季節は帝都の長屋で母の看病
     tula: [

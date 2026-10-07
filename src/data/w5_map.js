@@ -79,7 +79,6 @@
       "レオネスト王国": { light: "#c8a24c", dark: "#8f7232", label: [16, 45], size: 1 },
       "ノルディア帝国": { light: "#8ea4bd", dark: "#4f6884", label: [33, 17], size: 1 },
       "エルメシア共和国": { light: "#86ab6c", dark: "#4a7a40", label: [76, 46], size: 1 },
-      "自由都市連合": { light: "#cf8d5c", dark: "#8a5230", label: [45, 63], size: 0.7 },
       "光天教会領": { light: "#e6dca8", dark: "#8c8556", label: [7, 57], size: 0.6, vert: 1 },
       "シェルアーク": { light: "#6eaaa2", dark: "#2f6e66", label: [12, 103], size: 0.7 },
       "人類の最前線": { light: "#958c84", dark: "#5c564e", label: [64, 20], size: 0.6 },
