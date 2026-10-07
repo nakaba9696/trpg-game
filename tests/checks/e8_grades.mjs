@@ -129,6 +129,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       const G = loadEngine();
       party(G, 6000 + i, STRONG, false);
       keysAll(G, true);
+      if (G.e10Fill) G.e10Fill(G.S); // 弱らせる出来事（E10）も
       if (fight(G, () => G.apply({ e3fight: a.id })) && G.S.flags[a.flag]) k++;
     }
     rows.push(`${a.id}(${a.rank}) 剣だけ ${w}/${N}・条件そろえて ${k}/4`);

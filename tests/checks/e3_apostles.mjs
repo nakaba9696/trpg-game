@@ -118,6 +118,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     S.inv = { potion: 6, elixir: 2 };
     S.companions = [0, 1, 2].map((i) => ({ name: `傭兵の${"アベル,ブラン,カイ".split(",")[i]}`, cls: "傭兵", power: 70, dmg: 2, desc: "無口" }));
     if (keys) Object.values(D.E3.LIST).forEach((a) => a.keys.forEach((k) => { k.test = keys === "all" ? () => true : () => false; }));
+    if (keys === "all" && G.e10Fill) G.e10Fill(S); // 弱らせる出来事（E10）も、すべて起こしたことに
   };
   const fight = (G, id) => {
     const S = G.S;
