@@ -25,27 +25,58 @@
   // 本文の欄は画面の下に寄せ、高さは中身に合わせて tome.min〜tome.h（CSS の min-height・max-height）。戦闘は V9 のまま
   const v9Layout = v9.layout;
   u21.v9Layout = v9Layout;
+  // U23：立ち絵が小さくなった（持ち主「UI変えてもらったら立ち絵が小さくなった」）。本文の欄を 1 行 32 字ほどに、右の列を少し細くし、
+  // 本文の欄と右の列のあいだを立ち絵の場所にする。話している人は画面の高さの 9 割ほどで、足元まで見える（欄の後ろに沈めない）
+  u21.CHARS = 32; // 本文の 1 行の字数（広い画面でもこれまで）
+  u21.FIG = 0.9; // 立ち絵の高さ（見出しの帯より下の高さに対して）
+  u21.TMIN = 0.3; // 本文の欄の低いときの高さ（見出しの帯より下の高さに対して）
+  u21.TMIN_PX = 180;
+  u21.CORE = 0.42; // 立ち絵の幅のうち、ぼかさずに見える真ん中の割合（高さに対して。v9_pc.css の .v9fig.img の覆い：幅 0.8×高さの 52%）
   u21.layout = (vw, vh) => {
     const base = v9Layout(vw, vh, false);
     const { head, m, fs } = base;
     vw = base.vw; vh = base.vh;
     const gap = Math.round(Math.max(14, m * 0.8));
-    const sw = Math.round(Math.max(360, Math.min(500, vw * 0.33)));
+    const sw = Math.round(Math.max(340, Math.min(480, vw * 0.29)));
     const side = { x: vw - m - sw, y: head + 8, w: sw, h: vh - head - 8 - m };
     const leftW = side.x - gap - m;
     const width = (c) => c * fs + v9.PAD * 2 + 10;
-    let chars = 40;
+    let chars = u21.CHARS;
     while (chars > 28 && width(chars) > leftW) chars--;
     const tw = Math.min(leftW, width(chars));
     const avail = vh - m - head;
     const tmax = Math.max(200, avail - u21.TOP_GAP);
-    const tmin = Math.round(Math.min(tmax, Math.max(240, Math.min(520, avail * 0.5))));
+    // 本文の欄の低いとき（中身が短いとき）の高さ。U23：低くして、背景の絵を見せる（持ち主「立ち絵や背景は見えるように」）
+    const tmin = Math.round(Math.min(tmax, Math.max(u21.TMIN_PX, Math.min(400, avail * u21.TMIN))));
     const tome = { x: m, y: vh - m - tmax, w: tw, h: tmax, min: tmin };
-    // 立ち絵は左の広い所に。足元は本文の欄の後ろへ沈める（顔と肩が欄の上に見える）
-    const low = vh - m - tmin;
-    const cast = { x: 0, y: head, w: Math.max(0, side.x - gap), h: Math.round(low + tmin * 0.35 - head) };
-    return Object.assign({}, base, { chars, tome, cast, side, stage: null, side21: true });
+    // 立ち絵の場所：左の広い所（見出しの帯の下から画面の下まで）。人は本文の欄と右の列のあいだ（stand）に立つ
+    const cast = { x: 0, y: head, w: Math.max(0, side.x - 4), h: vh - head };
+    const stand = { x0: tome.x + tome.w, x1: side.x };
+    return Object.assign({}, base, { chars, tome, cast, side, stand, stage: null, side21: true });
   };
+  // 立ち絵の置き場所（V9 の placeCast と同じ形）。本文の欄と右の列のあいだの真ん中に、話している人を大きく。
+  // 高さは、見えている真ん中（CORE）がそのあいだに入る大きさまで。後ろの人は少し小さく暗く、左右にずらす（欄の後ろに隠れてもよい）
+  const v9Place = v9.placeCast;
+  u21.v9Place = v9Place;
+  u21.placeCast = (L, list) => {
+    const n = (list || []).length;
+    if (!L || !L.side21 || !L.stand || !n) return v9Place ? v9Place(L, list) : [];
+    const C = L.cast;
+    const room = Math.max(0, L.stand.x1 - L.stand.x0);
+    // 右の列を入れる前（V9）の大きさより小さくはしない（狭い画面では、人の端が本文の欄の後ろに隠れてもよい）
+    const was = v9Place ? (v9Place(v9Layout(L.vw, L.vh, false), [{ role: "speaker" }])[0] || {}).h || 0 : 0;
+    const H = Math.round(Math.min(C.h, Math.max(was, C.h * 0.6, Math.min(C.h * u21.FIG, room / u21.CORE))));
+    const mid = Math.round((L.stand.x0 + L.stand.x1) / 2 - C.x);
+    const off = Math.round(H * 0.3);
+    const speaker = list[0] && list[0].role === "speaker";
+    if (speaker) {
+      const xs = [mid, mid - off, mid + off];
+      return list.map((c, i) => ({ x: xs[i], h: i ? Math.round(H * 0.82) : H, front: i === 0, dim: i ? 0.45 : 0, z: i ? 1 : 3 }));
+    }
+    const xs = n === 1 ? [mid] : n === 2 ? [mid - off / 2, mid + off / 2] : [mid, mid - off, mid + off];
+    return list.map((c, i) => ({ x: Math.round(xs[i]), h: Math.round(H * (n === 3 && i ? 0.86 : 0.94)), front: false, dim: 0.22, z: n === 3 && !i ? 2 : 1 }));
+  };
+  if (v9Place) v9.placeCast = (L, list) => (L && L.side21 ? u21.placeCast(L, list) : v9Place(L, list));
   v9.layout = (vw, vh, combat) => (combat ? v9Layout(vw, vh, true) : u21.layout(vw, vh));
 
   // 右の列のまとめ方：U13 と同じ組で、まとめる数だけ下げる
@@ -60,6 +91,78 @@
       try { return basePlan(groups, S); } finally { u13.MIN_ITEMS = a; u13.FAC_MIN_ITEMS = b; }
     };
     u13.plan = (groups, S) => (u21.active && !(S && S.combat) ? u21.plan(groups, S) : basePlan(groups, S));
+  }
+
+  // ---------------------------------------------------------------- U23：町の選択肢を、もっと細かい組に（持ち主「街など、選択がいっぱいある場合はまとめてほしい」）
+  // PC の右の列だけ。組は 施設・特色の場所・人に会う・依頼・噂・旅立つ・持ち物・その他。よく使う組ほど上に。スマホ（U13 の「街で／冒険／仲間／その他」）は今のまま
+  // 町の組（「首都エルメシア」のように、施設と町ならではの場所と「町をぶらつく」が一つの組に入っている）は、選択肢ごとに組を分ける（画面の中だけ。エンジンの G.actions は変えない）
+  u21.TOWN_CATS = [
+    { key: "fac", label: "施設" },
+    { key: "spot", label: "特色の場所" },
+    { key: "people", label: "人に会う" },
+    { key: "quest", label: "依頼・噂" },
+    { key: "travel", label: "旅立つ" },
+    { key: "misc", label: "持ち物・その他" },
+  ];
+  u21.TOWN_MIN_ITEMS = 5; // 町では、選択肢がこれ以上で分類が 2 つ以上なら組にまとめる
+  // どこの町にもある施設（ほかの fac:… はその町ならではの場所）
+  u21.CORE_FAC = ["inn", "tavern", "shop", "guild", "church", "train", "alley", "castle", "academy", "forge"];
+  const TOWN_BY = {
+    walk: "spot", a11sight: "spot", explore: "spot", k1track: "spot", k1herb: "spot",
+    m2talk: "people", c2inv: "people", f4seek: "people", k1comp: "people", b5: "people",
+    q5go: "quest", m12: "quest", f2o: "quest", r3: "quest",
+    travel: "travel", sail: "travel",
+  };
+  u21.townCat = (a) => {
+    const id = String((a && a.id) || "");
+    const p = id.split(":")[0];
+    if (p === "fac") return u21.CORE_FAC.includes(id.split(":")[1]) ? "fac" : "spot";
+    return TOWN_BY[p] || "misc";
+  };
+  u21.isTown = (S) => !!(S && S.mode === "explore" && !S.combat && !S.over && G.loc && (G.loc() || {}).type === "town");
+  // 組を、選択肢の分類ごとに分ける（分類が一つの組はそのまま）。分けた二つ目からの見出しは分類の名前
+  u21.splitTown = (groups) => {
+    const out = [];
+    (groups || []).forEach((g) => {
+      const list = (g && g.list) || [];
+      const cats = [...new Set(list.map(u21.townCat))];
+      if (cats.length < 2 || (u13 && u13.pinned && u13.pinned(g))) { out.push(g); return; }
+      cats.forEach((c, i) => {
+        const part = list.filter((a) => u21.townCat(a) === c);
+        out.push(Object.assign({}, g, { title: i === 0 ? g.title : (u21.TOWN_CATS.find((x) => x.key === c) || {}).label || g.title, list: part }));
+      });
+    });
+    return out;
+  };
+  // 町の組の分け方（U13 の plan と同じ形）。groups は splitTown のあと
+  u21.townPlan = (groups, S) => {
+    if (!u21.isTown(S)) return null;
+    const gs = (groups || []).filter((g) => g && g.list && g.list.length);
+    const tabs = u21.TOWN_CATS.map((c) => ({ key: "t:" + c.key, label: c.label, groups: [], ids: [] }));
+    const top = [];
+    gs.forEach((g, i) => {
+      if (u13 && u13.pinned && u13.pinned(g)) { top.push(i); return; }
+      const n = {};
+      g.list.forEach((a) => { const c = u21.townCat(a); n[c] = (n[c] || 0) + 1; });
+      const c = Object.keys(n).sort((a, b) => n[b] - n[a] || u21.TOWN_CATS.findIndex((x) => x.key === a) - u21.TOWN_CATS.findIndex((x) => x.key === b))[0];
+      const t = tabs.find((x) => x.key === "t:" + c);
+      t.groups.push(i);
+      g.list.forEach((a) => t.ids.push(a.id));
+    });
+    const used = tabs.filter((t) => t.groups.length);
+    const items = gs.reduce((k, g) => k + g.list.length, 0);
+    if (used.length < 2 || items < u21.TOWN_MIN_ITEMS) return null;
+    return { tabs: used, top, bottom: [], place: "town21" };
+  };
+  if (u13 && u21.plan) {
+    const planPC = u21.plan;
+    u21.plan = (groups, S) => (u21.isTown(S) ? u21.townPlan(groups, S) : planPC(groups, S));
+  }
+  // 画面が G.actions を読むとき（右の列を出している町だけ）、町の組を分けて渡す
+  if (typeof G.actions === "function") {
+    const actions0 = G.actions;
+    u21.actions0 = actions0;
+    G.actions = (...a) => { const gs = actions0(...a); return u21.active && u21.isTown(G.S) ? u21.splitTown(gs) : gs; };
   }
 
   // U13 が描いたあと、分類の札の後ろに並ぶ組（開いた組と、下に出したままの組）を、元の並び順に。open は開いた組か
