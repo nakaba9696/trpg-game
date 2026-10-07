@@ -36,12 +36,13 @@ export default ({ G, fail, ok, seeded }) => {
     for (const id of list) if (!B.TRACKS[id]) F(`場面 ${s} が知らない曲 ${id} を指す`);
   }
   for (const s of Object.keys(B.SCENES)) if (!snd.bgmScenes.includes(s)) F(`曲の表に知らない場面 ${s}`);
-  const used = new Set(Object.values(B.SCENES).flat());
+  // S6：場面を細かく分けた表（ROUTES。町の時間帯・地方・ボスごと）で鳴る曲も、どこかで鳴る曲に数える
+  const used = new Set([...Object.values(B.SCENES).flat(), ...Object.values(B.ROUTES || {}).flat()]);
   for (const id of Object.keys(B.TRACKS)) if (!used.has(id)) F(`曲 ${id} がどの場面でも鳴らない`);
 
   // ---------------------------------------------------------------- 曲のデータ
   // 楽器ごとの音域（MIDI 番号）。外れると聞こえない・耳に刺さる
-  const RANGE = { bass: [26, 64], sub: [26, 64], tuba: [28, 64], cello: [28, 72], drone: [24, 60], organ: [28, 100], hammond: [36, 96], brass: [40, 96], guitar: [28, 96], lead: [45, 100], strings: [36, 100], violin: [55, 100], choir: [40, 88], bell: [36, 100], celesta: [55, 108], harp: [36, 100], lute: [40, 90], epiano: [40, 96], reed: [40, 92], clarinet: [50, 94], flute: [60, 100], pizz: [36, 90] };
+  const RANGE = { bass: [26, 64], sub: [26, 64], tuba: [28, 64], cello: [28, 72], drone: [24, 60], organ: [28, 100], hammond: [36, 96], brass: [40, 96], guitar: [28, 96], lead: [45, 100], strings: [36, 100], violin: [55, 100], choir: [40, 88], bell: [36, 100], celesta: [55, 108], harp: [36, 100], lute: [40, 90], epiano: [40, 96], reed: [40, 92], clarinet: [50, 94], flute: [60, 100], pizz: [36, 90], mandolin: [52, 96], ocarina: [57, 96] };
   for (const n of snd.bgmInsts) if (!RANGE[n]) F(`楽器 ${n} の音域が決まっていない（このテストに足す）`);
   const drums = new Set(snd.bgmDrumNames);
   for (const d of Object.values(snd.BGM_DRUMS)) if (!drums.has(d)) F(`打楽器の記号が知らない音 ${d} を指す`);
