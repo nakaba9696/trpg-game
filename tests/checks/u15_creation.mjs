@@ -12,15 +12,17 @@ export default ({ G, fail, seeded }) => {
   const HN = D.CRE_HINTS, TX = D.CRE_TEXT;
   if (!HN || !TX) { fail("作成画面の説明の表（D.CRE_HINTS・D.CRE_TEXT）が無い"); return; }
   const WHERE = /竜の墓場|鬼ヶ島|最奥|エンバルダ|絶界|10000|ヴォルグリム|白夜/;
-  for (const k of ["cls", "goal", "name", "sex", "age", "origin"]) {
+  // 生まれは U25 で無くした（説明の一行も無い）
+  if (HN.origin) fail("無くした生まれの説明（D.CRE_HINTS.origin）が残っている");
+  // 名前と性別の説明は U25 で無くした（選び方に関わらない）
+  for (const k of ["name", "sex"]) if (HN[k]) fail(`無くした「${k}」の説明（D.CRE_HINTS.${k}）が残っている`);
+  for (const k of ["cls", "goal", "age"]) {
     const t = HN[k];
     if (!t) { fail(`作成画面の「${k}」に効き目の一行が無い`); continue; }
     if (/[0-9０-９]/.test(t)) fail(`作成画面の「${k}」の説明が数字を並べている（${t}）`);
     if (WHERE.test(t)) fail(`作成画面の「${k}」の説明に行き先が出ている（${t}）`);
     if (t.length > 60) fail(`作成画面の「${k}」の説明が一行に収まらない（${t.length} 字）`);
   }
-  // 生まれは出発の町を変えない（出発の町は職業で決まる）。説明がそれと合う
-  if (/出発の町が変わる|最初の町が変わる/.test(HN.origin)) fail("生まれの説明が、変わらない出発の町を変わると書いている");
   if (!/出発の町/.test(HN.cls)) fail("職業の説明に出発の町が無い");
 
   // 初めての人
@@ -41,7 +43,7 @@ export default ({ G, fail, seeded }) => {
     cre.quickFinish(dr);
     if (cre.bonusLeft(dr) !== 0) fail(`おまかせのまま旅立つと、ボーナス点が ${cre.bonusLeft(dr)} 点残る`);
     const o = cre.options(dr, rnd);
-    if (!o.profile.name || !o.profile.age || !D.ORIGINS[o.profile.origin] || !D.GOALS[o.goal] || o.goal === "custom") fail("おまかせの人物が埋まっていない／自分で決める目的になっている");
+    if (!o.profile.name || !o.profile.age || !D.GOALS[o.goal] || o.goal === "custom") fail("おまかせの人物が埋まっていない／自分で決める目的になっている");
   }
 
   // 「自分で決める」目的の扱い
@@ -83,8 +85,9 @@ export default ({ G, fail, seeded }) => {
   // 「あとでもよいこと」（外見・生い立ち）の欄は無くした（U17）
   if (/creLater|TX\.later/.test(src)) fail("作成画面に、無くした「あとでもよいこと」の欄が残っている");
   if (!/TX\.now/.test(src)) fail("作成画面に「今決めること」の印が無い");
-  for (const k of ["cls", "goal", "name", "origin"]) if (!new RegExp(`eff\\("${k}"\\)`).test(src)) fail(`作成画面に「${k}」の効き目の一行が出ない`);
-  if (!/HN\.sex/.test(src) || !/HN\.age/.test(src)) fail("作成画面に性別・年齢の効き目の一行が出ない");
+  for (const k of ["cls", "goal"]) if (!new RegExp(`eff\\("${k}"\\)`).test(src)) fail(`作成画面に「${k}」の効き目の一行が出ない`);
+  if (!/HN\.age/.test(src)) fail("作成画面に年齢の効き目の一行が出ない");
+  if (/HN\.sex|eff\("name"\)|eff\("sex"\)/.test(src)) fail("作成画面に、無くした名前・性別の説明が出る");
   if (!/cre\.firstTime\(\)/.test(src) || !/TX\.first\b/.test(src)) fail("作成画面に、初めての人へのおまかせの一言が無い");
   if (!/creCustomNote/.test(src) || !/TX\.custom\b/.test(src)) fail("作成画面に、自分で決める目的の扱いの説明が無い");
   // タイトル画面に題名だけを出し、ページの <title> も同じ題名にする
