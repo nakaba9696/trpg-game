@@ -313,9 +313,9 @@
     const mark = S.log[S.log.length - 1];
     try { baseAct(arg); } finally { if (held) S.companions.splice(Math.min(held[0], S.companions.length), 0, held[1]); }
     if (aimBack && S.combat === C) { const i = C.foes.indexOf(aimBack); if (i >= 0) C.aim = i; }
-    // 弱点の上乗せ：こちらの一撃（その手番の最初のダメージ）だけ
+    // 弱点の上乗せ：こちらの一撃（その手番の最初のダメージ）だけ。E12 の耐性と弱点（aff）があればそちらが掛けるので、ここでは足さない
     const elem = kindElem(kind, itemId);
-    if (elem && !S.over) {
+    if (elem && !S.over && !E4.weakByE12) {
       const from = S.log.lastIndexOf(mark) + 1;
       const fresh = S.log.slice(from);
       const hitOnce = new Set();

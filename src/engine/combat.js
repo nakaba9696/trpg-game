@@ -4,7 +4,8 @@
 //   { fx: "hurt", n, heavy } あなたがダメージ / { fx: "ally", who: 仲間の名前, n } 仲間がダメージ / { fx: "allydown", who } 仲間が戦闘不能（B5）/ { fx: "crit" } 会心・急所 / { fx: "boss", foe: id, name } ボスの前口上（D.BOSS_LINES）
 // 読み合いのためのつなぎ目（F1。中身は engine/zzzzzzzzzz_f1_duel.js）。無ければ今まで通り：
 //   G.cbActs[kind](t, a, b)   こちらの手を足す（"cb:<kind>"。この手番の中で行うので、図鑑・依頼・弱点の上乗せがそのまま数える）
-//   G.cbDmgMod(f, n, how)     こちらの一撃のダメージを変える（構え・隙・とどめ）。返した数を与える
+//   G.cbDmgMod(f, n, how)     こちらの一撃のダメージを変える（構え・隙・とどめ・E12 の耐性と弱点）。返した数を与える
+//   G.cbAllyDmg(c, f, n)      仲間の一撃のダメージを変える（E12 の耐性と弱点）。返した数を与える
 //   G.cbMove(f, e)            敵がこの手番にすること { skip, times, mul, hit, through（身を守っても避けにくくならない）, guardDiv, pierce, you, name, text, f1 }。null ならふつうに一撃
 //   G.cbStruck(f, e, mv, who, dmg)  敵の一撃が当たった・外れた（who は仲間か null＝あなた、dmg は与えた数か 0）のあと
 //   C.f1dodge                 「躱す」が決まった：あなたへの最初の一撃を丸ごと外す
@@ -184,7 +185,7 @@
     // B5：回復を仲間に使う（"heal:<仲間の id>"・"item:<品>:<仲間の id>"）
     const ally = (id) => (id && id !== "you" ? S.companions.find((c) => c.id === id) || null : null);
     if (kind === "attack") {
-      G.log("you", `${w.name}で${t.name}に斬りかかる`);
+      G.log("you", `${w.name}で${t.name}に${G.e12 ? G.e12.verb(w) : "斬りかかる"}`);
       const r = G.check(w.stat, { vs: G.foeVs.eva(G.foeData(t), w.stat) }, "攻撃", w.hit || 0);
       if (r.ok) {
         let dmg = G.dice(w.dmg) + (w.stat === "筋力" ? pow("筋力", 15) : pow("敏捷", 20));
@@ -335,7 +336,8 @@
       if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
       const chance = G.allyHitChance(c, e);
       if (G.d(100) <= chance) {
-        const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
+        let dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
+        if (G.cbAllyDmg) dmg = G.cbAllyDmg(c, f, dmg); // E12：仲間の武器の種類と、敵の耐性・弱点
         f.hp = Math.max(0, f.hp - dmg);
         G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
         if (f.hp <= 0) onFoeDown(f);
