@@ -2543,9 +2543,9 @@
    "group": "c2",
    "name": "オルテンシア",
    "file": "assets/portraits/ortensia.webp",
-   "identity": "1girl, mature female, adult woman, 38 years old, tall, slender, pale skin, wine red hair, very long hair, wavy hair, side-swept bangs, violet eyes, half-closed eyes, long eyelashes, thin eyebrows, silver earrings, wide-brimmed pointed witch hat, purple witch hat with a silver band, elegant loose purple robe, silver embroidery, long wide sleeves",
+   "identity": "1girl, mature female, adult woman, 38 years old, tall, slender, pale skin, red hair, very long hair, wavy hair, side-swept bangs, violet eyes, half-closed eyes, long eyelashes, thin eyebrows, silver earrings, wide-brimmed pointed witch hat, purple witch hat with a silver band, elegant loose purple robe, silver embroidery, long wide sleeves",
    "tags": "sitting cross-legged in a high-backed chair, holding a teacup, small wooden clockwork doll on shoulder",
-   "face": "calm amused smile, looking down at viewer",
+   "face": "calm amused smile",
    "variants": {
     "joy": "gentle smile, closed eyes, happy",
     "anger": "cold stare, narrowed eyes, closed mouth, shadowed face",
@@ -2564,9 +2564,9 @@
    "group": "c2",
    "name": "イスメネ",
    "file": "assets/portraits/ismene.webp",
-   "identity": "1girl, elf, pointy ears, adult woman, 26 years old, slender, fair skin, snow white hair, very long hair, single braid, braid over shoulder, hair between eyes, grey eyes, calm eyes, thin eyebrows, ink stains on fingers, dark green scholar coat with gold trim, high collar, ink bottle on belt",
+   "identity": "1girl, elf, pointy ears, adult woman, 26 years old, slender, fair skin, white hair, very long hair, single braid, braid over shoulder, hair between eyes, grey eyes, calm eyes, thin eyebrows, ink stains on fingers, dark green scholar coat with gold trim, high collar, ink bottle on belt",
    "tags": "holding a thick old book with both arms, standing beside a tall bookshelf",
-   "face": "expressionless, calm, looking at viewer",
+   "face": "expressionless, calm",
    "variants": {
     "joy": "slight smile, soft eyes, holding book close",
     "anger": "frown, narrowed eyes, closed mouth",
@@ -2574,7 +2574,7 @@
     "fun": "small smile, sparkling eyes, pen in hand",
     "surprise": "surprised, wide-eyed, book slipping",
     "shy": "blush, red pointy ears, hiding mouth behind book",
-    "serious": "serious, focused eyes, reading by candlelight",
+    "serious": "serious, focused eyes, reading in candlelight",
     "sparkle": "sparkling eyes, slight smile, leaning forward",
     "fear": "scared, pale, wide eyes, gripping book tightly"
    },
