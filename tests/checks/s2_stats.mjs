@@ -1,5 +1,5 @@
 // S2：能力値を小さな数（点）で見せる・初期値をダイスで振る（docs/s2_stats.md）
-// - 初期値：能力値ごとに 3D6（8％で +1D6）＋職業・種族・年齢・生まれの補正。だいたい 5〜18、1 人のうちどれか 1 つが 20 以上になるのが約 5％
+// - 初期値：能力値ごとに 3D6（11％で +1D6）＋職業・種族・年齢の補正（生まれは U25 で無くした）。だいたい 5〜18、1 人のうちどれか 1 つが 20 以上になるのが約 5％
 // - ボーナス点：5 点で決まり＋トロフィーの格の点（銅 1・銀 2・金 5）10 点ごとに +1（合計の上限なし）。どの能力値にも好きなだけ
 // - 鍵は無い。振り直しは初期値を振り直す（何度でも）
 // - 換算（S5）：冒険に渡す値もセーブも点そのもの（D.S2.PCT = 1）。成功率は相手・難しさの点との差（tests/checks/s5_scale.mjs）
@@ -19,7 +19,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
 
   // ---------------------------------------------------------------- 初期値
   for (const [id, c] of Object.entries(D.CLASSES)) for (const k of D.STATS) if (!(Math.abs(c.mod2[k] || 0) <= 3)) fail(`職業 ${id}: ${k} の補正 ${c.mod2[k]} が大きすぎる`);
-  for (const T of [D.AGES, D.ORIGINS, D.RACES, D.BEASTS]) for (const [id, o] of Object.entries(T)) {
+  for (const T of [D.AGES, D.RACES, D.BEASTS]) for (const [id, o] of Object.entries(T)) {
     for (const [k, v] of Object.entries(o.mod || {})) if (!D.STATS.includes(k) || Math.abs(v) > 3) fail(`補正 ${id}: ${k} ${v} が点になっていない`);
   }
   const rnd = seeded(2200);
