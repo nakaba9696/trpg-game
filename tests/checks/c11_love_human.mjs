@@ -2,7 +2,7 @@
 // - 魔物の子分・ギグラ（ゴブリン）・人の姿でない者は、Q8 の一覧を切っても（仕組みだけのテストの形でも）恋の相手にならない
 // - 人の姿の恋の相手（人間・エルフ・獣人）は今まで通り恋の相手になれる
 // - ギグラは信頼の話題（kind: "bond"）が出て、恋の筋の段・恋の話題は出ない
-// - 格の違う相手は、人の姿で現れる者（D.C11L.AP）だけ
+// - 格の違う相手は、人の姿で現れる者（D.C11L.AP）だけ。人の姿の使徒（香煙のベリエラ yoi・砂塵のドレイゼ zalve）の恋は残る
 // - 古いセーブ：魔物の子分・ギグラと恋人・約束・連れ合いになっていても壊れず、「固い絆の仲間」になる（仲間のまま・年表の過去の行は残る）
 export default ({ fail, ok, loadEngine, seeded }) => {
   let n = 0;
@@ -80,6 +80,17 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     delete G.data.C11L.AP.yoi;
     if (G.m11ApAt("yoi", 0, S)) F(`人の姿の表に無い格の違う相手の続き物が進む${tag}`);
     G.data.C11L.AP.yoi = keep;
+  }
+
+  // ---- 人の姿の使徒（香煙のベリエラ yoi・砂塵のドレイゼ zalve）との恋の続き物と恋の筋は残る（配り役の確定）
+  for (const [sex, key] of [["男", "yoi"], ["女", "zalve"]]) {
+    const G = start(sex, []);
+    const S = G.S;
+    S.day = 50;
+    if (!G.data.C11L.AP[key]) F(`${key}: 人の姿の使徒が、人の姿の表から外れている`);
+    if (!G.data.M11.AP[key] || G.data.M11.AP[key].romance !== true) F(`${key}: 格の違う相手の恋の印が無い`);
+    if (!G.m11ApAt(key, 0, S)) F(`${key}: 人の姿の使徒との恋の続き物が始められない`);
+    if (!G.data.EVENTS.some((e) => e.id === `m11_${key}_last`) || !G.data.EVENTS.some((e) => e.id.startsWith(`r2_${key}_`))) F(`${key}: 恋の続き物か恋の筋（R2）の出来事が無い`);
   }
 
   // ---- 古いセーブ：魔物の子分・ギグラと恋人・連れ合い
