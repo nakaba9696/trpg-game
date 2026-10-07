@@ -1,11 +1,12 @@
 // A13・A14：白い無地の背景で作った絵（人物の絵：docs/art/style.json、魔物の絵：docs/art/style_monsters.json）の背景を消して透明にし、背景の絵になじませる。
-// 消すのは、絵の外周からつながった、背景の色（縁の白に近い升の色）にごく近い所（A14）と、線画に囲まれた背景（腕と体のあいだ・脚のあいだなど。
-// むらの無い背景の色で、大きく、縁に触れず、まわりがすぐ線画になる所。A15）。白い服・白い毛皮・白目・歯・光の反射は残す（迷うなら消さない）。
+// 消すのは、絵の外周からつながった、背景の色（縁の白に近い升の色）にごく近い所（A14）と、線画に囲まれた背景（腕と体のあいだ・武器の柄と体のあいだ・
+// 髪の房のあいだなど。A15・A16）。白い服・白い毛皮・白目・歯・光の反射は残す。囲まれた背景で消すか迷う所は、薄白の半透明にする（A16）。
 // 境目は 0/1 で切らず、半透明にする（ソフトマット）：境目の数 px は、その画素の色が「背景の色」と「すぐ内側の絵の色」のどこにあるかで透け具合を決め、
 // 白と混ざった分を取り除いて色を戻す（色のにじみ抜き。白い縁取りを残さない）。
 // 人物は v4_assets.js、魔物（人の姿の敵も）は v6_monsters.js が使う。同じ鍵は一度だけ処理して覚えておく（G.a13.cutout）。
 // 画素を読めないとき（file:// で開いたときなど）は null を返し、呼んだ側は元の絵のまま描く（壊さない）。
 // 消せた立ち絵の canvas には cut の印が付き、CSS（ui/a13_cutout.css）は縁を四角くぼかす覆いをやめて、足元だけを背景へ溶かす。
+// 背景をもう透明にしてある絵（透明つきの webp に置き換えた絵）は切り抜かずにそのまま使い、同じく cut の印を付ける（A16）。
 // 大きく縮めて描くときは G.a13.draw で段階的に縮める（なめらかに。A14）。レーン A（絵）
 (function (G) {
   const A13 = (G.a13 = G.a13 || {});
@@ -15,6 +16,7 @@
     const PATCH_TOL = 14; // 升の中の色の揺れ（これより揺れる升は背景の色に使わない）
     const TOL = 14; // 外周から塗りつぶすとき、背景とみなす色の幅（背景の色からの、どの色の差もこれ未満）
     const BAND = 3; // 境目の半透明にする幅（px。絵の側）
+    const SEMI = 56; // 消すか迷う囲まれた背景の不透明度（0〜255。約 22%。薄白に残す。A16）
 
     // 背景の色の候補：縁の 8×8 の升のうち、揃っていて白に近いもの（隅に物が掛かっていても、ほかの升で決まる）
     function refsOf(p, W, H, bottom) {
@@ -39,10 +41,24 @@
       return out;
     }
 
+    // 透明を持つ絵か：四隅のどれかが透明（不透明さ 16 未満）か、透明な画素が 1% 以上あれば、透明な画素（不透明さ 128 未満）の割合
+    // （透明が少ない絵でも「消せた絵」とみなされるよう、0.05 より小さくは返さない。A13.MIN より大きい）。そうでなければ −1
+    function transparent(p, W, H) {
+      const n = W * H;
+      const corner = [0, W - 1, (H - 1) * W, n - 1].some((i) => p[i * 4 + 3] < 16);
+      let k = 0;
+      for (let i = 3; i < n * 4; i += 4) if (p[i] < 128) k++;
+      return corner || k >= n * 0.01 ? Math.max(0.05, k / n) : -1;
+    }
+
     // px：RGBA の配列（ImageData.data）を、その場で書き換える。返り値：消した（ほぼ透明にした）画素の割合（0〜1）。白い背景の絵でなければ 0（何もしない）
     // opt.bottom：下の縁からも消す（魔物は足元まで白い背景。人物は胸から下の服で切れているので、白い服を守るため下からは消さない）
     const keyOut = (p, W, H, opt = {}) => {
       const n = W * H;
+      // もう透明を持つ絵（背景を除いて透明つきで置き換えた絵）は、切り抜かずにそのまま返す。返り値は透明な所の割合
+      // （呼んだ側はこれで「背景を消せた絵」とみなし、cut の印を付けて足元だけを溶かす。A16）
+      const clear = transparent(p, W, H);
+      if (clear >= 0) return clear;
       const refs = refsOf(p, W, H, !!opt.bottom);
       if (!refs.length) return 0;
       // 背景の色からの差（いちばん近い候補との、色ごとの差の最大）と、その候補
@@ -76,43 +92,92 @@
         if (i >= W) seed(i - W);
         if (i < n - W) seed(i + W);
       }
-      // 囲まれた背景（A15）：腕と体のあいだ・脚のあいだなど、線画に囲まれて外周とつながらない背景も消す。消すのは、
-      // ・背景の色にごく近く（HOLE_TOL 未満の点から、圧縮のむら HOLE_GROW 未満まで広げた所）、むらが無い（平均の差が HOLE_FLAT 未満）
-      // ・ある程度大きい（HOLE_MIN 以上。白目・歯・光の点は消さない）
-      // ・まわりがすぐ線画や濃い色になる（縁から HOLE_REACH px 以内に背景から HOLE_EDGE 以上離れた色がある）。白い服・帯・白い毛皮は
-      //   縁に薄い影の色が広がっているので、縁の HOLE_SOFT 以上が「薄い色のまま」なら残す
-      // ・線の向こうがまた白くない（縁から外へ HOLE_PAST px 見て、線を越えた先が背景の色に近い縁が HOLE_WHITE 以上なら残す）。
-      //   白い服の折り目・襟・旗などは、線を越えてもまた白い。腕と体のあいだの背景は、線の向こうが肌や服の色になる
-      // ・下の縁に触れるもの（脚や腕と服のあいだが絵の下まで続く所）は、条件を厳しくする（胸から下で切れた白い服を守る）。迷うなら消さない
-      // ・背景が真っ白（明るい。251 を超える）の絵ではしない。真っ白な背景と白い服は同じ色で見分けられない（生成の背景が少し灰色の絵だけ）
-      if (opt.holes !== false && refs.every((r) => Math.max(r[0], r[1], r[2]) <= 251)) {
-        const HOLE_TOL = 8, HOLE_GROW = 20, HOLE_FLAT = 3, HOLE_MIN = Math.max(150, Math.round(n * 0.0012));
-        const HOLE_REACH = 4, HOLE_EDGE = 60, HOLE_SOFT = 0.2, HOLE_PAST = 12, HOLE_WHITE = 0.15;
+      // 囲まれた背景（A15・A16）：腕と体のあいだ・脚のあいだ・武器の柄と体のあいだ・髪の房のあいだなど、線画に囲まれて外周とつながらない背景も消す。
+      // 背景の色に近い塊（HOLE_TOL 未満の点から、圧縮のむら HOLE_GROW 未満まで広げた所）ごとに、次で見分ける（真っ白の背景の絵でも同じ）：
+      // ・中身：むらが無い（5×5 の平均で背景の色ちょうどの所が多く、陰が少ない）・色がずれていない（HOLE_TINT 未満）。生成の背景はむらの無い一色。
+      //   白い服・白い毛皮・白い紋は、白くても陰や色みがある
+      // ・まわり：縁がすぐ濃い線画になる（HOLE_INK より暗い色が数 px 以内）。線を越えた先がまた白くない（白い服の襟・帯の向こうはまた白い）。
+      //   線の向こうが同じ塊（細く薄い線＝白い服の折り目・白い毛の筋）でない。中に閉じこめた物（白目の中の瞳）が無い
+      // はっきり背景の塊（大きく・太い）は透明に（bg=1）。消すか迷う塊（小さめ・細い・条件が少し甘い）は、完全には消さず薄白の半透明に（bg=2。SEMI）。
+      // 白目・歯・光の点のような小さな白（HOLE_SMALL 未満）は触らない。opt.dbg（Uint8Array）を渡すと、塊ごとの判定（1 透明・2 薄白・3 残す）を書く（確かめ用）
+      if (opt.holes !== false) {
+        const HOLE_TOL = 8, HOLE_GROW = 20, HOLE_SMALL = Math.max(48, Math.round(n * 0.00016)), HOLE_MIN = Math.max(150, Math.round(n * 0.0016));
+        const HOLE_REACH = 4, HOLE_EDGE = 60, HOLE_PAST = 12, HOLE_INK = 120, HOLE_TINT = 1.8;
+        // 外の背景の大部分に使われた背景の色だけを、囲まれた背景の色とみなす（縁の升が白い物に掛かってできた候補の色＝白い刃・白い面などは使わない）
+        const used = new Float64Array(refs.length);
+        let usedAll = 0;
+        for (let i = 0; i < n; i++) if (bg[i]) { used[near[i]]++; usedAll++; }
         const mark = new Int32Array(n), comp = [];
         let id = 0;
-        // i から step の向きに歩く。返り値：1＝HOLE_REACH 以内に線画・濃い色が無い（薄い色のまま）、2＝線を越えた先がまた白い、0＝そのほか
+        // i から step の向きに歩く。返り値：1＝HOLE_REACH 以内に線画・濃い色が無い（薄い色のまま）、2＝線を越えた先がまた白い、
+        // 3＝線を越えた先が外の背景、4＝細く薄い線（折り目・毛の筋）を越えた先がまた同じ塊、0＝そのほか
         const look = (i, step) => {
-          let hard = false;
-          for (let s = 1, j = i; s <= HOLE_PAST; s++) {
+          let hard = 0, dark = 765;
+          for (let s = 1, j = i; s <= HOLE_PAST + 8; s++) {
+            if (s > HOLE_PAST && (!hard || dark < 260)) break; // HOLE_PAST より先は、越えているのが線画でない色の帯（縞の服の縞）のときだけ見る
             const px = j % W;
             j += step;
             if (j < 0 || j >= n || (step === 1 && px === W - 1) || (step === -1 && px === 0)) break;
-            if (mark[j] === id) continue;
-            if (dist[j] >= HOLE_EDGE) hard = true;
-            else if (hard && dist[j] < HOLE_GROW) return 2;
+            if (mark[j] === id) { if (hard) return hard <= 3 && dark > 100 * 3 ? 4 : 0; continue; } // 白い服の中の折り目・白い毛の筋（細くて薄い線）
+            if (dist[j] >= HOLE_EDGE) { hard++; const l = p[j * 4] + p[j * 4 + 1] + p[j * 4 + 2]; if (l < dark) dark = l; }
+            else if (hard && dist[j] < HOLE_TOL) return bg[j] ? 3 : 2; // 線の向こうが外の背景（細い柄・薄い線の向こう）なら白い服の印にしない
             if (s === HOLE_REACH && !hard) return 1;
           }
           return 0;
+        };
+        // i から step の向きに HOLE_REACH+1 px 以内に、線画（暗い色）があるか。キノコの笠の白い斑点・模様・光は、線画なしで色に接している
+        const ink = (i, step) => {
+          for (let s = 1, j = i; s <= HOLE_REACH + 1; s++) {
+            const px = j % W;
+            j += step;
+            if (j < 0 || j >= n || (step === 1 && px === W - 1) || (step === -1 && px === 0)) return false;
+            if (p[j * 4] + p[j * 4 + 1] + p[j * 4 + 2] < HOLE_INK * 3) return true;
+          }
+          return false;
+        };
+        // i から step の向きに、薄い線（暗い色なし）一本だけを越えて外の背景に届くか（髪のまわりの薄い線に囲まれた背景など）
+        const faint = (i, step) => {
+          for (let s = 1, j = i; s <= 6; s++) {
+            const px = j % W;
+            j += step;
+            if (j < 0 || j >= n || (step === 1 && px === W - 1) || (step === -1 && px === 0)) return false;
+            if (bg[j] === 1 && dist[j] < HOLE_TOL) return s > 1;
+            if (mark[j] !== id && p[j * 4] + p[j * 4 + 1] + p[j * 4 + 2] < 170 * 3) return false;
+          }
+          return false;
+        };
+        // その高さの外の背景の色（上下で色の変わる背景がある。前後 8 行の外の背景の平均）。中身のむらは、この色からの差で見る
+        const rs = new Float64Array(H * 4);
+        for (let i = 0; i < n; i++) if (bg[i] && dist[i] < 6) { const y = (i / W) | 0; rs[y * 4] += p[i * 4]; rs[y * 4 + 1] += p[i * 4 + 1]; rs[y * 4 + 2] += p[i * 4 + 2]; rs[y * 4 + 3]++; }
+        const rowRef = new Float64Array(H * 3);
+        for (let y = 0; y < H; y++) {
+          let r = 0, g = 0, b = 0, k = 0;
+          for (let t = Math.max(0, y - 8); t <= Math.min(H - 1, y + 8); t++) { r += rs[t * 4]; g += rs[t * 4 + 1]; b += rs[t * 4 + 2]; k += rs[t * 4 + 3]; }
+          const R0 = refs[0];
+          rowRef[y * 3] = k ? r / k : R0[0]; rowRef[y * 3 + 1] = k ? g / k : R0[1]; rowRef[y * 3 + 2] = k ? b / k : R0[2];
+        }
+        // 背景の色との差（明るさ。符号つき）を 5×5 で平均して見る。圧縮の細かい点は打ち消しあい、服の陰・刃の光のような広い差は残る
+        const sat = new Float64Array((W + 1) * (H + 1));
+        for (let y = 0; y < H; y++) {
+          const r0 = rowRef[y * 3] + rowRef[y * 3 + 1] + rowRef[y * 3 + 2];
+          for (let x = 0, row = 0; x < W; x++) { const i = (y * W + x) * 4; row += (p[i] + p[i + 1] + p[i + 2] - r0) / 3; sat[(y + 1) * (W + 1) + x + 1] = sat[y * (W + 1) + x + 1] + row; }
+        }
+        const box5 = (x, y) => Math.abs(sat[(y + 3) * (W + 1) + x + 3] - sat[(y - 2) * (W + 1) + x + 3] - sat[(y + 3) * (W + 1) + x - 2] + sat[(y - 2) * (W + 1) + x - 2]) / 25;
+        const inside = (i, x) => { // 縁から 2px より内側か
+          for (let r = 1; r <= 2; r++) {
+            if (x - r < 0 || x + r >= W || i - r * W < 0 || i + r * W >= n) return false;
+            if (mark[i - r] !== id || mark[i + r] !== id || mark[i - r * W] !== id || mark[i + r * W] !== id) return false;
+          }
+          return true;
         };
         for (let s0 = 0; s0 < n; s0++) {
           if (bg[s0] || mark[s0] || dist[s0] >= HOLE_TOL) continue;
           id++;
           comp.length = 0;
-          let qh = 0, sum = 0, edge = false;
+          let qh = 0, edge = false;
           mark[s0] = id; comp.push(s0);
           while (qh < comp.length) {
             const i = comp[qh++], x = i % W;
-            sum += dist[i];
             if (x === 0 || x === W - 1 || i < W || i >= n - W) edge = true;
             const go = (j) => { if (!bg[j] && !mark[j] && dist[j] < HOLE_GROW) { mark[j] = id; comp.push(j); } };
             if (x > 0) go(i - 1);
@@ -120,8 +185,28 @@
             if (i >= W) go(i - W);
             if (i < n - W) go(i + W);
           }
-          if (comp.length < HOLE_MIN || sum / comp.length >= (edge ? HOLE_FLAT - 1 : HOLE_FLAT)) continue;
-          let rim = 0, soft = 0, white = 0;
+          if (comp.length < HOLE_SMALL) continue;
+          if (refs.length > 1) { const cnt = new Float64Array(refs.length); for (const i of comp) cnt[near[i]]++; let r = 0; for (let k = 1; k < refs.length; k++) if (cnt[k] > cnt[r]) r = k; if (used[r] < usedAll * 0.2) continue; }
+          // 中身のむら
+          let inn = 0, exact = 0, shade = 0, all = 0, allExact = 0;
+          const off = [0, 0, 0], offIn = [0, 0, 0]; // 背景の色との差の平均（色ごと。符号つき）
+          for (const i of comp) {
+            const x = i % W, y = (i - x) / W;
+            all++; if (dist[i] <= 3) allExact++;
+            for (let c = 0; c < 3; c++) off[c] += p[i * 4 + c] - rowRef[y * 3 + c];
+            if (!inside(i, x)) continue;
+            for (let c = 0; c < 3; c++) offIn[c] += p[i * 4 + c] - rowRef[y * 3 + c];
+            const d = box5(x, (i - x) / W);
+            inn++; if (d <= 1.5) exact++; else if (d >= 4) shade++;
+          }
+          // 細い塊（髪の房のあいだなど）は内側がほとんど無い（5×5 の平均にまわりの髪が混ざる）ので、塊ぜんぶを 1 画素ずつ見る
+          const thin = inn < 24 || inn < all * 0.3;
+          const flat = thin ? allExact / all : exact / inn, sh = thin ? 0 : shade / inn;
+          // 色ずれ：塊の平均の色が背景の色から HOLE_TINT 以上ずれていれば、背景ではない（少し明るい白い襟・青みの白い紋など）
+          const tint = Math.max(...(thin ? off.map((v) => Math.abs(v) / all) : offIn.map((v) => Math.abs(v) / inn)));
+          if (flat < 0.3 || sh > 0.3 || tint >= HOLE_TINT) { if (opt.dbg) for (const i of comp) opt.dbg[i] = 3; continue; }
+          // まわり
+          let rim = 0, soft = 0, white = 0, inked = 0, thinOut = 0, self = 0;
           for (const i of comp) {
             const x = i % W;
             for (const st of [-1, 1, -W, W]) {
@@ -129,12 +214,36 @@
               if (j < 0 || j >= n || (st === -1 && x === 0) || (st === 1 && x === W - 1) || mark[j] === id) continue;
               rim++;
               const r = look(i, st);
-              if (r === 1) soft++; else if (r === 2) white++;
+              if (r === 1) soft++; else if (r === 2) white++; else if (r === 4) self++;
+              if (ink(i, st)) inked++;
+              if (faint(i, st)) thinOut++;
             }
           }
-          const k = edge ? 0.5 : 1;
-          if (!rim || soft / rim >= HOLE_SOFT * k || white / rim >= HOLE_WHITE * k) continue;
-          for (const i of comp) bg[i] = 1;
+          // 中に閉じこめた物（白目の中の瞳など）：塊の外接矩形の縁から、塊でない所づたいに届かない所の広さ
+          let x0 = W, x1 = 0, y0 = H, y1 = 0;
+          for (const i of comp) { const x = i % W, y = (i - x) / W; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+          const bw = x1 - x0 + 1, bh = y1 - y0 + 1, seen = new Uint8Array(bw * bh), bq = [];
+          const reach = (x, y) => { const k = (y - y0) * bw + x - x0; if (!seen[k] && mark[y * W + x] !== id) { seen[k] = 1; bq.push(k); } };
+          for (let x = x0; x <= x1; x++) { reach(x, y0); reach(x, y1); }
+          for (let y = y0; y <= y1; y++) { reach(x0, y); reach(x1, y); }
+          for (let h = 0; h < bq.length; h++) {
+            const k = bq[h], x = (k % bw) + x0, y = ((k / bw) | 0) + y0;
+            if (x > x0) reach(x - 1, y); if (x < x1) reach(x + 1, y); if (y > y0) reach(x, y - 1); if (y < y1) reach(x, y + 1);
+          }
+          const isl = (bw * bh - bq.length - comp.length) / comp.length;
+          const so = rim ? soft / rim : 1, wh = rim ? white / rim : 1, li = rim ? inked / rim : 0, fa = rim ? thinOut / rim : 0, sf = rim ? self / rim : 0, k = edge ? 0.5 : 1;
+          const big = comp.length >= HOLE_MIN, th = comp.length / (rim || 1); // th：太さの目安（広さ÷縁の長さ）
+          // はっきり背景：大きく、太く、縁のほとんどがすぐ線画になり、線の向こうがほとんど白くなく、中がむらの無い背景の色
+          const sure = big && th >= 4 && isl < 0.03 && sf < 0.09 && li >= 0.3 && flat >= 0.6 && sh <= 0.08 && so < 0.05 * k && wh < 0.05 * k;
+          // 迷う：小さめ（指のあいだ）・細い（髪の房のあいだ。まわりがはっきり線画）でも縁の条件を満たす。
+          // または、ほぼ完全に背景の色ちょうどで、薄い線一本で外の背景とへだてられた所（髪のまわりの薄い線の内側など）
+          const maybe = isl < 0.03 && sf < 0.09 && ((li >= (th < 4 ? 0.6 : 0.3) && flat >= 0.6 && sh <= 0.1 && so < (th < 4 ? 0.03 : 0.08) * k && wh < 0.08 * k) ||
+            (li >= 0.3 && fa >= 0.3 && flat >= 0.65 && sh <= 0.05 && so < 0.35 && wh < 0.2) ||
+            // 髪の房のあいだ：細く、まわりがほとんど濃い線（髪）。線の向こうが別の房のあいだ（白）でもよい
+            (th < 3.5 && li >= 0.8 && flat >= 0.6 && so < 0.03 && wh < 0.4));
+          const v = sure ? 1 : maybe ? 2 : 0;
+          if (opt.dbg) for (const i of comp) opt.dbg[i] = v || 3;
+          if (v) for (const i of comp) bg[i] = v;
         }
       }
       // 境目からの深さ（絵の側に 1..BAND）。背景の側の、絵に接する画素（深さ 0 だが背景の色から少し離れたもの）も半透明の候補
@@ -220,6 +329,8 @@
         const touch = (x > 0 && depth[i - 1] === 1) || (x < W - 1 && depth[i + 1] === 1) || (i >= W && depth[i - W] === 1) || (i < n - W && depth[i + W] === 1);
         if (touch && dist[i] >= 3) apply(i, Math.min(0.35, alphaOf(i)));
         else p[i * 4 + 3] = 0;
+        // 迷う塊（bg=2）は薄白の半透明（SEMI）に残す：背景の色で、透け具合は SEMI より透けない
+        if (bg[i] === 2 && p[i * 4 + 3] < SEMI) { const B = refs[near[i]]; p[i * 4] = B[0]; p[i * 4 + 1] = B[1]; p[i * 4 + 2] = B[2]; p[i * 4 + 3] = SEMI; }
         if (p[i * 4 + 3] < 8) gone++;
       }
       for (let i = 0; i < n; i++) if (depth[i]) apply(i, alpha[i]);

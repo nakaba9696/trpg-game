@@ -50,7 +50,7 @@ const css = `
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17140f;--fg:#ece4d6;--sub:#a99c88;--line:#3a3328;--card:#201c16;--acc:#e09a5e;--new:#7cc39a}}
 :root[data-theme="dark"]{--bg:#17140f;--fg:#ece4d6;--sub:#a99c88;--line:#3a3328;--card:#201c16;--acc:#e09a5e;--new:#7cc39a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 "BIZ UDPGothic",system-ui,sans-serif}
-header{position:sticky;top:0;z-index:2;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
 h1{font-size:18px;margin:0;font-family:"Zen Old Mincho",serif}#now{flex:1 1 220px;color:var(--sub);font-size:13px;min-width:0}
 main{max-width:860px;margin:0 auto;padding:8px 16px 48px}h2{font-size:15px;margin:22px 0 8px;color:var(--sub);font-weight:700}
 .t{display:grid;grid-template-columns:44px 1fr;gap:4px 12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
@@ -100,6 +100,7 @@ draw();
 const html = `<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BGM の聴き比べ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Old+Mincho:wght@700&display=swap">
 <style>${css}</style></head>
 <body>
 <header><h1>BGM の聴き比べ</h1><div id="now">▶ を押すと鳴ります（ゲームと同じ合成・同じ大きさ）</div>
