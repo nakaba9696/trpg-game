@@ -63,7 +63,8 @@
         const th = T()[F2.threadFor(g, p)];
         if (!th || !homeOk(start) || !pages.length) return pages;
         const last = pages[pages.length - 1];
-        const t = (p.origin === start ? th.pro.home : th.pro.away) || "";
+        // 生まれは無くした（U25）。主人公はいつも、出発の町に着いたばかりの者として書く（pro.away）
+        const t = th.pro.away || "";
         if (t) last.splice(Math.max(0, last.length - 1), 0, t);
       } catch (e) { /* 導入が組めないときは元のまま */ }
       return pages;
