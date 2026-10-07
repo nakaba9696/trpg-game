@@ -80,6 +80,7 @@
         let dmg = G.dice(g.dmg);
         if (r.crit) { dmg *= 2; G.log("nar", "会心の一撃！", { fx: "crit" }); }
         G.say(say(id, "hit"));
+        if (G.cbGunDmg) dmg = G.cbGunDmg(t, dmg); // E12：弾は刺突
         t.hp = Math.max(0, t.hp - dmg);
         G.log("sys", `${t.name}に ${dmg} のダメージ（残り ${t.hp}/${t.max}）`, { fx: "hit", foe: t.name, n: dmg });
         if (t.hp <= 0) foeDown(t);

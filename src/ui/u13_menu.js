@@ -2,7 +2,7 @@
 // エンジンは触らない。ui.js が描いた #panel の .agroup を、G.actions() の並び（中身の無い組は描かれない）と突き合わせ、開いている分類の組だけを残す。
 // どの組をどの分類にするかは、組の行動の id の頭（travel: / sail: / m2talk: …）で決める（u13.BY_PREFIX）。知らない頭は「その他」に入り、消えない。
 // 店（施設）で組が多いときは、組そのもの（買う・今日の品・売る…）を分類にする。出来事の選択肢はまとめない。
-// 戦闘：よく使う手（攻撃・急所・身を守る・逃げる）はいつも出し、魔法・口と頭・道具などの組は札を押すと小さな一覧が開く（持ち主「戦闘画面も同様。スクロールではなくクリックだけで」）。
+// 戦闘：手は 5 つの見出し（攻撃・戦技・魔法・その他・道具。F4）。見出しを押すと中身が開く（一度に一つ。持ち主「戦闘画面も同様。スクロールではなくクリックだけで」）。
 // 開いていた分類は、同じ種類の場所（町・荒野・迷宮・同じ施設）に来たときも覚えておく（記録には残さない）。見せ方は u13_menu.css。レーン U
 (function (G) {
   const u13 = (G.u13 = G.u13 || {});
@@ -92,19 +92,25 @@
   u13.targetOf = (pick, cid) => "cb:" + String(pick).slice("b5:pick:".length) + ":" + cid;
 
   // 戦闘：いつも出す組（main）と、押すと開く組（drawers）。開く組が無ければまとめない
+  // F4：戦闘の手は 5 つの見出し（攻撃・戦技・魔法・その他・道具。エンジンが組に cat を付ける。engine/zzzzzzzzzzzzzz_f4_menu.js）。
+  //   見出しを押すと中身が開く（一度に一つ）。同じ見出しの組が続くとき（その他の下の作戦・仲間への指示）は、小見出しとして一つにまとめて出す
+  u13.F4_ORDER = ["attack", "tech", "magic", "misc", "item"];
+  u13.F4_NAME = { attack: "攻撃", tech: "戦技", magic: "魔法", misc: "その他", item: "道具" };
   function combatPlan(gs) {
-    const main = [], top = [], drawers = [];
+    const top = [], cats = {};
     gs.forEach((g, i) => {
-      if (asking(g)) top.push(i);
-      else if (g.list.some((a) => u13.COMBAT_MAIN.includes(a.id))) main.push(i);
-      else {
-        const merged = new Set(Object.values(u13.pairPicks(g.list)));
-        const shown = g.list.filter((a) => !merged.has(a.id));
-        drawers.push({ key: "d:" + shortTitle(g.title || "その他"), label: shortTitle(g.title || "その他"), groups: [i], ids: g.list.map((a) => a.id), count: shown.length, usable: shown.filter((a) => !a.disabled).length });
-      }
+      if (asking(g)) { top.push(i); return; }
+      const c = g.cat || (g.list.some((a) => u13.COMBAT_MAIN.includes(a.id)) ? "attack" : "misc");
+      (cats[c] || (cats[c] = [])).push(i);
     });
-    if (!drawers.length || !main.length) return null;
-    return { kind: "combat", main, top, drawers, tabs: drawers, bottom: [], place: "combat" };
+    const tabs = u13.F4_ORDER.filter((c) => cats[c]).map((c) => {
+      const list = cats[c].flatMap((i) => gs[i].list);
+      const merged = new Set(cats[c].flatMap((i) => Object.values(u13.pairPicks(gs[i].list))));
+      const shown = list.filter((a) => !merged.has(a.id));
+      return { key: "d:" + u13.F4_NAME[c], label: u13.F4_NAME[c], cat: c, groups: cats[c], ids: list.map((a) => a.id), count: shown.length, usable: shown.filter((a) => !a.disabled).length };
+    });
+    if (!tabs.length) return null;
+    return { kind: "combat", main: [], top, drawers: tabs, tabs, bottom: [], place: "combat" };
   }
 
   // 開いている分類：覚えているものがあればそれ、無ければ最初の分類
@@ -127,48 +133,70 @@
     return Object.fromEntries(plan.tabs.map((t) => [t.key, t.key !== key && t.ids.some((id) => !seen.has(id))]));
   };
 
+  // まとめた組の数（描いた組の数と合わなければ、まとめずにそのまま描く）。戦闘は見出しごとに組が二つ以上あることがある（F4）
+  u13.groupCount = (plan) => (plan.kind === "combat" ? plan.main.length + plan.top.length + plan.drawers.reduce((n, d) => n + d.groups.length, 0)
+    : plan.tabs.reduce((n, t) => n + t.groups.length, 0) + plan.top.length + plan.bottom.length);
+
   // ---------------------------------------------------------------- 画面
   if (typeof document === "undefined" || !G.ui || !G.ui.render) return;
   const ui = G.ui;
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 
-  // 戦闘の開いている一覧。手番が進んだら（記録が増えたら）閉じる
-  let drawer = null, drawerAt = null;
+  // 戦闘の開いている見出し。手番が進んでも同じ見出しのまま（続けて同じ術・道具を選びやすく）。戦闘が替わったら「攻撃」に戻る
+  let drawer = null, drawerFight = null;
   function paintCombat(S, plan, panel, els) {
-    const last = S.log[S.log.length - 1];
-    if (last !== drawerAt) { drawer = null; drawerAt = last; }
-    if (drawer && !plan.drawers.some((d) => d.key === drawer)) drawer = null;
+    if (S.combat !== drawerFight) { drawer = null; drawerFight = S.combat; who = null; }
+    const open = plan.drawers.find((d) => d.key === drawer) || plan.drawers.find((d) => d.usable) || plan.drawers[0];
+    drawer = open.key;
     const bar = h("div", "u13tabs u13drawers");
-    bar.setAttribute("aria-label", "ほかの手");
+    bar.setAttribute("role", "tablist");
+    bar.setAttribute("aria-label", "戦闘の手");
     plan.drawers.forEach((d) => {
-      const on = d.key === drawer;
+      const on = d === open;
       const b = h("button", "u13tab u13drawer" + (on ? " on" : "") + (d.usable ? "" : " dim"));
       b.type = "button";
       b.dataset.u13 = d.key;
-      b.setAttribute("aria-expanded", String(on));
-      b.append(h("span", "u13lab", d.label), h("span", "u13n num", String(d.count != null ? d.count : d.ids.length)), h("span", "u13caret", on ? "▾" : "▸"));
-      b.onclick = () => { drawer = on ? null : d.key; ui.render(); const f = document.querySelector(`#panel .u13drawer[data-u13="${CSS.escape(d.key)}"]`); if (f) f.focus(); };
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", String(on));
+      b.disabled = !d.usable && !on;
+      b.append(h("span", "u13lab", d.label), h("span", "u13n num", String(d.count)));
+      b.onclick = () => { if (on) return; drawer = d.key; who = null; ui.render(); const f = document.querySelector(`#panel .u13drawer[data-u13="${CSS.escape(d.key)}"]`); if (f) f.focus(); };
       bar.append(b);
     });
-    const open = plan.drawers.find((d) => d.key === drawer);
-    const keep = new Set([...plan.main, ...plan.top, ...(open ? open.groups : [])]);
+    const keep = new Set([...plan.top, ...open.groups]);
     els.forEach((el, i) => { if (!keep.has(i)) el.remove(); });
-    // いつも出す手（攻撃・急所・身を守る・逃げる）は一つの組にまとめる（見出しは攻撃の組の「攻撃（狙い：…）」）
-    const head = els[plan.main[0]];
+    // 開いた見出しの組を一つに：先頭の組が見出し、続く組（作戦・仲間ごとの指示）は小見出し
+    const head = els[open.groups[0]];
     head.classList.add("u13main");
+    head.dataset.f4 = open.cat;
     const list = head.querySelector(".alist");
-    plan.main.slice(1).forEach((i) => { if (list) els[i].querySelectorAll(".act").forEach((b) => list.append(b)); els[i].remove(); });
+    open.groups.slice(1).forEach((i) => {
+      const el = els[i];
+      const t = el.querySelector("h3");
+      const sub = h("div", "u13sub u13chips"); // 小見出しの手は、短い札を横に並べる（説明は札に乗せたときに出る）
+      sub.append(h("h4", "u13subt", t ? t.textContent : ""));
+      const al = el.querySelector(".alist");
+      if (al) {
+        al.querySelectorAll(":scope > .act").forEach((b) => { const d = b.querySelector(":scope > span"); if (d && !b.title) b.title = d.textContent; });
+        sub.append(al);
+      }
+      head.append(sub);
+      el.remove();
+    });
+    const many = head.querySelectorAll(".act").length > 8;
+    head.classList.toggle("u13many", many);
+    if (list) mergePicks(S, head, G.actions().filter((g) => g.list.length)[open.groups[0]]);
+    // 前の手番と同じ手を、すぐ選べるように
+    const again = G.f4 && G.f4.lastAction ? G.f4.lastAction(S) : null;
+    if (again) {
+      const b = h("button", "btn small u13again");
+      b.type = "button";
+      b.title = "前の手番と同じ手をもう一度";
+      b.append(h("span", "", "↻ 前と同じ："), h("b", "", again.label));
+      b.onclick = () => { G.act(again.id); ui.after(); };
+      bar.prepend(b);
+    }
     head.after(bar);
-    if (open) {
-      const pop = els[open.groups[0]];
-      pop.classList.add("u13pop");
-      // スマホでは下から出る欄になるので、閉じるボタンを見出しに添える
-      const t = pop.querySelector("h3");
-      if (t) { const x = h("button", "btn small u13close", "閉じる"); x.type = "button"; x.onclick = () => { drawer = null; who = null; ui.render(); }; t.append(x); }
-      mergePicks(S, pop, G.actions().filter((g) => g.list.length)[open.groups[0]]);
-      // 一覧は DOM ではいつも出す手より前に置く（1〜9 の番号が一覧の中から振られる）。見た目の順は CSS の order で「手 → 一覧 → 札」
-      head.before(pop);
-    } else who = null;
     panel.classList.add("u13on", "u13fight");
     // 戦闘が始まったら、スマホでは見出しの道具を画面の外へ送り、絵・記録・手が一画面に入るようにする
     if (S.combat !== fightOf) {
@@ -179,6 +207,8 @@
       });
     }
   }
+  // 見出しを外から開く（F3：一行の札から仲間への指示）
+  u13.openCombat = (cat) => { drawer = "d:" + (u13.F4_NAME[cat] || cat); who = null; ui.render(); };
   let fightOf = null;
 
   // 開いた一覧の中で、「〇〇」と「〇〇を仲間に」を一行にまとめる。まとめた行を押すと、使う相手を選ぶ小さな一覧（who）に替わる
@@ -215,7 +245,7 @@
       b.onclick = () => { if (!b.disabled) fn(); };
       list.append(b);
     };
-    const go = (ids) => { who = null; drawer = null; ids.forEach((id) => G.act(id)); ui.after(); };
+    const go = (ids) => { who = null; ids.forEach((id) => G.act(id)); ui.after(); };
     opt("あなた", `HP ${S.hp}/${S.maxHp}`, a.disabled, () => go([a.id]));
     (S.companions || []).forEach((c) => {
       const max = G.b5Max ? G.b5Max(c) : c.maxHp || c.hp;
@@ -228,12 +258,6 @@
     if (al) al.hidden = true;
     pop.append(box);
   }
-  // 開いた一覧の外（記録・絵など）を押したら閉じる（スマホでは一覧が手の札に重なるので）
-  document.addEventListener("click", (ev) => {
-    if (!drawer || !ev.target || !ev.target.closest) return;
-    if (ev.target.closest(".u13pop, .u13drawers, .act, button, a, input, dialog")) return;
-    drawer = null; ui.render();
-  });
   // 数字キーの 10 番目は 0（1〜9 は v9_pc.js）。番号の札も付ける
   const playing = () => { const p = document.getElementById("play"); return p && !p.hidden; };
   document.addEventListener("keydown", (ev) => {
@@ -268,9 +292,7 @@
     const plan = u13.plan(G.actions(), S);
     if (!plan) return;
     const els = Array.from(panel.querySelectorAll(":scope > .agroup"));
-    const count = plan.kind === "combat" ? plan.main.length + plan.top.length + plan.drawers.length
-      : plan.tabs.reduce((n, t) => n + t.groups.length, 0) + plan.top.length + plan.bottom.length;
-    if (els.length !== count) return; // 描いた組と数が合わなければ、まとめずにそのまま
+    if (els.length !== u13.groupCount(plan)) return; // 描いた組と数が合わなければ、まとめずにそのまま
     if (plan.kind === "combat") { paintCombat(S, plan, panel, els); return; }
     const key = u13.openKey(plan);
     const marks = u13.fresh(plan, key, `${S.loc}|${plan.place}`);
