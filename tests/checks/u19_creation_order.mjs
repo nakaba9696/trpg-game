@@ -1,5 +1,5 @@
 // U19：作成画面の並び（名前と性別 → 年齢 → 生まれ → 職業 → 目的）と、生まれを先に選んだあとで職業を変えても生まれ・名前が動かないこと
-// - 画面（DOM なしなので書き方を読む）：名前・年齢・生まれの欄が、職業・目的の欄より先に足される
+// - 画面（DOM なしなので書き方を読む）：性別・生まれ・名前・年齢の欄が、職業・目的の欄より先に足される（U25 で性別と生まれを名前の前に）
 // - 決まり（engine/zu19_creation.js）：選んだ生まれ・名前は職業を変えても残る。年齢・生まれの補正（cre.mod）はそのまま効く
 // - おまかせの下書き（生まれをまだ選んでいない）なら、今までどおり職業に似合う生まれへ寄る
 import { readFileSync } from "node:fs";
@@ -13,9 +13,10 @@ export default ({ fail, ok, loadEngine, seeded }) => {
 
   // 画面の並び
   const src = readFileSync(fileURLToPath(new URL("../../src/ui/setup.js", import.meta.url)), "utf8");
-  const order = ["now.append(s1)", "now.append(s0)", "now.append(s2)", "job.append(s3)", "job.append(s4)"].map((k) => src.indexOf(k));
+  // U25 で並びを「性別 → 生まれ → 名前 → 年齢 → 職業 → 目的」に（名前の響きを決める性別と生まれを、名前より前に）
+  const order = ["now.append(sSex)", "now.append(s2)", "now.append(s1)", "now.append(s0)", "job.append(s3)", "job.append(s4)"].map((k) => src.indexOf(k));
   if (order.some((i) => i < 0)) no(`作成画面の欄が見つからない ${order}`);
-  else if (order.some((i, j) => j && i < order[j - 1])) no("作成画面の並びが「名前・年齢・生まれ → 職業・目的」になっていない");
+  else if (order.some((i, j) => j && i < order[j - 1])) no("作成画面の並びが「性別・生まれ・名前・年齢 → 職業・目的」になっていない");
   if (!/TX\.job/.test(src)) no("職業と目的の見出しが無い");
   if (!D.CRE_TEXT.job || !D.CRE_TEXT.jobSub) no("職業と目的の見出しの文が無い");
 

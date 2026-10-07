@@ -122,18 +122,46 @@
       return gh;
     };
 
-    // ================= あなたは誰か（名前と性別・年齢・生まれ。U19：持ち主の決定で、職業・目的より先に）
+    // ================= あなたは誰か（性別 → 生まれ → 名前 → 年齢。U19：職業・目的より先に。U25：名前の響きを決める性別と生まれを名前の前に）
     const now = h("div", "creGroup creNow");
     now.append(groupHead(TX.now, TX.nowSub));
 
-    // 名前（性別と生まれの響きの表から選ぶ。自由入力は無い。「別の候補」で引き直す。U16）
+    // 性別（名前の響きが変わるので、名前より前に独立した項目で置く。選び直すと名前の候補も引き直す。U25）
+    const sSex = h("section", "creSec creSexSec");
+    const x3 = h("h3", "", "性別");
+    x3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "sex", R); drawSex(); drawNames(); refresh(); }, "p-sex-r"));
+    sSex.append(x3, h("p", "creEff", HN.sex || ""));
+    const sexSeg = segEl("性別", "sex", [["男", "男"], ["女", "女"]], draft.sex, (v) => { cre.setSex(draft, v, R); drawNames(); refresh(); });
+    sSex.append(sexSeg);
+    const drawSex = () => sexSeg.querySelectorAll("input").forEach((i) => { i.checked = i.value === draft.sex; });
+    now.append(sSex);
+
+    // 生まれ
+    const s2 = h("section", "creSec");
+    const o3 = h("h3", "", "生まれ");
+    o3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "origin", R); drawOrigin(); drawNames(); refresh(); }, "p-origin-r"));
+    s2.append(o3, eff("origin"));
+    const chips = h("div", "chips");
+    chips.setAttribute("role", "radiogroup");
+    chips.setAttribute("aria-label", "生まれ");
+    Object.entries(D.ORIGINS).forEach(([id, o]) => {
+      const l = h("label", "chip");
+      const inp = h("input"); inp.type = "radio"; inp.name = "origin"; inp.value = id; inp.checked = draft.origin === id;
+      inp.onchange = () => { cre.setOrigin(draft, id, R); drawNames(); refresh(); };
+      l.append(inp, document.createTextNode(o.name));
+      chips.append(l);
+    });
+    const drawOrigin = () => chips.querySelectorAll("input").forEach((i) => { i.checked = i.value === draft.origin; });
+    s2.append(chips);
+    oBlurb = h("p", "fine");
+    s2.append(oBlurb);
+    now.append(s2);
+
+    // 名前（上で選んだ性別と生まれの響きの表から選ぶ。自由入力は無い。「別の候補」で引き直す。U16。性別・生まれのあとに置く U25）
     const s1 = h("section", "creSec creNameSec");
     const n3 = h("h3", "", "名前");
     n3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "name", R); drawNames(); refresh(); }, "p-name-r"));
     s1.append(n3, eff("name"));
-    const sexRow = h("div", "creRow");
-    sexRow.append(segEl("性別", "sex", [["男", "男"], ["女", "女"]], draft.sex, (v) => { cre.setSex(draft, v, R); drawNames(); refresh(); }));
-    s1.append(sexRow, h("p", "creEff", `性別：${HN.sex || ""}`));
     const nameBox = h("div", "creNames");
     const nameChips = h("div", "chips");
     nameChips.setAttribute("role", "radiogroup");
@@ -178,27 +206,6 @@
     aBlurb = h("p", "fine");
     s0.append(aBlurb);
     now.append(s0);
-
-    // 生まれ
-    const s2 = h("section", "creSec");
-    const o3 = h("h3", "", "生まれ");
-    o3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "origin", R); drawOrigin(); drawNames(); refresh(); }, "p-origin-r"));
-    s2.append(o3, eff("origin"));
-    const chips = h("div", "chips");
-    chips.setAttribute("role", "radiogroup");
-    chips.setAttribute("aria-label", "生まれ");
-    Object.entries(D.ORIGINS).forEach(([id, o]) => {
-      const l = h("label", "chip");
-      const inp = h("input"); inp.type = "radio"; inp.name = "origin"; inp.value = id; inp.checked = draft.origin === id;
-      inp.onchange = () => { cre.setOrigin(draft, id, R); drawNames(); refresh(); };
-      l.append(inp, document.createTextNode(o.name));
-      chips.append(l);
-    });
-    const drawOrigin = () => chips.querySelectorAll("input").forEach((i) => { i.checked = i.value === draft.origin; });
-    s2.append(chips);
-    oBlurb = h("p", "fine");
-    s2.append(oBlurb);
-    now.append(s2);
     form.append(now);
 
     // ================= 何をする者か（職業・目的。U19：誰かを決めてから）
