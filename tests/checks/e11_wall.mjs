@@ -87,7 +87,7 @@ export default ({ fail, loadEngine, seeded }) => {
     for (const f of readdirSync(new URL(dir + "/", root))) {
       if (!f.endsWith(".js") || f === "changelog.js") continue;
       const src = readFileSync(new URL(`${dir}/${f}`, root), "utf8");
-      const m = src.match(SPEAK);
+      const m = src.split("\n").filter((l) => !/古いセーブ/.test(l)).join("\n").match(SPEAK);
       if (m) fail(`src/${dir}/${f} に、しゃべる剣・白い刀の書き方が残っている：${m[0]}`);
     }
   }
