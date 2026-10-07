@@ -291,7 +291,7 @@
   };
 
   function itemBrief(it) {
-    if (it.type === "weapon") return `・${it.dmg[0]}D${it.dmg[1]}+${it.dmg[2]}${it.hit ? "・命中" + G.sign(it.hit) : ""}${it.pierce ? "・絶界を破る" : ""}`;
+    if (it.type === "weapon") return `${G.e12 ? "・" + G.e12.short(it) : ""}・${it.dmg[0]}D${it.dmg[1]}+${it.dmg[2]}${it.hit ? "・命中" + G.sign(it.hit) : ""}${it.pierce ? "・絶界を破る" : ""}`;
     if (it.type === "armor") return `・防御${it.def}${it.agi ? "・敏捷" + G.sign(it.agi) : ""}`;
     if (it.hp) return `・HP+${it.hp > 100 ? "全快" : it.hp}`;
     if (it.mp) return `・MP+${it.mp}`;
