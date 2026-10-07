@@ -22,11 +22,11 @@ export default ({ G, fail, ok }) => {
   const has = (k) => !!(V.OUT[k] || V.IN[k]);
   const old = G.sceneNames();
   for (const k of [...old.out, ...old.inside]) if (!has(k)) no(`scene.js の絵 ${k} が V2 に無い（古い絵に落ちる）`);
-  const FAC_SCENE = { castle: "throne" };
+  const FAC_SCENE = { castle: "throne", ...(D.FAC_SCENE || {}) }; // D.FAC_SCENE：町の特色の場所（W9。室内の絵か、町の外の景色）
   for (const [id, L] of Object.entries(D.LOCS)) {
     if (!V.OUT[L.scene]) no(`${id} の外の絵 ${L.scene} が V2 に無い`);
     if (L.type === "dungeon" && !has(G.dungeonScene(L))) no(`${id} の迷宮の中 ${G.dungeonScene(L)} が V2 に無い`);
-    for (const f of L.fac || []) if (!V.IN[FAC_SCENE[f] || f]) no(`${id} の施設 ${f} の室内が V2 に無い`);
+    for (const f of L.fac || []) if (!V.IN[FAC_SCENE[f] || f] && !((D.FAC_SCENE || {})[f] && V.OUT[FAC_SCENE[f]])) no(`${id} の施設 ${f} の室内が V2 に無い`);
   }
 
   // ---------------------------------------------------------------- 描く（偽の canvas。呼んだ命令を記録する）
