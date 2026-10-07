@@ -205,7 +205,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const hp = g.S.combat.foes[0].hp;
     g.combatAct("attack");
     if (g.S.combat && g.S.combat.foes[0].hp < hp) F("武器を落としたのに攻撃できた");
-    // 弱点：上乗せのダメージ
+    // 弱点：上乗せのダメージ（E12 からは src/engine/zzzzzzzzzzzzzz_e12_resist.js の倍率）
     let weak = 0;
     for (let s = 0; s < 20 && !weak; s++) {
       const h = loadEngine();
@@ -215,7 +215,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       h.startCombat(["e4_mosswisp"], { e4raw: true });
       h.S.combat.foes[0].hp = h.S.combat.foes[0].max = 999;
       h.combatAct("fire");
-      if (h.S.log.some((l) => /炎に弱い/.test(l.text || ""))) weak++;
+      if (h.S.log.some((l) => /炎に弱い|炎がよく効いている/.test(l.text || ""))) weak++; // E12 からは耐性と弱点（aff）の一言
     }
     if (!weak) F("弱点の炎が上乗せされない");
   }
