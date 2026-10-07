@@ -3,7 +3,7 @@
 //   （ギルドの依頼は Q5 が報告・期限切れのときに一行出すので除く。出すのは R3 の続き・仲間の頼みごと・因縁・使徒の長編）
 //   「依頼『〇〇』は済んだ。」／失敗・期限切れなら「依頼『〇〇』は終わった（期限切れ）。」。結果は G.q7.finished に新しく増えた分から読む
 // - 町のきっかけ（R3 の続き）のように、済んだ記録をどこにも残さない依頼は、ここで S.r7done に残して「済んだ依頼」の欄に出す
-// - R3 の続きが次の段へ移る（同じ名前で行き先だけ変わる）ときは、消えたのではなく「進んだ」：一覧の key を名前でそろえる
+// - R3 の続きが次の段へ移る（同じ名前で行き先だけ変わる）ときは、消えたのではなく「進んだ」
 // - 噂が依頼になったあと、その依頼が済んだら、噂の欄でも「済んだ」と分かるように（x.done）
 // セーブに足すもの：S.r7done = [{ src, title, day, result }]（無くても動く）。噂の箱の一つ一つに qt（なった依頼の名前）。DOM には触らない。
 // 名前の頭の z は、G.act・G.q7.list・G.q17 を包むほかのファイル（u17・e7）より後に読ませるため。レーン C＋U（R7）
@@ -17,12 +17,30 @@
   const finished = (S) => { try { return Q7.finished ? Q7.finished(S) : []; } catch { return []; } };
   const finKey = (x) => `${x.src}|${x.title}|${x.day}|${x.result}`;
 
-  // R3 の続きは名前（sub）で key をそろえる（k_basket → k_basket3 は同じ「婆さんの籠」が進んだだけ）。行き先が変われば「進んだ」
-  const list0 = Q7.list;
-  Q7.list = (S) => list0(S).map((e) => (e && e.src === "r3" ? Object.assign(e, { key: "r3:" + e.title }) : e));
+  // R3 の続きが次の段へ移る（k_basket → k_basket3。同じ「婆さんの籠」で key だけ変わる）ときは、新しく引き受けたのではなく「進んだ」：
+  // U17 が見比べる前に、消えた key の印を、同じ名前の新しい key へ移す。行き先が変われば「進んだ」と出るよう、R3 は説明も印に入れる
   if (U && U.sigOf) {
     const sig0 = U.sigOf;
     U.sigOf = (e) => sig0(e) + (e && e.src === "r3" ? "|" + (e.desc || []).join("／") : "");
+  }
+  if (U && U.scan && U.state) {
+    const scan0 = U.scan;
+    U.scan = (S) => {
+      S = S || G.S;
+      try {
+        const q = S ? U.state(S) : null;
+        if (q && q.sig) {
+          const now = list(S).filter((e) => e.src === "r3");
+          const keys = new Set(now.map((e) => e.key));
+          now.forEach((e) => {
+            if (e.key in q.sig) return;
+            const old = Object.keys(q.sig).find((k) => k.startsWith("r3:") && !keys.has(k) && String(q.sig[k]).split("|")[0] === e.title);
+            if (old) { q.sig[e.key] = q.sig[old]; delete q.sig[old]; }
+          });
+        }
+      } catch { /* 移せなくても遊びは止めない */ }
+      return scan0(S);
+    };
   }
 
   // 済んだ記録の無い依頼（R3 の続き）を「済んだ依頼」の欄に

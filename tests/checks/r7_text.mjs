@@ -4,6 +4,9 @@
 // 3. 人生の振り返りは、していないことを語らない：宿にも店にも行っていない人生に「宿代」「薬草を買った」「泊まった宿」が出ない。行けば出うる
 // 4. まだ取っていないトロフィーは、名前も説明も伏せる（説明の文がそのまま出ない）
 // 5. 画面の文に内部の札が出ない：仲間が加わったときの「（誰も信じない）」「（疑り深い。警戒）」・英字の id・undefined・埋まっていない {n}
+// 6. 戦いの金は一行で一度（落とした金と出来事の報酬を「11G を手に入れた」「所持金 +12G」と分けない）
+// 7. 商店の比べの札に小数が出ない・性能欄と同じ「命中±n」を二度書かない
+// 8. シグルンとの最初の会話は、訊きたいだけ訊いて「話を終える」
 export default ({ fail, ok, loadEngine, seeded }) => {
   let n = 0;
   const F = (m) => { n++; fail("R7: " + m); };
@@ -166,5 +169,72 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
   }
 
-  if (!n) ok("R7 文と表示のほころび（失敗に報酬の文が混ざらない・済んだ依頼の一行・したことだけの振り返り・伏せたトロフィー・内部の札が出ない）");
+  // ---- 6. 戦いの金は一行で一度
+  {
+    const G = loadEngine();
+    const D = G.data;
+    let tried = 0;
+    for (let s = 1; s <= 6; s++) {
+      const S = start(G, Object.keys(D.CLASSES)[s % 5], 1700 + s);
+      D.STATS.forEach((k) => { S.stats[k] = 80; });
+      S.maxHp = G.maxHpOf(S.stats); S.hp = S.maxHp;
+      G.startEvent("f2_majin_3");
+      const i = G.eventChoices().find(({ c }) => c.fight && c.win && c.win.gold > 0);
+      if (!i) { F("f2_majin_3 に報酬の金つきの戦いが無い"); break; }
+      const g0 = S.gold, len = S.log.length;
+      G.act("ev:" + i.i);
+      for (let k = 0; k < 60 && S.mode === "combat"; k++) G.act("cb:attack");
+      if (S.mode === "combat" || S.over) continue;
+      tried++;
+      const gl = S.log.slice(len).filter((l) => /G を手に入れた|所持金 [+-]/.test(l.text));
+      if (gl.length !== 1) F(`戦いのあとの金が ${gl.length} 行（${gl.map((l) => l.text).join("／")}）`);
+      else if (gl[0].text !== `${S.gold - g0}G を手に入れた。`) F(`戦いのあとの金の数が合わない（${gl[0].text}・増えた ${S.gold - g0}G）`);
+    }
+    if (!tried) F("戦いの金を確かめられなかった（勝てない）");
+  }
+
+  // ---- 7. 商店の比べの札
+  {
+    const G = loadEngine();
+    const D = G.data;
+    for (let s = 0; s < 5; s++) {
+      start(G, Object.keys(D.CLASSES)[s], 1800 + s);
+      for (const [id, it] of Object.entries(D.ITEMS)) {
+        if (!["weapon", "armor", "ring"].includes(it.type)) continue;
+        const v = G.i3.compareLabel(id);
+        if (/\d\.\d/.test(v)) { F(`比べの札に小数：${it.name}「${v}」`); break; }
+        const eff = G.i3.effectText ? G.i3.effectText(it) : "";
+        const hit = (v.match(/命中[+-]\d+/) || [])[0];
+        if (hit && eff.includes(hit)) { F(`比べの札と性能欄に同じ「${hit}」：${it.name}`); break; }
+      }
+    }
+  }
+
+  // ---- 8. シグルンとの最初の会話
+  {
+    const G = loadEngine();
+    const D = G.data;
+    const S = start(G, "merc" in D.CLASSES ? "merc" : Object.keys(D.CLASSES)[0], 2);
+    G.startEvent("f2_majin_2");
+    const pick = (label) => G.eventChoices().find(({ c }) => c.label === label);
+    const a = pick("見たことを全部話す");
+    if (!a) F("シグルンの最初の会話に「見たことを全部話す」が無い");
+    else {
+      G.act("ev:" + a.i);
+      if (S.event !== "f2_majin_2q") F(`一つ訊いたら場面が終わる（${S.mode}・${S.event}）`);
+      else {
+        if (pick("見たことを全部話す")) F("訊き終えた質問がまた並ぶ");
+        if (!pick("使徒とは何かと訊く")) F("まだ訊いていない質問が並ばない");
+        const b = pick("使徒とは何かと訊く");
+        if (b) G.act("ev:" + b.i);
+        if (S.event !== "f2_majin_2q") F("二つ目の質問のあとも続けられない");
+        const end = pick("話を終える");
+        if (!end) F("「話を終える」が無い");
+        else { G.act("ev:" + end.i); if (S.mode === "event") F("「話を終える」で場面が終わらない"); }
+        if (!S.f2o || S.f2o.step !== 3) F(`会話のあと、因縁が野の段へ進まない（${S.f2o && S.f2o.step}）`);
+      }
+    }
+  }
+
+  if (!n) ok("R7 文と表示のほころび（失敗に報酬の文が混ざらない・済んだ依頼の一行・したことだけの振り返り・伏せたトロフィー・内部の札が出ない・戦いの金は一度・比べの札・続けられる会話）");
 };

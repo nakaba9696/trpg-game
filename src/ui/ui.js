@@ -84,7 +84,7 @@
     dice.append(h("span", "die", String(Math.floor(r / 10))), h("span", "die", String(r % 10)));
     box.append(dice, h("span", "num", `→ ${e.roll}`));
     box.append(h("span", "verdict " + (e.crit ? "crit" : e.ok ? "ok" : "ng"), e.label));
-    if (e.growth) box.append(h("span", "grow num", `${e.stat} 成長 ${e.growth[0]}→${e.growth[1]}`));
+    if (e.growth) box.append(h("span", "grow num", `${e.stat}が伸びた ${e.growth[0]}→${e.growth[1]}`)); // 成長の書き方は「〇〇が伸びた a→b」にそろえる（R7）
     if (e.rr) box.append(h("span", "fine", `（振り直し。前の出目 ${e.rr.roll}）`));
     // M7：失敗した判定の横に「振り直す（残り n）」
     if (G.rerollTarget && G.rerollTarget(e) && !busy) {
@@ -521,7 +521,7 @@
 
   async function copyLog() {
     const S = G.S;
-    const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}成長${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
+    const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}が伸びた ${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
     const txt = `${S.clsName} ${S.profile.name}の人生 ── 目的：${S.goal.text}\n` + lines.join("\n");
     try { await navigator.clipboard.writeText(txt); ui.toast("ログをコピーしました"); }
     catch { const ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.append(ta); ta.select(); try { document.execCommand("copy"); ui.toast("ログをコピーしました"); } catch { ui.toast("コピーできませんでした"); } ta.remove(); }

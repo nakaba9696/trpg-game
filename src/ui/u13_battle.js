@@ -347,7 +347,7 @@
   }
   function growLine(x) {
     const l = h("div", "u13grow1");
-    l.append(h("b", "", `${x.k}が伸びた！`), h("span", "num", ` ${x.from} → ${x.to}`));
+    l.append(h("b", "", `${x.k}が伸びた`), h("span", "num", ` ${x.from}→${x.to}`)); // 記録の「〇〇が伸びた a→b」と同じ書き方（R7）
     return l;
   }
   function showHold() {
