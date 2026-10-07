@@ -9,6 +9,8 @@
 //   G.cbMove(f, e)            敵がこの手番にすること { skip, times, mul, hit, through（身を守っても避けにくくならない）, guardDiv, pierce, you, name, text, f1 }。null ならふつうに一撃
 //   G.cbStruck(f, e, mv, who, dmg)  敵の一撃が当たった・外れた（who は仲間か null＝あなた、dmg は与えた数か 0）のあと
 //   C.f1dodge                 「躱す」が決まった：あなたへの最初の一撃を丸ごと外す
+//   G.cbAllyAssist(c, f, e)   仲間がこの手番に斬りかからずに援護した（true なら攻撃しない。F2）
+//   G.cbCover(f, e, dmg, mv)  あなたへの一撃のうち、仲間が庇って受けた分を引いた数を返す（F2）
 //   G.cbAfterAct(kind, t)     こちらの手のあと、仲間と敵の手番の前（I2：二刀の左手の一撃）
 (function (G) {
   const D = G.data;
@@ -333,6 +335,8 @@
       }
       const f = G.pick(foes);
       const e = G.foeData(f);
+      // F2：まるで歯が立たない相手には、斬りかからずに援護する（庇う・牽制。engine/zzzzzzzzzzz_f2_party.js）
+      if (G.cbAllyAssist && G.cbAllyAssist(c, f, e)) return;
       if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
       const chance = G.allyHitChance(c, e);
       if (G.d(100) <= chance) {
@@ -420,6 +424,7 @@
           if (C.guard) dmg = Math.floor(dmg / ((mv && mv.guardDiv) || 2));
           if (C.ward > 0) dmg -= wardCut();
           dmg = Math.max(1, dmg);
+          if (G.cbCover) dmg = Math.max(1, G.cbCover(f, e, dmg, mv)); // F2：仲間が庇って一部を受ける
           G.log("nar", `${f.name}の${e.magic ? "呪い" : (mv && mv.name) || "攻撃"}！ ${dmg} のダメージ。`, { fx: "hurt", n: dmg, heavy: dmg >= S.maxHp / 4 });
           G.hurt(dmg, `${f.name}に倒された`);
           if (G.cbStruck) G.cbStruck(f, e, mv, null, dmg);
