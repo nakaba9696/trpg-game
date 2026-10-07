@@ -52,7 +52,7 @@
 | `frost` | 凍てつく街道（ノルディア帝国・荒野） | `snow` | nordia | frozen highway across a snowfield, blizzard, snow-covered wooden signpost, dead trees, distant snowy mountains |
 | `garmund` | 帝都ノルディア（ノルディア帝国・町）・空 overcast | `snowcity` | nordia | vast fortified city of black stone seen from above, many black stone buildings and towers, snow on the roofs, high fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets, overcast sky |
 | `w7_eldenholm` | 緑の都エルデンホルム（ノルディア帝国・町） | `w7_greenvale` | nordia | green valley town in a snowy land, warm spring with steam, grove of trees around it, archery butts and practice range, herb gardens, wooden houses |
-| `w7_eisenvan` | 北の港アイゼルヴァン（ノルディア帝国・町） | `w7_icehaven` | nordia | cold northern harbor, ice-covered wooden piers and mooring posts, fishing boats tied up, rough grey ocean waves, warehouses, overcast stormy sky |
+| `w7_eisenvan` | 北の港アイゼルヴァン（ノルディア帝国・町） | `w7_icehaven` | nordia | northern harbor town in winter, snow on the rooftops and warehouses, ice-covered wooden piers and mooring posts, fishing boats tied up, floating ice on calm deep blue sea, crisp clear blue winter sky, snowy mountains |
 | `w7_grishaim` | 監獄の都グリスハイム（ノルディア帝国・町） | `w7_prison` | nordia | bleak snowy plain with several tall stone prison towers with tiny windows, a small town clustered at their feet, smoke from chimneys, grey sky |
 | `w7_brenark` | 砦の都ブレイナーク（ノルディア帝国・町） | `w7_clawwall` | nordia | snowy fortress city with three rings of grey stone walls, frozen sea behind, huge old claw marks high on the outer wall, banners, overcast sky |
 | `w2_zalgros` | 闘技の都ザルグロス（ノルディア帝国・町） | `w2_arena` | nordia | (huge round stone colosseum:1.3) in the middle of a snowy town, barracks, betting booths, snowy rooftops, banners |
@@ -116,26 +116,26 @@
 | `in_bath` | 湯（アミュレイン） | `bath` | special_in | hot spring bathhouse, stone bath, steam, wooden walls, lake view |
 | `in_field` | 畑（グランベール） | `field` | special_in | wheat field next to a windmill, golden wheat, farm path, blue sky |
 | `in_hunt` | 狩り場（ナグリス） | `hunt` | special_in | hunting ground in a deep forest, morning mist, animal tracks, hunting blind, giant trees |
-| `in_w8s_karna_bourse` | 金貨の取引所（ブランデール） | `w8s_karna_bourse` | special_in | grand exchange hall, chalkboards of coin rates, giant brass balance scale, merchants crowding, gold coins |
+| `in_w8s_karna_bourse` | 金貨の取引所（ブランデール） | `w8s_karna_bourse` | special_in | grand exchange hall, wooden counters, giant brass balance scale, stacks of gold coins, coin purses, ledgers |
 | `in_w8s_nerva_horn` | 霧笛小屋（ヴァレンツァ） | `w8s_nerva_horn` | special_in | small hut on a foggy cape, huge brass foghorn, names carved on wooden wall, sea mist through window |
-| `in_w8s_carmel_yard` | 造船所（カルメラント） | `w8s_carmel_yard` | special_in | shipyard on a slope by a harbor, ship keels like ribs, shipwrights with mallets, wood shavings |
-| `in_w8s_lignoa_lake` | 湖の舟着き場（リグノア） | `w8s_lignoa_lake` | special_in | wooden pier on a misty forest lake, flat-bottomed boats moored, small island with a stone shrine in the distance |
-| `in_w8s_frosleia_crater` | 火口の祭壇（フロスレイア） | `w8s_frosleia_crater` | special_in | rim of a volcanic crater, black stone altar, rising steam and ash, rope path with stakes |
-| `in_w8s_zaigros_tower` | 北の見張り塔（ザイグロス） | `w8s_zaigros_tower` | special_in | top of a stone watchtower, bell with colored cloth ribbons, snowy plain on the northern horizon, telescope |
-| `in_w8s_russen_isle` | 渡し舟の中洲（リュッセン） | `w8s_russen_isle` | special_in | sandbar in a wide river, ferrymen's hut, ferry boats, driftwood and a shield drying on the sand |
-| `in_w8s_glatz_post` | 傭兵の詰所（グラッツ） | `w8s_glatz_post` | special_in | mercenary guardhouse, wall covered with hundreds of wooden name tags, chalkboard of bouts, fireplace |
-| `in_w8s_durm_shed` | 欠片の鑑定小屋（ドゥルム） | `w8s_durm_shed` | special_in | appraiser's shed full of strange ancient fragments on shelves, gears and glass shards, rope ladders, muddy boots |
+| `in_w8s_carmel_yard` | 造船所（カルメラント） | `w8s_carmel_yard` | special_in | (shipbuilding yard on dry land:1.3), (half-built wooden ship hull resting on wooden blocks on the shore:1.3), hull planks missing so the ribs show, tall wooden scaffolding and ladders, stacks of timber and planks, sawhorses and workbenches, wood shavings on the ground, harbor in the background |
+| `in_w8s_lignoa_lake` | 湖の舟着き場（リグノア） | `w8s_lignoa_lake` | special_in | wooden pier on a misty forest lake, flat-bottomed boats moored, small island with a stone shrine in the distance, calm water |
+| `in_w8s_frosleia_crater` | 火口の祭壇（フロスレイア） | `w8s_frosleia_crater` | special_in | rim of a volcanic crater, black stone altar on the edge, rising steam and ash, glowing lava far below, rope path with wooden stakes, barren rocks |
+| `in_w8s_zaigros_tower` | 北の見張り塔（ザイグロス） | `w8s_zaigros_tower` | special_in | top of a stone watchtower, open battlements, bronze bell with colored cloth ribbons, brass telescope on a stand, snowy plain on the northern horizon |
+| `in_w8s_russen_isle` | 渡し舟の中洲（リュッセン） | `w8s_russen_isle` | special_in | sandbar in the middle of a wide river, small ferry hut, ferry boats pulled up on the sand, driftwood and a round shield drying on the sand |
+| `in_w8s_glatz_post` | 傭兵の詰所（グラッツ） | `w8s_glatz_post` | special_in | mercenary guardhouse, wall covered with hundreds of small wooden tags, weapon racks, fireplace, long table |
+| `in_w8s_durm_shed` | 欠片の鑑定小屋（ドゥルム） | `w8s_durm_shed` | special_in | cramped appraiser shed, shelves full of strange ancient fragments, old gears and glass shards, magnifying glass on a workbench, rope ladders, muddy boots |
 | `in_w8s_vinale_cellar` | 醸造所の酒蔵（ヴィナレ） | `w8s_vinale_cellar` | special_in | stone wine cellar, barrels stacked to the ceiling with three different brand marks, grape pressing vat |
 | `in_w8s_kaes_shaft` | 古い坑道（カースヴェルグ） | `w8s_kaes_shaft` | special_in | old mine entrance, wooden tags hanging on nails, mine cart rails, lanterns, snow outside |
-| `in_w8s_valm_pillar` | 石の柱の広場（ヴァルミリア） | `w8s_valm_pillar` | special_in | snowy market square, tall black stone pillar circled by stakes, colorful tribal tents, cooking pot |
-| `in_w8s_brenark_wall` | 爪痕の城壁（ブレイナーク） | `w8s_brenark_wall` | special_in | top of a grey triple city wall, four huge claw marks gouged in the stone, frozen sea beyond |
+| `in_w8s_valm_pillar` | 石の柱の広場（ヴァルミリア） | `w8s_valm_pillar` | special_in | (snowy:1.3) market square in a winter town, snow on the ground, tall black stone pillar circled by wooden stakes, colorful tribal tents and stalls, large cooking pot over a fire |
+| `in_w8s_brenark_wall` | 爪痕の城壁（ブレイナーク） | `w8s_brenark_wall` | special_in | (view from the top of a city wall:1.3), stone walkway with battlements running into the distance, (four huge claw marks gouged into the stone parapet:1.3), grey stone, frozen sea beyond the wall |
 | `in_w8s_gris_visit` | 塔の面会所（グリスハイム） | `w8s_gris_visit` | special_in | prison tower visiting room, iron bars, two stools facing each other, chalk line on the floor, small window |
-| `in_w8s_eisen_ice` | 氷の漁場（アイゼルヴァン） | `w8s_eisen_ice` | special_in | frozen bay, ice fishing huts around holes, fishermen with lines, rope path on the ice, whale ribs far away |
-| `in_w8s_elden_garden` | 泉の森の薬草園（エルデンホルム） | `w8s_elden_garden` | special_in | herb garden around a steaming warm spring, green rows amid snow, archery target on the fence, baskets |
-| `in_w8s_fort_wall` | 黒い壁の上（黒鉄の砦） | `w8s_fort_wall` | special_in | walkway atop a black iron fortress wall, soldiers of three nations looking at the sky, mountain pass beyond |
-| `in_w8s_kern_well` | 深い井戸（ケルン） | `w8s_kern_well` | special_in | deep stone well in a town square, rope with countless knots, big porridge cauldron, soldiers' wives |
-| `in_w8s_rine_field` | 鐘待ちの畑（リーネ） | `w8s_rine_field` | special_in | village field with women and children hoeing, graveyard beside the field, distant watchtower bell |
-| `in_w8s_velt_beacon` | 烽火台（ヴェルト） | `w8s_velt_beacon` | special_in | three stone beacon platforms with stacked firewood, northern sea on one side and mountains on the other, smoke |
+| `in_w8s_eisen_ice` | 氷の漁場（アイゼルヴァン） | `w8s_eisen_ice` | special_in | frozen bay, (small wooden ice fishing huts:1.3) around round holes in the ice, fishing lines and buckets, rope path across the ice, (huge whale skeleton ribs sticking out of the ice far away:1.2), no living animals |
+| `in_w8s_elden_garden` | 泉の森の薬草園（エルデンホルム） | `w8s_elden_garden` | special_in | herb garden around a steaming warm spring, green rows of herbs amid snow, archery target on the wooden fence, wicker baskets |
+| `in_w8s_fort_wall` | 黒い壁の上（黒鉄の砦） | `w8s_fort_wall` | special_in | (walkway on top of a fortress wall:1.3), black iron and stone battlements in the foreground, three different national banners on poles, (mountain pass seen from the wall:1.2) |
+| `in_w8s_kern_well` | 深い井戸（ケルン） | `w8s_kern_well` | special_in | small town square of a fort town, (old round stone well with a wooden roof and a pulley:1.4), rope with countless knots, wooden bucket on the well rim, separate big iron porridge cauldron hanging over a campfire nearby, stone houses around the square |
+| `in_w8s_rine_field` | 鐘待ちの畑（リーネ） | `w8s_rine_field` | special_in | village field with hoes left in the soil, small graveyard beside the field, distant watchtower with a bell |
+| `in_w8s_velt_beacon` | 烽火台（ヴェルト） | `w8s_velt_beacon` | special_in | (three round stone beacon towers:1.3) with stacked firewood on top on a cliff, thin smoke, northern sea on one side, mountains on the other side |
 | `in_w8s_halt_carver` | 像彫りの小屋（ハルト） | `w8s_halt_carver` | special_in | stone carver's hut, dozens of small faceless stone statues, all facing away from the mountains, window on the far side |
 | `in_w8s_zalem_altar` | 庵の奥の祭壇（ザレム） | `w8s_zalem_altar` | special_in | inside a crumbling mountain hermitage, mossy stone altar with plates of bread, pile of walking staffs, candles |
 | `in_w9s_cathedral` | 大聖堂の奥（エルヴィナ） | `w9s_cathedral` | special_in | inner nave of a vast white cathedral, soaring gothic vaults, gilded pillars with carved ornaments, rows of empty pews, bell ropes hanging, shafts of light |
