@@ -653,7 +653,8 @@
 
   // 今の画面から場面を決めて切り替える
   const view = () => { const s = document.getElementById("setup"); const on = !!(s && !s.hidden); return { title: on || !G.S, depart: on && s.dataset.step === "prologue" }; };
-  snd.bgmUpdate = () => { if (B) snd.bgm(snd.bgmScene(G.S, view())); };
+  // F6：とどめ・倒れる手番を順に見せている間は、終わった戦い（G.u13.inGhost）で場面を見る。曲は見せ終えてから替わる（ダイスより先に結果が分からないように）
+  snd.bgmUpdate = () => { if (!B) return; const pick = () => snd.bgmScene(G.S, view()); snd.bgm(G.u13 && G.u13.inGhost ? G.u13.inGhost(pick) : pick()); };
   function wakeBgm() {
     if (!ensure()) return;
     if (B.ctx.state === "suspended") B.ctx.resume().catch(() => {});
