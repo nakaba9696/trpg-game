@@ -14,7 +14,9 @@ export default ({ G, fail, ok, seeded }) => {
   const T = D.TROPHIES;
 
   // ---------------------------------------------------------------- 表の形
-  if (T.length !== 100) B(`トロフィーが ${T.length} 個（100 個のはず）`);
+  // 使徒を正面から倒す長編（E7）のトロフィーは、長編ごとに足す（100 個の外に数える）
+  const saga = T.filter((t) => /^e7_/.test(t.key)).length;
+  if (T.length - saga !== 100) B(`トロフィーが ${T.length - saga} 個（長編の ${saga} 個を除いて 100 個のはず）`);
   const keys = new Set();
   for (const t of T) {
     if (keys.has(t.key)) B(`key ${t.key} が重複している`);

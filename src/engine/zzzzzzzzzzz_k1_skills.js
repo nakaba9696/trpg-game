@@ -533,6 +533,20 @@
       G.startCombat([G.pick(L.pool)].filter((id) => D.ENEMIES[id]), {});
     }
   }
+  // K4：野営の稽古の手引き。その技の巻物を持っている（{ kind: "scroll", item }）か、その技を教えられる仲間と打ち解けて同行している（{ kind: "comp", c }）。無ければ null
+  K.drillGuide = (id, S) => {
+    S = S || G.S;
+    if (!SK[id] || !S) return null;
+    const it = D.K1_SCROLL(id);
+    if (D.ITEMS[it] && ((S.inv || {})[it] || 0) > 0) return { kind: "scroll", item: it };
+    for (const tid of (SK[id].learn || {}).teach || []) {
+      const T = K.teacher(tid);
+      if (!T || !T.comp) continue;
+      const c = K.compOf(tid, S);
+      if (c) return { kind: "comp", c };
+    }
+    return null;
+  };
   K.campList = (S) => [];   // K3：野営の稽古では新しく覚えない（learn.camp は使わない）
   K.campList0 = (S) => { S = S || G.S; return Object.keys(SK).filter((id) => SK[id].learn.camp && !K.knows(id, S) && !K.needMiss(id, S).length); };
   K.canCamp = (S) => { S = S || G.S; const L = D.LOCS[S.loc]; return !!(L && L.type === "wild" && S.mode === "explore" && !S.combat); };
@@ -565,13 +579,16 @@
       if (K.knows("k1_herb")) list.push({ id: "k1herb:", label: "薬草を摘む", sub: K.dayUsed("herb") ? "今日はもう摘んだ" : `${SK.k1_herb.stat} ${K.fieldChance("k1_herb", "易しい")}%`, disabled: K.dayUsed("herb"), kw: ["薬草", "摘"] });
     }
     if (list.length) groups.push({ title: "身につけたスキルで", list });
-    // 野営の稽古（荒野で。一日かかる）
+    // 野営の稽古（荒野で。一日かかる）。K4：一人では伸びない。その技の巻物を持っているか、教えられる仲間と打ち解けて同行しているときだけ、その技の熟練が上がる。
+    //   条件を満たさないときは、稽古の選択肢そのものを出さない（持ち主「稽古の選択肢すらださないで。意味ある行為に見えるから」）
     if (K.canCamp(S)) {
-      // K3：野営の稽古では新しく覚えない。覚えた戦技の型をなぞって、熟練を少し上げるだけ
-      const learnable = [];
-      const drillable = K.list(S).filter((id) => K.isArt(id) && K.lv(id) < 3);
-      if (drillable.length) learnable.push({ id: "k1camp:drill", label: "覚えた戦技の型を、繰り返しなぞる", sub: "一日・いちばん未熟な戦技の熟練が少し上がる", kw: ["型", "稽古"] });
-      if (learnable.length) groups.push({ title: "野営の稽古", list: learnable });
+      const known = K.list(S).filter((id) => SK[id].kind !== "passive" && K.lv(id, S) < 3);
+      const ok = known.filter((id) => K.drillGuide(id, S)).slice(0, 4);
+      const list = ok.map((id) => {
+        const g = K.drillGuide(id, S);
+        return { id: "k1camp:" + id, label: `「${SK[id].name}」の型を磨く`, sub: `一日・${g.kind === "scroll" ? `${D.ITEMS[g.item].name}を見ながら` : `${G.m2Short ? G.m2Short(g.c) : g.c.name}に見てもらう`}・熟練が少し上がる`, kw: ["型", "稽古", SK[id].name] };
+      });
+      if (list.length) groups.push({ title: "野営の稽古", list });
     }
     // 打ち解けた仲間に習う
     const comp = [];
@@ -634,17 +651,20 @@
     }
     if (head === "k1camp") {
       if (!K.canCamp(S)) return;
-      if (arg === "drill") {
-        const list = K.list(S).filter((id) => K.isArt(id) && K.lv(id) < 3);
-        if (!list.length) return;
-        G.log("you", "焚き火のそばで、覚えた戦技の型をなぞる");
-        G.passDays(1);
-        const id = list.slice().sort((x, y) => K.uses(x) - K.uses(y))[0];
-        K.use(id, 1);
-        G.say(`「${SK[id].name}」の型を、日が落ちるまで繰り返した。手のひらの豆が一つ潰れた。`);
-        campRisk();
-        return;
+      const id = arg;
+      const g = SK[id] && K.knows(id) && SK[id].kind !== "passive" && K.lv(id) < 3 ? K.drillGuide(id, S) : null;
+      if (!g) return;   // K4：一人では伸びない（巻物か、教えられる仲間が要る）
+      G.log("you", `焚き火のそばで「${SK[id].name}」の型を磨く`);
+      G.passDays(1);
+      K.use(id, 1);
+      if (g.kind === "scroll") G.say(`${D.ITEMS[g.item].name}を石で押さえて広げ、描かれた足の運びを一つずつなぞった。日が落ちるころ、図と体のずれが一つ減っていた。`);
+      else {
+        const n = G.m2Short ? G.m2Short(g.c) : g.c.name;
+        G.say(`${n}が焚き火の向こうから、肘の高さを顎で指した。直して、もう一度。それを何十回も繰り返した。`);
+        if (G.m2Bond) G.m2Bond(g.c, 1, true);
       }
+      campRisk();
+      return;
       return;   // K3：野営の稽古では新しく覚えない
     }
     if (head === "k1comp") {

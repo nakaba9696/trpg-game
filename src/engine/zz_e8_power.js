@@ -32,7 +32,17 @@
     const e = a && (D.ENEMIES[a.foe] || D.E3.FOES[a.foe]);
     if (!e || e.e8power) return;
     e.e8power = true;
+    const hp0 = e.hp;
     if (t.hp) e.hp = t.hp;
+    // E7 の長編の正面の決戦（D.E7.SAGAS[id].final）は、裏道の E3 の戦いより強いことが前提（tests/checks/e7_saga.mjs）。
+    // E3 の HP を変えた倍率だけ、決戦の HP（と下限・条件ごとに減る量）も同じに掛けて、両者の比を保つ。e7 のファイルは書き換えない
+    const sg = D.E7 && D.E7.SAGAS && D.E7.SAGAS[id];
+    if (sg && sg.final && t.hp && hp0) {
+      const k = e.hp / hp0;
+      ["hp", "minHp", "keyHp"].forEach((f) => { if (sg.final[f]) sg.final[f] = Math.round(sg.final[f] * k); });
+      // 備え（preps）と弱み（weak）が引く HP も同じ倍率に（引く量が決まった数なので、HP だけ上げると備えの効きが薄まる）
+      [...Object.values(sg.preps || {}).map((p) => p.weak), ...(sg.weak || [])].forEach((w) => { if (w && w.hp) w.hp = Math.round(w.hp * k); });
+    }
     if (t.dmg && e.dmg) e.dmg = [e.dmg[0], e.dmg[1], Math.round((e.dmg[2] || 0) * t.dmg)];
   });
   // 条件をそろえた割合に応じて、HP をさらに keyHp 倍まで下げる（そろえていなければ変わらない）
