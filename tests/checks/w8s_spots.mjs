@@ -76,6 +76,7 @@ export default ({ G, fail, ok, seeded }) => {
       const os = [...sample(a.ok), ...sample(a.ng)].filter(Boolean);
       os.forEach((o, i) => checkOut(`${w}[${i}]`, o));
       const gain = os.some((o) => (o.gold || 0) > 0 || o.item || o.grow || (o.fame || 0) > 0 || o.rep > 0);
+      if (!a.once && os.some((o) => o.grow)) fail(`${w}: 能力値が伸びるのに一度きりでない（繰り返して鍛える場になる）`);
       if (gain && !(a.once || a.cd || a.ev)) fail(`${w}: 金か物が出るのに、一度きりでも日数の間でもない（稼ぎの場になる）`);
     }
   }
