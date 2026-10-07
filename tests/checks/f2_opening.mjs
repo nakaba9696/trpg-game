@@ -84,7 +84,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
           // 導入
           const pages = G.cre.prologue({ cls, goal, goalText: D.GOALS[goal].text || "何か", profile: { name: "テスト" + n, age: 24, origin } });
           const last = pages[pages.length - 1].join("");
-          const want = origin === home ? th.pro.home : th.pro.away;
+          // 生まれは無くした（U25）。古いセーブに origin（出発地と同じ町でも）が残っていても、いつも町に着いたばかりの者として書く
+          const want = th.pro.away;
           if (!last.includes(want)) F(`${cls}/${goal}/${origin}: 導入の最後の頁に因縁の一節が無い`);
           if (G.q7.list(S).some((x) => x.src === "f2o")) F(`${cls}/${goal}: 始めたばかりで因縁が依頼の一覧に載る`);
         }
