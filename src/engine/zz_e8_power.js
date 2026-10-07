@@ -23,7 +23,7 @@
       gormore: { hp: 994, dmg: 2 }, levian: { hp: 355, dmg: 2 }, mirza: { hp: 460, dmg: 2 }, aurelia: { hp: 281, dmg: 2 },
       notari: { hp: 302, dmg: 2 }, tetsukui: { hp: 431, dmg: 2 }, togaoi: { hp: 329, dmg: 2 }, sanno: { hp: 365, dmg: 2 },
       mordu: { keyHp: 0.637 }, zalve: { keyHp: 0.553 }, chezar: { keyHp: 0.68 }, azlag: { keyHp: 0.595 }, lugu: { keyHp: 0.637 },
-      kurobane: { keyHp: 0.532 }, tojizuki: { keyHp: 0.469 },
+      kurobane: { keyHp: 0.57 }, tojizuki: { keyHp: 0.469 },
     },
   });
   Object.entries(P.WEAK).forEach(([r, w]) => { D.E3.WEAK[r] = w; });

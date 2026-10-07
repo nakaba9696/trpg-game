@@ -1,5 +1,5 @@
 // E10：使徒を弱らせる出来事（src/data/zz_e10_events.js・src/engine/zz_e3z_e10_events.js）
-// - B 級の討伐できる使徒 8 体に、弱らせる出来事が 1 つ以上ある（A・S は続きの PR）
+// - 討伐できる使徒すべてに弱らせる出来事がある：B 級は 1 つ以上、A 級は 2 つ以上（国を挙げる規模を一つ）、S 級は 3 つ以上
 // - 出来事は D.EVENTS にあり、成功の結果で印 e10:<使徒>:<key> が付き、人生の物語に一行残る。断念する（判定なしの）選択肢もある
 // - 出来事は、その使徒を知らないと起きない（cond）。手がかりの噂がある
 // - 弱り方：弱点だけでは frac = KEY_W、出来事もすべてで frac = 1。挑んだときに出来事の一行が出る。図鑑の弱る条件に並ぶ
@@ -11,8 +11,18 @@ export default ({ fail, loadEngine, seeded }) => {
   const D = G.data;
   const E10 = D.E10;
   if (!E10 || !G.e10Of) return fail("弱らせる出来事の表（D.E10・G.e10Of）が無い");
-  const B = Object.values(D.E3.LIST).filter((a) => a.rank === "B" && !a.noslay);
-  for (const a of B) if (!(E10.LIST[a.id] || []).length) fail(`B 級の使徒 ${a.id} に弱らせる出来事が無い`);
+  const NEED = { B: 1, A: 2, S: 3 };
+  for (const a of Object.values(D.E3.LIST).filter((x) => !x.noslay)) {
+    const n = (E10.LIST[a.id] || []).length;
+    if (n < NEED[a.rank]) fail(`${a.rank} 級の使徒 ${a.id} の弱らせる出来事が ${n} つ（${NEED[a.rank]} つ以上）`);
+  }
+  for (const a of Object.values(D.E3.LIST).filter((x) => x.noslay)) if (E10.LIST[a.id]) fail(`倒せない使徒 ${a.id} に弱らせる出来事がある`);
+  // A 級・S 級は、国を挙げる規模の出来事を一つ含む（名声が要り、王命・宮廷・議会・軍・艦隊・三つの国のどれかの話）
+  const BIG = /王命|宮廷|議会|軍|艦隊|三つの国|総出/;
+  for (const a of Object.values(D.E3.LIST).filter((x) => !x.noslay && x.rank !== "B")) {
+    const evs = (E10.LIST[a.id] || []).map((x) => D.EVENTS.find((e) => e.id === `e10_${a.id}_${x.key}`)).filter(Boolean);
+    if (!evs.some((e) => BIG.test(e.text + e.choices.map((c) => (c.ok && c.ok.text) || "").join("")))) fail(`${a.rank} 級の使徒 ${a.id} に、国を挙げる規模の出来事が無い`);
+  }
   const evById = Object.fromEntries(D.EVENTS.map((e) => [e.id, e]));
   const BAD = /見世物|観客|客席|舞台|台本|魔王/;
   const names = Object.values(D.E3.LIST).map((a) => (G.e3FoeData(a.id).name || "").replace(/^.*の使徒/, "")).filter((n) => n.length >= 3 && /^[ァ-ヴー]+$/.test(n));
