@@ -42,7 +42,7 @@ export default ({ G, fail, ok, seeded }) => {
 
   // ---------------------------------------------------------------- 曲のデータ
   // 楽器ごとの音域（MIDI 番号）。外れると聞こえない・耳に刺さる
-  const RANGE = { bass: [26, 64], sub: [26, 64], tuba: [28, 64], cello: [28, 72], drone: [24, 60], organ: [28, 100], hammond: [36, 96], brass: [40, 96], guitar: [28, 96], lead: [45, 100], strings: [36, 100], violin: [55, 100], choir: [40, 88], bell: [36, 100], celesta: [55, 108], harp: [36, 100], lute: [40, 90], epiano: [40, 96], reed: [40, 92], clarinet: [50, 94], flute: [60, 100], pizz: [36, 90], mandolin: [52, 96], ocarina: [57, 96] };
+  const RANGE = { bass: [26, 64], sub: [26, 64], tuba: [28, 64], cello: [28, 72], drone: [24, 60], organ: [28, 100], hammond: [36, 96], brass: [40, 96], guitar: [28, 96], lead: [45, 100], strings: [36, 100], violin: [55, 100], choir: [40, 88], bell: [36, 100], celesta: [55, 108], harp: [36, 100], lute: [40, 90], epiano: [40, 96], reed: [40, 92], clarinet: [50, 94], flute: [60, 100], pizz: [36, 90], mandolin: [52, 96], ocarina: [57, 96], glass: [55, 100], whisper: [55, 96] };
   for (const n of snd.bgmInsts) if (!RANGE[n]) F(`楽器 ${n} の音域が決まっていない（このテストに足す）`);
   const drums = new Set(snd.bgmDrumNames);
   for (const d of Object.values(snd.BGM_DRUMS)) if (!drums.has(d)) F(`打楽器の記号が知らない音 ${d} を指す`);
