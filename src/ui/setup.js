@@ -129,7 +129,7 @@
     const sSex = h("section", "creSec creSexSec");
     const x3 = h("h3", "", "性別");
     x3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "sex", R); drawSex(); drawNames(); refresh(); }, "p-sex-r"));
-    sSex.append(x3, h("p", "creEff", HN.sex || ""));
+    sSex.append(x3);   // 説明の一行は無くした（U25）
     const sexSeg = segEl("性別", "sex", [["男", "男"], ["女", "女"]], draft.sex, (v) => { cre.setSex(draft, v, R); drawNames(); refresh(); });
     sSex.append(sexSeg);
     const drawSex = () => sexSeg.querySelectorAll("input").forEach((i) => { i.checked = i.value === draft.sex; });
@@ -139,7 +139,7 @@
     const s1 = h("section", "creSec creNameSec");
     const n3 = h("h3", "", "名前");
     n3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "name", R); drawNames(); refresh(); }, "p-name-r"));
-    s1.append(n3, eff("name"));
+    s1.append(n3);   // 説明の一行は無くした（U25）
     const nameBox = h("div", "creNames");
     const nameChips = h("div", "chips");
     nameChips.setAttribute("role", "radiogroup");

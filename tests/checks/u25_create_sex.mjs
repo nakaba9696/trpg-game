@@ -18,7 +18,9 @@ export default ({ G, fail, ok, seeded }) => {
   if (!/randomPart\(draft, "sex"/.test(sexSec)) F("性別の欄におまかせが無い");
   if (!/setSex[^\n]*drawNames\(\)/.test(sexSec)) F("性別を選び直しても名前の候補を引き直さない");
   if (/name: "sex"|"性別"/.test(nameSec)) F("名前の欄の中に、まだ性別の選択がある");
-  if (!/選び直すと候補も引き直される/.test(D.CRE_HINTS.name)) F("名前の説明に、性別で候補が引き直されることが書かれていない");
+  // 名前と性別の説明の一行は無くした（持ち主の決定）。見出し・おまかせ・選ぶ札だけ
+  if (D.CRE_HINTS.name || D.CRE_HINTS.sex) F("無くした名前・性別の説明が表に残っている");
+  if (/creEff/.test(sexSec) || /creEff|eff\(/.test(nameSec)) F("性別か名前の欄に説明の一行が残っている");
   // 生まれは無くした
   if (D.ORIGINS || D.CLASS_ORIGIN || D.CRE_HINTS.origin) F("生まれの表か説明が残っている");
   if (/生まれ/.test(src.replace(/\/\/[^\n]*/g, ""))) F("作成画面のどこかに「生まれ」が出る");

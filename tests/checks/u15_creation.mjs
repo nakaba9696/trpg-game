@@ -14,7 +14,9 @@ export default ({ G, fail, seeded }) => {
   const WHERE = /竜の墓場|鬼ヶ島|最奥|エンバルダ|絶界|10000|ヴォルグリム|白夜/;
   // 生まれは U25 で無くした（説明の一行も無い）
   if (HN.origin) fail("無くした生まれの説明（D.CRE_HINTS.origin）が残っている");
-  for (const k of ["cls", "goal", "name", "sex", "age"]) {
+  // 名前と性別の説明は U25 で無くした（選び方に関わらない）
+  for (const k of ["name", "sex"]) if (HN[k]) fail(`無くした「${k}」の説明（D.CRE_HINTS.${k}）が残っている`);
+  for (const k of ["cls", "goal", "age"]) {
     const t = HN[k];
     if (!t) { fail(`作成画面の「${k}」に効き目の一行が無い`); continue; }
     if (/[0-9０-９]/.test(t)) fail(`作成画面の「${k}」の説明が数字を並べている（${t}）`);
@@ -83,8 +85,9 @@ export default ({ G, fail, seeded }) => {
   // 「あとでもよいこと」（外見・生い立ち）の欄は無くした（U17）
   if (/creLater|TX\.later/.test(src)) fail("作成画面に、無くした「あとでもよいこと」の欄が残っている");
   if (!/TX\.now/.test(src)) fail("作成画面に「今決めること」の印が無い");
-  for (const k of ["cls", "goal", "name"]) if (!new RegExp(`eff\\("${k}"\\)`).test(src)) fail(`作成画面に「${k}」の効き目の一行が出ない`);
-  if (!/HN\.sex/.test(src) || !/HN\.age/.test(src)) fail("作成画面に性別・年齢の効き目の一行が出ない");
+  for (const k of ["cls", "goal"]) if (!new RegExp(`eff\\("${k}"\\)`).test(src)) fail(`作成画面に「${k}」の効き目の一行が出ない`);
+  if (!/HN\.age/.test(src)) fail("作成画面に年齢の効き目の一行が出ない");
+  if (/HN\.sex|eff\("name"\)|eff\("sex"\)/.test(src)) fail("作成画面に、無くした名前・性別の説明が出る");
   if (!/cre\.firstTime\(\)/.test(src) || !/TX\.first\b/.test(src)) fail("作成画面に、初めての人へのおまかせの一言が無い");
   if (!/creCustomNote/.test(src) || !/TX\.custom\b/.test(src)) fail("作成画面に、自分で決める目的の扱いの説明が無い");
   // タイトル画面に題名だけを出し、ページの <title> も同じ題名にする
