@@ -5,7 +5,8 @@
 //   c8: true の人は、キャラメモ（シート）の人ではない印。
 //   kin は R1 の種族の表に無い血筋（ゴブリン・竜の血）。仕組みの上の種族（race）は近いものに寄せる（R1 の作成画面には足さない）。
 //   childLook: true は子どもの姿の人（年経た者でも）。恋の相手にしない（src/engine/zzz_love_age.js）。
-//   romance: true：恋と結婚の相手になる（R1 の src/engine/zzzz_romance.js。一覧は docs/romance.md。C8 は 3 人）。無い人は情の出来事になる。
+//   romance: true：恋と結婚の相手になる（R1 の src/engine/zzzz_romance.js。一覧は docs/romance.md。C8 は 2 人。ギグラは C11 で外した）。無い人は情の出来事になる。
+//   humanLike: false：人の姿でない（恋の相手にしない。C11）
 // 出来事は src/data/events_c8.js、図鑑の説明・名前の札・用語説明は src/data/zc8_people.js、好感度の始まりは src/engine/zzzz_c8_people.js（F3 の初対面の値）。
 //
 // D.C8_PEOPLE[id]：作った人物の控え（GM・作る子のため。プレイヤーには見せない）
@@ -121,7 +122,7 @@
   Object.assign(D.C2_PEOPLE, {
     // ================================================================ 仲間になる人
     gigra: P({
-      name: "ギグラ", full: "樽のギグラ", nation: "断界山脈", kin: "ゴブリン", role: "断界山脈の洞穴で密造酒を仕込む、はぐれゴブリンの女。強欲で卑怯で口を開けば金の話。そのくせ子どもには甘く、褒められると酒樽に隠れる。昔、群れが人の村から連れてきた子を一人逃がして、群れを追われた", sex: "女", age: 28, race: "human", romance: true,
+      name: "ギグラ", full: "樽のギグラ", nation: "断界山脈", kin: "ゴブリン", role: "断界山脈の洞穴で密造酒を仕込む、はぐれゴブリンの女。強欲で卑怯で口を開けば金の話。そのくせ子どもには甘く、褒められると酒樽に隠れる。昔、群れが人の村から連れてきた子を一人逃がして、群れを追われた", sex: "女", age: 28, race: "human", romance: false, humanLike: false, // C11：人の姿でない（ゴブリン）ので恋の相手にしない（src/engine/zzzzzzzz_c11_love_human.js）
       who: { kind: "rogue", sex: "女", age: 28, seed: "c2:gigra", look: { skin: "#8aa864", hair: "#d06a2a", hairStyle: "ponytail", eyes: "sharp", iris: "#c83a2a", mouth: "grin", brows: "raised", outfit: "rags", head: "bandana", gear: "daggers", chest: "coins", cloth: "#6a5030", build: "slim", ears: "pointy", marks: ["dirt", "earring"], bg: "#4a4a3a" } },
       join: {
         cls: "密造酒の親分", desc: "金の分だけ働く。たぶん", power: 50, dmg: 2, trait: "greedy", bond: 50, home: ["fort"],
@@ -248,7 +249,7 @@
   };
   for (const [id, sc] of Object.entries(SCHEDULE)) if (D.C2_PEOPLE[id]) D.C2_PEOPLE[id].schedule = sc;
 
-  // ---------------------------------------------------------------- 仲間のひとこと（M2）と恋のひとこと（M10。romance: true の 3 人だけ）。{kin} {food} などは M2 が埋める
+  // ---------------------------------------------------------------- 仲間のひとこと（M2）と恋のひとこと（M10。romance: true の人だけ。ギグラの恋のひとことは C11 から使わない）。{kin} {food} などは M2 が埋める
   Object.assign(D.C2_VOICE, {
     gigra: {
       talk: [
