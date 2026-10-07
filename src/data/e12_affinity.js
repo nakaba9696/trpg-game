@@ -7,6 +7,8 @@
 //   物理：slash 斬撃 / blunt 打撃 / pierce 刺突（武器の欄は dtype。既存の pierce: true〔絶界を破る〕とは別）
 // 敵の書き方（FOES）："<種類><印> ..." を空白で区切る。印は
 //   ++ 大きな弱点（2 倍）/ + 弱点（1.5 倍）/ - 耐性（半分）/ ! 無効（0）。書かない種類は等倍
+//   <種類>= は等倍に戻す（身なりの印を打ち消すとき）
+//   =<身なり> は人間の敵の装備（GEAR）。身なりの印を先に置き、あとに書いた印で上書きする。図鑑に「身なり」として出る
 //   @<種類> は敵の攻め手（図鑑に出すだけ。書かなければ形から決める）
 // 敵には読み込みのあと e.aff = { 種類: 倍率 } が付く。E4 の weak（一つの属性の弱点）は aff に 1.5 倍として合わせる。
 // 強い個体（elderOf）は書かなければ元の種と同じ。表に無い敵（あとから足された敵）は形・不死・魔法から決める（RULES）。
@@ -28,17 +30,26 @@
     { id: "light", name: "光", short: "光", word: "光", kind: "elem" },
     { id: "dark", name: "闇", short: "闇", word: "闇", kind: "elem" },
   ];
-  E12.MARK = { "++": 2, "+": 1.5, "-": 0.5, "!": 0 };
+  E12.MARK = { "++": 2, "+": 1.5, "-": 0.5, "!": 0, "=": 1 };
+  // 人間の敵の身なり。板金鎧＝斬突に強く打と雷に弱い／鎖帷子＝斬に強く突に弱い／革鎧は控えめ（打に弱い）／
+  // ローブ（術師）＝物理に弱く、炎と雷に少し強い／平服＝斬と突に弱い
+  E12.GEAR = {
+    plate: { name: "板金鎧", aff: "slash- pierce- blunt+ bolt+" },
+    chain: { name: "鎖帷子", aff: "slash- pierce+" },
+    leather: { name: "革鎧", aff: "blunt+" },
+    robe: { name: "ローブ", aff: "slash+ pierce+ blunt+ fire- bolt-" },
+    cloth: { name: "平服", aff: "slash+ pierce+" },
+  };
 
   // ---------------------------------------------------------------- 敵
   E12.FOES = {
     // enemies.js
-    goblin: "blunt+", wolf: "fire+ slash+", barrelgob: "blunt- fire++", dogu: "slash- blunt+ earth!", bandit: "pierce+",
-    orc: "blunt- pierce+", werewolf: "light+ dark-", spider: "fire+ slash+", slime: "slash- blunt- fire++", banditboss: "pierce+", guard: "slash- blunt+",
-    ogre: "blunt- pierce+", zombie: "pierce- fire+ light+ dark!", wyvern: "pierce+ wind- bolt+", deserter: "blunt+ pierce+", ninja: "dark- blunt+", mimic: "slash- pierce- blunt+ fire+",
-    oni: "blunt- light+", warlock: "dark! light+ pierce+", chimera: "fire- ice+ pierce+", blackknight: "slash- pierce- blunt+ bolt+ dark-",
+    goblin: "blunt+", wolf: "fire+ slash+", barrelgob: "blunt- fire++", dogu: "slash- blunt+ earth!", bandit: "=cloth",
+    orc: "blunt- pierce+", werewolf: "light+ dark-", spider: "fire+ slash+", slime: "slash- blunt- fire++", banditboss: "=leather", guard: "=chain",
+    ogre: "blunt- pierce+", zombie: "pierce- fire+ light+ dark!", wyvern: "pierce+ wind- bolt+", deserter: "=chain", ninja: "=cloth dark-", mimic: "slash- pierce- blunt+ fire+",
+    oni: "blunt- light+", warlock: "=robe dark! light+", chimera: "fire- ice+ pierce+", blackknight: "=plate dark-",
     general: "pierce- bolt+", kin: "dark- light+ pierce+",
-    kain: "fire+ dark-", shuten: "light+ pierce-", bonedragon: "slash- blunt+ light+ dark!", rize: "bolt+ dark-", royalguard: "slash- pierce- blunt+",
+    kain: "=robe fire+ dark-", shuten: "light+ pierce-", bonedragon: "slash- blunt+ light+ dark!", rize: "=leather bolt+ dark-", royalguard: "=plate",
     // 使徒（D.ENEMIES にいる三体）
     graw: "pierce- blunt+ bolt+ dark-", e2_gormoa: "fire! ice+ pierce-", e2_mordu: "fire+ ice+ earth! blunt-",
     // enemies_2.js
@@ -46,19 +57,19 @@
     e1_frogprophet: "bolt+ ice+ blunt-", e1_sweeper: "slash- pierce- blunt+ bolt+", e1_lantern: "fire+ wind+ pierce-", e1_melted: "blunt- bolt+",
     e1_sleepgiant: "blunt- pierce+", e1_bonepicker: "slash- blunt+ light+", e1_herald: "light+ wind- pierce+", e1_ashhound: "fire! ice+",
     // enemies_w1.js
-    w1_candlemite: "fire+ blunt+", w1_husk: "pierce- blunt+ fire+ light+", w1_choir: "slash- pierce- blunt+ light+ dark!", w1_beastpriest: "light+ dark-",
-    w1_tanuki: "wind+ fire-", w1_vespa: "light- dark+ pierce+", w1_gregor: "dark- light+ blunt+", w1_konoha: "wind+ earth-",
+    w1_candlemite: "fire+ blunt+", w1_husk: "pierce- blunt+ fire+ light+", w1_choir: "slash- pierce- blunt+ light+ dark!", w1_beastpriest: "=robe light+ dark-",
+    w1_tanuki: "wind+ fire-", w1_vespa: "=chain light- dark+", w1_gregor: "=robe dark- light+", w1_konoha: "=cloth wind+ earth-",
     // 人物（c2〜c8・m2）
-    c2_nora: "bolt+", c2_angelica: "pierce+", c2_captainbeast: "fire+ light+", c2_rustspawn: "slash- blunt+ bolt+", c2_zork: "pierce+ dark-",
-    c4_musette: "fire+ slash+", c5_violaine: "light+", c5_severin: "light! dark+", c8_graul: "pierce- bolt+", m2_traitor: "blunt+",
+    c2_nora: "=leather bolt+", c2_angelica: "=chain", c2_captainbeast: "fire+ light+", c2_rustspawn: "slash- blunt+ bolt+", c2_zork: "=leather dark-",
+    c4_musette: "fire+ slash+", c5_violaine: "=cloth light+", c5_severin: "light! dark+", c8_graul: "=leather bolt+", m2_traitor: "=leather",
     // enemies_e2.js
-    e2_marmit: "fire- ice+", e2_cookgob: "fire- blunt+", e2_meatling: "slash+ fire+", e2_berna: "fire+ dark-", e2_planted: "fire+ slash+ earth-", e2_rotbloom: "fire++ slash+ earth-",
+    e2_marmit: "=cloth fire- ice+", e2_cookgob: "fire- blunt+", e2_meatling: "slash+ fire+", e2_berna: "=robe fire+ dark-", e2_planted: "fire+ slash+ earth-", e2_rotbloom: "fire++ slash+ earth-",
     // enemies_e4_kin.js（E4 の weak は自動で 1.5 倍に足される）
     e4k_squire: "pierce- blunt+", e4k_chainhound: "bolt+", e4k_taster: "fire- ice+", e4k_cauldron: "fire! blunt-",
     e4k_mossdog: "earth-", e4k_pruner: "pierce- blunt+", e4k_inkling: "light+", e4k_drowned: "bolt+ fire-",
-    e4k_puppet: "fire+ slash+", e4k_smiler: "fire+", e4k_fogscribe: "wind+", e4k_fogowl: "wind+ pierce+",
-    e4k_sandimp: "earth! pierce-", e4k_hourglass: "earth- blunt+", e4k_whiteacolyte: "dark+ light-", e4k_haloshade: "light! dark+",
-    e4k_smokecat: "wind+ pierce-", e4k_bouncer: "blunt- pierce+", e4k_maskguard: "slash-", e4k_nailer: "blunt+ bolt+",
+    e4k_puppet: "fire+ slash+", e4k_smiler: "=cloth fire+", e4k_fogscribe: "wind+", e4k_fogowl: "wind+ pierce+",
+    e4k_sandimp: "earth! pierce-", e4k_hourglass: "earth- blunt+", e4k_whiteacolyte: "=robe dark+ light-", e4k_haloshade: "light! dark+",
+    e4k_smokecat: "wind+ pierce-", e4k_bouncer: "=leather", e4k_maskguard: "=chain", e4k_nailer: "blunt+ bolt+",
     e4k_dreamsheep: "light+ slash+", e4k_sleepwalkers: "light+", e4k_bladechick: "wind! pierce+ slash-", e4k_cliffwatch: "wind- pierce+",
     e4k_bellfish: "fire- blunt+", e4k_drownedsailor: "fire- bolt+", e4k_unsaid: "dark! light+", e4k_blackmite: "wind+",
     e4k_moonhare: "light+ dark-", e4k_moonarcher: "dark! pierce-", e4k_rustgnaw: "slash- blunt+", e4k_ironmite: "slash- pierce-",
@@ -66,26 +77,26 @@
     e4k_acidbud: "blunt- earth-", e4k_greenwatch: "fire+ slash+", e4k_rootling: "earth! slash+", e4k_ember: "fire! wind-",
     // enemies_e4_regions.js（強い個体 _x は元の種と同じ）
     e4_mosswisp: "pierce- wind+", e4_satchelrat: "slash+", e4_thornboar: "slash- pierce+", e4_relicmole: "earth! wind+", e4_lampghost: "slash- pierce- fire-",
-    e4_rustwatch: "slash- blunt+", e4_cropcrow: "pierce+ wind-", e4_poacher: "blunt+", e4_mudhound: "slash+ earth-", e4_rainslug: "blunt-",
-    e4_brokenknight: "slash- blunt+", e4_lordhound: "slash+", e4_cinderhound: "fire!", e4_penitent: "blunt- dark+", e4_bellbat: "light+ pierce+",
-    e4_relicthief: "pierce+", e4_waxsaint: "slash- pierce- blunt+", e4_ossuaryhound: "slash- blunt+ dark!", e4_candlewidow: "fire-",
+    e4_rustwatch: "slash- blunt+", e4_cropcrow: "pierce+ wind-", e4_poacher: "=leather", e4_mudhound: "slash+ earth-", e4_rainslug: "blunt-",
+    e4_brokenknight: "=plate", e4_lordhound: "slash+", e4_cinderhound: "fire!", e4_penitent: "=cloth blunt- dark+", e4_bellbat: "light+ pierce+",
+    e4_relicthief: "=cloth", e4_waxsaint: "slash- pierce- blunt+", e4_ossuaryhound: "slash- blunt+ dark!", e4_candlewidow: "fire-",
     e4_tidecrab: "slash- pierce- blunt+", e4_reedimp: "fire+ slash+", e4_seafog: "slash- pierce- wind+", e4_drumbadger: "blunt- pierce+",
-    e4_islepirate: "bolt+", e4_shellwitch: "ice- bolt+", e4_snowwolf: "ice! fire+", e4_iciclewraith: "ice! blunt+ slash-", e4_pressgang: "pierce+",
-    e4_minerghost: "earth! blunt-", e4_frostbear: "ice! blunt-", e4_warcrow: "pierce+ wind-", e4_bogleech: "blunt-", e4_bogwitch: "pierce+",
+    e4_islepirate: "=cloth bolt+", e4_shellwitch: "ice- bolt+", e4_snowwolf: "ice! fire+", e4_iciclewraith: "ice! blunt+ slash-", e4_pressgang: "=chain",
+    e4_minerghost: "earth! blunt-", e4_frostbear: "ice! blunt-", e4_warcrow: "pierce+ wind-", e4_bogleech: "blunt-", e4_bogwitch: "=robe",
     e4_brokenspirit: "dark- light- wind!", e4_mudcroc: "bolt+ blunt-", e4_poisonfrog: "ice+ slash+", e4_dustmoth: "wind+ slash+", e4_rockeater: "earth! blunt-",
     e4_hillorc: "blunt- pierce+", e4_gravejackal: "light+ slash+", e4_oldlegion: "pierce- blunt+ dark!", e4_stonetroll: "slash- pierce- blunt+",
     e4_cliffharpy: "pierce+ wind-", e4_ladderGob: "fire+ blunt+", e4_ashogre: "fire- ice+ blunt-", e4_scoutbird: "pierce+ wind!",
-    e4_deadsentry: "slash- blunt+", e4_warbeast: "fire+ bolt+", e4_firearrowimp: "fire! pierce-", e4_runawaywatch: "blunt+",
+    e4_deadsentry: "slash- blunt+", e4_warbeast: "fire+ bolt+", e4_firearrowimp: "fire! pierce-", e4_runawaywatch: "=leather",
     e4_ashwyrm: "fire! earth-", e4_bonecarter: "slash- pierce- blunt+ light+", e4_shadewalker: "dark! light+ pierce-",
     e4_redscorpion: "pierce- blunt+", e4_hollowknight: "pierce- blunt+ light+", e4_vulture: "pierce+ wind-",
     // enemies_m5.js
-    m5_feverfolk: "ice+ slash+", m5_remnant: "light+ dark-", m5_nightwatch: "light+", m5_oldbeast: "light+",
+    m5_feverfolk: "=cloth ice+", m5_remnant: "light+ dark-", m5_nightwatch: "=leather light+", m5_oldbeast: "light+",
     // enemies_w3.js・enemies_w4.js・events_m3.js・items_w2.js
-    w3_smuggler: "pierce+", w3_hermit: "slash- pierce- blunt+", w3_cinder: "fire! ice+", w3_drowned: "bolt+ fire- light+", w3_silentmonk: "blunt- dark+",
-    w3_ashmoth: "fire- wind+", w3_ashscribe: "wind+ ice+", w3_tidemaw: "pierce- bolt+",
+    w3_smuggler: "=leather", w3_hermit: "slash- pierce- blunt+", w3_cinder: "fire! ice+", w3_drowned: "bolt+ fire- light+", w3_silentmonk: "=robe blunt- dark+",
+    w3_ashmoth: "fire- wind+", w3_ashscribe: "=robe wind+ ice+ fire=", w3_tidemaw: "pierce- bolt+",
     w4_borer: "earth! wind+ pierce+", w4_hungryrock: "slash- pierce- blunt+", w4_hushed: "light+ dark-", w4_saltwalker: "wind+ dark-",
     w4_borermother: "earth! blunt+ fire+", w4_gatekeeper: "slash- pierce- blunt+ bolt+",
-    m3_hunter: "blunt+", w2_ironwarden: "slash- blunt+ bolt+",
+    m3_hunter: "=leather", w2_ironwarden: "slash- blunt+ bolt+",
     // 使徒（D.E3.FOES。戦いが始まるときに D.ENEMIES に入る）
     e3_levian: "bolt+ fire- pierce-", e3_mirza: "fire+ dark-", e3_zalve: "earth! fire+ pierce-", e3_aurelia: "light! fire+",
     e3_yoihime: "wind+ fire- pierce-", e3_chezar: "bolt+ pierce- dark-", e3_yura: "dark! light+ blunt-", e3_azlag: "wind! bolt+ pierce+",

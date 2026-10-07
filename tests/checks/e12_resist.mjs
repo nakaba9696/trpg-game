@@ -4,6 +4,8 @@
 // - G.dmgMod：弱点で倍率が上がる・耐性で下がる・無効は 0。戦いの一撃に掛かり、ひとことが出る（数は見せない）
 // - 全部の武器に物理の種類があり、説明に「斬」「打」「突」が出る
 // - 図鑑：はじめは「？」、当てて確かめた種類・倒した数で段階的に開く。使徒は一度倒せばすべて
+// - 人間の敵は身なり（板金鎧・鎖帷子・革鎧・ローブ・平服）で決まる
+// - 攻撃する戦技はすべて物理の種類を持ち、説明に出る。物理と属性を両方持つ技は両方で掛ける（無効は半分とみなす）
 export default ({ G: G0, fail, loadEngine, seeded }) => {
   const G = loadEngine();
   const D = G.data;
@@ -121,6 +123,46 @@ export default ({ G: G0, fail, loadEngine, seeded }) => {
   // 使徒は一度倒せばすべて
   G.codexKill("e3_levian", true);
   if (G.e12.known("e3_levian").some((x) => !x.known)) fail("使徒を一度倒しても効き目がすべて開かない");
+  // 人間の敵の身なり
+  const gearOf = (id) => G.e12.affOf(id);
+  if (!(gearOf("guard").slash < 1 && gearOf("guard").pierce > 1)) fail("鎖帷子の衛兵が斬に強く突に弱くない");
+  if (!(gearOf("royalguard").slash < 1 && gearOf("royalguard").pierce < 1 && gearOf("royalguard").blunt > 1 && gearOf("royalguard").bolt > 1)) fail("板金鎧の騎士団長の効き目がおかしい");
+  if (!(gearOf("warlock").slash > 1 && gearOf("warlock").fire < 1 && gearOf("warlock").dark === 0)) fail("ローブの呪術師の効き目がおかしい（身なりのあとの印で上書きできない）");
+  if (gearOf("w3_ashscribe").fire != null) fail("「fire=」で身なりの炎の耐性を打ち消せない");
+  Object.entries(D.ENEMIES).filter(([, e]) => e.gear).forEach(([id, e]) => { if (!X.GEAR[e.gear]) fail(`${id} の身なり ${e.gear} が無い`); });
+  if (Object.values(D.ENEMIES).filter((e) => e.gear).length < 30) fail("身なりのある人間の敵が少ない");
+  G.codexKill("guard", true);
+  if (!G.codexFoeStats("guard").some((r) => r[0] === "身なり" && r[1] === "鎖帷子")) fail("図鑑に身なりが出ない");
+
+  // 戦技
+  Object.entries(D.SKILLS).filter(([id, s]) => s.fx && ["hit", "parry", "counter"].includes(s.fx.t)).forEach(([id, s]) => {
+    const ts = G.e12.skillTypes(id);
+    if (ts.filter((t) => ["slash", "blunt", "pierce"].includes(t)).length !== 1) fail(`戦技 ${id}（${s.name}）に物理の種類が一つでない（${ts}）`);
+    if (!/^(斬|打|突)/.test(s.hint)) fail(`戦技 ${id} の説明に種類が出ない（${s.hint}）`);
+  });
+  Object.keys(X.SKILL_TYPES).forEach((id) => { if (!D.SKILLS[id]) fail(`E12 の戦技の表に存在しない技 ${id}`); });
+  if (!Object.values(X.SKILL_TYPES).some((t) => /fire|bolt|wind|earth|light|dark|ice/.test(t))) fail("属性を持つ戦技が無い");
+  if (G.e12.mulOf("e4_cinderhound", ["slash", "fire"]) !== 0.5) fail("片方が無効の技が半分にならない");
+  if (G.e12.mulOf("slime", ["blunt", "fire"]) !== 1) fail("耐性と弱点の技が打ち消し合わない");
+  // 戦技で斬る：技の種類が武器より先（剣で兜割り＝打撃。ゴブリンは打撃に弱く、斬撃は等倍）
+  {
+    start("merc", "longsword");
+    G.S.skills = ["k1_helmsplit", "k1_emberedge"];
+    G.startCombat(["goblin"]);
+    const f = G.S.combat.foes[0];
+    f.hp = f.max = 9999;
+    G.S.maxHp = G.S.hp = 999;
+    if (G.k1 && G.k1.state) G.k1.state(G.S).ki = 9;
+    G.e12.cur = "k1_helmsplit";
+    const tsNow = G.e12.typesOf("blade", f);
+    G.e12.cur = null;
+    if (tsNow.join() !== "blunt") fail(`兜割りの最中の種類が ${tsNow}（blunt のはず）`);
+    const from = G.S.log.length;
+    for (let i = 0; i < 20 && !G.S.log.slice(from).some((l) => /打撃がよく効いている/.test(l.text || "")); i++) { G.S.hp = G.S.maxHp; G.k1.state(G.S).ki = 9; G.combatAct("k1:k1_helmsplit"); }
+    if (!G.S.log.slice(from).some((l) => /打撃がよく効いている/.test(l.text || ""))) fail("剣の兜割りがゴブリン（打撃に弱い）に打撃として効かない");
+    if (G.e12.cur !== null) fail("戦技のあとも技の種類が残る");
+  }
+
   // 古い profile（e12 も codex も無い）でも動く
   G.P = { trophies: {}, graves: [] };
   G.e12.known("slime");
