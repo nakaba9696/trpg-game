@@ -389,7 +389,7 @@
     (e.acts || []).forEach((a) => KNOW_ACT[a] && add("act:" + a, KNOW_ACT[a]));
     if (e.when) add("when", `${WHEN_TEXT(e.when)}にしか出ない。避けたければ時を選べ。`);
     if (e.undead) add("undead", "不死のもの。聖水がよく効く。");
-    if (e.majin) add("majin", "見えない守り（絶界）がある。破る手立てを持たずに挑むな。");
+    if ((e.majin && (!G.hasWall || !G.e3Of || !G.e3Of(id) || G.hasWall(G.e3Of(id).id)))) add("majin", "見えない守り（絶界）がある。破る手立てを持たずに挑むな。"); // E11：絶界は黒鎧だけ
     if (e.mres >= 25 && e.def >= 20) add("hard", "刃も魔法も通りにくい。急所を狙うか、弱みを探せ。");
     else {
       if (e.mres < 0) add("mres", "魔法に弱い。");

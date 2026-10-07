@@ -82,8 +82,8 @@
       ["eyes", "片腕の傭兵は「でかいのに会ったら、目を合わせるな」と言った。", { hint: ["目を合わせるな"] }],
     ] },
     zekkai: { sec: "人ならざる者", title: "絶界", lines: [
-      ["first", "使徒の体を守る、見えない何か。剣は体に届く前に弾かれた。", { hint: ["絶界"] }],
-      ["legend", "斬れる剣が二振りある、という言い伝えがある。どこにあるのかは酒場ごとに話が違う。"],
+      ["first", "黒い鎧の使徒の体を守る、見えない何か。剣は体に届く前に弾かれた。ほかの使徒には、無いものらしい。", { hint: ["絶界"] }],
+      ["legend", "伝説の剣なら斬れる、という言い伝えがある。黒い鎧の宿敵の羽なら、と言う者もいる。どこにあるのかは酒場ごとに話が違う。"],
     ] },
     shito: { sec: "人ならざる者", title: "眷属", lines: [
       ["first", "使徒に仕える者がいる。"],
@@ -231,7 +231,7 @@
     },
     fac: { church: "gods:church", guild: "are", "guild@karna": ["kokuin", "kokuin:torn"] },
     loc: { ruins: "rowm", majincastle: "graw:castle", w1_oboro: "yoihime:rumor", zephara: "sekaiju" },
-    foe: { "@majin": ["majin", "zekkai"], werewolf: ["beast", "beast:bite"], kin: "shito", kain: "shito", rize: "shito", w1_vespa: "shito", w1_gregor: "shito", w1_konoha: "shito" },
+    foe: { "@majin": "majin", graw: ["majin", "zekkai"], werewolf: ["beast", "beast:bite"], kin: "shito", kain: "shito", rize: "shito", w1_vespa: "shito", w1_gregor: "shito", w1_konoha: "shito" },
     item: { volgrim: "swords:volgrim", byakuya: "swords:byakuya" },
     flag: { graw: "clap:graw" },
     goal: { majin: "zekkai:legend", sword: "zekkai:legend" },

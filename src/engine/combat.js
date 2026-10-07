@@ -152,7 +152,8 @@
   function damageFoe(f, n, how) {
     const e = G.foeData(f);
     if (e.majin && !G.weapon().pierce && how !== "holy") {
-      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
+      const W = (G.wallOf ? G.wallOf(f) : { what: "見えない壁", name: "絶界" }); // E11：絶界は黒鎧だけ。長編の若君は糸の守り
+      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、${W.what}に弾かれた。${W.name}だ。`, { fx: "wall", foe: f.name });
       return;
     }
     if (G.cbDmgMod) n = Math.max(0, Math.round(G.cbDmgMod(f, n, how)));
@@ -302,7 +303,7 @@
       G.log("you", `${t.name}に呪いの言葉を吐く`);
       const r = G.check("魔力", spellVs(sp, G.foeVs.mres(G.foeData(t))), sp.name, bonus);
       if (r.ok) {
-        if (G.foeData(t).majin && !G.weapon().pierce) G.say(`呪いの言葉は、${t.name}の手前で霧のように散った。絶界だ。`);
+        if (G.foeData(t).majin && !G.weapon().pierce) G.say(`呪いの言葉は、${t.name}の手前で霧のように散った。${(G.wallOf ? G.wallOf(t) : { name: "絶界" }).name}だ。`);
         else { t.hex = r.crit ? 5 : 3; G.say(`${t.name}の影が、ぐにゃりと歪んだ。`); G.note(`${t.name}は呪われた（${t.hex}手番・命中が落ち、少しずつ蝕まれる）`); }
       } else G.say(r.fumble ? "言葉が口の中で裏返り、自分の舌を噛んだ。" : "言葉は届かなかった。");
       if (r.fumble) { if (!S.conds.includes("呪い")) { S.conds.push("呪い"); G.note("状態：呪い"); } G.payDebt(sp.debt); }
@@ -332,7 +333,7 @@
       }
       const f = G.pick(foes);
       const e = G.foeData(f);
-      if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
+      if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は${(G.wallOf ? G.wallOf(f) : { what: "見えない壁", name: "絶界" }).name}に弾かれた。`, { fx: "wall", foe: f.name }); return; }
       const chance = G.allyHitChance(c, e);
       if (G.d(100) <= chance) {
         const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
