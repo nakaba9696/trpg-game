@@ -29,6 +29,9 @@
 //   --type <型>[,<型>…]  その型の男だけ（例：--type ojisan --force で渋いおっさんを作り直す。--only と重ねられる。--variants でも使える）
 // 絵の版（A9）：style.json の art が今の版。基本の絵を作ると一覧のその人に art（今の版）を書き、redo（作り直しの印）を消す。
 //   差分は、その人の基本の絵の版（一覧の art。無ければ 1）にそろえ、style.json の art_drop[版] の語（1 なら ikezawa shin）を prefix から外して作る
+// 背景を抜く（A13）：作った絵は、保存のあとすぐ背景除去のモデル（tools/cutout_model.py・birefnet-general）に通し、透明つきの webp にする。
+//   モデルの入った Python は環境変数 CUTOUT_PYTHON か style.local.json の cutout_python（手順は docs/art/cutout_model.md）。無ければ作る前に止める。
+//   --no-cutout で抜かずに白い背景のまま保存する（試しだけ。入れる絵は必ず抜く）。差分（img2img）の元には、透明つきの基本の絵を白い背景に戻して送る
 // 外部のライブラリは使わない（Node 18 以上の fetch）。
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -177,6 +180,28 @@ async function txt2img(p) {
 }
 
 // ---------------------------------------------------------------- 保存（必ず縮める）
+// 背景除去（A13）：保存した絵を cutout_model.py で透明つきにする。モデルは読み込みが重いので、最後にまとめて一度だけ通す
+const cutoutPy = flag("--no-cutout") ? null : process.env.CUTOUT_PYTHON || style.cutout_python || null;
+const cutoutScript = path.join(root, "tools", "cutout_model.py");
+const cutoutAll = (ids) => {
+  if (!cutoutPy || !ids.length) return;
+  console.log(`
+背景を抜く（${ids.length} 枚・tools/cutout_model.py）…`);
+  execFileSync(cutoutPy, [cutoutScript, "--dirs", KIND.dir, "--only", ids.join(","), "--in-place", "--force"], { stdio: "inherit", cwd: root });
+};
+// 透明つきの絵を白い背景に戻した png（差分の img2img の元に使う）
+const flatOf = (file) => {
+  if (!cutoutPy) return readFileSync(file);
+  const tmp = path.join(root, ".tmp_flat_" + path.basename(file) + ".png");
+  execFileSync(cutoutPy, [cutoutScript, "--flatten", file, tmp], { stdio: "ignore", cwd: root });
+  const b = readFileSync(tmp);
+  rmSync(tmp, { force: true });
+  return b;
+};
+if (!flag("--dry") && !flag("--keep") && !cutoutPy && !flag("--no-cutout")) {
+  console.error("背景除去の Python が分からない。CUTOUT_PYTHON か docs/art/style.local.json（魔物は style_monsters.local.json）の cutout_python に、モデルの入った venv の python を書く（docs/art/cutout_model.md）。抜かずに試すだけなら --no-cutout");
+  process.exit(1);
+}
 let cwebp = null;
 try { execFileSync("cwebp", ["-version"], { stdio: "ignore" }); cwebp = "cwebp"; } catch {}
 const size = data.size || (MON ? { width: 512, height: 512 } : { width: 512, height: 640 });
@@ -247,6 +272,7 @@ if (dry) {
   }
 }
 let made = 0;
+const madeIds = new Set();
 for (const p of todo) {
   if (dry) { const b = bodyOf(p); console.log(`\n[${p.id}] ${p.name}${isEld(p) ? "（異形）" : ""}${isMale(p) ? `（男・型 ${typeOf(p)}）` : ""}  seed ${b.seed}${Number.isInteger(p.seed) && !newSeed ? "（一覧）" : ""}\n  + ${b.prompt}\n  - ${b.negative_prompt || ""}${b.styles && b.styles.length ? `\n  styles: ${b.styles.join(", ")}（WebUI の Styles の文が、さらに足される）` : ""}`); continue; }
   process.stdout.write(`${p.id}（${p.name}${isEld(p) ? "・異形" : ""}）… `);
@@ -260,6 +286,7 @@ for (const p of todo) {
     if (!MON && (p.art !== P.artNow(style) || p.redo)) { p.art = P.artNow(style); delete p.redo; writeFileSync(JSON_PATH, JSON.stringify(data, null, 1) + "\n"); writeFileSync(MD_PATH, KIND.render(data)); }
     console.log(`${path.relative(root, out)}  ${(small.buf.length / 1024).toFixed(0)}KB  seed ${seed ?? "?"}${small.buf.length > (size.maxKB || 80) * 1024 ? `（${size.maxKB || 80}KB を超えた。webpQuality を下げる）` : ""}`);
     made++;
+    madeIds.add(p.id);
   } catch (e) {
     if (e.message === "STOP") {
       console.log("保存しない");
@@ -270,6 +297,7 @@ for (const p of todo) {
     if (/ECONNREFUSED|fetch failed/.test(e.message + (e.cause ? e.cause.message : ""))) { console.error("Stable Diffusion に繋がらない。WebUI を --api で起動しているか（style.json の url）"); process.exit(1); }
   }
 }
+if (!dry) cutoutAll([...madeIds]);
 const M_ = MON ? " --monsters" : "";
 if (!dry) console.log(`\n${made} 枚 作った。気に入った絵は${M_} --keep <id> で seed を一覧に残す。気に入らない絵は${M_} --only <id> --force --new-seed で作り直す。終わったら node tools/build.mjs`);
 
@@ -297,12 +325,13 @@ async function runVariants() {
     delete b.enable_hr;
     return Object.assign(b, {
       prompt: promptOf(p, p.variants[m]), seed: seedOfVariant(p),
-      init_images: [readFileSync(base).toString("base64")], denoising_strength: v.denoising, resize_mode: 0,
+      init_images: [flatOf(base).toString("base64")], denoising_strength: v.denoising, resize_mode: 0,
     }, v.extra || {});
   };
   if (!jobs.length) { console.log("作る差分はない（基本の絵が無い人は飛ばす。--force で作り直す）"); return; }
   console.log(`差分 ${jobs.length} 枚（${api("")}${dry ? "・送らない" : ""}・img2img・denoising ${v.denoising}・${size.width}×${size.height} に縮めて保存：${cwebp ? "cwebp" : "WebUI（cwebp が無い）"}）`);
   let made = 0;
+  const madeV = [];
   const warned = new Set();
   for (const j of jobs) {
     const b = bodyOfVariant(j);
@@ -318,6 +347,7 @@ async function runVariants() {
       const out = save(j.id, small);
       console.log(`${path.relative(root, out)}  ${(small.buf.length / 1024).toFixed(0)}KB`);
       made++;
+      madeV.push(j.id);
     } catch (e) {
       if (e.message === "STOP") { console.log("保存しない"); console.error("\ncwebp を入れてから、もう一度動かす（docs/art/README.md）。"); process.exit(1); }
       console.log("失敗：" + e.message);
