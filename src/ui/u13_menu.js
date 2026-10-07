@@ -286,6 +286,7 @@
     const S = G.S;
     const panel = document.getElementById("panel");
     if (!S || !panel) return;
+    if (u13.ghostPanel && u13.ghostPanel()) return; // F6：とどめの手番を見せている間は、手を選ぶ前の手の欄のまま（u13_battle.js）
     panel.classList.remove("u13on", "u13fight");
     document.body.classList.toggle("u13combat", !!(S.combat && !S.over));
     if (u13.holding && u13.holding() && !(u13.ghosting && u13.ghosting())) return; // 戦闘の結果の場面を出している間は、まとめない（u13_battle.js）。とどめの手番を見せている間（F5）は戦闘のまま
