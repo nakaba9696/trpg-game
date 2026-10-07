@@ -63,9 +63,17 @@ body.u21pc[data-u14="town"] #u21side { --orn: var(--u14-town); --win-edge: rgba(
 body.u21pc[data-u14="wild"] #u21side { --orn: var(--u14-wild); --win-edge: rgba(122, 146, 116, .7); }
 body.u21pc[data-u14="dungeon"] #u21side { --orn: var(--u14-dungeon); --win-edge: rgba(112, 124, 156, .7); }
 
-/* 立ち絵の名前は本文の欄の上に（欄の後ろに沈んだ足元ではなく、肩の辺り） */
-body.u21pc .v9fig .v9name { bottom: 42%; }
-body.u21pc .v9fig.card .v9name { bottom: -34px; }
+/* U23：絵を見せる。本文の欄と右の列は、絵が透けて見える窓に（語りの場面の本の頁は、読みやすさのためにそのまま） */
+body.u21pc:not([data-u14="story"]) .tome, body.u21pc:not([data-u14="story"]) #u21side {
+  background: color-mix(in srgb, var(--win-solid) 74%, transparent);
+  -webkit-backdrop-filter: blur(5px) saturate(1.05); backdrop-filter: blur(5px) saturate(1.05); }
+/* 戦闘の下の帯も、絵が透けて見える窓に（並べ方・大きさは変えない。並べ方は F1） */
+body.v9pc.v9combat .tome { background: color-mix(in srgb, var(--win-solid) 80%, transparent); }
+body.u21pc[data-u14="story"] .tome { background: radial-gradient(ellipse 120% 90% at 50% 35%, rgba(245, 236, 214, .94) 30%, rgba(230, 213, 176, .92)); }
+body.u21pc[data-u14="story"] #u21side { background: radial-gradient(ellipse 120% 90% at 50% 35%, rgba(245, 236, 214, .9) 30%, rgba(230, 213, 176, .88)); }
+
+/* 立ち絵（U23）：本文の欄と右の列のあいだに、足元まで立つ。名前は腰の辺り */
+body.u21pc .v9fig .v9name { bottom: 22%; left: 50%; transform: translateX(-50%); max-width: 70%; }
 
 /* 旅の行き先の小さな地図（W7）：右の列では、画面の低さに合わせて低くする（行き先の選択肢を多く見せる） */
 body.u21pc #u21side #panel .w7tmap canvas { height: clamp(120px, 20vh, 220px); }
