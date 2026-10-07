@@ -103,14 +103,14 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   judge("town", await measure(), { wantSide: true });
   await shot("town");
   // 冒険の組を開く：札のすぐ下に開き、ほかの札は残る
-  const adv = page.locator('#u21side .u13tab[data-u13="adv"]');
+  const adv = page.locator('#u21side .u13tab[data-u13="adv"], #u21side .u13tab[data-u13="t:travel"]').first();
   if (pc && (await adv.count())) {
     await adv.click();
     await page.waitForTimeout(200);
     const m = await measure();
     judge("adv", m, { wantSide: true });
-    if (!m.tabs || !m.tabs.includes("adv*")) ng(`${vn} adv：押した組が開いていない ${JSON.stringify(m.tabs)}`);
-    const next = await page.evaluate(() => { const t = document.querySelector('#u21side .u13tab[data-u13="adv"]'); const n = t && t.parentElement.nextElementSibling; return n ? n.id : ""; });
+    if (!m.tabs || !m.tabs.some((t) => t === "adv*" || t === "t:travel*")) ng(`${vn} adv：押した組が開いていない ${JSON.stringify(m.tabs)}`);
+    const next = await page.evaluate(() => { const t = document.querySelector('#u21side .u13tab[data-u13="adv"], #u21side .u13tab[data-u13="t:travel"]'); const n = t && t.parentElement.nextElementSibling; return n ? n.id : ""; });
     if (next !== "u21open") ng(`${vn} adv：開いた組が札のすぐ下にない（${next}）`);
     await shot("adv");
   }
