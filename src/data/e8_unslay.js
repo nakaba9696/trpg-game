@@ -1,6 +1,6 @@
-// E8：倒せない使徒（持ち主の決定「使徒ですが、討伐できるのは S 級 3 体・A 級 5 体・B 級 8 体にしましょう」）
-//   討伐できる S（3）：黒翼 kurobane・閉じ月 tojizuki・海嘯 lugu
-//   討伐できる A（5）：黒鎧 graw・苔衣 mordu・砂塵 zalve・百面 chezar・剣翼 azlag
+// E8：倒せない使徒（持ち主の決定「使徒ですが、討伐できるのは S 級 3 体・A 級 5 体・B 級 8 体にしましょう」。E9 で海嘯を A に移し S 2・A 6・B 8）
+//   討伐できる S（2）：黒翼 kurobane・閉じ月 tojizuki
+//   討伐できる A（6）：黒鎧 graw・苔衣 mordu・砂塵 zalve・百面 chezar・剣翼 azlag・海嘯 lugu（E9 で S から A に。持ち主「ガルメド A級な気がする」。シートでも A）
 //   討伐できる B（8）：灼け口 gormore・忘れ水 levian・微笑 mirza・蝶翅 aurelia・白霧 notari・鉄喰い tetsukui・咎追い togaoi・酸溜まり sanno
 //   倒せない：根の王 sekaiju（S）・逆夢 yura（S）・芽吹き midori（A）・香煙 yoihime（B）・伯爵さま yuzuel・薄布 salphiel（A。持ち主の振り分けに名が無く、
 //   A の討伐が 5 体になるようにここへ入れた。PR の判断待ち）
