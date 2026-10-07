@@ -399,8 +399,27 @@
       adsr(g.gain, t, dur, 0.15 * v, 0.045, 0.2, 0.88, 0.12);
       if (B.white) { const nz = B.ctx.createBufferSource(); nz.buffer = B.white; nz.loop = true; const bp = lp(B, f * 1.5, 2, "bandpass"); const ng = gain(B, 0); nz.connect(bp); bp.connect(ng); ng.connect(out); adsr(ng.gain, t, Math.min(dur, 0.12), 0.02 * v, 0.02, 0.06, 0.3, 0.06); nz.start(t, jr() * 0.5); nz.stop(end); }
     },
+    // S6：グラスハーモニカ（擦ったグラス）：二つの正弦がわずかにずれ、音量がかすかに震える。ゆっくり立ち上がり長く残る
+    glass: (B, t, f, dur, v, out) => {
+      const end = t + dur + 1.2;
+      const g = gain(B, 0); const o = osc(B, "sine", f, t, end); const o2 = osc(B, "sine", f * 2.005, t, end); const g2 = gain(B, 0.18);
+      o.connect(g); o2.connect(g2); g2.connect(g);
+      const am = gain(B, 1); const tr = osc(B, "sine", 5 + jr(), t, end); const tg = gain(B, 0.22); tr.connect(tg); tg.connect(am.gain);
+      g.connect(am); am.connect(out);
+      adsr(g.gain, t, dur, 0.11 * v, 0.14, 0.3, 0.8, 0.9);
+    },
+    // S6：ささやき：雑音を細い帯域二つ（音の高さと、その倍）に通した、息だけの声
+    whisper: (B, t, f, dur, v, out) => {
+      if (!B.white) return;
+      const end = t + dur + 0.6;
+      const n = B.ctx.createBufferSource(); n.buffer = B.white; n.loop = true;
+      const b1 = lp(B, f, 12, "bandpass"); const b2 = lp(B, f * 2, 9, "bandpass"); const g = gain(B, 0);
+      n.connect(b1); n.connect(b2); b1.connect(g); b2.connect(g); g.connect(out);
+      adsr(g.gain, t, dur, 0.9 * v, 0.25, 0.3, 0.7, 0.45);
+      n.start(t, jr() * 0.8); n.stop(end);
+    },
     // ピッツィカート（弦をはじく）
-    pizz:(B, t, f, dur, v, out) => {
+    pizz: (B, t, f, dur, v, out) => {
       const end = t + 0.6;
       const g = gain(B, 0); const fl = lp(B, 1600, 1);
       osc(B, "triangle", f, t, end).connect(fl); osc(B, "sawtooth", f, t, end, 5).connect(fl);
