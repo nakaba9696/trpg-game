@@ -288,7 +288,7 @@
     if (!S || !panel) return;
     panel.classList.remove("u13on", "u13fight");
     document.body.classList.toggle("u13combat", !!(S.combat && !S.over));
-    if (u13.holding && u13.holding()) return; // 戦闘の結果の場面を出している間は、まとめない（u13_battle.js）
+    if (u13.holding && u13.holding() && !(u13.ghosting && u13.ghosting())) return; // 戦闘の結果の場面を出している間は、まとめない（u13_battle.js）。とどめの手番を見せている間（F5）は戦闘のまま
     const plan = u13.plan(G.actions(), S);
     if (!plan) return;
     const els = Array.from(panel.querySelectorAll(":scope > .agroup"));
