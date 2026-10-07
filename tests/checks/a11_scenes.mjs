@@ -52,7 +52,8 @@ export default ({ fail, ok, loadEngine }) => {
   const ui = readFileSync(path.join(root, "src/ui/ui.js"), "utf8");
   const fm = /FAC_SCENE = (\{[^}]*\})/.exec(ui);
   // 町の特色の場所（W9）の絵の名前は D.FAC_SCENE（src/engine/w9_spots.js。src/ui/w9_spots.js が使う）
-  const facScene = { ...(fm ? vm.runInNewContext("(" + fm[1] + ")") : {}), ...(D.FAC_SCENE || {}) };
+  // 専用の絵の名前（D.W9_ART の w9s_*）があればそちらが一覧に要る
+  const facScene = { ...(fm ? vm.runInNewContext("(" + fm[1] + ")") : {}), ...(D.FAC_SCENE || {}), ...(D.W9_ART || {}) };
   if (!fm) F("ui.js の FAC_SCENE を読めない");
   const insideKeys = Object.keys(V.IN || {});
   const miss = missingScenes(data, { LOCS: D.LOCS, facScene, dungeonScene: G.dungeonScene, insideKeys });

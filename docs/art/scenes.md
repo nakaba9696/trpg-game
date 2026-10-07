@@ -3,7 +3,7 @@
 > このファイルは [scenes.json](scenes.json) から `node tools/scenes.mjs` で作る。直すときは json を直してから作り直す。
 > 作り方は [README.md](README.md) の「背景の絵（A11）」。設定は [style_scenes.json](style_scenes.json)。1344×768 で作り、1232×704 の webp に縮めて `assets/scenes/<id>.webp` に置く（1 枚 150KB 以下）。
 
-全部で 120 枚（場所 72・施設の中 36・迷宮の中 12）。
+全部で 141 枚（場所 72・施設の中 57・迷宮の中 12）。
 
 ## 試しの 5 枚
 
@@ -96,7 +96,7 @@
 | `e2_kitchen` | 肉の谷の大厨房（使徒領・迷宮）・空 red | `e2_kitchen` | realm | gigantic castle-like kitchen building at the bottom of a valley, many chimneys with steam, red sky, giant cauldrons |
 | `w4_canopy` | 使徒領・天蓋の原（使徒領・荒野） | `w4_canopy` | realm | white salt flat, mirror-like ground reflecting the sky, blurred horizon, huge round shadow on the ground |
 
-## 施設の中（36）
+## 施設の中（57）
 
 町の施設（宿屋・酒場・商店・ギルド・教会・訓練場・裏路地・王城・学院と、町ごとの施設）。どの町でも同じ絵。
 
@@ -138,6 +138,27 @@
 | `in_w8s_velt_beacon` | 烽火台（ヴェルト） | `w8s_velt_beacon` | special_in | three stone beacon platforms with stacked firewood, northern sea on one side and mountains on the other, smoke |
 | `in_w8s_halt_carver` | 像彫りの小屋（ハルト） | `w8s_halt_carver` | special_in | stone carver's hut, dozens of small faceless stone statues, all facing away from the mountains, window on the far side |
 | `in_w8s_zalem_altar` | 庵の奥の祭壇（ザレム） | `w8s_zalem_altar` | special_in | inside a crumbling mountain hermitage, mossy stone altar with plates of bread, pile of walking staffs, candles |
+| `in_w9s_cathedral` | 大聖堂の奥（エルヴィナ） | `w9s_cathedral` | special_in | inner nave of a vast white cathedral, soaring gothic vaults, gilded pillars with carved donor names, rows of pilgrims kneeling, bell ropes hanging, shafts of light |
+| `in_w9s_relics` | 聖遺物の間（エルヴィナ） | `w9s_relics` | special_in | reliquary hall, rows of glass cases with double locks, old bones and rusted relics on velvet, brass scales on a scholar's desk, candlelight, stone vaults |
+| `in_w9s_staffs` | 杖の納め所（オルベ） | `w9s_staffs` | special_in | wooden shed at the edge of a pilgrim town, hundreds of walking staffs standing in rows, small wooden tags hanging from each staff, dusty light through slats |
+| `in_w9s_scriptorium` | 修道院の写字室（メルヴィ） | `w9s_scriptorium` | special_in | monastery scriptorium, long writing desks in rows, ink pots and quills, stacks of parchment, tall arched windows, river beyond the window |
+| `in_w9s_chandlery` | 蝋燭工房（リュミエ） | `w9s_chandlery` | special_in | candle workshop, hundreds of white beeswax candles hanging from the ceiling to cool, pots of melted wax over a hearth, wooden dipping racks, beehives through the back door |
+| `in_w9s_spring` | 泉の縁（セレナ） | `w9s_spring` | special_in | small stone-rimmed holy spring on a seaside cliff top, clear water with copper coins on the bottom, pilgrims' kneeling stones, the sea far below |
+| `in_w9s_shrine` | 浜の祠（ノルヴェ） | `w9s_shrine` | special_in | tiny wooden shrine on a fishing beach, a single stone inside with a fish offering, small boats pulled up on the sand, fishing nets drying |
+| `in_w9s_dojo` | 島の道場（シェルアーク） | `w9s_dojo` | special_in | wooden dojo built out over the sea on stilts, plank floor with gaps showing waves, wooden name plaques on the wall in three rows, wooden practice swords on a rack |
+| `in_w9s_council` | 顔役の会所（シェルアーク） | `w9s_council` | special_in | harbor meeting house of island bosses, low wooden table with floor cushions, a price board on the table, rafters covered with knotted ropes, open side toward the piers |
+| `in_w9s_yagura` | 夜祭りの櫓（朧島） | `w9s_yagura` | special_in | festival tower on a night beach hung with many paper lanterns, big taiko drum on the platform, dancers wearing white paper masks circling, incense smoke, festival stalls |
+| `in_w9s_saltpan` | 塩田（ソルネ） | `w9s_saltpan` | special_in | square salt evaporation ponds stretching along a beach like mirrors, white salt heaps, wooden rakes, a small weighing hut, glaring sunlight |
+| `in_w9s_netyard` | 網干し場（カラヴ） | `w9s_netyard` | special_in | small island beach with ropes strung between posts, dozens of fishing nets drying and billowing like sails, net floats and shells tied in the meshes |
+| `in_w9s_belltower` | 霧の鐘楼（ミストラ） | `w9s_belltower` | special_in | huge bronze fog bell in a small open tower on a rocky sea cliff, thick sea fog, worn stone floor, ship names carved on the bell keeper's wall |
+| `in_w9s_pearlcove` | 潜りの入り江（ヨナ） | `w9s_pearlcove` | special_in | shallow turquoise cove with white sand bottom, small boats with divers, oyster shells piled on the boats, huts roofed with empty shells on the beach |
+| `in_w9s_sluice` | 水門の番小屋（トゥリエル） | `w9s_sluice` | special_in | wooden sluice gate on a lake canal, large winch with a crank wheel, gatekeeper's hut with a water level post, small boats waiting, plank walkways over the water |
+| `in_w9s_theater` | 芝居小屋（サリュエス） | `w9s_theater` | special_in | small wooden theater with half the roof made of canvas, stage with painted backdrops, benches, playbills nailed over playbills, colorful murals on the walls |
+| `in_w9s_eldertree` | 長老の樹（レヴァンデル） | `w9s_eldertree` | special_in | enormous ancient tree in a hidden forest village, houses built into the trunk, a doorway high on the trunk, hundreds of small cloth strips tied to the roots, moss |
+| `in_w9s_lighthouse` | 白い灯台（ヴォルエラ） | `w9s_lighthouse` | special_in | tall white lighthouse at a calm bay, spiral stone stairs inside, great glass lens in the lamp room, a shelf of driftwood objects at its foot |
+| `in_w9s_senate` | 議場の傍聴席（エルメシア） | `w9s_senate` | special_in | circular senate hall seen from the gallery, delegates' seats in a ring at the same height, contract script carved in a circle on the floor, crystal tower light from above |
+| `in_w9s_lake` | 湖の舟着き場（アミュレイン） | `w9s_lake` | special_in | wooden boat landing on a misty lake behind a hot spring town, small rowboats tied up, steam drifting over the water, distant shore |
+| `in_w9s_canopy` | 大樹の見張り台（ナグリス） | `w9s_canopy` | special_in | wooden lookout platform high in the branches of a giant tree, rope ladders, a vast forest canopy below, the shadow of a colossal tree on the horizon |
 
 ## 迷宮の中（12）
 
