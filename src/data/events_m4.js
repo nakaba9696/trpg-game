@@ -1,6 +1,6 @@
 // M4：世界が動いたあとの町と街道の出来事。書き方は events.js の頭の説明と同じ
 // where の m4_* は src/engine/world_m4.js が、世界の様子に合わせて場所のタグに足す：
-//   m4_war（戦に巻き込まれた所）・m4_war_home（戦をしている国の町）・m4_war_free（自由都市）・m4_war_front（前線の野外）・m4_war_fort（砦）
+//   m4_war（戦に巻き込まれた所）・m4_war_home（戦をしている国の町）・m4_war_free（王国が戦をしていないときの南の商いの町）・m4_war_front（前線の野外）・m4_war_fort（砦）
 //   m4_burned・m4_fallen・m4_famine・m4_plague・m4_dance・m4_rebuild（その町の様子）・m4_ruin（焼け跡か、消えた町）
 //   m4_after_raid（どこかの町が焼けたか消えたあと）・m4_after_war（休戦のあと）・m4_mourn（皇帝の戦傷のあいだの帝都）・m4_civil（四騎士の派閥と皇女の婿取りの争い）
 // m4_here_*（w: 0）は、あなたのいる町が襲われたときに engine が呼ぶ。名前は出さない（docs/lore/voice.md）

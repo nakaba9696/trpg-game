@@ -55,7 +55,7 @@
     gaston: { name: "茹で騎士ガストン", title: "騎士", events: ["e2_kitchen_pot"], lines: ["大鍋の縁にしがみついていた騎士。食材ではない、と情けない顔で言い張っていた。", "村の代わりに来た、と口を滑らせた。"] },
     joachim: { name: "脱走兵ヨアヒム", title: "帝国の脱走兵", events: ["deserter_help"], lines: ["雪の中でうずくまっていた、帝国の軍服の男。", "火に手をかざしながら、もう人を殺したくない、と繰り返していた。"] },
     mirza: { name: "日傘の銀髪の男", title: "灰の荒野の男", events: ["mirza"], lines: ["灰の降る荒野に、場違いな日傘を差していた美しい男。何を話すあいだもずっと微笑んでいた。", "人が困る顔を見たい、と言った。本能が逃げろと叫んだ。"] },
-    zalve: { name: "ドレイゼ金融商会の両替商", title: "両替商", events: ["v1_zalve", "m11_zalve_1", "m11_zalve_2", "m11_zalve_3", "m11_zalve_4", "m11_zalve_last", "m11_zalve_won", "m11_zalve_no", "m11_zalve_after"], lines: ["自由都市ブランデールの表通りの金融商会の主。銀の片眼鏡をかけている。嘘はつかないが全部は言わない。", "袖口から乾いた砂がこぼれる。机の砂時計は、横に倒しても落ち続けている。"] },
+    zalve: { name: "ドレイゼ金融商会の両替商", title: "両替商", events: ["v1_zalve", "m11_zalve_1", "m11_zalve_2", "m11_zalve_3", "m11_zalve_4", "m11_zalve_last", "m11_zalve_won", "m11_zalve_no", "m11_zalve_after"], lines: ["商都ブランデールの表通りの金融商会の主。銀の片眼鏡をかけている。嘘はつかないが全部は言わない。", "袖口から乾いた砂がこぼれる。机の砂時計は、横に倒しても落ち続けている。"] },
     borg: { name: "取り立て屋ボルグ", title: "金融商会の取り立て屋", events: ["v1_borg"], lines: ["ドレイゼ金融商会の取り立て屋。熊のような大男で、帳面をめくる手の指の数が合わない。", "払えなければ、指から順に貰っていくという。"] },
     aurelia: { name: "生き聖女", title: "聖都の生き聖女", events: ["w1_miracle", "w1_misprayer", "w1_accuse"], lines: ["聖都の大聖堂に現れる、金髪の聖女。背に蝶の羽のような光を負い、慈悲深く微笑んでいる。", "群衆はひれ伏し、すすり泣く。聖女は誰にでも両手を広げる。"] },
     yoihime: { name: "煙をまとった女", title: "朧島の賭場の客", events: ["w1_yoidice", "w1_dance", "w1_moonriddle", "w1_kamikakushi", "v1_foxfest", "m11_yoi_1", "m11_yoi_2", "m11_yoi_3", "m11_yoi_4", "m11_yoi_last", "m11_yoi_won", "m11_yoi_no", "m11_yoi_after"], lines: ["朧島の賭場の上座にいる、香の煙をまとった女。顔ははっきり見えない。祭りと賽遊びが何より好きらしい。", "争いを嫌う。賽の目には、いつも本気で一喜一憂している。"] },

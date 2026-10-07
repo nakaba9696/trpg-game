@@ -40,8 +40,9 @@
   };
 
   // ---------------------------------------------------------------- 国ごとの依頼の傾向（掛け算の重み。無い型は 1）
+  // 王国の南の商いの町（D.M4.MARKET の町。商都ブランデール・港町ヴァレンツァなど）は、国の傾向より先にこちらを見る（D10）
+  const MARKET_BIAS = { deliver: 2, escort: 2, collect: 2, spy: 1.6, smuggle: 1.8, message: 1.5, search: 1.3 };
   const NATION_BIAS = {
-    自由都市連合: { deliver: 2, escort: 2, collect: 2, spy: 1.6, smuggle: 1.8, message: 1.5, search: 1.3 },
     レオネスト王国: { hunt: 1.4, guard: 1.6, festival: 2.2, duel: 1.5, pest: 1.5, bounty: 1.3 },
     ノルディア帝国: { bounty: 2.2, hunt: 1.8, duel: 2, spy: 1.5, caravan: 1.6, bigbeast: 1.3 },
     エルメシア共和国: { gather: 2.5, investigate: 2, survey: 2.2, relic: 1.6, search: 1.2 },
@@ -437,5 +438,5 @@
     miss: "あたりを見て回ったが、何も分からなかった。",
   };
 
-  D.Q5 = { RIVAL_TELLS, PROBE, CLIENTS, NAMES, PARTS, NATION_BIAS, TOWN_PEOPLE, TYPES, CLIMAX, TWISTS, MIDS, JOBS, COWORKERS };
+  D.Q5 = { RIVAL_TELLS, PROBE, CLIENTS, NAMES, PARTS, NATION_BIAS, MARKET_BIAS, TOWN_PEOPLE, TYPES, CLIMAX, TWISTS, MIDS, JOBS, COWORKERS };
 })(globalThis.G = globalThis.G || {});

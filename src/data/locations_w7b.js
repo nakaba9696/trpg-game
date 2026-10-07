@@ -1,5 +1,5 @@
-// 町を国・地方ごとに 6〜8 まで増やす（W7 の続き。その 1：自由都市連合・光天教会領）。欄の意味は locations.js と同じ
-// 持ち主の声「（地方ごとに増やすのを）頼みます」。シートに無い町は、その地方の設定（自由都市＝王子から自治を許された町の寄り合い、
+// 町を国・地方ごとに 6〜8 まで増やす（W7 の続き。その 1：ブランデールの周り・光天教会領）。欄の意味は locations.js と同じ
+// 持ち主の声「（地方ごとに増やすのを）頼みます」。シートに無い町は、その地方の設定（ブランデールの周り＝王国の南の、商いと冒険者の土地、
 // 教会領＝光天教会の聖都のまわりの巡礼と祈りの土地）から作った。
 // marks：町の印（その町が何の町か。R3 の最初のきっかけ・M12 の世の大事の舞台を選ぶときの手がかり）
 //   port 港 / river 渡し・川港 / mine 鉱山・掘る町 / holy 聖地・巡礼 / border 国境・前線 / market 市・商い / farm 畑・葡萄 / craft 職人 / ruins 遺跡のそば / mercs 傭兵
@@ -9,30 +9,30 @@
   const D = (G.data = G.data || {});
 
   Object.assign(D.LOCS, {
-    // ---------------------------------------------------------------- 自由都市連合
+    // ---------------------------------------------------------------- レオネスト王国（ブランデールの周り）
     w7_russen: {
-      name: "渡しの町リュッセン", region: "自由都市連合", type: "town", danger: 0, scene: "w7_ferry", x: 30, y: 55, marks: ["river", "market"],
+      name: "渡しの町リュッセン", region: "レオネスト王国", type: "town", danger: 0, scene: "w7_ferry", x: 30, y: 55, marks: ["river", "market"],
       desc: "大きな川の東岸に、渡し舟の桟橋と、通行料を取る小屋が並んでいる。町の決まりは、舟の上では誰も偉くない、というただ一つ。王子の使いも傭兵の頭も、同じ板に膝を寄せて座り、同じ銅貨を払って向こう岸へ渡る。",
       fac: ["inn", "tavern", "shop", "guild"],
       shop: ["dagger", "longsword", "leather", "i3a_oilcoat", "ale", "w2_sausage"],
       links: {},
     },
     w7_glatz: {
-      name: "傭兵の町グラッツ", region: "自由都市連合", type: "town", danger: 0, scene: "w7_mercs", x: 50, y: 48, marks: ["mercs", "market"],
+      name: "傭兵の町グラッツ", region: "レオネスト王国", type: "town", danger: 0, scene: "w7_mercs", x: 50, y: 48, marks: ["mercs", "market"],
       desc: "柵で囲った練兵場のまわりに、宿と酒場と鍛冶屋だけが並ぶ町。広場の大きな板には、雇い主の名と日当と「命の保証なし」の札が隙間なく貼られている。傭兵たちは昼まで寝て、昼から札の前で値切り、夜は誰が明日死ぬかを賭ける。",
       fac: ["inn", "tavern", "shop", "guild", "train", "alley"],
       shop: ["i3w_broadsword", "i3w_halberd", "i3w_crossbow", "i3a_studded", "chain", "potion"],
       links: {},
     },
     w7_durm: {
-      name: "発掘人の町ドゥルム", region: "自由都市連合", type: "town", danger: 0, scene: "w7_diggers", x: 49, y: 81, marks: ["ruins", "mine"],
+      name: "発掘人の町ドゥルム", region: "レオネスト王国", type: "town", danger: 0, scene: "w7_diggers", x: 49, y: 81, marks: ["ruins", "mine"],
       desc: "エル・ナフ遺構へ通う発掘人たちが、天幕を板に、板を石に建て替えてできた町。どの家の戸口にも、掘り出した何かの欠片が飾ってあって、どれも何なのか誰にも分からない。酒場の壁の黒板には、今週帰ってこない者の名が、白墨で書き足されていく。",
       fac: ["inn", "tavern", "shop", "guild"],
       shop: ["tools", "i3w_pick", "i3w_shortsword", "leather", "potion", "jerky"],
       links: {},
     },
     w7_vinale: {
-      name: "葡萄の町ヴィナレ", region: "自由都市連合", type: "town", danger: 0, scene: "w7_vineyard", x: 36, y: 74, marks: ["farm", "market"],
+      name: "葡萄の町ヴィナレ", region: "レオネスト王国", type: "town", danger: 0, scene: "w7_vineyard", x: 36, y: 74, marks: ["farm", "market"],
       desc: "南向きのなだらかな斜面いっぱいに、葡萄の棚が段になって続いている。樽を転がす音と搾り場の甘酸っぱい匂い。この町の酒は三つの国に売られ、どの国の王も、自分の国の酒だと思って飲んでいる。",
       fac: ["inn", "tavern", "shop", "church"],
       shop: ["ale", "w2_whitebread", "w2_sausage", "i3w_sickle", "leather", "lute"],

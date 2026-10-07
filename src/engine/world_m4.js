@@ -41,7 +41,6 @@
     if (r.includes("王国") || r.includes("教会")) return "kingdom";
     if (r.includes("帝国")) return "empire";
     if (r.includes("エルメシア") || r.includes("共和国")) return "republic";
-    if (r.includes("自由都市")) return "free";
     if (r.includes("最前線")) return "front";
     return "other";
   };
@@ -55,7 +54,8 @@
     const W = S && S.world;
     return (W && W.towns[id || S.loc]) || null;
   };
-  // 戦に巻き込まれている場所か（戦をしている国の町・砦・自由都市・前線の野外）
+  // 戦に巻き込まれている場所か（戦をしている国の町・砦・戦をしていない国の商いの町・前線の野外）
+  // "free" は、王国が戦に加わっていないときの南の商いの町（M.MARKET。どちらの側にも売る）。内部の名前なので前のまま
   G.m4WarAt = (id, S) => {
     S = S || G.S;
     const W = S && S.world;
@@ -63,7 +63,7 @@
     const n = nationOf(id);
     if (n === "empire" || n === W.war.foe) return "home";
     if (n === "front") return "fort";
-    if (n === "free") return "free";
+    if ((M.MARKET || []).includes(id)) return "free";
     if ((M.FRONT[W.war.foe] || []).includes(id)) return "front";
     return "";
   };
