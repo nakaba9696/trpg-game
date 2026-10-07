@@ -312,7 +312,7 @@
    "region": "ノルディア帝国",
    "name": "北の港アイゼルヴァン",
    "pack": "nordia",
-   "tags": "cold northern harbor, ice-covered wooden piers and mooring posts, fishing boats tied up, rough grey ocean waves, warehouses, overcast stormy sky"
+   "tags": "northern harbor town in winter, snow on the rooftops and warehouses, ice-covered wooden piers and mooring posts, fishing boats tied up, floating ice on calm deep blue sea, crisp clear blue winter sky, snowy mountains"
   },
   {
    "id": "w7_grishaim",
@@ -859,7 +859,7 @@
    "scene": "w8s_karna_bourse",
    "name": "金貨の取引所（ブランデール）",
    "pack": "special_in",
-   "tags": "grand exchange hall, chalkboards of coin rates, giant brass balance scale, merchants crowding, gold coins"
+   "tags": "grand exchange hall, wooden counters, giant brass balance scale, stacks of gold coins, coin purses, ledgers"
   },
   {
    "id": "in_w8s_nerva_horn",
@@ -875,7 +875,8 @@
    "scene": "w8s_carmel_yard",
    "name": "造船所（カルメラント）",
    "pack": "special_in",
-   "tags": "shipyard on a slope by a harbor, ship keels like ribs, shipwrights with mallets, wood shavings"
+   "tags": "(shipbuilding yard on dry land:1.3), (half-built wooden ship hull resting on wooden blocks on the shore:1.3), hull planks missing so the ribs show, tall wooden scaffolding and ladders, stacks of timber and planks, sawhorses and workbenches, wood shavings on the ground, harbor in the background",
+   "outdoor": true
   },
   {
    "id": "in_w8s_lignoa_lake",
@@ -883,7 +884,8 @@
    "scene": "w8s_lignoa_lake",
    "name": "湖の舟着き場（リグノア）",
    "pack": "special_in",
-   "tags": "wooden pier on a misty forest lake, flat-bottomed boats moored, small island with a stone shrine in the distance"
+   "tags": "wooden pier on a misty forest lake, flat-bottomed boats moored, small island with a stone shrine in the distance, calm water",
+   "outdoor": true
   },
   {
    "id": "in_w8s_frosleia_crater",
@@ -891,7 +893,8 @@
    "scene": "w8s_frosleia_crater",
    "name": "火口の祭壇（フロスレイア）",
    "pack": "special_in",
-   "tags": "rim of a volcanic crater, black stone altar, rising steam and ash, rope path with stakes"
+   "tags": "rim of a volcanic crater, black stone altar on the edge, rising steam and ash, glowing lava far below, rope path with wooden stakes, barren rocks",
+   "outdoor": true
   },
   {
    "id": "in_w8s_zaigros_tower",
@@ -899,7 +902,8 @@
    "scene": "w8s_zaigros_tower",
    "name": "北の見張り塔（ザイグロス）",
    "pack": "special_in",
-   "tags": "top of a stone watchtower, bell with colored cloth ribbons, snowy plain on the northern horizon, telescope"
+   "tags": "top of a stone watchtower, open battlements, bronze bell with colored cloth ribbons, brass telescope on a stand, snowy plain on the northern horizon",
+   "outdoor": true
   },
   {
    "id": "in_w8s_russen_isle",
@@ -907,7 +911,8 @@
    "scene": "w8s_russen_isle",
    "name": "渡し舟の中洲（リュッセン）",
    "pack": "special_in",
-   "tags": "sandbar in a wide river, ferrymen's hut, ferry boats, driftwood and a shield drying on the sand"
+   "tags": "sandbar in the middle of a wide river, small ferry hut, ferry boats pulled up on the sand, driftwood and a round shield drying on the sand",
+   "outdoor": true
   },
   {
    "id": "in_w8s_glatz_post",
@@ -915,7 +920,7 @@
    "scene": "w8s_glatz_post",
    "name": "傭兵の詰所（グラッツ）",
    "pack": "special_in",
-   "tags": "mercenary guardhouse, wall covered with hundreds of wooden name tags, chalkboard of bouts, fireplace"
+   "tags": "mercenary guardhouse, wall covered with hundreds of small wooden tags, weapon racks, fireplace, long table"
   },
   {
    "id": "in_w8s_durm_shed",
@@ -923,7 +928,7 @@
    "scene": "w8s_durm_shed",
    "name": "欠片の鑑定小屋（ドゥルム）",
    "pack": "special_in",
-   "tags": "appraiser's shed full of strange ancient fragments on shelves, gears and glass shards, rope ladders, muddy boots"
+   "tags": "cramped appraiser shed, shelves full of strange ancient fragments, old gears and glass shards, magnifying glass on a workbench, rope ladders, muddy boots"
   },
   {
    "id": "in_w8s_vinale_cellar",
@@ -947,7 +952,8 @@
    "scene": "w8s_valm_pillar",
    "name": "石の柱の広場（ヴァルミリア）",
    "pack": "special_in",
-   "tags": "snowy market square, tall black stone pillar circled by stakes, colorful tribal tents, cooking pot"
+   "tags": "(snowy:1.3) market square in a winter town, snow on the ground, tall black stone pillar circled by wooden stakes, colorful tribal tents and stalls, large cooking pot over a fire",
+   "outdoor": true
   },
   {
    "id": "in_w8s_brenark_wall",
@@ -955,7 +961,8 @@
    "scene": "w8s_brenark_wall",
    "name": "爪痕の城壁（ブレイナーク）",
    "pack": "special_in",
-   "tags": "top of a grey triple city wall, four huge claw marks gouged in the stone, frozen sea beyond"
+   "tags": "(view from the top of a city wall:1.3), stone walkway with battlements running into the distance, (four huge claw marks gouged into the stone parapet:1.3), grey stone, frozen sea beyond the wall",
+   "outdoor": true
   },
   {
    "id": "in_w8s_gris_visit",
@@ -971,7 +978,8 @@
    "scene": "w8s_eisen_ice",
    "name": "氷の漁場（アイゼルヴァン）",
    "pack": "special_in",
-   "tags": "frozen bay, ice fishing huts around holes, fishermen with lines, rope path on the ice, whale ribs far away"
+   "tags": "frozen bay, (small wooden ice fishing huts:1.3) around round holes in the ice, fishing lines and buckets, rope path across the ice, (huge whale skeleton ribs sticking out of the ice far away:1.2), no living animals",
+   "outdoor": true
   },
   {
    "id": "in_w8s_elden_garden",
@@ -979,7 +987,8 @@
    "scene": "w8s_elden_garden",
    "name": "泉の森の薬草園（エルデンホルム）",
    "pack": "special_in",
-   "tags": "herb garden around a steaming warm spring, green rows amid snow, archery target on the fence, baskets"
+   "tags": "herb garden around a steaming warm spring, green rows of herbs amid snow, archery target on the wooden fence, wicker baskets",
+   "outdoor": true
   },
   {
    "id": "in_w8s_fort_wall",
@@ -987,7 +996,8 @@
    "scene": "w8s_fort_wall",
    "name": "黒い壁の上（黒鉄の砦）",
    "pack": "special_in",
-   "tags": "walkway atop a black iron fortress wall, soldiers of three nations looking at the sky, mountain pass beyond"
+   "tags": "(walkway on top of a fortress wall:1.3), black iron and stone battlements in the foreground, three different national banners on poles, (mountain pass seen from the wall:1.2)",
+   "outdoor": true
   },
   {
    "id": "in_w8s_kern_well",
@@ -995,7 +1005,8 @@
    "scene": "w8s_kern_well",
    "name": "深い井戸（ケルン）",
    "pack": "special_in",
-   "tags": "deep stone well in a town square, rope with countless knots, big porridge cauldron, soldiers' wives"
+   "tags": "small town square of a fort town, (old round stone well with a wooden roof and a pulley:1.4), rope with countless knots, wooden bucket on the well rim, separate big iron porridge cauldron hanging over a campfire nearby, stone houses around the square",
+   "outdoor": true
   },
   {
    "id": "in_w8s_rine_field",
@@ -1003,7 +1014,8 @@
    "scene": "w8s_rine_field",
    "name": "鐘待ちの畑（リーネ）",
    "pack": "special_in",
-   "tags": "village field with women and children hoeing, graveyard beside the field, distant watchtower bell"
+   "tags": "village field with hoes left in the soil, small graveyard beside the field, distant watchtower with a bell",
+   "outdoor": true
   },
   {
    "id": "in_w8s_velt_beacon",
@@ -1011,7 +1023,8 @@
    "scene": "w8s_velt_beacon",
    "name": "烽火台（ヴェルト）",
    "pack": "special_in",
-   "tags": "three stone beacon platforms with stacked firewood, northern sea on one side and mountains on the other, smoke"
+   "tags": "(three round stone beacon towers:1.3) with stacked firewood on top on a cliff, thin smoke, northern sea on one side, mountains on the other side",
+   "outdoor": true
   },
   {
    "id": "in_w8s_halt_carver",
