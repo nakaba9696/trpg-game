@@ -73,7 +73,8 @@
     const r = G.check(g.stat, vsOf(t, g.stat), it.name, hitOf(g));
     if (r.ok) {
       if (e.majin) {
-        G.log("nar", `弾は${t.name}の体の手前で、見えない壁に止まり、ぽとりと落ちた。絶界だ。`, { fx: "wall", foe: t.name });
+        const W = G.wallOf ? G.wallOf(t) : { what: "見えない壁", name: "絶界" };
+        G.log("nar", `弾は${t.name}の体の手前で、${W.what}に止まり、ぽとりと落ちた。${W.name}だ。`, { fx: "wall", foe: t.name });
         G.openLore && G.openLore("tsutsu:wall");
       } else {
         let dmg = G.dice(g.dmg);

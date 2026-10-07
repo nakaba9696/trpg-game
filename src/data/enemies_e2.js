@@ -1,5 +1,5 @@
 // 使徒二体と、その眷属と居城の魔物（E2）。欄の意味は enemies.js と enemies_2.js と同じ。
-// 使徒は majin（絶界）なので、魔剣ヴォルグリムか聖刀白夜でしか傷つかない。
+// 使徒は majin（使徒の印）。E11 から絶界は黒鎧だけで、ここの使徒は刃が届く（守りは固有の強さ。src/data/zz_e11_wall.js）。
 // 名前と説明は戦うと見える。正体や世界の仕組みは書かない（docs/lore/voice.md）。
 // 居城の迷宮は locations_e2.js、関われる出来事は events_e2.js。レーン E（敵）が管理
 (function (G) {
