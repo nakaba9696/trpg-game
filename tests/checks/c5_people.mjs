@@ -183,7 +183,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 使徒の側（E3）
   const E3 = D.E3 || { LIST: {} };
   const yz = E3.LIST.yuzuel;
-  if (!yz || yz.no !== 13 || yz.rank !== "討伐" || yz.calm !== "友好" || yz.home !== "mountains") F("伯爵さまが E3 の表（刻印の環の十三・討伐・友好・断界山脈）に無い");
+  if (!yz || yz.no !== 13 || yz.rank !== "B" || yz.calm !== "友好" || yz.home !== "mountains") F("伯爵さまが E3 の表（刻印の環の十三・B 級・友好・断界山脈）に無い");
   if (!evIds.has("e3_meet_yuzuel") || !evIds.has("e3_after_yuzuel")) F("伯爵さまに会う出来事か、倒したあとの出来事が無い");
   if (!(E3.LIST.aurelia && E3.LIST.aurelia.keys.some((k) => k.id === "c5_severin"))) F("聖歌の眷属を退けることが、蝶の奥方の条件に無い");
   if (!(E3.LIST.yoihime && E3.LIST.yoihime.keys.some((k) => k.id === "c5_rufina"))) F("古い香の燃えさしが、香の姐さんの条件に無い");

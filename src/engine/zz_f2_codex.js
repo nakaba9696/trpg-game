@@ -514,7 +514,7 @@
     if (e.mres >= 25) weak.push("魔法が効きにくい");
     const loot = as(e.loot).map(([lid]) => (G.codexHasItem(lid) ? (D.ITEMS[lid] || {}).name : "？？？")).filter(Boolean);
     return [
-      ["格", String(e.tier)],
+      ["格", G.gradeOf ? G.gradeName(G.gradeOf(id)) : String(e.tier)], // E8：S〜D 級
       ["HP", killed ? String(e.hp) : q],
       ["攻撃", `${dice(e.dmg)}${killed ? `（命中 ${e.hit}%）` : ""}`],
       ["防御", killed ? String(e.def) : q],
