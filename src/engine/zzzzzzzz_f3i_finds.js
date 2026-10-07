@@ -180,10 +180,14 @@
     if (head === "shop" && /^buy:/.test(arg)) {
       const id = arg.slice(4);
       if (id === API.marketFind(S.loc, S.day, S)) {
-        const extra = API.price(id) - RAW[id].price;
-        if (S.gold < API.price(id)) return;
+        const want = API.price(id);
+        if (S.gold < want) return;
+        const before = S.gold;
         const r = facAct0(head, arg, a);
+        // 払うのは札に出した掘り出し物の値段だけ。内側（戦・世の動きの値上がり）がもう上乗せしていれば、その分は足さない・返す（二重に取って所持金が負にならないように）
+        const extra = want - (before - S.gold);
         if (extra > 0) { S.gold -= extra; G.note(`掘り出し物の上乗せ（-${extra}G）`); }
+        else if (extra < 0) S.gold -= extra;
         G.say("店主は、あなたが選んだ品を見て、一瞬だけ惜しそうな顔をした。");
         return r;
       }

@@ -366,3 +366,20 @@
   });
   D.EVENT_NOBODY = (D.EVENT_NOBODY || []).concat((E10.EVENTS2 || []).map((e) => e.id));
 })(globalThis.G = globalThis.G || {});
+
+// E10-3：出来事の重み（持ち主「弱体イベントの内容しだいです」）。弱り方は起こした出来事の重みの割合で決まる。無い出来事は 1
+// 国を挙げる出来事（王命・議会・軍・艦隊・三つの国）は 2〜2.5、重い犠牲を払う・深く踏み込む出来事は 1.5、小さな出来事は 1
+(function (G) {
+  const E10 = G.data && G.data.E10;
+  if (!E10) return;
+  E10.W = Object.assign(E10.W || {}, {
+    graw: { herald: 1, fort: 2 },
+    mordu: { bed: 1, burn: 2 },
+    zalve: { ledger: 2, scale: 1 },
+    chezar: { piece: 1, court: 2 },
+    azlag: { laugh: 1, nets: 2 },
+    lugu: { chorus: 2, bell: 1.5 },
+    kurobane: { names: 1, child: 1.5, mirrors: 2.5 },
+    tojizuki: { watch: 1, lake: 1.5, edict: 2.5 },
+  });
+})(globalThis.G = globalThis.G || {});

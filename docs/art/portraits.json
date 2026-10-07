@@ -2539,6 +2539,263 @@
    }
   },
   {
+   "id": "ortensia",
+   "group": "c2",
+   "name": "オルテンシア",
+   "file": "assets/portraits/ortensia.webp",
+   "identity": "1girl, mature female, adult woman, 38 years old, tall, slender, pale skin, red hair, very long hair, wavy hair, side-swept bangs, violet eyes, half-closed eyes, long eyelashes, thin eyebrows, silver earrings, wide-brimmed pointed witch hat, purple witch hat with a silver band, elegant loose purple robe, silver embroidery, long wide sleeves",
+   "tags": "sitting cross-legged in a high-backed chair, holding a teacup, small wooden clockwork doll on shoulder",
+   "face": "calm amused smile",
+   "variants": {
+    "joy": "gentle smile, closed eyes, happy",
+    "anger": "cold stare, narrowed eyes, closed mouth, shadowed face",
+    "sorrow": "sad, looking away, holding the hat brim, downturned mouth",
+    "fun": "laughing, open mouth, hand near mouth",
+    "smug": "smug, half-closed eyes, smirk, chin up",
+    "surprise": "surprised, wide-eyed, slightly open mouth",
+    "shy": "embarrassed, light blush, pulling hat brim down over eyes",
+    "wicked": "mischievous smile, one eye closed, finger on lips",
+    "faint_smile": "slight smile, soft eyes, closed mouth"
+   },
+   "memo": "C12・仲間（恋の相手）。エルメシア共和国の毒沼の湿地の奥の離れに住む伝説の魔女。天才肌で気まぐれ、人を試すのが好き。背の高い大人の女、広いつばのとんがり帽子、紫と銀の衣、木のからくりの小さな留守番"
+  },
+  {
+   "id": "ismene",
+   "group": "c2",
+   "name": "イスメネ",
+   "file": "assets/portraits/ismene.webp",
+   "identity": "1girl, elf, pointy ears, adult woman, 26 years old, slender, fair skin, white hair, very long hair, single braid, braid over shoulder, hair between eyes, grey eyes, calm eyes, thin eyebrows, ink stains on fingers, dark green scholar coat with gold trim, high collar, ink bottle on belt",
+   "tags": "holding a thick old book with both arms, standing beside a tall bookshelf",
+   "face": "expressionless, calm",
+   "variants": {
+    "joy": "slight smile, soft eyes, holding book close",
+    "anger": "frown, narrowed eyes, closed mouth",
+    "sorrow": "sad, looking down at an open book, downturned mouth",
+    "fun": "small smile, sparkling eyes, pen in hand",
+    "surprise": "surprised, wide-eyed, book slipping",
+    "shy": "blush, red pointy ears, hiding mouth behind book",
+    "serious": "serious, focused eyes, reading in candlelight",
+    "sparkle": "sparkling eyes, slight smile, leaning forward",
+    "fear": "scared, pale, wide eyes, gripping book tightly"
+   },
+   "memo": "C12・仲間（恋の相手）。光天教会領の写本の町メルヴィの修道院の書庫番のエルフ。本が何より好きで、理屈っぽく淡々と話す。白い長い髪、知的な目、学者の長衣、いつも本を抱えている"
+  },
+  {
+   "id": "shano",
+   "group": "c2",
+   "type": "bishonen",
+   "name": "シャノ",
+   "file": "assets/portraits/shano.webp",
+   "identity": "1boy, male focus, young man, 26 years old, cat boy, orange cat ears, orange striped cat tail, lean, slim, fair skin, orange hair, medium hair, low ponytail, green eyes, slit pupils, sharp eyes, thin eyebrows, single earring, red sash, dark red acrobat vest, loose black trousers, bare forearms, bandaged wrists",
+   "tags": "crouching on a wooden beam, tail curled",
+   "face": "cocky grin",
+   "variants": {
+    "joy": "wide grin, sparkling eyes, tail raised",
+    "anger": "hissing, bared fangs, ears flattened, fur bristling",
+    "sorrow": "looking down, ears drooping, tail wrapped around legs",
+    "fun": "laughing, upside down, hanging from beam",
+    "smug": "smug, half-closed eyes, smirk, tail swaying",
+    "shy": "blush, looking away, ears down, tail twitching",
+    "surprise": "wide-eyed, ears perked, tail puffed up",
+    "troubled": "troubled, hunched, ears back, awkward smile"
+   },
+   "memo": "C12・仲間（恋の相手）。エルメシア共和国の芸の町サリュエスの芝居小屋の猫の獣人の軽業師。綱の上は大胆、降りると猫背で人見知り。水が嫌い。黒い猫耳と尻尾、赤い帯、赤い綱の切れ端"
+  },
+  {
+   "id": "otose",
+   "group": "c2",
+   "name": "オトセ",
+   "file": "assets/portraits/otose.webp",
+   "identity": "1girl, mature female, adult woman, 44 years old, tall, broad shoulders, sturdy, tan skin, dark brown hair, short hair, wet hair, dark brown eyes, round eyes, thick eyebrows, sun-weathered face, scar on forearm, white diving kimono, rolled-up sleeves, white headband with small seashells, rope coiled on shoulder",
+   "tags": "hands on hips, standing on a wooden boat",
+   "face": "big hearty laugh, open mouth",
+   "variants": {
+    "joy": "laughing, closed eyes, open mouth",
+    "anger": "angry, shouting, v-shaped eyebrows",
+    "sorrow": "sad, looking out to sea, closed mouth",
+    "fun": "grin, holding a closed shell to ear",
+    "smug": "smug grin, arms crossed",
+    "serious": "serious, holding breath, puffed cheeks, focused eyes",
+    "faint_smile": "slight smile, soft eyes, looking at a seashell headband"
+   },
+   "memo": "C12・仲間。シェルアーク諸島の真珠採りの島ヨナの海女の頭。豪快な島言葉、殻の賭けに負ける。浮かない体で沈むように潜る。白い潜り着、貝殻の鉢巻き、命綱"
+  },
+  {
+   "id": "guido",
+   "group": "c2",
+   "type": "ojisan",
+   "name": "グィド",
+   "file": "assets/portraits/guido.webp",
+   "identity": "1boy, male focus, old man, 61 years old, stocky, tan skin, wrinkled skin, orange hair, short hair, receding hairline, long sideburns, blue eyes, droopy eyes, bushy eyebrows, oil-stained knit cap, yellow oilskin jacket, oil stains on hands, brass oil can",
+   "tags": "sitting on stone steps of a lighthouse, holding an oil can",
+   "face": "gentle tired smile",
+   "variants": {
+    "joy": "warm smile, crinkled eyes",
+    "anger": "stern, frown, tight lips",
+    "sorrow": "sad, looking down, holding cap",
+    "fun": "chuckling, closed eyes",
+    "serious": "serious, listening, head tilted toward the sea",
+    "troubled": "troubled, scratching head, awkward smile",
+    "faint_smile": "slight smile, looking out to sea"
+   },
+   "memo": "C12・仲間。エルメシア共和国の灯台の港ヴォルエラの白い灯台の灯台守。何でも明日にする。沖の歌に歌い返すか迷う。油の染みた帽子、紺の外套、油の缶"
+  },
+  {
+   "id": "pietro",
+   "group": "c2",
+   "type": "ojisan",
+   "name": "ピエトロ",
+   "file": "assets/portraits/pietro.webp",
+   "identity": "1boy, male focus, old man, 58 years old, stocky, pale skin, brown hair, short hair, receding hairline, blue eyes, droopy eyes, round glasses, freckles, thin eyebrows, wrinkles, grey waistcoat, rolled-up shirt sleeves, ink-stained ledger",
+   "tags": "holding a ledger and a pen, standing by a water gate",
+   "face": "expressionless, looking over glasses",
+   "variants": {
+    "joy": "slight smile, closed mouth",
+    "anger": "frown, tapping ledger",
+    "sorrow": "sad, looking at water level marks",
+    "fun": "dry smile, pen behind ear",
+    "serious": "serious, writing in ledger",
+    "troubled": "troubled, wiping glasses",
+    "surprise": "surprised, glasses slipping"
+   },
+   "memo": "C12・名のある人。エルメシア共和国の水の都トゥリエルの水門番。帳面に三つの職しか書かない。眼鏡、帳面"
+  },
+  {
+   "id": "marguerite",
+   "group": "c2",
+   "name": "マルグリット",
+   "file": "assets/portraits/marguerite.webp",
+   "identity": "1girl, old woman, 66 years old, sturdy, fair skin, grey hair, hair bun, brown eyes, sharp eyes, raised eyebrows, wrinkles, gold earrings, wine red dress, black shawl, rolled ledger",
+   "tags": "holding a rolled ledger like a baton, standing in theater wings",
+   "face": "amused smirk",
+   "variants": {
+    "joy": "hearty laugh, open mouth",
+    "anger": "angry, raising ledger",
+    "sorrow": "sad, looking at a rope",
+    "fun": "grin, wink",
+    "smug": "smug, hand on hip",
+    "serious": "serious, watching from the wings",
+    "faint_smile": "slight smile, soft eyes"
+   },
+   "memo": "C12・名のある人。芸の町サリュエスの芝居小屋の座頭。帳面で座員の頭を叩く。猫の軽業師を拾った"
+  },
+  {
+   "id": "hildegard",
+   "group": "c2",
+   "name": "ヒルデガルト",
+   "file": "assets/portraits/hildegard.webp",
+   "identity": "1girl, old woman, 68 years old, thin, pale skin, white hair, short hair, grey eyes, narrow eyes, thin eyebrows, wrinkles, black nun habit, white veil, sun pendant, iron key on belt",
+   "tags": "standing at a scriptorium door, hands folded",
+   "face": "stern, expressionless",
+   "variants": {
+    "joy": "very slight smile",
+    "anger": "cold glare, narrowed eyes",
+    "sorrow": "sad, looking at a closed book",
+    "fun": "faint dry smile",
+    "serious": "serious, inspecting hands",
+    "cold": "cold, looking down at viewer",
+    "troubled": "troubled, holding key"
+   },
+   "memo": "C12・名のある人。光天教会領の写本の町メルヴィの修道院長。爪の汚れた者を紙に触らせない。切られた頁を知らないまま守る"
+  },
+  {
+   "id": "agathe",
+   "group": "c2",
+   "name": "アガテ",
+   "file": "assets/portraits/agathe.webp",
+   "identity": "1girl, mature female, 52 years old, broad shoulders, sturdy, tan skin, dark brown hair, hair bun, green eyes, sharp eyes, thick eyebrows, burn scar on hand, brown kerchief, leather apron, rolled-up sleeves, beeswax candles",
+   "tags": "stirring a wax pot, candles hanging from ceiling",
+   "face": "gruff frown",
+   "variants": {
+    "joy": "rough grin",
+    "anger": "angry, shouting",
+    "sorrow": "sad, counting bees silently",
+    "fun": "laughing, wax on cheek",
+    "serious": "serious, dipping wicks",
+    "troubled": "troubled, looking away",
+    "faint_smile": "slight smile, holding a honeycomb"
+   },
+   "memo": "C12・名のある人。光天教会領の蝋燭の町リュミエの蝋燭工房の親方。ぶっきらぼう。大聖堂の地下に下ろす蝋燭を納める"
+  },
+  {
+   "id": "seraphina",
+   "group": "c2",
+   "name": "セラフィナ",
+   "file": "assets/portraits/seraphina.webp",
+   "identity": "1girl, young woman, 27 years old, slender, fair skin, black hair, bob cut, green eyes, gentle eyes, soft eyebrows, white nun habit, light grey veil, sun pendant, wet sleeves",
+   "tags": "kneeling by a clear spring, hands in the water",
+   "face": "gentle smile",
+   "variants": {
+    "joy": "bright smile, closed eyes",
+    "anger": "pout, frown",
+    "sorrow": "sad, teary eyes",
+    "fun": "giggling, hand over mouth",
+    "serious": "serious, counting, lips moving",
+    "troubled": "troubled, worried eyebrows",
+    "faint_smile": "slight smile, soft eyes"
+   },
+   "memo": "C12・名のある人。光天教会領の泉の町セレナの泉守りの修道女。巡礼の手を泉に沈めて脈を数える。夜に泉の銅貨を貧しい家に配る"
+  },
+  {
+   "id": "tomas",
+   "group": "c2",
+   "type": "elder",
+   "name": "トマス",
+   "file": "assets/portraits/tomas.webp",
+   "identity": "1boy, male focus, old man, 81 years old, short, stocky, tan skin, wrinkled skin, grey hair, medium hair, wavy hair, long white beard, grey eyes, half-closed eyes, white eyebrows, brown pilgrim robe, rope belt, wooden walking staff with two wooden tags",
+   "tags": "sitting among many walking staffs",
+   "face": "calm gentle smile",
+   "variants": {
+    "joy": "warm smile, closed eyes",
+    "anger": "stern, frown",
+    "sorrow": "sad, holding a staff tag",
+    "fun": "chuckling",
+    "serious": "serious, wiping a staff tag",
+    "faint_smile": "slight smile, looking at a lying staff",
+    "troubled": "troubled, looking away"
+   },
+   "memo": "C12・名のある人。光天教会領の巡礼の宿場オルベの杖の納め所の番。杖の数を数えない。聖都へ七度歩いた"
+  },
+  {
+   "id": "ganzou",
+   "group": "c2",
+   "type": "brute",
+   "name": "ガンゾウ",
+   "file": "assets/portraits/ganzou.webp",
+   "identity": "1boy, male focus, man, 50 years old, very muscular, burly, tan skin, orange hair, short hair, crew cut, long sideburns, blue eyes, round eyes, thick eyebrows, tattoo on shoulder, white work kimono, open collar, rope belt, salt crystals on arms, brass weight in hand",
+   "tags": "arms crossed, standing by a salt pan",
+   "face": "intimidating grin",
+   "variants": {
+    "joy": "booming laugh",
+    "anger": "furious, shouting, veins",
+    "sorrow": "sad, looking at salt in palm",
+    "fun": "grin, tossing salt to a child",
+    "smug": "smug, holding a polished weight",
+    "serious": "serious, weighing salt",
+    "troubled": "troubled, scratching head"
+   },
+   "memo": "C12・名のある人。シェルアーク諸島の塩の島ソルネの塩田の顔役。分銅を一つだけ拭く。子どもには塩をただでやる"
+  },
+  {
+   "id": "yae",
+   "group": "c2",
+   "name": "ヤエ",
+   "file": "assets/portraits/yae.webp",
+   "identity": "1girl, old woman, 79 years old, very short, hunched, small, tan skin, white hair, hair bun, black eyes, narrow eyes, thin eyebrows, deep wrinkles, dark blue kimono, indigo kerchief, fishing net over shoulder",
+   "tags": "tugging at a net knot",
+   "face": "sharp knowing look",
+   "variants": {
+    "joy": "toothless laugh",
+    "anger": "scolding, pointing",
+    "sorrow": "sad, looking up at old nets",
+    "fun": "grin, holding a knot",
+    "serious": "serious, inspecting a knot",
+    "faint_smile": "slight smile, touching a seashell on the net",
+    "surprise": "surprised, wide-eyed"
+   },
+   "memo": "C12・名のある人。シェルアーク諸島の網の島カラヴの網元の婆さま。結び目で結んだ者を言い当てる。古い網に帰らなかった者の持ち物を結ぶ"
+  },
+  {
    "id": "kind_villager_m",
    "group": "people",
    "name": "町の人（男）",

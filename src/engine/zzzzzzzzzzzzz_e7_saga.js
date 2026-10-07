@@ -145,6 +145,9 @@
     const a = (sg.allies || {})[key];
     if (!a) return;
     if (a.c2) {
+      // 家に残した連れ合い（M10 の atHome）なら、仲間の欄に戻してから別れにする（M10 の「失ったとき」の文と、人生の物語の一行が出る）
+      const m10 = S.m10;
+      if (m10 && m10.atHome && m10.atHome.c2 === a.c2) { S.companions.push(m10.atHome); m10.atHome = null; }
       const c = (S.companions || []).find((x) => x && x.c2 === a.c2);
       if (c && G.m2Remove) G.m2Remove(c, "death", cause || a.cause || "");
       else G.chron(`${a.name}が死ぬ。${cause || a.cause || ""}`, "comp");

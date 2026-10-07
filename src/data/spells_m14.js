@@ -74,8 +74,8 @@
     // 光
     light2: { name: "癒しの雨", el: "light", tier: 2, mp: 6, diff: 0, bonus: "heal", debt: 2, hint: "自分と仲間すべての傷をふさぎ、毒を消す", kw: ["癒しの雨", "雨"],
       fx: { t: "heal", d: [2, 6, 2], pw: 10, party: true, cure: true } },
-    light3: { name: "浄めの光", el: "light", tier: 3, mp: 10, diff: -8, bonus: "light", debt: 3, hint: "敵すべてを焼く白い光。不死には三倍。自分の傷も癒す", kw: ["浄め", "浄化", "白い光"],
-      fx: { t: "all", d: [2, 6, 0], pw: 8, undead: 3, selfHeal: [2, 6, 0] } },
+    light3: { name: "浄めの光", el: "light", tier: 3, mp: 10, diff: -8, bonus: "light", debt: 3, hint: "敵すべてを焼く白い光。不死にはよく効く。自分の傷も癒す", kw: ["浄め", "浄化", "白い光"],
+      fx: { t: "all", d: [2, 6, 0], pw: 8, undead: 2, selfHeal: [2, 6, 0] } },
     // 闇
     dark2: { name: "命を吸う", el: "dark", tier: 2, mp: 6, diff: -5, bonus: "dark", debt: 3, hint: "一体の命を吸い、与えた分の半分を自分の傷に", kw: ["吸う", "命を"],
       fx: { t: "drain", d: [2, 6, 0], pw: 9, self: 0.5 } },

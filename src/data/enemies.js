@@ -38,12 +38,12 @@
     blackknight: { name: "黒騎士", tier: 4, hp: 52, dmg: [1, 12, 3], hit: 70, def: 25, agi: 35, will: 80, mres: 10, gold: [30, 100], loot: [["plate", 0.1], ["potion", 0.4]], shape: "humanoid", eye: "#ff3a3a", desc: "使徒に仕える黒い鎧の騎士。中身を見た者はいない。" },
 
     // 段 5
-    general: { name: "魔物将軍", tier: 5, hp: 72, dmg: [2, 10, 3], hit: 70, def: 25, agi: 45, will: 85, mres: 15, gold: [60, 150], loot: [["gem", 0.4], ["elixir", 0.1]], shape: "giant", eye: "#ff3a3a", desc: "魔物の軍勢を率いる将。" },
+    general: { name: "角兜の将", tier: 5, hp: 72, dmg: [2, 10, 3], hit: 70, def: 25, agi: 45, will: 85, mres: 15, gold: [60, 150], loot: [["gem", 0.4], ["elixir", 0.1]], shape: "giant", eye: "#ff3a3a", desc: "魔物の軍勢を率いる将。" },
     kin: { name: "使徒の眷属", tier: 5, hp: 58, dmg: [2, 8, 4], hit: 70, def: 20, agi: 55, will: 90, mres: 25, gold: [40, 120], loot: [["manawater", 0.5]], shape: "winged", eye: "#c77dff", desc: "使徒が生み出した翼ある僕。" },
 
     // ボス
     kain: { name: "眷属カイン", tier: 4, boss: true, hp: 95, dmg: [2, 8, 4], hit: 75, def: 20, agi: 60, will: 999, mres: 25, magic: true, gold: [150, 250], loot: [["apostleheart", 1]], shape: "humanoid", eye: "#c77dff", desc: "忘れ水の使徒ルアマリスの眷属。人の思い出を書き写した本を、遺跡で読み漁っている。" },
-    shuten: { name: "鬼の頭目ゴズ", tier: 4, boss: true, hp: 120, dmg: [2, 10, 4], hit: 70, def: 20, agi: 45, will: 999, mres: 10, gold: [100, 200], loot: [["oniclub", 1], ["onihorn", 1]], shape: "giant", eye: "#ff3a3a", desc: "鬼ヶ島を統べる大鬼。白く光る刀を戦利品として奪ったという。" },
+    shuten: { name: "鬼の頭目ゴズ", tier: 4, boss: true, hp: 120, dmg: [2, 10, 4], hit: 70, def: 20, agi: 45, will: 999, mres: 10, gold: [100, 200], loot: [["oniclub", 1], ["onihorn", 1]], shape: "giant", eye: "#ff3a3a", desc: "鬼ヶ島を統べる大鬼。夜明けに鳴る白い鎖を社から盗み、蔵に沈めているという。" },
     bonedragon: { name: "屍竜ネクロザ", tier: 5, boss: true, hp: 150, dmg: [3, 8, 4], hit: 70, def: 25, agi: 30, will: 999, mres: 20, undead: true, gold: [200, 400], loot: [["dragonmail", 1]], shape: "dragon", eye: "#7dffb0", desc: "死してなお墓場を守る竜。その腹に一振りの剣が刺さっている。" },
     rize: { name: "眷属リゼ", tier: 5, boss: true, hp: 120, dmg: [2, 10, 5], hit: 75, def: 25, agi: 70, will: 999, mres: 25, gold: [150, 300], loot: [["apostleheart", 1], ["elixir", 1]], shape: "humanoid", eye: "#ff3a3a", desc: "エンバルダの眷属。主人と同じく戦いに酔う女剣士。" },
     graw: { name: "黒鎧の使徒エンバルダ", tier: 6, boss: true, majin: true, hp: 220, dmg: [2, 10, 6], hit: 80, def: 25, agi: 50, will: 999, mres: 30, gold: [500, 1000], loot: [["gem", 1], ["relic", 1]], shape: "giant", eye: "#ff2020", desc: "黒い鎧に身を包んだ、騎士のような巨きな使徒。背の大剣を抜いた記録は一度もない。そばに立つだけで、一流の戦士でも体がすくむ。絶界に守られ、並の武器では傷ひとつ付かない。" },

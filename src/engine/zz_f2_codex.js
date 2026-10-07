@@ -462,7 +462,7 @@
     if (t === "weapon") {
       rows.push(["攻撃", dice(it.dmg)], ["命中", `${it.stat || "筋力"}${it.hit ? "・" + G.sign(it.hit) : ""}`]);
       if (it.vital) rows.push(["急所", G.sign(it.vital)]);
-      if (it.pierce) rows.push(["特性", "使徒の絶界を斬り裂く"]);
+      if (it.pierce) rows.push(["特性", "黒鎧の絶界にも届く"]);
     }
     if (t === "armor") { rows.push(["防御", String(it.def || 0)]); if (it.agi) rows.push(["敏捷", G.sign(it.agi)]); }
     if (it.magic && t !== "ring") rows.push(["魔法", G.sign(it.magic)]);
@@ -500,7 +500,7 @@
     if (F2.isApostle(e) && !killed) return [];
     const traits = [];
     if (e.boss) traits.push("主");
-    if (e.majin) traits.push("絶界");
+    if ((e.majin && (!G.hasWall || !G.e3Of || !G.e3Of(id) || G.hasWall(G.e3Of(id).id)))) traits.push("絶界"); // E11：絶界は黒鎧だけ
     if (e.undead) traits.push("不死");
     if (e.magic) traits.push("鎧を素通りする攻撃");
     if (e.will >= 999) traits.push("話が通じない");

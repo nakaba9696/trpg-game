@@ -201,18 +201,18 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (g2.e3Tries("yura") !== 0 || g2.e3EverSlain("e3_yura")) fail("古い G.P で記録の読み出しがおかしい");
   }
   {
-    // 剣も条件も無いと、刃は届かない（絶界）。剣があれば届く
+    // 剣も条件も無いと、刃は届かない（絶界）。剣があれば届く。E11 から絶界は黒鎧だけなので、黒鎧で確かめる
     const G = loadEngine();
     strong(G, 4, "none");
     G.S.mode = "event";
-    G.apply({ e3fight: "mirza" });
+    G.apply({ e3fight: "graw" });
     const f = G.S.combat.foes[0];
     if (!G.foeData(f).majin) fail("条件も剣も無いのに、絶界が破れている");
     const G2 = loadEngine();
     strong(G2, 4, "none");
     G2.S.weapon = "volgrim";
     G2.S.mode = "event";
-    G2.apply({ e3fight: "mirza" });
+    G2.apply({ e3fight: "graw" });
     if (G2.foeData(G2.S.combat.foes[0]).majin) fail("絶界を破る剣があるのに、絶界が破れない");
   }
   {

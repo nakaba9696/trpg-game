@@ -27,7 +27,7 @@
   const RULES = [
     { grade: null, why: "使徒：表の格（S・A・B）", test: (id) => !!apostleOf(id), pick: (id) => { const r = apostleOf(id).rank; return OLD[r] || r; } },
     { grade: null, why: "データに grade（A〜D。S は付けない）", test: (id, e) => ["A", "B", "C", "D"].includes(e.grade), pick: (id, e) => e.grade },
-    { grade: "B", why: "絶界を持つ（使徒）", test: (id, e) => !!e.majin },
+    { grade: "B", why: "使徒の印（majin）", test: (id, e) => !!e.majin },
     { grade: "B", why: "ボス・迷宮の主", test: (id, e) => !!e.boss },
     { grade: "B", why: "名のある強敵（D.W8_FOES）", test: (id) => !!(D.W8_FOES && D.W8_FOES[id]) },
     { grade: "B", why: `段の点が ${E8.AUTO.bLv} 以上（段 6 以上）か、HP ${E8.AUTO.bHp} 以上`, test: (id, e) => tierLv(e) >= E8.AUTO.bLv || (e.hp || 0) >= E8.AUTO.bHp },

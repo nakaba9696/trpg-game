@@ -34,6 +34,9 @@ const FACE = {
   // C8（src/data/zc8_people.js）
   gigra: "がらっぱち", valdun: "言葉は少ない", gensai: "糸目", tsuyuha: "古風な話し方", takimaru: "威勢がよく", yurien: "無表情", roswitha: "数字で話す",
   izra: "珍しがる", anselmo: "罰当たり", polf: "盛って", jonas: "堅物", rudger: "物腰が柔らか", rionetta: "おっとり", graul: "礼儀正しく",
+  // C12（src/data/zcz_c12_people.js）
+  ortensia: "問いを一つ", ismene: "淡々と", shano: "人見知り", otose: "豪快", guido: "明日にする",
+  pietro: "帳面", marguerite: "叩いて", hildegard: "にこりともせず", agathe: "ぶっきらぼう", seraphina: "おっとり", tomas: "穏やかな話し方", ganzou: "威勢", yae: "結び目",
 };
 
 export default ({ G, fail }) => {
