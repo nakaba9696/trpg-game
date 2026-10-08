@@ -81,7 +81,7 @@
       test: (S) => Object.values(S.e4kin || {}).filter((x) => x >= ((D.E4 && D.E4.CORE_NEED) || 2)).length >= 3 },
     { key: "t3_gradeB10", name: "B 級狩り", tier: "銀", desc: "冒険をまたいで、使徒でない B 級の魔物を十種倒した",
       test: () => { const f = (P().codex && P().codex.foes) || {}; return !!G.gradeOf && Object.keys(f).filter((i) => f[i] && f[i].kills > 0 && !(G.e3Of && G.e3Of(i)) && G.gradeOf(i) === "B").length >= 10; } },
-    { key: "t3_ap_b", name: "討伐の格", tier: "金", desc: "B 級の使徒を討ち果たした", test: (S) => e3done(S).some((a) => a.rank === "B") },
+    { key: "t3_ap_b", name: "B 級の首", tier: "金", desc: "B 級の使徒を討ち果たした", test: (S) => e3done(S).some((a) => a.rank === "B") },
     { key: "t3_ap_two", name: "二つ目の刻印", tier: "金", desc: "一度の冒険で使徒を二体討った", test: (S) => ((S.e3 && S.e3.done) || []).length >= 2 },
     { key: "t3_bosses10", name: "大物の山", tier: "金", desc: "一度の冒険で強敵・迷宮の主を十体倒した", test: (S) => ((S.counters || {}).bosses || 0) >= 10 },
     { key: "t3_ap_ranks", name: "三つの格付け", tier: "金", desc: "冒険をまたいで、S・A・B 級の使徒をそれぞれ討ったことがある", test: () => { const r = slainRanks(); return ["S", "A", "B"].every((x) => r.has(x)); } },
@@ -134,7 +134,7 @@
   // ---------------------------------------------------------------- 旅・地方・町の特色の場所
   tag("旅・地方・町の特色の場所", ["t2_travel10", "t2_region3", "t2_regions", "explorer", "t2_day30", "day100", "t2_year"]);
   add("旅・地方・町の特色の場所", [
-    { key: "t3_isle", name: "潮を越えて", tier: "銅", desc: "シェルアークの土地を踏んだ", test: (S) => visitedOf(S, (L) => L.region === "シェルアーク").length >= 1 },
+    { key: "t3_isle", name: "潮を越えて", tier: "銅", desc: "シェルアーク諸島の土地を踏んだ", test: (S) => visitedOf(S, (L) => L.region === "シェルアーク").length >= 1 },
     { key: "t3_spot", name: "土地の顔", tier: "銅", desc: "町の特色の場所で行いをした", test: (S) => spots(S).size >= 1 },
     { key: "t3_travel50", name: "旅の垢", tier: "銀", desc: "一度の冒険で五十度旅をした", test: (S) => bySeen("travels")(S) >= 50 },
     { key: "t3_towns15", name: "宿帳の束", tier: "銀", desc: "一度の冒険で十五の町を訪れた", test: (S) => visitedOf(S, (L) => L.type === "town").length >= 15 },
