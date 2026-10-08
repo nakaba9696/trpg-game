@@ -69,9 +69,9 @@
     k2_glare: P({ name: "睨み", stat: "魅力", need: { 魅力: 10 }, hint: "威圧の判定に +10%",
       fx: { check: { re: /^威圧$/, n: 10 } },
       learn: { teach: ["veteran"], scroll: true, crit: { why: "睨んだだけで相手が一歩下がった。眉と顎の角度がぴたりと決まった。この顔は使える。" } } }),
-    k2_vitaleye: P({ name: "急所の目", stat: "敏捷", need: { 敏捷: 12 }, hint: "急所を狙う判定に +10%",
-      fx: { check: { re: /^急所狙い$/, n: 10 } },
-      learn: { train: { gold: 70, days: 2 }, teach: ["fence"], scroll: true, crit: { why: "切っ先が骨と骨の隙間にまっすぐ入った。急所は指一本ぶん内側にある。手がそれを覚えた。" } } }),
+    k2_vitaleye: P({ name: "急所の目", stat: "敏捷", need: { 敏捷: 12 }, hint: "当たった一撃が会心になりやすい（+10%）", // F9：急所を狙う手を無くしたので、会心に
+      fx: { crit: 10 },
+      learn: { train: { gold: 70, days: 2 }, teach: ["fence"], scroll: true } }), // 急所狙いの大成功から覚える道は、急所を狙う手と一緒に無くした（F9）
     k2_spellhand: P({ name: "術の手癖", stat: "魔力", need: { 魔力: 12 }, hint: "炎・氷・雷・呪いの術に +5%",
       fx: { check: { re: /^(炎の魔法|氷の魔法|雷の魔法|呪いの言葉)$/, n: 5 } },
       learn: { teach: ["comp:magic"], scroll: true, crit: { why: "術の熱が指先から余さず出ていった。力の入れどころが手のひらで分かった。" } } }),

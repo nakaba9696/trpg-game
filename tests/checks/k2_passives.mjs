@@ -15,7 +15,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- データ
   if (ids.length < 25 || ids.length > 40) fail(`パッシブスキルが ${ids.length} 種（25〜40）`);
-  const FX = ["check", "bonus", "chance", "sanity", "beast", "poison", "armorAgi", "dual", "kiMax", "rest"];
+  const FX = ["check", "bonus", "chance", "sanity", "beast", "poison", "armorAgi", "dual", "kiMax", "rest", "crit"];
   const SUFFER = ["sanity", "poison", "beast", "brink"];
   let critN = 0;
   for (const id of ids) {
@@ -27,6 +27,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (s.fx.check && (typeof (s.fx.check.re && s.fx.check.re.test) !== "function" || !(s.fx.check.n > 0) || s.fx.check.n > 15)) fail(`${id}：判定の補正が変（強すぎない：15％まで）`);
     if (s.fx.bonus && !(s.fx.bonus.n > 0 && s.fx.bonus.n <= 10)) fail(`${id}：行動の補正が変`);
     if (s.fx.chance && !(s.fx.chance.n > 0 && s.fx.chance.n <= 5)) fail(`${id}：状況の補正が強すぎる`);
+    if (s.fx.crit && !(s.fx.crit > 0 && s.fx.crit <= 10)) fail(`${id}：会心の補正が強すぎる`);
     if (s.fx.sanity && !(s.fx.sanity >= 0.5 && s.fx.sanity < 1)) fail(`${id}：正気の減りの倍率が変`);
     const L = s.learn || {};
     if (!L.train && !L.camp && !(L.teach || []).length && !L.scroll && !L.crit && !L.suffer) fail(`${id}：覚え方が無い`);
