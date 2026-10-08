@@ -2581,6 +2581,27 @@
    "memo": "C12・仲間（恋の相手）。光天教会領の写本の町メルヴィの修道院の書庫番のエルフ。本が何より好きで、理屈っぽく淡々と話す。白い長い髪、知的な目、学者の長衣、いつも本を抱えている"
   },
   {
+   "id": "yorka",
+   "group": "c2",
+   "name": "ヨルカ",
+   "file": "assets/portraits/yorka.webp",
+   "identity": "1girl, 15 years old, petite, slim, pale skin, white hair, silver-white hair, long hair, straight hair, long bangs, hair between eyes, blue eyes, light blue eyes, half-closed eyes, sleepy eyes, thin eyebrows, silver hair clip, light blue hooded cloak, hood up, white dress, blue gem pendant, navy ribbon",
+   "tags": "holding a red hardcover book against chest with both arms",
+   "face": "expressionless",
+   "variants": {
+    "joy": "light smile, closed mouth",
+    "anger": "pout, puffed cheeks, frown",
+    "sorrow": "sad, teary eyes, looking down",
+    "fun": "smile, open mouth, sparkling eyes",
+    "faint_smile": "slight smile, soft eyes, closed mouth",
+    "shy": "blush, embarrassed, looking away",
+    "sparkle": "sparkling eyes, slight smile, excited",
+    "serious": "serious, focused eyes, closed mouth",
+    "surprise": "surprised, wide-eyed, slightly open mouth"
+   },
+   "memo": "C17・仲間（恋の相手ではない。子どもの姿）。写本の町メルヴィの本運びの娘。字が読めず、紺の紐を十字に結んだ赤い本（母の最後の荷）を両腕に抱えている。銀白の長い髪、眠たげな水色の目、水色の頭巾の外套、白い服、青い石の首飾り、紺のリボン。今の絵は、もとシェイラの絵（sheila.webp と表情 9 種）を画像のセッションがこの名前に変えて置く"
+  },
+  {
    "id": "shano",
    "group": "c2",
    "type": "bishonen",
