@@ -35,6 +35,16 @@ export function variantOf(key) {
 }
 export const isVariant = (key) => !!variantOf(key);
 
+// 描き直し待ちの絵（docs/art/portraits.json・monsters.json で redraw の付いた id。R5c：現代の服に見える絵など）。載せない（その人・敵は絵なし。canvas には戻さない）
+// 差分（<id>_<表情>）もまとめて載せない。描き直して置き換えたら、一覧の redraw を外す
+export function redrawKeys() {
+  const out = new Set();
+  const read = (u, dir, k) => { try { const d = JSON.parse(readFileSync(new URL(u, import.meta.url), "utf8"))[k] || []; (Array.isArray(d) ? d : Object.values(d)).forEach((x) => { if (x && x.redraw) out.add(`${dir}/${x.id}`); }); } catch {} };
+  read("../docs/art/portraits.json", "portraits", "portraits");
+  read("../docs/art/monsters.json", "monsters", "monsters");
+  return out;
+}
+
 // assets/ を読んで、鍵ごとに使うファイルを決める：{ files: [{ key, abs, file（assets/ からの道筋）, ext, bytes }], notes }
 export function scanAssets(dir) {
   const out = { files: [], notes: [] };
@@ -57,7 +67,10 @@ export function scanAssets(dir) {
     }
   };
   walk(dir);
+  const redraw = redrawKeys();
   for (const key of Object.keys(found).sort()) {
+    const v = variantOf(key);
+    if (redraw.has(key) || (v && redraw.has(v.base))) { if (!v) out.notes.push(`${key} は描き直し待ち（一覧の redraw）なので載せない`); continue; }
     const { abs, ext } = found[key];
     const bytes = statSync(abs).size;
     out.files.push({ key, abs, file: path.relative(dir, abs).split(path.sep).join("/"), ext, bytes });
