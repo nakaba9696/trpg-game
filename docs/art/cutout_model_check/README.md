@@ -19,19 +19,18 @@
 | 魔物 e4_ashogre・e4_firearrowimp・w3_ashscribe・w2_ironwarden | まとった煙 | `--keep-color` |
 | 魔物 e4k_cauldron | 湯気 | `--keep-color`（白い湯気は線だけ残る） |
 | 魔物 e4_lampghost | 青い鬼火 | `--keep-color` |
-| 魔物 e3_notari | 後ろの光（光輪） | `--keep-color --key 40,110`（暗い背景。背景の色は縁の中央値） |
-| 魔物 graw | まとった赤い気 | `--keep-color --key 40,110` |
-| 魔物 e4_seafog | 体の霧 | `--keep-color --key 40,110` |
-| 魔物 e3_yuzuel | 後ろの赤い円 | 切り抜かずに元のまま（グラデーションの背景と分けられない。表示のときの白抜きに任せる） |
-| 魔物 e3_lugu | 大きな傘 | 切り抜かずに元のまま（同上） |
 | 人物 titta（8 枚） | 車いす | `--model isnet-anime` |
 | 人物 aurelia（8 枚） | 翼（serious・sorrow で消えた） | `--keep-color`（差分も同じ形にそろえる） |
-| 人物 celestin（10 枚） | 座っている枝 | `--keep-color`（木ごと残す） |
-| 人物 timo（10 枚） | 木（差分で有る・無いがばらついた） | `--keep-color`（全部同じに） |
 
 このほか、前の点検で背景が残った・白いもやが出た 13 枚（bartolo・kind_villager_m・titta_exasperated・timo の一部・yura ほか）は `--model isnet-anime`。
 
+## 持ち主に聞く絵（`docs/art/cutout_review/questions.json`）
+
+光・オーラ（e3_notari・graw・e3_tojizuki・e3_levian・e3_yuzuel）、霧（e4_seafog）、傘（e3_lugu。背景を白に描き直した版）、足元の炎・溶岩・地面（e3_tetsukui・e4_cinderhound）、
+大樹の後ろの空（e3_sekaiju）、後ろの布（e4_mudhound）、止まっている岩・崖・廃墟（e4_vulture・e4_rockeater・e4_warcrow）、墓石（e4_gravejackal）、座る木・横の木（celestin・timo）。
+答えが出るまで、これらは切り抜かずに元の絵のまま（`fixes_*.jpg` にある notari・graw・seafog・yuzuel・lugu・celestin・timo の「直した後」は、答えでそれがよいと言われたときの版）。
+
 ## そのままにした所（背景と判断）
 
-e4_warcrow の廃墟・e4_vulture の岩・e4_cropcrow の麦・e4_gravejackal の墓石・ogre と timo 以外の木・konoha の雲・rionetta の階段・e4k_moonhare の青い光など、
+e4_cropcrow の麦・ogre・lumia の木・konoha の雲・rionetta の階段・e4k_moonhare の青い光など、
 人物や魔物から離れた景色は消したまま。座っている台（musette・tsuyuha・souhaku・otmar のいす）は残っている。

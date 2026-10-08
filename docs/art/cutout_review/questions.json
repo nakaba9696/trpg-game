@@ -1,0 +1,92 @@
+[
+ {
+  "id": "e3_yuzuel",
+  "name": "問答の使徒ユズエル",
+  "what": "後ろの赤い円（光輪）。灰色のグラデーションの背景と分けられず、円を残すと四角い背景ごと残る。右は円を消した版",
+  "file": "docs/art/cutout_review/e3_yuzuel.webp"
+ },
+ {
+  "id": "e3_lugu",
+  "name": "海嘯の使徒ガルメド",
+  "what": "背景込みの絵を作り直した（元の絵を土台に空を白にして描き直し、切り抜いた。傘は残り、足元の波は消えた）",
+  "file": "docs/art/cutout_review/e3_lugu.webp"
+ },
+ {
+  "id": "e3_notari",
+  "name": "白霧の使徒オルネグス",
+  "what": "光・オーラ：後ろの光（光輪の外側の光）。右は光を半透明で残した版（暗い背景の色が少し縁に残る）",
+  "file": "docs/art/cutout_review/e3_notari.webp"
+ },
+ {
+  "id": "graw",
+  "name": "黒鎧の使徒エンバルダ",
+  "what": "光・オーラ：体にまとった赤い気。右は気を半透明で残した版",
+  "file": "docs/art/cutout_review/graw.webp"
+ },
+ {
+  "id": "e3_tojizuki",
+  "name": "閉じ月の使徒クロフェン",
+  "what": "光・オーラ：まわりの青い光。右は光を消した版",
+  "file": "docs/art/cutout_review/e3_tojizuki.webp"
+ },
+ {
+  "id": "e3_levian",
+  "name": "忘れ水の使徒ルアマリス",
+  "what": "光・オーラ：頭の上からの光。右は光を消した版",
+  "file": "docs/art/cutout_review/e3_levian.webp"
+ },
+ {
+  "id": "e4_seafog",
+  "name": "沖の黒坊主",
+  "what": "体のまわりの霧（霧の怪物）。右は霧を半透明で残した版",
+  "file": "docs/art/cutout_review/e4_seafog.webp"
+ },
+ {
+  "id": "e4_cinderhound",
+  "name": "火口の犬",
+  "what": "足元の溶岩と黒い煙。右は消した版",
+  "file": "docs/art/cutout_review/e4_cinderhound.webp"
+ },
+ {
+  "id": "e3_tetsukui",
+  "name": "鉄喰いの使徒ザルガドム",
+  "what": "足元の炎と地面。右は残した版（モデルが残した）",
+  "file": "docs/art/cutout_review/e3_tetsukui.webp"
+ },
+ {
+  "id": "e3_sekaiju",
+  "name": "根の王",
+  "what": "大樹の後ろの空と光。右は消した版",
+  "file": "docs/art/cutout_review/e3_sekaiju.webp"
+ },
+ {
+  "id": "e4_mudhound",
+  "name": "泥浴び犬",
+  "what": "後ろの布（テント）。右は残した版（_x も同じ）",
+  "file": "docs/art/cutout_review/e4_mudhound.webp"
+ },
+ {
+  "id": "e4_vulture",
+  "name": "屍食い禿鷲",
+  "what": "足場：止まっている岩。消すと宙に浮く。右は消した版（e4_rockeater・e4_rockeater_x の崖、e4_warcrow の廃墟も同じ判断）",
+  "file": "docs/art/cutout_review/e4_vulture.webp"
+ },
+ {
+  "id": "e4_gravejackal",
+  "name": "墓荒らし山犬",
+  "what": "横の墓石。右は消した版",
+  "file": "docs/art/cutout_review/e4_gravejackal.webp"
+ },
+ {
+  "id": "celestin",
+  "name": "セレスティン",
+  "what": "座っている木。右は木ごと残した版（消すと座ったまま宙に浮く。差分 9 枚も同じ）",
+  "file": "docs/art/cutout_review/celestin.webp"
+ },
+ {
+  "id": "timo",
+  "name": "ティモ",
+  "what": "横の木。右は木ごと残した版（差分 9 枚も同じ）",
+  "file": "docs/art/cutout_review/timo.webp"
+ }
+]
