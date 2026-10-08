@@ -10,6 +10,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const F = (m) => { n++; fail("q8 恋と好感度: " + m); };
   const start = (seed, ids) => {
     const G = loadEngine();
+    G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
     G.data.Q8P.off = true; // 恋の相手の一覧と組み合わせは tests/checks/q8_pairs.mjs（ここは恋人の条件だけ）
     G.rand = seeded(seed);
     G.P = { trophies: {}, graves: [] };
@@ -135,6 +136,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   // ---- 表：恋の相手は全員、好感度のほかの条件を持つ。話題・場所・罪の種類は実在する。全員同じ条件ではない
   {
     const G = loadEngine();
+    G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
     const D = G.data;
     const ids = G.romanceIds();
     const seen = new Set();

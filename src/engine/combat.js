@@ -481,9 +481,11 @@
         (e.loot || []).forEach(([id, p]) => { if (G.rand() < p && G.give(id)) G.note(`${G.itemInfo(id).name}を手に入れた。`); });
         if (e.boss) S.counters.bosses++;
       });
-      if (gold) { S.gold += gold; G.note(`${gold}G を手に入れた。`); }
       G.addFame(fame);
-      if (C.win) G.apply(C.win);
+      // 出来事の戦いの報酬の金（C.win.gold）は、落とした金と合わせて一行で言う（「11G を手に入れた」「所持金 +12G」と二度に分けない。R7）
+      const won = C.win && C.win.gold > 0 ? C.win.gold : 0;
+      if (C.win) G.apply(won ? Object.assign({}, C.win, { gold: 0 }) : C.win);
+      if (gold + won && !S.over) { S.gold += gold + won; G.note(`${gold + won}G を手に入れた。`); }
     }
     if (S.over) return;
     if (C.after === "arrive" && S.travel) G.arrive(S.travel);
