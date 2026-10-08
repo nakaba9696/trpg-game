@@ -1,26 +1,29 @@
-// F4：戦闘の手を 5 つの見出しにまとめる（持ち主「戦闘コマンド 攻撃　戦技　魔法　その他　道具 にまとめて」）。DOM には触らない
-//   攻撃 … ふつうの攻撃・急所・割り込み・捨て身・身を削る（狙いや構えの違い）
+// F4：戦闘の手を見出しにまとめる（F9 で 6 つ：防御を足した）（持ち主「戦闘コマンド 攻撃　戦技　魔法　その他　道具 にまとめて」）。DOM には触らない
+//   攻撃 … ふつうの攻撃だけ（F9。急所・割り込み・捨て身・身を削るは外した。強い一撃は戦技で）
+//   防御 … 守りを固める（F9。前の身を守る・躱すを一つに）
 //   戦技 … 気力を使う技（K1 の cb:k1:…）
 //   魔法 … 覚えた術（D.SPELLS の手。術の才が無く一つも無ければ見出しごと出ない）
-//   その他 … 身を守る・躱す・逃げる・威圧・賄賂・背を向けて逃げる、作戦と仲間への指示（F3。見出しの下の小見出しとして続く）など、上の 4 つと道具に入らないもの
+//   その他 … 逃げる・威圧・賄賂・背を向けて逃げる、作戦と仲間への指示（F3。見出しの下の小見出しとして続く）など、上の 5 つと道具に入らないもの
 //   道具 … 持ち物を使う（目つぶしは道具を投げ捨てるのでここ）
-// G.combatActions を一番外から包み、組を見出しの順（攻撃・戦技・魔法・その他・道具）に並べ直し、どの組にも cat（attack / tech / magic / misc / item）を付ける。
+// G.combatActions を一番外から包み、組を見出しの順（攻撃・防御・戦技・魔法・その他・道具）に並べ直し、どの組にも cat（attack / guard / tech / magic / misc / item）を付ける。
 // 同じ見出しの組が二つ以上あるとき（その他の下の作戦・仲間ごとの指示）は、先頭が見出しの組、あとは小見出しの組。中身の無い見出しは出さない。
 // 「〇〇を誰に使う？」（B5 の相手選び）の間は、まとめずにそのまま返す。
 // 前の手番の手（S.combat.f4last）を覚え、画面が「前と同じ」を出せるようにする（G.f4.lastAction）。名前の z の数で、ほかの包みより後に読ませる。レーン B＋U（F4）
 (function (G) {
   const D = G.data;
   const F4 = (G.f4 = G.f4 || {});
-  F4.ORDER = ["attack", "tech", "magic", "misc", "item"];
-  F4.NAME = { attack: "攻撃", tech: "戦技", magic: "魔法", misc: "その他", item: "道具" };
-  F4.MISC_FIRST = ["cb:guard", "cb:f1dodge", "cb:flee", "cb:e3flee", "cb:talk", "cb:bribe"];
-  const ATTACK = /^cb:(attack|vital|f1cut|f1all|f1blood)$/;
-  const BY_TITLE = [[/^攻撃/, "attack"], [/^戦技/, "tech"], [/^魔法/, "magic"], [/^道具/, "item"]];
+  // F9：見出しは 攻撃・防御・戦技・魔法・その他・道具。攻撃は「〇〇で攻撃」、防御は「防御」の一つずつ（画面では見出しを開かずに選べる）
+  F4.ORDER = ["attack", "guard", "tech", "magic", "misc", "item"];
+  F4.NAME = { attack: "攻撃", guard: "防御", tech: "戦技", magic: "魔法", misc: "その他", item: "道具" };
+  F4.MISC_FIRST = ["cb:flee", "cb:e3flee", "cb:talk", "cb:bribe"];
+  const ATTACK = /^cb:(attack|vital|f1cut|f1all|f1blood)$/; // vital などは古い流れの名残（今は出さない）
+  const BY_TITLE = [[/^攻撃/, "attack"], [/^防御/, "guard"], [/^戦技/, "tech"], [/^魔法/, "magic"], [/^道具/, "item"]];
 
   // 一つの手の見出し（id で決め、決まらなければ元の組の見出しで）
   F4.catOf = (id, title) => {
     id = String(id || "");
     if (ATTACK.test(id)) return "attack";
+    if (id === "cb:guard" || id === "cb:f1dodge") return "guard";
     if (/^cb:k1:/.test(id)) return "tech";
     if (/^(cb|b5:pick):item:/.test(id) || id === "cb:f1throw") return "item";
     const m = id.match(/^(?:cb|b5:pick):([^:]+)/);
@@ -34,7 +37,7 @@
   F4.arrange = (groups) => {
     if (!groups || groups.some(asking)) return groups;
     const heads = {}; // cat → 見出しの組
-    const subs = { attack: [], tech: [], magic: [], misc: [], item: [] }; // cat → 小見出しの組（作戦・仲間への指示）
+    const subs = { attack: [], guard: [], tech: [], magic: [], misc: [], item: [] }; // cat → 小見出しの組（作戦・仲間への指示）
     groups.forEach((g) => {
       if (!g || !g.list || !g.list.length) return;
       // 仲間への指示・作戦（F3）は、その他の下の小見出しとして、組のまま残す

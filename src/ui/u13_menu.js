@@ -33,7 +33,7 @@
   u13.FAC_MIN_ITEMS = 13;
 
   // 戦闘でいつも出しておく手。この手を含む組はいつも出す。ほかの組（魔法・口と頭・道具…）は押すと開く
-  u13.COMBAT_MAIN = ["cb:attack", "cb:vital", "cb:guard", "cb:flee"];
+  u13.COMBAT_MAIN = ["cb:attack", "cb:guard", "cb:flee"];
   // 答えを待つ問い（〇〇を誰に使う？）。戦闘でも上に出したまま
   const asking = (g) => /誰に使う？$/.test(g.title || "") || (g.list || []).some((a) => a.id === "b5:cancel");
 
@@ -94,8 +94,8 @@
   // 戦闘：いつも出す組（main）と、押すと開く組（drawers）。開く組が無ければまとめない
   // F4：戦闘の手は 5 つの見出し（攻撃・戦技・魔法・その他・道具。エンジンが組に cat を付ける。engine/zzzzzzzzzzzzzz_f4_menu.js）。
   //   見出しを押すと中身が開く（一度に一つ）。同じ見出しの組が続くとき（その他の下の作戦・仲間への指示）は、小見出しとして一つにまとめて出す
-  u13.F4_ORDER = ["attack", "tech", "magic", "misc", "item"];
-  u13.F4_NAME = { attack: "攻撃", tech: "戦技", magic: "魔法", misc: "その他", item: "道具" };
+  u13.F4_ORDER = ["attack", "guard", "tech", "magic", "misc", "item"];
+  u13.F4_NAME = { attack: "攻撃", guard: "防御", tech: "戦技", magic: "魔法", misc: "その他", item: "道具" };
   function combatPlan(gs) {
     const top = [], cats = {};
     gs.forEach((g, i) => {
@@ -107,7 +107,9 @@
       const list = cats[c].flatMap((i) => gs[i].list);
       const merged = new Set(cats[c].flatMap((i) => Object.values(u13.pairPicks(gs[i].list))));
       const shown = list.filter((a) => !merged.has(a.id));
-      return { key: "d:" + u13.F4_NAME[c], label: u13.F4_NAME[c], cat: c, groups: cats[c], ids: list.map((a) => a.id), count: shown.length, usable: shown.filter((a) => !a.disabled).length };
+      // F9：攻撃・防御は一つの手だけなら、見出しを開かずにその手を選ぶ札（one）
+      const one = (c === "attack" || c === "guard") && shown.length === 1 ? shown[0] : null;
+      return { key: "d:" + u13.F4_NAME[c], label: u13.F4_NAME[c], cat: c, groups: cats[c], ids: list.map((a) => a.id), count: shown.length, usable: shown.filter((a) => !a.disabled).length, one };
     });
     if (!tabs.length) return null;
     return { kind: "combat", main: [], top, drawers: tabs, tabs, bottom: [], place: "combat" };
@@ -146,12 +148,28 @@
   let drawer = null, drawerFight = null;
   function paintCombat(S, plan, panel, els) {
     if (S.combat !== drawerFight) { drawer = null; drawerFight = S.combat; who = null; }
-    const open = plan.drawers.find((d) => d.key === drawer) || plan.drawers.find((d) => d.usable) || plan.drawers[0];
-    drawer = open.key;
+    // 開く見出し：すぐ選ぶ札（攻撃・防御の一つの手）は開かない。開く見出しが無ければ、すぐ選ぶ札だけを並べる
+    const openable = plan.drawers.filter((d) => !d.one);
+    const open = openable.find((d) => d.key === drawer) || openable.find((d) => d.usable) || openable[0] || null;
+    drawer = open ? open.key : null;
     const bar = h("div", "u13tabs u13drawers");
     bar.setAttribute("role", "tablist");
     bar.setAttribute("aria-label", "戦闘の手");
     plan.drawers.forEach((d) => {
+      if (d.one) {
+        // 攻撃・防御：押すとすぐその手に決まる（見出しを開かない）
+        const a = d.one;
+        const b = h("button", "u13tab u13drawer u13now u13now-" + d.cat + (a.disabled ? " dim" : ""));
+        b.type = "button";
+        b.dataset.u13 = d.key;
+        b.dataset.act = a.id;
+        b.disabled = !!a.disabled;
+        b.title = `${a.label}${a.sub ? "（" + a.sub + "）" : ""}`;
+        b.append(h("span", "u13lab", d.label), h("span", "u13nowsub fine", a.sub || ""));
+        b.onclick = () => { if (b.disabled) return; G.act(a.id); ui.after(); };
+        bar.append(b);
+        return;
+      }
       const on = d === open;
       const b = h("button", "u13tab u13drawer" + (on ? " on" : "") + (d.usable ? "" : " dim"));
       b.type = "button";
@@ -163,29 +181,32 @@
       b.onclick = () => { if (on) return; drawer = d.key; who = null; ui.render(); const f = document.querySelector(`#panel .u13drawer[data-u13="${CSS.escape(d.key)}"]`); if (f) f.focus(); };
       bar.append(b);
     });
-    const keep = new Set([...plan.top, ...open.groups]);
+    const keep = new Set([...plan.top, ...(open ? open.groups : [])]);
     els.forEach((el, i) => { if (!keep.has(i)) el.remove(); });
-    // 開いた見出しの組を一つに：先頭の組が見出し、続く組（作戦・仲間ごとの指示）は小見出し
-    const head = els[open.groups[0]];
-    head.classList.add("u13main");
-    head.dataset.f4 = open.cat;
-    const list = head.querySelector(".alist");
-    open.groups.slice(1).forEach((i) => {
-      const el = els[i];
-      const t = el.querySelector("h3");
-      const sub = h("div", "u13sub u13chips"); // 小見出しの手は、短い札を横に並べる（説明は札に乗せたときに出る）
-      sub.append(h("h4", "u13subt", t ? t.textContent : ""));
-      const al = el.querySelector(".alist");
-      if (al) {
-        al.querySelectorAll(":scope > .act").forEach((b) => { const d = b.querySelector(":scope > span"); if (d && !b.title) b.title = d.textContent; });
-        sub.append(al);
-      }
-      head.append(sub);
-      el.remove();
-    });
-    const many = head.querySelectorAll(".act").length > 8;
-    head.classList.toggle("u13many", many);
-    if (list) mergePicks(S, head, G.actions().filter((g) => g.list.length)[open.groups[0]]);
+    let head = null;
+    if (open) {
+      // 開いた見出しの組を一つに：先頭の組が見出し、続く組（作戦・仲間ごとの指示）は小見出し
+      head = els[open.groups[0]];
+      head.classList.add("u13main");
+      head.dataset.f4 = open.cat;
+      const list = head.querySelector(".alist");
+      open.groups.slice(1).forEach((i) => {
+        const el = els[i];
+        const t = el.querySelector("h3");
+        const sub = h("div", "u13sub u13chips"); // 小見出しの手は、短い札を横に並べる（説明は札に乗せたときに出る）
+        sub.append(h("h4", "u13subt", t ? t.textContent : ""));
+        const al = el.querySelector(".alist");
+        if (al) {
+          al.querySelectorAll(":scope > .act").forEach((b) => { const d = b.querySelector(":scope > span"); if (d && !b.title) b.title = d.textContent; });
+          sub.append(al);
+        }
+        head.append(sub);
+        el.remove();
+      });
+      const many = head.querySelectorAll(".act").length > 8;
+      head.classList.toggle("u13many", many);
+      if (list) mergePicks(S, head, G.actions().filter((g) => g.list.length)[open.groups[0]]);
+    }
     // 前の手番と同じ手を、すぐ選べるように
     const again = G.f4 && G.f4.lastAction ? G.f4.lastAction(S) : null;
     if (again) {
@@ -196,7 +217,7 @@
       b.onclick = () => { G.act(again.id); ui.after(); };
       bar.prepend(b);
     }
-    head.after(bar);
+    if (head) head.after(bar); else panel.append(bar);
     panel.classList.add("u13on", "u13fight");
     // 戦闘が始まったら、スマホでは見出しの道具を画面の外へ送り、絵・記録・手が一画面に入るようにする
     if (S.combat !== fightOf) {
