@@ -42,7 +42,7 @@
     }),
     sheila: P({
       name: "シェイラ", full: "シェイラ・レオネスト", nation: "レオネスト", role: "王国の第七王子（いちばん下の姫）。田舎の城の主。本が好きで使徒の伝承に詳しい。大人しそうに見えてお転婆。傭兵を雇って国の犯罪の芽を独自に調べている。「うん、」から話す", sex: "女", age: 18, race: "human",
-      who: { kind: "noble", sex: "女", age: 18, seed: "c2:sheila", look: { hair: "#d8bc70", hairStyle: "long", eyes: "sleepy", mouth: "flat", brows: "calm", outfit: "cloak", head: "none", gear: "none", chest: "gem", cloth: "#3a4a6a", build: "slim", marks: [], bg: "#6a5a7a" } },
+      who: { kind: "noble", sex: "女", age: 18, seed: "c2:sheila", look: { hair: "#d8d8e0", hairStyle: "bob", eyes: "sleepy", mouth: "smile", brows: "calm", outfit: "coat", head: "none", gear: "none", chest: "chain", cloth: "#eeeaf0", build: "slim", marks: [], bg: "#6a5a7a" } },
       join: {
         cls: "田舎の城の主", desc: "本を一冊、抱えている", power: 40, dmg: 0, heal: true, trait: "just", bond: 56, home: ["leavel"],
         life: { home: "王都の外れの、田舎の城", kin: "兄さまと姉さまたち", food: "城の厨房の焼き林檎", habit: "読みかけの本に指を一本はさんだまま、歩いている", secret: "城の書庫のいちばん奥の棚には、鍵がかかっている。中の本はもう全部読んだ", keep: "書き込みだらけの古い本" },

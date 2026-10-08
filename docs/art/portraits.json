@@ -90,9 +90,9 @@
    "kin": "leonest",
    "name": "シェイラ",
    "file": "assets/portraits/sheila.webp",
-   "identity": "1girl, princess, 18 years old, petite, slim, pale skin, white hair, silver-white hair, long hair, straight hair, long bangs, hair between eyes, blue eyes, light blue eyes, half-closed eyes, sleepy eyes, thin eyebrows, silver hair clip, blue hooded cloak, hood up, white dress, blue gem pendant",
-   "tags": "holding book against chest",
-   "face": "expressionless",
+   "identity": "1girl, 18 years old, petite, slim, pale skin, silver hair, platinum blonde hair, short hair, bob cut, hair ends curled inward, hair over one eye, bangs covering right eye, blue eyes, droopy eyes, thin eyebrows, pale pink lips, white jacket, oversized jacket, off-shoulder jacket, small red flower embroidery on collar, lavender camisole, thin chain necklace",
+   "tags": "hands on own chest, overlapping hands, soft lighting, thick painting, painterly",
+   "face": "gentle smile, closed mouth",
    "variants": {
     "joy": "light smile, closed mouth",
     "anger": "pout, puffed cheeks, frown",
@@ -104,7 +104,8 @@
     "serious": "serious, focused eyes, closed mouth",
     "surprise": "surprised, wide-eyed, slightly open mouth"
    },
-   "memo": "第七王子の姫。白い髪に長い前髪、眠たげな青い目。大人しそうで実はお転婆。「うん、」"
+   "memo": "第七王子の姫。銀の短いボブ（毛先は内巻き）で、右目が前髪に隠れる。垂れ目の青い目、やわらかい笑み。白い大きめの上着（襟に小さな赤い花の刺繍）に薄紫のキャミソール、細い鎖の首飾り。大人しそうで実はお転婆。「うん、」",
+   "seed": 3434884284
   },
   {
    "id": "rui",
