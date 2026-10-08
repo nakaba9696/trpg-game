@@ -5,6 +5,8 @@
 (function (G) {
   const D = (G.data = G.data || {});
   D.C13_BOND = D.C13_BOND || {};
+  // 書き出しが施設の中の出来事（R5 の背景の表。src/data/r5_scenes.js と同じ形で足す）
+  D.R5_EVENT_SCENE = Object.assign(D.R5_EVENT_SCENE || {}, { c13_dil_1: "inn", c13_lucien_1: "inn" });
   const fl = (d) => d.replace(/^[^。]*[+-]\d+[^。]*。/, ""); // 説明（I2）は、効き目の一文を除いた文
   const R = (name, o, desc) => Object.assign({ name, type: "ring", price: 0, c13: true, desc, flavor: fl(desc) }, o);
   const W = (name, o, desc) => Object.assign({ name, type: "weapon", hit: 0, price: 0, c13: true, desc, flavor: fl(desc) }, o);
