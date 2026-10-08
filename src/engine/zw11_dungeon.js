@@ -48,7 +48,9 @@
   // ---------------------------------------------------------------- 階と部屋
   W.inDungeon = (S) => { S = S || G.S; const L = S && D.LOCS[S.loc]; return !!(L && L.type === "dungeon"); };
   // 部屋のある階か（地下1階〜最奥の一つ手前）
-  W.hasRooms = (S) => { S = S || G.S; const L = D.LOCS[S.loc]; return !!(L && L.type === "dungeon" && S.depth > 0 && S.depth < (L.floors || 1)); };
+  // 大きな迷宮（D.W11_DUNGEONS の size: "large"）だけ。小さな迷宮は今までどおり「奥へ進む」だけ
+  W.large = (loc) => PL(loc).size === "large";
+  W.hasRooms = (S) => { S = S || G.S; const L = D.LOCS[S.loc]; return !!(L && L.type === "dungeon" && W.large(S.loc) && S.depth > 0 && S.depth < (L.floors || 1)); };
   W.highTide = (S) => { S = S || G.S; return !!(PL(S.loc).tide && W.inDungeon(S) && (S.phase || 0) % 2 === 1); };
   W.floorOf = (S) => {
     S = S || G.S;
@@ -60,7 +62,14 @@
   };
   W.room = (S) => { const f = W.floorOf(S); return f && f.cur >= 0 ? f.rooms[f.cur] || null : null; };
   // 部屋の種類の表（その迷宮・その深さで出るもの）
-  W.kinds = (loc, depth) => (D.W11_ROOMS || []).filter((r) => r && r.id !== "stairs" && (!r.where || r.where.includes(loc)) && !(r.minDepth && depth < r.minDepth));
+  W.kinds = (loc, depth) => (D.W11_ROOMS || []).filter((r) => r && r.id !== "stairs" && (!r.where || r.where.includes(loc)) && !(r.minDepth && depth < r.minDepth) && !(r.maxDepth && depth > r.maxDepth));
+  // 部屋の出来事（迷宮ごとの差し替え D.W11_DUNGEONS[loc].ev[種類] があればそれ。ev が関数なら (S, L, depth) => id）
+  const evOf = (r, S, L, R) => {
+    const over = (PL(S.loc).ev || {})[r.id];
+    const e = over || r.ev;
+    const v = typeof e === "function" ? e(S, L, S.depth) : e;
+    return Array.isArray(v) ? v[Math.floor(R() * v.length)] : v;
+  };
   W.makeFloor = (S, key) => {
     const L = D.LOCS[S.loc];
     const P = PL(S.loc);
@@ -69,18 +78,22 @@
     const pool = W.kinds(S.loc, S.depth);
     const used = {};
     const rooms = [];
-    for (let i = 0; i < n - 1; i++) {
+    const mk = (pick) => {
+      used[pick.id] = (used[pick.id] || 0) + 1;
+      const room = { k: pick.id, ev: evOf(pick, S, L, R), done: false };
+      if (pick.id === "chest") { room.locked = R() < 0.6; room.mimic = !!D.ENEMIES.mimic && R() < (P.mimic ?? 0.2); }
+      rooms.push(room);
+    };
+    // 必ず置く部屋（force。迷宮の昔のかけらなど）
+    pool.filter((r) => r.force).forEach(mk);
+    for (let i = rooms.length; i < n - 1; i++) {
       const cand = pool.map((r) => [r, Math.max(0, (typeof r.w === "function" ? r.w(L, S, S.depth) : r.w || 0) * ((P.weights || {})[r.id] ?? 1))])
-        .filter(([r, w]) => w > 0 && (used[r.id] || 0) < (r.max ?? 2));
+        .filter(([r, w]) => w > 0 && !r.force && (used[r.id] || 0) < (r.max ?? 2));
       if (!cand.length) break;
       let x = R() * cand.reduce((a, c) => a + c[1], 0);
       let pick = cand[cand.length - 1][0];
       for (const [r, w] of cand) { x -= w; if (x <= 0) { pick = r; break; } }
-      used[pick.id] = (used[pick.id] || 0) + 1;
-      const ev = Array.isArray(pick.ev) ? pick.ev[Math.floor(R() * pick.ev.length)] : pick.ev;
-      const room = { k: pick.id, ev, done: false };
-      if (pick.id === "chest") { room.locked = R() < 0.6; room.mimic = !!D.ENEMIES.mimic && R() < (P.mimic ?? 0.2); }
-      rooms.push(room);
+      mk(pick);
     }
     rooms.splice(Math.floor(R() * (rooms.length + 1)), 0, { k: "stairs", done: false });
     // 道の呼び名（重ならないように。潮の迷宮では、階段でない部屋の半分ほどが水の道）
@@ -93,6 +106,17 @@
     });
     const sr = R();
     return { key, rooms, cur: -1, stairs: false, searched: false, secret: sr < 0.25 ? "short" : sr < 0.5 ? "vault" : null, tick: 0 };
+  };
+  // 背景の種類（画面が読む。DOM には触らない）：最奥の広間は deep、部屋の中ならその部屋の scene（無ければ種類）、通路なら null
+  W.sceneKind = (S) => {
+    S = S || G.S;
+    const L = S && D.LOCS[S.loc];
+    if (!L || L.type !== "dungeon" || !W.large(S.loc) || !S.depth) return null;
+    if (S.depth >= (L.floors || 1)) return "deep";
+    const r = W.room(S);
+    if (!r) return null;
+    const def = (D.W11_ROOMS || []).find((x) => x.id === r.k);
+    return r.k === "stairs" || r.k === "vault" ? r.k : (def && def.scene) || r.k;
   };
   W.counts = (f) => ({ seen: f.rooms.filter((r) => r.done).length, all: f.rooms.length });
   W.mapLine = (S, L) => {
