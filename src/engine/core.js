@@ -250,8 +250,16 @@
     let g = 0;
     if (ok) g = G.d(4) * hard * fresh;
     else if (!fumble && G.rand() < 0.2) g = hard * fresh;
-    if (g) { const [a, b] = G.grow(stat, g); if (b > a) r.growth = [a, b]; }   // 点が上がったときだけ見せる
+    // 伸びたときに出る行（節目など）は、ダイスの行のあとに回す（ダイスより先に成否が漏れないように）
+    let held = [];
+    if (g) {
+      const last = S.log[S.log.length - 1];
+      const [a, b] = G.grow(stat, g);
+      if (b > a) r.growth = [a, b];   // 点が上がったときだけ見せる
+      held = S.log.splice(S.log.lastIndexOf(last) + 1);
+    }
     G.log("dice", "", r);
+    if (held.length) { S.log.push(...held); if (S.log.length > 240) S.log.splice(0, S.log.length - 240); }
     return r;
   };
 

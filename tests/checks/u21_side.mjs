@@ -21,33 +21,40 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 配置
   const inside = (r, vw, vh) => r && r.x >= 0 && r.y >= 0 && r.x + r.w <= vw + 0.5 && r.y + r.h <= vh + 0.5 && r.w > 0 && r.h > 0;
+  // U29：持ち主の配置図（左上に今の状態・右上に道具・真ん中は絵・下の左にログ・下の右にコマンドと選択肢）
   for (const [vw, vh] of [[1280, 720], [1366, 768], [1920, 1080], [1440, 900], [1280, 800], [1024, 768], [1000, 560], [2560, 1440]]) {
-    const L = v9.layout(vw, vh, false);
-    if (!L.side21 || !L.side) { fail(`${vw}×${vh}：PC の配置が右の列の形になっていない`); continue; }
-    const at = `${vw}×${vh}`;
-    if (!inside(L.side, vw, vh)) fail(`${at}：右の列が画面からはみ出す`);
-    if (!inside(L.tome, vw, vh)) fail(`${at}：本文の欄が画面からはみ出す`);
-    if (L.tome.x + L.tome.w > L.side.x - 8) fail(`${at}：本文の欄と右の列が重なる`);
-    if (L.side.y < L.head || L.tome.y < L.head + u.TOP_GAP - 1) fail(`${at}：見出しの帯・左上の札に掛かる`);
-    if (L.tome.min > L.tome.h || L.tome.min < Math.min(u.TMIN_PX, L.tome.h)) fail(`${at}：本文の欄の低いときの高さがおかしい（${L.tome.min}／${L.tome.h}）`);
-    if (L.side.w < 340) fail(`${at}：右の列が狭い（${L.side.w}px）`);
-    const per = (L.tome.w - v9.PAD * 2 - 10) / L.fs;
-    if (per < 28 || per > 40.5) fail(`${at}：本文の 1 行が ${per.toFixed(1)} 字`);
-    if (L.fs < 16) fail(`${at}：本文の字が小さい`);
-    if (L.cast.x + L.cast.w > L.side.x || L.cast.h <= 0) fail(`${at}：立ち絵の場所が右の列に掛かるか、無い`);
-    // U23：話している人の立ち絵は、右の列を入れる前（V9 の配置）より小さくしない。ぼかさずに見える真ん中は、本文の欄と右の列のあいだに入る
-    const sp = [{ role: "speaker" }], ally = [{ role: "speaker" }, { role: "ally" }];
-    const was = u.v9Place(u.v9Layout(vw, vh, false), sp)[0];
-    const now = v9.placeCast(L, sp)[0];
-    if (!now || now.h < was.h) fail(`${at}：立ち絵が前（${was.h}px）より小さい（${now ? now.h : 0}px）`);
-    else {
-      const core = now.h * u.CORE / 2;
-      if (vw >= 1280 && (now.x - core < L.stand.x0 - 2 || now.x + core > L.stand.x1 + 2)) fail(`${at}：立ち絵の真ん中が本文の欄か右の列に隠れる`);
-      if (now.h > L.cast.h + 0.5) fail(`${at}：立ち絵が見出しの帯に掛かる`);
+    for (const combat of [false, true]) {
+      const L = v9.layout(vw, vh, combat);
+      const at = `${vw}×${vh}${combat ? "（戦闘）" : ""}`;
+      if (!L.side21 || !L.side) { fail(`${at}：PC の配置が新しい形になっていない`); continue; }
+      if (!inside(L.side, vw, vh)) fail(`${at}：コマンドの窓が画面からはみ出す`);
+      if (!inside(L.tome, vw, vh)) fail(`${at}：ログの窓が画面からはみ出す`);
+      if (L.tome.x + L.tome.w > L.side.x - 8) fail(`${at}：ログとコマンドの窓が重なる`);
+      if (L.tome.y !== L.side.y || L.tome.h !== L.side.h) fail(`${at}：下の二つの窓の高さがそろっていない`);
+      if (L.tome.x > L.m + 1 || L.side.x + L.side.w < vw - L.m - 1) fail(`${at}：下の二つの窓が左右に広がっていない`);
+      if (Math.abs(L.tome.w - L.side.w) > 2) fail(`${at}：ログとコマンドの窓の幅が半分ずつでない`);
+      if (L.tome.y + L.tome.h < vh - L.m - 1) fail(`${at}：下の窓が画面の下に寄っていない`);
+      const share = L.tome.h / vh;
+      if (L.tome.h > u.PANE_MIN + 1 && (share < 0.27 || share > 0.45)) fail(`${at}：下の窓の高さが画面の 3 分の 1 ほどでない（${Math.round(share * 100)}%）`);
+      if (L.tome.y < L.head + 120) fail(`${at}：下の窓が上の札に掛かる`);
+      const per = (L.tome.w - v9.PAD * 2 - 10) / L.fs;
+      if (per < 20) fail(`${at}：ログの 1 行が ${per.toFixed(1)} 字`);
+      if (L.fs < 16) fail(`${at}：本文の字が小さい`);
+      if (combat) {
+        if (!L.stage || !inside(L.stage, vw, vh) || L.stage.y + L.stage.h > L.tome.y + 60) fail(`${at}：魔物の舞台が真ん中にない・下の窓に深く沈む`);
+        continue;
+      }
+      // 立ち絵：画面の真ん中に、右の列を入れる前（V9）より小さくしない
+      const sp = [{ role: "speaker" }], ally = [{ role: "speaker" }, { role: "ally" }];
+      const was = u.v9Place(u.v9Layout(vw, vh, false), sp)[0];
+      const now = v9.placeCast(L, sp)[0];
+      if (!now || now.h < was.h) fail(`${at}：立ち絵が前（${was.h}px）より小さい（${now ? now.h : 0}px）`);
+      else {
+        if (Math.abs(L.cast.x + now.x - vw / 2) > vw * 0.05) fail(`${at}：立ち絵が真ん中に立たない`);
+        if (now.h > L.cast.h + 0.5) fail(`${at}：立ち絵が見出しの帯に掛かる`);
+      }
+      if (v9.placeCast(L, ally).length !== 2 || !v9.placeCast(L, ally)[0].front) fail(`${at}：話している人が前に出ない`);
     }
-    if (v9.placeCast(L, ally).length !== 2 || !v9.placeCast(L, ally)[0].front) fail(`${at}：話している人が前に出ない`);
-    const C = v9.layout(vw, vh, true), B = u.v9Layout(vw, vh, true);
-    if (JSON.stringify(C) !== JSON.stringify(B)) fail(`${at}：戦闘の配置が V9 のままでない`);
   }
 
   // ---------------------------------------------------------------- まとめ方
@@ -141,6 +148,16 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
       }
     }
     if (!towns) fail("町の場面を通っていない");
+    // R8 中 8：使徒を追う・絆・想いは、自分の名前の組に（「持ち物・その他」に混ぜない）。「旅立つ」の前に
+    {
+      const gs = [{ title: "宿", list: [{ id: "fac:inn" }] }, { title: "使徒を追う", list: [{ id: "e7:a" }] }, { title: "旅立つ", list: [{ id: "travel:x" }] }, { title: "持ち物", list: [{ id: "tome:1" }] }, { title: "想い", list: [{ id: "m10tell:c1" }] }, { title: "絆", list: [{ id: "c13:r" }] }];
+      const plan = { tabs: [{ key: "t:fac", groups: [0], ids: ["fac:inn"] }, { key: "t:travel", groups: [2], ids: ["travel:x"] }, { key: "t:misc", groups: [1, 3, 4, 5], ids: ["e7:a", "tome:1", "m10tell:c1", "c13:r"] }], top: [] };
+      const p2 = u.ownTabs(plan, gs);
+      const keys = p2.tabs.map((t) => t.key).join(",");
+      if (keys !== "t:fac,o:使徒を追う,o:絆,o:想い,t:travel,t:misc") fail(`使徒を追う・絆・想いが自分の組にならない（${keys}）`);
+      if (p2.tabs.find((t) => t.key === "t:misc").ids.join() !== "tome:1") fail("「持ち物・その他」に使徒を追う・絆・想いが残る");
+      if (plan.tabs[2].groups.length !== 4) fail("元の plan を書き換えている");
+    }
     if (u.townCat({ id: "fac:inn" }) !== "fac" || u.townCat({ id: "fac:w9_senate" }) !== "spot" || u.townCat({ id: "walk" }) !== "spot" || u.townCat({ id: "travel:x" }) !== "travel" || u.townCat({ id: "zzz:1" }) !== "misc") fail("町の選択肢の分類の表が違う");
   }
 
@@ -159,7 +176,7 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
   walk(css);
   const inner = [...css.matchAll(/@media[^{]*\{([\s\S]*?\})\s*\}/g)].flatMap((m) => [...m[1].matchAll(/([^{}]+)\{/g)].map((x) => x[1].trim()));
   const sels = [...rules.filter((r) => !/^@/.test(r)), ...inner].flatMap((r) => r.split(",").map((x) => x.trim())).filter(Boolean);
-  const loose = sels.filter((x) => !/body[.\w-]*\.u21pc/.test(x) && !/^body\.v9pc\.v9combat /.test(x) && x !== "#u21side" && x !== "body.v9pc");
+  const loose = sels.filter((x) => !/body[.\w-]*\.u21pc/.test(x) && !/^body\.v9pc\.v9combat /.test(x) && x !== "#u21side" && x !== "#u29where" && x !== "body.v9pc");
   if (loose.length) fail(`右の列の見た目が PC の配置の外にも効く：${loose.join("／")}`);
   if (!/body\.u21pc #u21side\s*\{[^}]*display:\s*flex/.test(css) || !/#u21side\s*\{\s*display:\s*none/.test(css)) fail("右の列を PC でだけ出す決まりが無い");
   if (!/\.u21open\s*\{[^}]*overflow-y:\s*auto/.test(css)) fail("開いた組の中だけが流れる決まりが無い");
