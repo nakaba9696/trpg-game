@@ -1392,6 +1392,54 @@
    "memo": "持ち場を捨てた見張り。追い詰められた男"
   },
   {
+   "id": "w10_rockgoat",
+   "file": "assets/monsters/w10_rockgoat.webp",
+   "name": "岩跳び山羊",
+   "same_as": "e4_thornboar",
+   "tags": "mountain goat, feral, shaggy cream fur, curled horns, horizontal slit pupils, standing on rock, chewing a rope, four legs",
+   "memo": "崖の上から頭突きする野の山羊。干し肉の包みを盗む。まぬけ"
+  },
+  {
+   "id": "w10_screemole",
+   "file": "assets/monsters/w10_screemole.webp",
+   "name": "ガレ場の土竜",
+   "same_as": "e4k_furrowmole",
+   "tags": "giant mole, dark brown fur, pink nose, big digging claws, tiny eyes, emerging from loose stones, scree",
+   "memo": "石の斜面の下を掘る大土竜"
+  },
+  {
+   "id": "w10_fogimp",
+   "file": "assets/monsters/w10_fogimp.webp",
+   "name": "霧かぶり",
+   "same_as": "e4_reedimp",
+   "tags": "tiny imp, pale grey skin, hood made of fog, glowing pale eyes, mischievous grin, translucent wisps, knee height",
+   "memo": "霧をかぶって道標をずらす小鬼。いたずら好き"
+  },
+  {
+   "id": "w10_cragbird",
+   "file": "assets/monsters/w10_cragbird.webp",
+   "name": "尾根の大鷲",
+   "same_as": "e4k_cliffwatch",
+   "tags": "giant eagle, dark brown feathers, white head, hooked beak, huge spread wings, sharp talons, diving",
+   "memo": "尾根で足をすくって谷へ落とす大鷲"
+  },
+  {
+   "id": "w10_snowape",
+   "file": "assets/monsters/w10_snowape.webp",
+   "name": "雪の大猿",
+   "same_as": "e4_frostbear",
+   "tags": "giant ape, long white fur, blue glowing eyes, fangs, holding a snowball, three stolen hats stacked on head",
+   "memo": "雪玉に石を仕込む白い大猿。帽子を集める"
+  },
+  {
+   "id": "w10_icebat",
+   "file": "assets/monsters/w10_icebat.webp",
+   "name": "氷柱蝙蝠",
+   "same_as": "e4_bellbat",
+   "tags": "bat, frozen wing edges, icicles, pale blue fur, glowing eyes, fangs, hanging upside down",
+   "memo": "坑道の氷柱に混じる蝙蝠。翼の縁が刃"
+  },
+  {
    "id": "e3_levian",
    "file": "assets/monsters/e3_levian.webp",
    "name": "忘れ水の使徒ルアマリス",
