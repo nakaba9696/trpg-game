@@ -3,12 +3,16 @@
 // - どの断片も手に入る道がある：遺跡ごとに階を下りて、出た行動を押し続けると、すべての断片がそろい、鍵が出て、隠し部屋が開く（古いセーブ S.w12 なしから）
 // - 古文字読みが無いと碑文は一行目だけ。あとで覚えると読み直せる
 // - 手がかりが多いほど仕掛けが易しい。一日に一度
+// - 仕掛けを解いた先・隠し部屋では、その階にいるあいだ特別な背景（R5 の決め方に出る。絵の名前は docs/art/scenes.json にある）。階を離れたら戻る
+import { readFileSync } from "node:fs";
+const SCENES = new Set(JSON.parse(readFileSync(new URL("../../docs/art/scenes.json", import.meta.url), "utf8")).scenes.map((s) => s.id));
+
 export default ({ G, fail, ok, seeded }) => {
   const D = G.data;
   const W12 = G.w12;
   if (!W12) { fail("G.w12 が無い"); return; }
   const RU = D.W12_RUINS || {};
-  const BANNED = /見世物|観客|客席|舞台|台本|言霊|魔王|ガイゼリク|ヴェルム/;
+  const BANNED = /見世物|観客|客席|舞台|台本|言霊|魔王|ガイゼリク|名簿|端役/;
   const texts = [];
   const ids = new Set();
   for (const [loc, R] of Object.entries(RU)) {
@@ -30,6 +34,7 @@ export default ({ G, fail, ok, seeded }) => {
     const g = R.gear;
     if (!g) { fail(`${w}: 仕掛けが無い`); continue; }
     if (!D.STATS.includes(g.stat) || !(g.diff in D.DIFF)) fail(`${w}: 仕掛けの能力値か難しさ`);
+    if (!/^w12_\w+_in$/.test(g.scene || "") || !SCENES.has("in_" + g.scene.replace(/_in$/, ""))) fail(`${w}: 仕掛けの先の背景 ${g.scene} が scenes.json に無い`);
     if (!R.frags.some((f) => f.kind === "mural" && f.floor === g.floor)) fail(`${w}: 仕掛けの階 ${g.floor} に壁画が無い`);
     if (R.frags.some((f) => f.kind === "mural" && f.floor !== g.floor)) fail(`${w}: 仕掛けの階でない壁画（手に入らない）`);
     texts.push(g.label, g.ok.text, g.ng.text);
@@ -38,6 +43,7 @@ export default ({ G, fail, ok, seeded }) => {
   const V = D.W12_VAULT;
   if (!D.ITEMS[V.key] || !D.ITEMS[V.item] || !RU[V.loc]) fail("隠し部屋の鍵・品・場所が無い");
   if (!(V.floor >= 1 && V.floor < D.LOCS[V.loc].floors)) fail("隠し部屋の階");
+  if (!SCENES.has("in_" + String(V.scene).replace(/_in$/, ""))) fail(`隠し部屋の背景 ${V.scene} が scenes.json に無い`);
   ["w12_ruvenal", "w12_vault"].forEach((k) => { if (!D.TROPHIES.some((t) => t.key === k)) fail(`トロフィー ${k} が無い`); });
   texts.push(...D.W12_SECRET.text, ...V.text);
   for (const t of [...texts, D.ITEMS[V.key].desc, D.ITEMS[V.item].desc]) if (BANNED.test(t)) fail(`W12 の見える文に「${t.match(BANNED)[0]}」：${t.slice(0, 30)}`);
@@ -76,6 +82,16 @@ export default ({ G, fail, ok, seeded }) => {
         }
       }
     }
+    // 特別な背景：仕掛けを解いた階にいるあいだ出て、階を離れると消える
+    {
+      const [loc, R] = Object.entries(RU)[0];
+      reset(S, loc, R.gear.floor);
+      W12.st(S).view = { key: R.gear.scene, loc, depth: R.gear.floor };
+      const r = G.r5 && G.r5.sceneOf(S);
+      if (!r || r.key !== R.gear.scene) fail(`${cls}: 仕掛けの先の背景が出ない（${r && r.key}）`);
+      G.act("leave");
+      if (W12.st(S).view) fail(`${cls}: 階を離れても特別な背景が残る`);
+    }
     const miss = W12.all().filter((f) => !W12.st(S).got[f.id]);
     if (miss.length) fail(`${cls}: 手に入らなかった断片 ${miss.map((f) => f.id).join("・")}`);
     if (!W12.st(S).done) fail(`${cls}: そろったのに分かったことが出ない`);
@@ -93,6 +109,8 @@ export default ({ G, fail, ok, seeded }) => {
       G.act("w12:vault");
       if (!(S.inv[V.item] > 0) || S.inv[V.key] > 0) fail(`${cls}: 隠し部屋で品が出ない／鍵が残る`);
       if (acts().some((x) => x.id === "w12:vault")) fail(`${cls}: 隠し部屋がまた開く`);
+      const r = G.r5 && G.r5.sceneOf(S);
+      if (!r || r.key !== V.scene) fail(`${cls}: 隠し部屋の背景が出ない`);
     }
     // 読み直し：古文字読みを覚えると続きが読める
     if (!hasLetters) {

@@ -3,11 +3,12 @@
 //   仕掛けを解く（遺跡ごとの能力値。集めた手がかり〔今の冒険で見つけた断片〕が多いほど易しい。解けると隠し部屋の壁画）
 //   古い遺物を調べる（知力。目利き k1_appraise があると易しい）
 // 断片が全部そろうと、分かったこと（D.W12_SECRET。山場）・古い鍵・トロフィー。鍵でエル・ナフ遺構の隠し部屋（D.W12_VAULT）が開く。
-// 図鑑の頁「古い文明」（src/ui/zw12_ruins.js）は G.P.w12（冒険をまたいで残る）を読む。今の冒険の得（仕掛けの易しさ・褒美）は S.w12 だけで決める（L1：覚えていても得をしない）。
+// 設定は docs/lore/ancient.md。図鑑の頁「古い文明」（src/ui/zw12_ruins.js）は G.P.w12（冒険をまたいで残る）を読む。今の冒険の得（仕掛けの易しさ・褒美）は S.w12 だけで決める（L1：覚えていても得をしない）。
 //
 // explore.js は書き換えず、G.exploreActions・G.exploreAct を包む（w9_spots.js と同じやり方）。
 // W11 の「部屋の表を外から足す口」が入ったら、同じ断片と仕掛けを部屋（碑文の間・仕掛けの間・壁画の回廊）として載せ替える。それまでは各階の行動で出す。
-// セーブに足すもの：S.w12 = { got: { 断片: 読めた行の数 }, tried: { "場所:階:種類": 日 }, done, vault }・G.P.w12 = { got: { 断片: { n, date, by } }, done }。
+// 背景：仕掛けを解いた・隠し部屋を開けたら、その階にいるあいだ特別な一枚（S.w12.view。engine/zzzzzzzzzzzzzzzzz_w12_view.js が R5 の背景の決め方に足す。絵は ui/scene_v2_w12.js）。
+// セーブに足すもの：S.w12 = { got: { 断片: 読めた行の数 }, tried: { "場所:階:種類": 日 }, done, vault, view: { key, loc, depth } }・G.P.w12 = { got: { 断片: { n, date, by } }, done }。
 // 古いセーブに無くても動く（W12.st が作る）。DOM には触らない。乱数は G.rand / G.pick だけ。レーン W（W12）
 (function (G) {
   const D = G.data;
@@ -109,6 +110,9 @@
     const S = G.S;
     const R = head === "deeper" && ruins()[S.loc];
     act0(head, arg, a);
+    // 特別な一枚の背景は、その階を離れたら終わり
+    const v = S.w12 && S.w12.view;
+    if (v && (v.loc !== S.loc || v.depth !== S.depth)) delete S.w12.view;
     // 奥へ進んで何も起きなかったら、その遺跡の空気を一行
     if (R && !S.over && S.mode === "explore" && S.depth > 0 && S.depth < (D.LOCS[S.loc].floors || 0) && G.rand() < 0.5) G.say(G.pick(R.air));
   };
@@ -161,6 +165,7 @@
     const r = G.check(g.stat, g.diff, "仕掛けを解く", W12.clue(S));
     if (!r.ok) { G.apply(g.ng); return; }
     G.apply(g.ok);
+    W12.st(S).view = { key: g.scene, loc: S.loc, depth: S.depth };
     const f = W12.open(S, "mural")[0];
     if (!f) return;
     f.lines.forEach((t) => G.say(t));
@@ -224,6 +229,7 @@
     const w = W12.st(S);
     if (w.vault || !(S.inv[V.key] > 0)) return;
     w.vault = S.day;
+    w.view = { key: V.scene, loc: S.loc, depth: S.depth };
     G.log("you", V.label);
     G.pass(1);
     V.text.forEach((t) => G.log("nar", t, { peak: true }));
