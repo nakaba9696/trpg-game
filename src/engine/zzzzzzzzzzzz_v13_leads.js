@@ -1,6 +1,6 @@
 // V13：時限の出来事への導線（表は src/data/v13_leads.js の D.V13.LEADS）
 // 時期があって特定の場所でしか関われない出来事（季節の催し・舞台の町でしか関われない世の大事）について、
-// 時期の少し前から、別々の道（遠くの酒場・近くの酒場・ギルドの張り紙・旅人・道中・仲間）で話が一つずつ出る。
+// 時期の少し前から、別々の道（遠くの酒場・近くの酒場・ギルドに入ったときの張り紙・旅人・道中・仲間）で話が一つずつ出る。
 //   季節の催し：その季節の前の季節の半ばから、その季節の半ばまで（季節の長さで測る）。一度きりの出来事は、済んだら出ない
 //   世の大事：前触れの段階から、関われる行動がそろう段階の手前まで（段階で測る。段階の日数が変わってもずれない）
 // 聞いた話は、本文に一行と、この冒険の噂（G.memo の「噂：」「貼り紙：」→ 依頼の横の噂の欄）。
@@ -8,7 +8,7 @@
 // 一つ一つの話は一度だけ（その時期ごと）。町に着いたときの話（旅人・道中・仲間）は、何日かに一度まで。
 // 乱数は使わない（並びは日と表の順で決まる）。遊びの乱数の並びを変えないため。
 // セーブに足すもの：S.v13 = { heard: { "組:時期|番号": 日 }, day 着いたときの話を最後に出した日 }（無くても動く）。
-// core.js・explore.js は書き換えず、G.facAct・G.arrive を包む。DOM なし。レーン V（V13）
+// core.js・explore.js は書き換えず、G.facAct（酒場）・G.exploreAct（ギルドに入る）・G.arrive を包む。DOM なし。レーン V（V13）
 (function (G) {
   const D = G.data;
   const V = (G.v13 = G.v13 || {});
@@ -170,9 +170,19 @@
     try {
       if (S && !S.over && S.mode !== "combat" && S.mode !== "event") {
         if (head === "tavern" && V.TAVERN.includes(arg)) V.offer(S, ["far", "near"]);
-        else if (head === "guild") V.offer(S, ["guild"]);
       }
     } catch { /* 導線が出なくても遊びは止めない */ }
+    return r;
+  };
+
+  // ギルドに入ったとき、壁の張り紙に（報告や受けるときには出さない。依頼の窓の印を乱さない）
+  const exploreAct0 = G.exploreAct;
+  G.exploreAct = (head, arg, ...rest) => {
+    const r = exploreAct0(head, arg, ...rest);
+    const S = G.S;
+    try {
+      if (S && !S.over && head === "fac" && arg === "guild" && S.mode === "fac" && S.fac === "guild") V.offer(S, ["guild"]);
+    } catch { /* 同上 */ }
     return r;
   };
 

@@ -5,7 +5,7 @@
 // - どの導線も、出る所（遠くの町・近くの町・ギルド・旅人・道中・仲間）があり、時期より前に出る（季節の催しは季節が始まる前の日、世の大事は前触れの段階）
 //   時期を過ぎると出ない。一度きりの催しは、済んだら出ない
 // - 聞くと本文と噂に一行、図鑑のその場所（かその大事の用語）の「聞いた話」に覚え書きが残る。同じ話は二度出ない
-// - 乱数を使わない。酒場・ギルド・町に着いたときに出る。古いセーブ（S.v13 が無い）でも動く
+// - 乱数を使わない。酒場・ギルドに入ったとき・町に着いたときに出る（ギルドの中の行動では出ない）。古いセーブ（S.v13 が無い）でも動く
 const as = (x) => (x == null ? [] : Array.isArray(x) ? x : [x]);
 const FILLS = { t: "m12", site: "m12", n: "comp" };
 
@@ -200,5 +200,14 @@ export default ({ fail, loadEngine, seeded }) => {
     G.arrive(S.loc);
     if (Object.keys(S.v13.heard).length !== n1) fail("V13: 着いたときの話が日を置かずに続けて出る");
     if (!oath) fail("V13: 誓い祭の導線が無い");
+    // ギルドに入ると張り紙の導線。ギルドの中の行動（報告など）では出ない
+    S.loc = far; S.mode = "explore"; S.fac = null;
+    if (!(D0.LOCS[far].fac || []).includes("guild")) S.loc = towns.find((id) => (D0.LOCS[id].fac || []).includes("guild") && V.active(S).some((a) => V.distance(a, id) !== "here" && a.set.leads.some((l) => l.ch === "guild")));
+    const g0 = Object.keys(S.v13.heard).length;
+    G.facAct("guild", "none");
+    if (Object.keys(S.v13.heard).length !== g0) fail("V13: ギルドの中の行動で張り紙の導線が出る");
+    const wantGuild = V.candidates(S, ["guild"]).length;
+    G.exploreAct("fac", "guild");
+    if (wantGuild && !(Object.keys(S.v13.heard).length > g0)) fail("V13: ギルドに入っても張り紙の導線が出ない");
   }
 };
