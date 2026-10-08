@@ -13,7 +13,11 @@
   const C = () => D.C14;
   const X = (G.c14 = G.c14 || {});
   const P = () => D.C2_PEOPLE || {};
-  if (D.Q8B) D.Q8B.chatTop = 100;
+  // Q8 の雑談の上限は段の上限に任せる（off のときは今までの 30 のまま）
+  if (D.Q8B) {
+    let chatTop0 = D.Q8B.chatTop;
+    Object.defineProperty(D.Q8B, "chatTop", { get: () => (C().off ? chatTop0 : 100), set: (v) => { chatTop0 = v; }, enumerable: true, configurable: true });
+  }
 
   // ---------------------------------------------------------------- 段
   X.stages = () => C().STAGES;
@@ -104,7 +108,7 @@
   // 上がる分 n を、今の段の上限までに切る。上限に届いていて進める段があれば、先に進める
   X.room = (id, n, S) => {
     S = S || G.S;
-    if (!S || !(n > 0)) return n;
+    if (!S || !(n > 0) || C().off) return n;
     const a = affRaw(id, S);
     if (a + n > X.cap(id, S)) autoUp(id, S);
     const cap = X.cap(id, S);
@@ -113,6 +117,7 @@
   // 上限に届いていれば、その段で一度だけ手がかりを知らせる
   X.told = (id, S) => { if (affRaw(id, S) >= X.cap(id, S)) told(id, S); };
   const told = (id, S) => {
+    if (C().off) return;
     const s = X.state(S), k = X.stage(id, S);
     if (s.told[id] === k || k >= X.last() || !X.isMate(id)) return;
     s.told[id] = k;
@@ -154,6 +159,7 @@
     const why0 = C13.tierWhy;
     C13.tierWhy = (id, i, S) => {
       S = S || G.S;
+      if (C().off) return why0(id, i, S);
       const k = i + 2;
       if (X.stage(id, S) < k - 1) return `${X.nameOf(k - 1)}になってから`;
       if (X.stage(id, S) < k) { const h = X.hint(id, k, S); if (h) return h; }
@@ -168,7 +174,7 @@
   }
 
   // ---------------------------------------------------------------- 結婚は最後の段から
-  const wedOk = (c, S) => { const id = c && (c.c2 || c.aff); return !id || !(G.f3 && G.f3.has(id)) || X.stage(id, S || G.S) >= C().WED; };
+  const wedOk = (c, S) => { if (C().off) return true; const id = c && (c.c2 || c.aff); return !id || !(G.f3 && G.f3.has(id)) || X.stage(id, S || G.S) >= C().WED; };
   X.wedOk = wedOk;
   const st = (c) => (G.m10St ? G.m10St(c) : (c && c.m10 && c.m10.st) || "");
   if (G.m10P && G.m10P.propose) {
