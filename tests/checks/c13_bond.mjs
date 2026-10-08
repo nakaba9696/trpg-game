@@ -26,6 +26,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   for (const e of Object.values(D.ENEMIES)) for (const [it] of e.loot || []) sources.add(it);
   const KINDS = ["gift", "skill", "spell", "quest", "favor"];
   const itemOk = (where, it, own) => {
+    if (own && !String(it).startsWith("c13_")) own = false; // C14 で本・巻物に差し替えた最後の褒美は、その人だけの品でなくてよい
     if (!D.ITEMS[it]) { F(`${where}: 品 ${it} が無い`); return; }
     if (own && (!D.ITEMS[it].c13 || D.ITEMS[it].price)) F(`${where}: 品 ${it} がその人だけの品（c13・値なし）でない`);
     if (own && sources.has(it)) F(`${where}: 品 ${it} が店か落とし物に出る`);
@@ -87,6 +88,12 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     g.S.mode = "explore"; g.S.fac = null; g.S.event = null;
     if (!g.c2Join(id)) { F(`${id}: 仲間に加わらない`); return false; }
     g.affState()[id] = 100;
+    // C14：関係の出来事（身の上話・頼みごと）は済ませてあることにする（段の確かめは tests/checks/c14_stages.mjs）
+    const tk = (g.S.tk = g.S.tk || {}); tk.heard = tk.heard || {};
+    (((g.data.TALK || {})[id] || {}).topics || []).filter((t) => t.kind === "past").forEach((t) => { tk.heard[t.id] = { day: 1, k: "x", seq: 0 }; });
+    const q = (g.data.Q9 || {})[id];
+    if (q) { g.S.q9 = g.S.q9 || {}; g.S.q9[id] = { n: q.steps.length, day: 1, r: [], end: Object.keys(q.ends || {})[0] || "done" }; }
+    if (g.S.c14) delete g.S.c14.st[id]; // 段は今の好感度から決め直す（古いセーブと同じ）
     return true;
   };
   const myAct = (id) => acts().find((a) => typeof a.id === "string" && a.id.startsWith(`c13:${id}:`));
