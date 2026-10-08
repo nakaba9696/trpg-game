@@ -106,10 +106,10 @@
     cls: { mage: 2, priest: 1 },
     need: { mage: 1, priest: 1 },   // この職業は少なくともこの才（才なしではなれない）
     // 得意・苦手の重み（どの属性になりやすいか）。職業の属性は、魔法使い・破戒神官では必ず得意
-    clsEl: { merc: "earth", thief: "dark", mage: "fire", priest: "light", samurai: "wind" },
+    clsEl: { merc: "earth", thief: "dark", mage: "fire", priest: "light", samurai: "bolt" },
     lockEl: { mage: true, priest: true },
     // 作成画面を通らずに始めた冒険（古いセーブ・テスト）の才：職業ごとの得意な属性
-    defaultGood: { merc: ["earth"], thief: ["dark"], mage: ["fire", "ice"], priest: ["light", "earth"], samurai: ["wind"] },
+    defaultGood: { merc: ["earth"], thief: ["dark"], mage: ["fire", "ice"], priest: ["light", "earth"], samurai: ["bolt"] },
     raceEl: { elf: { wind: 2, light: 1 }, beast: { earth: 2, wind: 1 } },
     bad: [0, 2, 1, 1],   // 苦手な属性の数（才ごと）
   };
