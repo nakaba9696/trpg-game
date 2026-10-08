@@ -32,7 +32,9 @@
    ```
    python -m venv H:\game\cutout-venv
    H:\game\cutout-venv\Scripts\python -m pip install "rembg[gpu]" numpy pillow
+   H:\game\cutout-venv\Scripts\python -m pip install "nvidia-cudnn-cu12==9.8.*" nvidia-cublas-cu12 nvidia-cuda-runtime-cu12 nvidia-cufft-cu12 nvidia-curand-cu12 nvidia-cuda-nvrtc-cu12
    ```
+   2 行目（CUDA 12・cuDNN 9 の部品）が無いと GPU が使えず CPU で動く（1 枚 10 秒以上・メモリも重い）。cuDNN は 9.8 に止める（9.27 では BiRefNet の大きな畳み込みが CUDNN_BACKEND_API_FAILED で落ち、CPU に戻った）。`cutout_model.py` が `onnxruntime.preload_dlls()` で読み込む。
    モデル（birefnet-general 約 1GB・isnet-anime 約 170MB）は初回に `~/.u2net` へ落ちてくる。
 2. 生成の道具にその python を教える：環境変数 `CUTOUT_PYTHON=H:\game\cutout-venv\Scripts\python.exe`、または `docs/art/style.local.json`（魔物は `style_monsters.local.json`）に `"cutout_python": "…"`。
    無いと `gen_portraits.mjs` は作る前に止まる（`--no-cutout` で、抜かずに白い背景のまま試せる。入れる絵は必ず抜く）。

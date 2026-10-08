@@ -14,7 +14,7 @@
   <venv>/python tools/cutout_model.py --in-place                # assets/ を書き換える（アルファを持つ絵は飛ばす。--force で切り直す）
   <venv>/python tools/cutout_model.py --model isnet-anime --only <id> --out tmp/cut   # うまく抜けなかった絵を別のモデルで
   <venv>/python tools/cutout_model.py --flatten assets/portraits/<id>.webp tmp.png  # 白い背景に戻す（差分の img2img の元）
-要るもの：rembg[gpu]（onnxruntime-gpu）・Pillow・numpy。モデルは初回に ~/.u2net に落ちてくる。
+要るもの：rembg[gpu]（onnxruntime-gpu）・nvidia-cudnn-cu12 ほか CUDA 12 の pip の部品・Pillow・numpy。モデルは初回に ~/.u2net に落ちてくる。
 """
 import argparse
 import os
@@ -92,7 +92,8 @@ def main():
         sys.exit("--out <フォルダ> か --in-place を指定する")
     from rembg import new_session, remove
 
-    session = new_session(a.model, providers=["CUDAExecutionProvider", "CPUExecutionProvider"])
+    # HEURISTIC：畳み込みの算法を毎回探さない（WebUI と GPU を分け合うときに速い）
+    session = new_session(a.model, providers=[("CUDAExecutionProvider", {"cudnn_conv_algo_search": "HEURISTIC"}), "CPUExecutionProvider"])
     only = set(x for x in a.only.split(",") if x)
     n, t0 = 0, time.time()
     for d in [x for x in a.dirs.split(",") if x]:
