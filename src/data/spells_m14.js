@@ -87,7 +87,7 @@
   Object.values(S).forEach((sp) => { if (sp.el) sp.elem = sp.el; });
 
   // 職業ごとに、はじめから覚えている術（M1 の表を書き換える。魔法使い・破戒神官は術の才を持って生まれた者だけがなる）
-  D.SPELL_START = { mage: ["fire", "ice"], priest: ["heal", "ward"] };
+  D.SPELL_START = { mage: ["fire", "ice", "heal"], priest: ["heal", "ward"] };   // 魔法使いの癒しは、今まで誰でも使えた分を引き継ぐ（釣り合い）
 
   // ---------------------------------------------------------------- 術の才
   D.M14_TALENT = {
