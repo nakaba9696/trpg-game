@@ -1,7 +1,15 @@
 // T3：戦いの最中にしか分からない節目のトロフィーを渡す（読み勝ち・多勢に無勢。表は src/data/trophies_t3b.js）。
 // G.combatAct をいちばん外から包み、手のあとに戦いが勝って終わっていたら見る。戦闘の決まりは変えない。
-// 名前の頭の z の数は、ほかの G.combatAct の包み（F1・F8 など）より後に読ませるため。DOM には触らない。レーン T
+// あわせて、ほかのレーンが足したトロフィーを仕組みの分け方（D.TROPHY_GROUPS。src/data/trophies_t3b.js）に入れる：
+//   トロフィーに group: "迷宮・遺跡・山" のように書けばその仕組みへ、書かなければ「その他」へ（どれもちょうど一つに入る）。
+// 名前の頭の z の数は、ほかの G.combatAct の包み（F1・F8 など）やトロフィーを足すファイルより後に読ませるため。DOM には触らない。レーン T
 (function (G) {
+  const D = G.data;
+  const GR = D.TROPHY_GROUPS;
+  if (GR && D.TROPHIES) {
+    const has = new Set(Object.values(GR).flat());
+    D.TROPHIES.forEach((t) => { if (!has.has(t.key)) { const g = t.group || "その他"; (GR[g] = GR[g] || []).push(t.key); has.add(t.key); } });
+  }
   const act0 = G.combatAct;
   if (!act0) return;
   G.combatAct = (...a) => {
