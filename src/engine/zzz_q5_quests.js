@@ -27,6 +27,13 @@
   };
   Q5.fill = (s, v) => String(s == null ? "" : s).replace(/\{(\w+)\}/g, (m, k) => (v && v[k] != null ? String(v[k]) : m));
   const fill = Q5.fill;
+  // 名前が「〜の群れ」の魔物を数えるときは「関所ネズミの群れを1体」ではなく「関所ネズミをひと群れ」（R7b）
+  Q5.herd = (s, v) => {
+    const m = v && /^(.+)の群れ$/.exec(String(v.foe || ""));
+    if (!m) return s;
+    const cnt = (n) => (n === 1 ? "ひと" : n === 2 ? "ふた" : String(n)) + "群れ";
+    return String(s).replace(new RegExp(v.foe.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "を(\\d+)体", "g"), (x, n) => `${m[1]}を${cnt(+n)}`);
+  };
   Q5.type = (key) => Q.TYPES.find((t) => t.key === key) || null;
   const find = (qid) => ((G.S && G.S.quests) || []).find((q) => q.id === qid) || null;
   const MECH = { hunt: "hunt", delve: "delve", deliver: "deliver", scene: "q5scene", escort: "q5escort" };
@@ -158,7 +165,7 @@
       if (goods.length) item = G.pick(goods);
     }
     const q = {
-      id: qid, q5: 1, kind: t.key, type: MECH[t.mech], loc, title: fill(G.pick(t.title), v), desc: fill(t.desc, v),
+      id: qid, q5: 1, kind: t.key, type: MECH[t.mech], loc, title: Q5.herd(fill(G.pick(t.title), v), v), desc: Q5.herd(fill(t.desc, v), v),
       reward, fame, dur, twist, client, v, from: here, nation: G.nationOf(here) || "", foe, mids: 0,
     };
     if (item) q.item = item;

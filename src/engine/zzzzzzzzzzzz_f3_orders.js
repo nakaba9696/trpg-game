@@ -150,13 +150,15 @@
       if (c.heal && G.cbAllyHeal(c, F3.HEAL_AT.shield)) return true;
       const th = G.f2party && G.f2party.threat();
       if (th && G.f2party.cover(c, th)) return true;
+      // F9：深手なら攻めずに防御（作戦の自動の手も防御を使う）
+      if (ratioOf(c) < 0.4) { (C0.f3back || (C0.f3back = [])).push(c.name); G.note(`${c.name}は守りを固めて、次の機をうかがっている。`); return true; }
       return press(c, foes);
     }
     if (tac === "live") {
       if (c.heal && hurtCount(0.5) >= 2 && F3.art(c, foes)) return true;
       if (c.heal && G.cbAllyHeal(c, F3.HEAL_AT.live)) return true;
       if (potion(c, F3.LIVE_LOW)) return true;
-      if (ratioOf(c) < 0.4) { (C0.f3back || (C0.f3back = [])).push(c.name); G.note(`${c.name}は傷をかばって下がった。`); return true; }
+      if (ratioOf(c) < 0.4) { (C0.f3back || (C0.f3back = [])).push(c.name); G.note(`${c.name}は傷をかばって防御を固めた。`); return true; }
       return false;
     }
     if (tac === "spare") return potion(c, F3.LIVE_LOW);
@@ -189,7 +191,7 @@
     }
     if (o === "back") {
       (c0.f3back || (c0.f3back = [])).push(c.name);
-      G.note(`${c.name}は下がって、身を守っている。`);
+      G.note(`${c.name}は防御を固めている。`);
       return true;
     }
     return byTactic(c, foes, F3.tacticOf(c));

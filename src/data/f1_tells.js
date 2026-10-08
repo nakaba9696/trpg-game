@@ -51,20 +51,20 @@
 
   // 知っている敵のときだけ添える（答えの手をそのまま言わず、覚えている感じで）
   D.F1_HINT = {
-    heavy: "――見覚えがある。受け止めれば崩れ、躱せば背が空く。溜めの途中なら潰せる。",
+    heavy: "――見覚えがある。防御で受け止めれば、和らいで相手が崩れる。",
     quick: "――見覚えがある。細かい手数は守りを固めれば止まる。",
     brace: "――見覚えがある。刃で踏み込めば返される。術か、手当ての間だ。",
-    chant: "――見覚えがある。唱え終わる前に割り込めば潰せる。",
-    ult: "――見覚えがある。潰せはしない。受けるか、躱すかだ。",
+    chant: "――見覚えがある。防御を固めて、術を受け流せ。",
+    ult: "――見覚えがある。潰せはしない。防御で受けるしかない。",
   };
 
   // 気配ごとに、読みが当たる手（画面に「◎」を付けるのは知っている敵のときだけ）
   D.F1_ANSWER = {
-    heavy: ["cb:guard", "cb:f1dodge", "cb:f1cut"],
+    heavy: ["cb:guard"],
     quick: ["cb:guard"],
     brace: ["cb:fire", "cb:ice", "cb:bolt", "cb:curse", "cb:ward", "cb:heal"],
-    chant: ["cb:f1cut", "cb:f1dodge"],
-    ult: ["cb:guard", "cb:f1dodge"],
+    chant: ["cb:guard"],
+    ult: ["cb:guard"],
   };
   D.F1_NAME = { heavy: "大技の溜め", quick: "連撃", brace: "待ちの構え", chant: "詠唱・息吹", ult: "本気の必殺" };
 

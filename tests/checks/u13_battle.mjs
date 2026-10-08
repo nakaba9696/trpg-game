@@ -1,7 +1,7 @@
 // U13：戦闘の見せ方（src/ui/u13_battle.js の DOM を使わない部分、G.u13）と、戦闘の手の札（u13_menu.js の戦闘のまとめ方）
 // - 一手の記録は一行ずつ間をおいて出る。早送り（finish）で残りが全部出る。速さ「すぐ」は今まで通り一度に出る。古い記録（速さが無い）は「ふつう」
 // - 結果の場面：勝ち方の見出し・得た金と品・伸びた能力値（表示の点）・仲間の伸び・一行の HP
-// - 戦闘の手：攻撃・戦技・魔法・その他・道具の 5 つの見出し（F4）。攻撃・急所は「攻撃」、身を守る・逃げるは「その他」。どの組もこぼれない
+// - 戦闘の手：攻撃・防御・戦技・魔法・その他・道具の 6 つの見出し（F4・F9）。攻撃は「攻撃」、防御は「防御」（どちらも押すとすぐ決まる一つの手）、逃げるは「その他」。どの組もこぼれない
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
@@ -87,15 +87,16 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const p = u.plan(gs, S);
   if (!p || p.kind !== "combat") fail("U13: 戦闘の手をまとめない");
   else {
-    // F4：戦闘の手は 5 つの見出し（攻撃・戦技・魔法・その他・道具）。押すと開く（一度に一つ）
+    // F4・F9：戦闘の手は 6 つの見出し（攻撃・防御・戦技・魔法・その他・道具）。押すと開く（一度に一つ）。攻撃・防御は押すとすぐ決まる
     const gl = gs.filter((g) => g.list.length);
     const ids = (is) => is.flatMap((i) => gl[i].list.map((a) => a.id));
     const tab = (l) => p.drawers.find((d) => d.label === l);
     const labels = p.drawers.map((d) => d.label);
-    const order = ["攻撃", "戦技", "魔法", "その他", "道具"];
-    if (labels.some((l) => !order.includes(l)) || labels.join() !== order.filter((l) => labels.includes(l)).join()) fail(`U13: 戦闘の見出しが 5 つの順になっていない（${labels}）`);
-    for (const id of ["cb:attack", "cb:vital"]) if (!tab("攻撃") || !ids(tab("攻撃").groups).includes(id)) fail(`U13: ${id} が「攻撃」にない`);
-    for (const id of ["cb:guard", "cb:flee"]) if (!tab("その他") || !ids(tab("その他").groups).includes(id)) fail(`U13: ${id} が「その他」にない`);
+    const order = ["攻撃", "防御", "戦技", "魔法", "その他", "道具"];
+    if (labels.some((l) => !order.includes(l)) || labels.join() !== order.filter((l) => labels.includes(l)).join()) fail(`U13: 戦闘の見出しが 6 つの順になっていない（${labels}）`);
+    if (!tab("攻撃") || ids(tab("攻撃").groups).join() !== "cb:attack" || !tab("攻撃").one || tab("攻撃").one.id !== "cb:attack") fail(`U13: 「攻撃」が、押すとすぐ決まる「〇〇で攻撃」だけになっていない（${tab("攻撃") && ids(tab("攻撃").groups)}）`);
+    if (!tab("防御") || ids(tab("防御").groups).join() !== "cb:guard" || !tab("防御").one || tab("防御").one.id !== "cb:guard") fail(`U13: 「防御」が、押すとすぐ決まる一つの手になっていない（${tab("防御") && ids(tab("防御").groups)}）`);
+    if (!tab("その他") || !ids(tab("その他").groups).includes("cb:flee")) fail("U13: cb:flee が「その他」にない");
     for (const l of ["魔法", "道具"]) if (!labels.includes(l)) fail(`U13: 「${l}」が見出しにない（${labels}）`);
     if (p.main.length + p.top.length + p.drawers.reduce((a, d) => a + d.groups.length, 0) !== gl.length) fail("U13: 戦闘の組がこぼれる・重なる");
   }
