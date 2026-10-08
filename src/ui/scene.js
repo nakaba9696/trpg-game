@@ -1572,11 +1572,13 @@
     const foes = opt.foes || [];
     const n = foes.length;
     if (n) { ctx.fillStyle = "rgba(90,0,0,.18)"; ctx.fillRect(0, 0, w, h); }
+    const B = G.foeBand ? G.foeBand() : null; // 画面が見せている帯（U30。scene_v2.js と同じ）
     foes.forEach((f, i) => {
       const x = w * (n === 1 ? 0.5 : 0.22 + (0.56 * i) / Math.max(1, n - 1));
-      const s = h * (f.boss ? 0.78 : 0.58) * (n > 2 ? 0.85 : 1);
-      if (G.paintMonster) G.paintMonster(ctx, x, h * 0.97, s, f);
-      else foe(ctx, x, h * 0.97, s, f.shape, f.eye || "#ff3a3a");
+      const s = (B ? h * (B.base - B.top) * (f.boss ? 1 : 0.86) : h * (f.boss ? 0.78 : 0.58)) * (n > 2 ? 0.85 : 1);
+      const base = B ? h * B.base : h * 0.97;
+      if (G.paintMonster) G.paintMonster(ctx, x, base, s, f);
+      else foe(ctx, x, base, s, f.shape, f.eye || "#ff3a3a");
     });
     fallPass(ctx, w, h, RE);
     vignette(ctx, w, h, 0.55);
