@@ -152,7 +152,7 @@
       goal: (S.goal && S.goal.text !== undefined ? S.goal.text : S.goal) || "", goalId: S.goal && S.goal.id,
       over: S.over || S.end || "", cause: S.deathCause || S.cause || "力尽きた", fate: S.fate || "",
       place: (L0 && L0.name) || S.location || "どこか", placeType: L0 ? L0.type : "", inTown: !!(L0 && L0.type === "town"),
-      start: (startLoc && startLoc.name) || "どこかの町", days, year: yearOf(run ? S.day : 1), calOld: (S.cal && S.cal.old) || 0,
+      start: (startLoc && startLoc.name) || "どこかの町", days, year: yearOf(run ? S.day : 1),
       fame: S.fame || 0, title: S.title || "", gold: S.gold || 0, flags,
       bosses: cnt.bosses || 0, quests: cnt.quests || 0, kills: cnt.kills || 0, clung: cnt.clung || 0, fumbles: cnt.fumbles || 0,
       visited: Object.keys(S.visited || {}).length, sin: S.sin || 0, wanted: wantedIn.length > 0, where: wantedIn[0] || "",
@@ -301,7 +301,7 @@
       paras[paras.length - 1] += line(N.close);
       return { paras, epitaph: fill(T.EPITAPH.wall), death: { key: "wall" } };
     }
-    const a0 = (L.ageN || 25) + (G.calYearsLived ? G.calYearsLived(L.days, L.calOld) : Math.floor(L.days / G.YEAR_DAYS));
+    const a0 = (L.ageN || 25) + Math.floor(L.days / G.YEAR_DAYS);
     let extra = 12 + G.d(33);
     if (a0 + extra > 96) extra = Math.max(3, 96 - a0);
     const deathAge = a0 + extra;

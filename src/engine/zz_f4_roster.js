@@ -20,7 +20,7 @@
   const as = (x) => (x == null ? [] : Array.isArray(x) ? x : [x]);
   const WANT_W = 3;   // 狙った人の出会いの出来事の重み
   const WANT_MAX = 3; // 狙える人数
-  const SHIFT = () => Math.max(1, Math.round((G.SEASON_DAYS || 30) / 15)); // 予定が前後する日数（冒険ごと。季節 30 日なら 2 日）
+  const SHIFT = () => Math.max(1, Math.round((G.SEASON_DAYS || 30) / 15)); // 予定が前後する日数（冒険ごと。季節 90 日なら 6 日）
 
   // ---------------------------------------------------------------- 暦
   const SEASONS = () => G.SEASONS || ["春", "夏", "秋", "冬"];
