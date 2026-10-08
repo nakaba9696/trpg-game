@@ -18,7 +18,7 @@
 .u13rtitle { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 26px; letter-spacing: .3em; color: var(--head); text-align: center; }
 .u13result.win .u13rtitle { color: var(--accent); text-shadow: 0 0 14px rgba(234, 190, 100, .45); }
 .u13rtitle::after { content: ""; display: block; height: 1px; margin: 8px auto 0; width: 60%; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
-.u13rrows { display: grid; grid-template-columns: 5em minmax(0, 1fr); gap: 6px 12px; margin: 0; font-size: 14.5px; }
+.u13rrows { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); gap: 6px 12px; margin: 0; font-size: 14.5px; }
 .u13rrows dt { color: var(--muted); }
 .u13rrows dd { margin: 0; overflow-wrap: anywhere; }
 .u13rrows .u13comp { font-size: 13.5px; }
@@ -68,3 +68,14 @@ body.u13deadFast #backdrop, body.u13deadFast .scene, body.u13deadFast #v9cast { 
 .u13death .u13go::before { content: none; }
 .epitaph .u13retry { font-size: 13px; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .u13death { animation: none; } body.u13dead #backdrop, body.u13dead .scene, body.u13dead #v9cast { transition: none; } }
+
+/* F7：戦いのあと（結果の場面）。戦闘とは別の画面だと分かるように、上に小さな見出しを置き、項目ごとに並べる。戦いのあとの行は本文に出さない */
+#log > .u13after { display: none; }
+.u13rcap { margin: 0 0 -4px; text-align: center; font-size: 12px; letter-spacing: .4em; color: var(--muted); }
+.u13rcap::before, .u13rcap::after { content: "──"; margin: 0 .6em; opacity: .5; letter-spacing: 0; }
+.u13alist { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: 13.5px; }
+.u13alist li::before { content: "・"; color: var(--muted); }
+.u13a-note { color: var(--muted); }
+.u13drows { text-align: left; font-size: 13.5px; }
+.u13result { max-height: 100%; overflow-y: auto; overscroll-behavior: contain; }
+.u13death { max-height: 100%; overflow-y: auto; overscroll-behavior: contain; }
