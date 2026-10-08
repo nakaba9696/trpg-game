@@ -233,6 +233,16 @@
     };
   }
 
+  // ---------------------------------------------------------------- 図鑑の分類：防具を 鎧・兜・靴・盾 に分ける（f2_codex.js の F2.ITEM_KINDS・F2.kindOf）
+  const F2 = G.f2;
+  if (F2 && F2.ITEM_KINDS && F2.kindOf && !F2.ITEM_KINDS.some(([k]) => k === "head")) {
+    const at = F2.ITEM_KINDS.findIndex(([k]) => k === "armor");
+    F2.ITEM_KINDS.splice(at, 1, ["armor", "鎧"], ["head", "兜"], ["feet", "靴"], ["shield", "盾"]);
+    const kind0 = F2.kindOf;
+    const PART = { head: "head", feet: "feet", off: "shield" };
+    F2.kindOf = (it) => { const k = kind0(it); return k === "armor" && PART[it.slot] ? PART[it.slot] : k; };
+  }
+
   // ---------------------------------------------------------------- 文
   // 耐性の印（数は出さない）：◎ とても強い・○ 強い・△ 弱い・× とても弱い
   API.mark = (m) => (m <= 0.5 ? "◎" : m < 1 ? "○" : m >= 1.5 ? "×" : m > 1 ? "△" : "・");

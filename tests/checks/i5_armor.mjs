@@ -39,6 +39,15 @@ export default ({ fail, loadEngine, seeded }) => {
   // 説明（由来）：新しい品にはどれも説明がある
   for (const [id, it] of armor) if (/^i5/.test(id) && !(it.flavor && it.flavor.length >= 40)) F(`${id} の説明が短い`);
 
+  // すべての防具に説明（flavor：由来）と効き目の説明（desc）があり、図鑑で鎧・兜・靴・盾に分かれる
+  for (const [id, it] of armor) {
+    if (!(typeof it.flavor === "string" && it.flavor.length >= 40)) F(`${id}（${it.name}）に flavor が無い`);
+    if (!(typeof it.desc === "string" && it.desc)) F(`${id}（${it.name}）に desc が無い`);
+  }
+  const KIND = { body: "armor", head: "head", feet: "feet", off: "shield" };
+  for (const [id, it] of armor) if (G.f2.kindOf(it) !== KIND[it.slot]) F(`${id} の図鑑の分類が ${G.f2.kindOf(it)}`);
+  for (const k of ["armor", "head", "feet", "shield"]) if (!G.f2.ITEM_KINDS.some(([x]) => x === k)) F(`図鑑の分類に ${k} が無い`);
+
   // ---- 序盤の店（R6）：はじめの町の店に、防御 3 以上・値 300 以上の I5 の品が並ばない
   for (const loc of ["karna", "nerva", "w2_granbel", "leavel"]) for (const id of D.LOCS[loc].shop || []) {
     const it = D.ITEMS[id];
