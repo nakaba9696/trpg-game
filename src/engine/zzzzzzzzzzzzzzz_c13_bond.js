@@ -55,8 +55,9 @@
   X.gift = (S, spell) => {
     S = S || G.S;
     if (!S) return false;
-    if (G.m14Talent) return !!G.m14Talent(S, spell);
-    if (G.m14CanLearn) return !!G.m14CanLearn(spell, S);
+    // M14：術の才・属性の向き・段の決まり（G.m14.canLearn が空なら覚えられる。もう覚えている術は才とは別に扱う）
+    if (G.m14 && G.m14.canLearn && spell) { const why = G.m14.canLearn(spell, S); return why === "" || why === "もう覚えている"; }
+    if (G.m14 && G.m14.has) return G.m14.has(S);
     const apt = G.s5Apt ? G.s5Apt("魔力", S) : 0;
     return apt >= 0 || ((S.stats || {}).魔力 || 0) >= X.GIFT_MIN;
   };
