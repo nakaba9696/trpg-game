@@ -50,7 +50,7 @@
       ],
     },
     {
-      id: "m14_deeplore", where: ["dungeon"], w: 1, cond: (S) => (S.depth || 0) >= 3, title: "崩れた書庫",
+      id: "m14_deeplore", where: ["dungeon"], w: 1, cond: (S) => (S.depth || 0) >= 5, title: "崩れた書庫",
       text: "崩れた壁の向こうに、書架の並んだ小部屋がある。本のほとんどは崩れて灰になっていた。一冊だけ、灰の山の上に置かれたように残っている。",
       choices: [
         { label: "灰の山から、残った一冊を抜き出す", stat: "知力", diff: "難しい",

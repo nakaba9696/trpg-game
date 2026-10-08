@@ -25,6 +25,15 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   };
   const ids = () => G.actions().flatMap((g) => g.list).map((a) => a.id);
   const textOf = (S, from) => S.log.slice(from).map((l) => l.text || `${l.reason}:${l.roll}`).join("\n");
+  // F8：指示は、手を決める段でその仲間の番に出す（作戦「命を待て」の仲間だけ番が来る）。you＝主人公の手、o＝その仲間への指示。r を渡すと、解く間だけ乱数を固定
+  const order = (cid, o, you, r) => {
+    const c = G.S.companions.find((x) => x.id === cid);
+    c.f5tac = "wait";
+    G.act("cb:" + (you || "guard"));
+    const r0 = G.rand;
+    if (r != null) G.rand = () => r;
+    try { G.act(`f3:ord:${cid}:${o}`); } finally { G.rand = r0; }
+  };
 
   // ---------------------------------------------------------------- 任せる＝今まで通り
   {
@@ -46,26 +55,36 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   {
     const S = begin(12, [mk(0), mk(1, { heal: true, cls: "僧侶" })]);
     G.startCombat(["orc", "goblin"], {});
-    const list = ids();
-    if (!list.includes("f3:tac:shield")) F("作戦の選択肢が無い");
-    if (!list.includes("f3:ord:f3c0:cover") || !list.includes("f3:ord:f3c1:heal")) F("仲間ごとの指示が出ない");
-    if (list.includes("f3:ord:f3c0:heal")) F("回復役でない仲間に「手当て」が出る");
+    S.companions.forEach((c) => { c.f5tac = "wait"; });
+    if (!ids().includes("f3:tac:shield")) F("作戦の選択肢が無い");
     const turn = S.turn, round = S.combat.round, logN = S.log.length;
     G.act("f3:tac:shield");
-    G.act("f3:ord:f3c0:back");
-    if (S.turn !== turn || S.combat.round !== round || S.log.length !== logN) F("作戦・指示を変えると手番が進む（か、記録が増える）");
+    G.act("cb:guard"); // 主人公の手を決める → 仲間アの番
+    let list = ids();
+    if (!list.includes("f3:ord:f3c0:cover")) F("仲間アの番に、指示が出ない");
+    if (list.includes("f3:ord:f3c0:heal")) F("回復役でない仲間に「手当て」が出る");
+    G.act("f3:ord:f3c0:back"); // → 仲間イの番
+    list = ids();
+    if (!list.includes("f3:ord:f3c1:heal")) F("回復役の仲間の番に「手当て」が出ない");
+    if (S.turn !== turn || S.combat.round !== round || S.log.length !== logN) F("作戦・指示を決めている間に手番が進む（か、記録が増える）");
     if (S.f3tactic !== "shield" || S.combat.f3ord.f3c0 !== "back") F("作戦・指示が覚えられない");
-    G.act("cb:guard");
+    G.act("f3:ord:f3c1:back"); // 全員決まった → 一巡を解く
     if (S.combat && S.combat.f3ord && S.combat.f3ord.f3c0) F("指示が手番の終わりに消えない");
     if (S.f3tactic !== "shield") F("作戦が手番のあとに消えた");
   }
 
-  // 呼び名が重なる仲間でも、指示の組の見出しは重ならない（押すと開く組の鍵になる）
+  // 呼び名が重なる仲間でも、その仲間の番の見出しは重ならない
   {
-    begin(22, [mk(0, { name: "剣士のノエル" }), mk(1, { name: "弓使いのノエル" })]);
+    const S = begin(22, [mk(0, { name: "剣士のノエル" }), mk(1, { name: "弓使いのノエル" })]);
     G.startCombat(["goblin"], {});
-    const titles = G.actions().map((g) => (g.title || "").replace(/（.*$/, "")).filter((t) => /ノエル/.test(t));
-    if (titles.length !== 2 || titles[0] === titles[1]) F(`呼び名の重なる仲間の指示の組が見分けられない：${titles.join("・")}`);
+    S.companions.forEach((c) => { c.f5tac = "wait"; });
+    // F8：仲間の番の見出しは「攻撃（〇〇の手）」。二人の番で、名前が見分けられる
+    const who = () => ((G.actions()[0] || {}).title || "").replace(/^[^（]*（/, "").replace(/の手）$/, "");
+    G.act("cb:guard");
+    const a = who();
+    G.act("f3:ord:f3c0:back");
+    const b = who();
+    if (!/ノエル/.test(a) || !/ノエル/.test(b) || a === b) F(`呼び名の重なる仲間の番が見分けられない：${a}・${b}`);
   }
 
   // ---------------------------------------------------------------- 指示どおり動く
@@ -77,9 +96,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.setAim(1);
     let onAim = 0;
     for (let i = 0; i < 6; i++) {
-      G.act("f3:ord:f3c0:attack");
       const from = S.log.length;
-      G.act("cb:guard");
+      order("f3c0", "attack");
       if (S.log.slice(from).some((l) => l.fx === "hit" && l.foe === S.combat.foes[1].name && /仲間ア/.test(l.text))) onAim++;
       if (S.log.slice(from).some((l) => l.fx === "hit" && l.foe === S.combat.foes[0].name && /仲間ア/.test(l.text))) F("「狙いを攻める」で、狙っていない敵を攻めた");
     }
@@ -91,10 +109,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.startCombat(["goblin"], {});
     S.combat.foes[0].hp = S.combat.foes[0].max = 500;
     S.hp = 900;
-    G.act("f3:ord:f3c0:heal");
     const hp0 = S.hp;
-    const r0 = G.rand; G.rand = () => 0.99; // 敵は外す
-    try { G.act("cb:guard"); } finally { G.rand = r0; }
+    order("f3c0", "heal", "guard", 0.99); // 敵は外す
     if (!(S.hp > hp0)) F("「手当て」で、少しの傷を治さない");
   }
   {
@@ -109,9 +125,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       const c = S.companions[0];
       let covered = false;
       for (let i = 0; i < 12 && S.combat && !covered; i++) {
-        G.act("f3:ord:f3c0:cover");
         const hp0 = c.hp, from = S.log.length;
-        G.act("cb:guard");
+        order("f3c0", "cover");
         covered = c.hp < hp0 && S.log.slice(from).some((l) => /あなたを庇い/.test(l.text || ""));
       }
       if (!covered) F("「庇う」で、仲間があなたの代わりに傷を受けない");
@@ -119,7 +134,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         const s2 = begin(16, [mk(0)]);
         G.startCombat(["orc"], {});
         s2.combat.foes[0].hp = s2.combat.foes[0].max = 500;
-        if (back) G.act("f3:ord:f3c0:back");
+        if (back) s2.combat.f3ord = { f3c0: "back" };
         // 仲間を必ず狙わせる（敵の狙いの乱数を固定）
         s2.combat.f3back = back ? ["仲間ア"] : [];
         const c2 = s2.companions[0];
@@ -135,12 +150,13 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     S.combat.foes[0].hp = S.combat.foes[0].max = 500;
     G.give("potion", 1);
     S.hp = 700;
-    if (!ids().includes("f3:ord:f3c0:potion")) F("薬を持っているのに「薬を使う」が出ない");
     const meds = () => Object.keys(S.inv).filter((id) => (D.ITEMS[id] || {}).hp).reduce((a, id) => a + S.inv[id], 0);
     const n0 = meds();
-    G.act("f3:ord:f3c0:potion");
+    S.companions[0].f5tac = "wait";
+    G.act("cb:guard");
+    if (!ids().includes("f3:ord:f3c0:potion")) F("薬を持っているのに、仲間の番に「薬を使う」が出ない");
     const r0 = G.rand; G.rand = () => 0.99;
-    try { G.act("cb:guard"); } finally { G.rand = r0; }
+    try { G.act("f3:ord:f3c0:potion"); } finally { G.rand = r0; }
     if (!(meds() < n0 && S.hp > 700)) F("「薬を使う」で、薬が減らない（か、治らない）");
   }
 
@@ -184,10 +200,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       const S = begin(21, [mk(0, { bond, trait })]);
       G.startCombat(["goblin"], {});
       S.combat.foes[0].hp = S.combat.foes[0].max = 500;
-      G.act("f3:ord:f3c0:cover");
       const from = S.log.length;
-      const r0 = G.rand; G.rand = () => 0.01;
-      try { G.act("cb:guard"); } finally { G.rand = r0; }
+      order("f3c0", "cover", "guard", 0.01);
       return S.log.slice(from).some((l) => (D.F3_BALK[trait] || D.F3_BALK.any).some((t) => (l.text || "").includes(t.split("{n}").pop().slice(0, 6))));
     };
     if (!balks(10, "coward")) F("好感度の低い臆病者に「庇え」と言っても、渋らない");

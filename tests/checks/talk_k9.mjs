@@ -57,6 +57,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 遊ぶ：続き物の組を、順に全部起こす
   const G = loadEngine();
+  G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
   G.data.Q8B.off = G.data.Q8L.off = true; // Q8 の上がり方・恋人の条件は tests/checks/q8_love.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   G.rand = seeded(909);

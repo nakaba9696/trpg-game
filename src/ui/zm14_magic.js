@@ -5,7 +5,10 @@
 (function (G) {
   const D = G.data;
   const M = G.m14;
-  if (!M || typeof document === "undefined") return;
+  if (!M) return;
+  // 行動の分類（U13）：師に教わる・暮らしの術は「この地で」
+  if (G.u13 && G.u13.BY_PREFIX) Object.assign(G.u13.BY_PREFIX, { m14m: "here", m14ga: "here" });
+  if (typeof document === "undefined") return;
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   const elName = (k) => (D.M14_ELEMS[k] || {}).name || k;
   const AFF = D.M14_TALENT.aff;
@@ -61,6 +64,12 @@
       row.append(el("span", "nm", sp.name), el("span", "k1lv", `${elName(sp.el)}・${D.M14_TIERS[sp.tier || 1]}`), el("span", "k1meta", `MP${sp.mp}`), el("span", "k1fx", sp.hint || ""));
       list.append(row);
     });
+    const gen = M.known(S).filter((id) => D.SPELLS[id].generic);
+    if (gen.length) {
+      const row = el("div", "k1row");
+      row.append(el("span", "nm", "暮らしの術"), el("span", "k1lv", ""), el("span", "k1meta", ""), el("span", "k1fx", gen.map((id) => D.SPELLS[id].name).join("・")));
+      list.append(row);
+    }
     d.append(list);
     const after = pane.querySelector(".k1skills.k1skills2") || pane.querySelector(".f3marks") || ((pane.querySelector(".statlist") || {}).closest ? pane.querySelector(".statlist").closest("details") : null);
     if (after && after.parentNode === pane) after.after(d); else pane.append(d);

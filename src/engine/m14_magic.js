@@ -331,19 +331,21 @@
     return dealt;
   }
   function healSelf(n, why) { const S = G.S; const a = S.hp; G.heal(n); if (S.hp > a) G.note(`${why || ""}HP +${S.hp - a}`); }
-  function cast(id, t) {
+  // o.scroll：術の巻物（MP も才も要らない。易しい判定でほどける。大成功でも上の段は覚えない）
+  function cast(id, t, o) {
+    o = o || {};
     const S = G.S;
     const C = S.combat;
     const sp = SP[id];
     const fx = sp.fx || {};
     const say = SAY[sp.el] || SAY.fire;
-    if (S.mp < sp.mp) return;
-    S.mp -= sp.mp;
+    if (!o.scroll && S.mp < sp.mp) return;
+    if (!o.scroll) S.mp -= sp.mp;
     C.m14used = C.m14used || {};
-    C.m14used[sp.el] = Math.max(C.m14used[sp.el] || 0, sp.tier || 1);
+    if (!o.scroll) C.m14used[sp.el] = Math.max(C.m14used[sp.el] || 0, sp.tier || 1);
     const one = fx.t === "hit" || fx.t === "drain" || fx.t === "twice";
-    G.log("you", `${one ? t.name + "に" : ""}${elName(sp.el)}の術「${sp.name}」を唱える`);
-    const r = G.check("魔力", M.spellVs(sp, M.vsOf(id)), sp.name, G.gearBonus(sp.bonus) + G.magicBonus());
+    G.log("you", o.scroll ? `${one ? t.name + "に向けて" : ""}術の巻物の封を切る（${sp.name}）` : `${one ? t.name + "に" : ""}${elName(sp.el)}の術「${sp.name}」を唱える`);
+    const r = o.scroll ? G.check("魔力", M.spellVs({ diff: "易しい" }, M.vsOf(id)), sp.name, G.magicBonus()) : G.check("魔力", M.spellVs(sp, M.vsOf(id)), sp.name, G.gearBonus(sp.bonus) + G.magicBonus());
     if (r.ok) {
       G.say(say.ok);
       if (r.crit) G.log("nar", "術が、思っていたより深く通った。", { fx: "crit" });
@@ -362,7 +364,7 @@
       }
       if (fx.selfHeal) healSelf(G.dice(fx.selfHeal));
       if (fx.self && dealt > 0) healSelf(Math.ceil(dealt * fx.self), "吸った命で ");
-      if (r.crit) M.onCrit(id);
+      if (r.crit && !o.scroll) M.onCrit(id);
     } else G.say(r.fumble ? say.fumble : say.miss);
     if (r.fumble) { G.hurt(2 * (sp.tier || 1), say.die); G.payDebt(sp.debt || 1); }
   }
@@ -436,11 +438,11 @@
   G.m14AllyMagic = (c) => `${elName(M.allyTalent(c).good[0] || "fire")}の術`;
   G.m14CompLabel = (c) => { const t = M.allyTalent(c); return `術の才：${t.lv ? `${T.names[t.lv]}（${t.good.map(elName).join("・")}）` : T.names[0]}`; };
 
-  // ---------------------------------------------------------------- 伝承の書：迷宮の主・使徒の落とし物（属性ごとに、主を順に割り当てる）
+  // ---------------------------------------------------------------- 伝承の書：段の高い（5 以上の）迷宮の主の落とし物（属性ごとに、主を順に割り当てる。まれ。M15）
   const lore = Object.keys(D.ITEMS).filter((id) => D.ITEMS[id].m14lore);
-  Object.keys(D.ENEMIES).filter((id) => D.ENEMIES[id].boss).forEach((id, i) => {
+  Object.keys(D.ENEMIES).filter((id) => D.ENEMIES[id].boss && (D.ENEMIES[id].tier || 1) >= 5).forEach((id, i) => {
     const e = D.ENEMIES[id];
     const b = lore[i % lore.length];
-    if (!(e.loot || []).some(([x]) => x === b)) e.loot = [...(e.loot || []), [b, 0.12]];
+    if (!(e.loot || []).some(([x]) => x === b)) e.loot = [...(e.loot || []), [b, 0.05]];
   });
 })(globalThis.G = globalThis.G || {});
