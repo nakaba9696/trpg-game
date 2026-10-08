@@ -183,14 +183,16 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     const i = B[id].findIndex((t) => t.kind === "spell");
     const t = B[id][i];
     start("merc", 9); // 魔力が苦手な職業で、魔力も低い
+    if (g.m14) g.S.magic = { lv: 0, good: [], bad: [] }; // M14 の決まりでも「術の才なし」
     join(id);
-    if (g.c13.gift(g.S, t.spell)) F("魔力が苦手で低いのに、術の才があることになっている");
+    if (g.c13.gift(g.S, t.spell)) F("術の才が無いのに、才があることになっている");
     playAll(id);
     if ((g.S.spells || []).includes(t.spell)) F(`${id}: 術の才が無いのに ${t.spell} を教わった`);
     if (!g.has(t.alt.item)) F(`${id}: 術の才が無いとき、代わりの品 ${t.alt.item} が来ない`);
     start("mage");
+    if (g.m14) g.S.magic = { lv: 2, good: [g.data.SPELLS[t.spell].el], bad: [] }; // その属性が得意な才
     join(id);
-    if (!g.c13.gift(g.S, t.spell)) F("魔法使いに術の才が無いことになっている");
+    if (!g.c13.gift(g.S, t.spell)) F("術の才があるのに、才が無いことになっている");
   }
 
   // 依頼：頼まれたあと、場所が違えば選べない（どこでとだけ出る）。しくじっても、日をおいてまた挑める
