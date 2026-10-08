@@ -24,13 +24,14 @@
 
 このほか、前の点検で背景が残った・白いもやが出た 13 枚（bartolo・kind_villager_m・titta_exasperated・timo の一部・yura ほか）は `--model isnet-anime`。
 
-## 持ち主に聞く絵（`docs/art/cutout_review/questions.json`）
+## 持ち主に聞いた絵（`docs/art/cutout_review/questions.json` の answer）
 
-光・オーラ（e3_notari・graw・e3_tojizuki・e3_levian・e3_yuzuel）、霧（e4_seafog）、傘（e3_lugu。背景を白に描き直した版）、足元の炎・溶岩・地面（e3_tetsukui・e4_cinderhound）、
-大樹の後ろの空（e3_sekaiju）、後ろの布（e4_mudhound）、止まっている岩・崖・廃墟（e4_vulture・e4_rockeater・e4_warcrow）、墓石（e4_gravejackal）、座る木・横の木（celestin・timo）。
-答えが出るまで、これらは切り抜かずに元の絵のまま（`fixes_*.jpg` にある notari・graw・seafog・yuzuel・lugu・celestin・timo の「直した後」は、答えでそれがよいと言われたときの版）。
+- **背景込みの一枚絵として出す**（切り抜かず、表示の背景消しにも通さない。`src/ui/a17_keep_bg.js`）：e3_yuzuel・e3_lugu・e3_notari・graw・e3_tojizuki・e3_levian・e3_tetsukui・e3_sekaiju・e4_vulture・e4_rockeater・e4_rockeater_x・e4_warcrow。
+  縁と足元は、ほかの魔物と同じ仕上げ（`v6_monsters.js` の finish：丸いぼかし・足元を消す）で戦闘の背景になじむ。
+- **切り抜き後でよい**：e4_seafog（霧を半透明で残す）・e4_cinderhound（溶岩と煙を消す）・e4_mudhound と _x（布を残す）・e4_gravejackal（墓石を消す）・celestin（木ごと残す。差分も）。
+- **timo は木を消す**（差分も。差分は基本の絵の透明の形を少し広げた範囲に収め、木の残りを消した）。
 
 ## そのままにした所（背景と判断）
 
-e4_cropcrow の麦・ogre・lumia の木・konoha の雲・rionetta の階段・e4k_moonhare の青い光など、
+e4_cropcrow の麦・ogre・lumia・timo の木・konoha の雲・rionetta の階段・e4k_moonhare の青い光など、
 人物や魔物から離れた景色は消したまま。座っている台（musette・tsuyuha・souhaku・otmar のいす）は残っている。
