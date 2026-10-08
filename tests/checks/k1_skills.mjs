@@ -58,12 +58,11 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   for (const cls of Object.keys(D.CLASSES)) if (!(D.SKILL_START[cls] || []).length) fail(`職業 ${cls} にはじめの技が無い`);
   const scrolls = Object.keys(D.ITEMS).filter((id) => D.ITEMS[id].type === "k1scroll");
   for (const id of scrolls) { const it = D.ITEMS[id]; if (!SK[it.skill]) fail(`巻物 ${id}：技 ${it.skill} が無い`); if (!(it.price > 0) || !it.desc) fail(`巻物 ${id}：値段か説明が無い`); }
-  const inShop = new Set(Object.values(D.LOCS).flatMap((L) => L.shop || []).filter((id) => scrolls.includes(id)));
+  // K5：店の掘り出し物はやめ、奥の棚・強い敵の落とし物・迷宮の深い層・脇道の奥へ寄せた。どの巻物にも入手場所がある（図鑑）
+  const inShop = new Set(Object.values(D.K5_SHOP || {}).flat().map((id) => D.K1_SCROLL(id)).filter((id) => scrolls.includes(id)));
   const inLoot = new Set(Object.values(D.ENEMIES).flatMap((e) => (e.loot || []).map(([id]) => id)).filter((id) => scrolls.includes(id)));
-  for (const id of scrolls) if (!inShop.has(id) && !inLoot.has(id)) fail(`巻物 ${id}：店にも落とし物にも無い（図鑑の入手場所が引けない）`);
-  if (inShop.size < 10) fail(`店に並ぶ巻物が ${inShop.size} 種しかない`);
-  if (inLoot.size < 10) fail(`敵が落とす巻物が ${inLoot.size} 種しかない`);
-  for (const [loc, list] of Object.entries(D.K1_SHOP)) { if (!D.LOCS[loc]) fail(`巻物の店：場所 ${loc} が無い`); for (const id of list) if (!SK[id]) fail(`巻物の店：技 ${id} が無い`); }
+  for (const id of scrolls) if (!G.codexItemWhere(id).length) fail(`巻物 ${id}：入手場所が引けない`);
+  for (const [loc, list] of Object.entries(D.K5_SHOP || {})) { if (!D.LOCS[loc]) fail(`巻物の店：場所 ${loc} が無い`); for (const id of list) if (!SK[id]) fail(`巻物の店：技 ${id} が無い`); }
   for (const [eid, list] of Object.entries(D.K1_DROPS)) { if (!D.ENEMIES[eid]) fail(`巻物の落とし物：敵 ${eid} が無い`); for (const [id] of list) if (!SK[id]) fail(`巻物の落とし物：技 ${id} が無い`); }
   const cats = new Set([...Object.keys(D.C10_CATS || {}), ...Object.keys(D.K1_CATS || {})]);
   for (const t of D.K1_TPL) { if (!SK[t.sk] || SK[t.sk].kind === "combat") fail(`型「${t.label}」：戦闘の外の技 ${t.sk} でない`); if (!cats.has(t.cat)) fail(`型「${t.label}」：種類 ${t.cat} が無い`); }
@@ -305,8 +304,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     const a = acts().find((x) => x.id === "k1scroll:k1s_flurry");
     if (!a || !a.disabled || !/敏捷/.test(a.sub)) fail(`敏捷が低いのに乱れ打ちの巻物が読める（${a && a.sub}）`);
     S.stats.敏捷 = 30;
-    let n = 0;
-    while (!K.knows("k1_flurry") && n++ < 20) G.act("k1scroll:k1s_flurry");
+    G.act("k1scroll:k1s_flurry");   // K5：読めば必ず覚える
     if (!K.knows("k1_flurry")) fail("巻物を読んでも技を覚えない");
     if (G.count("k1s_flurry")) fail("覚えたのに巻物が残っている");
     // 古い字の巻物は古文字読みか知力が要る
