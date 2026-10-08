@@ -92,3 +92,8 @@ body.v9pc.v9combat #panel.u13fight > .u13main { flex: 0 1 auto; min-height: 3.2e
   body.u13combat #panel .u13drawers .u13again { position: fixed; left: 8px; right: 8px; bottom: calc(58px + env(safe-area-inset-bottom, 0px)); max-width: none; z-index: 13; }
   body.u13combat #panel .agroup.u13main .u13chips .act { min-height: 44px; }
 }
+
+/* F9：攻撃・防御は、押すとすぐその手に決まる札（見出しを開かない）。ほかの見出しより目立たせる */
+#panel .u13drawers .u13now { display: grid; gap: 0; text-align: left; border-color: var(--accent); font-weight: 700; }
+#panel .u13drawers .u13now .u13nowsub { font-weight: 400; font-size: 11px; color: var(--muted); max-width: 14em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#panel .u13drawers .u13now-attack .u13lab { color: var(--accent); }
