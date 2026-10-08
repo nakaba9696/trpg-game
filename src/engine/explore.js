@@ -26,8 +26,14 @@
       ] });
     } else {
       const maxed = S.depth >= L.floors && S.flags[bossFlag(L)];
-      groups.push({ title: `${L.name}（${S.depth ? `地下${S.depth}階／全${L.floors}階` : "入口"}）`, list: [
-        { id: "deeper", label: S.depth ? "奥へ進む" : "迷宮に入る", sub: S.depth + 1 >= L.floors && !S.flags[bossFlag(L)] ? "最奥に主がいる" : `危険度 ${L.danger}`, disabled: !!maxed, kw: ["奥", "進", "入", "潜", "下"] },
+      // 階の部屋（W11。zw11_dungeon.js）：階段を見つけていれば静かに下りる。見つけていなければ、探さずに奥へ進む（今までの「奥へ進む」）
+      const fl = G.w11 && G.w11.floorOf ? G.w11.floorOf(S) : null;
+      const where = G.w11 && G.w11.mapLine ? G.w11.mapLine(S, L) : S.depth ? `地下${S.depth}階／全${L.floors}階` : "入口";
+      const boss = S.depth + 1 >= L.floors && !S.flags[bossFlag(L)];
+      const label = !S.depth ? "迷宮に入る" : !fl ? "奥へ進む" : fl.stairs ? "階段を下りる" : "階段を探さずに奥へ進む";
+      const sub = boss ? "最奥に主がいる" : fl && fl.stairs ? `地下${S.depth + 1}階へ` : fl ? `手探り・何が出るか分からない・危険度 ${L.danger}` : `危険度 ${L.danger}`;
+      groups.push({ title: `${L.name}（${where}）`, list: [
+        { id: "deeper", label, sub, disabled: !!maxed, kw: ["奥", "進", "入", "潜", "下", "階段"] },
         ...(S.depth ? [{ id: "leave", label: "入口まで引き返す", sub: "", kw: ["戻", "引き返", "出る", "脱出"] }] : [
           { id: "camp", label: "入口で野営する", sub: "HP と MP が回復・襲われることも", kw: ["野営", "休", "寝", "キャンプ"] }]),
       ] });
@@ -127,7 +133,7 @@
   function deeper() {
     const S = G.S;
     const L = G.loc();
-    G.log("you", S.depth ? "奥へ進む" : "迷宮に入る");
+    G.log("you", !S.depth ? "迷宮に入る" : G.w11 && G.w11.calm ? "階段を下りる" : "奥へ進む");
     G.pass(1);
     S.depth++;
     S.quests.forEach((q) => { if (q.type === "delve" && !q.done && q.loc === S.loc && S.depth >= q.need) { q.done = true; G.note(`依頼「${q.title}」を達成した。ギルドに報告しよう。`); } });
@@ -142,7 +148,7 @@
         G.startCombat([L.boss], { win: { text: rw.text, flag: bf, item: rw.item, fame: rw.fame, trophy: rw.trophy, chron: rw.chron } });
         return;
       }
-      G.say("最奥の広間は静まり返っている。主はもういない。天井から、埃がゆっくり降りてくる。");
+      G.say((G.w11 && G.w11.deepLine && G.w11.deepLine(S)) || "最奥の広間は静まり返っている。主はもういない。天井から、埃がゆっくり降りてくる。");
       return;
     }
     const mid = L.midboss && L.midboss[S.depth];
@@ -153,6 +159,13 @@
       return;
     }
     const r = G.rand();
+    // 見つけた階段を下りたときは、着いた先で出会うものが少ない（W11）
+    if (G.w11 && G.w11.calm) {
+      if (r < 0.2) { G.startCombat(encounter(L), {}); return; }
+      if (r < 0.45) { const e = G.randomEvent(); if (e) { G.startEvent(e); return; } }
+      G.say("階段を下りた先は、しんとしていた。");
+      return;
+    }
     if (r < 0.45) { G.startCombat(encounter(L), {}); return; }
     if (r < 0.8) { const e = G.randomEvent(); if (e) { G.startEvent(e); return; } }
     const gold = G.d(20 * L.danger) + 10;
