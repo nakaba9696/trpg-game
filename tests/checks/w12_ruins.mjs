@@ -44,7 +44,7 @@ export default ({ G, fail, ok, seeded }) => {
   if (!D.ITEMS[V.key] || !D.ITEMS[V.item] || !RU[V.loc]) fail("隠し部屋の鍵・品・場所が無い");
   if (!(V.floor >= 1 && V.floor < D.LOCS[V.loc].floors)) fail("隠し部屋の階");
   if (!SCENES.has("in_" + String(V.scene).replace(/_in$/, ""))) fail(`隠し部屋の背景 ${V.scene} が scenes.json に無い`);
-  ["w12_ruvenal"].forEach((k) => { if (!D.TROPHIES.some((t) => t.key === k)) fail(`トロフィー ${k} が無い`); });
+  ["w12_ruvenal", "w12_vault"].forEach((k) => { if (!D.TROPHIES.some((t) => t.key === k)) fail(`トロフィー ${k} が無い`); });
   texts.push(...D.W12_SECRET.text, ...V.text);
   for (const t of [...texts, D.ITEMS[V.key].desc, D.ITEMS[V.item].desc]) if (BANNED.test(t)) fail(`W12 の見える文に「${t.match(BANNED)[0]}」：${t.slice(0, 30)}`);
   for (const t of texts) if (/\d|HP|MP|……/.test(t)) fail(`W12 の物語の文に数か「……」：${t.slice(0, 30)}`);
@@ -136,6 +136,7 @@ export default ({ G, fail, ok, seeded }) => {
       G.act("w12:vault");
       if (!(S.inv[V.item] > 0) || S.inv[V.key] > 0) fail(`${cls}: 隠し部屋で品が出ない／鍵が残る`);
       if (acts().some((x) => x.id === "w12:vault")) fail(`${cls}: 隠し部屋がまた開く`);
+      if (!G.P.trophies.w12_vault) fail(`${cls}: トロフィー w12_vault が無い`);
       const r = G.r5 && G.r5.sceneOf(S);
       if (!r || r.key !== V.scene) fail(`${cls}: 隠し部屋の背景が出ない`);
     }

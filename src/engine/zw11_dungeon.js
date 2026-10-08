@@ -76,7 +76,10 @@
   W.makeFloor = (S, key) => {
     const L = D.LOCS[S.loc];
     const P = PL(S.loc);
-    const R = rng(hash(`${S.id || ""}|${key}|${S.day}|${S.phase}|${st(S).n || 0}`));
+    // セーブの id（"r"＋作った時刻 8 桁＋乱数の部分。core.js の G.newGame）から時刻の部分を外して使う。
+    // 時刻を混ぜると、決まった乱数で遊ぶテストでも部屋の並びが走らせるたびに変わる（W12）
+    const sid = String(S.id || "").replace(/^r[0-9a-z]{8}/, "");
+    const R = rng(hash(`${sid}|${key}|${S.day}|${S.phase}|${st(S).n || 0}`));
     const n = 3 + ((L.danger || 1) >= 4 ? 1 : 0) + (R() < 0.5 ? 1 : 0);
     const pool = W.kinds(S.loc, S.depth);
     const used = {};

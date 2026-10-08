@@ -263,8 +263,10 @@
 
   // ---------------------------------------------------------------- トロフィー
   D.TROPHIES = D.TROPHIES || [];
-  // T2 の 100 個の外に数える（tests/checks/t2_trophies.mjs。E7 の長編と同じ扱い）
-  D.TROPHIES.push({ key: "w12_ruvenal", name: "同じ夜の四つの記録", tier: "金", group: "迷宮・遺跡・山", desc: "四つの遺跡で、古い文明の断片をすべて集めた" });
+  D.TROPHIES.push(
+    { key: "w12_ruvenal", name: "同じ夜の四つの記録", tier: "金", group: "迷宮・遺跡・山", desc: "四つの遺跡で、古い文明の断片をすべて集めた" },
+    { key: "w12_vault", name: "噛んだ王", tier: "銀", group: "迷宮・遺跡・山", desc: "エル・ナフ遺構の祭壇の下の部屋を開けた" },
+  );
 
   // 図鑑の「主な入手場所」（コードの中で渡している物。src/engine/zz_f2_codex.js の D.F2_ITEM_WHERE）
   D.F2_ITEM_WHERE = D.F2_ITEM_WHERE || {};

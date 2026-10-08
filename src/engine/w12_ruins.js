@@ -252,5 +252,6 @@
     V.text.forEach((t) => G.log("nar", t, { peak: true }));
     G.take(V.key);
     G.apply({ gold: V.gold, item: V.item, chron: "エル・ナフ遺構の祭壇の下で、古い王の練習部屋を開ける" });
+    G.award("w12_vault");
   }
 })(globalThis.G = globalThis.G || {});
