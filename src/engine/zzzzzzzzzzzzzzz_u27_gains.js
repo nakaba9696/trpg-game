@@ -78,9 +78,11 @@
   // ---------------------------------------------------------------- 行動を包む
   const act0 = G.act;
   if (typeof act0 !== "function") return;
+  let lastBefore = null; // 直前の行動の前の状態（振り直し「rr:go」は行動の前に戻ってやり直すので、そこから比べる）
   G.act = (id) => {
     const S = G.S;
-    const before = U.snap(S);
+    const before = id === "rr:go" && lastBefore && lastBefore.S === S ? lastBefore.snap : U.snap(S);
+    if (id !== "rr:go") lastBefore = { S, snap: before };
     const r = act0(id);
     try {
       const S2 = G.S;
