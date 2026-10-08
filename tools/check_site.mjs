@@ -5,7 +5,7 @@ import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
 import { execSync } from "node:child_process";
 import { createServer } from "node:http";
-import { readFileSync, existsSync, statSync, mkdirSync } from "node:fs";
+import { readFileSync, existsSync, statSync, mkdirSync, readdirSync } from "node:fs";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import path from "node:path";
 const require = createRequire(import.meta.url);
@@ -157,7 +157,7 @@ if (existsSync(one)) {
 // 読めない画像：絵を出さない（canvas の絵に戻らない。A10）。nora の基本の絵のファイル（スプライトなら、そのスプライト。A12）を読めなくする
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 }, reducedMotion: "reduce" });
-  const html = readFileSync(path.join(site, "index.html"), "utf8") + (existsSync(path.join(site, "game.js")) ? readFileSync(path.join(site, "game.js"), "utf8") : ""); // コードは game.js に分けてある（T）
+  const html = readFileSync(path.join(site, "index.html"), "utf8") + readdirSync(site).filter((n) => /^game(-\d+)?\.js$/.test(n)).map((n) => readFileSync(path.join(site, n), "utf8")).join("\n"); // コードは game.js に分けてある（T）
   const noraFile = String((JSON.parse((/G\.ASSETS = (\{[^\n]*\});/.exec(html) || [, "{}"])[1])["portraits/nora"]) || "portraits/nora.webp").replace(/#.*$/, "");
   await page.route("**/" + noraFile, (r) => r.abort());
   await page.goto(base);
