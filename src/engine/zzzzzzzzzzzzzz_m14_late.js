@@ -36,9 +36,9 @@
   const T = G.data.M14_TALENT;
   if (cre) {
     const roll0 = cre.roll;
-    cre.roll = (dr, rnd) => { const r = roll0(dr, rnd); M.rollDraft(dr, rnd); return r; };
+    cre.roll = (dr, rnd) => { const r = roll0(dr, rnd); M.rollDraft(dr); return r; };
     const options0 = cre.options;
-    cre.options = (dr, rnd) => { const o = options0(dr, rnd); if (!dr.m14) M.rollDraft(dr, rnd); o.magic = M.ofDraft(dr); return o; };
+    cre.options = (dr, rnd) => { const o = options0(dr, rnd); if (!dr.m14) M.rollDraft(dr); o.magic = M.ofDraft(dr); return o; };
     // 確認のシートの一行
     cre.sheetRows = (dr) => { if (!dr.m14) return []; const w = M.words(M.ofDraft(dr)); return [["術の才", w.line]]; };
     // 職業の札：術の才が要る職業
