@@ -78,6 +78,8 @@
     g.forEach((grp) => (grp.list || []).forEach((a) => { if (!a.disabled && !a.locked) tagSub(a, a.label); }));
     return g;
   };
+  // F9：会心の出やすさ（急所の目など fx.crit。combat.js の G.cb.critBonus が足す）
+  G.cbCritBonus = () => (G.S ? owned(G.S).reduce((a, [, fx]) => a + (fx.crit || 0), 0) : 0);
   // 戦闘の逃げる・威圧・急所（理由が決まっている判定）
   [["flee", "逃走"], ["talk", "威圧"], ["vital", "急所狙い"]].forEach(([k, reason]) => {
     const f0 = G.cb && G.cb[k];

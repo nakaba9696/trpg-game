@@ -94,7 +94,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const f = fight("orc", null);
     const hp = G.S.hp;
     const acts = () => G.combatActions().flatMap((g) => g.list);
-    for (const id of ["cb:f1cut", "cb:f1dodge", "cb:f1all", "cb:f1blood", "cb:f1throw"]) if (!acts().some((a) => a.id === id)) F(`戦闘に ${id} が無い`);
+    if (!acts().some((a) => a.id === "cb:f1throw")) F("戦闘に cb:f1throw が無い");
+    // F9：割り込む・躱す・捨て身・身を削るは手の欄から外した（躱すは防御に入った。手そのものは古い流れのために残す）
+    for (const id of ["cb:f1cut", "cb:f1dodge", "cb:f1all", "cb:f1blood"]) if (acts().some((a) => a.id === id)) F(`戦闘の手に ${id} が残っている（F9 で外した）`);
     if (!acts().find((a) => a.id === "cb:f1throw").disabled) F("投げる物が無いのに目つぶしが選べる");
     const sureMiss = D.ENEMIES.orc.hit;
     D.ENEMIES.orc.hit = -999;
@@ -124,7 +126,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (/◎/.test(plain)) F("知らない敵なのに◎が付いた");
     G.P.codex = { foes: { ogre: { kills: 1 } }, items: {}, people: {} };
     const marked = G.combatActions().flatMap((g) => g.list).find((a) => a.id === "cb:guard").sub;
-    if (!/◎/.test(marked)) F("知っている敵の大技に、身を守るの◎が付かない");
+    if (!/◎/.test(marked)) F("知っている敵の大技に、防御の◎が付かない");
     with_(0.01, () => G.combatAct("attack"));
     const t = tellOf();
     if (G.S.combat && !(t && t.text.includes(D.F1_HINT[t.f1]))) F("知っている敵の気配に一言が付かない");
@@ -168,7 +170,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       G.S.hp = G.S.maxHp; G.S.mp = G.S.maxMp;
       G.give("herb", 1);
       G.startCombat([ids[i]], {});
-      const all = ["cb:attack", "cb:guard", "cb:f1cut", "cb:f1dodge", "cb:f1all", "cb:f1blood", "cb:f1throw", "cb:vital"];
+      const all = ["cb:attack", "cb:guard", "cb:f1throw"];
       for (let n = 0; n < 40 && G.S.combat && !G.S.over; n++) {
         const can = G.combatActions().flatMap((g) => g.list).filter((a) => !a.disabled && all.includes(a.id));
         G.act(can[Math.floor(G.rand() * can.length)].id);

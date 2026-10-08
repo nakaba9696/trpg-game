@@ -956,6 +956,22 @@
       glow(ctx, w * 0.5, h * 0.8, h * 0.05, "#ffd08a", sk.night || sk.dusk ? 0.5 : 0.15);
       ctx.fillStyle = rgba("#e8ecf0", 0.3); ctx.fillRect(0, h * 0.6, w, h * 0.4);
     },
+    // W10：眠り山ロウネ（草の裾の、頂の平らな古い火山と白い山羊。新しい描き方は scene_v2_zw10_mount.js）
+    w10_roune(ctx, w, h, sk, R) {
+      OUT.plains(ctx, w, h, sk, R);
+      const [, mid] = layers(sk);
+      ctx.fillStyle = mix(mid, "#6a8a4a", sk.night ? 0.2 : 0.5); ctx.beginPath(); ctx.moveTo(w * 0.05, h * 0.78); ctx.lineTo(w * 0.4, h * 0.3); ctx.lineTo(w * 0.6, h * 0.3); ctx.lineTo(w * 0.95, h * 0.78); ctx.fill();
+      ctx.fillStyle = rgba("#ffffff", 0.5); ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.28, w * 0.14, h * 0.04, 0, 0, Math.PI * 2); ctx.fill();
+      for (let i = 0; i < 8; i++) { ctx.fillStyle = "#f0ece0"; ctx.beginPath(); ctx.ellipse(w * (0.25 + R() * 0.5), h * (0.62 + R() * 0.12), 4, 2.5, 0, 0, Math.PI * 2); ctx.fill(); }
+    },
+    // W10：鉄冠岳ドラウゼ（赤錆色の山と、頂の冠の歯）
+    w10_drause(ctx, w, h, sk, R) {
+      OUT.mountain(ctx, w, h, sk, R);
+      const [, mid] = layers(sk);
+      ctx.fillStyle = mix(mid, "#7a3a2a", sk.night ? 0.2 : 0.45); ctx.beginPath(); ctx.moveTo(w * 0.15, h * 0.8); ctx.lineTo(w * 0.42, h * 0.3); ctx.lineTo(w * 0.58, h * 0.3); ctx.lineTo(w * 0.85, h * 0.8); ctx.fill();
+      ctx.fillStyle = "#1a1614";
+      for (let i = 0; i < 6; i++) { const x = w * (0.42 + i * 0.03); ctx.beginPath(); ctx.moveTo(x, h * 0.31); ctx.lineTo(x + w * 0.012, h * (0.2 + (i % 2) * 0.04)); ctx.lineTo(x + w * 0.024, h * 0.31); ctx.fill(); }
+    },
     // W3：火山の都フロスレイア（煙を上げる火山の斜面に、白い家が段々に貼りつく）
     w3_volcano(ctx, w, h, sk, R) {
       const [far, mid, near] = layers(sk);

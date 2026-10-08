@@ -1,0 +1,15 @@
+/* I5：防具の耐性の札（src/ui/zi5_armor.js）。強いは緑、弱いは赤。印（◎○△×）でも分かるので、色だけに頼らない */
+.i5chips { display: flex; flex-wrap: wrap; gap: 3px; margin: 1px 0; }
+.i5chip { display: inline-block; font-family: var(--f-ui); font-size: 11px; line-height: 1.5; padding: 0 4px; border: 1px solid var(--rule);
+  border-radius: 2px; white-space: nowrap; color: var(--ink); }
+.i5chip.good { color: var(--ok); border-color: var(--ok); font-weight: 700; }
+.i5chip.bad { color: var(--ng); border-color: var(--ng); font-weight: 700; }
+.i5chip.flat { color: var(--muted); }
+.i2doll .i5res { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 0; }
+.i5res .i5lab { font-family: var(--f-ui); font-size: 11px; letter-spacing: .06em; color: var(--muted); }
+.i5res .i5grid { display: grid; grid-template-columns: repeat(10, auto); gap: 3px; }
+@media (max-width: 420px) {
+  .i5res .i5grid { grid-template-columns: repeat(5, auto); }
+}
+#dlgCodex .f2detail .f2kv dd.i5chips { display: flex; }
+#dlgCodex .f2detail .f2kv .i5hide { display: none; }
