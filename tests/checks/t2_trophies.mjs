@@ -15,20 +15,21 @@ export default ({ G, fail, ok, seeded }) => {
 
   // ---------------------------------------------------------------- 表の形
   // 使徒を正面から倒す長編（E7）のトロフィーは、長編ごとに足す（100 個の外に数える）
-  const saga = T.filter((t) => /^e7_/.test(t.key)).length;
-  if (T.length - saga !== 100) B(`トロフィーが ${T.length - saga} 個（長編の ${saga} 個を除いて 100 個のはず）`);
+  // T3 で足した節目（t3_）も 100 個の外に数える（tests/checks/t3_trophy_tiers.mjs）
+  const saga = T.filter((t) => /^(e7|t3)_/.test(t.key)).length;
+  if (T.length - saga !== 100) B(`トロフィーが ${T.length - saga} 個（長編と T3 の ${saga} 個を除いて 100 個のはず）`);
   const keys = new Set();
   for (const t of T) {
     if (keys.has(t.key)) B(`key ${t.key} が重複している`);
     keys.add(t.key);
-    if (!["銅", "銀", "金"].includes(t.tier)) B(`${t.key}: 格「${t.tier}」が銅・銀・金のどれでもない`);
+    if (!["銅", "銀", "金", "白金"].includes(t.tier)) B(`${t.key}: 格「${t.tier}」が銅・銀・金・白金のどれでもない`);
     if (!t.name || !t.desc) B(`${t.key}: 名前か説明が無い`);
     if (t.test && typeof t.test !== "function") B(`${t.key}: test が関数でない`);
   }
   const tiers = { 銅: 0, 銀: 0, 金: 0 };
   T.forEach((t) => { tiers[t.tier] = (tiers[t.tier] || 0) + 1; });
-  // 金ばかり・銅ばかりにしない（どの格も 2 割以上）
-  for (const [k, v] of Object.entries(tiers)) if (v < T.length * 0.2) B(`${k}が少ない（${v} 個）`);
+  // 金ばかり・銅ばかりにしない（銅・銀・金はどれも 2 割以上。白金〔T3〕は極めて大変なやりこみだけなので数えない）
+  for (const [k, v] of Object.entries(tiers)) if (k !== "白金" && v < T.length * 0.2) B(`${k}が少ない（${v} 個）`);
 
   // ---------------------------------------------------------------- 取れる道
   const given = new Set();
@@ -155,9 +156,9 @@ export default ({ G, fail, ok, seeded }) => {
   yes("t2_dead5", S, "五度死んだ");
 
   // ---------------------------------------------------------------- 全部取ったときの点
-  const pts = D.TROPHY_POINTS || { 銅: 1, 銀: 2, 金: 5 };
+  const pts = D.TROPHY_POINTS || { 銅: 1, 銀: 2, 金: 5, 白金: 10 };
   const sum = T.reduce((a, t) => a + pts[t.tier], 0);
   G.P = { trophies: Object.fromEntries(T.map((t) => [t.key, { name: t.name, tier: "銅" }])), graves: [] }; // 記録の格が古くても、今の表の格で数える
   if (G.cre && G.cre.trophyScore && G.cre.trophyScore() !== sum) B(`全部取ったときの点が ${G.cre.trophyScore()}（表の格では ${sum}）。記録に残った古い格で数えている`);
-  if (!bad) ok(`T2 トロフィー ${T.length} 個（銅 ${tiers.銅}・銀 ${tiers.銀}・金 ${tiers.金}。全部で ${sum} 点 → ボーナス点 +${Math.floor(sum / (D.TROPHY_PER_BONUS || 10))}）・取れる道・条件`);
+  if (!bad) ok(`T2 トロフィー ${T.length} 個（銅 ${tiers.銅}・銀 ${tiers.銀}・金 ${tiers.金}・白金 ${tiers.白金 || 0}。全部で ${sum} 点 → ボーナス点 +${Math.floor(sum / (D.TROPHY_PER_BONUS || 10))}）・取れる道・条件`);
 };
