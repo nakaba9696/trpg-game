@@ -13,6 +13,7 @@ export default ({ G, fail, ok, seeded }) => {
     G.rand = seeded(seed);
     G.P = { trophies: {}, graves: [] };
     G.newGame({ cls: Object.keys(D.CLASSES)[0], stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
+    if (!G.knows("heal")) G.S.spells = [...(G.S.spells || []), "heal"];   // M14：癒しは覚えた者だけが使える
     return G.S;
   };
 

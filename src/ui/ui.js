@@ -105,6 +105,7 @@
   const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag", quest: "l-quest" };
   function logEntryEl(e) {
     if (e.k === "dice") return checkEl(e);
+    if (ui.logEl) { const el = ui.logEl(e); if (el) return el; } // 記録の種類ごとの描き方を足す入口（U27 の「得たもの」）
     return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : "") + (e.tell ? " l-tell" + (e.rage ? " l-rage" : e.brk ? " l-brk" : "") : ""), e.k === "you" ? "▶ " + e.text : e.text);
   }
   const LOG_KEEP = 90;
@@ -385,6 +386,7 @@
       t.append(h("b", "", c.name), h("span", "fine", c.desc || ""));
       if (G.r1CompLabel && G.r1CompLabel(c)) t.append(h("span", "fine", G.r1CompLabel(c)));
       if (G.m10Label && G.m10Label(c)) t.append(h("span", "fine", G.m10Label(c)));
+      if (G.m14CompLabel) t.append(h("span", "fine", G.m14CompLabel(c)));   // 術の才（M14）
       el.append(t);
       box.append(el);
     });

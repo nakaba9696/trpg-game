@@ -210,17 +210,17 @@ export const SECTIONS = [
       return G.S;
     };
     const acts = () => G.actions().flatMap((g) => g.list);
-    // 古いセーブ（S.spells が無い）でも動き、新しい術は出ない。炎と癒しは今までどおり
+    // 古いセーブ（S.spells と S.magic が無い）でも動き、新しい術は出ない。炎と癒しは今までどおり（M14：古いセーブは才ありとして扱う）
     let S = start("merc", 21);
-    delete S.spells;
+    delete S.spells; delete S.magic;
     G.startCombat(["goblin"], {});
     if (NEW.some((id) => G.knows(id)) || acts().some((a) => NEW.includes(a.id.slice(3)))) fail("古いセーブで覚えていない術が出る");
     if (!acts().some((a) => a.id === "cb:fire") || !acts().some((a) => a.id === "cb:heal")) fail("炎と癒しが出ない");
     G.S.combat = null; G.S.mode = "explore";
     // はじめから覚えている術
     start("mage", 22);
-    if (!G.knows("ice")) fail("魔法使いが氷の魔法を覚えていない");
-    if (!start("priest", 23).spells.includes("ward")) fail("破戒神官が加護を覚えていない");
+    if (!G.knows("ice") || !G.knows("fire")) fail("魔法使いが炎か氷の魔法を覚えていない");
+    if (!start("priest", 23).spells.includes("ward") || !G.knows("heal")) fail("破戒神官が加護か癒しを覚えていない");
     // 学院で覚える（成功するまで通う）
     S = start("merc", 24);
     S.loc = "zephara"; S.gold = 5000; S.stats.知力 = 95;
@@ -238,7 +238,7 @@ export const SECTIONS = [
     // 魔導書で覚える（読んでも本は残る）
     G.give("m1_tome_curse");
     const read = acts().find((a) => a.id === "tome:m1_tome_curse");
-    if (!read || !/知力 \d+%/.test(read.sub)) fail("魔導書を読み解く行動が出ない");
+    if (!read || read.disabled) fail("魔導書を読み解く行動が出ない");   // M15：読めば必ず覚えるので、成功率は出さない
     for (let i = 0; i < 20 && !G.knows("curse"); i++) G.act("tome:m1_tome_curse");
     if (!G.knows("curse") || !S.inv.m1_tome_curse) fail("魔導書で呪いを覚えられない（か、本が消えた）");
     if (acts().some((a) => a.id === "tome:m1_tome_curse")) fail("覚えたのに魔導書を読む行動が残る");
@@ -358,7 +358,7 @@ export const SECTIONS = [
         fail(`game ${g}: 例外 ${e.stack || e}`);
         if (failures - before > 20) break;
       }
-      for (const id of G.S.spells || []) if (!(D.SPELL_START[G.S.cls] || []).includes(id)) learned[id] = (learned[id] || 0) + 1;
+      for (const id of G.S.spells || []) if (!(G.S.spellStart || D.SPELL_START[G.S.cls] || []).includes(id)) learned[id] = (learned[id] || 0) + 1;
       if (G.S.over === "dead") deaths++;
       maxDay = Math.max(maxDay, G.S.day);
       totalTurns += G.S.turn;
