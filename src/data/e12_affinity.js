@@ -45,7 +45,7 @@
   // ---------------------------------------------------------------- 敵
   E12.FOES = {
     // enemies.js
-    goblin: "blunt+", wolf: "fire+ slash+", barrelgob: "blunt- fire++", dogu: "slash- blunt+ earth!", bandit: "=cloth",
+    goblin: "blunt+", wolf: "fire+ slash+", barrelgob: "blunt- fire++", dogu: "blunt+ earth!", bandit: "=cloth",
     orc: "blunt- pierce+", werewolf: "light+ dark-", spider: "fire+ slash+", slime: "slash- blunt- fire++", banditboss: "=leather", guard: "=chain",
     ogre: "blunt- pierce+", zombie: "pierce- fire+ light+ dark!", wyvern: "pierce+ wind- bolt+", deserter: "=chain", ninja: "=cloth dark-", mimic: "slash- pierce- blunt+ fire+",
     oni: "blunt- light+", warlock: "=robe dark! light+", chimera: "fire- ice+ pierce+", blackknight: "=plate dark-",
@@ -80,8 +80,8 @@
     e4k_bellsinner: "blunt+", e4k_guiltdog: "light+", e4k_scarecrow: "pierce- slash+", e4k_furrowmole: "earth- bolt+",
     e4k_acidbud: "blunt- earth-", e4k_greenwatch: "fire+ slash+", e4k_rootling: "earth! slash+", e4k_ember: "fire! wind-",
     // enemies_e4_regions.js（強い個体 _x は元の種と同じ）
-    e4_mosswisp: "pierce- wind+", e4_satchelrat: "slash+", e4_thornboar: "slash- pierce+", e4_relicmole: "earth! wind+", e4_lampghost: "slash- pierce- fire-",
-    e4_rustwatch: "slash- blunt+", e4_cropcrow: "pierce+ wind-", e4_poacher: "=leather", e4_mudhound: "slash+ earth-", e4_rainslug: "blunt-",
+    e4_mosswisp: "pierce- wind+", e4_satchelrat: "slash+", e4_thornboar: "pierce+", e4_relicmole: "earth! wind+", e4_lampghost: "slash- pierce- fire-",
+    e4_rustwatch: "slash- blunt+", e4_cropcrow: "pierce+ wind-", e4_poacher: "=leather", e4_mudhound: "slash+ earth-", e4_rainslug: "fire+",
     e4_brokenknight: "=plate", e4_lordhound: "slash+", e4_cinderhound: "fire!", e4_penitent: "=cloth blunt- dark+", e4_bellbat: "light+ pierce+",
     e4_relicthief: "=cloth", e4_waxsaint: "slash- pierce- blunt+", e4_ossuaryhound: "slash- blunt+ dark!", e4_candlewidow: "fire-",
     e4_tidecrab: "slash- pierce- blunt+", e4_reedimp: "fire+ slash+", e4_seafog: "slash- pierce- wind+", e4_drumbadger: "blunt- pierce+",

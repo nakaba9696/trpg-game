@@ -39,13 +39,16 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
       const n0 = S.log.length, last0 = S.log[S.log.length - 1];
       const acts = G.actions().flatMap((x) => x.list).filter((a) => !a.disabled);
       if (!acts.length) break;
-      G.act(acts[Math.floor(G.rand() * acts.length)].id);
+      const id = acts[Math.floor(G.rand() * acts.length)].id;
+      G.act(id);
       if (G.S !== S) break;
       const at = S.log.lastIndexOf(last0);
       const fresh = at >= 0 ? S.log.slice(at + 1) : S.log.slice(Math.max(0, S.log.length - (S.log.length - n0)));
       const gl = fresh.filter((e) => e.k === "gain");
       if (gl.length > 1) fail(`一つの行動に「得たもの」が ${gl.length} つ`);
       if (was.combat || S.combat) { if (gl.length) fail("戦闘の手番に「得たもの」が出る"); continue; }
+      // 振り直し（rr:go）は前の行動の前に戻ってやり直すので、比べる元がこの手の前ではない（記録も入れ替わり、上限 240 行では新しい行を探せない）
+      if (id === "rr:go") continue;
       const now = U.snap(S);
       const moved = now.gold !== was.gold || now.fame !== was.fame || JSON.stringify(now.own) !== JSON.stringify(was.own);
       checked++;
