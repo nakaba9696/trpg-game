@@ -59,7 +59,7 @@
     // ---------------------------------------------------------------- 金：やりこみ・まれな結末・高難度
     { key: "t2_regions", name: "九つの国境", tier: "金", desc: "一度の冒険で、すべての地方に足を踏み入れた", test: (S) => T2.regions().every((r) => regionsOf(S).has(r)) },
     { key: "t2_kills200", name: "屍の山", tier: "金", desc: "一度の冒険で敵を二百体倒した", test: (S) => S.counters.kills >= 200 },
-    { key: "t2_spells", name: "六つの術", tier: "金", desc: "一度の冒険ですべての術を覚えた", test: (S) => Object.keys(D.SPELLS || {}).every((id) => D.SPELLS[id].base || (S.spells || []).includes(id)) },
+    { key: "t2_spells", name: "六つの術", tier: "金", desc: "一度の冒険で六つの術を覚えた", test: (S) => Object.keys(D.SPELLS || {}).filter((id) => (G.knows ? G.knows(id, S) : (S.spells || []).includes(id))).length >= 6 },
     { key: "t2_lairs", name: "迷宮の主の名簿", tier: "金", desc: "冒険をまたいで、すべての迷宮の主を倒したことがある",
       test: () => { const f = codexFoes(); return T2.dungeonBosses().every((id) => f[id] && f[id].kills > 0); } },
     { key: "t2_bestiary", name: "魔物の博物誌", tier: "金", desc: "冒険をまたいで、図鑑の魔物の頁を半分埋めた",
