@@ -741,6 +741,26 @@
    "tags": "white salt flat, mirror-like ground reflecting the sky, blurred horizon, huge round shadow on the ground"
   },
   {
+   "id": "w10_roune",
+   "kind": "place",
+   "scene": "w10_roune",
+   "type": "wild",
+   "region": "レオネスト王国",
+   "name": "眠り山ロウネ",
+   "pack": "leonest",
+   "tags": "gentle extinct volcano with wide grassy slopes, flat cloud-capped summit, scattered white goats, shepherd's stone hut with thin smoke, winding footpath, stone cairns"
+  },
+  {
+   "id": "w10_drause",
+   "kind": "place",
+   "scene": "w10_drause",
+   "type": "wild",
+   "region": "ノルディア帝国",
+   "name": "鉄冠岳ドラウゼ",
+   "pack": "nordia",
+   "tags": "rust-red rocky mountain with a jagged crown of black rock spires at the summit, snowfields, abandoned mine entrances on the slopes, ruined miners' village at the foot, frozen rails"
+  },
+  {
    "id": "in_inn",
    "kind": "facility",
    "scene": "inn",
