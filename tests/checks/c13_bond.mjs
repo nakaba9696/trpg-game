@@ -26,6 +26,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   for (const e of Object.values(D.ENEMIES)) for (const [it] of e.loot || []) sources.add(it);
   const KINDS = ["gift", "skill", "spell", "quest", "favor"];
   const itemOk = (where, it, own) => {
+    if (own && !String(it).startsWith("c13_")) own = false; // C14 で本・巻物に差し替えた最後の褒美は、その人だけの品でなくてよい
     if (!D.ITEMS[it]) { F(`${where}: 品 ${it} が無い`); return; }
     if (own && (!D.ITEMS[it].c13 || D.ITEMS[it].price)) F(`${where}: 品 ${it} がその人だけの品（c13・値なし）でない`);
     if (own && sources.has(it)) F(`${where}: 品 ${it} が店か落とし物に出る`);
@@ -87,6 +88,12 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     g.S.mode = "explore"; g.S.fac = null; g.S.event = null;
     if (!g.c2Join(id)) { F(`${id}: 仲間に加わらない`); return false; }
     g.affState()[id] = 100;
+    // C14：関係の出来事（身の上話・頼みごと）は済ませてあることにする（段の確かめは tests/checks/c14_stages.mjs）
+    const tk = (g.S.tk = g.S.tk || {}); tk.heard = tk.heard || {};
+    (((g.data.TALK || {})[id] || {}).topics || []).filter((t) => t.kind === "past").forEach((t) => { tk.heard[t.id] = { day: 1, k: "x", seq: 0 }; });
+    const q = (g.data.Q9 || {})[id];
+    if (q) { g.S.q9 = g.S.q9 || {}; g.S.q9[id] = { n: q.steps.length, day: 1, r: [], end: Object.keys(q.ends || {})[0] || "done" }; }
+    if (g.S.c14) delete g.S.c14.st[id]; // 段は今の好感度から決め直す（古いセーブと同じ）
     return true;
   };
   const myAct = (id) => acts().find((a) => typeof a.id === "string" && a.id.startsWith(`c13:${id}:`));
@@ -176,14 +183,16 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     const i = B[id].findIndex((t) => t.kind === "spell");
     const t = B[id][i];
     start("merc", 9); // 魔力が苦手な職業で、魔力も低い
+    if (g.m14) g.S.magic = { lv: 0, good: [], bad: [] }; // M14 の決まりでも「術の才なし」
     join(id);
-    if (g.c13.gift(g.S, t.spell)) F("魔力が苦手で低いのに、術の才があることになっている");
+    if (g.c13.gift(g.S, t.spell)) F("術の才が無いのに、才があることになっている");
     playAll(id);
     if ((g.S.spells || []).includes(t.spell)) F(`${id}: 術の才が無いのに ${t.spell} を教わった`);
     if (!g.has(t.alt.item)) F(`${id}: 術の才が無いとき、代わりの品 ${t.alt.item} が来ない`);
     start("mage");
+    if (g.m14) g.S.magic = { lv: 2, good: [g.data.SPELLS[t.spell].el], bad: [] }; // その属性が得意な才
     join(id);
-    if (!g.c13.gift(g.S, t.spell)) F("魔法使いに術の才が無いことになっている");
+    if (!g.c13.gift(g.S, t.spell)) F("術の才があるのに、才が無いことになっている");
   }
 
   // 依頼：頼まれたあと、場所が違えば選べない（どこでとだけ出る）。しくじっても、日をおいてまた挑める

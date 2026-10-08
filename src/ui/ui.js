@@ -84,7 +84,7 @@
     dice.append(h("span", "die", String(Math.floor(r / 10))), h("span", "die", String(r % 10)));
     box.append(dice, h("span", "num", `→ ${e.roll}`));
     box.append(h("span", "verdict " + (e.crit ? "crit" : e.ok ? "ok" : "ng"), e.label));
-    if (e.growth) box.append(h("span", "grow num", `${e.stat} 成長 ${e.growth[0]}→${e.growth[1]}`));
+    if (e.growth) box.append(h("span", "grow num", `${e.stat}が伸びた ${e.growth[0]}→${e.growth[1]}`)); // 成長の書き方は「〇〇が伸びた a→b」にそろえる（R7）
     if (e.rr) box.append(h("span", "fine", `（振り直し。前の出目 ${e.rr.roll}）`));
     // M7：失敗した判定の横に「振り直す（残り n）」
     if (G.rerollTarget && G.rerollTarget(e) && !busy) {
@@ -105,6 +105,7 @@
   const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag", quest: "l-quest" };
   function logEntryEl(e) {
     if (e.k === "dice") return checkEl(e);
+    if (ui.logEl) { const el = ui.logEl(e); if (el) return el; } // 記録の種類ごとの描き方を足す入口（U27 の「得たもの」）
     return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : "") + (e.tell ? " l-tell" + (e.rage ? " l-rage" : e.brk ? " l-brk" : "") : ""), e.k === "you" ? "▶ " + e.text : e.text);
   }
   const LOG_KEEP = 90;
@@ -522,7 +523,7 @@
 
   async function copyLog() {
     const S = G.S;
-    const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}成長${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
+    const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}が伸びた ${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
     const txt = `${S.clsName} ${S.profile.name}の人生 ── 目的：${S.goal.text}\n` + lines.join("\n");
     try { await navigator.clipboard.writeText(txt); ui.toast("ログをコピーしました"); }
     catch { const ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.append(ta); ta.select(); try { document.execCommand("copy"); ui.toast("ログをコピーしました"); } catch { ui.toast("コピーできませんでした"); } ta.remove(); }
@@ -667,7 +668,8 @@
     tl.textContent = "";
     all.forEach((t) => {
       const el = h("div", "tro" + (t.got ? "" : " locked"));
-      el.append(h("span", "medal " + t.tier, t.tier), h("b", "", t.got ? t.name : "？？？"), h("span", "", t.desc), h("span", "", t.got ? `${t.got.by || ""} ${t.got.date || ""}` : "未獲得"));
+      const v = G.r7 && G.r7.trophyView ? G.r7.trophyView(t, t.got) : { name: t.got ? t.name : "？？？", desc: t.got ? t.desc : "" }; // まだなら説明も伏せる（R7）
+      el.append(h("span", "medal " + t.tier, t.tier), h("b", "", v.name), h("span", "", v.desc), h("span", "", t.got ? `${t.got.by || ""} ${t.got.date || ""}` : "未獲得"));
       tl.append(el);
     });
     const gl = $("#graveList");

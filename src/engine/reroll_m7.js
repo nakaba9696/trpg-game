@@ -56,11 +56,13 @@
     return r;
   };
 
+  // 最後の記録（U27 の「得たもの」の枠は、行動のまとめなので数えない）
+  const lastLog = (S) => { for (let i = S.log.length - 1; i >= 0; i--) if (S.log[i].k !== "gain") return S.log[i]; return undefined; };
   // 今、振り直せる判定（無ければ null）。行動のあとに何か起きたら（記録が増えたら）消える
   G.rerollPending = () => {
     const S = G.S;
     if (!pending || !S || S.over || pending.S !== S || pending.turn !== S.turn || G.rerolls(S) <= 0) return null;
-    if (S.log[S.log.length - 1] !== pending.last) return null;
+    if (lastLog(S) !== pending.last) return null;
     return pending;
   };
   // 画面用：記録の中で、振り直せる判定の1件か
@@ -69,7 +71,7 @@
   G.rerollBlocked = () => {
     const S = G.S;
     const b = blocked;
-    if (!b || !S || S.over || b.S !== S || b.turn !== S.turn || G.rerolls(S) <= 0 || S.log[S.log.length - 1] !== b.last) return null;
+    if (!b || !S || S.over || b.S !== S || b.turn !== S.turn || G.rerolls(S) <= 0 || lastLog(S) !== b.last) return null;
     return b;
   };
   G.rerollBlockedTarget = (e) => { const b = G.rerollBlocked(); return !!b && b.entry === e; };
