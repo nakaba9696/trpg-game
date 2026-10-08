@@ -186,6 +186,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   let g = null;
   const start = (loc) => {
     g = loadEngine();
+    g.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
     g.rand = seeded(77);
     g.P = { trophies: {}, graves: [] };
     g.newGame({ cls: "merc", stats, caps, goal: Object.keys(g.data.GOALS)[0], profile: { ...PROFILE } });

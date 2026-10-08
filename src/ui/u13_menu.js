@@ -208,6 +208,8 @@
     }
   }
   // 見出しを外から開く（F3：一行の札から仲間への指示）
+  // 開いている見出しを忘れる（次に描くとき、最初の使える見出しを開く。F8：手を決める番が替わったとき）
+  u13.resetCombat = () => { drawer = null; who = null; };
   u13.openCombat = (cat) => { drawer = "d:" + (u13.F4_NAME[cat] || cat); who = null; ui.render(); };
   let fightOf = null;
 
