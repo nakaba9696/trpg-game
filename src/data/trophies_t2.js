@@ -43,7 +43,7 @@
 
     // ---------------------------------------------------------------- 銀：狙って遊べば取れる・何度か遊ぶうちに取れる
     { key: "t2_quests30", name: "ギルドの古株", tier: "銀", desc: "一度の冒険で依頼を三十件こなした", test: (S) => S.counters.quests >= 30 },
-    { key: "t2_year", name: "一年の旅", tier: "銀", desc: "旅立って一年を生き延びた", test: (S) => S.day >= 361 && alive(S) },
+    { key: "t2_year", name: "一年の旅", tier: "銀", desc: "旅立って一年を生き延びた", test: (S) => S.day > G.YEAR_DAYS && alive(S) },
     { key: "t2_custom", name: "自分で決めた道", tier: "銀", desc: "自分で決めた目的で旅の区切りに着いた",
       test: (S) => S.goal.id === "custom" && S.day >= 30 && (S.fame >= 20 || S.counters.quests >= 3 || S.counters.bosses >= 1) },
     { key: "t2_bond", name: "背中を預ける", tier: "銀", desc: "仲間と深い絆を結んだ", test: (S) => (S.companions || []).some((c) => (c.bond || 0) >= 90) },

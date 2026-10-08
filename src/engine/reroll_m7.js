@@ -155,8 +155,8 @@
     apply0(o);
     if (o && o.reroll && S && !S.over) G.gainReroll(o.reroll);
   };
-  G.yearOf = (day) => Math.floor((day - 1) / 360);
-  G.isWinter = (day) => (day - 1) % 360 >= 270;
+  G.yearOf = (day) => G.calYi(day);
+  G.isWinter = (day) => G.calSi(day) === 3;
   // 瀕死から立ち上がったとき
   const hurt0 = G.hurt;
   G.hurt = (n, cause) => {

@@ -188,7 +188,7 @@
   M.reg("winter", {
     name: "長い冬", glyph: "雪", w: 2, nation: "ノルディア帝国",
     // 秋か冬に始まる
-    cond: (S) => Math.floor(((S.day - 1) % 360) / 90) >= 2,
+    cond: (S) => G.calSi(S.day) >= 2,
     targets: ["w4_kaesverg", "w4_valmiria", "w2_zalgros", "garmund"],
     at: ["frost", "garmund", "w4_kaesverg", "w4_valmiria", "w2_zalgros", "@t"],
     stageNames: ["前触れ", "雪が早い", "街道が閉ざされる"],

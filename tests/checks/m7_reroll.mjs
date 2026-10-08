@@ -102,7 +102,7 @@ export default ({ G, fail, ok, seeded }) => {
   S.loc = D.CLASSES.merc.start; S.day = 1;
   const nightOk = () => D.EVENTS.find((e) => e.id === "m7_dicenight").cond(S);
   if (nightOk()) bad("春なのに賽の夜が起きる");
-  S.day = 300;
+  S.day = G.YEAR_DAYS - 10; // 冬（C16：暦の長さは G.YEAR_DAYS）
   if (!nightOk()) bad("冬なのに賽の夜が起きない");
   G.startEvent("m7_dicenight");
   S.gold = 100;
@@ -110,7 +110,7 @@ export default ({ G, fail, ok, seeded }) => {
   G.act("ev:0");
   if (nightOk()) bad("同じ冬に賽の夜が二度起きる");
   if (!S.inv.m7_chipdie) bad("賽の夜に勝っても欠けた賽子が手に入らない");
-  S.day = 300 + 360;
+  S.day = G.YEAR_DAYS * 2 - 10;
   if (!nightOk()) bad("次の冬に賽の夜が起きない");
   // 瀕死から立ち上がると +1
   S.rerolls = 0; S.hp = 1; S.clungUsed = false;
