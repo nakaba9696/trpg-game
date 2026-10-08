@@ -27,7 +27,7 @@ node tools/build.mjs && node tests/run.mjs
 
 - 手元で遊ぶときは `dist/site/index.html` をブラウザで直接開いてもよい（file://）。画像も出る。ただし file:// では魔物の絵の白い背景を消せない（ブラウザの決まりで画素を読めないため）。きちんと見るなら `npx http-server dist/site` などのローカルサーバで開く。
 - 外のファイルの形で遊べるかは `node tools/check_site.mjs`（Playwright。ローカルサーバと file:// で開き、立ち絵・差分・魔物の絵が出るかを見る）。
-- 予備として、画像を埋め込んだ 1 枚の HTML も作れる：`node tools/build.mjs --embed` → `dist/morsveld.html`。上限（12MB）を超えるなら差分を省いて基本の絵だけにする。
+- 予備として、画像を埋め込んだ 1 枚の HTML も作れる：`node tools/build.mjs --embed` → `dist/morsveld.html`。上限（12MB）を超えるなら差分を省いて基本の絵だけにする（それでも超えるなら背景、次に魔物の絵を省く。立ち絵と魔物を透明つきにして大きくなったため、今は魔物の絵も省かれる）。
 
 ## 載せる（Claude に頼む）
 
@@ -76,7 +76,7 @@ MB は余裕を見て 1000×1000 バイトで数える。予備の埋め込み�
 
 ## しくみ（開発する人へ）
 
-- `tools/assets.mjs`：`assets/` を読む。`siteAssets`（外のファイル）と `collectAssets`（埋め込み。`shrink` で差分を省く）。どちらも `G.ASSETS["portraits/<id>"]` に Image の `src` にそのまま使える値（相対パスか data URI）を入れ、`G.ASSET_MODE` が `"files"` か `"embed"`。外のファイルの形では `G.ASSET_BYTES` にバイト数。
+- `tools/assets.mjs`：`assets/` を読む。`siteAssets`（外のファイル）と `collectAssets`（埋め込み。`shrink` で曲・差分・背景・魔物の絵の順に省く）。どちらも `G.ASSETS["portraits/<id>"]` に Image の `src` にそのまま使える値（相対パスか data URI）を入れ、`G.ASSET_MODE` が `"files"` か `"embed"`。外のファイルの形では `G.ASSET_BYTES` にバイト数。
 - `tools/site.mjs`：大きさの決まりと、何回に分けるか（`planSite`）。
 - 差分のまとめ方（A8）：1 つの版は 511 ファイルまでなので、外のファイルの形では、差分（`<id>_<表情>`）が 2 枚以上ある人の差分を 1 人 1 枚のスプライト `portraits/<id>.moods.svg` にまとめる（A12 からは、基本の絵も下の「立ち絵と魔物の絵のまとめ方」で 25 枚ずつのスプライトに入る）。
   中身は SVG で、元の webp を data URI のまま升目（正方形に近い格子・512×640 なら 4 枚で 2×2）に並べたもの。描き直さないので画質は変わらず、Node だけで作れる（`cwebp` などは要らない。CI でも動く）。代わりに差分のバイト数は base64 の分（約 1.34 倍）増える。

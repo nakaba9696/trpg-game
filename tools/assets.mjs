@@ -245,7 +245,7 @@ export function siteAssets(dir, { sprites = true, packs = true } = {}) {
 }
 
 // 埋め込みの形：assets/ を読んで { map: { 鍵: data URI }, files: [{ key, file, bytes, size }], total（data URI の合計の文字数）, notes: [知らせ], dropped: [省いた鍵] } を返す
-// shrink：上限を超えるなら差分（V8）を省いて作り直す（--embed の予備のため）。それでも超えるなら止まる
+// shrink：上限を超えるなら曲・差分（V8）・背景・魔物の絵の順に省いて作り直す（--embed の予備のため）。それでも超えるなら止まる
 export function collectAssets(dir, { limit = LIMIT, shrink = false } = {}) {
   const s = scanAssets(dir);
   const make = (list) => {
@@ -260,7 +260,8 @@ export function collectAssets(dir, { limit = LIMIT, shrink = false } = {}) {
   };
   let out = make(s.files);
   // 省く順：曲のファイル（S4。省いた場面は合成の曲になる） → 表情の差分 → 背景の絵（A11。省いた背景は canvas の絵になる）
-  for (const [what, drop] of [["曲", (k) => k.startsWith("music/")], ["差分", isVariant], ["背景", (k) => k.startsWith("scenes/")]]) {
+  // → 魔物の絵（A13。透明つきにして大きくなった。省いた魔物は絵なしで戦う。外のファイルの形では全部載る）
+  for (const [what, drop] of [["曲", (k) => k.startsWith("music/")], ["差分", isVariant], ["背景", (k) => k.startsWith("scenes/")], ["魔物の絵", (k) => k.startsWith("monsters/")]]) {
     if (!(out.total > limit && shrink)) break;
     const gone = new Set(out.dropped);
     const keep = s.files.filter((f) => !gone.has(f.key) && !drop(f.key));
