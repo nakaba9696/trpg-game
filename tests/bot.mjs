@@ -30,7 +30,7 @@ export function makeSmartBot(G) {
     out.push({ id: "cb:attack", mp: 0, dmg: pierceBlock ? 0 : (G.chance(w.stat, { vs: G.foeVs.eva(e, w.stat) }, w.hit || 0) / 100) * (avg(w.dmg) + statBonus) });
     out.push({ id: "cb:vital", mp: 0, dmg: pierceBlock ? 0 : (G.chance("敏捷", { vs: G.foeVs.vital(e) }, w.vital || 0) / 100) * 2 * (avg(w.dmg) + pw("敏捷", 15)) });
     const mb = G.magicBonus();
-    out.push({ id: "cb:fire", mp: 3, dmg: pierceBlock ? 0 : (G.chance("魔力", { vs: G.foeVs.mres(e) }, G.gearBonus("fire") + mb) / 100) * (7 + pw("魔力", 8)) });
+    if (!G.knows || G.knows("fire")) out.push({ id: "cb:fire", mp: 3, dmg: pierceBlock ? 0 : (G.chance("魔力", { vs: G.foeVs.mres(e) }, G.gearBonus("fire") + mb) / 100) * (7 + pw("魔力", 8)) });
     if (G.knows && G.knows("ice") && D.SPELLS.ice) {
       const p = G.chance("魔力", { vs: G.foeVs.mres(e) - G.s5Mod(D.SPELLS.ice.diff || 0) }, G.gearBonus("ice") + mb) / 100;
       out.push({ id: "cb:ice", mp: D.SPELLS.ice.mp, dmg: pierceBlock ? 0 : p * (3.5 + pw("魔力", 10) + avg(e.dmg) * 0.6) });
