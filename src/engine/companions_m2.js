@@ -54,6 +54,15 @@
     return c;
   };
   G.m2Trait = (c) => D.M2_TRAITS[c.trait] || D.M2_TRAITS[G.m2TraitOf(c)];
+  // 加わったときの一言（D.R7_JOIN。乱数は使わない：名前で決める）
+  G.m2JoinLine = (c) => {
+    const J = D.R7_JOIN || {};
+    const key = c.trait || G.m2TraitOf(c);
+    const arr = J[key] || J.any || ["{n}が一行に加わった。"];
+    const n = G.m2Short(c);
+    const i = [...String(c.name || "")].reduce((a, ch) => a + ch.charCodeAt(0), 0) % arr.length;
+    return arr[i].replace(/\{n\}/g, n);
+  };
   G.m2Short = (c) => { const n = String((c && c.name) || ""); const i = n.lastIndexOf("の"); return i >= 0 && i < n.length - 1 ? n.slice(i + 1) : n; };
   G.m2Mood = (b) => (b >= 80 ? "心を許している" : b >= 55 ? "打ち解けている" : b >= 35 ? "様子を見ている" : b > BETRAY_AT ? "不満げ" : "危うい");
   const find = (id) => {
@@ -151,7 +160,7 @@
       // 酒場で雇った者は金の縁、助けた者は恩の縁
       comp.bond = S.mode === "fac" && S.fac === "tavern" ? 36 + G.d(12) : 52 + G.d(12);
       comp.joined = S.day;
-      G.note(`（${G.m2Trait(comp).name}。${G.m2Mood(comp.bond)}）`);
+      G.note(G.m2JoinLine(comp)); // 性格・好感度の札は括弧で見せず、振る舞いの一言にする（R7）
     }
     return r;
   };

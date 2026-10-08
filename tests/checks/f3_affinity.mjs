@@ -40,6 +40,7 @@ const FACE = {
 };
 
 export default ({ G, fail }) => {
+  G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
   G.data.Q8B.off = G.data.Q8L.off = true; // Q8 の上がり方・恋人の条件は tests/checks/q8_love.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   let n = 0;

@@ -164,6 +164,8 @@
       world: world.length ? { text: G.pick(world).text } : false,
       trophy: (key) => { const t = (D.TROPHIES || []).find((x) => x.key === key); return !!t && chron.some((c) => c.kind === "trophy" && (c.text || "").includes(t.name)); },
       stats: S.stats || {},
+      // 暮らしの記録（R7。宿・食事・酒場・買い物・薬草の回数）。条件つきの行（{ t, if }）がこれを見る
+      life: G.r7 && G.r7.life ? G.r7.life(S) : { inn: 0, meal: 0, tavern: 0, buy: 0, herb: 0 },
     };
     L.ending = S.ending ? (S.ending.id || S.ending) : L.over === "end" ? "plain" : "";
     return L;
@@ -202,7 +204,12 @@
         return x === undefined ? "" : String(x).includes("{") ? fill(x, extra) : x;
       });
     };
-    const line = (arr, extra) => fill(G.pick(arr), extra);
+    // 行は文字列か { t, if: (L) => 真偽 }。if が偽の行（していないことを前提にした行）は選ばない（R7）
+    const only = (arr) => {
+      const ok = (arr || []).filter((x) => typeof x === "string" || (x && (() => { try { return !!x.if(L); } catch { return false; } })()));
+      return (ok.length ? ok : (arr || []).filter((x) => typeof x === "string")).map((x) => (typeof x === "string" ? x : x.t));
+    };
+    const line = (arr, extra) => fill(G.pick(only(arr)), extra);
 
     // 1. 生まれと旅立ち
     const life = [];
