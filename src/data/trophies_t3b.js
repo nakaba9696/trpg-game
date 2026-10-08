@@ -11,7 +11,8 @@
   const ST = () => D.STATS || [];
   const st = (S, k) => ((S.stats || {})[k] || 0);
   const rep = (S) => Object.values(S.repute || {}).filter(Boolean);
-  const nations = () => [...new Set(Object.values(D.LOCS || {}).map((L) => L.nation || L.region).filter((x) => x && !(D.LAWLESS || []).includes(x)))];
+  const once = (k, fn) => (G.t3Once ? G.t3Once(k, fn, true) : fn());   // データだけで決まる表は一度だけ作る（zzz_t3_trophy_points.js）
+  const nations = () => once("nations", () => [...new Set(Object.values(D.LOCS || {}).map((L) => L.nation || L.region).filter((x) => x && !(D.LAWLESS || []).includes(x)))]);
   const chron = (S, re) => (S.chronicle || []).some((c) => re.test((c && c.text) || ""));
   const worn = (S) => (G.i2s && G.i2s.worn ? G.i2s.worn(S) : [S.weapon, S.armor, S.ring]).filter(Boolean);
   const held = (S) => [...Object.keys(S.inv || {}), ...worn(S)];
@@ -26,7 +27,7 @@
   const visitedOf = (S, f) => Object.keys(S.visited || {}).filter((k) => D.LOCS[k] && f(D.LOCS[k]));
   const spots = (S) => { const s = new Set(); [S.w8s && S.w8s.once, S.w8s && S.w8s.cd, S.w9 && S.w9.once, S.w9 && S.w9.last].forEach((o) => Object.keys(o || {}).forEach((k) => s.add(k.split(":")[0]))); return s; };
   const lairs = (S) => Object.entries(D.LOCS || {}).filter(([id, L]) => L.type === "dungeon" && (S.flags || {})[(L.reward && L.reward.flag) || "boss:" + id]).length;
-  const mids = () => Object.entries(D.LOCS || {}).flatMap(([id, L]) => Object.keys(L.midboss || {}).map((d) => `mid:${id}:${d}`));
+  const mids = () => once("mids", () => Object.entries(D.LOCS || {}).flatMap(([id, L]) => Object.keys(L.midboss || {}).map((d) => `mid:${id}:${d}`)));
   const q5res = (S) => (S.q5 && S.q5.res) || {};
   const m2c = (S) => (S.m2 && S.m2.counts) || {};
   const m10c = (S) => (S.m10 && S.m10.counts) || {};
@@ -36,7 +37,7 @@
   const runs = (S) => (G.t2 && G.t2.runs ? G.t2.runs(S) : []);
   const cc = () => (G.codexCount ? G.codexCount() : {});
   const i3c = () => ((P().codex || {}).i3) || {};
-  const knowKind = (kind) => { const K = G.l1 && G.l1.build ? G.l1.build() : D.KNOW || {}; const ids = Object.keys(K).filter((id) => K[id].kind === kind); const k = P().know || {}; return ids.length > 0 && ids.every((id) => k[id]); };
+  const knowKind = (kind) => { const ids = once("know:" + kind, () => { const K = G.l1 && G.l1.build ? G.l1.build() : D.KNOW || {}; return Object.keys(K).filter((id) => K[id].kind === kind); }); const k = P().know || {}; return ids.length > 0 && ids.every((id) => k[id]); };
   const bySeen = (k) => (S) => ((S.counters || {})[k] || 0);
 
   const GROUPS = (D.TROPHY_GROUPS = D.TROPHY_GROUPS || {});
@@ -89,7 +90,7 @@
     { key: "t3_ap_ball", name: "B 級の名簿", tier: "金", desc: "冒険をまたいで、討てる B 級の使徒をすべて討った",
       test: () => { const l = Object.values((D.E3 && D.E3.LIST) || {}).filter((a) => a && a.rank === "B" && !a.noslay); const s = P().slain || {}; return l.length > 0 && l.every((a) => s[a.foe]); } },
     { key: "t3_elders_all", name: "年経たものの目録・完", tier: "白金", desc: "冒険をまたいで、まれに出る強い個体をすべて倒した",
-      test: () => { const a = Object.keys(D.ENEMIES || {}).filter((i) => D.ENEMIES[i].elderOf); const s = P().e4elders || {}; return a.length > 0 && a.every((i) => s[i]); } },
+      test: () => { const a = once("elders", () => Object.keys(D.ENEMIES || {}).filter((i) => D.ENEMIES[i].elderOf)); const s = P().e4elders || {}; return a.length > 0 && a.every((i) => s[i]); } },
   ]);
 
   // ---------------------------------------------------------------- 魔法（属性 7・段 1〜3・暮らしの術。m14）
@@ -129,7 +130,7 @@
     { key: "t3_legend", name: "伝説の手触り", tier: "金", desc: "伝説の品を手に入れた", test: (S) => n((S.i3 || {}).legends) >= 1 },
     { key: "t3_plus5", name: "親方の槌", tier: "金", desc: "武具を +5 まで鍛え上げた", test: (S) => plus(S, 5) },
     { key: "t3_legends_all", name: "伝説の目録", tier: "白金", desc: "冒険をまたいで、伝説の品をすべて手にした",
-      test: () => { const c = (P().codex && P().codex.items) || {}; const l = Object.keys(D.ITEMS || {}).filter((i) => D.ITEMS[i].legend); return l.length > 0 && l.every((i) => c[i]); } },
+      test: () => { const c = (P().codex && P().codex.items) || {}; const l = once("legends", () => Object.keys(D.ITEMS || {}).filter((i) => D.ITEMS[i].legend)); return l.length > 0 && l.every((i) => c[i]); } },
   ]);
 
   // ---------------------------------------------------------------- 旅・地方・町の特色の場所

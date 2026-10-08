@@ -65,6 +65,6 @@
     { key: "t2_bestiary", name: "魔物の博物誌", tier: "金", desc: "冒険をまたいで、図鑑の魔物の頁を半分埋めた",
       test: () => !!G.codexCount && (({ foes, foesAll }) => foesAll > 0 && foes * 2 >= foesAll)(G.codexCount()) },
     { key: "t2_traps", name: "罠の地図", tier: "白金", desc: "冒険をまたいで、迷宮の罠の覚え書きをすべて集めた",
-      test: () => { const K = G.l1 && G.l1.build ? G.l1.build() : D.KNOW || {}; const ids = Object.keys(K).filter((id) => K[id].kind === "trap"); const k = P().know || {}; return ids.length > 0 && ids.every((id) => k[id]); } },
+      test: () => { const mk = () => { const K = G.l1 && G.l1.build ? G.l1.build() : D.KNOW || {}; return Object.keys(K).filter((id) => K[id].kind === "trap"); }; const ids = G.t3Once ? G.t3Once("know:trap", mk, true) : mk(); const k = P().know || {}; return ids.length > 0 && ids.every((id) => k[id]); } },
   );
 })(globalThis.G = globalThis.G || {});
