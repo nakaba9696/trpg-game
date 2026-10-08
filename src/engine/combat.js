@@ -168,9 +168,14 @@
       G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い", wind: "風", earth: "石", light: "光", dark: "闇", burn: "炎" }[how] || "刃"}は${f.name}の体の手前で、${W.what}に弾かれた。${W.name}だ。`, { fx: "wall", foe: f.name });
       return;
     }
+    // ダメージの見積もりの中で出た行のうち、結果の行（late：とどめなど）は、ダメージの行のあとに回す
+    const S = G.S, last = S.log[S.log.length - 1];
     if (G.cbDmgMod) n = Math.max(0, Math.round(G.cbDmgMod(f, n, how)));
+    const added = S.log.splice(S.log.lastIndexOf(last) + 1);
+    S.log.push(...added.filter((e) => !e.late));
     f.hp = Math.max(0, f.hp - n);
     G.log("sys", `${f.name}に ${n} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n });
+    added.filter((e) => e.late).forEach((e) => { delete e.late; S.log.push(e); });
     if (f.hp <= 0) onFoeDown(f);
   }
   G.cbDamage = (f, n, how) => damageFoe(f, n, how);

@@ -179,7 +179,7 @@
     // とどめ（雑魚戦を長引かせない）
     if (!isBig(f) && (blade || spell || how === "holy") && f.hp - n > 0 && f.hp - n <= Math.max(2, Math.floor(f.max * F1.P.finish))) {
       n = f.hp;
-      G.note("勢いのまま、とどめを刺した。");
+      G.log("sys", "勢いのまま、とどめを刺した。", { late: true }); // ダメージの行のあとに出る（combat.js の damageFoe）
     }
     if (n > (s.best || 0)) s.best = n;
     return n;
