@@ -42,8 +42,8 @@ export default ({ G, fail, ok, seeded }) => {
   // ---------------------------------------------------------------- 作成：才を振る
   const cre = G.cre;
   const rnd = seeded(14);
-  const roll = (cls, race, origin) => {
-    const dr = { cls, origin: origin || D.CLASS_ORIGIN[cls], ageBand: "prime", profile: { race: race || "human" }, bonus: {}, rolls: 0 };
+  const roll = (cls, race) => {
+    const dr = { cls, ageBand: "prime", profile: { race: race || "human" }, bonus: {}, rolls: 0 };
     cre.roll(dr, rnd);
     return M.ofDraft(dr);
   };

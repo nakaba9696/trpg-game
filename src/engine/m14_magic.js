@@ -100,12 +100,12 @@
   };
   M.from = (o) => {
     const x = o.m14 || { d: 10, r: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5] };
-    const score = x.d + (T.race[o.race] || 0) + (T.origin[o.origin] || 0) + (T.cls[o.cls] || 0);
+    const score = x.d + (T.race[o.race] || 0) + (T.cls[o.cls] || 0);
     let lv = score <= T.cut[0] ? 0 : score <= T.cut[1] ? 1 : score <= T.cut[2] ? 2 : 3;
     lv = Math.max(lv, T.need[o.cls] || 0);
     if (!lv) return { lv: 0, good: [], bad: [] };
     const w = {};
-    ELS.forEach((el) => { w[el] = 1 + (T.clsEl[o.cls] === el ? 3 : 0) + (((T.raceEl[o.race] || {})[el]) || 0) + (((T.originEl[o.origin] || {})[el]) || 0); });
+    ELS.forEach((el) => { w[el] = 1 + (T.clsEl[o.cls] === el ? 3 : 0) + (((T.raceEl[o.race] || {})[el]) || 0); });
     let i = 0;
     const pickW = (pool, wt) => {
       const sum = pool.reduce((a, el) => a + wt(el), 0);
@@ -119,7 +119,7 @@
     while (bad.length < (T.bad[lv] || 0)) bad.push(pickW(ELS.filter((el) => !good.includes(el) && !bad.includes(el)), (el) => 1 / w[el]));
     return { lv, good, bad };
   };
-  M.ofDraft = (dr) => M.from({ m14: dr.m14, cls: dr.cls, race: (dr.profile || {}).race || "human", origin: dr.origin });
+  M.ofDraft = (dr) => M.from({ m14: dr.m14, cls: dr.cls, race: (dr.profile || {}).race || "human" });
 
   // ---------------------------------------------------------------- 新しい冒険
   const newGame0 = G.newGame;

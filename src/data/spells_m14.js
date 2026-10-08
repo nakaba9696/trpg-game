@@ -100,19 +100,17 @@
       "百年に一人の器。得意な属性が三つ",
     ],
     aff: { good: "得意（上級まで届く）", mid: "ふつう（中級まで）", bad: "苦手（初級止まり・覚えにくい）" },
-    // 才の振り方：3D6 ＋ 種族・生まれ・職業。8 以下 才なし／9〜13 人並み／14〜16 抜きん出た才／17 以上 百年に一人
+    // 才の振り方：3D6 ＋ 種族・職業。8 以下 才なし／9〜13 人並み／14〜16 抜きん出た才／17 以上 百年に一人
     cut: [8, 13, 16],
     race: { elf: 3, beast: -2 },
-    origin: { zephara: 2, leavel: 1, yakumo: 1, fort: -1 },
     cls: { mage: 2, priest: 1 },
     need: { mage: 1, priest: 1 },   // この職業は少なくともこの才（才なしではなれない）
     // 得意・苦手の重み（どの属性になりやすいか）。職業の属性は、魔法使い・破戒神官では必ず得意
-    clsEl: { merc: "earth", thief: "dark", mage: "fire", priest: "light", samurai: "wind" },
+    clsEl: { merc: "earth", thief: "dark", mage: "fire", priest: "light", samurai: "bolt" },
     lockEl: { mage: true, priest: true },
     // 作成画面を通らずに始めた冒険（古いセーブ・テスト）の才：職業ごとの得意な属性
-    defaultGood: { merc: ["earth"], thief: ["dark"], mage: ["fire", "ice"], priest: ["light", "earth"], samurai: ["wind"] },
+    defaultGood: { merc: ["earth"], thief: ["dark"], mage: ["fire", "ice"], priest: ["light", "earth"], samurai: ["bolt"] },
     raceEl: { elf: { wind: 2, light: 1 }, beast: { earth: 2, wind: 1 } },
-    originEl: { zephara: { bolt: 1, ice: 1 }, leavel: { light: 1 }, garmund: { ice: 2 }, fort: { earth: 1 }, yakumo: { wind: 1, bolt: 1 }, nerva: { dark: 1 }, karna: { fire: 1 }, village: { earth: 1 } },
     bad: [0, 2, 1, 1],   // 苦手な属性の数（才ごと）
   };
 
