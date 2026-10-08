@@ -76,7 +76,7 @@
   W.makeFloor = (S, key) => {
     const L = D.LOCS[S.loc];
     const P = PL(S.loc);
-    const R = rng(hash(`${S.id || ""}|${key}|${S.day}|${S.phase}|${st(S).n || 0}`));
+    const R = rng(hash(`${S.wseed || S.id || ""}|${key}|${S.day}|${S.phase}|${st(S).n || 0}`)); // 種は冒険の初めに G.rand で引く S.wseed（S.id は Date.now を含むので、テストで揺れる。古いセーブは S.id）
     const n = 3 + ((L.danger || 1) >= 4 ? 1 : 0) + (R() < 0.5 ? 1 : 0);
     const pool = W.kinds(S.loc, S.depth);
     const used = {};
