@@ -9,14 +9,16 @@
   const dn = (rnd, n) => 1 + Math.floor(rnd() * n);
   const pickR = (rnd, a) => a[Math.floor(rnd() * a.length)];
 
-  // 名前の響き（生まれで決まる。古い下書きは職業で）
-  const culture = (dr) => (D.ORIGINS[dr.origin] || {}).culture || D.CLASSES[dr.cls].culture;
+  // 名前の表：主人公の名前は、職業の響き（D.CLASSES の culture）の表をみな合わせて、性別で引く。
+  // 生まれは無くした（持ち主の決定 U25）。職業を選び直しても、選んだ名前は動かさない
+  cre.heroCultures = () => [...new Set(Object.values(D.CLASSES).map((c) => c.culture).filter((k) => D.PROFILE.names[k]))];
+  cre.heroNames = (sex) => cre.heroCultures().flatMap((k) => D.PROFILE.names[k][sex] || []);
 
   // 人物設定の一項目をおまかせで作る
   cre.gen = (dr, key, rnd) => {
     const P = D.PROFILE;
     switch (key) {
-      case "name": return pickR(rnd, P.names[culture(dr)][dr.sex]);
+      case "name": return pickR(rnd, cre.heroNames(dr.sex));
       case "age": { const [a, b] = D.AGES[dr.ageBand].range; return String(a + Math.floor(rnd() * (b - a + 1))); }
     }
     return "";
@@ -25,13 +27,11 @@
   // 古いセーブの profile.history は人生の物語の一言にだけ残り、profile.look は読まない。
   // 性格・口癖・好きなもの・苦手なものも作らない（持ち主の決定）。古いセーブの profile に残っていても表示しない
 
-  // すべておまかせ（職業・性別・年齢・生まれ・目的・名前）。能力値も振る
+  // すべておまかせ（職業・性別・年齢・目的・名前）。能力値も振る
   cre.randomAll = (dr, rnd) => {
     dr.cls = pickR(rnd, Object.keys(D.CLASSES));
     dr.sex = pickR(rnd, ["男", "女"]);
     dr.ageBand = rnd() < 0.2 ? "old" : pickR(rnd, ["young", "prime"]);
-    // 半分は職業に似合う生まれ、残りはどこでも
-    dr.origin = rnd() < 0.5 ? D.CLASS_ORIGIN[dr.cls] : pickR(rnd, Object.keys(D.ORIGINS));
     dr.goal = pickR(rnd, Object.keys(D.GOALS).filter((g) => g !== "custom"));
     dr.profile = { name: cre.gen(dr, "name", rnd), age: cre.gen(dr, "age", rnd) };
     dr.bonus = {};
@@ -41,20 +41,11 @@
 
   cre.fresh = (rnd) => cre.randomAll({ rolls: 0, customGoal: "", bonus: {} }, rnd);
 
-  // 職業を変える：生まれが前の職業のはじめの生まれなら、新しい職業の方へ寄せる。名前の響きが変われば名前も作り直す
+  // 職業を変える：能力値を振り直す（選んだ名前・性別・年齢はそのまま）
   cre.setClass = (dr, cls, rnd) => {
     if (dr.cls === cls) return;
-    const oldCul = culture(dr);
-    if (dr.origin === D.CLASS_ORIGIN[dr.cls]) dr.origin = D.CLASS_ORIGIN[cls];
     dr.cls = cls;
-    if (culture(dr) !== oldCul) dr.profile.name = cre.gen(dr, "name", rnd);
     cre.roll(dr, rnd);
-  };
-  cre.setOrigin = (dr, id, rnd) => {
-    const oldCul = culture(dr);
-    dr.origin = id;
-    if (culture(dr) !== oldCul) dr.profile.name = cre.gen(dr, "name", rnd);
-    cre.fit(dr);
   };
   cre.setAge = (dr, band, rnd) => {
     dr.ageBand = band;
@@ -67,7 +58,7 @@
   // 作成はすべて点で数える（src/data/zs2_points.js）。冒険に渡すときに成功率の尺度（点×4）にする（cre.final）。
   // 持ち主の決定（古いダンジョン RPG 風）：
   //   初期値をダイスで振る … 能力値ごとに 3D6（3〜18）。8％（D.S2.EXTRA）でもう 1D6 が乗って 20 以上も出る（1 人のうちどれか 1 つが 20 以上になるのが約 5％）。
-  //     それに職業・種族・年齢・生まれの補正を足す（D.S2.MIN より下げない）。振り直しは何度でも。鍵は無い。
+  //     それに職業・種族・年齢の補正を足す（D.S2.MIN より下げない）。振り直しは何度でも。鍵は無い。
   //   ボーナス点 … 5 点（D.BONUS_POINTS）で決まり。トロフィーの格の点（銅 1・銀 2・金 5）10 点ごとに +1（cre.extraBonus。合計の上限は無い）。
   //     トロフィーは格ごとの点（銅 1・銀 2・金 5）の合計 10 点ごとに +1（zz_u10_trophy_bonus.js）。どの能力値にも好きなだけ足せる。
   //   上限 … 能力値そのものに上限は無い（判定は 5〜95％で止まる）。
@@ -98,12 +89,12 @@
     dr.rolls = (dr.rolls || 0) + 1;
   };
 
-  // 年齢・生まれによる補正（表示用に出どころ別にも返す）
+  // 年齢による補正（表示用に出どころ別にも返す。生まれの補正は無くした U25。古い下書きの origin は見ない）
   cre.modParts = (dr, k) => {
-    const a = D.AGES[dr.ageBand] || D.AGES.prime, o = D.ORIGINS[dr.origin] || {};
-    return { age: (a.mod || {})[k] || 0, origin: (o.mod || {})[k] || 0 };
+    const a = D.AGES[dr.ageBand] || D.AGES.prime;
+    return { age: (a.mod || {})[k] || 0 };
   };
-  cre.mod = (dr, k) => { const m = cre.modParts(dr, k); return m.age + m.origin; };
+  cre.mod = (dr, k) => cre.modParts(dr, k).age;
   // ボーナスを足す前の値（初期値）
   cre.base = (dr, k) => Math.max(S2().MIN, dr.rolled[k] + cre.mod(dr, k));
   cre.value = (dr, k) => cre.base(dr, k) + (dr.bonus[k] || 0);
@@ -158,7 +149,7 @@
   // 返すのは冒険に渡す形（成功率の尺度）
   cre.quickStats = (cls, rnd, o) => {
     o = o || {};
-    const dr = { cls, ageBand: o.ageBand || "prime", origin: o.origin || D.CLASS_ORIGIN[cls], profile: {}, bonus: {}, rolls: 0 };
+    const dr = { cls, ageBand: o.ageBand || "prime", profile: {}, bonus: {}, rolls: 0 };
     if (o.race) { dr.profile.race = o.race; dr.profile.beast = o.beast || ""; }
     cre.roll(dr, rnd);
     cre.autoBonus(dr, o.even !== false);
@@ -176,36 +167,31 @@
     p.age = String(p.age || "").trim() || cre.gen(dr, "age", rnd);
     p.sex = dr.sex;
     p.ageBand = dr.ageBand;
-    p.origin = dr.origin;
+    delete p.origin;   // 生まれは無くした（U25）
     return { cls: dr.cls, stats: cre.final(dr), caps: cre.caps(dr), profile: p, goal: dr.goal, goalText: cre.goalText(dr) };
   };
 
   // 始まりの導入。ページ（段落の並び）の配列を返す。状況の概要の 3 頁（D.PROLOGUE）：世界の今・あなたは誰か・今どこにいて何を目指すか
-  // 部品は乱数を使わず名前で選ぶ（同じ人物なら同じ文）。古いセーブの人物（生まれ・年齢の区分が無い）でも作れる
+  // 古いセーブの人物（年齢の区分が無い）でも作れる。生まれは無くした（U25。古いセーブの origin は見ない）
   cre.prologue = (o) => {
     const P = D.PROLOGUE;
     const p = o.profile || {};
-    const org = D.ORIGINS[p.origin];
     const c = D.CLASSES[o.cls];
     const startId = c.start;
     const start = D.LOCS[startId];
     // 作成画面の形（goal: id, goalText）とセーブの形（goal: { id, text }）のどちらでもよい
     const g = o.goal && typeof o.goal === "object" ? o.goal : { id: o.goal, text: o.goalText };
     const text = String(g.text || o.goalText || "").trim().replace(/[。．.]+$/, "");
-    const fill = (t) => t.replace("{name}", p.name).replace("{age}", p.age).replace("{cls}", c.name).replace("{origin}", org ? org.name : "")
+    const fill = (t) => t.replace("{name}", p.name).replace("{age}", p.age).replace("{cls}", c.name)
       .replace("{place}", start.name).replace("{text}", text);
-    // 名前から決まる数（同じ人物なら同じ部品）
-    const seed = [...String(p.name || "")].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
-    const pick = (arr) => (Array.isArray(arr) ? arr[seed % arr.length] : arr);
     // 年齢の区分は、書いた歳の数から（区分と歳が食い違うときは歳を信じる）。歳が読めなければ区分、それも無ければ壮年
     const byAge = Object.keys(D.AGES).find((k) => { const [lo, hi] = D.AGES[k].range; const n = Number(p.age); return n >= lo && n <= hi; });
     const band = byAge || (D.AGES[p.ageBand] ? p.ageBand : "prime");
     const past = (P.past[o.cls] || {})[band] || P.pastNone;
-    const home = org && org.name === start.name;
     return [
       P.world.slice(),
-      [fill(org ? P.who : P.whoNoOrigin), org ? pick(P.life[p.origin]) : "", past].filter(Boolean),
-      [fill(home ? P.arriveHome : P.arrive) + (P.place[startId] ? P.place[startId] : ""), fill(g.id !== "custom" && D.GOALS[g.id] ? P.goal : P.custom), P.close],
+      [fill(P.who), past].filter(Boolean),
+      [fill(P.arrive) + (P.place[startId] ? P.place[startId] : ""), fill(g.id !== "custom" && D.GOALS[g.id] ? P.goal : P.custom), P.close],
     ];
   };
 })(globalThis.G = globalThis.G || {});
