@@ -37,6 +37,8 @@ const FACE = {
   // C12（src/data/zcz_c12_people.js）
   ortensia: "問いを一つ", ismene: "淡々と", shano: "人見知り", otose: "豪快", guido: "明日にする",
   pietro: "帳面", marguerite: "叩いて", hildegard: "にこりともせず", agathe: "ぶっきらぼう", seraphina: "おっとり", tomas: "穏やかな話し方", ganzou: "威勢", yae: "結び目",
+  // C17（src/data/zcz_c17_people.js）
+  yorka: "座ったまま",
 };
 
 export default ({ G, fail }) => {
