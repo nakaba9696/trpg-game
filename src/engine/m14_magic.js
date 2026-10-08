@@ -6,7 +6,7 @@
 //   talent(S)        術の才 { lv, good, bad }（S.magic。古いセーブは「人並み・職業の属性が得意」）
 //   aff(el, S)       その属性の向き "good" | "mid" | "bad"。maxTier(el, S) その属性で届く段（才なしは 0）
 //   canLearn(id, S)  覚えられないわけ（覚えられるなら ""）。learnBonus(id, S) 覚える判定の補正（％）
-//   words(t)         才を言葉で（作成画面・シート）。rollDraft / ofDraft 作成画面の才
+//   words(t)         才を言葉で（作成画面・シート）。rollDraft / ofDraft 作成画面の才（能力値のダイスから決まり、乱数を進めない）
 (function (G) {
   const D = G.data;
   const M = (G.m14 = G.m14 || {});
@@ -91,8 +91,11 @@
   };
 
   // ---------------------------------------------------------------- 作成画面：才を振る（ダイスは下書きに覚え、種族・生まれ・職業は見るたびに足す）
-  M.rollDraft = (dr, rnd) => {
-    dr.m14 = { d: [1, 2, 3].reduce((a) => a + 1 + Math.floor(rnd() * 6), 0), r: Array.from({ length: 8 }, () => rnd()) };
+  // 才のダイスは、振った能力値のダイスから決める（乱数をそれ以上進めない。振り直すたびに変わる。能力値の高い低いとは結びつかない）
+  M.rollDraft = (dr) => {
+    let h = hash(`${JSON.stringify(dr.dice || dr.rolled || {})}#${dr.rolls || 0}`);
+    const next = () => { h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0; h = Math.imul(h ^ (h >>> 13), 3266489909) >>> 0; h = (h ^ (h >>> 16)) >>> 0; return h / 4294967296; };
+    dr.m14 = { d: [1, 2, 3].reduce((a) => a + 1 + Math.floor(next() * 6), 0), r: Array.from({ length: 8 }, () => next()) };
     return dr.m14;
   };
   M.from = (o) => {
