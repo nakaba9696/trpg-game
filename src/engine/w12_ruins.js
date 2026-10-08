@@ -114,7 +114,9 @@
     const v = S.w12 && S.w12.view;
     if (v && (v.loc !== S.loc || v.depth !== S.depth)) delete S.w12.view;
     // 奥へ進んで何も起きなかったら、その遺跡の空気を一行
-    if (R && !S.over && S.mode === "explore" && S.depth > 0 && S.depth < (D.LOCS[S.loc].floors || 0) && G.rand() < 0.5) G.say(G.pick(R.air));
+    // 乱数を使わず、日と階と手番で決める（遺跡の行動を選ばない遊び方では、乱数の並びが前と変わらないように）
+    if (R && !S.over && S.mode === "explore" && S.depth > 0 && S.depth < (D.LOCS[S.loc].floors || 0) && (S.turn + S.depth) % 2 === 0)
+      G.say(R.air[(S.day * 7 + S.depth * 3 + S.turn) % R.air.length]);
   };
 
   // ---------------------------------------------------------------- 行う
@@ -234,7 +236,6 @@
     G.pass(1);
     V.text.forEach((t) => G.log("nar", t, { peak: true }));
     G.take(V.key);
-    G.apply({ gold: V.gold, item: V.item, chron: "エル・ナフ遺構の砂の下の部屋で、環の欠け石を見つける" });
-    G.award("w12_vault");
+    G.apply({ gold: V.gold, item: V.item, chron: "エル・ナフ遺構の祭壇の下で、古い王の練習部屋を開ける" });
   }
 })(globalThis.G = globalThis.G || {});

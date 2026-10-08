@@ -14,8 +14,8 @@ export default ({ G, fail, ok, seeded }) => {
   const T = D.TROPHIES;
 
   // ---------------------------------------------------------------- 表の形
-  // 使徒を正面から倒す長編（E7）のトロフィーは、長編ごとに足す（100 個の外に数える）
-  const saga = T.filter((t) => /^e7_/.test(t.key)).length;
+  // 使徒を正面から倒す長編（E7）と、遺跡の古い文明の断片（W12）のトロフィーは、100 個の外に数える
+  const saga = T.filter((t) => /^(e7|w12)_/.test(t.key)).length;
   if (T.length - saga !== 100) B(`トロフィーが ${T.length - saga} 個（長編の ${saga} 個を除いて 100 個のはず）`);
   const keys = new Set();
   for (const t of T) {
