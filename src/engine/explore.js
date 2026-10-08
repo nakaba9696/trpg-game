@@ -148,7 +148,7 @@
         G.startCombat([L.boss], { win: { text: rw.text, flag: bf, item: rw.item, fame: rw.fame, trophy: rw.trophy, chron: rw.chron } });
         return;
       }
-      G.say("最奥の広間は静まり返っている。主はもういない。天井から、埃がゆっくり降りてくる。");
+      G.say((G.w11 && G.w11.deepLine && G.w11.deepLine(S)) || "最奥の広間は静まり返っている。主はもういない。天井から、埃がゆっくり降りてくる。");
       return;
     }
     const mid = L.midboss && L.midboss[S.depth];

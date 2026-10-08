@@ -118,6 +118,8 @@
     const def = (D.W11_ROOMS || []).find((x) => x.id === r.k);
     return r.k === "stairs" || r.k === "vault" ? r.k : (def && def.scene) || r.k;
   };
+  // 主を倒したあとの最奥の一行（大きな迷宮だけ。explore.js が読む）
+  W.deepLine = (S) => { S = S || G.S; return (W.large(S.loc) && PL(S.loc).deep) || ""; };
   W.counts = (f) => ({ seen: f.rooms.filter((r) => r.done).length, all: f.rooms.length });
   W.mapLine = (S, L) => {
     S = S || G.S;
@@ -186,7 +188,7 @@
     if (S.mode !== "explore" || !W.hasRooms(S)) return;
     const f = W.floorOf(S);
     const P = PL(S.loc);
-    const line = pickOf(P.intro, `${S.loc}:${S.depth}:${S.day}`);
+    const line = Array.isArray(P.intro) && P.intro.length ? P.intro[Math.min(P.intro.length - 1, S.depth - 1)] : "";
     const n = f.rooms.length;
     G.say(`${line ? line + "\n" : ""}道は${"一二三四五六七八"[n - 1] || "いくつ"}つに分かれている。`);
   }

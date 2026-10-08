@@ -1,11 +1,15 @@
 // W11：迷宮の階と部屋（src/engine/zw11_dungeon.js・src/data/dungeon_w11*.js）
-// - 表の整合：迷宮ごとの性格（道の呼び名・着いたときの一行）がすべての迷宮にあり、その迷宮だけの部屋がある。部屋の出来事がある。
+// - 大きな迷宮（size: "large"）は 3〜5 か所で、由来（docs/lore/dungeons.md）に載っている。小さな迷宮は今までどおり「奥へ進む」だけ（部屋が出ない）
+// - 表の整合：大きな迷宮ごとの性格（道の呼び名・階ごとの一行・最奥の一行）と、その迷宮だけの部屋・階ごとのかけらがある。部屋の出来事がある。
 //   見える文に「！」・禁じた言葉・数字が無い
-// - どの迷宮も、部屋をたどって階段を見つけ、最奥まで行ける。どの階にも階段の部屋がちょうど一つあり、部屋が尽きても詰まない
+// - どの大きな迷宮も、部屋をたどって階段を見つけ、最奥まで行ける。どの階にも階段の部屋とかけらの部屋がちょうど一つずつあり、部屋が尽きても詰まない
+// - 背景の種類（G.w11.sceneKind）：部屋に入るとその部屋の種類、最奥は deep
 // - 画面の地図の一行（地下2階／全4階：部屋 1/4・階段 まだ）。階段を見つけると「階段を下りる」になる
 // - 箱：ミミックなら開けると戦い、調べると見破る。錠のある箱は錠の選択肢だけ。潮の迷宮は満ち潮で水の道が通れず、待てる
 // - 外から部屋の種類を足せる（G.data.W11_ROOMS に push。W12 の口）
 // - 選択肢を並べるだけでは乱数を使わない。古いセーブ（S.w11 が無い・迷宮の途中）でも動く
+import { readFileSync } from "node:fs";
+
 const BANNED = /見世物|観客|客席|舞台|台本|言霊|神々|魔王|魔人|正体|もういない|！|!/;
 
 export default ({ fail, ok, loadEngine, seeded }) => {
@@ -27,20 +31,45 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const D = G0.data;
   const W = G0.w11;
   if (!W) { F("G.w11 が無い"); return; }
-  const dungeons = Object.keys(D.LOCS).filter((id) => D.LOCS[id].type === "dungeon");
+  const all = Object.keys(D.LOCS).filter((id) => D.LOCS[id].type === "dungeon");
+  const dungeons = all.filter((id) => W.large(id));
+  if (dungeons.length < 3 || dungeons.length > 5) F(`大きな迷宮が ${dungeons.length} か所（3〜5 か所）`);
+  const lore = readFileSync(new URL("../../docs/lore/dungeons.md", import.meta.url), "utf8");
   const evIds = new Set(D.EVENTS.map((e) => e.id));
   for (const id of dungeons) {
-    const P = (D.W11_DUNGEONS || {})[id];
-    if (!P) { F(`${id}: 迷宮の性格（D.W11_DUNGEONS）が無い`); continue; }
+    const P = D.W11_DUNGEONS[id];
+    const L = D.LOCS[id];
+    if (!lore.includes("`" + id + "`")) F(`${id}: docs/lore/dungeons.md に由来が無い`);
     if (!(P.ways && P.ways.length >= 4)) F(`${id}: 道の呼び名が少ない`);
-    if (!(P.intro && P.intro.length)) F(`${id}: 着いたときの一行が無い`);
-    if (!D.W11_ROOMS.some((r) => r.where && r.where.includes(id))) F(`${id}: その迷宮だけの部屋が無い`);
+    if (!(P.intro && P.intro.length >= L.floors - 1)) F(`${id}: 階ごとの一行が足りない（${(P.intro || []).length}/${L.floors - 1}）`);
+    if (!P.deep) F(`${id}: 最奥の一行が無い`);
+    for (const [k, e] of Object.entries(P.ev || {})) for (const x of [].concat(e)) if (!evIds.has(x)) F(`${id}: 部屋 ${k} の出来事 ${x} が無い`);
+    if (!D.W11_ROOMS.some((r) => r.where && r.where.includes(id) && r.force)) F(`${id}: 階ごとのかけらの部屋が無い`);
+    for (let d = 1; d < L.floors; d++) {
+      const r = D.W11_ROOMS.find((x) => x.where && x.where.includes(id) && x.force);
+      const e = r && (typeof r.ev === "function" ? r.ev({}, L, d) : r.ev);
+      if (r && !evIds.has(e)) F(`${id} 地下${d}階: かけらの出来事 ${e} が無い`);
+      if (d > 1 && r && typeof r.ev === "function" && r.ev({}, L, d) === r.ev({}, L, d - 1)) F(`${id} 地下${d}階: かけらが上の階と同じ`);
+    }
+  }
+  // 小さな迷宮は部屋が出ない
+  {
+    const G = loadEngine();
+    const S = start(G, 2);
+    for (const id of all.filter((x) => !W.large(x))) {
+      S.loc = id; S.depth = 1; S.mode = "explore"; keep(S);
+      const a = acts(G);
+      if (a.some((x) => /^w11/.test(x.id))) F(`小さな迷宮 ${id} に部屋が出る`);
+      const dp = a.find((x) => x.id === "deeper");
+      if (!dp || dp.label !== "奥へ進む") F(`小さな迷宮 ${id} の「奥へ進む」が「${dp && dp.label}」`);
+      if (G.w11.sceneKind(S)) F(`小さな迷宮 ${id} に部屋の背景が出る`);
+    }
   }
   const seen = new Set();
   for (const r of D.W11_ROOMS) {
     if (seen.has(r.id)) F(`部屋の種類 ${r.id} が重なっている`);
     seen.add(r.id);
-    for (const e of [].concat(r.ev || [])) if (!evIds.has(e)) F(`部屋 ${r.id}: 出来事 ${e} が無い`);
+    for (const e of [].concat(typeof r.ev === "function" ? [] : r.ev || [])) if (!evIds.has(e)) F(`部屋 ${r.id}: 出来事 ${e} が無い`);
     for (const l of r.where || []) if (!D.LOCS[l] || D.LOCS[l].type !== "dungeon") F(`部屋 ${r.id}: 迷宮 ${l} が無い`);
     if (!r.hint) F(`部屋 ${r.id}: 気配（hint）が無い`);
   }
@@ -96,6 +125,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (!f) { G.act("deeper"); continue; }
       const stairsN = f.rooms.filter((r) => r.k === "stairs").length;
       if (stairsN !== 1) { F(`${id} 地下${S.depth}階: 階段の部屋が ${stairsN}`); stuck = true; break; }
+      if (f.rooms.filter((r) => /_lore$/.test(r.k)).length !== 1) F(`${id} 地下${S.depth}階: かけらの部屋が一つでない`);
       const line = G.w11.mapLine(S);
       if (!/^地下\d+階／全\d+階：部屋 \d+\/\d+・階段 (発見|まだ)$/.test(line)) { F(`${id}: 地図の一行が「${line}」`); stuck = true; break; }
       const deeper = acts(G).find((x) => x.id === "deeper");
@@ -109,7 +139,14 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (deeper.label !== "階段を探さずに奥へ進む") F(`${id}: 階段を見つける前に「${deeper.label}」`);
       const go = acts(G).find((x) => /^w11go:/.test(x.id) && !x.disabled) || acts(G).find((x) => x.id === "w11wait") || acts(G).find((x) => x.id === "w11search");
       if (!go) { F(`${id} 地下${S.depth}階: 部屋が尽きたのに階段が無い（${JSON.stringify(f.rooms.map((r) => [r.k, r.done, !!r.wet]))}）`); stuck = true; break; }
-      if (/^w11go:/.test(go.id)) rooms++;
+      if (/^w11go:/.test(go.id)) {
+        rooms++;
+        const k = f.rooms[Number(go.id.slice(6))].k;
+        G.act(go.id);
+        const sk = G.w11.sceneKind(S);
+        if (S.depth && S.depth < L.floors && !sk) F(`${id}: 部屋（${k}）に入っても背景の種類が無い`);
+        continue;
+      }
       G.act(go.id);
     }
     if (!stuck && steps >= 600) F(`${id}: 最奥まで行けない（地下${S.depth}階で止まった）`);
@@ -118,16 +155,17 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       keep(S);
       G.act("deeper");
       if (S.depth !== L.floors) F(`${id}: 最奥の手前から主の階へ下りられない（地下${S.depth}階）`);
+      else if (G.w11.sceneKind(S) !== "deep") F(`${id}: 最奥の背景が deep にならない`);
     }
   }
-  if (rooms < 30) F(`たどった部屋が少ない（${rooms}）`);
+  if (rooms < 10) F(`たどった部屋が少ない（${rooms}）`);
 
   // ---------------------------------------------------------------- 箱とミミック・錠・潮・外から足す部屋・乱数・古いセーブ
   {
     const G = loadEngine();
     const D2 = G.data;
     const S = start(G, 3);
-    S.loc = "ruins"; S.depth = 1;
+    S.loc = "graveyard"; S.depth = 1;
     keep(S);
     const f = G.w11.floorOf(S);
     // ミミック：開けると戦い
@@ -188,13 +226,13 @@ export default ({ fail, ok, loadEngine, seeded }) => {
 
     // 外から部屋の種類を足せる（W12 の口）
     D2.EVENTS.push({ id: "w11_test_room", where: ["w11"], w: 0, noC10: true, title: "試しの部屋", text: "試しの部屋。", choices: [{ label: "出る", ok: { text: "出た。" } }] });
-    D2.W11_ROOMS.push({ id: "w11_test", where: ["ruins"], w: 1000, max: 1, ev: "w11_test_room", hint: "試し" });
+    D2.W11_ROOMS.push({ id: "w11_test", where: ["graveyard"], w: 1000, max: 1, ev: "w11_test_room", hint: "試し" });
     S.depth = 1; S.w11.floor = null;
     if (!G.w11.floorOf(S).rooms.some((r) => r.k === "w11_test")) F("D.W11_ROOMS に足した部屋が出ない");
     D2.W11_ROOMS.pop();
 
     // 潮：満ち潮では水の道が通れず、待てる。引き潮なら通れる
-    S.loc = "w3_seacave"; S.depth = 1; S.w11.floor = null; S.mode = "explore";
+    S.loc = "onigashima"; S.depth = 1; S.w11.floor = null; S.mode = "explore";
     const sf = G.w11.floorOf(S);
     if (!sf.rooms.some((r) => r.wet)) sf.rooms.push({ k: "rest", ev: "w11_rest_spring", way: "水の道", wet: true, done: false });
     S.phase = 1;
