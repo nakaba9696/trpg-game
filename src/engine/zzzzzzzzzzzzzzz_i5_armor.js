@@ -217,8 +217,13 @@
   }
 
   // ---------------------------------------------------------------- 逃げる（靴）
+  // 画面の見込み：今までの G.cb.flee（種族・技の上乗せ込み）を包み、そのあいだだけ G.chance に靴の分を足す
+  let fleeing = false;
+  const chance0 = G.chance;
+  G.chance = (stat, diff, extra) => (fleeing && G.S ? chance0(stat, diff, (extra || 0) + API.sum().flee) : chance0(stat, diff, extra));
   if (G.cb && G.cb.flee) {
-    G.cb.flee = () => G.chance("敏捷", { vs: Math.max(...G.alive().map((f) => G.foeVs.flee(G.foeData(f)))) }, API.sum().flee);
+    const flee0 = G.cb.flee;
+    G.cb.flee = (...a) => { const p = fleeing; fleeing = true; try { return flee0(...a); } finally { fleeing = p; } };
   }
   const check0 = G.check;
   G.check = (stat, diff, reason, extra) => (reason === "逃走" && G.S && API.sum().flee ? check0(stat, diff, reason, (extra || 0) + API.sum().flee) : check0(stat, diff, reason, extra));

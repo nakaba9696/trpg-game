@@ -82,7 +82,7 @@
     i3a_halfplate: ["slash- pierce- bolt+", { bonus: { steal: -5 }, i5: { fit: ["merc"] } }, "鍛冶の都ドランヘルツの、胴だけ鉄の鎧。腕と脚は綿入れの革なので、打たれても中まで響きにくい。走れないことはない。長くは走れない。"],
     plate: ["slash- pierce- blunt+ bolt+", { magic: -5, bonus: { steal: -10 }, i5: { land: { bog: -10, snow: -5 } } }, "王国の騎士の従者が着る板金鎧。並の刃は通さない。そのかわり打たれれば中で骨が鳴り、雷は鉄を伝って全身を走る。沼に入れば沈み、術の言葉は兜の中でこもる。"],
     i3a_fullplate: ["slash-- pierce- blunt+ bolt+", { bonus: { steal: -15 }, i5: { land: { bog: -15, snow: -10, mount: -5 } } }, "鍛冶の都ドランヘルツで、注文した者の体に合わせて打つ全身の甲冑。刃はまず通らない。中の人は、自分がどこを向いているのか、ときどき分からなくなる。"],
-    i3a_knightplate: ["slash- pierce-- blunt+ bolt+", { bonus: { steal: -10 }, i5: { land: { bog: -10, snow: -5 } } }, "王都の鍛冶組合が一年に十領しか打たない、獅子の甲冑。騎士の槍試合のために、胸と脇を突きに厚く作ってある。十一領目は無い。"],
+    i3a_knightplate: ["slash- pierce- blunt+ bolt+", { bonus: { steal: -10 }, i5: { land: { bog: -10, snow: -5 } } }, "王都の鍛冶組合が一年に十領しか打たない、獅子の甲冑。刃も穂先も止めるが、打たれれば中で響く。十一領目は無い。"],
     i3a_blackiron: ["slash- pierce- blunt+ bolt+ ice-", { bonus: { steal: -10 }, i5: { land: { bog: -10 } } }, "帝都ノルディアの兵器廠で、重装兵のために型で打つ鎧。黒いのは塗りではなく、北の鉱山の鉄がもともと黒い。冷えに慣れた鉄で、雪の中でも肌に貼りつかない。"],
     i3a_yoroi: ["slash- pierce- blunt+ fire-", { bonus: { steal: -5 }, i5: { fit: ["samurai"] } }, "島の侍の家に伝わる鎧。札を漆で塗り固め、潮風と火の粉に強い。兜の前立ては家ごとに違う。島の侍は、これを着たまま泳ぐ稽古をする。"],
     i1_mirrorplate: ["slash- pierce- bolt+ light-", {}, "貴族の若様が見栄で作らせた、鏡のように磨いた鎧。光を撥ね返すが、雷は撥ね返さない。磨くのは従者の仕事で、従者は毎晩そのことを恨んでいる。"],
