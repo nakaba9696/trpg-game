@@ -48,7 +48,6 @@ export default ({ fail, loadEngine, seeded }) => {
     Object.entries(D.CLASSES).forEach(([k, c]) => put(`職業 ${k}`, c.blurb));
     Object.entries(D.GOALS).forEach(([k, g]) => { put(`目的 ${k}`, g.text); put(`目的 ${k}`, g.hint); });
     Object.entries(D.AGES || {}).forEach(([k, a]) => put(`年齢 ${k}`, a.blurb));
-    Object.entries(D.ORIGINS || {}).forEach(([k, o]) => put(`生まれ ${k}`, o.blurb));
     Object.entries(D.RACES || {}).forEach(([k, r]) => put(`種族 ${k}`, r.blurb));
     Object.entries(D.BEASTS || {}).forEach(([k, b]) => { put(`獣 ${k}`, b.blurb); put(`獣 ${k}`, b.temper); });
     put("導入", D.PROLOGUE);
