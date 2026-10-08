@@ -17,8 +17,8 @@
 //   probe: true | "sure" | "fail"（箱を調べる。ミミックなら見破る。どちらでも箱の前に戻る）・
 //   loot: "small" | "chest" | "vault" | "lair" | "sneak" | "mimic" | "bones"（迷宮の危険度と深さで金と品）・extra（品をもう一つ）・
 //   rest: "fire" | "dark" | "spring" | "camp"（回復。時が経ち、魔物が寄ってくることも）・short（近道：階段が分かる）・lost（迷って時が経つ）
-// セーブに足す項目：S.w11 = { floor, n, seed }（古いセーブには無い。無ければ、その階の部屋をそのとき作る）
-// 部屋の並びは、冒険の種（S.w11.seed。古いセーブはセーブの id）・場所・階・日と時刻から決める（画面を描くたびに乱数を使わない。同じセーブなら同じ並び）。部屋の中の判定と戦利品は G.rand
+// セーブに足す項目：S.w11 = { floor, n }（古いセーブには無い。無ければ、その階の部屋をそのとき作る）
+// 部屋の並びは、セーブの id・場所・階・日と時刻から決める（画面を描くたびに乱数を使わない。同じセーブなら同じ並び）。部屋の中の判定と戦利品は G.rand
 // 名前の頭の zw は、W8（w8_explore.js）と E2（e2_lair.js）より後・L1（zzz_know_l1.js）・K1・M14 より前に読むため。
 //   「奥へ進む」を包む順：L1 の罠 → ここ → W8 の脇道の出来事 → E2 の主の巣 → explore.js。DOM に触らない。レーン W（W11）
 (function (G) {
@@ -73,20 +73,10 @@
     const v = typeof e === "function" ? e(S, L, S.depth) : e;
     return Array.isArray(v) ? v[Math.floor(R() * v.length)] : v;
   };
-  // 冒険ごとの種。S.id は時刻を含むので、決まった乱数で遊ぶテストでも並びが毎回変わってしまう。
-  // 新しい冒険は、名前・職業・能力値・目的から作る（G.rand は使わない）。古いセーブ（S.w11.seed が無い）は今までどおり S.id
-  W.seedOf = (S) => (st(S).seed != null ? st(S).seed : S.id || "");
-  const newGame0 = G.newGame;
-  if (newGame0) G.newGame = (opt) => {
-    const r = newGame0(opt);
-    const S = G.S;
-    if (S) st(S).seed = hash(JSON.stringify([S.profile && S.profile.name, S.cls, S.stats, S.goal && S.goal.id]));
-    return r;
-  };
   W.makeFloor = (S, key) => {
     const L = D.LOCS[S.loc];
     const P = PL(S.loc);
-    const R = rng(hash(`${W.seedOf(S)}|${key}|${S.day}|${S.phase}|${st(S).n || 0}`));
+    const R = rng(hash(`${S.wseed || S.id || ""}|${key}|${S.day}|${S.phase}|${st(S).n || 0}`)); // 種は冒険の初めに G.rand で引く S.wseed（S.id は Date.now を含むので、テストで揺れる。古いセーブは S.id）
     const n = 3 + ((L.danger || 1) >= 4 ? 1 : 0) + (R() < 0.5 ? 1 : 0);
     const pool = W.kinds(S.loc, S.depth);
     const used = {};

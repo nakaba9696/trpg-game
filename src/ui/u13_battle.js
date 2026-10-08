@@ -165,7 +165,9 @@
   const b5a = G.b5AfterCombat;
   // F7：戦いを片づけた所の記録の位置（ここから後ろの行は、戦闘の本文に流さず結果の場面へ）
   let cutAt = null; // { S, i }
-  G.b5AfterCombat = (how) => { lastHow = how; if (G.S) cutAt = { S: G.S, i: G.S.log.length }; return b5a ? b5a(how) : undefined; };
+  // 得た物は、戦いを片づけた所（落とし物を配る直前）の所持金・持ち物から数える（戦闘の中で使った干し肉などと、拾った物が打ち消し合って「なし」にならないように）
+  let lootBase = null; // { S, inv, gold }
+  G.b5AfterCombat = (how) => { lastHow = how; if (G.S) { cutAt = { S: G.S, i: G.S.log.length }; lootBase = { S: G.S, inv: { ...(G.S.inv || {}) }, gold: G.S.gold }; } return b5a ? b5a(how) : undefined; };
   const die0 = G.die;
   // あなたが倒れたとき：最後の文（倒れる前のひとり言など）と「〇〇は倒れた。」の一行までが戦い。そのあとのトロフィー・手引きなどが結果の場面へ
   if (die0) G.die = (...a) => {
@@ -511,7 +513,9 @@
     if (RC && RC !== fightRef) { fightRef = RC; fightSnap = { ...u13.snap(S), pts: growBase.pts, comps: growBase.comps }; }
     const ended = !!fightRef && !RC;
     if (ended) {
-      if (!RO) hold = { data: u13.result(fightSnap, S, lastHow), shown: false };
+      const base = lootBase && lootBase.S === S ? { ...fightSnap, inv: lootBase.inv, gold: lootBase.gold } : fightSnap;
+      lootBase = null;
+      if (!RO) hold = { data: u13.result(base, S, lastHow), shown: false };
       fightRef = null; fightSnap = null; lastHow = null;
       growBase = u13.snap(S);
     } else if (!RC && !hold && !RO) {

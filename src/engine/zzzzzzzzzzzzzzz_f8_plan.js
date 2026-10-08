@@ -12,7 +12,7 @@
   const F3 = () => G.f3;
   const C = () => (G.S && G.S.combat) || null;
   // 指示 → 見出し
-  F8.CAT = { attack: "attack", art: "tech", magic: "magic", heal: "magic", potion: "item", cover: "misc", feint: "misc", back: "misc" };
+  F8.CAT = { attack: "attack", art: "tech", magic: "magic", heal: "magic", potion: "item", cover: "misc", feint: "misc", back: "guard" }; // F9：下がる → 防御
 
   // 一つずつ手を選ぶ仲間（立っている者・作戦が「命を待て」）
   F8.queue = (S) => {
@@ -48,8 +48,8 @@
       (by[cat] || (by[cat] = [])).push({ id: `f3:ord:${c.id}:${o}`, label, sub, kw: ["指示", name, D.F3_ORDERS[o].name] });
     });
     (by.misc || (by.misc = [])).push({ id: "f8:back", label: "一つ前に戻る", sub: "前に決めた手を選び直す", kw: ["戻る", "やり直す"] });
-    const NAME = (G.f4 && G.f4.NAME) || { attack: "攻撃", tech: "戦技", magic: "魔法", misc: "その他", item: "道具" };
-    const ORDER = (G.f4 && G.f4.ORDER) || ["attack", "tech", "magic", "misc", "item"];
+    const NAME = (G.f4 && G.f4.NAME) || { attack: "攻撃", guard: "防御", tech: "戦技", magic: "魔法", misc: "その他", item: "道具" };
+    const ORDER = (G.f4 && G.f4.ORDER) || ["attack", "guard", "tech", "magic", "misc", "item"];
     return ORDER.filter((k) => by[k]).map((k) => ({ title: `${NAME[k]}（${name}の手）`, list: by[k], cat: k, f8who: c.id }));
   };
 
