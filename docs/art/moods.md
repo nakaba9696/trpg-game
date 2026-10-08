@@ -55,7 +55,7 @@
 | ライオス（`raios`） | 困り（`troubled`）・真剣（`serious`）・驚き（`surprise`） |
 | セリオス（`serios`） | ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・驚き（`surprise`） |
 | ファリナ（`farina`） | ほんの少し笑う（`faint_smile`）・慌て（`panic`）・冷たい目（`cold`） |
-| グレオル（`greol`） | 照れ（`shy`）・困り（`troubled`）・真剣（`serious`） |
+| アルマン（`greol`） | 照れ（`shy`）・困り（`troubled`）・真剣（`serious`） |
 | ネイラス（`neilas`） | 慌て（`panic`）・ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・怯え（`fear`） |
 | ティリア（`tiria`） | 慌て（`panic`）・驚き（`surprise`）・目を輝かせる（`sparkle`） |
 | オルヴェイン（第六騎士団の団長）（`sixth`） | ほんの少し笑う（`faint_smile`）・冷たい目（`cold`）・驚き（`surprise`） |
