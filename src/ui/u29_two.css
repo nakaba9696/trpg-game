@@ -1,0 +1,3 @@
+/* U29（R8 表 4c）：PC の右下の窓で「施設」の組を開いたときだけ、選択肢を二列に（宿・酒場・商店・ギルド・教会・訓練場・裏路地が、1366×768 でも全部見える）。
+   ほかの組は一行に一つ（U12）。選択肢の並べ方なので、zu12_layout.css より前の名前に置く（tests/checks/u12_*.mjs）。#u21open の id で一列の決まりより強い */
+body.u21pc #u21open.u29two .alist { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }

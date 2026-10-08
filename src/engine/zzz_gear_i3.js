@@ -246,7 +246,8 @@
     if (key && cmpMemo.has(key)) return cmpMemo.get(key);
     const c = API.compare(id);
     // 差は「今より」を付けて、品そのものの性能（同じ札の前の欄）と見分けられるように（R7）
-    const v = c ? `${c.mark}${c.text ? (c.text === "鑑定前" ? c.text : "今より" + c.text) : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : "";
+    // 総合で同じくらい（＝）のときは「＝今より攻撃-1」と読めないよう、差を括弧に（R7b）
+    const v = c ? `${c.mark}${c.text ? (c.text === "鑑定前" ? c.text : c.dir === 0 ? `今と同じくらい（${c.text}）` : "今より" + c.text) : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : "";
     if (key) { if (cmpMemo.size > 2000) cmpMemo.clear(); cmpMemo.set(key, v); }
     return v;
   };
