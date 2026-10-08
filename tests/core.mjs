@@ -238,7 +238,7 @@ export const SECTIONS = [
     // 魔導書で覚える（読んでも本は残る）
     G.give("m1_tome_curse");
     const read = acts().find((a) => a.id === "tome:m1_tome_curse");
-    if (!read || !/知力 \d+%/.test(read.sub)) fail("魔導書を読み解く行動が出ない");
+    if (!read || read.disabled) fail("魔導書を読み解く行動が出ない");   // M15：読めば必ず覚えるので、成功率は出さない
     for (let i = 0; i < 20 && !G.knows("curse"); i++) G.act("tome:m1_tome_curse");
     if (!G.knows("curse") || !S.inv.m1_tome_curse) fail("魔導書で呪いを覚えられない（か、本が消えた）");
     if (acts().some((a) => a.id === "tome:m1_tome_curse")) fail("覚えたのに魔導書を読む行動が残る");
