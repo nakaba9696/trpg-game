@@ -119,7 +119,13 @@
 - 得たものの枠と、PC の右の列の二列の札。
 
 ## 自動テスト
-`node tools/build.mjs` は通った。`node tests/run.mjs` はこの環境でも長く（25 分で終わらず）、結果は末尾に追記する。
+`node tools/build.mjs` は通った。
+`node tests/run.mjs` の全部は、このコンテナでは三度とも途中で止められた（25 分の timeout で一度、残り二度は 75 分ほどで exit 137。出力は最後にまとめて出るので、どこまで通ったかは分からない）。
+代わりに、このレビューに関わる確認だけに絞って動かした：
+```
+ONLY=love_age,c11_love,v12_no_numbers,u28_beats,u27_gains,f8_plan,m6_ending,e10_events,e7_saga,c14_stages,c13_bond,r6_early,u26_review,u21_side,u13_battle,q7_quests BALANCE=0 JOBS=2 node tests/run.mjs
+```
+これは `tests/core.mjs`（データの整合・150 回のランダムプレイ・保存の鍵）と上の 16 の checks を動かし、`DONE failures=0`（279 秒）。ランダム 150 回は死亡 2・最長 224 日・ボス撃破 28。恋の決まり（18 歳未満・子どもの姿の 10 人は恋にならない）、数値が物語の文に無いこと、行動 → 記録 → 結果 → 得たものの順、序盤に C 級が出ないこと、仲間の手の決め方、長編、絆の段と褒美、節目と終わり方の各検査が通った。釣り合い（q2）と残りの checks はこの環境では確かめられていない。
 
 ## スクリーンショット
 `docs/review/shots_2026-10-08/` に 33 枚（番号は撮った順。本文で（番号）と書いたもの）。要点：
