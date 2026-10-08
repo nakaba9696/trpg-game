@@ -1,0 +1,25 @@
+/* U27：「得たもの・失ったもの」の枠（ui/zu27_gains.js）。本文の下に、はっきりした枠で */
+:root { --u27-good: #2f7a2a; --u27-good-bg: rgba(64, 140, 52, .12); --u27-bad: #b0321f; --u27-bad-bg: rgba(190, 50, 30, .1); }
+:root[data-theme="dark"] { --u27-good: #8fd47e; --u27-good-bg: rgba(120, 200, 100, .14); --u27-bad: #ff8f78; --u27-bad-bg: rgba(255, 110, 80, .13); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u27-good: #8fd47e; --u27-good-bg: rgba(120, 200, 100, .14); --u27-bad: #ff8f78; --u27-bad-bg: rgba(255, 110, 80, .13); } }
+#log .l-gain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: .3em 0 .2em; padding: 7px 10px 8px; border: 1px solid var(--win-edge, var(--rule)); border-left: 3px solid var(--accent);
+  border-radius: 2px; background: color-mix(in srgb, var(--win-solid, var(--sheet)) 86%, var(--accent) 6%); font-family: var(--f-ui); }
+#log .l-gain .u27head { font-size: 12px; letter-spacing: .14em; color: var(--head); font-weight: 700; }
+#log .l-gain .u27list { display: flex; flex-wrap: wrap; gap: 5px 6px; }
+#log .l-gain .u27chip { display: inline-flex; align-items: center; gap: 4px; min-height: 26px; padding: 2px 9px 2px 3px; border-radius: 13px; font-size: 13.5px; line-height: 1.3; border: 1px solid transparent; }
+#log .l-gain .u27-good { color: var(--u27-good); background: var(--u27-good-bg); border-color: color-mix(in srgb, var(--u27-good) 35%, transparent); font-weight: 700; }
+#log .l-gain .u27-bad { color: var(--u27-bad); background: var(--u27-bad-bg); border-color: color-mix(in srgb, var(--u27-bad) 35%, transparent); font-weight: 700; }
+#log .l-gain .u27-info { color: var(--ink); background: var(--field); border-color: var(--rule); }
+#log .l-gain .u27mark { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; font-style: normal; font-size: 11px; font-weight: 700; color: #fff; background: currentColor; }
+#log .l-gain .u27mark { color: inherit; }
+#log .l-gain .u27-good .u27mark { background: var(--u27-good); color: var(--win-solid, #fff); }
+#log .l-gain .u27-bad .u27mark { background: var(--u27-bad); color: var(--win-solid, #fff); }
+#log .l-gain .u27-info .u27mark { background: var(--accent); color: var(--win-solid, #fff); }
+#log .l-gain .u27k-gold .u27mark { background: #b8892a; color: #fff; }
+#log .l-gain .u27arrow { font-size: 10px; }
+/* 本文の末尾の知らせ（「名声 +1」など）も、薄い灰色をやめて読める濃さに */
+#log .l-sys { color: color-mix(in srgb, var(--ink) 82%, var(--muted)); }
+@media (max-width: 600px) {
+  #log .l-gain { padding: 6px 8px; }
+  #log .l-gain .u27chip { font-size: 13px; min-height: 28px; }
+}
