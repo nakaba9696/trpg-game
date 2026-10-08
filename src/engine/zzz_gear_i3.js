@@ -228,9 +228,10 @@
     const diff = [];
     if (it.type === "weapon" && cur) {
       const avg = (w) => w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2];
-      const d = Math.round((avg(it) - avg(cur)) * 10) / 10;
+      const d = Math.round(avg(it) - avg(cur)); // 小数は出さない（「攻撃-0.5」は読みにくい。R7）
       if (d) diff.push("攻撃" + G.sign(d));
-      if ((it.hit || 0) !== (cur.hit || 0)) diff.push("命中" + G.sign((it.hit || 0) - (cur.hit || 0)));
+      // 今の武器に命中の増減が無ければ、差は品の性能欄の「命中±n」と同じ数になるので、二度は出さない（R7）
+      if ((it.hit || 0) !== (cur.hit || 0) && (cur.hit || 0)) diff.push("命中" + G.sign((it.hit || 0) - (cur.hit || 0)));
     }
     if (it.type === "armor") { const d = (it.def || 0) - ((cur && cur.def) || 0); if (d) diff.push("防御" + G.sign(d)); const g = (it.agi || 0) - ((cur && cur.agi) || 0); if (g) diff.push("敏捷" + G.sign(g)); }
     if ((it.magic || 0) !== ((cur && cur.magic) || 0)) diff.push("魔法" + G.sign((it.magic || 0) - ((cur && cur.magic) || 0)));
@@ -244,7 +245,8 @@
     const key = S ? `${id}|${G.i2s ? G.i2s.key(S) : `${S.weapon}|${S.armor}|${S.ring}`}` : "";
     if (key && cmpMemo.has(key)) return cmpMemo.get(key);
     const c = API.compare(id);
-    const v = c ? `${c.mark}${c.text ? c.text : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : "";
+    // 差は「今より」を付けて、品そのものの性能（同じ札の前の欄）と見分けられるように（R7）
+    const v = c ? `${c.mark}${c.text ? (c.text === "鑑定前" ? c.text : "今より" + c.text) : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : "";
     if (key) { if (cmpMemo.size > 2000) cmpMemo.clear(); cmpMemo.set(key, v); }
     return v;
   };
