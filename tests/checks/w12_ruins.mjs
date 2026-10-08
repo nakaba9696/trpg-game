@@ -61,27 +61,54 @@ export default ({ G, fail, ok, seeded }) => {
   };
   const acts = () => G.actions().flatMap((g) => g.list);
   const reset = (S, loc, depth) => { S.mode = "explore"; S.event = null; S.combat = null; S.fac = null; S.loc = loc; S.depth = depth; S.hp = S.maxHp; S.over = null; };
+  // 一度試す。小さな遺跡は各階の「遺跡」の組の行動、大きな迷宮（エル・ナフ遺構。W11）は階ごとのかけらの部屋の出来事から。
+  // 返り値："none" もう何も無い / "busy" 今日はもう試した / 押した選択肢の id
+  const LEAVE = "何もせずに部屋を出る";
+  const attempt = (S, loc, depth, cls) => {
+    reset(S, loc, depth);
+    if (G.w11 && G.w11.large(loc)) {
+      delete S.w11; // 階の部屋を作り直す（日が変われば、かけらの部屋にまた入れる）
+      const f = G.w11.floorOf(S);
+      const i = f ? f.rooms.findIndex((r) => r.k === "w12_ruins_lore") : -1;
+      if (i < 0) { fail(`${cls} ${loc}:${depth}: かけらの部屋が無い`); return "none"; }
+      if (acts().some((x) => /^w12:(script|gear|relic)$/.test(x.id))) fail(`${cls} ${loc}:${depth}: 大きな迷宮なのに各階の行動が出る`);
+      G.act("w11go:" + i);
+      if (S.mode !== "event") { fail(`${cls} ${loc}:${depth}: かけらの部屋で出来事が始まらない`); return "none"; }
+      const ch = acts().filter((x) => !x.disabled);
+      const c = ch.find((x) => x.label !== LEAVE);
+      if (!c) { G.act(ch.find((x) => x.label === LEAVE).id); return W12.open(S, "script").length + W12.open(S, "relic").length + W12.open(S, "mural").length ? "busy" : "none"; }
+      G.act(c.id);
+      if (S.mode === "combat") { S.combat = null; S.mode = "explore"; }
+      return c.label;
+    }
+    const mine = acts().filter((a) => /^w12:/.test(a.id) && a.id !== "w12:vault");
+    if (!mine.length) return "none";
+    const a = mine.find((x) => !x.disabled);
+    if (!a) return "busy";
+    const before = W12.count(S);
+    G.act(a.id);
+    if (S.mode === "combat") { S.combat = null; S.mode = "explore"; }
+    if (acts().some((x) => x.id === a.id && !x.disabled) && W12.count(S) === before && S.depth === depth) fail(`${cls} ${a.id}: 同じ日にまた押せる`);
+    return a.id;
+  };
   for (const cls of ["mage", "merc"]) {
     const S = start(7 + cls.length, cls);
     const hasLetters = G.k1.knows("k1_letters", S);
     let pressed = 0;
-    for (const [loc, R] of Object.entries(RU)) {
+    for (const [loc] of Object.entries(RU)) {
       const L = D.LOCS[loc];
       S.visited[loc] = true;
       for (let depth = 1; depth < L.floors; depth++) {
         for (let tries = 0; tries < 60; tries++) {
-          reset(S, loc, depth);
-          const mine = acts().filter((a) => /^w12:/.test(a.id) && a.id !== "w12:vault");
-          if (!mine.length) break;
-          const a = mine.find((x) => !x.disabled);
-          if (!a) { S.day++; continue; }
-          const before = W12.count(S);
-          try { G.act(a.id); pressed++; } catch (e) { fail(`${cls} ${loc}:${depth} ${a.id}: 例外 ${e.message}`); break; }
-          if (S.mode === "combat") { S.combat = null; S.mode = "explore"; }
-          if (acts().some((x) => x.id === a.id && !x.disabled) && W12.count(S) === before && S.depth === depth) fail(`${cls} ${a.id}: 同じ日にまた押せる`);
+          let r;
+          try { r = attempt(S, loc, depth, cls); } catch (e) { fail(`${cls} ${loc}:${depth}: 例外 ${e.message}`); break; }
+          if (r === "none") break;
+          if (r === "busy") { S.day++; continue; }
+          pressed++;
         }
       }
     }
+    if (!(G.w11 && G.w11.large("ruins"))) fail("エル・ナフ遺構が大きな迷宮になっていない");
     // 特別な背景：仕掛けを解いた階にいるあいだ出て、階を離れると消える
     {
       const [loc, R] = Object.entries(RU)[0];
@@ -119,10 +146,9 @@ export default ({ G, fail, ok, seeded }) => {
       if (!G.k1.knows("k1_letters", S)) { fail("k1_letters を覚えさせられない"); continue; }
       let got = false;
       for (let i = 0; i < 40 && !got; i++) {
-        reset(S, f.loc, f.floor); S.day++;
-        const a = acts().find((x) => x.id === "w12:script");
-        if (!a) { fail(`${cls}: 古文字読みを覚えても読み直しが出ない`); break; }
-        G.act("w12:script");
+        S.day++;
+        const r = attempt(S, f.loc, f.floor, cls);
+        if (r === "none") { fail(`${cls}: 古文字読みを覚えても読み直しが出ない`); break; }
         got = W12.st(S).got[f.id] === f.lines.length;
       }
       if (!got) fail(`${cls}: 読み直しで続きが読めない`);

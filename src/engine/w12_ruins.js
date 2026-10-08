@@ -64,7 +64,9 @@
     if (!R) return [];
     const out = [];
     const busy = (k) => W12.triedToday(S, k);
-    const sc = W12.open(S, "script");
+    // W11 の大きな迷宮（エル・ナフ遺構）では、断片は「かけらの部屋」の出来事から（data/w12_ruins.js の w12_nf_room*）。ここでは隠し部屋の鍵だけ
+    const rooms = !!(G.w11 && G.w11.large && G.w11.large(S.loc));
+    const sc = rooms ? [] : W12.open(S, "script");
     if (sc.length) {
       const f = sc[0];
       const again = (W12.st(S).got[f.id] || 0) > 0;
@@ -75,14 +77,14 @@
         disabled: busy("script"), kw: ["碑文", "読", "字"] });
     }
     const R2 = R.gear;
-    const mur = W12.open(S, "mural");
+    const mur = rooms ? [] : W12.open(S, "mural");
     if (R2 && R2.floor === S.depth && mur.length) {
       const c = W12.clue(S);
       out.push({ id: "w12:gear", label: R2.label,
         sub: busy("gear") ? "今日はもう試した" : `${R2.stat} ${G.chance(R2.stat, R2.diff, c)}%${c ? "・手がかり " + W12.count(S) : ""}`,
         disabled: busy("gear"), kw: ["仕掛け", "解", "扉"] });
     }
-    const rel = W12.open(S, "relic");
+    const rel = rooms ? [] : W12.open(S, "relic");
     if (rel.length) {
       const bonus = knows("k1_appraise", S) ? 15 : 0;
       out.push({ id: "w12:relic", label: "古い文明の遺物を調べる",
@@ -119,8 +121,18 @@
       G.say(R.air[(S.day * 7 + S.depth * 3 + S.turn) % R.air.length]);
   };
 
+  // 出来事の結果の w12: "script" | "gear" | "relic"（W11 のかけらの部屋の選択肢）を受け持つ
+  const apply0 = G.apply;
+  G.apply = (o) => {
+    if (!o || !o.w12) return apply0(o);
+    const { w12, ...rest } = o;
+    apply0(rest);
+    if (G.S && !G.S.over) W12.run(w12, true);
+  };
+
   // ---------------------------------------------------------------- 行う
-  W12.run = (kind) => {
+  // quiet：出来事の選択肢から呼ぶとき（選んだ行動の行は出来事がもう書いている）
+  W12.run = (kind, quiet) => {
     const S = G.S;
     const R = here(S);
     if (!R) return;
@@ -128,9 +140,12 @@
     if (kind === "vault") return vault();
     if (W12.triedToday(S, kind)) return;
     w.tried[tkey(S, kind)] = S.day;
-    if (kind === "script") return readScript(R);
-    if (kind === "gear") return solveGear(R);
-    if (kind === "relic") return lookRelic(R);
+    W12.quiet = !!quiet;
+    try {
+      if (kind === "script") return readScript(R);
+      if (kind === "gear") return solveGear(R);
+      if (kind === "relic") return lookRelic(R);
+    } finally { W12.quiet = false; }
   };
 
   function readScript(R) {
@@ -139,7 +154,7 @@
     if (!f) return;
     const w = W12.st(S);
     const had = w.got[f.id] || 0;
-    G.log("you", had ? "碑文の続きを読む" : "碑文を読む");
+    if (!W12.quiet) G.log("you", had ? "碑文の続きを読む" : "碑文を読む");
     G.pass(1);
     const L = letters(S);
     const r = G.check("知力", L ? "普通" : "難しい", "碑文を読む", L ? 15 : 0);
@@ -162,7 +177,7 @@
   function solveGear(R) {
     const S = G.S;
     const g = R.gear;
-    G.log("you", g.label);
+    if (!W12.quiet) G.log("you", g.label);
     G.pass(1);
     const r = G.check(g.stat, g.diff, "仕掛けを解く", W12.clue(S));
     if (!r.ok) { G.apply(g.ng); return; }
@@ -180,7 +195,7 @@
     const S = G.S;
     const f = W12.open(S, "relic")[0];
     if (!f) return;
-    G.log("you", "古い文明の遺物を調べる");
+    if (!W12.quiet) G.log("you", "古い文明の遺物を調べる");
     G.pass(1);
     const r = G.check("知力", "普通", "遺物を調べる", knows("k1_appraise", S) ? 15 : 0);
     if (!r.ok) {
