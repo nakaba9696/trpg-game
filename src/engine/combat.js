@@ -111,6 +111,11 @@
     ward: () => spellChance("ward", null),
     talk: () => G.chance("魅力", { vs: Math.max(...G.alive().map((f) => G.foeVs.will(G.foeData(f)))) }, G.gearBonus("talk")),
     flee: () => G.chance("敏捷", { vs: Math.max(...G.alive().map((f) => G.foeVs.flee(G.foeData(f)))) }),
+    // F9：会心の出やすさ（武器の急所の補正を移した。当たった一撃が会心になる見込み ％）。急所の目（K2）も足す
+    critBonus: () => { const w = G.weapon(); return Math.max(0, (w.vital || 0) + (G.cbCritBonus ? G.cbCritBonus() : 0)); },
+    // F9：防御で避けやすくなる分（％。前の「躱す」を溶かした。敏捷の点から）と、盾（左手の防具）があるか
+    guardEvade: () => Math.max(0, Math.min(15, Math.floor(G.pt(G.S.stats["敏捷"]) / 3))),
+    shield: () => { const X = G.i2s; const off = X && X.item ? X.item("off", G.S) : null; return !!(off && off.type === "armor"); },
   };
 
   // 術の相手の点（vs。null なら敵と比べない術で、普通の難しさ）に、術の難しさ（sp.diff。今までの％）を足す
@@ -129,8 +134,11 @@
     const bribe = G.alive().every((f) => G.foeData(f).bribe) ? G.alive().reduce((a, f) => a + G.foeData(f).bribe, 0) : 0;
     const groups = [
       { title: `攻撃（狙い：${t.name}）`, list: [
-        { id: "cb:attack", label: `${w.name}で攻撃`, sub: `${w.stat} ${G.cb.attack()}%`, kw: ["攻撃", "斬", "切", "殴", "突", "叩", "戦"] },
-        { id: "cb:vital", label: "急所を狙う", sub: `敏捷 ${G.cb.vital()}%・当たれば2倍`, kw: ["急所", "狙", "喉", "心臓"] },
+        { id: "cb:attack", label: `${w.name}で攻撃`, sub: `${w.stat} ${G.cb.attack()}%${G.cb.critBonus() ? `・会心+${G.cb.critBonus()}%` : ""}`, kw: ["攻撃", "斬", "切", "殴", "突", "叩", "戦"] },
+      ] },
+      // F9：防御（前の「身を守る」と「躱す」を一つに）。受ける傷を大きく減らし、溜めの大技も和らげる。敏捷が高いと避けやすく、盾があれば効きが増す
+      { title: "防御", list: [
+        { id: "cb:guard", label: "防御", sub: `受ける傷を大きく減らす・避け +${G.cb.guardEvade()}%${G.cb.shield() ? "・盾で受ける" : ""}`, kw: ["守", "防", "構え", "躱", "避", "盾"] },
       ] },
       { title: "魔法", list: [
         { id: "cb:fire", label: "炎の魔法", sub: `魔力 ${G.cb.fire()}%・MP3`, disabled: S.mp < 3, kw: ["魔法", "炎", "火", "燃"] },
@@ -144,11 +152,10 @@
         { id: "cb:talk", label: "威圧して追い払う", sub: talkable ? `魅力 ${G.cb.talk()}%` : "話が通じない", disabled: !talkable, kw: ["威圧", "脅", "説得", "交渉", "話", "怒鳴"] },
       ] },
       { title: "その他", list: [
-        { id: "cb:guard", label: "身を守る", sub: "受けるダメージ半分", kw: ["守", "防", "構え"] },
         { id: "cb:flee", label: "逃げる", sub: S.combat.boss ? "逃げられない" : `敏捷 ${G.cb.flee()}%`, disabled: S.combat.boss, kw: ["逃", "退", "走"] },
       ] },
     ];
-    if (bribe) groups[2].list.push({ id: "cb:bribe", label: `${bribe}G 払って見逃してもらう`, sub: "確実", disabled: S.gold < bribe, kw: ["金", "賄賂", "払"] });
+    if (bribe) groups[3].list.push({ id: "cb:bribe", label: `${bribe}G 払って見逃してもらう`, sub: "確実", disabled: S.gold < bribe, kw: ["金", "賄賂", "払"] });
     const items = Object.keys(S.inv).filter((id) => { const it = D.ITEMS[id]; return it && it.type === "use"; });
     if (items.length) {
       groups.push({ title: "道具", list: items.map((id) => {
@@ -206,6 +213,9 @@
       const r = G.check(w.stat, { vs: G.foeVs.eva(G.foeData(t), w.stat) }, "攻撃", w.hit || 0);
       if (r.ok) {
         let dmg = G.dice(w.dmg) + (w.stat === "筋力" ? pow("筋力", 15) : pow("敏捷", 20));
+        // F9：武器の急所の補正は、当たった一撃が会心になる見込みに（急所を狙う手は無くした）
+        const cb = G.cb.critBonus();
+        if (!r.crit && cb > 0 && G.d(100) <= cb) r.crit = true;
         if (r.crit) { dmg *= 2; G.log("nar", "会心の一撃！", { fx: "crit" }); }
         damageFoe(t, dmg, "blade");
       } else G.say(r.fumble ? "足を滑らせ、大きな隙をさらした。" : "攻撃は空を切った。");
@@ -256,7 +266,7 @@
       G.say("相手は金を数えると、にやりと笑って去っていった。");
       return endCombat("bribed");
     } else if (kind === "guard") {
-      G.log("you", "身を守る");
+      G.log("you", G.cb.shield() ? "盾を構えて防御する" : "防御する");
       C.guard = true;
     } else if (kind === "flee") {
       G.log("you", "逃げる");
@@ -448,10 +458,12 @@
           if (G.cbStruck) G.cbStruck(f, e, mv, null, 0, "dodged");
           continue;
         }
-        const chance = G.foeHitChance(e, -(C.guard && !(mv && mv.through) ? 20 : 0) + (C.exposed ? 20 : 0) - (hexed ? 20 : 0) + ((mv && mv.hit) || 0));
+        // 防御：当たりにくくなる（−20 に、敏捷の分の避けを足す。前の「躱す」）。守りを貫く大技・必殺は避けにくさを変えず、受けて傷を和らげる（受け止めれば崩れる。F1）
+        const guardHit = C.guard && !(mv && mv.through) ? -20 - G.cb.guardEvade() : 0;
+        const chance = G.foeHitChance(e, guardHit + (C.exposed ? 20 : 0) - (hexed ? 20 : 0) + ((mv && mv.hit) || 0));
         if (G.d(100) <= chance) {
           let dmg = Math.round(G.dice(e.dmg) * ((mv && mv.mul) || 1)) - (e.magic || (mv && mv.pierce) ? 0 : (armor ? armor.def : 0));
-          if (C.guard) dmg = Math.floor(dmg / ((mv && mv.guardDiv) || 2));
+          if (C.guard) dmg = Math.floor(dmg / (((mv && mv.guardDiv) || 2) * (G.cb.shield() ? 1.5 : 1))); // 盾があれば効きが増す
           if (C.ward > 0) dmg -= wardCut();
           dmg = Math.max(1, dmg);
           if (G.cbHurtMod) dmg = Math.max(1, G.cbHurtMod(f, e, dmg, mv)); // E12b：敵の攻め手の種類と、こちらの防具の効き目
