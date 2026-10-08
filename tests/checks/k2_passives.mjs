@@ -17,7 +17,6 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   if (ids.length < 25 || ids.length > 40) fail(`パッシブスキルが ${ids.length} 種（25〜40）`);
   const FX = ["check", "bonus", "chance", "sanity", "beast", "poison", "armorAgi", "dual", "kiMax", "rest"];
   const SUFFER = ["sanity", "poison", "beast", "brink"];
-  const scrolls = new Set([...Object.values(D.LOCS).flatMap((L) => L.shop || []), ...Object.values(D.ENEMIES).flatMap((e) => (e.loot || []).map(([id]) => id))]);
   let critN = 0;
   for (const id of ids) {
     const s = SK[id];
@@ -40,7 +39,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (L.scroll) {
       const it = D.ITEMS[D.K1_SCROLL(id)];
       if (!it || it.skill !== id) fail(`${id}：巻物が無い`);
-      else if (!scrolls.has(D.K1_SCROLL(id))) fail(`${id}：巻物が店にも落とし物にも無い`);
+      else if (!G.codexItemWhere(D.K1_SCROLL(id)).length) fail(`${id}：巻物の入手場所が無い`);
     }
   }
   if (critN < 10) fail(`大成功から覚えるスキルが ${critN} しかない（10 以上）`);

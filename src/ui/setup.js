@@ -351,6 +351,7 @@
     box.append(sum);
     box.append(h("p", "fine", `能力値は点で、冒険の中で 99 まで伸びていく（使うほど、強い相手に挑むほど伸びる）。12 点で普通の判定が五分五分。相手が強い・難しいほど成功率は下がり、点が上なら上がる。能力の名前に触れると説明が出る。`));
     root.append(box);
+    if (setup.statsExtra) setup.statsExtra(root, draft, h);   // 術の才（M14。src/ui/zm14_magic.js）
 
     const nav = h("div", "creNav");
     const next = btn("次へ：確かめる", "primary", () => go("sheet"), "s-next");
@@ -402,7 +403,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["伸び方", growLine(o.cls)], ["出発地", D.LOCS[c.start].name], ...rrows]
+    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["伸び方", growLine(o.cls)], ["出発地", D.LOCS[c.start].name], ...rrows, ...(cre.sheetRows ? cre.sheetRows(draft) : [])]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);
