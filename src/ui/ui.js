@@ -386,6 +386,7 @@
       t.append(h("b", "", c.name), h("span", "fine", c.desc || ""));
       if (G.r1CompLabel && G.r1CompLabel(c)) t.append(h("span", "fine", G.r1CompLabel(c)));
       if (G.m10Label && G.m10Label(c)) t.append(h("span", "fine", G.m10Label(c)));
+      if (G.m14CompLabel) t.append(h("span", "fine", G.m14CompLabel(c)));   // 術の才（M14）
       el.append(t);
       box.append(el);
     });
