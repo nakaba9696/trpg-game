@@ -1,6 +1,6 @@
 // K5：技の巻物を手に入れにくくする（データは src/data/k5_scrolls.js）。巻物は読めば必ず覚える（K1 の K.readScroll）
 //   1. 巻物の段（D.K5.tier）。出来事・依頼の礼で出る巻物は段 1 まで（名の知れた者は 2 まで）。K.randomScroll(kind, cap) の cap で上限を決める
-//   2. 店の奥の棚：D.K5_SHOP の町の店だけ。名声かその国での評判が届いた者にだけ見せ、高値で一本きり（S.k5.sold）
+//   2. 店：段 1 の巻物は町の店にふつうに並ぶ（データで K1_SHOP を段 1 に絞る）。段 2 は奥の棚：D.K5_SHOP の町の店だけ。名声かその国での評判が届いた者にだけ見せ、高値で一本きり（S.k5.sold）
 //   3. 迷宮の深い層（D.K5.DEEP）で宝を見つけたとき、まれに巻物が混じる。深いほど・危うい迷宮ほど強い技
 //   4. 脇道の奥の主を倒したあと（W8 の w8clear）、見込み D.K5.SIDE で巻物
 //   5. 打ち解けた仲間（D.K5.BOND）が、野営の夜に巻物を一本くれる（一人一度。S.k5.gift）
@@ -50,11 +50,11 @@
   };
 
   // ---------------------------------------------------------------- 店の奥の棚
-  X.shopList = (loc) => (D.K5_SHOP[loc] || []).filter((id) => SK[id] && P.tier(id) < 3 && D.ITEMS[D.K1_SCROLL(id)]);
-  X.price = (id) => Math.round(D.ITEMS[D.K1_SCROLL(id)].price * (P.PRICE[P.tier(id)] || 5));
+  X.shopList = (loc) => (D.K5_SHOP[loc] || []).filter((id) => SK[id] && P.tier(id) === 2 && D.ITEMS[D.K1_SCROLL(id)]);
+  X.price = (id) => Math.round(D.ITEMS[D.K1_SCROLL(id)].price * (P.PRICE[P.tier(id)] || 4));
   X.shopOk = (id, S) => {
     S = S || G.S;
-    const n = P.SHOP_NEED[P.tier(id)] || P.SHOP_NEED[2];
+    const n = P.SHOP_NEED[2];
     const nation = G.nationOf ? G.nationOf(S.loc) : null;
     const rep = nation && S.repute && S.repute[nation] ? S.repute[nation].rep || 0 : 0;
     return (S.fame || 0) >= n.fame || rep >= n.rep;

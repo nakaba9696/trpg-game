@@ -1,9 +1,9 @@
 // K5：技の巻物は読めば必ず覚える。そのかわり手に入れにくい（持ち主「確定取得でいい。入手を難しくすればいい」）
 // - 読むのに判定が無い（知力の見込みを出さない）。古い字の巻物は時間が長い
-// - 店の掘り出し物（どの町にも並ぶ巻物）は無い。奥の棚は名か評判が要り、高値で一本きり。奥義は置かない
+// - 初級（段 1）の巻物は町の店にふつうに並ぶ（持ち主「初級や簡単なものは店売りでもいいよ」）。段 2 は奥の棚だけで、名か評判が要り、高値で一本きり。奥義は店に無い
 // - 落とす敵は段 3 以上（奥義は段 5 以上か主）だけで、見込みは低い
 // - どの巻物にも入手場所がある（図鑑）
-// - 150 回ランダムに遊んで、序盤（150 手まで）に手に入る巻物が少ない
+// - 150 回ランダムに遊んで、序盤（150 手まで）に中級以上（段 2・3）の巻物が手に入りすぎない（初級は許す）
 export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   let bad = 0;
   const fail = (m) => { bad++; fail0(m); };
@@ -58,11 +58,15 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 店
   {
-    const shopScroll = Object.entries(D.LOCS).filter(([, L]) => (L.shop || []).some((it) => D.ITEMS[it] && D.ITEMS[it].type === "k1scroll"));
-    if (shopScroll.length) fail(`町の店に巻物が並んでいる（${shopScroll.map(([id]) => id).slice(0, 5)}）`);
+    const onShelf = Object.entries(D.LOCS).flatMap(([lid, L]) => (L.shop || []).filter((it) => D.ITEMS[it] && D.ITEMS[it].type === "k1scroll").map((it) => [lid, it]));
+    onShelf.forEach(([lid, it]) => { if (D.K5.tier(D.ITEMS[it].skill) !== 1) fail(`${lid} の店に、初級でない巻物（${D.ITEMS[it].name}）が並んでいる`); });
+    const easyTowns = new Set(onShelf.map(([lid]) => lid));
+    if (easyTowns.size < 5) fail(`初級の巻物を売る町が少ない（${easyTowns.size}）`);
+    const kinds = new Set([...easyTowns].map((lid) => onShelf.filter(([l]) => l === lid).map(([, it]) => it).sort().join(",")));
+    if (kinds.size < 3) fail("初級の巻物の品ぞろえが、どの町も同じ");
     const towns = Object.keys(D.K5_SHOP).filter((loc) => D.LOCS[loc] && (D.LOCS[loc].fac || []).includes("shop"));
     if (towns.length < 2 || towns.length > 8) fail(`奥の棚のある町の数がおかしい（${towns.length}）`);
-    Object.keys(D.K5_SHOP).forEach((loc) => D.K5_SHOP[loc].forEach((id) => { if (D.K5.tier(id) >= 3) fail(`奥の棚に奥義（${SK[id].name}）がある`); }));
+    Object.keys(D.K5_SHOP).forEach((loc) => X.shopList(loc).forEach((id) => { if (D.K5.tier(id) !== 2) fail(`奥の棚に段 2 でない巻物（${SK[id].name}）がある`); }));
     const loc = towns[0];
     const S = start("merc", 21, 20);
     S.loc = loc; S.mode = "fac"; S.fac = "shop"; S.gold = 99999; S.fame = 0; S.repute = {};
@@ -104,12 +108,13 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 150 回ランダムに遊ぶ
   {
     const GAMES = 150, STEPS = 250, EARLY = 150;
-    let early = 0, total = 0, strongEarly = 0, gamesEarly = 0;
+    let early = 0, total = 0, strongEarly = 0, gamesEarly = 0, easy = 0;
     const give0 = G.give;
     let step = 0;
     G.give = (id, n) => {
       const r = give0(id, n);
       if (r && D.ITEMS[id] && D.ITEMS[id].type === "k1scroll" && G.S && G.S.turn > 0) {
+        if (D.K5.tier(D.ITEMS[id].skill) < 2) { easy++; return r; }   // 初級は数えない（店で買える）
         total++;
         if (step <= EARLY) { early++; if (D.K5.tier(D.ITEMS[id].skill) >= 3) strongEarly++; }
       }
@@ -133,11 +138,11 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       }
     } catch (e) { fail(`ランダムに遊ぶと例外 ${e.stack || e}`); }
     G.give = give0;
-    console.log(`NOTE K5：ランダムに ${GAMES} 回遊んで、手に入った巻物 ${total} 本（${EARLY} 手まで ${early} 本・${gamesEarly} 回の冒険で・奥義 ${strongEarly} 本）`);
-    if (gamesEarly > GAMES * 0.1) fail(`序盤（${EARLY} 手まで）に巻物が手に入る冒険が多すぎる（${gamesEarly}/${GAMES}）`);
+    console.log(`NOTE K5：ランダムに ${GAMES} 回遊んで、手に入った中級以上の巻物 ${total} 本（${EARLY} 手まで ${early} 本・${gamesEarly} 回の冒険で・奥義 ${strongEarly} 本）・初級 ${easy} 本`);
+    if (gamesEarly > GAMES * 0.1) fail(`序盤（${EARLY} 手まで）に中級以上の巻物が手に入る冒険が多すぎる（${gamesEarly}/${GAMES}）`);
     if (strongEarly > 0) fail(`序盤に奥義の巻物が手に入った（${strongEarly} 本）`);
-    if (total > GAMES * 0.3) fail(`一冒険で手に入る巻物が多すぎる（${GAMES} 回で ${total} 本）`);
+    if (total > GAMES * 0.3) fail(`一冒険で手に入る中級以上の巻物が多すぎる（${GAMES} 回で ${total} 本）`);
   }
 
-  if (!bad) ok("巻物（読めば必ず覚える・判定なし・店は奥の棚だけ・強い敵だけが落とす・序盤に出すぎない）");
+  if (!bad) ok("巻物（読めば必ず覚える・判定なし・初級は店売り・中級は奥の棚だけ・強い敵だけが落とす・序盤に中級以上が出すぎない）");
 };

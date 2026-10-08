@@ -58,8 +58,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   for (const cls of Object.keys(D.CLASSES)) if (!(D.SKILL_START[cls] || []).length) fail(`職業 ${cls} にはじめの技が無い`);
   const scrolls = Object.keys(D.ITEMS).filter((id) => D.ITEMS[id].type === "k1scroll");
   for (const id of scrolls) { const it = D.ITEMS[id]; if (!SK[it.skill]) fail(`巻物 ${id}：技 ${it.skill} が無い`); if (!(it.price > 0) || !it.desc) fail(`巻物 ${id}：値段か説明が無い`); }
-  // K5：店の掘り出し物はやめ、奥の棚・強い敵の落とし物・迷宮の深い層・脇道の奥へ寄せた。どの巻物にも入手場所がある（図鑑）
-  const inShop = new Set(Object.values(D.K5_SHOP || {}).flat().map((id) => D.K1_SCROLL(id)).filter((id) => scrolls.includes(id)));
+  // K5：初級の巻物は町の店、中級は奥の棚。ほかは強い敵の落とし物・迷宮の深い層・脇道の奥へ寄せた。どの巻物にも入手場所がある（図鑑）
+  const inShop = new Set([...Object.values(D.LOCS).flatMap((L) => L.shop || []), ...Object.values(D.K5_SHOP || {}).flat().map((id) => D.K1_SCROLL(id))].filter((id) => scrolls.includes(id)));
   const inLoot = new Set(Object.values(D.ENEMIES).flatMap((e) => (e.loot || []).map(([id]) => id)).filter((id) => scrolls.includes(id)));
   for (const id of scrolls) if (!G.codexItemWhere(id).length) fail(`巻物 ${id}：入手場所が引けない`);
   for (const [loc, list] of Object.entries(D.K5_SHOP || {})) { if (!D.LOCS[loc]) fail(`巻物の店：場所 ${loc} が無い`); for (const id of list) if (!SK[id]) fail(`巻物の店：技 ${id} が無い`); }
