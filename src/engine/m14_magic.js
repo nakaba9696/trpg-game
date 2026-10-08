@@ -436,11 +436,11 @@
   G.m14AllyMagic = (c) => `${elName(M.allyTalent(c).good[0] || "fire")}の術`;
   G.m14CompLabel = (c) => { const t = M.allyTalent(c); return `術の才：${t.lv ? `${T.names[t.lv]}（${t.good.map(elName).join("・")}）` : T.names[0]}`; };
 
-  // ---------------------------------------------------------------- 伝承の書：迷宮の主・使徒の落とし物（属性ごとに、主を順に割り当てる）
+  // ---------------------------------------------------------------- 伝承の書：段の高い（5 以上の）迷宮の主の落とし物（属性ごとに、主を順に割り当てる。まれ。M15）
   const lore = Object.keys(D.ITEMS).filter((id) => D.ITEMS[id].m14lore);
-  Object.keys(D.ENEMIES).filter((id) => D.ENEMIES[id].boss).forEach((id, i) => {
+  Object.keys(D.ENEMIES).filter((id) => D.ENEMIES[id].boss && (D.ENEMIES[id].tier || 1) >= 5).forEach((id, i) => {
     const e = D.ENEMIES[id];
     const b = lore[i % lore.length];
-    if (!(e.loot || []).some(([x]) => x === b)) e.loot = [...(e.loot || []), [b, 0.12]];
+    if (!(e.loot || []).some(([x]) => x === b)) e.loot = [...(e.loot || []), [b, 0.05]];
   });
 })(globalThis.G = globalThis.G || {});

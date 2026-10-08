@@ -101,7 +101,7 @@ export default ({ G, fail, ok, seeded }) => {
   G.act("back");
   G.give("m14_tome_fire");
   const tomeA = acts().find((a) => a.id === "tome:m14_tome_fire");
-  if (!tomeA || !tomeA.disabled) F("才なしに魔導書を読む行動が出る");
+  if (tomeA && !tomeA.disabled) F("才なしに魔導書を読む行動が出る");   // M15 からは出さない（出すなら選べない形で）
   always(() => G.readTome("m14_tome_fire"));
   if (G.knows("fire")) F("才なしが魔導書で炎を覚えた");
   if (acts().some((a) => /^m14m:/.test(a.id))) F("才なしに師事する行動が出る");
