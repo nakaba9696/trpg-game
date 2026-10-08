@@ -4,7 +4,7 @@
 // - who.name が名前で終わる人（「写し場の古株ヤン」）は名のある人。役目だけの呼び名（「量り売りの本屋の女主人」）は型の絵
 // - 名もない人：who に年齢があれば、年頃の合う型だけ（41 歳に 20 歳の型を出さない）。型の絵の年頃の表が docs/art/portraits.json と合う
 // - 仲間になる名のある人（シグルン・ロデリク・ケイル）も型の絵を使わない
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import vm from "node:vm";
 
 export default ({ G, fail, ok }) => {
@@ -17,7 +17,8 @@ export default ({ G, fail, ok }) => {
   // 画像がすべてあるふり（型の絵も、名のある人の絵も）。名のある人の絵の鍵が型の名前にならないか、で確かめる
   // 型の絵は一覧（docs/art/portraits.json）にあるものだけ。名のある人の絵は、どの id でもあるふり
   const json = JSON.parse(readFileSync(new URL("../../docs/art/portraits.json", import.meta.url), "utf8"));
-  const kinds = new Set(json.portraits.filter((p) => p.group === "people").map((p) => p.id));
+  // 「まだ描いていない」型（R5b）は一覧にあってもファイルが無いので、ファイルのあるものだけ
+  const kinds = new Set(json.portraits.filter((p) => p.group === "people" && existsSync(new URL("../../" + p.file, import.meta.url))).map((p) => p.id));
   const all = (only) => { G.ASSETS = new Proxy({}, { get: (t, k) => { if (typeof k !== "string" || !k.startsWith("portraits/")) return undefined; const id = k.slice(10); return (/^kind_/.test(id) ? kinds.has(id) : true) && (!only || only(id)) ? "x.webp" : undefined; } }); };
 
   // ---------------------------------------------------------------- 表
@@ -67,10 +68,12 @@ export default ({ G, fail, ok }) => {
     if (!w || w.kind === "foe" || w.kind === "hero") continue;
     const k = G.v4PortraitKey(w);
     const isNamed = G.r5.named(w, x.id);
-    if (isNamed) { namedN++; if (k && /^kind_/.test(k)) F(`名のある人の出来事 ${x.id} に型の絵 ${k} が出る`); }
+    const nameOnly = isNamed && G.r5.artId(w, x.id) === ""; // R5b：名前だけの人（id の無い依頼人）は汎用のモブ絵（型）を使い回す
+    if (isNamed && !nameOnly) { namedN++; if (k && /^kind_/.test(k)) F(`名のある人の出来事 ${x.id} に型の絵 ${k} が出る`); }
+    else if (nameOnly) { namedN++; if (k && !/^kind_/.test(k)) F(`名前だけの人の出来事 ${x.id} に、型でない絵 ${k} が出る`); if (k && Number(w.age) > 0 && !G.v4AgeFits(G.v4AgeOf(w), k)) F(`名前だけの人の出来事 ${x.id}（${w.age} 歳）に年頃の合わない型 ${k} が出る`); }
     else {
       kindN++;
-      if (k && Number(w.age) > 0 && !G.v4AgeFits(Number(w.age), k)) F(`出来事 ${x.id}（${w.age} 歳）に年頃の合わない型 ${k} が出る`);
+      if (k && Number(w.age) > 0 && !G.v4AgeFits(G.v4AgeOf(w), k)) F(`出来事 ${x.id}（${w.age} 歳）に年頃の合わない型 ${k} が出る`);
       if (w.name && G.r5.properName(w.name)) F(`出来事 ${x.id} の who.name「${w.name}」は名前なのに名のある人にならない`);
       if (OTHER.has(x.id) || !String(w.seed || "").startsWith("ev:")) continue;
       const t = String(x.text || "");
@@ -93,7 +96,12 @@ export default ({ G, fail, ok }) => {
   const pick = (w) => G.v4PortraitKey(Object.assign({ seed: "r5:test" }, w));
   if (pick({ kind: "adventurer", sex: "女", age: 41 }) !== "kind_adventurer_f") F(`41 歳の名もない女の冒険者の型が ${pick({ kind: "adventurer", sex: "女", age: 41 })}（30 歳の型）`);
   if (/_b$/.test(pick({ kind: "adventurer", sex: "女", age: 41, seed: "x1" }) || "") || /_b$/.test(pick({ kind: "adventurer", sex: "女", age: 41, seed: "x2" }) || "")) F("41 歳の人に 20 歳の二枚目の型が出る");
-  if (pick({ kind: "priest", sex: "男", age: 50 }) !== null) F("50 歳の名もない神官（型は 20・24 歳だけ）に型の絵が出る");
+  if (pick({ kind: "priest", sex: "男", age: 50 }) !== (kinds.has("kind_priest_m_c") ? "kind_priest_m_c" : null)) F("50 歳の名もない神官に、壮年の三枚目の型（まだ無ければ絵なし）が出ない");
+  kinds.add("kind_priest_m_c"); // 描いたら壮年の型が出る
+  if (pick({ kind: "priest", sex: "男", age: 50 }) !== "kind_priest_m_c") F("壮年の神官の三枚目の型 kind_priest_m_c があるのに使われない");
+  if (pick({ kind: "priest", sex: "男", age: 22 }) === "kind_priest_m_c") F("22 歳の神官に壮年の三枚目の型が出る");
+  if (pick({ kind: "mage", sex: "女", age: 140 }) !== "kind_mage_f" && pick({ kind: "mage", sex: "女", age: 140 }) !== "kind_mage_f_b") F(`140 歳（エルフ）の魔法使いが老人の型 ${pick({ kind: "mage", sex: "女", age: 140 })} になる（エルフは年齢で型を選ばない）`);
+  kinds.delete("kind_priest_m_c");
   if (pick({ kind: "guard", sex: "男", age: 72 }) !== "kind_elder_m") F("72 歳の衛兵が老人の型にならない");
   if (pick({ kind: "villager", sex: "男", age: 11 }) !== "kind_child_m") F("11 歳の村人が子どもの型にならない");
   G.ASSETS = undefined;
