@@ -11,6 +11,14 @@
 - 「**異形**」と書いた魔物（一覧の `style: "eldritch"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。
 - 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。
 
+## 描き直し待ち（1）
+
+今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（戦闘では絵なし）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す。
+
+| ファイル | 名前 | 何が合わないか | どう直すか |
+|---|---|---|---|
+| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | 警備員の制服（襟とネクタイ、写真入りの名札、革靴）に警棒に見える棍棒 | 港の荒くれ：袖をまくった麻のシャツか胴衣、頭に布、腰に鈴、樫の棍棒、裸足か革のサンダル（例：rolled-up linen shirt, leather vest, bandana, small bell on belt, oak club, sandals） |
+
 ## 使徒・ボス（30）
 
 使徒の魔物の姿と、ボス。特にていねいに。気に入った絵は `--keep <id>` で seed を残す。
