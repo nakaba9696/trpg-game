@@ -1319,6 +1319,262 @@
    "name": "潮鳴りの洞の中",
    "pack": "dungeon_b",
    "tags": "inside a sea cave, tide water, glowing algae, wet rocks"
+  },
+  {
+   "id": "in_w11_graveyard_trap",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_trap_in",
+   "name": "竜の墓場・罠の通路",
+   "pack": "w11_graveyard",
+   "tags": "narrow chasm in a valley of dragon bones, a single huge dragon rib laid across as a bridge, saw marks, small skulls hanging on ropes, dark"
+  },
+  {
+   "id": "in_w11_graveyard_chest",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_chest_in",
+   "name": "竜の墓場・宝の部屋",
+   "pack": "w11_graveyard",
+   "tags": "sleeping dragon skeleton curled on the ground, old treasure chest held between its rib bones, scattered gold, dim cave light"
+  },
+  {
+   "id": "in_w11_graveyard_rest",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_rest_in",
+   "name": "竜の墓場・休み場",
+   "pack": "w11_graveyard",
+   "tags": "ruined dry stone hut on a rocky ledge among giant bones, old stone hearth with a small campfire, carved tally marks on the wall"
+  },
+  {
+   "id": "in_w11_graveyard_lair",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_lair_in",
+   "name": "竜の墓場・巣",
+   "pack": "w11_graveyard",
+   "tags": "huge dragon ribcage used as a nest, glowing yellow eyes in the dark, scattered bones, faint green glow"
+  },
+  {
+   "id": "in_w11_graveyard_stairs",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_stairs_in",
+   "name": "竜の墓場・下への階段",
+   "pack": "w11_graveyard",
+   "tags": "stone steps descending into a dark hole, bone-strewn cave floor, cold blue light rising from below"
+  },
+  {
+   "id": "in_w11_graveyard_lore",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_lore_in",
+   "name": "竜の墓場・昔のかけら",
+   "pack": "w11_graveyard",
+   "tags": "rows of upright dragon bones standing like grave markers, each carved with short ancient glyphs, torchlight"
+  },
+  {
+   "id": "in_w11_graveyard_vault",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_vault_in",
+   "name": "竜の墓場・隠し部屋",
+   "pack": "w11_graveyard",
+   "tags": "small hidden stone storeroom, shelves with old skulls and bone tools, open treasure chest glowing, shaft of light from above, dust motes"
+  },
+  {
+   "id": "in_w11_graveyard_deep",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_deep_in",
+   "name": "竜の墓場・最奥（最奥の特別な一枚）",
+   "pack": "w11_graveyard",
+   "tags": "vast round hollow at the bottom of a valley, several giant dragon skeletons curled asleep in a ring, single beam of light from a crack in the ceiling, eerie green flame in the center, mist, epic"
+  },
+  {
+   "id": "in_w11_majincastle_trap",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_trap_in",
+   "name": "黒鎧の使徒の居城・罠の通路",
+   "pack": "w11_majincastle",
+   "tags": "dark corridor of black iron and bone, square trapdoors in the ceiling, steel spikes thrust up from holes in the floor, torches"
+  },
+  {
+   "id": "in_w11_majincastle_chest",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_chest_in",
+   "name": "黒鎧の使徒の居城・宝の部屋",
+   "pack": "w11_majincastle",
+   "tags": "black iron hall, chest of a fallen challenger with a paper note on the lid, dark red banners, torchlight"
+  },
+  {
+   "id": "in_w11_majincastle_rest",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_rest_in",
+   "name": "黒鎧の使徒の居城・休み場",
+   "pack": "w11_majincastle",
+   "tags": "small antechamber in a dark castle, simple bed with clean sheets, table with a loaf of black bread and a water jar, small fire"
+  },
+  {
+   "id": "in_w11_majincastle_lair",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_lair_in",
+   "name": "黒鎧の使徒の居城・巣",
+   "pack": "w11_majincastle",
+   "tags": "barracks hall, empty suits of black armor with names painted in white, red glowing eyes in the dark"
+  },
+  {
+   "id": "in_w11_majincastle_stairs",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_stairs_in",
+   "name": "黒鎧の使徒の居城・下への階段",
+   "pack": "w11_majincastle",
+   "tags": "bone and iron corridor, stairway descending into darkness, cold blue light from below"
+  },
+  {
+   "id": "in_w11_majincastle_lore",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_lore_in",
+   "name": "黒鎧の使徒の居城・昔のかけら",
+   "pack": "w11_majincastle",
+   "tags": "upside-down relief carving on the ceiling, rows of kneeling soldiers, huge beast on a throne, face chiseled away"
+  },
+  {
+   "id": "in_w11_majincastle_vault",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_vault_in",
+   "name": "黒鎧の使徒の居城・隠し部屋",
+   "pack": "w11_majincastle",
+   "tags": "hidden armory sealed inside a wall, racks of ancient spears and halberds, open chest of gold, shaft of light"
+  },
+  {
+   "id": "in_w11_majincastle_deep",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_deep_in",
+   "name": "黒鎧の使徒の居城・最奥（最奥の特別な一枚）",
+   "pack": "w11_majincastle",
+   "tags": "colossal throne hall of bone pillars, giant spiked bone throne silhouetted against a breach in the wall showing a blood red sunset sky and jagged mountains, a small wooden chair facing the throne on a red carpet, epic"
+  },
+  {
+   "id": "in_w11_w1_catacomb_trap",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_trap_in",
+   "name": "エルヴィナの地下墓地・罠の通路",
+   "pack": "w11_w1_catacomb",
+   "tags": "catacomb corridor, hanging bronze censers on chains, sweet smoke crawling along the floor, skulls in the walls"
+  },
+  {
+   "id": "in_w11_w1_catacomb_chest",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_chest_in",
+   "name": "エルヴィナの地下墓地・宝の部屋",
+   "pack": "w11_w1_catacomb",
+   "tags": "catacomb chamber, stone sarcophagi, burial chest with a family crest, candlelight"
+  },
+  {
+   "id": "in_w11_w1_catacomb_rest",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_rest_in",
+   "name": "エルヴィナの地下墓地・休み場",
+   "pack": "w11_w1_catacomb",
+   "tags": "small altar in a catacomb niche, three candles always burning, stone basin of reddish water, warm light"
+  },
+  {
+   "id": "in_w11_w1_catacomb_lair",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_lair_in",
+   "name": "エルヴィナの地下墓地・巣",
+   "pack": "w11_w1_catacomb",
+   "tags": "catacomb hall, dried corpses kneeling in prayer, thin threads of golden light rising from their necks to the ceiling, red eyes in the dark"
+  },
+  {
+   "id": "in_w11_w1_catacomb_stairs",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_stairs_in",
+   "name": "エルヴィナの地下墓地・下への階段",
+   "pack": "w11_w1_catacomb",
+   "tags": "catacomb corridor, stairway descending into darkness, cold blue light from below"
+  },
+  {
+   "id": "in_w11_w1_catacomb_lore",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_lore_in",
+   "name": "エルヴィナの地下墓地・昔のかけら",
+   "pack": "w11_w1_catacomb",
+   "tags": "wall of bones with scratched writing, a row of skulls, candlelight"
+  },
+  {
+   "id": "in_w11_w1_catacomb_vault",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_vault_in",
+   "name": "エルヴィナの地下墓地・隠し部屋",
+   "pack": "w11_w1_catacomb",
+   "tags": "secret ossuary niche, neatly stacked skulls, open chest, shaft of light, dust"
+  },
+  {
+   "id": "in_w11_w1_catacomb_deep",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_deep_in",
+   "name": "エルヴィナの地下墓地・最奥（最奥の特別な一枚）",
+   "pack": "w11_w1_catacomb",
+   "tags": "enormous cavern beneath a cathedral altar, thousands of kneeling skeletal pilgrims, countless threads of golden light rising from them and converging on a glowing point in the ceiling like a starry sky, beautiful and eerie, epic"
+  },
+  {
+   "id": "in_w11_onigashima_trap",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_trap_in",
+   "name": "鬼ヶ島の洞窟・罠の通路",
+   "pack": "w11_onigashima",
+   "tags": "warm cave tunnel, straw mat laid over a pit, rope hanging from the ceiling with a giant iron club swinging above, wooden sign"
+  },
+  {
+   "id": "in_w11_onigashima_chest",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_chest_in",
+   "name": "鬼ヶ島の洞窟・宝の部屋",
+   "pack": "w11_onigashima",
+   "tags": "cave storeroom with sake barrels, gambling money chest, lanterns"
+  },
+  {
+   "id": "in_w11_onigashima_rest",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_rest_in",
+   "name": "鬼ヶ島の洞窟・休み場",
+   "pack": "w11_onigashima",
+   "tags": "remains of an ogre feast in a cave, huge red sake cup, barrels, embers of a bonfire"
+  },
+  {
+   "id": "in_w11_onigashima_lair",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_lair_in",
+   "name": "鬼ヶ島の洞窟・巣",
+   "pack": "w11_onigashima",
+   "tags": "cave sleeping quarters full of snoring ogres in the dark, glowing eyes, scattered bones, paper lanterns"
+  },
+  {
+   "id": "in_w11_onigashima_stairs",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_stairs_in",
+   "name": "鬼ヶ島の洞窟・下への階段",
+   "pack": "w11_onigashima",
+   "tags": "rocky cave, steps descending into a dark hole, cold blue light from below"
+  },
+  {
+   "id": "in_w11_onigashima_lore",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_lore_in",
+   "name": "鬼ヶ島の洞窟・昔のかけら",
+   "pack": "w11_onigashima",
+   "tags": "cave wall covered with names carved by sword tips, old swords stuck in the ground, torchlight"
+  },
+  {
+   "id": "in_w11_onigashima_vault",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_vault_in",
+   "name": "鬼ヶ島の洞窟・隠し部屋",
+   "pack": "w11_onigashima",
+   "tags": "hidden rock niche, old sword guard and keepsakes, open chest, shaft of light"
+  },
+  {
+   "id": "in_w11_onigashima_deep",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_deep_in",
+   "name": "鬼ヶ島の洞窟・最奥（最奥の特別な一枚）",
+   "pack": "w11_onigashima",
+   "tags": "huge sea cave opening onto the open ocean at dawn, sunrise on the horizon, path of golden light across the waves into the cave, giant red sake cup and barrels on the rocks, white chain glowing under the water, epic"
   }
  ]
 }
