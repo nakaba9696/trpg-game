@@ -1,4 +1,4 @@
-// W10：序盤〜中盤の山（src/data/locations_zw10.js・engine/zzzzzzzzzz_w10_climb.js・data/w10_peaks.js・data/events_w10.js・data/enemies_w10.js・ui/scene_w10_mount.js）
+// W10：序盤〜中盤の山（src/data/locations_zw10.js・engine/zzzzzzzzzz_w10_climb.js・data/w10_peaks.js・data/events_w10.js・data/enemies_w10.js・ui/scene_v2_zw10_mount.js）
 // - 設定（docs/lore/mountains.md）が山ごとにある
 // - 山が二つ：一つは危険度 1〜2 でレオネスト王国、もう一つは危険度 2〜3。段（麓・峠・山小屋・尾根・山頂）の名・敵・一文、気候・用語・着いたときの一文・背景の一覧・噂
 // - 麓では荒野の行動に「山道を登る」が足され、登っている間は旅に出られない。段を登りきると山頂、下りられる、麓まで一気に下りられる
@@ -197,7 +197,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
   }
   // 背景：段の絵が描ける名前で用意されている
-  const ui = readFileSync(new URL("../../src/ui/scene_w10_mount.js", import.meta.url), "utf8");
+  const ui = readFileSync(new URL("../../src/ui/scene_v2_zw10_mount.js", import.meta.url), "utf8");
   for (const k of ["w10_pass", "w10_hut", "w10_ridge", ...mounts.map((id) => "w10_peak_" + id.replace(/^w10_/, "")), ...mounts.map((id) => D.LOCS[id].scene)]) if (!new RegExp(`OUT\\.${k}\\s*=`).test(ui)) F(`背景の絵 ${k} が無い`);
 
   if (!bad) ok(`W10：山 ${mounts.length}（${mounts.map((id) => D.LOCS[id].name).join("・")}）・出来事 ${evs.length}`);

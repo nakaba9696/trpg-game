@@ -7,7 +7,7 @@
 //   w10.say[段]    … その段に着いたときの短い一文（候補から一つ）
 //   w10.quiet      … 何も起きなかったときの一文
 //   w10.cold       … 寒さの底上げ（高い山ほど大きい）
-// 設定は docs/lore/mountains.md（地理と歴史・住む人・峠と山小屋・言い伝え・魔物の理由）。山頂の景色は src/data/w10_peaks.js、出来事と噂は src/data/events_w10.js、敵は src/data/enemies_w10.js、絵は src/ui/scene_w10_mount.js
+// 設定は docs/lore/mountains.md（地理と歴史・住む人・峠と山小屋・言い伝え・魔物の理由）。山頂の景色は src/data/w10_peaks.js、出来事と噂は src/data/events_w10.js、敵は src/data/enemies_w10.js、絵は src/ui/scene_v2_zw10_mount.js
 // 道は両方向に書く（tests/checks/w7_map.mjs）。locations.js は書き換えない。レーン W（W10）
 (function (G) {
   const D = (G.data = G.data || {});
@@ -79,6 +79,21 @@
   const link = (a, b, days) => { if (L[a] && L[b]) { L[a].links[b] = days; L[b].links[a] = days; } };
   link("w10_roune", "w3_frosleia", 1);
   link("w10_drause", "w4_kaesverg", 1);
+
+  // 名のある強敵（W8。どの荒野にも一体は要る）：今ある強敵の出る場所に山を足す。events_w8_foes.js が出来事を作ったあとなので、
+  // 強敵の loc（出来事の w8.loc と同じ配列）と、出来事の where（図鑑の出会う場所）の両方に足す。設定は docs/lore/mountains.md
+  //   眠り山ロウネ：年経た岩喰い鳥（火口の縁の黒い溶岩をかじりに来る）／鉄冠岳ドラウゼ：雪狼の頭目（帝国の雪原の群れが峠の下まで来る）
+  const addFoe = (foe, loc) => {
+    const f = D.W8_FOES && D.W8_FOES[foe];
+    if (!f || !L[loc] || f.loc.includes(loc)) return;
+    f.loc.push(loc);
+    D.EVENTS.forEach((e) => { if ((e.id === "w8_omen_" + foe || e.id === "w8_meet_" + foe) && !e.where.includes(loc)) e.where.push(loc); });
+  };
+  addFoe("e4_rockeater_x", "w10_roune");
+  addFoe("e4_snowwolf_x", "w10_drause");
+
+  // 王国の野の出来事（W3）のうち、山羊飼いの牧草地に合うものは眠り山の麓でも起きる
+  D.EVENTS.forEach((e) => { if (e.id === "w3_o_p_sheep" && !e.where.includes("w10_roune")) e.where.push("w10_roune"); });
 
   // 気候（src/engine/weather.js の D.CLIMATE）。山は霧が多い。鉄冠岳は寒い（高い段では雨が雪になる：zzzzzzzzzz_w10_climb.js）
   D.CLIMATE = Object.assign(D.CLIMATE || {}, {

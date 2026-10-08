@@ -956,7 +956,7 @@
       glow(ctx, w * 0.5, h * 0.8, h * 0.05, "#ffd08a", sk.night || sk.dusk ? 0.5 : 0.15);
       ctx.fillStyle = rgba("#e8ecf0", 0.3); ctx.fillRect(0, h * 0.6, w, h * 0.4);
     },
-    // W10：眠り山ロウネ（草の裾の、頂の平らな古い火山と白い山羊。新しい描き方は scene_w10_mount.js）
+    // W10：眠り山ロウネ（草の裾の、頂の平らな古い火山と白い山羊。新しい描き方は scene_v2_zw10_mount.js）
     w10_roune(ctx, w, h, sk, R) {
       OUT.plains(ctx, w, h, sk, R);
       const [, mid] = layers(sk);
