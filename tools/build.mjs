@@ -15,6 +15,7 @@ import vm from "node:vm";
 import { listFiles } from "./files.mjs";
 import { collectAssets, siteAssets, assetsScript } from "./assets.mjs";
 import { planSite, SITE_LIMITS, MB } from "./site.mjs";
+import { stripLineComments } from "./strip.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(here, "..");
@@ -27,7 +28,7 @@ const files = [...engine, ...ui];
 const assetsDir = path.join(root, "assets"); // 持ち主が作った画像（tools/assets.mjs・docs/art/）
 const assets = embed ? collectAssets(assetsDir, { shrink: true }) : siteAssets(assetsDir);
 assets.notes.forEach((n) => console.warn("画像：" + n));
-const js = assetsScript(assets) + files.map((f) => `// ==== ${f}\n` + readFileSync(path.join(src, f), "utf8")).join("\n");
+const js = assetsScript(assets) + files.map((f) => `// ==== ${f}\n` + stripLineComments(readFileSync(path.join(src, f), "utf8"))).join("\n"); // 行まるごとの注は落とす（tools/strip.mjs）
 if (/<\/script/i.test(js)) throw new Error("スクリプトの中に </script が含まれている");
 new vm.Script(js, { filename: "bundle.js" }); // 構文だけ確かめる
 
