@@ -10,6 +10,8 @@
 // - F5：戦闘を終えた手番（とどめの一撃・あなたが倒れる一撃）も、ほかの手番と同じ順に見せる。エンジンはその手番で S.combat を片づけるので、
 //   順に見せている間だけ、終わった戦い（ghost）を描く：背景の敵・敵の札と HP の帯・手の欄は戦闘のまま、ダイス → 当たり・ダメージ → 帯が 0 → 倒れる → 一拍 → 結果の場面（死の場面）。
 //   入れ替えるのは描く間だけ（u13.inGhost。外側の包みは ui/zzzzzzz_f5_finish.js）。保存（ui.after の G.main.save）は描き終えてからなので、記録には残らない
+// - F6：結果がダイスより先に漏れないように、効果音は順に出す行に合わせて鳴らし（行に結びつかない金・品の音は出し終えてから）、
+//   BGM は終わった戦いを見せている間は戦闘の曲のまま（sound_bgm.js が u13.inGhost で場面を見る）。知らせは ui/zzzzzz_f6_hold.js が出し終えるまで預かる（u13.afterReveal）
 // 見せ方は u13_battle.css。レーン U
 (function (G) {
   const u13 = (G.u13 = G.u13 || {});
@@ -104,6 +106,18 @@
   };
   u13.RETRY = "最後に保存した所から、やり直すこともできる（タイトルの「ロード」から）。";
 
+  // F6：効果音を段に合わせる（DOM なし。テストもこれを読む）。list は [{ n: 音の名前, d: 元の遅れ, e: 元になった記録 }]、entries は順に出す行の記録。
+  //   行に結びついた音は、その行が出る瞬間（行の番号 → 名前の並び）。行に結びつかない音（金・品・戦闘の始まりの合図など）は、出し終えてから（after）
+  u13.QUIET_ON_DEATH = ["trophy", "coin", "item", "page", "levelup"];
+  u13.soundPlan = (list, entries) => {
+    const at = {}, after = [];
+    (list || []).forEach((x) => {
+      const i = x.e ? (entries || []).indexOf(x.e) : -1;
+      if (i >= 0) (at[i] || (at[i] = [])).push(x.n); else after.push(x.n);
+    });
+    return { at, after };
+  };
+
   // ---------------------------------------------------------------- 画面
   if (typeof document === "undefined" || !G.ui || !G.ui.render) return;
   const ui = G.ui;
@@ -138,6 +152,30 @@
   const fxPlay = G.fx && G.fx.play;
   if (G.fx && fxPlay) G.fx.play = (entries, S) => { pendingFx = { entries: entries || [], S }; };
   const flushFx = (entries, S, keep) => { if (fxPlay && entries && entries.length) fxPlay(entries, S, keep); };
+  // F6：効果音（ui/sound.js の react）も一度預かり、順に出す行に合わせて鳴らす（ダイスより先に、倒した音・金の音が鳴らないように）
+  let pendingSnd = null;
+  const snd = G.sound;
+  const react0 = snd && snd.react;
+  if (react0) snd.react = (S) => {
+    const calls = [];
+    const play0 = snd.play;
+    snd.play = (n, d) => { calls.push([n, d]); };
+    try { react0(S); } finally { snd.play = play0; }
+    const from = snd.cueFrom || [];
+    pendingSnd = calls.map(([n, d], i) => ({ n, d, e: from[i] || null }));
+    // あなたが倒れた手番：今まで通り、知らせの音（トロフィー・金・品）は鳴らさず、倒れる音だけ（見せ終えてから鳴る）
+    if (ghostReal && ghostReal.over === "dead") pendingSnd = pendingSnd.filter((x) => !u13.QUIET_ON_DEATH.includes(x.n));
+  };
+  const playNow = (list) => { (list || []).forEach((x) => { try { snd.play(x.n, x.d); } catch (e) {} }); };
+  // 出し終えたあとに呼ぶもの（F6：知らせ・効果音。終わった戦いを片づけて描き直したあと）
+  let afterCalls = [];
+  u13.revealing = () => !!reveal;
+  u13.afterReveal = (fn) => { if (reveal) afterCalls.push(fn); else fn(); };
+  const runAfter = () => {
+    const list = afterCalls; afterCalls = [];
+    const go = () => list.forEach((fn) => { try { fn(); } catch (e) {} });
+    if (rendering) setTimeout(go, 0); else go();
+  };
 
   // 「能力値が伸びた」の小さな通知は、この演出に置き換える
   const toast0 = ui.toast;
@@ -165,8 +203,21 @@
     rendering++;
     if (reveal) reveal.r.finish(); // 出している途中で描き直すときは、先に全部出す
     const S = G.S;
-    if (!ghost && S && fightRef && !S.combat && fightSnap && fightSnap.run === S.id && u13.delay(G.P) > 0) ghost = { c: fightRef, run: S.id };
+    if (!ghost && S && fightRef && !S.combat && fightSnap && fightSnap.run === S.id && u13.delay(G.P) > 0) {
+      // F6：手の欄は、手を選ぶ前の形のまま写しておく（とどめで敵がいなくなると手が消え、ダイスより先に結果が分かってしまうので）
+      const p = $("#panel");
+      ghost = { c: fightRef, run: S.id, panel: p ? p.cloneNode(true) : null, restored: false };
+    }
   };
+  // 手の欄を、手を選ぶ前の写しに戻す（押しても早送りだけ。u13_menu などはこの間は並べ替えない）
+  u13.ghostPanel = () => !!(ghost && ghost.restored);
+  function restorePanel() {
+    const panel = $("#panel");
+    if (!ghost || !ghost.panel || !panel) return;
+    panel.replaceChildren(...Array.from(ghost.panel.childNodes));
+    panel.className = ghost.panel.className;
+    ghost.restored = true;
+  }
   // 描いたあと：順に出すものが無ければ、終わった戦いはすぐ片づけて描き直す
   u13.renderEnd = () => {
     rendering--;
@@ -212,7 +263,8 @@
     el.classList.add("f1land");
     if (e.crit || e.fumble) el.classList.add(e.crit ? "f1crit" : "f1fumble");
   }
-  function startReveal(S, fresh, entries, ended) {
+  function startReveal(S, fresh, entries, ended, sounds) {
+    const sp0 = u13.soundPlan(sounds, entries);
     const panel = $("#panel"), log = $("#log");
     const sp = u13.SPEEDS[u13.speed(G.P)];
     // 戦闘が終わった手番は、最後の行のあと一拍おいて結果の場面へ（何も出さない一段を足す）
@@ -233,6 +285,7 @@
       flashActor(el);
       const e = entries[i];
       if (e && e.k === "dice") { rolling.push([el, e]); rollDice(el, e, u13.ROLL_MS * sp.k); }
+      if (sp0.at[i] && snd) sp0.at[i].forEach((n, j) => { try { snd.play(n, j * 0.12); } catch (err) {} });
       if (e && e.fx) flushFx([e], V, true);
       if (log && log.scrollHeight > log.clientHeight) log.scrollTop = log.scrollHeight;
     };
@@ -243,9 +296,12 @@
       panel.classList.remove("u13wait");
       if (reveal === st) reveal = null;
       // 終わった戦いを見せ終えた：片づけて描き直す（結果の場面・死の場面はその描き直しで出る）
-      if (ghost) { ghost = null; if (!rendering) ui.render(); return; }
+      // 行に結びつかない音（金・品など）は、出し終えてから
+      if (sp0.after.length && snd) afterCalls.unshift(() => sp0.after.forEach((n, j) => { try { snd.play(n, j * 0.17); } catch (err) {} }));
+      if (ghost) { ghost = null; if (!rendering) ui.render(); runAfter(); return; }
       if (dead && !dead.shown) showDead(G.S);
       else if (hold && !hold.shown) showHold();
+      runAfter();
     };
     reveal = st;
     st.r = u13.makeReveal(delays, show, done);
@@ -379,6 +435,7 @@
     const panel = $("#panel"), log = $("#log");
     if (!panel || !log) return;
     const pend = pendingFx; pendingFx = null;
+    const psnd = pendingSnd; pendingSnd = null;
     // 終わった戦いを描いている間も、戦闘の始まり・終わり・死は本当の値で数える（F5）
     const R = ghostReal || S;
     const RC = R.combat, RO = R.over;
@@ -404,8 +461,9 @@
     const all = Array.from(log.querySelectorAll(":scope > .new"));
     const fresh = G.u14 && G.u14.later ? all.filter((el) => !G.u14.later(el)) : all;
     const entries = pend ? pend.entries.slice(0, pend.entries.length - (all.length - fresh.length)).slice(-fresh.length) : [];
-    if ((turn || ended) && fresh.length >= 2 && u13.delay(G.P) > 0) startReveal(S, fresh, entries, ended);
-    else if (pend) flushFx(pend.entries, pend.S);
+    if (ended && ghost && fresh.length >= 2 && u13.delay(G.P) > 0) restorePanel();
+    if ((turn || ended) && fresh.length >= 2 && u13.delay(G.P) > 0) startReveal(S, fresh, entries, ended, psnd);
+    else { if (pend) flushFx(pend.entries, pend.S); playNow(psnd); }
     // F1：見えている HP を覚える（次の手番を順に見せるとき、ここへ戻してから減らす）
     if (!reveal && G.fx && G.fx.remember) G.fx.remember(S);
     // 死の場面：今この描き直しで死んだとき。ui.after が年表を自動で開かないよう印を付け、押されたら開く
