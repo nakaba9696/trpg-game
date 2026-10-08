@@ -1,0 +1,8310 @@
+{
+ "monsters/bandit": [
+  {
+   "n": 1,
+   "seed": [
+    192,
+    146
+   ],
+   "area": 3676,
+   "box": [
+    158,
+    109,
+    86,
+    92
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    259,
+    412
+   ],
+   "area": 2633,
+   "box": [
+    243,
+    349,
+    34,
+    122
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    198,
+    257
+   ],
+   "area": 1632,
+   "box": [
+    177,
+    215,
+    47,
+    104
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    215,
+    382
+   ],
+   "area": 156,
+   "box": [
+    210,
+    371,
+    10,
+    30
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/barrelgob": [
+  {
+   "n": 6,
+   "seed": [
+    364,
+    445
+   ],
+   "area": 259,
+   "box": [
+    356,
+    427,
+    15,
+    30
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/bonedragon": [
+  {
+   "n": 1,
+   "seed": [
+    130,
+    349
+   ],
+   "area": 373,
+   "box": [
+    108,
+    341,
+    44,
+    19
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    270,
+    176
+   ],
+   "area": 370,
+   "box": [
+    259,
+    162,
+    27,
+    28
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    114,
+    124
+   ],
+   "area": 155,
+   "box": [
+    102,
+    116,
+    24,
+    16
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    134,
+    143
+   ],
+   "area": 151,
+   "box": [
+    125,
+    137,
+    19,
+    12
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/c2_rustspawn": [
+  {
+   "n": 1,
+   "seed": [
+    171,
+    221
+   ],
+   "area": 2007,
+   "box": [
+    142,
+    187,
+    63,
+    72
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    250,
+    421
+   ],
+   "area": 327,
+   "box": [
+    200,
+    413,
+    91,
+    18
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/chimera": [
+  {
+   "n": 1,
+   "seed": [
+    90,
+    407
+   ],
+   "area": 478,
+   "box": [
+    69,
+    384,
+    36,
+    34
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    133,
+    427
+   ],
+   "area": 229,
+   "box": [
+    120,
+    423,
+    37,
+    11
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/dogu": [
+  {
+   "n": 1,
+   "seed": [
+    258,
+    394
+   ],
+   "area": 13291,
+   "box": [
+    190,
+    330,
+    136,
+    121
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e1_ashhound": [
+  {
+   "n": 1,
+   "seed": [
+    239,
+    350
+   ],
+   "area": 302,
+   "box": [
+    232,
+    332,
+    20,
+    28
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e1_bonepicker": [
+  {
+   "n": 1,
+   "seed": [
+    302,
+    249
+   ],
+   "area": 4381,
+   "box": [
+    256,
+    204,
+    114,
+    100
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    395,
+    229
+   ],
+   "area": 412,
+   "box": [
+    382,
+    205,
+    27,
+    45
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    256,
+    293
+   ],
+   "area": 150,
+   "box": [
+    249,
+    275,
+    13,
+    32
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e1_crowngob": [
+  {
+   "n": 1,
+   "seed": [
+    251,
+    439
+   ],
+   "area": 4355,
+   "box": [
+    183,
+    406,
+    124,
+    56
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e1_herald": [
+  {
+   "n": 1,
+   "seed": [
+    366,
+    200
+   ],
+   "area": 1348,
+   "box": [
+    340,
+    159,
+    52,
+    82
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e1_melted": [
+  {
+   "n": 1,
+   "seed": [
+    234,
+    359
+   ],
+   "area": 11084,
+   "box": [
+    198,
+    271,
+    78,
+    175
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    293,
+    355
+   ],
+   "area": 3900,
+   "box": [
+    275,
+    280,
+    43,
+    150
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    180,
+    377
+   ],
+   "area": 3533,
+   "box": [
+    166,
+    299,
+    29,
+    149
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    443,
+    410
+   ],
+   "area": 2342,
+   "box": [
+    417,
+    340,
+    44,
+    112
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    178,
+    275
+   ],
+   "area": 185,
+   "box": [
+    171,
+    267,
+    15,
+    18
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e1_sweeper": [
+  {
+   "n": 1,
+   "seed": [
+    349,
+    330
+   ],
+   "area": 12828,
+   "box": [
+    276,
+    215,
+    122,
+    236
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    229,
+    384
+   ],
+   "area": 5804,
+   "box": [
+    185,
+    324,
+    77,
+    116
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    153,
+    273
+   ],
+   "area": 2336,
+   "box": [
+    122,
+    236,
+    71,
+    98
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    102,
+    373
+   ],
+   "area": 384,
+   "box": [
+    87,
+    347,
+    26,
+    42
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e1_tollrat": [
+  {
+   "n": 2,
+   "seed": [
+    293,
+    462
+   ],
+   "area": 2029,
+   "box": [
+    217,
+    452,
+    162,
+    18
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    84,
+    398
+   ],
+   "area": 1100,
+   "box": [
+    71,
+    319,
+    28,
+    158
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e2_cookgob": [
+  {
+   "n": 1,
+   "seed": [
+    258,
+    449
+   ],
+   "area": 1419,
+   "box": [
+    210,
+    436,
+    97,
+    23
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    325,
+    316
+   ],
+   "area": 953,
+   "box": [
+    310,
+    298,
+    39,
+    40
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    193,
+    312
+   ],
+   "area": 239,
+   "box": [
+    184,
+    302,
+    17,
+    19
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e2_marmit": [
+  {
+   "n": 4,
+   "seed": [
+    272,
+    430
+   ],
+   "area": 1426,
+   "box": [
+    253,
+    406,
+    40,
+    46
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e2_meatling": [
+  {
+   "n": 1,
+   "seed": [
+    333,
+    385
+   ],
+   "area": 886,
+   "box": [
+    322,
+    353,
+    21,
+    57
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    366,
+    257
+   ],
+   "area": 645,
+   "box": [
+    354,
+    234,
+    23,
+    45
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    308,
+    391
+   ],
+   "area": 273,
+   "box": [
+    301,
+    379,
+    14,
+    28
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    108,
+    385
+   ],
+   "area": 222,
+   "box": [
+    102,
+    374,
+    14,
+    27
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e2_mordu": [
+  {
+   "n": 1,
+   "seed": [
+    193,
+    301
+   ],
+   "area": 1516,
+   "box": [
+    166,
+    277,
+    57,
+    52
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e2_rotbloom": [
+  {
+   "n": 1,
+   "seed": [
+    277,
+    428
+   ],
+   "area": 8936,
+   "box": [
+    204,
+    379,
+    154,
+    88
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    151,
+    451
+   ],
+   "area": 1122,
+   "box": [
+    117,
+    428,
+    57,
+    41
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    192,
+    492
+   ],
+   "area": 691,
+   "box": [
+    166,
+    482,
+    55,
+    20
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e3_azlag": [
+  {
+   "n": 1,
+   "seed": [
+    254,
+    413
+   ],
+   "area": 5958,
+   "box": [
+    208,
+    334,
+    93,
+    123
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    287,
+    240
+   ],
+   "area": 172,
+   "box": [
+    281,
+    229,
+    15,
+    23
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    388,
+    307
+   ],
+   "area": 160,
+   "box": [
+    384,
+    287,
+    8,
+    42
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e3_kurobane": [
+  {
+   "n": 1,
+   "seed": [
+    269,
+    455
+   ],
+   "area": 213,
+   "box": [
+    264,
+    443,
+    12,
+    27
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    172,
+    493
+   ],
+   "area": 177,
+   "box": [
+    147,
+    484,
+    49,
+    22
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e3_sanno": [
+  {
+   "n": 1,
+   "seed": [
+    71,
+    334
+   ],
+   "area": 1178,
+   "box": [
+    0,
+    256,
+    160,
+    137
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    460,
+    324
+   ],
+   "area": 841,
+   "box": [
+    404,
+    268,
+    108,
+    104
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    247,
+    407
+   ],
+   "area": 533,
+   "box": [
+    238,
+    388,
+    18,
+    35
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    272,
+    411
+   ],
+   "area": 358,
+   "box": [
+    266,
+    391,
+    15,
+    41
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    386,
+    380
+   ],
+   "area": 230,
+   "box": [
+    368,
+    371,
+    36,
+    17
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    351,
+    394
+   ],
+   "area": 196,
+   "box": [
+    336,
+    388,
+    32,
+    16
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    186,
+    399
+   ],
+   "area": 182,
+   "box": [
+    168,
+    391,
+    32,
+    21
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e3_sekaiju": [
+  {
+   "n": 1,
+   "seed": [
+    433,
+    380
+   ],
+   "area": 5537,
+   "box": [
+    369,
+    338,
+    113,
+    106
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    117,
+    391
+   ],
+   "area": 2824,
+   "box": [
+    82,
+    349,
+    79,
+    84
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e3_tetsukui": [
+  {
+   "n": 1,
+   "seed": [
+    165,
+    428
+   ],
+   "area": 2709,
+   "box": [
+    141,
+    341,
+    47,
+    139
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    345,
+    428
+   ],
+   "area": 2182,
+   "box": [
+    321,
+    346,
+    47,
+    136
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    303,
+    443
+   ],
+   "area": 1472,
+   "box": [
+    287,
+    384,
+    29,
+    103
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    211,
+    442
+   ],
+   "area": 1155,
+   "box": [
+    200,
+    391,
+    29,
+    90
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    45,
+    366
+   ],
+   "area": 677,
+   "box": [
+    20,
+    334,
+    46,
+    75
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    468,
+    378
+   ],
+   "area": 675,
+   "box": [
+    443,
+    344,
+    51,
+    65
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    388,
+    409
+   ],
+   "area": 359,
+   "box": [
+    381,
+    381,
+    16,
+    68
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    121,
+    402
+   ],
+   "area": 325,
+   "box": [
+    115,
+    379,
+    15,
+    56
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e3_yura": [
+  {
+   "n": 1,
+   "seed": [
+    359,
+    299
+   ],
+   "area": 9030,
+   "box": [
+    294,
+    196,
+    109,
+    260
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    150,
+    295
+   ],
+   "area": 8710,
+   "box": [
+    104,
+    194,
+    110,
+    259
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    131,
+    396
+   ],
+   "area": 660,
+   "box": [
+    120,
+    335,
+    43,
+    107
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    376,
+    404
+   ],
+   "area": 401,
+   "box": [
+    358,
+    355,
+    27,
+    86
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e3_yuzuel": [
+  {
+   "n": 1,
+   "seed": [
+    477,
+    259
+   ],
+   "area": 3990,
+   "box": [
+    435,
+    216,
+    77,
+    86
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    30,
+    271
+   ],
+   "area": 3761,
+   "box": [
+    0,
+    230,
+    72,
+    74
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    340,
+    300
+   ],
+   "area": 1877,
+   "box": [
+    315,
+    267,
+    47,
+    69
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    143,
+    301
+   ],
+   "area": 1226,
+   "box": [
+    127,
+    268,
+    35,
+    60
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    378,
+    297
+   ],
+   "area": 877,
+   "box": [
+    363,
+    262,
+    30,
+    68
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    84,
+    297
+   ],
+   "area": 745,
+   "box": [
+    70,
+    266,
+    25,
+    54
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    407,
+    278
+   ],
+   "area": 632,
+   "box": [
+    397,
+    252,
+    22,
+    54
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    115,
+    292
+   ],
+   "area": 533,
+   "box": [
+    107,
+    270,
+    18,
+    52
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    177,
+    295
+   ],
+   "area": 453,
+   "box": [
+    167,
+    280,
+    24,
+    37
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 10,
+   "seed": [
+    169,
+    330
+   ],
+   "area": 168,
+   "box": [
+    161,
+    316,
+    17,
+    25
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_ashogre": [
+  {
+   "n": 1,
+   "seed": [
+    414,
+    454
+   ],
+   "area": 2163,
+   "box": [
+    384,
+    427,
+    76,
+    46
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    244,
+    466
+   ],
+   "area": 1279,
+   "box": [
+    198,
+    458,
+    97,
+    17
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_ashwyrm_x": [
+  {
+   "n": 1,
+   "seed": [
+    181,
+    139
+   ],
+   "area": 10664,
+   "box": [
+    131,
+    74,
+    119,
+    145
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    348,
+    249
+   ],
+   "area": 165,
+   "box": [
+    340,
+    237,
+    17,
+    23
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_bellbat": [
+  {
+   "n": 1,
+   "seed": [
+    392,
+    406
+   ],
+   "area": 6231,
+   "box": [
+    350,
+    318,
+    83,
+    154
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    315,
+    433
+   ],
+   "area": 978,
+   "box": [
+    305,
+    399,
+    20,
+    69
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    59,
+    341
+   ],
+   "area": 195,
+   "box": [
+    52,
+    331,
+    14,
+    22
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_bogleech": [
+  {
+   "n": 1,
+   "seed": [
+    258,
+    330
+   ],
+   "area": 9852,
+   "box": [
+    228,
+    234,
+    62,
+    188
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    200,
+    331
+   ],
+   "area": 8776,
+   "box": [
+    177,
+    214,
+    49,
+    213
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    304,
+    317
+   ],
+   "area": 2449,
+   "box": [
+    294,
+    250,
+    22,
+    139
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    326,
+    317
+   ],
+   "area": 1261,
+   "box": [
+    319,
+    262,
+    22,
+    105
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    412,
+    405
+   ],
+   "area": 536,
+   "box": [
+    399,
+    377,
+    23,
+    47
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    339,
+    292
+   ],
+   "area": 498,
+   "box": [
+    331,
+    269,
+    17,
+    54
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    104,
+    217
+   ],
+   "area": 469,
+   "box": [
+    95,
+    203,
+    21,
+    32
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    282,
+    251
+   ],
+   "area": 287,
+   "box": [
+    270,
+    240,
+    21,
+    28
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    219,
+    239
+   ],
+   "area": 206,
+   "box": [
+    213,
+    225,
+    11,
+    33
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_bogwitch": [
+  {
+   "n": 1,
+   "seed": [
+    184,
+    303
+   ],
+   "area": 3194,
+   "box": [
+    155,
+    210,
+    62,
+    175
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    274,
+    416
+   ],
+   "area": 1755,
+   "box": [
+    251,
+    387,
+    45,
+    53
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    328,
+    421
+   ],
+   "area": 1299,
+   "box": [
+    308,
+    392,
+    38,
+    49
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    225,
+    412
+   ],
+   "area": 1182,
+   "box": [
+    207,
+    376,
+    32,
+    65
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_bonecarter": [
+  {
+   "n": 1,
+   "seed": [
+    401,
+    361
+   ],
+   "area": 223,
+   "box": [
+    390,
+    355,
+    30,
+    13
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    385,
+    394
+   ],
+   "area": 168,
+   "box": [
+    377,
+    388,
+    24,
+    16
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_cinderhound": [
+  {
+   "n": 1,
+   "seed": [
+    465,
+    87
+   ],
+   "area": 4324,
+   "box": [
+    390,
+    56,
+    122,
+    80
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_drumbadger": [
+  {
+   "n": 2,
+   "seed": [
+    420,
+    338
+   ],
+   "area": 2342,
+   "box": [
+    371,
+    302,
+    78,
+    84
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    376,
+    372
+   ],
+   "area": 1153,
+   "box": [
+    354,
+    336,
+    40,
+    66
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    329,
+    374
+   ],
+   "area": 318,
+   "box": [
+    321,
+    354,
+    15,
+    38
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_firearrowimp": [
+  {
+   "n": 1,
+   "seed": [
+    237,
+    413
+   ],
+   "area": 2741,
+   "box": [
+    200,
+    383,
+    81,
+    55
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    373,
+    272
+   ],
+   "area": 2532,
+   "box": [
+    335,
+    219,
+    80,
+    104
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    363,
+    384
+   ],
+   "area": 787,
+   "box": [
+    344,
+    350,
+    40,
+    59
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_frostbear_x": [
+  {
+   "n": 1,
+   "seed": [
+    231,
+    420
+   ],
+   "area": 4860,
+   "box": [
+    179,
+    387,
+    103,
+    60
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    133,
+    265
+   ],
+   "area": 788,
+   "box": [
+    119,
+    226,
+    27,
+    81
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    443,
+    254
+   ],
+   "area": 537,
+   "box": [
+    426,
+    224,
+    28,
+    64
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 10,
+   "seed": [
+    398,
+    345
+   ],
+   "area": 298,
+   "box": [
+    386,
+    334,
+    28,
+    24
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_hillorc_x": [
+  {
+   "n": 1,
+   "seed": [
+    107,
+    395
+   ],
+   "area": 3199,
+   "box": [
+    80,
+    331,
+    57,
+    131
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    370,
+    301
+   ],
+   "area": 1295,
+   "box": [
+    352,
+    267,
+    35,
+    70
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    281,
+    432
+   ],
+   "area": 578,
+   "box": [
+    262,
+    414,
+    41,
+    34
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    145,
+    317
+   ],
+   "area": 411,
+   "box": [
+    132,
+    303,
+    29,
+    31
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_hollowknight": [
+  {
+   "n": 1,
+   "seed": [
+    265,
+    219
+   ],
+   "area": 180,
+   "box": [
+    252,
+    207,
+    25,
+    27
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_islepirate": [
+  {
+   "n": 1,
+   "seed": [
+    259,
+    390
+   ],
+   "area": 5240,
+   "box": [
+    196,
+    306,
+    99,
+    147
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    344,
+    427
+   ],
+   "area": 3791,
+   "box": [
+    317,
+    379,
+    61,
+    86
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_islepirate_x": [
+  {
+   "n": 1,
+   "seed": [
+    304,
+    283
+   ],
+   "area": 368,
+   "box": [
+    293,
+    268,
+    23,
+    30
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    248,
+    262
+   ],
+   "area": 308,
+   "box": [
+    232,
+    253,
+    30,
+    21
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_lordhound": [
+  {
+   "n": 1,
+   "seed": [
+    279,
+    405
+   ],
+   "area": 2446,
+   "box": [
+    256,
+    347,
+    51,
+    107
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_mudcroc": [
+  {
+   "n": 1,
+   "seed": [
+    327,
+    422
+   ],
+   "area": 3472,
+   "box": [
+    275,
+    390,
+    93,
+    53
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_mudcroc_x": [
+  {
+   "n": 1,
+   "seed": [
+    270,
+    420
+   ],
+   "area": 5018,
+   "box": [
+    199,
+    389,
+    143,
+    54
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    176,
+    305
+   ],
+   "area": 307,
+   "box": [
+    169,
+    286,
+    15,
+    37
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_mudhound_x": [
+  {
+   "n": 1,
+   "seed": [
+    394,
+    349
+   ],
+   "area": 4344,
+   "box": [
+    362,
+    277,
+    67,
+    121
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    324,
+    356
+   ],
+   "area": 2230,
+   "box": [
+    303,
+    315,
+    43,
+    74
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_ossuaryhound": [
+  {
+   "n": 1,
+   "seed": [
+    168,
+    345
+   ],
+   "area": 7740,
+   "box": [
+    130,
+    263,
+    77,
+    156
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    226,
+    358
+   ],
+   "area": 2568,
+   "box": [
+    207,
+    277,
+    41,
+    148
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_poacher": [
+  {
+   "n": 1,
+   "seed": [
+    384,
+    233
+   ],
+   "area": 674,
+   "box": [
+    337,
+    217,
+    99,
+    33
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_poacher_x": [
+  {
+   "n": 1,
+   "seed": [
+    378,
+    221
+   ],
+   "area": 3146,
+   "box": [
+    333,
+    174,
+    98,
+    87
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    136,
+    344
+   ],
+   "area": 494,
+   "box": [
+    111,
+    328,
+    41,
+    26
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_pressgang": [
+  {
+   "n": 1,
+   "seed": [
+    265,
+    441
+   ],
+   "area": 808,
+   "box": [
+    243,
+    427,
+    49,
+    25
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_rainslug": [
+  {
+   "n": 1,
+   "seed": [
+    130,
+    294
+   ],
+   "area": 18048,
+   "box": [
+    0,
+    214,
+    273,
+    126
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    486,
+    262
+   ],
+   "area": 3802,
+   "box": [
+    458,
+    203,
+    54,
+    101
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_redscorpion": [
+  {
+   "n": 1,
+   "seed": [
+    361,
+    401
+   ],
+   "area": 1211,
+   "box": [
+    346,
+    354,
+    27,
+    80
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    131,
+    447
+   ],
+   "area": 609,
+   "box": [
+    110,
+    430,
+    76,
+    25
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    114,
+    259
+   ],
+   "area": 221,
+   "box": [
+    105,
+    240,
+    17,
+    40
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_redscorpion_x": [
+  {
+   "n": 1,
+   "seed": [
+    355,
+    375
+   ],
+   "area": 9957,
+   "box": [
+    236,
+    318,
+    210,
+    99
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    91,
+    208
+   ],
+   "area": 426,
+   "box": [
+    77,
+    184,
+    33,
+    46
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    195,
+    411
+   ],
+   "area": 347,
+   "box": [
+    167,
+    402,
+    47,
+    16
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_reedimp": [
+  {
+   "n": 1,
+   "seed": [
+    394,
+    349
+   ],
+   "area": 11899,
+   "box": [
+    320,
+    269,
+    150,
+    172
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    77,
+    392
+   ],
+   "area": 8286,
+   "box": [
+    12,
+    326,
+    144,
+    177
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    365,
+    397
+   ],
+   "area": 1812,
+   "box": [
+    318,
+    379,
+    108,
+    47
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    58,
+    339
+   ],
+   "area": 1573,
+   "box": [
+    17,
+    297,
+    80,
+    110
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    485,
+    435
+   ],
+   "area": 793,
+   "box": [
+    474,
+    396,
+    22,
+    72
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    140,
+    390
+   ],
+   "area": 466,
+   "box": [
+    106,
+    380,
+    51,
+    24
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_relicmole": [
+  {
+   "n": 1,
+   "seed": [
+    323,
+    250
+   ],
+   "area": 1096,
+   "box": [
+    292,
+    236,
+    53,
+    33
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    325,
+    316
+   ],
+   "area": 1009,
+   "box": [
+    296,
+    298,
+    51,
+    32
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    97,
+    428
+   ],
+   "area": 1009,
+   "box": [
+    82,
+    406,
+    33,
+    45
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    53,
+    423
+   ],
+   "area": 831,
+   "box": [
+    34,
+    403,
+    35,
+    36
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    145,
+    427
+   ],
+   "area": 647,
+   "box": [
+    130,
+    409,
+    29,
+    37
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_relicthief": [
+  {
+   "n": 1,
+   "seed": [
+    248,
+    407
+   ],
+   "area": 1618,
+   "box": [
+    231,
+    374,
+    33,
+    62
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    198,
+    411
+   ],
+   "area": 1448,
+   "box": [
+    184,
+    367,
+    27,
+    77
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_runawaywatch": [
+  {
+   "n": 1,
+   "seed": [
+    288,
+    423
+   ],
+   "area": 7754,
+   "box": [
+    223,
+    363,
+    136,
+    100
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    129,
+    385
+   ],
+   "area": 3225,
+   "box": [
+    106,
+    307,
+    49,
+    152
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_rustwatch": [
+  {
+   "n": 1,
+   "seed": [
+    306,
+    229
+   ],
+   "area": 1795,
+   "box": [
+    279,
+    191,
+    52,
+    74
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_satchelrat_x": [
+  {
+   "n": 1,
+   "seed": [
+    327,
+    429
+   ],
+   "area": 2600,
+   "box": [
+    277,
+    391,
+    123,
+    58
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    462,
+    393
+   ],
+   "area": 2338,
+   "box": [
+    439,
+    350,
+    51,
+    79
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    368,
+    405
+   ],
+   "area": 2207,
+   "box": [
+    322,
+    375,
+    95,
+    59
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_seafog": [
+  {
+   "n": 1,
+   "seed": [
+    82,
+    118
+   ],
+   "area": 39367,
+   "box": [
+    0,
+    0,
+    254,
+    272
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    448,
+    94
+   ],
+   "area": 22590,
+   "box": [
+    266,
+    0,
+    246,
+    264
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    202,
+    403
+   ],
+   "area": 4653,
+   "box": [
+    156,
+    361,
+    104,
+    76
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    432,
+    165
+   ],
+   "area": 205,
+   "box": [
+    423,
+    151,
+    18,
+    30
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_stonetroll_x": [
+  {
+   "n": 1,
+   "seed": [
+    325,
+    233
+   ],
+   "area": 5005,
+   "box": [
+    263,
+    193,
+    120,
+    87
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_thornboar": [
+  {
+   "n": 1,
+   "seed": [
+    227,
+    404
+   ],
+   "area": 795,
+   "box": [
+    202,
+    391,
+    47,
+    25
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    302,
+    409
+   ],
+   "area": 453,
+   "box": [
+    282,
+    398,
+    42,
+    20
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_tidecrab_x": [
+  {
+   "n": 1,
+   "seed": [
+    114,
+    36
+   ],
+   "area": 10379,
+   "box": [
+    0,
+    0,
+    272,
+    80
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    84,
+    3
+   ],
+   "area": 392,
+   "box": [
+    60,
+    0,
+    52,
+    8
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    393,
+    7
+   ],
+   "area": 192,
+   "box": [
+    388,
+    0,
+    12,
+    16
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_vulture": [
+  {
+   "n": 1,
+   "seed": [
+    343,
+    220
+   ],
+   "area": 772,
+   "box": [
+    314,
+    203,
+    54,
+    46
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    306,
+    284
+   ],
+   "area": 293,
+   "box": [
+    292,
+    278,
+    36,
+    14
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    246,
+    266
+   ],
+   "area": 243,
+   "box": [
+    237,
+    250,
+    18,
+    32
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4_warcrow": [
+  {
+   "n": 1,
+   "seed": [
+    114,
+    113
+   ],
+   "area": 17180,
+   "box": [
+    0,
+    60,
+    237,
+    117
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    421,
+    109
+   ],
+   "area": 14819,
+   "box": [
+    303,
+    64,
+    209,
+    104
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    155,
+    433
+   ],
+   "area": 334,
+   "box": [
+    143,
+    419,
+    24,
+    27
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    461,
+    310
+   ],
+   "area": 304,
+   "box": [
+    425,
+    300,
+    67,
+    23
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    130,
+    439
+   ],
+   "area": 221,
+   "box": [
+    113,
+    433,
+    32,
+    12
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    337,
+    344
+   ],
+   "area": 211,
+   "box": [
+    331,
+    333,
+    27,
+    41
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    107,
+    43
+   ],
+   "area": 192,
+   "box": [
+    100,
+    36,
+    16,
+    16
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    263,
+    414
+   ],
+   "area": 171,
+   "box": [
+    248,
+    404,
+    29,
+    25
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    503,
+    295
+   ],
+   "area": 169,
+   "box": [
+    492,
+    288,
+    20,
+    15
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_cauldron": [
+  {
+   "n": 1,
+   "seed": [
+    97,
+    248
+   ],
+   "area": 312,
+   "box": [
+    76,
+    241,
+    38,
+    14
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    420,
+    174
+   ],
+   "area": 184,
+   "box": [
+    410,
+    165,
+    24,
+    20
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_chainhound": [
+  {
+   "n": 1,
+   "seed": [
+    237,
+    391
+   ],
+   "area": 3292,
+   "box": [
+    207,
+    345,
+    59,
+    80
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    405,
+    407
+   ],
+   "area": 2038,
+   "box": [
+    377,
+    377,
+    70,
+    50
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    331,
+    407
+   ],
+   "area": 711,
+   "box": [
+    316,
+    383,
+    43,
+    42
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_cliffwatch": [
+  {
+   "n": 1,
+   "seed": [
+    255,
+    421
+   ],
+   "area": 8588,
+   "box": [
+    175,
+    346,
+    164,
+    108
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    370,
+    434
+   ],
+   "area": 1427,
+   "box": [
+    340,
+    407,
+    66,
+    50
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_furrowmole": [
+  {
+   "n": 2,
+   "seed": [
+    242,
+    378
+   ],
+   "area": 1592,
+   "box": [
+    225,
+    339,
+    33,
+    71
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    388,
+    367
+   ],
+   "area": 1092,
+   "box": [
+    366,
+    350,
+    52,
+    40
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_greenwatch": [
+  {
+   "n": 1,
+   "seed": [
+    261,
+    416
+   ],
+   "area": 10930,
+   "box": [
+    199,
+    350,
+    127,
+    120
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    348,
+    291
+   ],
+   "area": 3743,
+   "box": [
+    304,
+    223,
+    76,
+    154
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    176,
+    287
+   ],
+   "area": 2167,
+   "box": [
+    138,
+    240,
+    78,
+    118
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    124,
+    420
+   ],
+   "area": 1668,
+   "box": [
+    112,
+    365,
+    28,
+    106
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_guiltdog": [
+  {
+   "n": 1,
+   "seed": [
+    141,
+    404
+   ],
+   "area": 3410,
+   "box": [
+    101,
+    368,
+    81,
+    66
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    181,
+    363
+   ],
+   "area": 1534,
+   "box": [
+    157,
+    333,
+    42,
+    65
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    247,
+    359
+   ],
+   "area": 989,
+   "box": [
+    232,
+    328,
+    33,
+    64
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    342,
+    377
+   ],
+   "area": 167,
+   "box": [
+    336,
+    368,
+    16,
+    16
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_haloshade": [
+  {
+   "n": 1,
+   "seed": [
+    213,
+    392
+   ],
+   "area": 8294,
+   "box": [
+    160,
+    329,
+    119,
+    107
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_hourglass": [
+  {
+   "n": 1,
+   "seed": [
+    280,
+    402
+   ],
+   "area": 8921,
+   "box": [
+    233,
+    328,
+    102,
+    131
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_inkling": [
+  {
+   "n": 1,
+   "seed": [
+    247,
+    366
+   ],
+   "area": 12128,
+   "box": [
+    194,
+    285,
+    106,
+    147
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    165,
+    401
+   ],
+   "area": 2111,
+   "box": [
+    129,
+    351,
+    57,
+    76
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    163,
+    263
+   ],
+   "area": 202,
+   "box": [
+    153,
+    247,
+    19,
+    34
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    221,
+    297
+   ],
+   "area": 165,
+   "box": [
+    213,
+    288,
+    15,
+    19
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_maskguard": [
+  {
+   "n": 1,
+   "seed": [
+    309,
+    95
+   ],
+   "area": 653,
+   "box": [
+    290,
+    82,
+    46,
+    27
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    396,
+    52
+   ],
+   "area": 399,
+   "box": [
+    382,
+    38,
+    30,
+    29
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    416,
+    49
+   ],
+   "area": 309,
+   "box": [
+    403,
+    39,
+    23,
+    27
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    321,
+    331
+   ],
+   "area": 277,
+   "box": [
+    310,
+    319,
+    20,
+    22
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    93,
+    235
+   ],
+   "area": 205,
+   "box": [
+    86,
+    221,
+    16,
+    35
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_moonarcher": [
+  {
+   "n": 1,
+   "seed": [
+    378,
+    316
+   ],
+   "area": 4887,
+   "box": [
+    306,
+    233,
+    177,
+    163
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    126,
+    144
+   ],
+   "area": 3829,
+   "box": [
+    67,
+    83,
+    111,
+    110
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    246,
+    329
+   ],
+   "area": 1528,
+   "box": [
+    220,
+    295,
+    50,
+    64
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    215,
+    311
+   ],
+   "area": 550,
+   "box": [
+    195,
+    254,
+    44,
+    109
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    276,
+    325
+   ],
+   "area": 209,
+   "box": [
+    268,
+    304,
+    18,
+    37
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_mossdog": [
+  {
+   "n": 1,
+   "seed": [
+    350,
+    418
+   ],
+   "area": 1988,
+   "box": [
+    315,
+    387,
+    69,
+    49
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    233,
+    424
+   ],
+   "area": 310,
+   "box": [
+    224,
+    411,
+    22,
+    21
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_nailer": [
+  {
+   "n": 1,
+   "seed": [
+    351,
+    375
+   ],
+   "area": 12850,
+   "box": [
+    295,
+    219,
+    92,
+    264
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    261,
+    450
+   ],
+   "area": 2085,
+   "box": [
+    236,
+    419,
+    46,
+    62
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_pruner": [
+  {
+   "n": 1,
+   "seed": [
+    132,
+    319
+   ],
+   "area": 409,
+   "box": [
+    107,
+    305,
+    46,
+    25
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_rootling": [
+  {
+   "n": 1,
+   "seed": [
+    251,
+    437
+   ],
+   "area": 256,
+   "box": [
+    239,
+    426,
+    24,
+    18
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    171,
+    430
+   ],
+   "area": 201,
+   "box": [
+    153,
+    422,
+    40,
+    14
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_scarecrow": [
+  {
+   "n": 1,
+   "seed": [
+    251,
+    402
+   ],
+   "area": 1629,
+   "box": [
+    243,
+    342,
+    19,
+    131
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_smiler": [
+  {
+   "n": 2,
+   "seed": [
+    352,
+    312
+   ],
+   "area": 274,
+   "box": [
+    334,
+    298,
+    39,
+    31
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_smokecat": [
+  {
+   "n": 2,
+   "seed": [
+    285,
+    442
+   ],
+   "area": 1228,
+   "box": [
+    270,
+    406,
+    32,
+    68
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/e4k_squire": [
+  {
+   "n": 1,
+   "seed": [
+    319,
+    293
+   ],
+   "area": 232,
+   "box": [
+    308,
+    279,
+    23,
+    38
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/general": [
+  {
+   "n": 1,
+   "seed": [
+    164,
+    278
+   ],
+   "area": 8310,
+   "box": [
+    114,
+    206,
+    126,
+    148
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    268,
+    365
+   ],
+   "area": 1896,
+   "box": [
+    220,
+    323,
+    76,
+    77
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/goblin": [
+  {
+   "n": 1,
+   "seed": [
+    390,
+    281
+   ],
+   "area": 1482,
+   "box": [
+    374,
+    240,
+    43,
+    68
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/kin": [
+  {
+   "n": 1,
+   "seed": [
+    207,
+    385
+   ],
+   "area": 1516,
+   "box": [
+    143,
+    372,
+    132,
+    25
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    149,
+    371
+   ],
+   "area": 1430,
+   "box": [
+    100,
+    360,
+    101,
+    25
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    330,
+    291
+   ],
+   "area": 903,
+   "box": [
+    305,
+    267,
+    49,
+    49
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    261,
+    339
+   ],
+   "area": 485,
+   "box": [
+    245,
+    329,
+    35,
+    20
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/m2_traitor": [
+  {
+   "n": 2,
+   "seed": [
+    261,
+    267
+   ],
+   "area": 192,
+   "box": [
+    246,
+    261,
+    31,
+    12
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    306,
+    270
+   ],
+   "area": 189,
+   "box": [
+    291,
+    266,
+    42,
+    11
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/m5_feverfolk": [
+  {
+   "n": 1,
+   "seed": [
+    366,
+    409
+   ],
+   "area": 1180,
+   "box": [
+    346,
+    392,
+    41,
+    35
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    286,
+    252
+   ],
+   "area": 748,
+   "box": [
+    273,
+    238,
+    28,
+    33
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/m5_nightwatch": [
+  {
+   "n": 1,
+   "seed": [
+    255,
+    429
+   ],
+   "area": 994,
+   "box": [
+    221,
+    416,
+    65,
+    27
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/m5_oldbeast": [
+  {
+   "n": 2,
+   "seed": [
+    254,
+    152
+   ],
+   "area": 275,
+   "box": [
+    239,
+    139,
+    30,
+    21
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/ogre": [
+  {
+   "n": 1,
+   "seed": [
+    415,
+    346
+   ],
+   "area": 3004,
+   "box": [
+    391,
+    298,
+    55,
+    103
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    271,
+    431
+   ],
+   "area": 2767,
+   "box": [
+    225,
+    403,
+    92,
+    50
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    180,
+    100
+   ],
+   "area": 493,
+   "box": [
+    157,
+    86,
+    49,
+    26
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    127,
+    123
+   ],
+   "area": 444,
+   "box": [
+    116,
+    104,
+    34,
+    38
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    240,
+    62
+   ],
+   "area": 184,
+   "box": [
+    224,
+    51,
+    34,
+    20
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/oni": [
+  {
+   "n": 1,
+   "seed": [
+    226,
+    255
+   ],
+   "area": 437,
+   "box": [
+    211,
+    240,
+    33,
+    29
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/orc": [
+  {
+   "n": 1,
+   "seed": [
+    111,
+    415
+   ],
+   "area": 381,
+   "box": [
+    97,
+    403,
+    29,
+    25
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    167,
+    416
+   ],
+   "area": 307,
+   "box": [
+    152,
+    403,
+    26,
+    23
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/rize": [
+  {
+   "n": 1,
+   "seed": [
+    270,
+    368
+   ],
+   "area": 23161,
+   "box": [
+    102,
+    289,
+    297,
+    153
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    311,
+    187
+   ],
+   "area": 589,
+   "box": [
+    291,
+    170,
+    47,
+    37
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    217,
+    52
+   ],
+   "area": 366,
+   "box": [
+    191,
+    43,
+    50,
+    21
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    281,
+    132
+   ],
+   "area": 238,
+   "box": [
+    268,
+    118,
+    26,
+    30
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    191,
+    56
+   ],
+   "area": 185,
+   "box": [
+    178,
+    49,
+    29,
+    15
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/royalguard": [
+  {
+   "n": 1,
+   "seed": [
+    347,
+    404
+   ],
+   "area": 605,
+   "box": [
+    338,
+    376,
+    19,
+    62
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/spider": [
+  {
+   "n": 1,
+   "seed": [
+    107,
+    111
+   ],
+   "area": 23198,
+   "box": [
+    0,
+    48,
+    268,
+    152
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    451,
+    116
+   ],
+   "area": 13393,
+   "box": [
+    349,
+    64,
+    163,
+    116
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/w1_beastpriest": [
+  {
+   "n": 1,
+   "seed": [
+    166,
+    390
+   ],
+   "area": 2070,
+   "box": [
+    139,
+    354,
+    53,
+    66
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    193,
+    318
+   ],
+   "area": 975,
+   "box": [
+    157,
+    293,
+    72,
+    53
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    203,
+    400
+   ],
+   "area": 152,
+   "box": [
+    196,
+    389,
+    16,
+    21
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/w1_tanuki": [
+  {
+   "n": 1,
+   "seed": [
+    250,
+    450
+   ],
+   "area": 1312,
+   "box": [
+    212,
+    438,
+    96,
+    23
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/w1_vespa": [
+  {
+   "n": 1,
+   "seed": [
+    275,
+    403
+   ],
+   "area": 6435,
+   "box": [
+    243,
+    284,
+    59,
+    186
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/w2_ironwarden": [
+  {
+   "n": 1,
+   "seed": [
+    286,
+    403
+   ],
+   "area": 10540,
+   "box": [
+    218,
+    334,
+    130,
+    122
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    156,
+    339
+   ],
+   "area": 8194,
+   "box": [
+    101,
+    206,
+    136,
+    260
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/w4_borer": [
+  {
+   "n": 1,
+   "seed": [
+    103,
+    205
+   ],
+   "area": 908,
+   "box": [
+    93,
+    178,
+    25,
+    56
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/w4_hushed": [
+  {
+   "n": 1,
+   "seed": [
+    374,
+    400
+   ],
+   "area": 5881,
+   "box": [
+    330,
+    325,
+    76,
+    138
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    267,
+    436
+   ],
+   "area": 2770,
+   "box": [
+    196,
+    395,
+    128,
+    58
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/warlock": [
+  {
+   "n": 3,
+   "seed": [
+    225,
+    350
+   ],
+   "area": 336,
+   "box": [
+    219,
+    332,
+    15,
+    46
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/werewolf": [
+  {
+   "n": 1,
+   "seed": [
+    119,
+    244
+   ],
+   "area": 1470,
+   "box": [
+    96,
+    202,
+    41,
+    76
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    121,
+    330
+   ],
+   "area": 496,
+   "box": [
+    105,
+    306,
+    31,
+    41
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/wolf": [
+  {
+   "n": 1,
+   "seed": [
+    212,
+    366
+   ],
+   "area": 11085,
+   "box": [
+    132,
+    292,
+    147,
+    151
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    351,
+    351
+   ],
+   "area": 9935,
+   "box": [
+    303,
+    257,
+    108,
+    154
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "monsters/zombie": [
+  {
+   "n": 1,
+   "seed": [
+    257,
+    350
+   ],
+   "area": 1815,
+   "box": [
+    247,
+    292,
+    21,
+    123
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/adele": [
+  {
+   "n": 1,
+   "seed": [
+    344,
+    538
+   ],
+   "area": 4401,
+   "box": [
+    325,
+    415,
+    37,
+    225
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    254,
+    590
+   ],
+   "area": 1139,
+   "box": [
+    246,
+    539,
+    18,
+    101
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/alicia": [
+  {
+   "n": 5,
+   "seed": [
+    157,
+    492
+   ],
+   "area": 424,
+   "box": [
+    145,
+    473,
+    21,
+    38
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/angelica": [
+  {
+   "n": 1,
+   "seed": [
+    349,
+    417
+   ],
+   "area": 2787,
+   "box": [
+    318,
+    366,
+    63,
+    98
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    248,
+    629
+   ],
+   "area": 223,
+   "box": [
+    243,
+    616,
+    13,
+    24
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/annelise": [
+  {
+   "n": 1,
+   "seed": [
+    351,
+    404
+   ],
+   "area": 6865,
+   "box": [
+    317,
+    331,
+    82,
+    146
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    140,
+    345
+   ],
+   "area": 2654,
+   "box": [
+    109,
+    305,
+    61,
+    87
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    364,
+    171
+   ],
+   "area": 994,
+   "box": [
+    353,
+    138,
+    26,
+    65
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/aubin": [
+  {
+   "n": 2,
+   "seed": [
+    393,
+    621
+   ],
+   "area": 929,
+   "box": [
+    380,
+    582,
+    32,
+    58
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    262,
+    630
+   ],
+   "area": 351,
+   "box": [
+    253,
+    620,
+    20,
+    20
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    179,
+    612
+   ],
+   "area": 213,
+   "box": [
+    176,
+    586,
+    6,
+    54
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    369,
+    376
+   ],
+   "area": 201,
+   "box": [
+    365,
+    353,
+    12,
+    45
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/barnabe": [
+  {
+   "n": 13,
+   "seed": [
+    419,
+    481
+   ],
+   "area": 175,
+   "box": [
+    414,
+    466,
+    12,
+    32
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/bartolo": [
+  {
+   "n": 1,
+   "seed": [
+    420,
+    496
+   ],
+   "area": 716,
+   "box": [
+    404,
+    465,
+    31,
+    66
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    260,
+    630
+   ],
+   "area": 287,
+   "box": [
+    251,
+    612,
+    20,
+    28
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/baudouin": [
+  {
+   "n": 1,
+   "seed": [
+    51,
+    355
+   ],
+   "area": 265,
+   "box": [
+    43,
+    341,
+    15,
+    35
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/berangere": [
+  {
+   "n": 4,
+   "seed": [
+    492,
+    469
+   ],
+   "area": 415,
+   "box": [
+    480,
+    447,
+    22,
+    38
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    30,
+    465
+   ],
+   "area": 366,
+   "box": [
+    21,
+    446,
+    21,
+    33
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    469,
+    624
+   ],
+   "area": 308,
+   "box": [
+    461,
+    614,
+    19,
+    23
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    55,
+    620
+   ],
+   "area": 252,
+   "box": [
+    46,
+    610,
+    18,
+    24
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/berna": [
+  {
+   "n": 1,
+   "seed": [
+    257,
+    626
+   ],
+   "area": 643,
+   "box": [
+    246,
+    610,
+    23,
+    30
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/boku": [
+  {
+   "n": 7,
+   "seed": [
+    136,
+    201
+   ],
+   "area": 351,
+   "box": [
+    131,
+    165,
+    13,
+    65
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/bride": [
+  {
+   "n": 22,
+   "seed": [
+    68,
+    480
+   ],
+   "area": 175,
+   "box": [
+    57,
+    470,
+    30,
+    17
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/captain_east": [
+  {
+   "n": 2,
+   "seed": [
+    391,
+    430
+   ],
+   "area": 1126,
+   "box": [
+    379,
+    376,
+    26,
+    100
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    118,
+    410
+   ],
+   "area": 852,
+   "box": [
+    105,
+    366,
+    26,
+    87
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/celestin": [
+  {
+   "n": 1,
+   "seed": [
+    109,
+    329
+   ],
+   "area": 6390,
+   "box": [
+    63,
+    269,
+    100,
+    132
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    133,
+    469
+   ],
+   "area": 577,
+   "box": [
+    117,
+    447,
+    38,
+    39
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    422,
+    481
+   ],
+   "area": 215,
+   "box": [
+    409,
+    473,
+    30,
+    14
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/dario": [
+  {
+   "n": 5,
+   "seed": [
+    300,
+    554
+   ],
+   "area": 1081,
+   "box": [
+    288,
+    508,
+    23,
+    92
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    221,
+    582
+   ],
+   "area": 617,
+   "box": [
+    213,
+    556,
+    21,
+    71
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/dil": [
+  {
+   "n": 1,
+   "seed": [
+    334,
+    482
+   ],
+   "area": 505,
+   "box": [
+    324,
+    452,
+    22,
+    66
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/dorothea": [
+  {
+   "n": 2,
+   "seed": [
+    358,
+    391
+   ],
+   "area": 1868,
+   "box": [
+    328,
+    356,
+    70,
+    76
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/erna": [
+  {
+   "n": 2,
+   "seed": [
+    262,
+    630
+   ],
+   "area": 306,
+   "box": [
+    254,
+    621,
+    17,
+    19
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/ferida": [
+  {
+   "n": 1,
+   "seed": [
+    353,
+    445
+   ],
+   "area": 5956,
+   "box": [
+    307,
+    318,
+    82,
+    254
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    168,
+    339
+   ],
+   "area": 4430,
+   "box": [
+    133,
+    287,
+    67,
+    96
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    256,
+    586
+   ],
+   "area": 3718,
+   "box": [
+    237,
+    513,
+    42,
+    127
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    188,
+    606
+   ],
+   "area": 273,
+   "box": [
+    182,
+    587,
+    11,
+    46
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 14,
+   "seed": [
+    391,
+    626
+   ],
+   "area": 187,
+   "box": [
+    380,
+    612,
+    24,
+    28
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 15,
+   "seed": [
+    316,
+    608
+   ],
+   "area": 186,
+   "box": [
+    311,
+    594,
+    11,
+    35
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 16,
+   "seed": [
+    109,
+    349
+   ],
+   "area": 171,
+   "box": [
+    97,
+    340,
+    22,
+    21
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/gaston": [
+  {
+   "n": 1,
+   "seed": [
+    257,
+    632
+   ],
+   "area": 835,
+   "box": [
+    229,
+    623,
+    59,
+    17
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/gauthier": [
+  {
+   "n": 1,
+   "seed": [
+    130,
+    397
+   ],
+   "area": 3127,
+   "box": [
+    96,
+    330,
+    65,
+    109
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    381,
+    389
+   ],
+   "area": 3090,
+   "box": [
+    359,
+    320,
+    43,
+    134
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/gensai": [
+  {
+   "n": 3,
+   "seed": [
+    155,
+    185
+   ],
+   "area": 600,
+   "box": [
+    132,
+    171,
+    37,
+    56
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    111,
+    622
+   ],
+   "area": 436,
+   "box": [
+    103,
+    598,
+    19,
+    42
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/gerhard": [
+  {
+   "n": 1,
+   "seed": [
+    399,
+    397
+   ],
+   "area": 3750,
+   "box": [
+    366,
+    345,
+    66,
+    107
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    129,
+    391
+   ],
+   "area": 3197,
+   "box": [
+    103,
+    339,
+    54,
+    108
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/gigra": [
+  {
+   "n": 1,
+   "seed": [
+    364,
+    421
+   ],
+   "area": 1882,
+   "box": [
+    326,
+    389,
+    66,
+    70
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/greol": [
+  {
+   "n": 1,
+   "seed": [
+    69,
+    618
+   ],
+   "area": 2104,
+   "box": [
+    33,
+    586,
+    66,
+    54
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    279,
+    596
+   ],
+   "area": 317,
+   "box": [
+    273,
+    578,
+    12,
+    37
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    245,
+    622
+   ],
+   "area": 214,
+   "box": [
+    240,
+    608,
+    11,
+    29
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    114,
+    633
+   ],
+   "area": 176,
+   "box": [
+    101,
+    623,
+    22,
+    17
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/hans": [
+  {
+   "n": 1,
+   "seed": [
+    376,
+    506
+   ],
+   "area": 1759,
+   "box": [
+    357,
+    445,
+    35,
+    123
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/ilse": [
+  {
+   "n": 1,
+   "seed": [
+    78,
+    387
+   ],
+   "area": 464,
+   "box": [
+    65,
+    372,
+    24,
+    29
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    396,
+    266
+   ],
+   "area": 314,
+   "box": [
+    384,
+    253,
+    25,
+    27
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    442,
+    439
+   ],
+   "area": 273,
+   "box": [
+    433,
+    422,
+    17,
+    35
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    431,
+    354
+   ],
+   "area": 257,
+   "box": [
+    422,
+    342,
+    16,
+    28
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    84,
+    303
+   ],
+   "area": 191,
+   "box": [
+    77,
+    291,
+    16,
+    24
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    424,
+    317
+   ],
+   "area": 188,
+   "box": [
+    417,
+    305,
+    13,
+    24
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/iori": [
+  {
+   "n": 7,
+   "seed": [
+    321,
+    72
+   ],
+   "area": 548,
+   "box": [
+    308,
+    29,
+    24,
+    85
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/izra": [
+  {
+   "n": 1,
+   "seed": [
+    76,
+    505
+   ],
+   "area": 551,
+   "box": [
+    66,
+    478,
+    22,
+    57
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    462,
+    501
+   ],
+   "area": 369,
+   "box": [
+    450,
+    474,
+    21,
+    55
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    475,
+    541
+   ],
+   "area": 328,
+   "box": [
+    468,
+    524,
+    14,
+    34
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    457,
+    469
+   ],
+   "area": 313,
+   "box": [
+    449,
+    446,
+    20,
+    50
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    62,
+    532
+   ],
+   "area": 303,
+   "box": [
+    56,
+    516,
+    17,
+    30
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    83,
+    525
+   ],
+   "area": 264,
+   "box": [
+    76,
+    502,
+    15,
+    39
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    427,
+    392
+   ],
+   "area": 220,
+   "box": [
+    416,
+    379,
+    22,
+    31
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 10,
+   "seed": [
+    81,
+    445
+   ],
+   "area": 206,
+   "box": [
+    70,
+    428,
+    24,
+    43
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 11,
+   "seed": [
+    446,
+    525
+   ],
+   "area": 152,
+   "box": [
+    440,
+    513,
+    13,
+    21
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/joachim": [
+  {
+   "n": 1,
+   "seed": [
+    373,
+    455
+   ],
+   "area": 1320,
+   "box": [
+    357,
+    388,
+    25,
+    159
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    385,
+    612
+   ],
+   "area": 476,
+   "box": [
+    380,
+    588,
+    16,
+    52
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/jonas": [
+  {
+   "n": 1,
+   "seed": [
+    341,
+    485
+   ],
+   "area": 494,
+   "box": [
+    327,
+    453,
+    28,
+    84
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    248,
+    633
+   ],
+   "area": 159,
+   "box": [
+    241,
+    625,
+    14,
+    15
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    169,
+    464
+   ],
+   "area": 156,
+   "box": [
+    162,
+    452,
+    14,
+    30
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/katia": [
+  {
+   "n": 7,
+   "seed": [
+    439,
+    449
+   ],
+   "area": 719,
+   "box": [
+    430,
+    409,
+    18,
+    77
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 14,
+   "seed": [
+    406,
+    545
+   ],
+   "area": 192,
+   "box": [
+    401,
+    503,
+    13,
+    86
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 15,
+   "seed": [
+    107,
+    408
+   ],
+   "area": 183,
+   "box": [
+    103,
+    390,
+    9,
+    38
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_adventurer_f": [
+  {
+   "n": 1,
+   "seed": [
+    371,
+    590
+   ],
+   "area": 2929,
+   "box": [
+    352,
+    528,
+    37,
+    112
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    363,
+    444
+   ],
+   "area": 2927,
+   "box": [
+    333,
+    390,
+    50,
+    110
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    338,
+    355
+   ],
+   "area": 2845,
+   "box": [
+    312,
+    313,
+    63,
+    79
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    157,
+    445
+   ],
+   "area": 2333,
+   "box": [
+    127,
+    348,
+    66,
+    196
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    258,
+    614
+   ],
+   "area": 1940,
+   "box": [
+    241,
+    582,
+    43,
+    58
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_adventurer_f_b": [
+  {
+   "n": 2,
+   "seed": [
+    349,
+    491
+   ],
+   "area": 1183,
+   "box": [
+    328,
+    408,
+    42,
+    171
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    157,
+    538
+   ],
+   "area": 964,
+   "box": [
+    146,
+    486,
+    26,
+    102
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    186,
+    429
+   ],
+   "area": 307,
+   "box": [
+    178,
+    408,
+    18,
+    37
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_archer_f": [
+  {
+   "n": 4,
+   "seed": [
+    258,
+    619
+   ],
+   "area": 887,
+   "box": [
+    247,
+    598,
+    22,
+    42
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    337,
+    144
+   ],
+   "area": 151,
+   "box": [
+    335,
+    120,
+    5,
+    47
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_beggar_f": [
+  {
+   "n": 4,
+   "seed": [
+    161,
+    258
+   ],
+   "area": 1166,
+   "box": [
+    142,
+    189,
+    35,
+    141
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    257,
+    614
+   ],
+   "area": 967,
+   "box": [
+    248,
+    579,
+    20,
+    61
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 13,
+   "seed": [
+    399,
+    422
+   ],
+   "area": 197,
+   "box": [
+    395,
+    400,
+    9,
+    41
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 14,
+   "seed": [
+    130,
+    453
+   ],
+   "area": 175,
+   "box": [
+    127,
+    425,
+    12,
+    51
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_beggar_m": [
+  {
+   "n": 1,
+   "seed": [
+    115,
+    554
+   ],
+   "area": 871,
+   "box": [
+    105,
+    502,
+    22,
+    106
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_child_f": [
+  {
+   "n": 4,
+   "seed": [
+    257,
+    606
+   ],
+   "area": 1006,
+   "box": [
+    249,
+    569,
+    16,
+    71
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    164,
+    142
+   ],
+   "area": 294,
+   "box": [
+    159,
+    112,
+    12,
+    56
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_child_m": [
+  {
+   "n": 4,
+   "seed": [
+    259,
+    621
+   ],
+   "area": 1244,
+   "box": [
+    242,
+    603,
+    34,
+    37
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_guard_f": [
+  {
+   "n": 1,
+   "seed": [
+    127,
+    561
+   ],
+   "area": 4948,
+   "box": [
+    108,
+    456,
+    56,
+    184
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    134,
+    518
+   ],
+   "area": 306,
+   "box": [
+    127,
+    480,
+    19,
+    82
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 10,
+   "seed": [
+    150,
+    503
+   ],
+   "area": 290,
+   "box": [
+    139,
+    462,
+    25,
+    75
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_guard_m": [
+  {
+   "n": 1,
+   "seed": [
+    144,
+    492
+   ],
+   "area": 1706,
+   "box": [
+    126,
+    430,
+    40,
+    139
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_host_f": [
+  {
+   "n": 4,
+   "seed": [
+    174,
+    528
+   ],
+   "area": 1099,
+   "box": [
+    156,
+    482,
+    33,
+    85
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 14,
+   "seed": [
+    184,
+    576
+   ],
+   "area": 482,
+   "box": [
+    169,
+    556,
+    32,
+    37
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_host_m": [
+  {
+   "n": 3,
+   "seed": [
+    405,
+    377
+   ],
+   "area": 387,
+   "box": [
+    396,
+    353,
+    17,
+    63
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    104,
+    363
+   ],
+   "area": 178,
+   "box": [
+    98,
+    347,
+    14,
+    34
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_knight_m": [
+  {
+   "n": 1,
+   "seed": [
+    270,
+    625
+   ],
+   "area": 867,
+   "box": [
+    252,
+    607,
+    37,
+    33
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_mage_m": [
+  {
+   "n": 1,
+   "seed": [
+    189,
+    397
+   ],
+   "area": 900,
+   "box": [
+    181,
+    344,
+    17,
+    108
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    311,
+    398
+   ],
+   "area": 790,
+   "box": [
+    303,
+    350,
+    18,
+    96
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_mage_m_b": [
+  {
+   "n": 1,
+   "seed": [
+    77,
+    610
+   ],
+   "area": 3912,
+   "box": [
+    45,
+    520,
+    108,
+    120
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_merchant_f": [
+  {
+   "n": 8,
+   "seed": [
+    150,
+    187
+   ],
+   "area": 216,
+   "box": [
+    147,
+    157,
+    9,
+    56
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_merchant_m": [
+  {
+   "n": 1,
+   "seed": [
+    261,
+    629
+   ],
+   "area": 354,
+   "box": [
+    249,
+    610,
+    24,
+    30
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_priest_m": [
+  {
+   "n": 1,
+   "seed": [
+    344,
+    469
+   ],
+   "area": 6800,
+   "box": [
+    321,
+    329,
+    50,
+    311
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    169,
+    474
+   ],
+   "area": 6630,
+   "box": [
+    140,
+    334,
+    56,
+    306
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_priest_m_b": [
+  {
+   "n": 2,
+   "seed": [
+    146,
+    487
+   ],
+   "area": 4409,
+   "box": [
+    124,
+    345,
+    43,
+    286
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_priest_f": [
+  {
+   "n": 5,
+   "seed": [
+    161,
+    313
+   ],
+   "area": 720,
+   "box": [
+    155,
+    260,
+    11,
+    101
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    333,
+    310
+   ],
+   "area": 347,
+   "box": [
+    329,
+    272,
+    8,
+    81
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_rogue_f": [
+  {
+   "n": 1,
+   "seed": [
+    252,
+    612
+   ],
+   "area": 1544,
+   "box": [
+    237,
+    580,
+    32,
+    60
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    326,
+    190
+   ],
+   "area": 303,
+   "box": [
+    324,
+    154,
+    6,
+    71
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    180,
+    186
+   ],
+   "area": 176,
+   "box": [
+    178,
+    163,
+    5,
+    47
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_ronin_f": [
+  {
+   "n": 2,
+   "seed": [
+    411,
+    632
+   ],
+   "area": 574,
+   "box": [
+    391,
+    618,
+    51,
+    22
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    180,
+    254
+   ],
+   "area": 228,
+   "box": [
+    175,
+    227,
+    14,
+    56
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_ronin_f_b": [
+  {
+   "n": 1,
+   "seed": [
+    314,
+    480
+   ],
+   "area": 1227,
+   "box": [
+    292,
+    410,
+    42,
+    114
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    203,
+    469
+   ],
+   "area": 847,
+   "box": [
+    189,
+    410,
+    32,
+    110
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_ronin_m": [
+  {
+   "n": 1,
+   "seed": [
+    100,
+    606
+   ],
+   "area": 1109,
+   "box": [
+    89,
+    577,
+    28,
+    63
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    418,
+    604
+   ],
+   "area": 701,
+   "box": [
+    404,
+    577,
+    23,
+    63
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_sailor_m": [
+  {
+   "n": 1,
+   "seed": [
+    258,
+    627
+   ],
+   "area": 469,
+   "box": [
+    247,
+    611,
+    24,
+    29
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_soldier_f": [
+  {
+   "n": 1,
+   "seed": [
+    144,
+    461
+   ],
+   "area": 3019,
+   "box": [
+    108,
+    370,
+    68,
+    176
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    109,
+    608
+   ],
+   "area": 2927,
+   "box": [
+    62,
+    546,
+    78,
+    94
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    244,
+    286
+   ],
+   "area": 1623,
+   "box": [
+    223,
+    255,
+    42,
+    58
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_soldier_m": [
+  {
+   "n": 1,
+   "seed": [
+    261,
+    628
+   ],
+   "area": 688,
+   "box": [
+    246,
+    614,
+    32,
+    26
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    123,
+    468
+   ],
+   "area": 608,
+   "box": [
+    110,
+    426,
+    29,
+    92
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/kind_villager_m": [
+  {
+   "n": 1,
+   "seed": [
+    142,
+    492
+   ],
+   "area": 1622,
+   "box": [
+    126,
+    421,
+    42,
+    139
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    390,
+    488
+   ],
+   "area": 1382,
+   "box": [
+    366,
+    421,
+    39,
+    140
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/lazare": [
+  {
+   "n": 1,
+   "seed": [
+    185,
+    47
+   ],
+   "area": 549,
+   "box": [
+    170,
+    23,
+    36,
+    45
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    180,
+    109
+   ],
+   "area": 212,
+   "box": [
+    174,
+    96,
+    14,
+    28
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    177,
+    143
+   ],
+   "area": 199,
+   "box": [
+    168,
+    131,
+    18,
+    25
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    401,
+    77
+   ],
+   "area": 178,
+   "box": [
+    392,
+    65,
+    17,
+    23
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    381,
+    20
+   ],
+   "area": 170,
+   "box": [
+    370,
+    7,
+    20,
+    26
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/leopold": [
+  {
+   "n": 16,
+   "seed": [
+    264,
+    631
+   ],
+   "area": 161,
+   "box": [
+    259,
+    617,
+    11,
+    23
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/liesel": [
+  {
+   "n": 7,
+   "seed": [
+    162,
+    393
+   ],
+   "area": 440,
+   "box": [
+    134,
+    383,
+    46,
+    33
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    373,
+    389
+   ],
+   "area": 315,
+   "box": [
+    359,
+    382,
+    32,
+    16
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/lisette": [
+  {
+   "n": 1,
+   "seed": [
+    353,
+    598
+   ],
+   "area": 4766,
+   "box": [
+    320,
+    543,
+    66,
+    97
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    264,
+    579
+   ],
+   "area": 1349,
+   "box": [
+    253,
+    538,
+    22,
+    102
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/lumia": [
+  {
+   "n": 4,
+   "seed": [
+    309,
+    605
+   ],
+   "area": 3371,
+   "box": [
+    267,
+    574,
+    78,
+    66
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    213,
+    604
+   ],
+   "area": 3265,
+   "box": [
+    179,
+    574,
+    75,
+    66
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 16,
+   "seed": [
+    54,
+    431
+   ],
+   "area": 550,
+   "box": [
+    43,
+    403,
+    26,
+    57
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/magda": [
+  {
+   "n": 11,
+   "seed": [
+    21,
+    314
+   ],
+   "area": 280,
+   "box": [
+    15,
+    289,
+    13,
+    48
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/margot": [
+  {
+   "n": 4,
+   "seed": [
+    118,
+    265
+   ],
+   "area": 385,
+   "box": [
+    111,
+    241,
+    16,
+    57
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    361,
+    175
+   ],
+   "area": 317,
+   "box": [
+    354,
+    152,
+    15,
+    41
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    346,
+    88
+   ],
+   "area": 281,
+   "box": [
+    338,
+    65,
+    15,
+    47
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    373,
+    290
+   ],
+   "area": 162,
+   "box": [
+    366,
+    269,
+    13,
+    50
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/mordu": [
+  {
+   "n": 1,
+   "seed": [
+    360,
+    179
+   ],
+   "area": 443,
+   "box": [
+    353,
+    161,
+    18,
+    42
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    398,
+    164
+   ],
+   "area": 226,
+   "box": [
+    390,
+    156,
+    16,
+    18
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/natalia": [
+  {
+   "n": 3,
+   "seed": [
+    173,
+    393
+   ],
+   "area": 1463,
+   "box": [
+    158,
+    347,
+    32,
+    98
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    363,
+    134
+   ],
+   "area": 280,
+   "box": [
+    356,
+    103,
+    15,
+    73
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 11,
+   "seed": [
+    149,
+    142
+   ],
+   "area": 250,
+   "box": [
+    144,
+    108,
+    15,
+    63
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 14,
+   "seed": [
+    345,
+    212
+   ],
+   "area": 155,
+   "box": [
+    333,
+    201,
+    24,
+    19
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/neilas": [
+  {
+   "n": 1,
+   "seed": [
+    319,
+    531
+   ],
+   "area": 5141,
+   "box": [
+    290,
+    455,
+    62,
+    149
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    193,
+    529
+   ],
+   "area": 4189,
+   "box": [
+    159,
+    466,
+    58,
+    170
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    252,
+    616
+   ],
+   "area": 788,
+   "box": [
+    244,
+    588,
+    19,
+    52
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 13,
+   "seed": [
+    337,
+    501
+   ],
+   "area": 423,
+   "box": [
+    323,
+    492,
+    29,
+    17
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 15,
+   "seed": [
+    172,
+    499
+   ],
+   "area": 383,
+   "box": [
+    158,
+    490,
+    28,
+    18
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/neumann": [
+  {
+   "n": 1,
+   "seed": [
+    362,
+    427
+   ],
+   "area": 452,
+   "box": [
+    356,
+    395,
+    16,
+    62
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    153,
+    422
+   ],
+   "area": 203,
+   "box": [
+    148,
+    405,
+    11,
+    40
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/nora": [
+  {
+   "n": 4,
+   "seed": [
+    202,
+    392
+   ],
+   "area": 2174,
+   "box": [
+    180,
+    346,
+    44,
+    94
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    445,
+    169
+   ],
+   "area": 286,
+   "box": [
+    438,
+    148,
+    15,
+    45
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 12,
+   "seed": [
+    221,
+    183
+   ],
+   "area": 230,
+   "box": [
+    215,
+    161,
+    11,
+    41
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/otmar": [
+  {
+   "n": 1,
+   "seed": [
+    194,
+    629
+   ],
+   "area": 386,
+   "box": [
+    183,
+    616,
+    23,
+    24
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    260,
+    481
+   ],
+   "area": 163,
+   "box": [
+    258,
+    451,
+    4,
+    67
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/pipinelle": [
+  {
+   "n": 5,
+   "seed": [
+    464,
+    575
+   ],
+   "area": 2273,
+   "box": [
+    451,
+    496,
+    30,
+    144
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    141,
+    267
+   ],
+   "area": 1750,
+   "box": [
+    118,
+    196,
+    43,
+    161
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 17,
+   "seed": [
+    64,
+    617
+   ],
+   "area": 704,
+   "box": [
+    53,
+    589,
+    26,
+    51
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 30,
+   "seed": [
+    99,
+    446
+   ],
+   "area": 263,
+   "box": [
+    93,
+    419,
+    11,
+    53
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 37,
+   "seed": [
+    108,
+    494
+   ],
+   "area": 182,
+   "box": [
+    102,
+    475,
+    13,
+    35
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 40,
+   "seed": [
+    442,
+    620
+   ],
+   "area": 173,
+   "box": [
+    438,
+    592,
+    7,
+    48
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/polf": [
+  {
+   "n": 1,
+   "seed": [
+    365,
+    556
+   ],
+   "area": 2450,
+   "box": [
+    343,
+    468,
+    36,
+    172
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    140,
+    514
+   ],
+   "area": 1970,
+   "box": [
+    130,
+    455,
+    30,
+    178
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    121,
+    537
+   ],
+   "area": 350,
+   "box": [
+    113,
+    523,
+    16,
+    30
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    120,
+    504
+   ],
+   "area": 289,
+   "box": [
+    113,
+    491,
+    16,
+    26
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/radmila": [
+  {
+   "n": 1,
+   "seed": [
+    77,
+    563
+   ],
+   "area": 2640,
+   "box": [
+    51,
+    479,
+    65,
+    161
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    86,
+    592
+   ],
+   "area": 1913,
+   "box": [
+    70,
+    523,
+    38,
+    117
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    110,
+    599
+   ],
+   "area": 1413,
+   "box": [
+    99,
+    537,
+    21,
+    103
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    415,
+    610
+   ],
+   "area": 1259,
+   "box": [
+    402,
+    556,
+    27,
+    84
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    397,
+    561
+   ],
+   "area": 709,
+   "box": [
+    387,
+    522,
+    18,
+    86
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    142,
+    604
+   ],
+   "area": 516,
+   "box": [
+    137,
+    549,
+    12,
+    91
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    389,
+    621
+   ],
+   "area": 195,
+   "box": [
+    385,
+    590,
+    8,
+    50
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/raios": [
+  {
+   "n": 1,
+   "seed": [
+    50,
+    588
+   ],
+   "area": 657,
+   "box": [
+    46,
+    513,
+    9,
+    127
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    461,
+    581
+   ],
+   "area": 196,
+   "box": [
+    458,
+    557,
+    7,
+    44
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/raisha": [
+  {
+   "n": 1,
+   "seed": [
+    14,
+    304
+   ],
+   "area": 18714,
+   "box": [
+    0,
+    0,
+    34,
+    640
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    498,
+    303
+   ],
+   "area": 16738,
+   "box": [
+    481,
+    0,
+    31,
+    640
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/rionetta": [
+  {
+   "n": 3,
+   "seed": [
+    427,
+    271
+   ],
+   "area": 1695,
+   "box": [
+    387,
+    259,
+    92,
+    24
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 10,
+   "seed": [
+    112,
+    190
+   ],
+   "area": 275,
+   "box": [
+    52,
+    186,
+    89,
+    7
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 11,
+   "seed": [
+    116,
+    147
+   ],
+   "area": 180,
+   "box": [
+    78,
+    145,
+    71,
+    4
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/rodolphe": [
+  {
+   "n": 1,
+   "seed": [
+    112,
+    366
+   ],
+   "area": 384,
+   "box": [
+    102,
+    336,
+    26,
+    59
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    254,
+    625
+   ],
+   "area": 177,
+   "box": [
+    251,
+    601,
+    8,
+    39
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/roswitha": [
+  {
+   "n": 1,
+   "seed": [
+    141,
+    624
+   ],
+   "area": 967,
+   "box": [
+    115,
+    595,
+    43,
+    45
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    256,
+    624
+   ],
+   "area": 331,
+   "box": [
+    251,
+    609,
+    11,
+    31
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    450,
+    86
+   ],
+   "area": 192,
+   "box": [
+    436,
+    68,
+    29,
+    33
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/rudger": [
+  {
+   "n": 1,
+   "seed": [
+    226,
+    400
+   ],
+   "area": 206,
+   "box": [
+    208,
+    395,
+    38,
+    16
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    183,
+    92
+   ],
+   "area": 160,
+   "box": [
+    178,
+    76,
+    12,
+    30
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/rufina": [
+  {
+   "n": 7,
+   "seed": [
+    456,
+    492
+   ],
+   "area": 1073,
+   "box": [
+    425,
+    475,
+    55,
+    45
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 23,
+   "seed": [
+    62,
+    466
+   ],
+   "area": 171,
+   "box": [
+    59,
+    436,
+    10,
+    62
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 24,
+   "seed": [
+    69,
+    549
+   ],
+   "area": 170,
+   "box": [
+    63,
+    532,
+    17,
+    33
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 25,
+   "seed": [
+    394,
+    502
+   ],
+   "area": 158,
+   "box": [
+    391,
+    475,
+    7,
+    49
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/selevan": [
+  {
+   "n": 1,
+   "seed": [
+    364,
+    420
+   ],
+   "area": 1866,
+   "box": [
+    342,
+    367,
+    44,
+    90
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    129,
+    551
+   ],
+   "area": 1136,
+   "box": [
+    118,
+    515,
+    25,
+    73
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    155,
+    451
+   ],
+   "area": 698,
+   "box": [
+    147,
+    409,
+    21,
+    80
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/serios": [
+  {
+   "n": 4,
+   "seed": [
+    220,
+    499
+   ],
+   "area": 1422,
+   "box": [
+    194,
+    481,
+    51,
+    45
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    150,
+    95
+   ],
+   "area": 299,
+   "box": [
+    142,
+    70,
+    21,
+    51
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/sheila": [
+  {
+   "n": 7,
+   "seed": [
+    374,
+    486
+   ],
+   "area": 1173,
+   "box": [
+    317,
+    361,
+    106,
+    273
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/sieglinde": [
+  {
+   "n": 7,
+   "seed": [
+    109,
+    486
+   ],
+   "area": 373,
+   "box": [
+    86,
+    476,
+    50,
+    27
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    481,
+    422
+   ],
+   "area": 301,
+   "box": [
+    475,
+    399,
+    12,
+    46
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/sixth": [
+  {
+   "n": 1,
+   "seed": [
+    16,
+    206
+   ],
+   "area": 13216,
+   "box": [
+    0,
+    0,
+    32,
+    424
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    496,
+    204
+   ],
+   "area": 13050,
+   "box": [
+    480,
+    0,
+    32,
+    416
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 14,
+   "seed": [
+    348,
+    608
+   ],
+   "area": 208,
+   "box": [
+    340,
+    596,
+    16,
+    21
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/solenne": [
+  {
+   "n": 1,
+   "seed": [
+    249,
+    506
+   ],
+   "area": 1105,
+   "box": [
+    243,
+    414,
+    11,
+    180
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/souhaku": [
+  {
+   "n": 3,
+   "seed": [
+    37,
+    631
+   ],
+   "area": 537,
+   "box": [
+    21,
+    623,
+    35,
+    17
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 10,
+   "seed": [
+    481,
+    632
+   ],
+   "area": 274,
+   "box": [
+    470,
+    623,
+    20,
+    17
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/timo": [
+  {
+   "n": 1,
+   "seed": [
+    42,
+    49
+   ],
+   "area": 1062,
+   "box": [
+    24,
+    12,
+    34,
+    79
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    157,
+    179
+   ],
+   "area": 1042,
+   "box": [
+    144,
+    147,
+    35,
+    57
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    148,
+    620
+   ],
+   "area": 934,
+   "box": [
+    133,
+    594,
+    30,
+    46
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    263,
+    630
+   ],
+   "area": 304,
+   "box": [
+    255,
+    613,
+    20,
+    27
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/tiria": [
+  {
+   "n": 1,
+   "seed": [
+    356,
+    441
+   ],
+   "area": 346,
+   "box": [
+    338,
+    430,
+    32,
+    26
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    133,
+    418
+   ],
+   "area": 282,
+   "box": [
+    127,
+    394,
+    14,
+    42
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    169,
+    233
+   ],
+   "area": 215,
+   "box": [
+    160,
+    220,
+    24,
+    23
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    335,
+    479
+   ],
+   "area": 187,
+   "box": [
+    328,
+    471,
+    17,
+    22
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/titta": [
+  {
+   "n": 1,
+   "seed": [
+    406,
+    278
+   ],
+   "area": 579,
+   "box": [
+    379,
+    268,
+    44,
+    30
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    392,
+    184
+   ],
+   "area": 510,
+   "box": [
+    379,
+    131,
+    20,
+    97
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 8,
+   "seed": [
+    448,
+    605
+   ],
+   "area": 304,
+   "box": [
+    442,
+    590,
+    12,
+    32
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 9,
+   "seed": [
+    106,
+    178
+   ],
+   "area": 266,
+   "box": [
+    101,
+    140,
+    14,
+    76
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 10,
+   "seed": [
+    39,
+    602
+   ],
+   "area": 263,
+   "box": [
+    35,
+    583,
+    10,
+    39
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 11,
+   "seed": [
+    385,
+    620
+   ],
+   "area": 250,
+   "box": [
+    378,
+    608,
+    15,
+    27
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 12,
+   "seed": [
+    47,
+    543
+   ],
+   "area": 238,
+   "box": [
+    39,
+    525,
+    17,
+    44
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/tsuyuha": [
+  {
+   "n": 1,
+   "seed": [
+    408,
+    625
+   ],
+   "area": 3738,
+   "box": [
+    337,
+    611,
+    137,
+    29
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    107,
+    625
+   ],
+   "area": 3604,
+   "box": [
+    45,
+    611,
+    130,
+    29
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    430,
+    385
+   ],
+   "area": 1303,
+   "box": [
+    408,
+    330,
+    44,
+    111
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    395,
+    317
+   ],
+   "area": 393,
+   "box": [
+    380,
+    284,
+    28,
+    68
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    121,
+    309
+   ],
+   "area": 360,
+   "box": [
+    107,
+    272,
+    29,
+    77
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/tula": [
+  {
+   "n": 2,
+   "seed": [
+    218,
+    370
+   ],
+   "area": 389,
+   "box": [
+    205,
+    353,
+    24,
+    34
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 3,
+   "seed": [
+    288,
+    380
+   ],
+   "area": 362,
+   "box": [
+    276,
+    366,
+    24,
+    33
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 5,
+   "seed": [
+    260,
+    622
+   ],
+   "area": 322,
+   "box": [
+    256,
+    598,
+    12,
+    42
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 6,
+   "seed": [
+    376,
+    427
+   ],
+   "area": 233,
+   "box": [
+    371,
+    406,
+    11,
+    42
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/valdun": [
+  {
+   "n": 2,
+   "seed": [
+    28,
+    628
+   ],
+   "area": 363,
+   "box": [
+    16,
+    611,
+    22,
+    29
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/valeon": [
+  {
+   "n": 6,
+   "seed": [
+    272,
+    628
+   ],
+   "area": 457,
+   "box": [
+    264,
+    606,
+    21,
+    34
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/valg": [
+  {
+   "n": 1,
+   "seed": [
+    382,
+    457
+   ],
+   "area": 779,
+   "box": [
+    367,
+    441,
+    38,
+    40
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/violaine": [
+  {
+   "n": 8,
+   "seed": [
+    310,
+    375
+   ],
+   "area": 174,
+   "box": [
+    304,
+    354,
+    12,
+    37
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 10,
+   "seed": [
+    249,
+    568
+   ],
+   "area": 161,
+   "box": [
+    247,
+    536,
+    4,
+    72
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/vittorio": [
+  {
+   "n": 1,
+   "seed": [
+    393,
+    393
+   ],
+   "area": 426,
+   "box": [
+    385,
+    368,
+    19,
+    47
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 2,
+   "seed": [
+    394,
+    433
+   ],
+   "area": 291,
+   "box": [
+    387,
+    414,
+    16,
+    37
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/walker": [
+  {
+   "n": 1,
+   "seed": [
+    329,
+    149
+   ],
+   "area": 150,
+   "box": [
+    323,
+    140,
+    14,
+    16
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/yoihime": [
+  {
+   "n": 3,
+   "seed": [
+    441,
+    305
+   ],
+   "area": 1657,
+   "box": [
+    391,
+    277,
+    95,
+    50
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 4,
+   "seed": [
+    429,
+    269
+   ],
+   "area": 949,
+   "box": [
+    386,
+    243,
+    84,
+    39
+   ],
+   "verdict": "remove"
+  },
+  {
+   "n": 7,
+   "seed": [
+    118,
+    257
+   ],
+   "area": 245,
+   "box": [
+    98,
+    249,
+    39,
+    22
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/yura": [
+  {
+   "n": 22,
+   "seed": [
+    267,
+    624
+   ],
+   "area": 179,
+   "box": [
+    264,
+    603,
+    7,
+    37
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/yurina": [
+  {
+   "n": 2,
+   "seed": [
+    390,
+    618
+   ],
+   "area": 814,
+   "box": [
+    358,
+    591,
+    73,
+    49
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/yuzuel": [
+  {
+   "n": 22,
+   "seed": [
+    370,
+    369
+   ],
+   "area": 235,
+   "box": [
+    359,
+    359,
+    24,
+    20
+   ],
+   "verdict": "remove"
+  }
+ ],
+ "portraits/zork": [
+  {
+   "n": 1,
+   "seed": [
+    357,
+    291
+   ],
+   "area": 202,
+   "box": [
+    342,
+    275,
+    26,
+    27
+   ],
+   "verdict": "remove"
+  }
+ ]
+}

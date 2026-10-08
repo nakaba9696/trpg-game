@@ -8,3 +8,5 @@ docs/art/style_monsters.local.json
 docs/art/seeds_monsters.local.json
 docs/art/style_scenes.local.json
 docs/art/seeds_scenes.local.json
+cutout_sheets/
+__pycache__/

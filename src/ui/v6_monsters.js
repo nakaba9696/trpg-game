@@ -76,6 +76,8 @@
     const d = g.getImageData(0, 0, W, H);
     if (G.a13.keyOut(d.data, W, H, { bottom: true }) > 0) g.putImageData(d, 0, 0);
   }
+  // 背景込みの一枚絵として出す魔物（a17_keep_bg.js）：背景を消さない
+  const keepBg = (id) => !!(G.a17KeepBg && G.a17KeepBg.has(id));
   function sprite(id, img) {
     if (sprites[id]) return sprites[id];
     if (!hasDoc()) return img; // テスト（DOM なし）はそのまま
@@ -91,6 +93,7 @@
     else if (rect) g.drawImage(img, rect[0], rect[1], W, H, 0, 0, W, H);
     else g.drawImage(img, 0, 0);
     if (id.startsWith("portraits/")) return (sprites[id] = person(c, g, W, H));
+    if (keepBg(id)) return (sprites[id] = finish(c, g, W, H)); // 背景込みの一枚絵（A17）：消さずに、縁のぼかしだけ
     try { keyOut(g, W, H); } catch (e) { /* 読めない画像は消さずに、ぼかしだけ */ }
     return (sprites[id] = finish(c, g, W, H));
   }
@@ -131,7 +134,7 @@
     else g.drawImage(img, 0, 0);
     let d = null;
     try { d = g.getImageData(0, 0, W, H); } catch (e) { d = null; } // 読めない画像は消さずに、ぼかしだけ
-    if (!d) { sprites[id] = sprites[id] || finish(c, g, W, H); return end(); }
+    if (!d || keepBg(id)) { sprites[id] = sprites[id] || finish(c, g, W, H); return end(); } // 背景込みの一枚絵（A17）も消さない
     G.a13.run(d, { bottom: true }, (r, dd) => {
       if (!sprites[id]) { if (r > 0) g.putImageData(dd, 0, 0); sprites[id] = finish(c, g, W, H); }
       end();

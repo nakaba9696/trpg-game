@@ -58,7 +58,7 @@ mkdirSync(out, { recursive: true });
 if (embed) {
   if (htmlBytes >= SITE_LIMITS.page) throw new Error(`dist/morsveld.html が ${(htmlBytes / MB).toFixed(1)}MB で、Artifact の 1 ページの上限 ${SITE_LIMITS.page / MB}MB を超える`);
   writeFileSync(path.join(out, "morsveld.html"), html);
-  console.log(`dist/morsveld.html ${kb(htmlBytes)}（${files.length} ファイル${assets.files.length ? `・画像 ${assets.files.length} 枚 ${kb(assets.total)}` : ""}${assets.dropped.length ? `・差分 ${assets.dropped.length} 枚を省いた` : ""}）`);
+  console.log(`dist/morsveld.html ${kb(htmlBytes)}（${files.length} ファイル${assets.files.length ? `・画像 ${assets.files.length} 枚 ${kb(assets.total)}` : ""}${assets.dropped.length ? `・差分などの ${assets.dropped.length} 枚を省いた` : ""}）`);
 } else {
   const site = path.join(out, "site");
   rmSync(site, { recursive: true, force: true });
