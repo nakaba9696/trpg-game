@@ -90,7 +90,7 @@ export default ({ G, fail, ok, seeded }) => {
     ["t3_plus1", "t3_forge3", "t3_plus5"], ["t3_legend", "t3_legends_all"], ["t2_travel10", "t3_travel50", "t3_travel150"], ["t3_towns15", "t3_towns30"],
     ["t3_spot", "t3_spots10", "t3_spots30"], ["t3_depth3", "t3_depth5"], ["t3_mid", "t3_mid_all"], ["t3_side", "t3_side5"],
     ["t2_boss1", "t3_lairs3", "t3_lairs6", "t3_lairs_all"], ["t2_lairs", "t3_lairs_all"], ["t3_ev30", "t3_ev80"], ["t3_m12", "t3_m12_end"],
-    ["t2_quest1", "t3_qkinds10", "t3_qkinds_all"], ["t2_q9", "t3_q9_10", "t3_q9_all"], ["t3_c13", "t3_c13_3", "t3_bond"], ["t3_c13", "t3_c13_10"],
+    ["t2_quest1", "t3_qkinds10", "t3_qkinds_all"], ["t2_q9", "t3_q9_10", "t3_q9_all"], ["t3_c13", "t3_c13_3", "t3_bond"], ["t3_c13", "t3_c13_10"], ["t3_c14_friend", "t3_c14_friends5"], ["t3_c14_friend", "t3_c14_top"],
     ["t3_m6_3", "t3_m6_6"], ["t2_runs3", "t3_runs10", "t3_runs30"], ["t2_endings3", "t3_endings8"], ["t3_lore50", "t3_lore_half", "t3_lore_all"],
     ["t3_know100", "t3_know300"], ["t3_i3_10", "t3_i3_names", "t3_i3_mats"], ["t3_purse300", "rich1", "rich2"], ["t3_trade1", "t3_trade1000", "t3_trade5000", "t3_trade20000"],
   ];

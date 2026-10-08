@@ -32,6 +32,7 @@
   const m10c = (S) => (S.m10 && S.m10.counts) || {};
   const c13done = (S) => Object.entries((S.c13 && S.c13.done) || {}).filter(([, d]) => (d || []).length);
   const c13kind = (S, kinds) => c13done(S).some(([id, d]) => d.some((i) => kinds.includes((((D.C13_BOND || {})[id] || [])[i] || {}).kind)));
+  const c14st = (S) => Object.values((S.c14 && S.c14.st) || {}).filter((v) => typeof v === "number");
   const runs = (S) => (G.t2 && G.t2.runs ? G.t2.runs(S) : []);
   const cc = () => (G.codexCount ? G.codexCount() : {});
   const i3c = () => ((P().codex || {}).i3) || {};
@@ -210,6 +211,11 @@
     { key: "t3_refused", name: "届かなかった言葉", tier: "銀", desc: "想いを断られた", test: (S) => (m10c(S).refuse || 0) >= 1 },
     { key: "t3_jealous", name: "火種", tier: "銀", desc: "嫉妬の場面が起きた", test: (S) => (m10c(S).jealous || 0) >= 1 },
     { key: "t3_widow", name: "喪服", tier: "銀", desc: "連れ合いに先立たれた", test: (S) => (m10c(S).widow || 0) >= 1 },
+    // 関係の段（C14：顔見知り・知人・友・深い仲・かけがえのない人。S.c14.st）
+    { key: "t3_c14_friend", name: "友と呼べる人", tier: "銀", desc: "名のある人と「友」の段になった", test: (S) => c14st(S).some((v) => v >= 2) },
+    { key: "t3_c14_friends5", name: "五人の友", tier: "金", desc: "一度の冒険で、五人と「友」以上の段になった", test: (S) => c14st(S).filter((v) => v >= 2).length >= 5 },
+    { key: "t3_c14_top", name: "かけがえのない人", tier: "金", desc: "名のある人と「かけがえのない人」の段になった",
+      test: (S) => { const n = ((D.C14 && D.C14.STAGES) || []).length; return n > 0 && c14st(S).some((v) => v >= n - 1); } },
     { key: "t3_c13_10", name: "十人の形見", tier: "金", desc: "冒険をまたいで、十人から絆の褒美を受け取った",
       test: () => Object.values(((P().codex || {}).people) || {}).filter((p) => p && (p.c13 || []).length).length >= 10 },
   ]);
