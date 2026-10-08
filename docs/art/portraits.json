@@ -2806,6 +2806,16 @@
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
+   "id": "kind_villager_m_b",
+   "group": "people",
+   "name": "町の人（男・二）",
+   "type": "classic",
+   "file": "assets/portraits/kind_villager_m_b.webp",
+   "identity": "1boy, male focus, adult, young man, 20 years old, dark brown hair, short hair, messy hair, brown eyes",
+   "tags": "townsperson, simple tunic",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い町の男・徒弟・助手（15〜29 歳）が 22 件。まだ描いていない）"
+  },
+  {
    "id": "kind_villager_f",
    "group": "people",
    "name": "町の人（女）",
@@ -2813,6 +2823,15 @@
    "identity": "1girl, woman, 30 years old, light brown hair, short hair, low twintails, amber eyes",
    "tags": "townsperson, simple tunic",
    "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_villager_f_b",
+   "group": "people",
+   "name": "町の人（女・二）",
+   "file": "assets/portraits/kind_villager_f_b.webp",
+   "identity": "1girl, young woman, 18 years old, auburn hair, medium hair, braid, green eyes",
+   "tags": "townsperson, simple tunic, apron",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。町の娘（15〜19 歳）が 14 件。まだ描いていない）"
   },
   {
    "id": "kind_merchant_m",
@@ -2825,6 +2844,16 @@
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
+   "id": "kind_merchant_m_b",
+   "group": "people",
+   "name": "商人（男・二）",
+   "type": "classic",
+   "file": "assets/portraits/kind_merchant_m_b.webp",
+   "identity": "1boy, male focus, adult, young man, 24 years old, brown hair, short hair, brown eyes",
+   "tags": "merchant, vest, coin pouch",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い商人・骨董屋（26〜28 歳）が 2 件。まだ描いていない）"
+  },
+  {
    "id": "kind_merchant_f",
    "group": "people",
    "name": "商人（女）",
@@ -2835,6 +2864,15 @@
    "art": 2
   },
   {
+   "id": "kind_merchant_f_b",
+   "group": "people",
+   "name": "商人（女・二）",
+   "file": "assets/portraits/kind_merchant_f_b.webp",
+   "identity": "1girl, young woman, 17 years old, light brown hair, ponytail, brown eyes",
+   "tags": "merchant, vest, coin pouch, cart",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。荷馬車の娘（16 歳）が 1 件。まだ描いていない）"
+  },
+  {
    "id": "kind_guard_m",
    "group": "people",
    "name": "衛兵（男）",
@@ -2843,6 +2881,16 @@
    "identity": "1boy, male focus, adult, middle-aged man, 45 years old, brown hair, short hair, brown eyes",
    "tags": "town guard, helmet, tabard, spear",
    "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_guard_m_b",
+   "group": "people",
+   "name": "衛兵（男・二）",
+   "type": "classic",
+   "file": "assets/portraits/kind_guard_m_b.webp",
+   "identity": "1boy, male focus, adult, young man, 24 years old, light brown hair, short hair, blue eyes",
+   "tags": "town guard, helmet, tabard, spear",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い衛兵（24〜29 歳）が 3 件。まだ描いていない）"
   },
   {
    "id": "kind_guard_f",
@@ -2863,6 +2911,16 @@
    "identity": "1boy, male focus, adult, young man, 24 years old, ash blonde hair, short hair, brown eyes",
    "tags": "priest, white vestment, sun emblem",
    "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_priest_m_c",
+   "group": "people",
+   "name": "神官・修道女（男・三）",
+   "type": "ojisan",
+   "file": "assets/portraits/kind_priest_m_c.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 48 years old, grey hair, short hair, receding hairline, brown eyes",
+   "tags": "priest, white vestment, sun emblem",
+   "memo": "名もない人の型の三枚目（R5b：年頃の合う型が無かった人のため。壮年の神官・修道士・異端審問官（40〜59 歳）が 14 件。まだ描いていない）"
   },
   {
    "id": "kind_priest_m_b",
@@ -2914,6 +2972,15 @@
    "art": 2
   },
   {
+   "id": "kind_noble_f_b",
+   "group": "people",
+   "name": "貴族（女・二）",
+   "file": "assets/portraits/kind_noble_f_b.webp",
+   "identity": "1girl, young woman, 17 years old, platinum blonde hair, long hair, blue eyes",
+   "tags": "noble, elegant clothes, jewelry",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い貴族の娘（17 歳）が 1 件。まだ描いていない）"
+  },
+  {
    "id": "kind_rogue_m",
    "group": "people",
    "name": "ならず者・盗賊（男）",
@@ -2963,6 +3030,16 @@
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
+   "id": "kind_soldier_m_b",
+   "group": "people",
+   "name": "兵士・傭兵団の兵（男・二）",
+   "type": "classic",
+   "file": "assets/portraits/kind_soldier_m_b.webp",
+   "identity": "1boy, male focus, adult, young man, 20 years old, brown hair, short hair, brown eyes",
+   "tags": "soldier, armor, spear",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い兵士・見習いの鐘番・脱走兵（15〜29 歳）が 23 件。まだ描いていない）"
+  },
+  {
    "id": "kind_soldier_f",
    "group": "people",
    "name": "兵士・傭兵団の兵（女）",
@@ -2980,6 +3057,16 @@
    "identity": "1boy, male focus, adult, man, 30 years old, dark brown hair, short hair, slicked back hair, brown eyes",
    "tags": "knight, plate armor, crest, sword",
    "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_knight_m_b",
+   "group": "people",
+   "name": "騎士（男・二）",
+   "type": "bishonen",
+   "file": "assets/portraits/kind_knight_m_b.webp",
+   "identity": "1boy, male focus, adult, young man, 19 years old, blonde hair, short hair, blue eyes",
+   "tags": "squire, knight, light plate armor, crest, sword",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い騎士・従者（17〜20 歳）が 2 件。まだ描いていない）"
   },
   {
    "id": "kind_knight_f",
@@ -3001,6 +3088,16 @@
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
+   "id": "kind_sailor_m_b",
+   "group": "people",
+   "name": "船乗り（男・二）",
+   "type": "classic",
+   "file": "assets/portraits/kind_sailor_m_b.webp",
+   "identity": "1boy, male focus, adult, young man, 22 years old, dark hair, short hair, tan skin, black eyes",
+   "tags": "sailor, striped shirt, bandana",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い水夫・漁師（20〜29 歳）が 8 件。まだ描いていない）"
+  },
+  {
    "id": "kind_sailor_f",
    "group": "people",
    "name": "船乗り（女）",
@@ -3019,6 +3116,16 @@
    "identity": "1boy, male focus, adult, young man, 24 years old, black hair, short hair, hair between eyes, grey eyes",
    "tags": "mage, dark blue robe, staff",
    "memo": "名もない人の型（仲間・出来事の人）"
+  },
+  {
+   "id": "kind_mage_m_c",
+   "group": "people",
+   "name": "魔法使い（男・三）",
+   "type": "ojisan",
+   "file": "assets/portraits/kind_mage_m_c.webp",
+   "identity": "1boy, male focus, adult, middle-aged man, 50 years old, dark grey hair, short hair, beard, grey eyes",
+   "tags": "mage, dark blue robe, staff",
+   "memo": "名もない人の型の三枚目（R5b：年頃の合う型が無かった人のため。壮年の学者・魔法使い（40〜58 歳）が 2 件。まだ描いていない）"
   },
   {
    "id": "kind_mage_m_b",
@@ -3126,6 +3233,15 @@
    "art": 2
   },
   {
+   "id": "kind_beggar_f_b",
+   "group": "people",
+   "name": "物乞い・囚人（女・二）",
+   "file": "assets/portraits/kind_beggar_f_b.webp",
+   "identity": "1girl, young woman, 19 years old, dark brown hair, long hair, messy hair, grey eyes",
+   "tags": "ragged clothes, dirty, tired",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い逃亡奴隷・物乞い（20 歳）が 1 件。まだ描いていない）"
+  },
+  {
    "id": "kind_archer_m",
    "group": "people",
    "name": "弓使い・狩人（男）",
@@ -3136,6 +3252,16 @@
    "memo": "名もない人の型（仲間・出来事の人）"
   },
   {
+   "id": "kind_archer_m_b",
+   "group": "people",
+   "name": "弓使い・狩人（男・二）",
+   "type": "classic",
+   "file": "assets/portraits/kind_archer_m_b.webp",
+   "identity": "1boy, male focus, adult, young man, 22 years old, black hair, short hair, green eyes",
+   "tags": "hunter, archer, green hooded cloak, bow",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い狩人・弓兵（25〜26 歳）が 2 件。まだ描いていない）"
+  },
+  {
    "id": "kind_archer_f",
    "group": "people",
    "name": "弓使い・狩人（女）",
@@ -3144,6 +3270,15 @@
    "tags": "hunter, archer, green hooded cloak, bow",
    "memo": "名もない人の型（仲間・出来事の人）",
    "art": 2
+  },
+  {
+   "id": "kind_archer_f_b",
+   "group": "people",
+   "name": "弓使い・狩人（女・二）",
+   "file": "assets/portraits/kind_archer_f_b.webp",
+   "identity": "1girl, young woman, 17 years old, brown hair, ponytail, amber eyes",
+   "tags": "hunter, archer, green hooded cloak, bow",
+   "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い女の狩人（16〜19 歳）が 2 件。まだ描いていない）"
   },
   {
    "id": "kind_adventurer_m",
