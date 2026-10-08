@@ -3,12 +3,15 @@
 // （迷宮の処理は W11 の担当。山の段は迷宮の「地下」「主」「迷宮の出来事」と混ざらないよう、別の状態 S.w10 に持つ）。explore.js は書き換えず、
 // G.exploreActions・G.exploreAct・G.arrive を包む
 //   麓（段 0）：いつもの荒野の行動（探索・野営・旅）に「山道を登る」が一つ足される
-//   段 1〜4：旅には出られない。登る・下りる・麓まで一気に下りる・休む（山小屋はただで全快、ほかの段は岩陰で野営）・山頂で景色を眺める
+//   段 1〜4：旅には出られない。登る・下りる・麓まで一気に下りる・休む（山小屋はただで全快、ほかの段は岩陰で野営）
+//   「景色を眺める」行動は置かない（持ち主「冒険した先で絶景を見たいだけ」）。はじめて峠を越えた瞬間と、山頂に着いた瞬間に、背景と短い文で見せる
 //   登るたびに：天候（霧・雪で道に迷う）→ 落石 → 高さの寒さ → 山頂なら景色、でなければ その段の敵（L.w10.pools）・山の出来事・何もなし
 //   天候は G.skyAt に高さを足す（尾根から上は雨が雪に、冬は晴れでも雪が舞う。山小屋から上は晴れでも霧が湧く日がある。日と段で決まる）
-//   山頂：はじめて立ったときだけ山場の文（D.W10_PEAKS[場所] の arrive → 晴れた朝昼は vista・ほかは景色の文 → after）と小さな発見（first）・手引きの一行。景色の文は天候 → 季節 → 時間帯で選ぶ（A11 と同じ）
+//   峠：はじめて越えたときだけ、下の世界を振り返る一文（D.W10_PEAKS[場所].pass。晴れなら clear、ほかは cloud）
+//   山頂：はじめて立ったときだけ山場の文（arrive → 晴れた朝昼は vista・ほかは景色の文 → after）と小さな発見（first）・手引きの一行。
+//         二度目からは着いた一文（again）と景色の文。景色の文は天候 → 季節 → 時間帯で選ぶ（A11 と同じ）。設定は docs/lore/mountains.md
 // 出来事：D.EVENTS に where: ["w10"]・w: 0（ふつうの抽選に出さない）と w10: { loc [場所], min, max 段, weather [天候] } を付けて置く（src/data/events_w10.js）
-// セーブに足すもの：S.w10 = { loc, stage, peaks: {場所: はじめて立った日}, sight: 眺めた日, recent: [出来事] }。古いセーブに無くても動く（W10.st が作る）
+// セーブに足すもの：S.w10 = { loc, stage, peaks: {場所: はじめて立った日}, passes: {場所: はじめて峠を越えた日}, recent: [出来事] }。古いセーブに無くても動く（W10.st が作る）
 // 乱数は G.rand / G.d / G.pick だけ。DOM には触らない。レーン W（W10）
 (function (G) {
   const D = G.data;
@@ -21,7 +24,7 @@
   W.DIFF = ["易しい", "易しい", "普通", "普通", "難しい"]; // 段ごとの判定の難しさ（場所の危険度の上乗せは G.s5EventDiff が足す）
   W.FIGHT = 0.35;     // 登ったときに戦いになる割合
   W.EVENT = 0.35;     // 登ったときに山の出来事が起きる割合（戦いでなかったとき）
-  W.SANITY = 3;       // 景色を眺めると戻る正気
+  W.SANITY = 3;       // 山頂に着くと戻る正気（はじめては倍）
   W.RECENT = 5;
 
   W.mountOf = (id) => { const L = D.LOCS[id]; return L && L.w10 ? L : null; };
@@ -164,7 +167,8 @@
     W.setStage(S, to);
     G.log("title", `${L.name}・${W.name(L, to)}`);
     const say = (L.w10.say || [])[to];
-    if (say && say.length && !(to === W.TOP && !W.st(S).peaks[S.loc])) G.say(G.pick(say));
+    const vista = to === 1 && W.passView(S, L);
+    if (!vista && say && say.length && to !== W.TOP) G.say(G.pick(say));
     const rockP = (to === 1 || to === 3 ? 0.18 : 0.08) + (sky.weather === "雪" || sky.weather === "雨" ? 0.08 : 0);
     if (G.rand() < rockP) W.rockfall(S, L, to);
     if (S.over) return;
@@ -241,7 +245,6 @@
     if (!P) { G.say("山頂に着いた。"); return; }
     if (!st.peaks[S.loc]) {
       st.peaks[S.loc] = S.day;
-      st.sight = S.day;
       G.log("title", `${L.name}の頂`, { peak: true });
       G.log("nar", P.arrive, { peak: true });
       const sky = W.sky(S);
@@ -258,19 +261,22 @@
       if (G.addSanity) G.addSanity(W.SANITY * 2);
       return;
     }
+    // 二度目からも、着いた瞬間の景色がごほうび（短い一文と、時間帯・天候の景色）
     G.say(G.pick(P.again || ["山頂に着いた。風が強い。"]));
-  };
-  W.view = () => {
-    const S = G.S, L = G.loc();
-    const P = (D.W10_PEAKS || {})[S.loc];
-    if (!P || W.stage(S) !== W.TOP) return;
-    const st = W.st(S);
-    if (st.sight === S.day) return;
-    st.sight = S.day;
-    G.log("you", P.label);
     G.say(G.pick(W.lines(P, S)));
     if (G.addSanity) G.addSanity(W.SANITY);
-    G.pass(1);
+  };
+  // はじめて峠を越えたとき：越えてきた下の世界を振り返る（短い文。背景は峠の絵）
+  W.passView = (S, L) => {
+    const P = (D.W10_PEAKS || {})[S.loc];
+    const st = W.st(S);
+    st.passes = st.passes || {};
+    if (!P || !P.pass || st.passes[S.loc]) return false;
+    st.passes[S.loc] = S.day;
+    const sky = W.sky(S);
+    G.say(sky.weather === "晴" ? P.pass.clear : P.pass.cloud || P.pass.clear);
+    if (P.pass.lore && G.openLore) G.openLore(P.pass.lore);
+    return true;
   };
 
   // ---------------------------------------------------------------- 行動
@@ -294,11 +300,6 @@
       .filter((g) => g.list.length && g.title !== "旅立つ");
     const list = [];
     if (n < W.TOP) list.push({ id: "w10up", label: `${W.name(L, n + 1)}へ登る`, sub: upSub(n + 1), kw: ["登", "上", "進"] });
-    if (n === W.TOP) {
-      const P = (D.W10_PEAKS || {})[S.loc];
-      const seen = W.st(S).sight === S.day;
-      if (P) list.push({ id: "w10view", label: P.label, sub: seen ? "今日はもう眺めた" : "気が晴れる", disabled: seen, kw: ["景色", "眺め", "山頂"] });
-    }
     if (n === W.HUT) list.push({ id: "w10rest", label: "山小屋で休む", sub: "HP と MP が全快", kw: ["休", "泊", "寝", "小屋"] });
     else list.push({ id: "w10rest", label: "岩陰で野営する", sub: "HP 少し・MP 全快・冷える", kw: ["野営", "休", "寝"] });
     list.push({ id: "w10down", label: `${W.name(L, n - 1)}へ下りる`, sub: "", kw: ["下", "戻", "引き返"] });
@@ -313,7 +314,6 @@
       case "w10down": return W.down(false);
       case "w10foot": return W.down(true);
       case "w10rest": return W.rest();
-      case "w10view": return W.view();
       default: return act0(head, arg, a);
     }
   };

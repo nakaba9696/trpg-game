@@ -7,7 +7,7 @@
 //   w10.say[段]    … その段に着いたときの短い一文（候補から一つ）
 //   w10.quiet      … 何も起きなかったときの一文
 //   w10.cold       … 寒さの底上げ（高い山ほど大きい）
-// 山頂の景色は src/data/w10_peaks.js、出来事と噂は src/data/events_w10.js、敵は src/data/enemies_w10.js、絵は src/ui/scene_w10_mount.js
+// 設定は docs/lore/mountains.md（地理と歴史・住む人・峠と山小屋・言い伝え・魔物の理由）。山頂の景色は src/data/w10_peaks.js、出来事と噂は src/data/events_w10.js、敵は src/data/enemies_w10.js、絵は src/ui/scene_w10_mount.js
 // 道は両方向に書く（tests/checks/w7_map.mjs）。locations.js は書き換えない。レーン W（W10）
 (function (G) {
   const D = (G.data = G.data || {});
@@ -15,7 +15,7 @@
   Object.assign(D.LOCS, {
     w10_roune: {
       name: "眠り山ロウネ", region: "レオネスト王国", area: "南の野", type: "wild", danger: 1, scene: "w10_roune", x: 32, y: 84, w8land: "mount",
-      desc: "火山の都フロスレイアの北に、なだらかな裾を広げた山がある。火はとうの昔に消え、斜面は一面の草地だ。山羊の鈴があちこちで鳴り、羊飼いの小屋の煙が細く上がっている。頂のあたりだけが、いつも雲をかぶっている。",
+      desc: "火山の都フロスレイアの北に、なだらかな裾を広げた山がある。南の怒る山と同じ山並みなのに、ここだけは火も煙も上げない。降り積もった灰の斜面は一面の草地になり、山羊の鈴があちこちで鳴っている。羊飼いの小屋の煙が細く上がり、頂のあたりだけがいつも雲をかぶっている。",
       pool: ["wolf", "goblin", "w10_rockgoat", "w10_screemole"],
       links: {},
       w10: {
@@ -45,7 +45,7 @@
     },
     w10_drause: {
       name: "鉄冠岳ドラウゼ", region: "ノルディア帝国", type: "wild", danger: 3, scene: "w10_drause", x: 45, y: 12, w8land: "mount",
-      desc: "鉱山の都カースヴェルグの北東に、赤錆色の岩肌の山がそびえている。頂の岩は冠の歯のように尖って並び、雪の日にも黒く見える。中腹には掘り捨てられた坑口がいくつも口を開け、坑夫たちは「上の方は鉄が呼ぶ」と言って登りたがらない。",
+      desc: "鉱山の都カースヴェルグの北東に、赤錆色の岩肌の山がそびえている。都の鉄はもともとこの山から掘った。頂の岩は冠の歯のように尖って並び、雪の日にも黒く見える。上の坑道が崩れてから中腹の坑夫の村は捨てられ、坑夫たちは「上の方は鉄が呼ぶ」と言って登りたがらない。",
       pool: ["w10_snowape", "w10_icebat", "orc"],
       links: {},
       w10: {

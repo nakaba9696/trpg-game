@@ -1,7 +1,9 @@
 // W10：序盤〜中盤の山（src/data/locations_zw10.js・engine/zzzzzzzzzz_w10_climb.js・data/w10_peaks.js・data/events_w10.js・data/enemies_w10.js・ui/scene_w10_mount.js）
+// - 設定（docs/lore/mountains.md）が山ごとにある
 // - 山が二つ：一つは危険度 1〜2 でレオネスト王国、もう一つは危険度 2〜3。段（麓・峠・山小屋・尾根・山頂）の名・敵・一文、気候・用語・着いたときの一文・背景の一覧・噂
 // - 麓では荒野の行動に「山道を登る」が足され、登っている間は旅に出られない。段を登りきると山頂、下りられる、麓まで一気に下りられる
-// - はじめて頂に立ったときだけ山場の文（晴れた朝昼は遠くを見渡す文、ほかは天候・時間帯の文）・小さな発見・手引きの一行。景色を眺めるのは一日に一度。景色の文は天候で変わる
+// - 「景色を眺める」行動は無い。はじめて峠を越えた瞬間に下の世界の一文、山頂に着くたびに景色の文（天候で変わる）。
+//   はじめて頂に立ったときだけ山場の文（晴れた朝昼は遠くを見渡す文、ほかは天候・時間帯の文）・小さな発見・手引きの一行
 // - 山小屋で休むと全快。高さで雨が雪になる。古いセーブ（S.w10 が無い）でも動く。別の場所に着くと段は消える
 // - 山の出来事は形がそろい（能力値の違う解き方 2 つ以上・判定なしの選択肢）、どの選択肢を選んでも壊れない。新しい敵に耐性と弱点がある
 import { readFileSync } from "node:fs";
@@ -41,7 +43,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!rumors.some((r) => r.includes(short(L.name)))) F(`${id}: 噂が無い`);
     const P = (D.W10_PEAKS || {})[id];
     if (!P) { F(`${id}: 山頂の景色（D.W10_PEAKS）が無い`); continue; }
-    if (!P.label || !P.arrive || !P.vista || !P.after || (P.phase || []).length !== 4 || P.phase.some((x) => !x || !x.length)) F(`${id}: 山頂の景色の名・山場の文（arrive・vista・after）・時間帯の文がそろっていない`);
+    if (!P.pass || !P.pass.clear || !P.pass.cloud || !P.arrive || !P.vista || !P.after || (P.phase || []).length !== 4 || P.phase.some((x) => !x || !x.length)) F(`${id}: 峠の景色・山場の文（arrive・vista・after）・時間帯の文がそろっていない`);
     if (!P.weather || !(P.weather.霧 || []).length || !(P.weather.雪 || []).length) F(`${id}: 霧と雪の日の景色が無い`);
     if (!P.first || !P.first.text || !P.first.lore) F(`${id}: はじめて立ったときの発見と手引きの一行が無い`);
     else { const [lid, key] = P.first.lore.split(":"); if (!((D.LORE[lid] || {}).lines || []).some((l) => l[0] === key)) F(`${id}: 発見の用語 ${P.first.lore} が無い`); }
@@ -54,6 +56,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!(D.E12 && D.E12.FOES && D.E12.FOES[id])) F(`敵 ${id}: 耐性と弱点（E12）が無い`);
     else if (!/[+]/.test(D.E12.FOES[id]) || !/[-!]/.test(D.E12.FOES[id])) F(`敵 ${id}: 弱点と耐性の両方が無い（${D.E12.FOES[id]}）`);
   }
+
+  const lore = readFileSync(new URL("../../docs/lore/mountains.md", import.meta.url), "utf8");
+  for (const id of mounts) if (!lore.includes("`" + id + "`")) F(`${id}: 設定（docs/lore/mountains.md）が無い`);
 
   // ---------------------------------------------------------------- 出来事の形
   const evs = D.EVENTS.filter((e) => /^w10_/.test(e.id));
@@ -118,19 +123,17 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const [lid, key] = P.first.lore.split(":");
     if (!((g.loreOf ? g.loreOf(S) : S.lore || {})[lid] || []).includes(key)) F(`${id}: 発見の手引きの一行が開かない`);
     if (!S.chronicle.some((c) => c.text.includes(D.LOCS[id].name) && c.text.includes("頂"))) F(`${id}: 年表に頂が残らない`);
-    // 景色を眺める（今日はもう眺めた → 次の日なら眺められる）
-    const view = () => g.actions().flatMap((x) => x.list).find((x) => x.id === "w10view");
-    if (!view()) F(`${id}: 山頂に「景色を眺める」が無い`);
-    else if (!view().disabled) F(`${id}: はじめて立った日に、もう一度景色を眺められる`);
-    S.day++;
-    if (!view() || view().disabled) F(`${id}: 次の日に景色を眺められない`);
-    else { const n0 = S.log.length; g.act("w10view"); if (S.log.length === n0) F(`${id}: 景色を眺めても何も出ない`); if (!view().disabled) F(`${id}: 一日に二度眺められる`); }
+    // 「景色を眺める」行動は無い（着いた瞬間に見せる）。はじめて峠を越えたときの一文
+    if (g.actions().flatMap((x) => x.list).some((x) => /景色|眺め/.test(x.label))) F(`${id}: 「景色を眺める」行動がある（着いた瞬間に見せるはず）`);
+    if (!S.w10.passes || !S.w10.passes[id]) F(`${id}: はじめて峠を越えた日が残らない`);
+    if (!logs.includes(P.pass.clear) && !logs.includes(P.pass.cloud)) F(`${id}: はじめて峠を越えたときの景色の文が出ない`);
     // 二度目の頂では発見の文が出ない
     const firstN = () => S.log.filter((x) => x.text === P.first.text).length;
     const f0 = firstN();
     g.act("w10down"); settle(g);
     for (let i = 0; i < 40 && W.stage(S) < W.TOP && !S.over; i++) { S.hp = S.maxHp; g.act("w10up"); settle(g); }
     if (W.stage(S) === W.TOP && firstN() !== f0) F(`${id}: 二度目の頂でも発見の文が出る`);
+    if (W.stage(S) === W.TOP) { const tail = S.log.slice(-40).map((x) => x.text); if (!tail.some((t) => (P.again || []).includes(t))) F(`${id}: 二度目の頂で着いたときの一文が出ない`); if (!tail.some((t) => [...P.phase.flat(), ...Object.values(P.weather || {}).flat(), ...Object.values(P.season || {}).flat()].includes(t))) F(`${id}: 二度目の頂で景色の文が出ない`); }
     // 山小屋で休む → 全快
     W.setStage(S, W.HUT); S.mode = "explore";
     S.hp = 1; S.mp = 0;
@@ -195,7 +198,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   }
   // 背景：段の絵が描ける名前で用意されている
   const ui = readFileSync(new URL("../../src/ui/scene_w10_mount.js", import.meta.url), "utf8");
-  for (const k of ["w10_trail", "w10_hut", "w10_ridge", ...mounts.map((id) => "w10_peak_" + id.replace(/^w10_/, "")), ...mounts.map((id) => D.LOCS[id].scene)]) if (!new RegExp(`OUT\\.${k}\\s*=`).test(ui)) F(`背景の絵 ${k} が無い`);
+  for (const k of ["w10_pass", "w10_hut", "w10_ridge", ...mounts.map((id) => "w10_peak_" + id.replace(/^w10_/, "")), ...mounts.map((id) => D.LOCS[id].scene)]) if (!new RegExp(`OUT\\.${k}\\s*=`).test(ui)) F(`背景の絵 ${k} が無い`);
 
   if (!bad) ok(`W10：山 ${mounts.length}（${mounts.map((id) => D.LOCS[id].name).join("・")}）・出来事 ${evs.length}`);
 };
