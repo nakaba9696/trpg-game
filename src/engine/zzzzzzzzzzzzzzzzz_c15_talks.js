@@ -68,7 +68,14 @@
       const out = pick0(c, S);
       const sc = X.sceneFor(c, S);
       if (!sc) return out;
-      return [sc].concat(out.filter((x) => x !== sc && x.id !== sc.id)).slice(0, 5);
+      // 一覧の数は変えない。あふれる分は、頼みごと（C9）・ほかの場面（K10）を残して後ろから外す
+      const rest = out.filter((x) => x !== sc && x.id !== sc.id);
+      while (rest.length > 4) {
+        let j = rest.length - 1;
+        while (j > 0 && rest[j].q9) j--;
+        rest.splice(j > 0 ? j : rest.length - 1, 1);
+      }
+      return [sc].concat(rest);
     };
   }
   // 深い話を聞き終えたら、進める段は進める（顔見知り→知人。友から先は C13 の節目の出来事で）
