@@ -88,14 +88,14 @@
   }
 
   // ---------------------------------------------------------------- 2. 人物（一画面でまとめて）
-  // おまかせで全部埋まった状態から始める。まず「名前と生まれ」（名前と性別・年齢・生まれ）、次に「職業と目的」の順に並べる（U19）。
-  // 「あとでもよいこと」（外見・生い立ち）の欄は、中身ごと無くした（U17）。各項目に、ゲームにどう効くかの一行（D.CRE_HINTS）。U15。名前・年齢・生まれを今決めることへ移し、候補から選ぶ形に（U16）
+  // おまかせで全部埋まった状態から始める。まず「名前と年齢」（性別・名前・年齢）、次に「職業と目的」の順に並べる（U19。生まれは U25 で無くした）。
+  // 「あとでもよいこと」（外見・生い立ち）の欄は、中身ごと無くした（U17）。各項目に、ゲームにどう効くかの一行（D.CRE_HINTS）。U15。名前・年齢を今決めることへ移し、候補から選ぶ形に（U16）
   function person(root) {
     const HN = D.CRE_HINTS || {}, TX = D.CRE_TEXT || {};
     const eff = (k) => h("p", "creEff", HN[k] || "");
     // 上の見出しと人物の札は外した（札の中身は「確認」で見られる。持ち主の決定 U20）。「全部おまかせ」は段の並びの右端に小さく
     const all = btn("全部おまかせ", "small", () => { const s = draft.customGoal; draft = cre.fresh(R); draft.customGoal = s; sfx("dice", "coin"); setup.show(); }, "p-all");
-    all.title = "名前・年齢・生まれ・職業・目的を全部おまかせで決め直す";
+    all.title = "性別・名前・年齢・職業・目的を全部おまかせで決め直す";
     steps(root, 0, all);
 
     // 初めて遊ぶ人（トロフィーも墓碑も無い）には、おまかせで旅立つのを勧める（強制しない）
@@ -106,15 +106,14 @@
     }
 
     const lay = h("div", "cre2");
-    // 年齢と生まれの説明の一行を、選び直すたびに書き換える
+    // 年齢の説明の一行を、選び直すたびに書き換える
     function refresh() {
-      const a = D.AGES[draft.ageBand], o = D.ORIGINS[draft.origin];
-      if (oBlurb) oBlurb.textContent = `${o.blurb}（${modText(o.mod)}）`;
+      const a = D.AGES[draft.ageBand];
       if (aBlurb) aBlurb.textContent = `${a.blurb}（${modText(a.mod)}${cre.ageRange ? `、${cre.ageRange(draft).join("〜")}歳` : ""}）`;
     }
 
     const form = h("div", "creForm");
-    let oBlurb = null, aBlurb = null;
+    let aBlurb = null;
     const groupHead = (title, sub) => {
       const gh = h("div", "creGroupHead");
       const t = h("b", "", title);
@@ -122,18 +121,25 @@
       return gh;
     };
 
-    // ================= あなたは誰か（名前と性別・年齢・生まれ。U19：持ち主の決定で、職業・目的より先に）
+    // ================= あなたは誰か（性別 → 名前 → 年齢。U19：職業・目的より先に。U25：名前の響きを決める性別を名前の前に。生まれは無くした）
     const now = h("div", "creGroup creNow");
     now.append(groupHead(TX.now, TX.nowSub));
 
-    // 名前（性別と生まれの響きの表から選ぶ。自由入力は無い。「別の候補」で引き直す。U16）
+    // 性別（名前の響きが変わるので、名前より前に独立した項目で置く。選び直すと名前の候補も引き直す。U25）
+    const sSex = h("section", "creSec creSexSec");
+    const x3 = h("h3", "", "性別");
+    x3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "sex", R); drawSex(); drawNames(); refresh(); }, "p-sex-r"));
+    sSex.append(x3);   // 説明の一行は無くした（U25）
+    const sexSeg = segEl("性別", "sex", [["男", "男"], ["女", "女"]], draft.sex, (v) => { cre.setSex(draft, v, R); drawNames(); refresh(); });
+    sSex.append(sexSeg);
+    const drawSex = () => sexSeg.querySelectorAll("input").forEach((i) => { i.checked = i.value === draft.sex; });
+    now.append(sSex);
+
+    // 名前（上で選んだ性別の名前の表から選ぶ。自由入力は無い。「別の候補」で引き直す。U16。性別のあとに置く U25）
     const s1 = h("section", "creSec creNameSec");
     const n3 = h("h3", "", "名前");
     n3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "name", R); drawNames(); refresh(); }, "p-name-r"));
-    s1.append(n3, eff("name"));
-    const sexRow = h("div", "creRow");
-    sexRow.append(segEl("性別", "sex", [["男", "男"], ["女", "女"]], draft.sex, (v) => { cre.setSex(draft, v, R); drawNames(); refresh(); }));
-    s1.append(sexRow, h("p", "creEff", `性別：${HN.sex || ""}`));
+    s1.append(n3);   // 説明の一行は無くした（U25）
     const nameBox = h("div", "creNames");
     const nameChips = h("div", "chips");
     nameChips.setAttribute("role", "radiogroup");
@@ -178,27 +184,6 @@
     aBlurb = h("p", "fine");
     s0.append(aBlurb);
     now.append(s0);
-
-    // 生まれ
-    const s2 = h("section", "creSec");
-    const o3 = h("h3", "", "生まれ");
-    o3.append(btn("おまかせ", "small", () => { cre.randomPart(draft, "origin", R); drawOrigin(); drawNames(); refresh(); }, "p-origin-r"));
-    s2.append(o3, eff("origin"));
-    const chips = h("div", "chips");
-    chips.setAttribute("role", "radiogroup");
-    chips.setAttribute("aria-label", "生まれ");
-    Object.entries(D.ORIGINS).forEach(([id, o]) => {
-      const l = h("label", "chip");
-      const inp = h("input"); inp.type = "radio"; inp.name = "origin"; inp.value = id; inp.checked = draft.origin === id;
-      inp.onchange = () => { cre.setOrigin(draft, id, R); drawNames(); refresh(); };
-      l.append(inp, document.createTextNode(o.name));
-      chips.append(l);
-    });
-    const drawOrigin = () => chips.querySelectorAll("input").forEach((i) => { i.checked = i.value === draft.origin; });
-    s2.append(chips);
-    oBlurb = h("p", "fine");
-    s2.append(oBlurb);
-    now.append(s2);
     form.append(now);
 
     // ================= 何をする者か（職業・目的。U19：誰かを決めてから）
@@ -213,10 +198,7 @@
       const l = h("label", "card");
       const inp = h("input"); inp.type = "radio"; inp.name = "cls"; inp.value = id; inp.checked = draft.cls === id;
       inp.onchange = () => {
-        const oldOrigin = draft.origin;
-        cre.setClass(draft, id, R);
-        drawNames();
-        if (draft.origin !== oldOrigin) { const r = form.querySelector(`input[name=origin][value=${draft.origin}]`); if (r) r.checked = true; }
+        cre.setClass(draft, id, R);   // 選んだ名前・性別・年齢はそのまま（U25）
         refresh();
       };
       l.append(inp, h("b", "", c.name), h("span", "", c.blurb), h("span", "fine", `得意：${cre.strengths(id).join("・")}`));
@@ -311,7 +293,7 @@
     const c = D.CLASSES[draft.cls];
     const st = cre.final(draft);
     const wt = h("div");
-    wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", `${[c.name, D.AGES[draft.ageBand].name].join("・")}・${D.ORIGINS[draft.origin].short}生まれ`));
+    wt.append(h("b", "", draft.profile.name || "（名無し）"), h("span", "fine", [c.name, D.AGES[draft.ageBand].name].join("・")));
     who.append(wt);
     const tray = h("div", "tray");
     tray.setAttribute("aria-hidden", "true");
@@ -334,7 +316,7 @@
     const tb = cre.trophyBonus ? cre.trophyBonus() : 0;
     const ts = cre.trophyScore ? cre.trophyScore() : 0;
     if (ts) bh.append(h("span", "trophyBonus num", `トロフィー ${ts} 点で +${tb}（次の +1 まであと ${cre.trophyNext()} 点）`));
-    bh.append(h("span", "fine", "好きな能力値に足す。トロフィーは銅 1・銀 2・金 5 点で数え、10 点ごとにボーナス点 +1"));
+    bh.append(h("span", "fine", "好きな能力値に足す。トロフィーは銅 1・銀 2・金 5・白金 10 点で数え、10 点ごとにボーナス点 +1"));
     box.append(bh);
     const list = h("div", "statlist creStats num");
     D.STATS.forEach((k) => {
@@ -357,7 +339,6 @@
       const cm = cre.classMod(draft.cls, k);
       if (cm) det.append(h("span", cm > 0 ? "plus" : "minus", `職業 ${signed(cm)}`));
       if (m.age) det.append(h("span", m.age > 0 ? "plus" : "minus", `年齢 ${signed(m.age)}`));
-      if (m.origin) det.append(h("span", m.origin > 0 ? "plus" : "minus", `生まれ ${signed(m.origin)}`));
       if (draft.bonus[k]) det.append(h("span", "plus", `ボーナス +${draft.bonus[k]}`));
       det.append(h("span", "", `普通の判定 ${G.s5Plain(v)}%`));   // 相手・難しさとの差で決まる（S5）
       row.append(h("span", "nm", k), h("span", "v", String(v)), b, pm, det);
@@ -370,6 +351,7 @@
     box.append(sum);
     box.append(h("p", "fine", `能力値は点で、冒険の中で 99 まで伸びていく（使うほど、強い相手に挑むほど伸びる）。12 点で普通の判定が五分五分。相手が強い・難しいほど成功率は下がり、点が上なら上がる。能力の名前に触れると説明が出る。`));
     root.append(box);
+    if (setup.statsExtra) setup.statsExtra(root, draft, h);   // 術の才（M14。src/ui/zm14_magic.js）
 
     const nav = h("div", "creNav");
     const next = btn("次へ：確かめる", "primary", () => go("sheet"), "s-next");
@@ -401,7 +383,7 @@
     const paper = h("article", "charSheet");
     const top = h("header", "csTop");
     const nm = h("div");
-    nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, p.sex].join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）・${D.ORIGINS[p.origin].name}生まれ`));
+    nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, p.sex].join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）`));
     nm.append(h("span", "csLine", `目的：${o.goalText}${o.goal === "custom" ? (D.CRE_TEXT || {}).customSheet || "" : ""}`));
     top.append(nm);
     paper.append(top);
@@ -421,7 +403,7 @@
     sb.append(h("h3", "", "持ち物"), h("p", "csGear", gear.join("、")));
     const dl = h("dl", "kv csKv");
     const rrows = G.r1Rows ? G.r1Rows({ profile: p }).filter(([k]) => k !== "種族") : [];
-    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["伸び方", growLine(o.cls)], ["出発地", D.LOCS[c.start].name], ...rrows]
+    [["職業", c.blurb], ["得意", cre.strengths(o.cls).join("・")], ["伸び方", growLine(o.cls)], ["出発地", D.LOCS[c.start].name], ...rrows, ...(cre.sheetRows ? cre.sheetRows(draft) : [])]
       .forEach(([k, v]) => { if (!v) return; dl.append(h("dt", "", k), h("dd", "", v)); });
     const pb = h("section");
     pb.append(h("h3", "", "人物"), dl);

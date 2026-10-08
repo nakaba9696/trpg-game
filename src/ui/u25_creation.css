@@ -1,0 +1,2 @@
+/* U25：性別の欄は見出しと同じ名前なので、男／女の札の上の「性別」は読み上げだけに残す */
+.creSexSec .field > .flabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

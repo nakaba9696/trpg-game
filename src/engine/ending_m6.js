@@ -141,7 +141,7 @@
     const days = run ? S.day : Math.max(1, Math.round((S.turns || 0) / 3));
     const world = chron.filter((c) => c.kind === "world");
     const spells = S.spells || [];
-    const learned = spells.filter((id) => !((D.SPELL_START && D.SPELL_START[S.cls]) || []).includes(id)).length;
+    const learned = spells.filter((id) => !(S.spellStart || (D.SPELL_START && D.SPELL_START[S.cls]) || []).includes(id)).length;   // S.spellStart：はじめから知っていた術（M14）
     const alive = comps.find((c) => (c.bond || 0) >= 90) || comps[0];
     // 語り手になれる仲間は、生きて別れた者だけ（死んだ者・裏切った者は語れない）
     const kept = gone.find((g) => g.how === "leave");
@@ -164,6 +164,8 @@
       world: world.length ? { text: G.pick(world).text } : false,
       trophy: (key) => { const t = (D.TROPHIES || []).find((x) => x.key === key); return !!t && chron.some((c) => c.kind === "trophy" && (c.text || "").includes(t.name)); },
       stats: S.stats || {},
+      // 暮らしの記録（R7。宿・食事・酒場・買い物・薬草の回数）。条件つきの行（{ t, if }）がこれを見る
+      life: G.r7 && G.r7.life ? G.r7.life(S) : { inn: 0, meal: 0, tavern: 0, buy: 0, herb: 0 },
     };
     L.ending = S.ending ? (S.ending.id || S.ending) : L.over === "end" ? "plain" : "";
     return L;
@@ -202,7 +204,12 @@
         return x === undefined ? "" : String(x).includes("{") ? fill(x, extra) : x;
       });
     };
-    const line = (arr, extra) => fill(G.pick(arr), extra);
+    // 行は文字列か { t, if: (L) => 真偽 }。if が偽の行（していないことを前提にした行）は選ばない（R7）
+    const only = (arr) => {
+      const ok = (arr || []).filter((x) => typeof x === "string" || (x && (() => { try { return !!x.if(L); } catch { return false; } })()));
+      return (ok.length ? ok : (arr || []).filter((x) => typeof x === "string")).map((x) => (typeof x === "string" ? x : x.t));
+    };
+    const line = (arr, extra) => fill(G.pick(only(arr)), extra);
 
     // 1. 生まれと旅立ち
     const life = [];

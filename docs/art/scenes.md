@@ -3,7 +3,7 @@
 > このファイルは [scenes.json](scenes.json) から `node tools/scenes.mjs` で作る。直すときは json を直してから作り直す。
 > 作り方は [README.md](README.md) の「背景の絵（A11）」。設定は [style_scenes.json](style_scenes.json)。1344×768 で作り、1232×704 の webp に縮めて `assets/scenes/<id>.webp` に置く（1 枚 150KB 以下）。
 
-全部で 141 枚（場所 72・施設の中 57・迷宮の中 12）。
+全部で 175 枚（場所 74・施設の中 57・迷宮の中 44）。
 
 ## 試しの 5 枚
 
@@ -17,7 +17,7 @@
 | `in_tavern` | 酒場 | 施設の中 |
 | `in_ruins` | エル・ナフ遺構の中 | 迷宮の中 |
 
-## 場所（72）
+## 場所（74）
 
 町・荒野・迷宮の外の景色（場所の id ごとに 1 枚）。屋外は昼・晴れで作り、時間帯・季節・天候はゲームが色味と雨・雪・霧の粒で重ねる。`sky` が night・red の場所は空が決まっている（朧島は夜、使徒領は赤い空）。
 
@@ -95,6 +95,8 @@
 | `majincastle` | 黒鎧の使徒の居城（使徒領・迷宮）・空 red | `majin` | realm | castle made of bones and black iron, open gate, red sky, ominous fortress, ash in the air |
 | `e2_kitchen` | 肉の谷の大厨房（使徒領・迷宮）・空 red | `e2_kitchen` | realm | gigantic castle-like kitchen building at the bottom of a valley, many chimneys with steam, red sky, giant cauldrons |
 | `w4_canopy` | 使徒領・天蓋の原（使徒領・荒野） | `w4_canopy` | realm | white salt flat, mirror-like ground reflecting the sky, blurred horizon, huge round shadow on the ground |
+| `w10_roune` | 眠り山ロウネ（レオネスト王国・荒野） | `w10_roune` | leonest | gentle extinct volcano with wide grassy slopes, flat cloud-capped summit, scattered white goats, shepherd's stone hut with thin smoke, winding footpath, stone cairns |
+| `w10_drause` | 鉄冠岳ドラウゼ（ノルディア帝国・荒野） | `w10_drause` | nordia | rust-red rocky mountain with a jagged crown of black rock spires at the summit, snowfields, abandoned mine entrances on the slopes, ruined miners' village at the foot, frozen rails |
 
 ## 施設の中（57）
 
@@ -160,7 +162,7 @@
 | `in_w9s_lake` | 湖の舟着き場（アミュレイン） | `w9s_lake` | special_in | wooden boat landing on a misty lake behind a hot spring town, small rowboats tied up, steam drifting over the water, distant shore |
 | `in_w9s_canopy` | 大樹の見張り台（ナグリス） | `w9s_canopy` | special_in | wooden lookout platform high in the branches of a giant tree, rope ladders, a vast forest canopy below, the shadow of a colossal tree on the horizon |
 
-## 迷宮の中（12）
+## 迷宮の中（44）
 
 迷宮に入ったあと（深さ 1 から）の絵。汎用の石の通路と洞窟、迷宮ごとの中。竜の墓場と黒鎧の使徒の居城は外と同じ絵を使う。
 
@@ -178,4 +180,36 @@
 | `in_e2_kitchen` | 大厨房の中 | `e2_kitchen_in` | dungeon_b | giant kitchen interior, enormous cauldrons, stoves with fire, hanging meat hooks, steam, huge cleavers |
 | `in_onigashima` | 鬼ヶ島の洞窟の奥 | `onigashima_in` | dungeon_b | cave lair, warm wet rock walls, sake barrels, bonfire, feast remains, scattered bones |
 | `in_w3_seacave` | 潮鳴りの洞の中 | `w3_seacave_in` | dungeon_b | inside a sea cave, tide water, glowing algae, wet rocks |
+| `in_w11_graveyard_trap` | 竜の墓場・罠の通路 | `w11_graveyard_trap_in` | w11_graveyard | narrow chasm in a valley of dragon bones, a single huge dragon rib laid across as a bridge, saw marks, small skulls hanging on ropes, dark |
+| `in_w11_graveyard_chest` | 竜の墓場・宝の部屋 | `w11_graveyard_chest_in` | w11_graveyard | sleeping dragon skeleton curled on the ground, old treasure chest held between its rib bones, scattered gold, dim cave light |
+| `in_w11_graveyard_rest` | 竜の墓場・休み場 | `w11_graveyard_rest_in` | w11_graveyard | ruined dry stone hut on a rocky ledge among giant bones, old stone hearth with a small campfire, carved tally marks on the wall |
+| `in_w11_graveyard_lair` | 竜の墓場・巣 | `w11_graveyard_lair_in` | w11_graveyard | huge dragon ribcage used as a nest, glowing yellow eyes in the dark, scattered bones, faint green glow |
+| `in_w11_graveyard_stairs` | 竜の墓場・下への階段 | `w11_graveyard_stairs_in` | w11_graveyard | stone steps descending into a dark hole, bone-strewn cave floor, cold blue light rising from below |
+| `in_w11_graveyard_lore` | 竜の墓場・昔のかけら | `w11_graveyard_lore_in` | w11_graveyard | rows of upright dragon bones standing like grave markers, each carved with short ancient glyphs, torchlight |
+| `in_w11_graveyard_vault` | 竜の墓場・隠し部屋 | `w11_graveyard_vault_in` | w11_graveyard | small hidden stone storeroom, shelves with old skulls and bone tools, open treasure chest glowing, shaft of light from above, dust motes |
+| `in_w11_graveyard_deep` | 竜の墓場・最奥（最奥の特別な一枚） | `w11_graveyard_deep_in` | w11_graveyard | vast round hollow at the bottom of a valley, several giant dragon skeletons curled asleep in a ring, single beam of light from a crack in the ceiling, eerie green flame in the center, mist, epic |
+| `in_w11_majincastle_trap` | 黒鎧の使徒の居城・罠の通路 | `w11_majincastle_trap_in` | w11_majincastle | dark corridor of black iron and bone, square trapdoors in the ceiling, steel spikes thrust up from holes in the floor, torches |
+| `in_w11_majincastle_chest` | 黒鎧の使徒の居城・宝の部屋 | `w11_majincastle_chest_in` | w11_majincastle | black iron hall, chest of a fallen challenger with a paper note on the lid, dark red banners, torchlight |
+| `in_w11_majincastle_rest` | 黒鎧の使徒の居城・休み場 | `w11_majincastle_rest_in` | w11_majincastle | small antechamber in a dark castle, simple bed with clean sheets, table with a loaf of black bread and a water jar, small fire |
+| `in_w11_majincastle_lair` | 黒鎧の使徒の居城・巣 | `w11_majincastle_lair_in` | w11_majincastle | barracks hall, empty suits of black armor with names painted in white, red glowing eyes in the dark |
+| `in_w11_majincastle_stairs` | 黒鎧の使徒の居城・下への階段 | `w11_majincastle_stairs_in` | w11_majincastle | bone and iron corridor, stairway descending into darkness, cold blue light from below |
+| `in_w11_majincastle_lore` | 黒鎧の使徒の居城・昔のかけら | `w11_majincastle_lore_in` | w11_majincastle | upside-down relief carving on the ceiling, rows of kneeling soldiers, huge beast on a throne, face chiseled away |
+| `in_w11_majincastle_vault` | 黒鎧の使徒の居城・隠し部屋 | `w11_majincastle_vault_in` | w11_majincastle | hidden armory sealed inside a wall, racks of ancient spears and halberds, open chest of gold, shaft of light |
+| `in_w11_majincastle_deep` | 黒鎧の使徒の居城・最奥（最奥の特別な一枚） | `w11_majincastle_deep_in` | w11_majincastle | colossal throne hall of bone pillars, giant spiked bone throne silhouetted against a breach in the wall showing a blood red sunset sky and jagged mountains, a small wooden chair facing the throne on a red carpet, epic |
+| `in_w11_w1_catacomb_trap` | エルヴィナの地下墓地・罠の通路 | `w11_w1_catacomb_trap_in` | w11_w1_catacomb | catacomb corridor, hanging bronze censers on chains, sweet smoke crawling along the floor, skulls in the walls |
+| `in_w11_w1_catacomb_chest` | エルヴィナの地下墓地・宝の部屋 | `w11_w1_catacomb_chest_in` | w11_w1_catacomb | catacomb chamber, stone sarcophagi, burial chest with a family crest, candlelight |
+| `in_w11_w1_catacomb_rest` | エルヴィナの地下墓地・休み場 | `w11_w1_catacomb_rest_in` | w11_w1_catacomb | small altar in a catacomb niche, three candles always burning, stone basin of reddish water, warm light |
+| `in_w11_w1_catacomb_lair` | エルヴィナの地下墓地・巣 | `w11_w1_catacomb_lair_in` | w11_w1_catacomb | catacomb hall, dried corpses kneeling in prayer, thin threads of golden light rising from their necks to the ceiling, red eyes in the dark |
+| `in_w11_w1_catacomb_stairs` | エルヴィナの地下墓地・下への階段 | `w11_w1_catacomb_stairs_in` | w11_w1_catacomb | catacomb corridor, stairway descending into darkness, cold blue light from below |
+| `in_w11_w1_catacomb_lore` | エルヴィナの地下墓地・昔のかけら | `w11_w1_catacomb_lore_in` | w11_w1_catacomb | wall of bones with scratched writing, a row of skulls, candlelight |
+| `in_w11_w1_catacomb_vault` | エルヴィナの地下墓地・隠し部屋 | `w11_w1_catacomb_vault_in` | w11_w1_catacomb | secret ossuary niche, neatly stacked skulls, open chest, shaft of light, dust |
+| `in_w11_w1_catacomb_deep` | エルヴィナの地下墓地・最奥（最奥の特別な一枚） | `w11_w1_catacomb_deep_in` | w11_w1_catacomb | enormous cavern beneath a cathedral altar, thousands of kneeling skeletal pilgrims, countless threads of golden light rising from them and converging on a glowing point in the ceiling like a starry sky, beautiful and eerie, epic |
+| `in_w11_onigashima_trap` | 鬼ヶ島の洞窟・罠の通路 | `w11_onigashima_trap_in` | w11_onigashima | warm cave tunnel, straw mat laid over a pit, rope hanging from the ceiling with a giant iron club swinging above, wooden sign |
+| `in_w11_onigashima_chest` | 鬼ヶ島の洞窟・宝の部屋 | `w11_onigashima_chest_in` | w11_onigashima | cave storeroom with sake barrels, gambling money chest, lanterns |
+| `in_w11_onigashima_rest` | 鬼ヶ島の洞窟・休み場 | `w11_onigashima_rest_in` | w11_onigashima | remains of an ogre feast in a cave, huge red sake cup, barrels, embers of a bonfire |
+| `in_w11_onigashima_lair` | 鬼ヶ島の洞窟・巣 | `w11_onigashima_lair_in` | w11_onigashima | cave sleeping quarters full of snoring ogres in the dark, glowing eyes, scattered bones, paper lanterns |
+| `in_w11_onigashima_stairs` | 鬼ヶ島の洞窟・下への階段 | `w11_onigashima_stairs_in` | w11_onigashima | rocky cave, steps descending into a dark hole, cold blue light from below |
+| `in_w11_onigashima_lore` | 鬼ヶ島の洞窟・昔のかけら | `w11_onigashima_lore_in` | w11_onigashima | cave wall covered with names carved by sword tips, old swords stuck in the ground, torchlight |
+| `in_w11_onigashima_vault` | 鬼ヶ島の洞窟・隠し部屋 | `w11_onigashima_vault_in` | w11_onigashima | hidden rock niche, old sword guard and keepsakes, open chest, shaft of light |
+| `in_w11_onigashima_deep` | 鬼ヶ島の洞窟・最奥（最奥の特別な一枚） | `w11_onigashima_deep_in` | w11_onigashima | huge sea cave opening onto the open ocean at dawn, sunrise on the horizon, path of golden light across the waves into the cave, giant red sake cup and barrels on the rocks, white chain glowing under the water, epic |
 

@@ -25,13 +25,14 @@
       sec.append(h("p", "fine u17rumlead", "依頼になる手前の話。続きを追えば、依頼や手がかりにつながるかもしれない。"));
       const ul = h("ul", "u17rumlist");
       list.forEach((x) => {
-        const li = h("li", "u17r" + (x.quest ? " done" : "") + (x.fresh ? " fresh" : ""));
+        const li = h("li", "u17r" + (x.quest || x.done ? " done" : "") + (x.fresh ? " fresh" : ""));
         const top = h("div", "u17rtop");
         top.append(h("span", "u17rtext", `「${x.text}」`));
-        if (x.fresh && !x.quest) top.append(h("span", "u17tag", "新"));
+        if (x.fresh && !x.quest && !x.done) top.append(h("span", "u17tag", "新"));
+        if (x.done) top.append(h("span", "u17tag r7done", "済")); // 依頼になって済んだ噂（R7。engine/zzzzzzzzzzzzzz_r7_done.js）
         li.append(top);
         const sub = h("div", "u17rsub fine");
-        sub.textContent = x.quest ? `依頼になった：『${x.quest}』` : x.hint;
+        sub.textContent = x.quest ? `依頼になった：『${x.quest}』` : x.done ? `済んだ：『${x.done}』` : x.hint;
         if (x.date) sub.append(h("small", "u17rdate", x.date));
         li.append(sub);
         ul.append(li);

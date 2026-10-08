@@ -5,7 +5,7 @@
 //   鍛錬 … 町の訓練場（「技の稽古」。金と日数。町・職業・F3 の節目で鍛えられる技が変わる）と、荒野の野営（「野営の稽古」。日数だけ・難しい）。
 //          しくじっても積み重ね（S.k1.prog）が残り、次は当たりやすい
 //   師   … 町の施設にいる人（D.K1_TEACHERS の fac。名声・罪・善行・依頼の数・位・評判が条件）、出来事で出会う人（ev）、打ち解けた仲間（comp）
-//   巻物 … 技の巻物（type "k1scroll"）。店の掘り出し物・敵の落とし物・出来事。読むと覚えて崩れる。能力値が目安に届かないと読めない。古い字の巻物は古文字読みか知力が要る
+//   巻物 … 技の巻物（type "k1scroll"）。町の商店の奥の棚・強い敵の落とし物・迷宮の深い層・出来事など。読めば必ず覚えて崩れる（判定は無い。古い字の巻物は半日かかる）。能力値が目安に届かないと読めない。古い字の巻物は古文字読みか知力が要る。手に入れにくさは K5（zzzzzzzzzzzzz_k5_scrolls.js）
 //   出来事の結果に skill（覚える）・k1scroll（巻物を一つ）・k1use（覚えた技の熟練）を書ける（G.apply を包む）
 // 気力（S.k1.ki）：戦闘の技に使う。眠ると全快。戦闘の中では、身を守る・読み勝つ（F1 の読み勝ちが増える）と一つ戻る。勝つと一つ戻る
 // 熟練（S.k1.use）：使うたびに数え、D.K1_LV で段が上がる（判定 +5％ずつ。極みは気力が一つ軽い）
@@ -107,7 +107,7 @@
   G.sleep = () => { const r = sleep0(); if (G.S) K.state(G.S).ki = K.kiMax(G.S); return r; };
 
   // ---------------------------------------------------------------- 武器の型（ここだけ見れば型が決まる）
-  K.WEAPON_KIND = { fists: "拳", dagger: "短剣", longsword: "剣", mace: "槌", axe: "斧", katana: "刀", staff: "杖", rapier: "剣", mithril: "剣", oniclub: "槌", volgrim: "剣", byakuya: "刀" };
+  K.WEAPON_KIND = { fists: "拳", dagger: "短剣", longsword: "剣", mace: "槌", axe: "斧", katana: "刀", staff: "杖", rapier: "剣", mithril: "剣", oniclub: "槌", volgrim: "槍", byakuya: "鞭" };
   K.I3_KIND = { 拳具: "拳", 鎌: "剣", 鎖: "鞭" };
   const BY_NAME = [[/弓/, "弓"], [/槍|矛|薙刀|鉾|銛/, "槍"], [/短剣|ナイフ|鎧通し|匕首|鉤/, "短剣"], [/刀/, "刀"], [/斧|鉈/, "斧"],
     [/槌|棍|金棒|フレイル|鎚|メイス|錫杖|匙/, "槌"], [/杖|指揮棒/, "杖"], [/鞭/, "鞭"], [/籠手|拳|素手/, "拳"], [/礫|投げ|手裏剣|筒/, "投げ物"], [/剣|刃|鎌/, "剣"]];
@@ -406,19 +406,17 @@
     if (it.old && !K.knows("k1_letters", S) && ((S.stats || {}).知力 || 0) < 20) return "古い字が読めない";
     return "";
   };
-  K.scrollChance = (itemId) => G.chance("知力", D.ITEMS[itemId] && D.ITEMS[itemId].old ? "普通" : "易しい", K.knows("k1_letters") ? 10 : 0);
+  // K5：巻物は読めば必ず覚える（判定は無い）。かかる時間だけ違う。古い字の巻物は半日、ふつうはひととき
+  K.scrollTime = (itemId) => (D.ITEMS[itemId] && D.ITEMS[itemId].old ? 2 : 1);
   K.readScroll = (itemId) => {
     const S = G.S;
     const it = D.ITEMS[itemId];
     if (!S || S.over || S.mode === "combat" || !it || it.type !== "k1scroll" || !S.inv[itemId] || K.scrollWhy(itemId, S)) return false;
     G.log("you", `${it.name}を読む`);
-    G.pass(1);
-    const r = G.check("知力", it.old ? "普通" : "易しい", "巻物を読む", K.knows("k1_letters") ? 10 : 0);
-    if (r.ok) {
-      G.say("墨の線をなぞるうちに、体のほうが先に分かった。読み終えると、巻物は乾いた音を立てて崩れた。");
-      G.take(itemId);
-      K.learn(it.skill, "scroll");
-    } else G.say("書いてあることは分かる。だが、体がまだついてこない。巻物を巻き直して、懐にしまった。");
+    G.pass(K.scrollTime(itemId));
+    G.say(it.old ? "古い字を一つずつ拾い、図の足の運びを床の上でなぞる。日が傾くころ、体のほうが先に分かった。読み終えると、巻物は乾いた音を立てて崩れた。" : "墨の線をなぞるうちに、体のほうが先に分かった。読み終えると、巻物は乾いた音を立てて崩れた。");
+    G.take(itemId);
+    K.learn(it.skill, "scroll");
     return true;
   };
   const useItem0 = G.useItem;
@@ -568,7 +566,7 @@
       groups.push({ title: "巻物", list: scrolls.map((id) => {
         const why = K.scrollWhy(id, S);
         const s = SK[D.ITEMS[id].skill];
-        return { id: "k1scroll:" + id, label: `${D.ITEMS[id].name}を読む`, sub: why || `知力 ${K.scrollChance(id)}%・${s.hint}`, disabled: !!why, kw: ["巻物", "読", s.name] };
+        return { id: "k1scroll:" + id, label: `${D.ITEMS[id].name}を読む`, sub: why || `${K.scrollTime(id) > 1 ? "半日" : "ひととき"}・${s.hint}`, disabled: !!why, kw: ["巻物", "読", s.name] };
       }) });
     }
     // 戦闘の外の技

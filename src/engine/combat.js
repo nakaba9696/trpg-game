@@ -4,7 +4,9 @@
 //   { fx: "hurt", n, heavy } あなたがダメージ / { fx: "ally", who: 仲間の名前, n } 仲間がダメージ / { fx: "allydown", who } 仲間が戦闘不能（B5）/ { fx: "crit" } 会心・急所 / { fx: "boss", foe: id, name } ボスの前口上（D.BOSS_LINES）
 // 読み合いのためのつなぎ目（F1。中身は engine/zzzzzzzzzz_f1_duel.js）。無ければ今まで通り：
 //   G.cbActs[kind](t, a, b)   こちらの手を足す（"cb:<kind>"。この手番の中で行うので、図鑑・依頼・弱点の上乗せがそのまま数える）
-//   G.cbDmgMod(f, n, how)     こちらの一撃のダメージを変える（構え・隙・とどめ）。返した数を与える
+//   G.cbDmgMod(f, n, how)     こちらの一撃のダメージを変える（構え・隙・とどめ・E12 の耐性と弱点）。返した数を与える
+//   G.cbAllyDmg(c, f, n)      仲間の一撃のダメージを変える（E12 の耐性と弱点）。返した数を与える
+//   G.cbHurtMod(f, e, n, mv)  あなたが受ける一撃のダメージを変える（E12b：敵の攻め手と、こちらの防具の効き目）。返した数を受ける
 //   G.cbMove(f, e)            敵がこの手番にすること { skip, times, mul, hit, through（身を守っても避けにくくならない）, guardDiv, pierce, you, name, text, f1 }。null ならふつうに一撃
 //   G.cbStruck(f, e, mv, who, dmg)  敵の一撃が当たった・外れた（who は仲間か null＝あなた、dmg は与えた数か 0）のあと
 //   C.f1dodge                 「躱す」が決まった：あなたへの最初の一撃を丸ごと外す
@@ -18,10 +20,16 @@
   G.cbActs = G.cbActs || {};
 
   const VOLGRIM_LINES = [
-    "ヴォルグリム「おい、腰が引けてるぞ。もっと深く踏み込め」",
-    "ヴォルグリム「雑魚に手こずってんじゃねえ。俺が泣くぞ」",
-    "ヴォルグリム「……血の味が薄いな。もっとマシな獲物はいねえのか」",
-    "ヴォルグリム「死ぬなよ。お前が死んだら、次の持ち主を探すのが面倒だ」",
+    "ヴォルグリムの鉤が、ひとりでに、いちばん強い相手の方へ向く。",
+    "槍が手の中で重くなる。弱い相手には、振るのを渋るように。",
+    "鉤が相手の肉に掛かって外れない。槍は黙ったまま、引き寄せる。",
+    "骨の柄が、手のひらに吸い付くように馴染む。槍は何も言わない。次の獲物を探している。",
+  ];
+  // 明けの鎖もしゃべらない。鳴るだけ
+  const BYAKUYA_LINES = [
+    "鎖の輪が触れ合って、澄んだ音が一つ鳴る。相手が、ほんの一瞬たじろぐ。",
+    "投げた鎖が、相手の腕に巻きついて離れない。",
+    "鎖が、手首の上で静かに締まり直す。まだ終わっていない、というふうに。",
   ];
 
   G.alive = () => (G.S.combat ? G.S.combat.foes.filter((f) => f.hp > 0) : []);
@@ -156,7 +164,8 @@
   function damageFoe(f, n, how) {
     const e = G.foeData(f);
     if (e.majin && !G.weapon().pierce && how !== "holy") {
-      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、見えない壁に弾かれた。絶界だ。`, { fx: "wall", foe: f.name });
+      const W = (G.wallOf ? G.wallOf(f) : { what: "見えない壁", name: "絶界" }); // E11：絶界は黒鎧だけ。長編の若君は糸の守り
+      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い", wind: "風", earth: "石", light: "光", dark: "闇", burn: "炎" }[how] || "刃"}は${f.name}の体の手前で、${W.what}に弾かれた。${W.name}だ。`, { fx: "wall", foe: f.name });
       return;
     }
     if (G.cbDmgMod) n = Math.max(0, Math.round(G.cbDmgMod(f, n, how)));
@@ -188,7 +197,7 @@
     // B5：回復を仲間に使う（"heal:<仲間の id>"・"item:<品>:<仲間の id>"）
     const ally = (id) => (id && id !== "you" ? S.companions.find((c) => c.id === id) || null : null);
     if (kind === "attack") {
-      G.log("you", `${w.name}で${t.name}に斬りかかる`);
+      G.log("you", `${w.name}で${t.name}に${G.e12 ? G.e12.verb(w) : "斬りかかる"}`);
       const r = G.check(w.stat, { vs: G.foeVs.eva(G.foeData(t), w.stat) }, "攻撃", w.hit || 0);
       if (r.ok) {
         let dmg = G.dice(w.dmg) + (w.stat === "筋力" ? pow("筋力", 15) : pow("敏捷", 20));
@@ -273,6 +282,7 @@
     if (S.over) return;
     if (!G.alive().length) return endCombat("win"); // 呪いで倒れることがある
     if (S.weapon === "volgrim" && G.rand() < 0.2) G.say(G.pick(VOLGRIM_LINES));
+    else if (S.weapon === "byakuya" && G.rand() < 0.2) G.say(G.pick(BYAKUYA_LINES));
     C.round++;
   };
 
@@ -306,7 +316,7 @@
       G.log("you", `${t.name}に呪いの言葉を吐く`);
       const r = G.check("魔力", spellVs(sp, G.foeVs.mres(G.foeData(t))), sp.name, bonus);
       if (r.ok) {
-        if (G.foeData(t).majin && !G.weapon().pierce) G.say(`呪いの言葉は、${t.name}の手前で霧のように散った。絶界だ。`);
+        if (G.foeData(t).majin && !G.weapon().pierce) G.say(`呪いの言葉は、${t.name}の手前で霧のように散った。${(G.wallOf ? G.wallOf(t) : { name: "絶界" }).name}だ。`);
         else { t.hex = r.crit ? 5 : 3; G.say(`${t.name}の影が、ぐにゃりと歪んだ。`); G.note(`${t.name}は呪われた（${t.hex}手番・命中が落ち、少しずつ蝕まれる）`); }
       } else G.say(r.fumble ? "言葉が口の中で裏返り、自分の舌を噛んだ。" : "言葉は届かなかった。");
       if (r.fumble) { if (!S.conds.includes("呪い")) { S.conds.push("呪い"); G.note("状態：呪い"); } G.payDebt(sp.debt); }
@@ -333,12 +343,13 @@
   }
   // 仲間の一撃（絶界に弾かれる・当たる・外れる）
   function allyStrike(c, f, e) {
-    if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は絶界に弾かれた。`, { fx: "wall", foe: f.name }); return; }
+    if (e.majin && !G.weapon().pierce) { G.log("sys", `${c.name}の攻撃は${(G.wallOf ? G.wallOf(f) : { what: "見えない壁", name: "絶界" }).name}に弾かれた。`, { fx: "wall", foe: f.name }); return; }
     const chance = G.allyHitChance(c, e);
     if (G.d(100) <= chance) {
-      const dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
+      let dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
+      if (G.cbAllyDmg) dmg = G.cbAllyDmg(c, f, dmg); // E12：仲間の武器の種類と、敵の耐性・弱点
       f.hp = Math.max(0, f.hp - dmg);
-      G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
+      G.log("sys", `${c.name}の${c.fire ? (G.m14AllyMagic ? G.m14AllyMagic(c) : "魔法") : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
       if (f.hp <= 0) onFoeDown(f);
     } else G.note(`${c.name}の攻撃は外れた。`);
   }
@@ -413,7 +424,7 @@
         damageFoe(f, G.d(4) + pow("魔力", 20), "curse");
         if (f.hp <= 0) return;
       }
-      if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は凍りついたまま動けない。`); return; }
+      if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は${f.stunText || "凍りついたまま"}動けない。`); if (!f.frozen) f.stunText = ""; return; }
       // F1：この手番の動き（溜め・構え・連撃・大技）。skip なら殴ってこない
       const mv = G.cbMove ? G.cbMove(f, e) : null;
       if (mv && mv.text) G.say(mv.text);
@@ -438,6 +449,7 @@
           if (C.guard) dmg = Math.floor(dmg / ((mv && mv.guardDiv) || 2));
           if (C.ward > 0) dmg -= wardCut();
           dmg = Math.max(1, dmg);
+          if (G.cbHurtMod) dmg = Math.max(1, G.cbHurtMod(f, e, dmg, mv)); // E12b：敵の攻め手の種類と、こちらの防具の効き目
           if (G.cbCover) dmg = Math.max(1, G.cbCover(f, e, dmg, mv)); // F2：仲間が庇って一部を受ける
           G.log("nar", `${f.name}の${e.magic ? "呪い" : (mv && mv.name) || "攻撃"}！ ${dmg} のダメージ。`, { fx: "hurt", n: dmg, heavy: dmg >= S.maxHp / 4 });
           G.hurt(dmg, `${f.name}に倒された`);
@@ -469,9 +481,11 @@
         (e.loot || []).forEach(([id, p]) => { if (G.rand() < p && G.give(id)) G.note(`${G.itemInfo(id).name}を手に入れた。`); });
         if (e.boss) S.counters.bosses++;
       });
-      if (gold) { S.gold += gold; G.note(`${gold}G を手に入れた。`); }
       G.addFame(fame);
-      if (C.win) G.apply(C.win);
+      // 出来事の戦いの報酬の金（C.win.gold）は、落とした金と合わせて一行で言う（「11G を手に入れた」「所持金 +12G」と二度に分けない。R7）
+      const won = C.win && C.win.gold > 0 ? C.win.gold : 0;
+      if (C.win) G.apply(won ? Object.assign({}, C.win, { gold: 0 }) : C.win);
+      if (gold + won && !S.over) { S.gold += gold + won; G.note(`${gold + won}G を手に入れた。`); }
     }
     if (S.over) return;
     if (C.after === "arrive" && S.travel) G.arrive(S.travel);

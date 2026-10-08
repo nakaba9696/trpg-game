@@ -67,6 +67,7 @@
     u7_jutsu: { sec: "人と暮らし", title: "術", lines: [
       ["first", "魔法は悪魔のもので、人は生まれつき使えないという。それでも学院で学べば、少しだけ「術」を借りるように使える者がいる。", { hint: ["魔導書"] }],
       ["nations", "教会は術に眉をひそめ、共和国は認め、帝国は軍で管理している。"],
+      ["vessel", "借りられる者と、借りられない者がいる。学院では、それを「器」と呼ぶ。器の無い者が何年学んでも、手のひらの上には何も起きない。", { hint: ["器"] }],
     ] },
 
     // ---------------------------------------------------------------- 魔物
@@ -110,7 +111,7 @@
 
   // 施設
   add("fac", "church", ["u7_church", "u7_church:three"]);
-  add("fac", "academy", ["u7_jutsu", "u7_jutsu:nations"]);
+  add("fac", "academy", ["u7_jutsu", "u7_jutsu:nations", "u7_jutsu:vessel"]);
 
   // 敵（格の高い敵・術を使う敵は src/engine/lore_u7.js が見る）
   add("foe", "dogu", ["u7_silly", "u7_silly:dogu"]);

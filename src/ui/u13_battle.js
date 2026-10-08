@@ -7,6 +7,13 @@
 //   成長の計算には触らず、「表示の点（G.pt）が増えた」ことだけを見る。仲間の HP の上限・腕前が伸びたときも小さく出す。
 // - 主人公が死んだら、すぐ年表・墓碑にせず死の場面を挟む（致命の一手を順に見せたあと「あなたは倒れた」・倒れたわけ・画面が暗く色が抜ける）。
 //   押すまで先へ進まない。押したら墓碑・年表の窓（ui.openChronicle）。墓碑には「最後に保存した所から、やり直すこともできる」を添える。
+// - F5：戦闘を終えた手番（とどめの一撃・あなたが倒れる一撃）も、ほかの手番と同じ順に見せる。エンジンはその手番で S.combat を片づけるので、
+//   順に見せている間だけ、終わった戦い（ghost）を描く：背景の敵・敵の札と HP の帯・手の欄は戦闘のまま、ダイス → 当たり・ダメージ → 帯が 0 → 倒れる → 一拍 → 結果の場面（死の場面）。
+//   入れ替えるのは描く間だけ（u13.inGhost。外側の包みは ui/zzzzzzz_f5_finish.js）。保存（ui.after の G.main.save）は描き終えてからなので、記録には残らない
+// - F6：結果がダイスより先に漏れないように、効果音は順に出す行に合わせて鳴らし（行に結びつかない金・品の音は出し終えてから）、
+//   BGM は終わった戦いを見せている間は戦闘の曲のまま（sound_bgm.js が u13.inGhost で場面を見る）。知らせは ui/zzzzzz_f6_hold.js が出し終えるまで預かる（u13.afterReveal）
+// - F7：戦いのあとの行（拾った物・金・トロフィー・手引き・覚え書き・余韻の一言など）は、戦闘の本文に一行ずつ流さず、結果の場面（「戦いのあと」）に項目ごとにまとめて出す。
+//   戦闘は、倒れる段（あなたが倒れる・逃げ切るときはその行）のあと一拍で区切る。区切りは、エンジンが戦いを片づけた所（b5AfterCombat・G.die）の記録の位置で決める
 // 見せ方は u13_battle.css。レーン U
 (function (G) {
   const u13 = (G.u13 = G.u13 || {});
@@ -90,9 +97,24 @@
       items,
       grow: u13.grown(a, S),
       comp: u13.compGrown(a, S),
-      f1: G.f1Summary ? G.f1Summary(S) : "", // F1：読み勝ち・崩し・いちばん重い一撃
       party: [{ name: "あなた", hp: S.hp, max: S.maxHp }, ...(S.companions || []).map((c) => ({ name: c.name, hp: c.hp, max: maxOf(c) }))],
     };
+  };
+
+  // F7：戦いのあとの行を、結果の場面の項目に分ける（DOM なし。テストもこれを読む）。拾った物・金・能力値の伸びの行は、上の「得た物」「成長」にまとめてあるので出さない
+  u13.AFTER_KINDS = [["trophy", "トロフィー"], ["guide", "手引き"], ["note", "そのほか"]];
+  u13.afterGroups = (entries) => {
+    const out = { trophy: [], guide: [], note: [] };
+    (entries || []).forEach((e) => {
+      const t = String((e && e.text) || "").trim();
+      if (!t || (e && (e.k === "dice" || e.k === "grow" || e.k === "title" || e.k === "you"))) return;
+      if (/を手に入れた|G を手に入れた|を拾った/.test(t)) return;
+      // トロフィーは名前だけ、手引きは項目の名前だけ（一行に並べる。結果の場面が長くならないように）
+      if ((e && e.k === "trophy") || /^トロフィー『/.test(t)) out.trophy.push((t.match(/『[^』]*』/) || [t])[0]);
+      else if (/手引きに書き足された|覚え書き|図鑑/.test(t)) out.guide.push(t.replace(/^手引きに書き足された[：:]/, "").replace(/^(覚え書き[：:][^：:]*)[：:].*$/, "$1"));
+      else out.note.push(t);
+    });
+    return out;
   };
 
   // 死の場面の中身：見出し・倒れたわけ（R3 の墓碑と同じ文。無ければ死因）・次に試せそうなこと
@@ -101,6 +123,18 @@
     return { title: "あなたは倒れた", cause: (c && c.what) || (S.deathCause ? `${S.deathCause}。` : "力尽きた。"), hint: (c && c.hint) || "" };
   };
   u13.RETRY = "最後に保存した所から、やり直すこともできる（タイトルの「ロード」から）。";
+
+  // F6：効果音を段に合わせる（DOM なし。テストもこれを読む）。list は [{ n: 音の名前, d: 元の遅れ, e: 元になった記録 }]、entries は順に出す行の記録。
+  //   行に結びついた音は、その行が出る瞬間（行の番号 → 名前の並び）。行に結びつかない音（金・品・戦闘の始まりの合図など）は、出し終えてから（after）
+  u13.QUIET_ON_DEATH = ["trophy", "coin", "item", "page", "levelup"];
+  u13.soundPlan = (list, entries) => {
+    const at = {}, after = [];
+    (list || []).forEach((x) => {
+      const i = x.e ? (entries || []).indexOf(x.e) : -1;
+      if (i >= 0) (at[i] || (at[i] = [])).push(x.n); else after.push(x.n);
+    });
+    return { at, after };
+  };
 
   // ---------------------------------------------------------------- 画面
   if (typeof document === "undefined" || !G.ui || !G.ui.render) return;
@@ -129,13 +163,53 @@
   // 戦闘の終わり方（勝利・逃走…）。エンジンが b5AfterCombat(how) を呼ぶので、それを包んで覚える
   let lastHow = null;
   const b5a = G.b5AfterCombat;
-  G.b5AfterCombat = (how) => { lastHow = how; return b5a ? b5a(how) : undefined; };
+  // F7：戦いを片づけた所の記録の位置（ここから後ろの行は、戦闘の本文に流さず結果の場面へ）
+  let cutAt = null; // { S, i }
+  G.b5AfterCombat = (how) => { lastHow = how; if (G.S) cutAt = { S: G.S, i: G.S.log.length }; return b5a ? b5a(how) : undefined; };
+  const die0 = G.die;
+  // あなたが倒れたとき：最後の文（倒れる前のひとり言など）と「〇〇は倒れた。」の一行までが戦い。そのあとのトロフィー・手引きなどが結果の場面へ
+  if (die0) G.die = (...a) => {
+    const S = G.S;
+    const n = S && !S.over ? S.log.length : -1;
+    const r = die0(...a);
+    if (n >= 0) {
+      const who = `${(S.profile && S.profile.name) || ""}は倒れた`;
+      let j = -1;
+      for (let x = n; x < S.log.length; x++) if (String(S.log[x].text || "").startsWith(who)) { j = x; break; }
+      cutAt = { S, i: (j >= 0 ? j : n) + 1 };
+    }
+    return r;
+  };
 
   // fx.js の演出は、順に出す行に合わせて鳴らす。ui.js が描き直しのたびに呼ぶ G.fx.play は、ここで一度預かる
   let pendingFx = null;
   const fxPlay = G.fx && G.fx.play;
   if (G.fx && fxPlay) G.fx.play = (entries, S) => { pendingFx = { entries: entries || [], S }; };
   const flushFx = (entries, S, keep) => { if (fxPlay && entries && entries.length) fxPlay(entries, S, keep); };
+  // F6：効果音（ui/sound.js の react）も一度預かり、順に出す行に合わせて鳴らす（ダイスより先に、倒した音・金の音が鳴らないように）
+  let pendingSnd = null;
+  const snd = G.sound;
+  const react0 = snd && snd.react;
+  if (react0) snd.react = (S) => {
+    const calls = [];
+    const play0 = snd.play;
+    snd.play = (n, d) => { calls.push([n, d]); };
+    try { react0(S); } finally { snd.play = play0; }
+    const from = snd.cueFrom || [];
+    pendingSnd = calls.map(([n, d], i) => ({ n, d, e: from[i] || null }));
+    // あなたが倒れた手番：今まで通り、知らせの音（トロフィー・金・品）は鳴らさず、倒れる音だけ（見せ終えてから鳴る）
+    if (ghostReal && ghostReal.over === "dead") pendingSnd = pendingSnd.filter((x) => !u13.QUIET_ON_DEATH.includes(x.n));
+  };
+  const playNow = (list) => { (list || []).forEach((x) => { try { snd.play(x.n, x.d); } catch (e) {} }); };
+  // 出し終えたあとに呼ぶもの（F6：知らせ・効果音。終わった戦いを片づけて描き直したあと）
+  let afterCalls = [];
+  u13.revealing = () => !!reveal;
+  u13.afterReveal = (fn) => { if (reveal) afterCalls.push(fn); else fn(); };
+  const runAfter = () => {
+    const list = afterCalls; afterCalls = [];
+    const go = () => list.forEach((fn) => { try { fn(); } catch (e) {} });
+    if (rendering) setTimeout(go, 0); else go();
+  };
 
   // 「能力値が伸びた」の小さな通知は、この演出に置き換える
   const toast0 = ui.toast;
@@ -143,6 +217,52 @@
 
   // ---------------------------------------------------------------- 一行ずつ出す
   let reveal = null; // { r: makeReveal, els, panel }
+  // F5：終わった戦い（とどめの手番を順に見せる間だけ描く）。{ c: 戦い, run: 冒険の id }。ghostReal は入れ替えている間の本当の値
+  let ghost = null, ghostReal = null, rendering = 0;
+  u13.ghosting = () => !!ghost;
+  u13.inGhost = (fn) => {
+    const S = G.S;
+    if (!ghost || !S || ghostReal || ghost.run !== S.id) return fn();
+    const had = Object.prototype.hasOwnProperty.call(S, "over");
+    ghostReal = { combat: S.combat, mode: S.mode, over: S.over };
+    S.combat = ghost.c; S.mode = "combat"; S.over = null;
+    try { return fn(); } finally {
+      const R = ghostReal; ghostReal = null;
+      S.combat = R.combat; S.mode = R.mode;
+      if (had) S.over = R.over; else delete S.over;
+    }
+  };
+  // 描く前（外側の包みが呼ぶ）：出している途中なら先に全部出し、戦闘を今終えたなら終わった戦いを描く
+  u13.renderStart = () => {
+    rendering++;
+    if (reveal) reveal.r.finish(); // 出している途中で描き直すときは、先に全部出す
+    const S = G.S;
+    if (!ghost && S && fightRef && !S.combat && fightSnap && fightSnap.run === S.id && u13.delay(G.P) > 0) {
+      // F6：手の欄は、手を選ぶ前の形のまま写しておく（とどめで敵がいなくなると手が消え、ダイスより先に結果が分かってしまうので）
+      const p = $("#panel");
+      ghost = { c: fightRef, run: S.id, panel: p ? p.cloneNode(true) : null, restored: false };
+    }
+  };
+  // 手の欄を、手を選ぶ前の写しに戻す（押しても早送りだけ。u13_menu などはこの間は並べ替えない）
+  u13.ghostPanel = () => !!(ghost && ghost.restored);
+  function restorePanel() {
+    const panel = $("#panel");
+    if (!ghost || !ghost.panel || !panel) return;
+    panel.replaceChildren(...Array.from(ghost.panel.childNodes));
+    panel.className = ghost.panel.className;
+    ghost.restored = true;
+  }
+  // 描いたあと：順に出すものが無ければ、終わった戦いはすぐ片づけて描き直す
+  u13.renderEnd = () => {
+    rendering--;
+    if (ghost && !reveal && !rendering) { ghost = null; ui.render(); }
+  };
+  const viewOf = (S) => {
+    if (!ghost) return S;
+    const V = Object.create(S);
+    V.combat = ghost.c; V.mode = "combat"; V.over = null;
+    return V;
+  };
   function flashActor(el) {
     const text = el.textContent || "";
     const cands = [
@@ -177,7 +297,8 @@
     el.classList.add("f1land");
     if (e.crit || e.fumble) el.classList.add(e.crit ? "f1crit" : "f1fumble");
   }
-  function startReveal(S, fresh, entries, ended) {
+  function startReveal(S, fresh, entries, ended, sounds) {
+    const sp0 = u13.soundPlan(sounds, entries);
     const panel = $("#panel"), log = $("#log");
     const sp = u13.SPEEDS[u13.speed(G.P)];
     // 戦闘が終わった手番は、最後の行のあと一拍おいて結果の場面へ（何も出さない一段を足す）
@@ -186,8 +307,9 @@
     if (beat) delays[delays.length - 1] = delays[delays.length - 2] + Math.round((u13.beatOf(entries[entries.length - 1]) + u13.END_BEAT) * sp.k);
     fresh.forEach((el) => el.classList.add("u13hide"));
     panel.classList.add("u13wait");
-    // 札と HP の欄を手番の前の値に戻し、当たった行が出るたびに減らす（fx.js）
-    if (G.fx && G.fx.freeze) G.fx.freeze(S);
+    // 札と HP の欄を手番の前の値に戻し、当たった行が出るたびに減らす（fx.js）。戦闘を終えた手番は、終わった戦いを見せる（F5）
+    const V = viewOf(S);
+    if (G.fx && G.fx.freeze) G.fx.freeze(V);
     const rolling = [];
     const show = (i) => {
       const el = fresh[i];
@@ -197,17 +319,23 @@
       flashActor(el);
       const e = entries[i];
       if (e && e.k === "dice") { rolling.push([el, e]); rollDice(el, e, u13.ROLL_MS * sp.k); }
-      if (e && e.fx) flushFx([e], S, true);
+      if (sp0.at[i] && snd) sp0.at[i].forEach((n, j) => { try { snd.play(n, j * 0.12); } catch (err) {} });
+      if (e && e.fx) flushFx([e], V, true);
       if (log && log.scrollHeight > log.clientHeight) log.scrollTop = log.scrollHeight;
     };
     const st = {};
     const done = () => {
       rolling.forEach(([el, e]) => { if (el.classList.contains("f1roll")) land(el, e); });
-      if (G.fx && G.fx.remember) { G.fx.remember(G.S); G.fx.sync(G.S); }
+      if (G.fx && G.fx.remember) { const W = viewOf(G.S); G.fx.remember(W); G.fx.sync(W); }
       panel.classList.remove("u13wait");
       if (reveal === st) reveal = null;
+      // 終わった戦いを見せ終えた：片づけて描き直す（結果の場面・死の場面はその描き直しで出る）
+      // 行に結びつかない音（金・品など）は、出し終えてから
+      if (sp0.after.length && snd) afterCalls.unshift(() => sp0.after.forEach((n, j) => { try { snd.play(n, j * 0.17); } catch (err) {} }));
+      if (ghost) { ghost = null; if (!rendering) ui.render(); runAfter(); return; }
       if (dead && !dead.shown) showDead(G.S);
       else if (hold && !hold.shown) showHold();
+      runAfter();
     };
     reveal = st;
     st.r = u13.makeReveal(delays, show, done);
@@ -227,11 +355,30 @@
   // ---------------------------------------------------------------- 結果の場面
   let fightRef = null, fightSnap = null;
   let hold = null; // { data, shown }
+  // F7：本文から外した戦いのあとの行（結果の場面を閉じたら、ふつうの記録として本文に戻す）
+  let afterHidden = null, pendingAfter = null;
+  function showAfter() {
+    afterHidden = null;
+    document.querySelectorAll("#log > .u13after").forEach((el) => el.classList.remove("u13after"));
+  }
+  // 結果の場面・死の場面の「戦いのあと」の項目（トロフィー・手引き・そのほか）
+  function afterRows(after, row) {
+    if (!after) return;
+    u13.AFTER_KINDS.forEach(([k, label]) => {
+      const list = after[k] || [];
+      if (!list.length) return;
+      if (k !== "note") { row(label, list.join("・"), "u13a-" + k); return; } // 名前は一行に
+      const ul = h("ul", "u13alist u13a-" + k);
+      list.slice(0, 4).forEach((t) => ul.append(h("li", "", t)));
+      if (list.length > 4) ul.append(h("li", "fine", `ほか ${list.length - 4} 行（記録に残る）`));
+      row(label, ul);
+    });
+  }
   u13.holding = () => !!hold || !!dead;
   function holdEl(d) {
     const box = h("div", "u13result " + d.how + (calm() || u13.speed(G.P) === "instant" ? " fast" : ""));
     box.setAttribute("role", "status");
-    box.append(h("h3", "u13rtitle", d.title));
+    box.append(h("p", "u13rcap", "戦いのあと"), h("h3", "u13rtitle", d.title));
     const rows = h("dl", "u13rrows");
     const row = (k, v, cls) => { if (!v) return; rows.append(h("dt", "", k)); const dd = h("dd", cls || ""); if (typeof v === "string") dd.textContent = v; else dd.append(v); rows.append(dd); };
     const got = [d.gold ? `${d.gold}G` : "", ...d.items.map((it) => it.n > 1 ? `${it.name}×${it.n}` : it.name)].filter(Boolean).join("・");
@@ -242,28 +389,31 @@
       row("成長", g);
     }
     if (d.comp.length) row("仲間", d.comp.map((c) => `${c.name}の${c.what}が伸びた ${c.from}→${c.to}`).join("・"), "u13comp");
-    if (d.f1) row("手応え", d.f1, "u13f1");
+    afterRows(d.after, row);
     row("一行", d.party.map((p) => `${p.name} HP ${Math.max(0, p.hp)}/${p.max}`).join("・"), "num");
     box.append(rows);
     const go = h("button", "act u13go");
     go.type = "button";
     go.append(h("b", "", "先へ進む"));
-    go.onclick = () => { hold = null; ui.render(); };
+    go.onclick = () => { hold = null; showAfter(); ui.render(); };
     box.append(go);
     return box;
   }
   function growLine(x) {
     const l = h("div", "u13grow1");
-    l.append(h("b", "", `${x.k}が伸びた！`), h("span", "num", ` ${x.from} → ${x.to}`));
+    l.append(h("b", "", `${x.k}が伸びた`), h("span", "num", ` ${x.from}→${x.to}`)); // 記録の「〇〇が伸びた a→b」と同じ書き方（R7）
     return l;
   }
   function showHold() {
     const panel = $("#panel");
     if (!panel || !hold) return;
     panel.textContent = "";
-    panel.append(holdEl(hold.data));
+    const box = holdEl(hold.data);
+    panel.append(box);
     if (!hold.shown) {
       hold.shown = true;
+      // F7：スマホでは「戦いのあと」を画面の真ん中に送る（戦闘の記録の下に隠れないように。死の場面と同じ）
+      if (window.matchMedia("(max-width: 880px)").matches) requestAnimationFrame(() => box.scrollIntoView({ block: "center", behavior: calm() || u13.speed(G.P) === "instant" ? "auto" : "smooth" }));
       if (hold.data.how === "win") play("victory");
       if (hold.data.grow.length) play("levelup", 0.5);
       if (hold.data.grow.length) glowStats(hold.data.grow);
@@ -285,11 +435,18 @@
     box.setAttribute("role", "status");
     box.append(h("h3", "u13dtitle", d.title), h("p", "u13dcause", d.cause));
     if (d.hint) box.append(h("p", "u13dhint", d.hint));
+    // F7：倒れたあとの行（トロフィー・手引きなど）も、本文ではなくここに
+    if (d.after) {
+      const rows = h("dl", "u13rrows u13drows");
+      afterRows(d.after, (k, v, cls) => { rows.append(h("dt", "", k)); const dd = h("dd", cls || ""); if (typeof v === "string") dd.textContent = v; else dd.append(v); rows.append(dd); });
+      if (rows.children.length) box.append(rows);
+    }
     const go = h("button", "act u13go");
     go.type = "button";
     go.append(h("b", "", "墓碑と年表へ"));
     go.onclick = () => {
       dead = null;
+      showAfter();
       document.body.classList.remove("u13dead", "u13deadFast");
       ui.render();
       ui.openChronicle(S, true);
@@ -342,18 +499,22 @@
     const panel = $("#panel"), log = $("#log");
     if (!panel || !log) return;
     const pend = pendingFx; pendingFx = null;
+    const psnd = pendingSnd; pendingSnd = null;
+    // 終わった戦いを描いている間も、戦闘の始まり・終わり・死は本当の値で数える（F5）
+    const R = ghostReal || S;
+    const RC = R.combat, RO = R.over;
     if (growBase && growBase.run !== S.id) growBase = null;
     if (!growBase) growBase = u13.snap(S);
     // 戦闘の始まりと終わり（始まったときの記録は一度に出す。順に出すのは、戦闘の中の手番と、戦闘を終えた手番）
-    const turn = !!S.combat && S.combat === fightRef;
+    const turn = !!RC && RC === fightRef;
     // 得た物は戦闘が始まったときの所持金・持ち物から数え、成長は前に見た点から数える（始まった手番で伸びた分も結果に出す）
-    if (S.combat && S.combat !== fightRef) { fightRef = S.combat; fightSnap = { ...u13.snap(S), pts: growBase.pts, comps: growBase.comps }; }
-    const ended = !!fightRef && !S.combat;
+    if (RC && RC !== fightRef) { fightRef = RC; fightSnap = { ...u13.snap(S), pts: growBase.pts, comps: growBase.comps }; }
+    const ended = !!fightRef && !RC;
     if (ended) {
-      if (!S.over) hold = { data: u13.result(fightSnap, S, lastHow), shown: false };
+      if (!RO) hold = { data: u13.result(fightSnap, S, lastHow), shown: false };
       fightRef = null; fightSnap = null; lastHow = null;
       growBase = u13.snap(S);
-    } else if (!S.combat && !hold && !S.over) {
+    } else if (!RC && !hold && !RO) {
       // 戦闘の外で伸びた：その場で演出
       const g = u13.grown(growBase, S), c = u13.compGrown(growBase, S);
       if (g.length || c.length) popGrowth(g, c);
@@ -363,24 +524,49 @@
     // 結果の場面のあとに始まる次の場面の行（U14 が結果の場面の間は隠す。G.u14.later）は順に出さない。その行は記録の末尾にある
     const all = Array.from(log.querySelectorAll(":scope > .new"));
     const fresh = G.u14 && G.u14.later ? all.filter((el) => !G.u14.later(el)) : all;
-    const entries = pend ? pend.entries.slice(0, pend.entries.length - (all.length - fresh.length)).slice(-fresh.length) : [];
-    if ((turn || ended) && fresh.length >= 2 && u13.delay(G.P) > 0) startReveal(S, fresh, entries, ended);
-    else if (pend) flushFx(pend.entries, pend.S);
+    let entries = pend ? pend.entries.slice(0, pend.entries.length - (all.length - fresh.length)).slice(-fresh.length) : [];
+    // F7：戦いを片づけた所から後ろの行（拾った物・トロフィー・手引き・余韻など）は、本文に流さず結果の場面へ
+    let fr = fresh, afterNow = null;
+    const cut = cutAt && cutAt.S === S ? cutAt : null;
+    if (cut && (ended || RO === "dead")) {
+      cutAt = null;
+      const first = S.log[cut.i];
+      const k = first ? entries.indexOf(first) : -1;
+      if (k >= 0) {
+        afterNow = entries.slice(k);
+        fr.slice(k).forEach((el) => el.classList.add("u13after"));
+        afterHidden = { run: S.id, set: new Set(afterNow) };
+        fr = fr.slice(0, k); entries = entries.slice(0, k);
+      }
+      if (hold && !hold.shown) hold.data.after = u13.afterGroups(afterNow || []);
+      pendingAfter = afterNow || [];
+    }
+    if (ended && ghost && fr.length >= 2 && u13.delay(G.P) > 0) restorePanel();
+    if ((turn || ended) && fr.length >= 2 && u13.delay(G.P) > 0) startReveal(S, fr, entries, ended, psnd);
+    else { if (pend) flushFx(pend.entries, pend.S); playNow(psnd); }
     // F1：見えている HP を覚える（次の手番を順に見せるとき、ここへ戻してから減らす）
     if (!reveal && G.fx && G.fx.remember) G.fx.remember(S);
     // 死の場面：今この描き直しで死んだとき。ui.after が年表を自動で開かないよう印を付け、押されたら開く
-    const justDied = prevOver.id === S.id && !prevOver.over && S.over === "dead";
-    prevOver = { id: S.id, over: S.over };
-    if (justDied) { dead = { id: S.id, data: u13.deathScene(S), shown: false }; hold = null; S.flags.chronShown = true; }
-    if (dead && (dead.id !== S.id || S.over !== "dead")) { dead = null; document.body.classList.remove("u13dead", "u13deadFast"); }
-    if (dead) { if (reveal) { panel.textContent = ""; panel.append(h("p", "fine u13waitmsg", "…")); } else showDead(S); return; }
+    const justDied = prevOver.id === S.id && !prevOver.over && RO === "dead";
+    prevOver = { id: S.id, over: RO };
+    if (justDied) { dead = { id: S.id, data: Object.assign(u13.deathScene(S), { after: u13.afterGroups(pendingAfter || []) }), shown: false }; hold = null; S.flags.chronShown = true; }
+    pendingAfter = null;
+    // F7：結果の場面・死の場面を出している間は、戦いのあとの行を本文に出さない（描き直しても隠したまま）
+    if (afterHidden && (hold || dead) && afterHidden.run === S.id) {
+      const kids = Array.from(log.children);
+      const shown = S.log.slice(-kids.length);
+      if (shown.length === kids.length) kids.forEach((el, i) => { if (afterHidden.set.has(shown[i])) el.classList.add("u13after"); });
+    } else if (afterHidden) showAfter();
+    if (dead && (dead.id !== S.id || RO !== "dead")) { dead = null; document.body.classList.remove("u13dead", "u13deadFast"); }
+    // 終わった戦いを見せている間（F5）は、戦闘の欄をそのまま残す（敵の札の HP が 0 まで減るのを見せる）
+    if (dead) { if (reveal) { if (!ghost) { panel.textContent = ""; panel.append(h("p", "fine u13waitmsg", "…")); } } else showDead(S); return; }
     // 結果の場面（順に出し終えてから見せる）
-    if (hold) { if (reveal) { panel.textContent = ""; panel.append(h("p", "fine u13waitmsg", "…")); } else showHold(); }
+    if (hold) { if (reveal) { if (!ghost) { panel.textContent = ""; panel.append(h("p", "fine u13waitmsg", "…")); } } else showHold(); }
   }
 
   const base = ui.render;
   ui.render = (...a) => {
-    if (reveal) reveal.r.finish(); // 出している途中で描き直すときは、先に全部出す
+    if (reveal && !rendering) reveal.r.finish(); // 出している途中で描き直すときは、先に全部出す（外側の包みがあれば、そちらで済ませている）
     const r = base(...a);
     try { if (G.S) post(G.S); } catch (e) { /* 見せ方に失敗しても、画面は止めない */ }
     return r;

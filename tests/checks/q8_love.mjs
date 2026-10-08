@@ -10,6 +10,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const F = (m) => { n++; fail("q8 恋と好感度: " + m); };
   const start = (seed, ids) => {
     const G = loadEngine();
+    G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
     G.data.Q8P.off = true; // 恋の相手の一覧と組み合わせは tests/checks/q8_pairs.mjs（ここは恋人の条件だけ）
     G.rand = seeded(seed);
     G.P = { trophies: {}, graves: [] };
@@ -108,14 +109,12 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (G.q8LoveOk(mar, S)) F("罪のない人を殺したのに、マルゴの条件がそろう");
   }
   {
-    // 難しい道の人（ギグラ）：恋の筋の告白の条件を、M10 の告白にも当てる
+    // ギグラ（ゴブリン）は C11 で恋の相手から外した：身の上の最後まで聞いても、告白は起きない
     const G = start(5, ["gigra"]);
     const S = G.S, c = S.companions[0];
     c.bond = 95;
-    if (confessable(G, c)) F("身の上の最後を聞かずに、ギグラの告白が起きる");
     G.tkState(S).heard.gigra_p6 = { day: S.day, k: "" }; quest(S, "gigra", 9);
-    c.m10.cool = 0;
-    if (!confessable(G, c)) F(`身の上の最後を聞いたのに、ギグラの告白が起きない（${G.q8LoveMissing(c, S).join("・")}）`);
+    if (confessable(G, c)) F("身の上の最後を聞いたら、ギグラ（ゴブリン）の告白が起きる");
     // 名の無い仲間は、一緒に旅した日数
     G.addCompanion({ name: "槍兵のテス", cls: "傭兵", power: 40, dmg: 1 });
     const m = S.companions[S.companions.length - 1];
@@ -137,6 +136,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   // ---- 表：恋の相手は全員、好感度のほかの条件を持つ。話題・場所・罪の種類は実在する。全員同じ条件ではない
   {
     const G = loadEngine();
+    G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
     const D = G.data;
     const ids = G.romanceIds();
     const seen = new Set();

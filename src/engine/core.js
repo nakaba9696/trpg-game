@@ -465,7 +465,7 @@
     if (S.companions.length >= 3) { G.note("これ以上、仲間は連れていけない。"); return false; }
     const comp = c === "random" ? G.genCompanion() : { ...c };
     S.companions.push(comp);
-    G.note(`${comp.name}が仲間になった。（${comp.desc}）`);
+    G.note(`${comp.name}が仲間になった。`); // 性格の文（desc）は括弧で見せない。人となりは加わったときの一言（companions_m2.js）とステータスに（R7）
     G.chron(`${comp.name}が仲間に加わる`, "event");
     return true;
   };
