@@ -162,5 +162,20 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
   }
 
+  // ---- 6. 最初に会う敵に、初期装備の物理の種類で相性負けしない（出発地から 1 日の危険度 1 の野の、昼に出る D 級）
+  for (const [cls, C] of Object.entries(D.CLASSES)) {
+    const w = D.ITEMS[C.weapon] || {};
+    const types = [].concat(w.dtype || []);
+    for (const [to, d] of Object.entries(D.LOCS[C.start].links || {})) {
+      const L = D.LOCS[to];
+      if (d > 2 || L.type === "town" || (L.danger || 0) > 1) continue;
+      [...(L.pool || []), ...(L.e4pool || [])].forEach((id) => {
+        const e = D.ENEMIES[id];
+        if (!e || !R6.isD(id) || (e.when && e.when.night) || !e.aff || !types.length) return;
+        if (types.every((t) => (e.aff[t] == null ? 1 : e.aff[t]) < 1)) F(`${C.name}の${w.name}が、${L.name}の${e.name}に通りにくい（${types.join("・")}）`);
+      });
+    }
+  }
+
   if (!bad) ok(`R6 序盤：出発地の近くの出会い ${tried} 回に C 級なし・守りは日と名声で外れる・旅の出来事・D 級の強さ・商店の先頭は薬草`);
 };
