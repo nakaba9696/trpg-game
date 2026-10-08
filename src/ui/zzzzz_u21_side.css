@@ -1,17 +1,38 @@
-/* U21：PC の一画面の配置（ui/zzzzz_u21_side.js が body.u21pc を付ける。V9 の PC 配置で、戦闘でないときだけ）。
-   左上：札と立ち絵（V9）・左下：本文の欄（下に寄せ、高さは中身に合わせる）・右の列：行動の組のボタンと、開いた組の選択肢。
-   画面全体は動かさない。流れるのは、開いた組の中（と、長すぎる本文の欄の中）だけ */
+/* U21・U29：PC の配置（ui/zzzzz_u21_side.js が body.u21pc を付ける。PC の大きさなら、戦闘・会話・町・迷宮のどれでも）。
+   左上：今の状態の札（メニュー系 2）・右上：道具のボタンの細い窓（メニュー系）・真ん中：絵だけ（魔物・立ち絵）・
+   下の左：本文の欄（ログ）・下の右：コマンドと選択肢の窓。下の二つは同じ高さで左右に並ぶ。画面全体は動かさず、流れるのは窓の中だけ */
 #u21side { display: none; }
 /* PC の配置では、ページの余白（body の既定の 8px）で画面が 16px 長くなっていたのを止める（V9 からの残り） */
 body.v9pc { margin: 0; }
 
-/* ---------------------------------------------------------------- 本文の欄：左下 */
-body.u21pc .tome { top: auto; bottom: var(--v9-m); height: auto; min-height: var(--u21-tmin, 300px); max-height: var(--v9-th);
-  display: flex; flex-direction: column; gap: 10px; padding-bottom: 18px; }
-body.u21pc #log { height: auto; flex: 0 1 auto; min-height: 0; }
+/* ---------------------------------------------------------------- 下の左：本文の欄（ログ）。高さは右の窓と同じに決め、長い文は欄の中だけ流れる */
+body.u21pc .tome { top: var(--v9-ty); bottom: auto; height: var(--v9-th); min-height: 0; max-height: none;
+  display: flex; flex-direction: column; gap: 8px; padding: 26px 22px 12px; }
+body.u21pc #log { height: auto; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+/* 戦闘の下の帯の名残（V9 の二つの列・区切り線）を消す */
+body.u21pc.v9combat .tome { grid-template-columns: none; padding-top: 26px; }
+body.u21pc.v9combat #log { grid-row: auto; border-right: 0; padding-right: 6px; font-size: var(--v9-fs); line-height: 1.85; }
+
+/* ---------------------------------------------------------------- 上：左に今の状態の札（メニュー系 2）、右に道具の細い窓（メニュー系）。真ん中は空ける */
+body.u21pc .top { background: none; pointer-events: none; height: auto; padding: var(--u21-m, 12px) var(--u21-m, 12px) 0; align-items: flex-start; }
+body.u21pc .top .tools { pointer-events: auto; margin-left: auto; padding: 5px 6px; gap: 4px; border: 1px solid var(--win-edge); border-radius: 2px;
+  background: color-mix(in srgb, var(--win-solid) 78%, transparent); box-shadow: 0 4px 14px rgba(0, 0, 0, .3); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+body.u21pc .top #v9place, body.u21pc .top .f4date, body.u21pc .top .logo { display: none; }
+body.u21pc #mbar { top: var(--u21-m, 12px); left: var(--u21-m, 12px); max-width: min(380px, 30vw); padding: 8px 12px 8px;
+  background: color-mix(in srgb, var(--win-solid) 82%, transparent); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+/* いる所・日付と時刻・状態の札 */
+#u29where { display: none; }
+body.u21pc #mbar #u29where { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; flex-basis: 100%; margin: 0 0 3px; padding-bottom: 4px; border-bottom: 1px solid var(--rule); }
+body.u21pc #u29where .u29wplace { font-family: var(--f-display); font-weight: 400; font-size: 15px; letter-spacing: .08em; color: var(--head); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+body.u21pc #u29where .u29wdate { font-size: 12px; color: var(--muted); }
+body.u21pc #u29where .u29wstate { margin-left: auto; padding: 0 8px; font: 700 11px/1.7 var(--f-ui); letter-spacing: .1em; border-radius: 9px; color: var(--win-solid, #fff); background: var(--accent); }
+body.u21pc #u29where[data-state="戦闘"] .u29wstate { background: #b0321f; }
+body.u21pc #u29where[data-state="旅の途中"] .u29wstate, body.u21pc #u29where[data-state="出来事"] .u29wstate, body.u21pc #u29where[data-state="会話"] .u29wstate { background: #8a5c22; }
+body.u21pc #u29where[data-state^="迷宮"] .u29wstate { background: #4d5a7a; }
+body.u21pc #u29where[data-state="荒野"] .u29wstate { background: #4f6b4a; }
 
 /* ---------------------------------------------------------------- 右の列：窓（文章の窓と同じ縁） */
-body.u21pc #u21side { display: flex; flex-direction: column; position: fixed; z-index: 4; left: var(--u21-sx); top: var(--u21-sy); width: var(--u21-sw); max-height: var(--u21-sh);
+body.u21pc #u21side { display: flex; flex-direction: column; position: fixed; z-index: 4; left: var(--u21-sx); top: var(--u21-sy); width: var(--u21-sw); height: var(--u21-sh);
   padding: 16px 16px 14px; background: var(--win); color: var(--ink); border: 1px solid var(--win-edge); border-radius: 2px;
   box-shadow: var(--win-shade); -webkit-backdrop-filter: var(--win-glass); backdrop-filter: var(--win-glass); }
 body.u21pc #u21side::before { content: ""; position: absolute; inset: 2px; pointer-events: none; --c: var(--orn);
@@ -72,8 +93,28 @@ body.v9pc.v9combat .tome { background: color-mix(in srgb, var(--win-solid) 80%, 
 body.u21pc[data-u14="story"] .tome { background: radial-gradient(ellipse 120% 90% at 50% 35%, rgba(245, 236, 214, .94) 30%, rgba(230, 213, 176, .92)); }
 body.u21pc[data-u14="story"] #u21side { background: radial-gradient(ellipse 120% 90% at 50% 35%, rgba(245, 236, 214, .9) 30%, rgba(230, 213, 176, .88)); }
 
-/* 立ち絵（U23）：本文の欄と右の列のあいだに、足元まで立つ。名前は腰の辺り */
-body.u21pc .v9fig .v9name { bottom: 22%; left: 50%; transform: translateX(-50%); max-width: 70%; }
+/* 立ち絵（U23・U29）：画面の真ん中に大きく。足元は下の窓の後ろへ沈むので、名前は下の窓のすぐ上 */
+body.u21pc:not(.v9combat) .v9fig .v9name { bottom: calc(var(--u21-sh, 260px) + var(--u21-m, 12px) + 10px); left: 50%; transform: translateX(-50%); max-width: 70%; }
+
+/* ---------------------------------------------------------------- 戦闘：右下の窓にコマンド。敵の札と狙いの一行は、真ん中の魔物の上に
+   （右の窓のぼかしを止めて、窓の中の札を画面に対して置けるようにする） */
+body.u21pc.v9combat #u21side { -webkit-backdrop-filter: none; backdrop-filter: none; background: color-mix(in srgb, var(--win-solid) 88%, transparent); }
+body.u21pc.v9combat #u21side #panel { position: static; }
+/* 手の組（攻撃…）は窓の高さに合わせて縮み、組の中だけ流れる。下の見出しの札（攻撃・戦技・魔法・その他・道具）はいつも見える */
+body.u21pc.v9combat #u21side { padding-top: 12px; padding-bottom: 8px; }
+body.u21pc.v9combat #u21side #panel.u13fight { overflow: hidden; gap: 5px; }
+/* 下の見出しの札（攻撃・戦技・魔法・その他・道具）は一行の小さな札（町の組のボタンの形にしない） */
+body.u21pc.v9combat #u21side #panel .u13drawers { display: flex; flex-wrap: wrap; gap: 4px; }
+body.u21pc.v9combat #u21side #panel .u13drawers .u13tab { width: auto; flex: 1 1 auto; min-height: 30px; padding: 2px 10px; font-size: 13px; justify-content: center; grid-column: auto; }
+/* 仲間の HP の札は小さく一行に */
+body.u21pc.v9combat #u21side #panel .b5party { flex-wrap: wrap; gap: 3px; margin: 0; }
+body.u21pc.v9combat #u21side #panel .b5mem { padding: 1px 7px; font-size: 11.5px; gap: 4px; }
+body.u21pc.v9combat #u21side #panel .b5mem b { font-size: 12px; }
+body.u21pc.v9combat #u21side #panel .b5mem .b5g { width: 36px; }
+body.u21pc.v9combat #u21side #panel.u13fight > .u13main, body.u21pc.v9combat #u21side #panel.u13fight > .u13pop { flex: 1 1 auto; min-height: 2.4em; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+body.u21pc.v9combat #u21side #panel .foes { position: fixed; z-index: 5; left: var(--v9-sx); width: var(--v9-sw); top: calc(var(--v9-sy) + 10px); display: flex; justify-content: center; gap: 10px; pointer-events: none; }
+body.u21pc.v9combat #u21side #panel .foe { pointer-events: auto; min-width: 160px; box-shadow: 0 4px 14px rgba(0, 0, 0, .45); }
+body.u21pc.v9combat #u21side #panel .aimHint { position: fixed; z-index: 5; left: var(--v9-sx); width: var(--v9-sw); top: calc(var(--v9-sy) + 88px); text-align: center; margin: 0; color: #e4d9bf; text-shadow: 0 1px 3px #000; pointer-events: none; }
 
 /* 旅の行き先の小さな地図（W7）：右の列では、画面の低さに合わせて低くする（行き先の選択肢を多く見せる） */
 body.u21pc #u21side #panel .w7tmap canvas { height: clamp(120px, 20vh, 220px); }

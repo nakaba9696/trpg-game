@@ -1,15 +1,14 @@
-// U21：PC の一画面にすべて収め、スクロールせずに遊べるようにする。持ち主の声「UI が結局スクロールが必要。こんな感じで改善できない？」
-// 持ち主の画面案（ブランチ mock-u21 の docs/mock/u21_owner_layout.png）に寄せた配置：
-//   ・上の帯：場所と日付・メニューのボタン（今のまま。V9）
-//   ・左上：背景の絵の上に小さな札（名前と職業・HP と MP・所持金。V9 のまま）と立ち絵
-//   ・左下：本文の欄（場所の看板・選んだこと・結果の文。U14・U19 のまま）。高さは中身に合わせ、下に寄せる
-//   ・右の列：行動の組のボタン（「街で 8」「冒険 6」…）。押すと、その組の選択肢がボタンのすぐ下に開く（開いた組の中だけ流れる）
-// 組は U13（ui/u13_menu.js）のまとめ方をそのまま使う（町・荒野・迷宮は「街で／冒険／仲間／その他」、店は「買う・売る…」）。
-// PC では右の列が縦に長いので、まとめる数を少し下げる（u21.MIN_ITEMS）。最初に開く組は、その種類の場所で直前に開いた組（U13 が覚えている）。
-// 出来事・会話・旅の道中は、選択肢をまとめずにそのまま右の列に出す。戦闘は今の下の帯の配置（V9・U13）のまま。
-// 選択肢の中身（状態で現れる選択肢・依頼の印・成功率と一言・薄く見せる選択肢・1〜9 のキー）は触らない。#panel を右の列へ移すだけ。
-// スマホ・狭い窓（V9 の PC でないとき）は何もしない。ui.js は書き換えず、G.ui.render と G.v9.layout・G.u13.plan を包む
-// （名前の zzzzz で、v9_pc・u13・u14・u19 より後に読まれる）。見た目は ui/zzzzz_u21_side.css。エンジンは読むだけ。レーン U（U21）
+// U21：PC の一画面にすべて収め、スクロールせずに遊べるようにする（持ち主の声「UI が結局スクロールが必要」）。
+// U29 で持ち主の配置図に合わせて作り直した：
+//   ・左上「メニュー系 2」：今の状態（名前・HP と MP・所持金・仲間の札、いる所・日付と時刻・状態の札）。#mbar に場所の一行（#u29where）を足す
+//   ・右上「メニュー系」：図鑑・地図・依頼・ステータス・ログ・トロフィー・システム・設定のボタン（上の帯の道具を細い窓に）
+//   ・真ん中：何も置かない。背景の絵は画面いっぱい、魔物と立ち絵がその真ん中に大きく立つ
+//   ・下の左「ログ」：本文の欄（U14 の看板・U19 の頁・U28 の順に見せる流れ・U27 の得たもの）
+//   ・下の右「コマンド・選択肢」：#panel をここへ移す。町・探索の行動の組（U13／U23 の組のボタン）、出来事の選択肢、戦闘の手（F1・U13）。長いときはこの窓の中だけ流れる
+//   下の二つの窓は同じ高さ（画面の 3 分の 1 ほど）で左右に並ぶ。戦闘・会話・町・迷宮のどの場面でも同じ形
+// 組は U13（ui/u13_menu.js）のまとめ方（町は U23 の 施設・特色の場所…）。最初に開く組は U26 が決める。選択肢の中身（印・成功率・1〜9 のキー）は触らない。
+// スマホ・狭い窓（V9 の PC でないとき）は何もしない。ui.js は書き換えず、G.ui.render と G.v9.layout・G.v9.placeCast・G.u13.plan を包む
+// （名前の zzzzz で、v9_pc・u13・u14・u19 より後に読まれる）。見た目は ui/zzzzz_u21_side.css。エンジンは読むだけ。レーン U（U21・U23・U29）
 (function (G) {
   const u21 = (G.u21 = G.u21 || {});
   const v9 = G.v9;
@@ -19,7 +18,6 @@
   // 右の列で組にまとめるのは、選択肢がこれ以上のとき（スマホ・下の帯は U13 の数のまま）
   u21.MIN_ITEMS = 7;
   u21.FAC_MIN_ITEMS = 9;
-  u21.TOP_GAP = 124; // 本文の欄の上端は、左上の札の下まで（見出しの帯からの距離）
 
   // 配置。V9 の layout と同じ形（tome・cast・stage・fs・m…）に、右の列（side）と本文の欄の低いとき（tome.min）を足す。
   // 本文の欄は画面の下に寄せ、高さは中身に合わせて tome.min〜tome.h（CSS の min-height・max-height）。戦闘は V9 のまま
@@ -27,32 +25,31 @@
   u21.v9Layout = v9Layout;
   // U23：立ち絵が小さくなった（持ち主「UI変えてもらったら立ち絵が小さくなった」）。本文の欄を 1 行 32 字ほどに、右の列を少し細くし、
   // 本文の欄と右の列のあいだを立ち絵の場所にする。話している人は画面の高さの 9 割ほどで、足元まで見える（欄の後ろに沈めない）
-  u21.CHARS = 32; // 本文の 1 行の字数（広い画面でもこれまで）
   u21.FIG = 0.9; // 立ち絵の高さ（見出しの帯より下の高さに対して）
-  u21.TMIN = 0.3; // 本文の欄の低いときの高さ（見出しの帯より下の高さに対して）
-  u21.TMIN_PX = 180;
   u21.CORE = 0.42; // 立ち絵の幅のうち、ぼかさずに見える真ん中の割合（高さに対して。v9_pc.css の .v9fig.img の覆い：幅 0.8×高さの 52%）
-  u21.layout = (vw, vh) => {
+  // U29：持ち主の配置図「左上にメニュー系 2・右上にメニュー系・真ん中は魔物や立ち絵・下の左にログ・下の右にコマンドと選択肢」。
+  // 背景の絵は画面いっぱい。下の二つの窓（本文の欄＝ログ、右の窓＝コマンド・選択肢）は同じ高さで左右に並べる。戦闘・会話・町・迷宮のどれでも同じ形
+  u21.PANE = 0.34; // 下の窓の高さ（画面の高さに対して）
+  u21.PANE_COMBAT = 0.38; // 戦闘は手と仲間の札が多いので少し高く
+  u21.PANE_MIN = 230;
+  u21.PANE_MAX = 400;
+  u21.GAP = 12; // 下の二つの窓のあいだ
+  u21.layout = (vw, vh, combat) => {
     const base = v9Layout(vw, vh, false);
-    const { head, m, fs } = base;
+    const { head, fs } = base;
     vw = base.vw; vh = base.vh;
-    const gap = Math.round(Math.max(14, m * 0.8));
-    const sw = Math.round(Math.max(340, Math.min(480, vw * 0.29)));
-    const side = { x: vw - m - sw, y: head + 8, w: sw, h: vh - head - 8 - m };
-    const leftW = side.x - gap - m;
-    const width = (c) => c * fs + v9.PAD * 2 + 10;
-    let chars = u21.CHARS;
-    while (chars > 28 && width(chars) > leftW) chars--;
-    const tw = Math.min(leftW, width(chars));
-    const avail = vh - m - head;
-    const tmax = Math.max(200, avail - u21.TOP_GAP);
-    // 本文の欄の低いとき（中身が短いとき）の高さ。U23：低くして、背景の絵を見せる（持ち主「立ち絵や背景は見えるように」）
-    const tmin = Math.round(Math.min(tmax, Math.max(u21.TMIN_PX, Math.min(400, avail * u21.TMIN))));
-    const tome = { x: m, y: vh - m - tmax, w: tw, h: tmax, min: tmin };
-    // 立ち絵の場所：左の広い所（見出しの帯の下から画面の下まで）。人は本文の欄と右の列のあいだ（stand）に立つ
-    const cast = { x: 0, y: head, w: Math.max(0, side.x - 4), h: vh - head };
-    const stand = { x0: tome.x + tome.w, x1: side.x };
-    return Object.assign({}, base, { chars, tome, cast, side, stand, stage: null, side21: true });
+    const m = Math.round(Math.max(10, Math.min(24, vw * 0.012)));
+    const ph = Math.round(Math.max(u21.PANE_MIN, Math.min(u21.PANE_MAX + (combat ? 40 : 0), vh * (combat ? u21.PANE_COMBAT : u21.PANE))));
+    const y = vh - m - ph;
+    const lw = Math.round((vw - m * 2 - u21.GAP) / 2);
+    const tome = { x: m, y, w: lw, h: ph, min: ph };
+    const side = { x: m + lw + u21.GAP, y, w: vw - m - (m + lw + u21.GAP), h: ph };
+    const chars = Math.max(20, Math.min(48, Math.floor((lw - v9.PAD * 2 - 10) / fs)));
+    // 真ん中の舞台：立ち絵は画面の真ん中に立ち、足元は下の窓の後ろへ沈む。戦闘の魔物も真ん中に大きく
+    const cast = combat ? { x: 0, y: head + 64, w: Math.round(vw * 0.22), h: y + 40 - head - 64 } : { x: 0, y: head, w: vw, h: vh - head };
+    const stand = { x0: Math.round(vw * 0.3), x1: Math.round(vw * 0.7) };
+    const stage = combat ? { x: m, y: head, w: vw - m * 2, h: y + 40 - head } : null;
+    return Object.assign({}, base, { m, chars, tome, cast, side, stand, stage, combat: !!combat, side21: true });
   };
   // 立ち絵の置き場所（V9 の placeCast と同じ形）。本文の欄と右の列のあいだの真ん中に、話している人を大きく。
   // 高さは、見えている真ん中（CORE）がそのあいだに入る大きさまで。後ろの人は少し小さく暗く、左右にずらす（欄の後ろに隠れてもよい）
@@ -60,7 +57,7 @@
   u21.v9Place = v9Place;
   u21.placeCast = (L, list) => {
     const n = (list || []).length;
-    if (!L || !L.side21 || !L.stand || !n) return v9Place ? v9Place(L, list) : [];
+    if (!L || !L.side21 || !L.stand || !n || L.combat) return v9Place ? v9Place(L, list) : [];
     const C = L.cast;
     const room = Math.max(0, L.stand.x1 - L.stand.x0);
     // 右の列を入れる前（V9）の大きさより小さくはしない（狭い画面では、人の端が本文の欄の後ろに隠れてもよい）
@@ -77,7 +74,7 @@
     return list.map((c, i) => ({ x: Math.round(xs[i]), h: Math.round(H * (n === 3 && i ? 0.86 : 0.94)), front: false, dim: 0.22, z: n === 3 && !i ? 2 : 1 }));
   };
   if (v9Place) v9.placeCast = (L, list) => (L && L.side21 ? u21.placeCast(L, list) : v9Place(L, list));
-  v9.layout = (vw, vh, combat) => (combat ? v9Layout(vw, vh, true) : u21.layout(vw, vh));
+  v9.layout = (vw, vh, combat) => u21.layout(vw, vh, combat);
 
   // 右の列のまとめ方：U13 と同じ組で、まとめる数だけ下げる
   const u13 = G.u13;
@@ -191,18 +188,18 @@
   const playing = () => !!(play && !play.hidden && G.S);
   function place() {
     const panel = $("#panel"), tome = tomeEl();
-    const want = !!(playing() && v9.isPC(vwNow(), window.innerHeight) && G.S && !G.S.combat);
+    const want = !!(playing() && v9.isPC(vwNow(), window.innerHeight) && G.S); // U29：戦闘でも同じ形（右下の窓にコマンド）
     u21.active = want;
     body.classList.toggle("u21pc", want);
     if (!panel || !tome) return want;
     if (want && panel.parentNode !== side) side.append(panel);
     if (!want && panel.parentNode !== tome) tome.append(panel);
     if (want) {
-      const L = u21.layout(vwNow(), window.innerHeight);
+      const L = u21.layout(vwNow(), window.innerHeight, !!G.S.combat);
       const r = document.documentElement.style;
       const px = (k, v) => r.setProperty(k, Math.round(v) + "px");
       px("--u21-sx", L.side.x); px("--u21-sy", L.side.y); px("--u21-sw", L.side.w); px("--u21-sh", L.side.h);
-      px("--u21-tmin", L.tome.min);
+      px("--u21-tmin", L.tome.min); px("--u21-m", L.m);
     }
     return want;
   }
@@ -224,16 +221,14 @@
     const tabs = Array.from(bar.querySelectorAll(".u13tab"));
     const at = tabs.findIndex((t) => t.dataset.u13 === key);
     if (at < 0) return;
+    // U29：下の右の窓は低いので、組の札は上に一列（小さな札）にまとめ、開いた組の中身をその下に（中身だけ流れる）
     const box = h("div", "u21open");
     box.id = "u21open";
     after.forEach((g, k) => { if (order[k].open) box.append(g); });
-    const rest = h("div", "u13tabs u21rest");
-    tabs.slice(at + 1).forEach((t) => rest.append(t));
     bar.classList.add("u21tabs");
     bar.after(box);
-    box.after(rest);
-    // 札は押すと開く見出し（タブではなく、開いた・閉じたの見出し）
-    [bar, rest].forEach((b) => { b.setAttribute("role", "group"); b.setAttribute("aria-label", "行動の組"); });
+    bar.setAttribute("role", "group");
+    bar.setAttribute("aria-label", "行動の組");
     tabs.forEach((t) => {
       t.removeAttribute("role");
       t.removeAttribute("aria-selected");
@@ -242,7 +237,6 @@
       if (on) t.setAttribute("aria-controls", "u21open");
       if (!t.querySelector(".u21caret")) t.append(h("span", "u21caret", on ? "▾" : "▸"));
     });
-    if (!rest.children.length) rest.remove();
     panel.classList.add("u21acc");
   }
 
@@ -256,6 +250,27 @@
     tabs[(i + (ev.key === "ArrowDown" ? 1 : tabs.length - 1)) % tabs.length].focus();
   });
 
+  // U29：左上の札（メニュー系 2）に、いる所・日付と時刻・今の状態の一行
+  const where = h("div", "u29where");
+  where.id = "u29where";
+  const wPlace = h("b", "u29wplace"), wDate = h("span", "u29wdate num"), wState = h("span", "u29wstate");
+  where.append(wPlace, wDate, wState);
+  function paintWhere(S) {
+    const mbar = $("#mbar");
+    if (!mbar) return;
+    if (where.parentNode !== mbar) { const name = mbar.querySelector(".mname"); if (name) name.after(where); else mbar.prepend(where); }
+    const U28 = G.u28 || {};
+    const L = ((G.data || {}).LOCS || {})[S.loc] || {};
+    wPlace.textContent = U28.placeOf ? U28.placeOf(S) : L.name || "";
+    const d = $("#sceneDate");
+    wDate.textContent = (d && d.textContent) || (G.date ? G.date() : "");
+    const st = U28.stateOf ? U28.stateOf(S) : "";
+    wState.textContent = st;
+    wState.hidden = !st;
+    where.dataset.state = st;
+  }
+  u21.paintWhere = paintWhere;
+
   const base = ui.render;
   ui.render = (...a) => {
     place();
@@ -265,6 +280,7 @@
       const S = G.S;
       if (S && u21.active) {
         accordion(S);
+        paintWhere(S);
         const box = $("#u21open");
         if (box) box.scrollTop = 0;
         const p = $("#panel");
