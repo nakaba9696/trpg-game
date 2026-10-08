@@ -103,14 +103,15 @@ export default ({ fail: failTo, ok, note, loadEngine, seeded }) => {
   for (const kind of Object.keys(G2.PEOPLE)) for (const sex of ["男", "女"]) for (const age of [undefined, 9, 30, 70]) for (const look of [undefined, { ears: "pointy" }, ...beasts.map((b) => ({ ears: "none", beast: b }))]) {
     const w = { kind, sex, age, seed: "a10:" + kind, look };
     tryWho(`型 ${kind}・${sex}・${age || "年齢なし"}・${look ? look.beast || "エルフ" : "人間"}`, w);
-    if (kind !== "majin" && !G2.portraitArt(w)) fail(`型 ${kind}・${sex}・${age}・${look ? look.beast || "エルフ" : "人間"} に合う型の絵が無い`);
+    const odd = (kind === "child" && age >= 13) || (kind === "elder" && age && age < 60); // 年頃と食い違う種類（R5：年頃の合わない型は出さない）
+    if (kind !== "majin" && !odd && !G2.portraitArt(w)) fail(`型 ${kind}・${sex}・${age}・${look ? look.beast || "エルフ" : "人間"} に合う型の絵が無い`);
   }
   // 二枚目の型（もとは主人公の型）：ある種類・性別では、人ごとに一枚目と二枚目に分かれ、同じ人はいつも同じ絵
   for (const k of Object.keys(assets).filter((k) => /^portraits\/kind_[a-z]+_[mf]_b$/.test(k))) {
     const [, kind, sx] = /^portraits\/kind_([a-z]+)_([mf])_b$/.exec(k);
     const got = new Set();
     for (let i = 0; i < 40; i++) {
-      const w = { kind, sex: sx === "m" ? "男" : "女", age: 30, seed: "a10:alt:" + i };
+      const w = { kind, sex: sx === "m" ? "男" : "女", seed: "a10:alt:" + i }; // 年齢なし（R5：年齢があれば年頃の合うほうだけ）
       const key = G2.v4PortraitKey(w);
       if (key !== G2.v4PortraitKey(Object.assign({}, w))) fail(`${k}：同じ人なのに絵が変わる`);
       got.add(key);
@@ -136,7 +137,10 @@ export default ({ fail: failTo, ok, note, loadEngine, seeded }) => {
   G2.newGame({ cls: "thief", stats: Object.fromEntries(D.STATS.map((k) => [k, 40])), caps: Object.fromEntries(D.STATS.map((k) => [k, 70])), goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
   for (let i = 0; i < 120; i++) comps.push(G2.genCompanion());
   for (const c of comps) tryWho(`仲間 ${c.name}`, G2.companionWho(c));
-  if (s.comps.none.length) fail(`絵の無い仲間がいる（型が当たらない）：${[...new Set(s.comps.none)].slice(0, 10).join("、")}`);
+  // 名のある仲間（シグルン・ロデリク・ケイル。R5）は、専用の絵が無ければ絵なしでよい
+  const namedComp = new Set(comps.filter((c) => G2.r5 && G2.r5.named(G2.companionWho(c))).map((c) => c.name));
+  const noneComp = [...new Set(s.comps.none)].filter((n) => !namedComp.has(String(n).replace(/（[^）]*）$/, "")));
+  if (noneComp.length) fail(`絵の無い仲間がいる（型が当たらない）：${noneComp.slice(0, 10).join("、")}`);
 
   // 画像が読めない・読み込みのあいだ：canvas の絵に戻らない
   {
