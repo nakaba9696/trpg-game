@@ -218,6 +218,8 @@
       leave,
     ]),
   );
+  // 人の姿の出ない部屋（絵の who を持たない出来事。src/data/events_who_a4.js の D.EVENT_NOBODY）
+  D.EVENT_NOBODY = (D.EVENT_NOBODY || []).concat(["w12_nf_room1", "w12_nf_room2", "w12_nf_room3"]);
   D.W11_ROOMS = D.W11_ROOMS || [];
   D.W11_ROOMS.push({
     id: "w12_ruins_lore", where: ["ruins"], force: true, w: 0,
