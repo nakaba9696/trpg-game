@@ -545,7 +545,11 @@
    "name": "港の用心棒",
    "human": true,
    "tags": "thug, burly man, thick neck, bandana, stubble, grin, holding wooden club, small bell on belt, dock worker clothes",
-   "memo": "密輸の荷の見張り。腰に鈴"
+   "memo": "密輸の荷の見張り。腰に鈴",
+   "redraw": {
+    "modern": "警備員の制服（襟とネクタイ、写真入りの名札、革靴）に警棒に見える棍棒",
+    "fix": "港の荒くれ：袖をまくった麻のシャツか胴衣、頭に布、腰に鈴、樫の棍棒、裸足か革のサンダル（例：rolled-up linen shirt, leather vest, bandana, small bell on belt, oak club, sandals）"
+   }
   },
   {
    "id": "w3_hermit",

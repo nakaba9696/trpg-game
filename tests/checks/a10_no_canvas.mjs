@@ -7,7 +7,7 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import vm from "node:vm";
 import { loadArt, realAssets, a10Survey, MAP_PATH, ROOT } from "../../tools/a10_map.mjs";
-import { siteAssets } from "../../tools/assets.mjs";
+import { siteAssets, redrawKeys } from "../../tools/assets.mjs";
 
 export default ({ fail: failTo, ok, note, loadEngine, seeded }) => {
   let bad = 0;
@@ -24,6 +24,7 @@ export default ({ fail: failTo, ok, note, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 実際の画像の一覧で読む
   const assets = realAssets();
+  const redrawn = redrawKeys(); // 描き直し待ちの絵（R5c。siteAssets は載せない）
   const G = loadArt(loadEngine(), assets);
   const D = G.data;
   // 筆を数える偽の canvas。clearRect・setTransform・drawImage と、魔物の胸から上の地（fillRect・グラデーション）のほかは「canvas の絵」
@@ -104,10 +105,12 @@ export default ({ fail: failTo, ok, note, loadEngine, seeded }) => {
     const w = { kind, sex, age, seed: "a10:" + kind, look };
     tryWho(`型 ${kind}・${sex}・${age || "年齢なし"}・${look ? look.beast || "エルフ" : "人間"}`, w);
     const odd = (kind === "child" && age >= 13) || (kind === "elder" && age && age < 60); // 年頃と食い違う種類（R5：年頃の合わない型は出さない）
+    const kk = G2.v4KindOf(w);
+    if (kk && redrawn.has(`portraits/kind_${kk}_${sex === "女" ? "f" : "m"}`)) continue; // 描き直し待ちの型（R5c：現代の服に見える絵）は、描き直すまで絵なしでよい
     if (kind !== "majin" && !odd && !G2.portraitArt(w)) fail(`型 ${kind}・${sex}・${age}・${look ? look.beast || "エルフ" : "人間"} に合う型の絵が無い`);
   }
-  // 二枚目の型（もとは主人公の型）：ある種類・性別では、人ごとに一枚目と二枚目に分かれ、同じ人はいつも同じ絵
-  for (const k of Object.keys(assets).filter((k) => /^portraits\/kind_[a-z]+_[mf]_b$/.test(k))) {
+  // 二枚目の型（もとは主人公の型）：ある種類・性別では、人ごとに一枚目と二枚目に分かれ、同じ人はいつも同じ絵（一枚目が描き直し待ちの型は除く。R5c）
+  for (const k of Object.keys(assets).filter((k) => /^portraits\/kind_[a-z]+_[mf]_b$/.test(k) && !redrawn.has(k.slice(0, -2)))) {
     const [, kind, sx] = /^portraits\/kind_([a-z]+)_([mf])_b$/.exec(k);
     const got = new Set();
     for (let i = 0; i < 40; i++) {
@@ -139,7 +142,10 @@ export default ({ fail: failTo, ok, note, loadEngine, seeded }) => {
   for (const c of comps) tryWho(`仲間 ${c.name}`, G2.companionWho(c));
   // 名のある仲間（シグルン・ロデリク・ケイル。R5）は、専用の絵が無ければ絵なしでよい
   const namedComp = new Set(comps.filter((c) => G2.r5 && G2.r5.named(G2.companionWho(c))).map((c) => c.name));
-  const noneComp = [...new Set(s.comps.none)].filter((n) => !namedComp.has(String(n).replace(/（[^）]*）$/, "")));
+  // 型が描き直し待ちの仲間（R5c：現代の服に見える型）も、描き直すまで絵なしでよい
+  comps.forEach((c) => { const w = G2.companionWho(c), k = w && G2.v4KindOf(w); if (k && redrawn.has(`portraits/kind_${k}_${(w.sex || G2.personLook(w).sex) === "女" ? "f" : "m"}`)) namedComp.add(c.name); });
+  const redrawnKind = (n) => { const m = /（([a-z]+)）$/.exec(String(n)); return !!m && ["m", "f"].some((x) => redrawn.has(`portraits/kind_${m[1]}_${x}`)); };
+  const noneComp = [...new Set(s.comps.none)].filter((n) => !namedComp.has(String(n).replace(/（[^）]*）$/, "")) && !redrawnKind(n));
   if (noneComp.length) fail(`絵の無い仲間がいる（型が当たらない）：${noneComp.slice(0, 10).join("、")}`);
 
   // 画像が読めない・読み込みのあいだ：canvas の絵に戻らない

@@ -2841,7 +2841,11 @@
    "file": "assets/portraits/kind_merchant_m.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes",
    "tags": "merchant, vest, coin pouch",
-   "memo": "名もない人の型（仲間・出来事の人）"
+   "memo": "名もない人の型（仲間・出来事の人）",
+   "redraw": {
+    "modern": "ファスナー付きの多ポケットのベスト（釣り・撮影用のような）に襟付きのシャツ",
+    "fix": "麻の上着か革の胴衣（紐で締める）、帯に財布と秤。眼鏡を額に上げた姿もあると、道ばたの両替商の文に合う（例：linen tunic, leather jerkin with laces, belt pouch, small scales, spectacles pushed up on forehead）"
+   }
   },
   {
    "id": "kind_merchant_m_b",
@@ -2861,7 +2865,11 @@
    "identity": "1girl, woman, 30 years old, chestnut brown hair, bob cut, blunt bangs, violet eyes",
    "tags": "merchant, vest, coin pouch",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "art": 2
+   "art": 2,
+   "redraw": {
+    "modern": "学校の制服（ベスト・ネクタイ・プリーツのスカート）に肩掛けの鞄",
+    "fix": "麻のブラウスに胴衣、長いスカート、帯に財布（例：linen blouse, laced bodice, long skirt, belt pouch）"
+   }
   },
   {
    "id": "kind_merchant_f_b",
@@ -2959,7 +2967,11 @@
    "file": "assets/portraits/kind_noble_m.webp",
    "identity": "1boy, male focus, adult, man, 30 years old, black hair, short hair, spiky hair, black eyes",
    "tags": "noble, elegant clothes, jewelry",
-   "memo": "名もない人の型（仲間・出来事の人）"
+   "memo": "名もない人の型（仲間・出来事の人）",
+   "redraw": {
+    "modern": "黒のタンクトップに腕輪（貴族に見えず、今の運動着に見える）",
+    "fix": "刺繍の入った上着（ダブレット）、マント、指輪（例：embroidered doublet, cape, signet ring）"
+   }
   },
   {
    "id": "kind_noble_f",
@@ -2988,7 +3000,11 @@
    "file": "assets/portraits/kind_rogue_m.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes",
    "tags": "rogue, bandana, dark leather clothes, dagger, scar",
-   "memo": "名もない人の型（仲間・出来事の人）"
+   "memo": "名もない人の型（仲間・出来事の人）",
+   "redraw": {
+    "modern": "肩章とボタンの並ぶトレンチコート（近代の軍服に見える）",
+    "fix": "頭巾付きの外套か革の胴衣、腰に短刀（例：hooded cloak, leather jerkin, dagger at belt）"
+   }
   },
   {
    "id": "kind_rogue_m_b",
@@ -3008,7 +3024,11 @@
    "identity": "1girl, woman, 30 years old, dark blue hair, long hair, blunt bangs, amber eyes",
    "tags": "rogue, bandana, dark leather clothes, dagger, scar",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "art": 2
+   "art": 2,
+   "redraw": {
+    "modern": "革のライダースジャケットにプリーツのスカート",
+    "fix": "頭巾付きの外套に革の胴衣、腰に短刀（例：hooded cloak, leather bodice, dagger at belt）"
+   }
   },
   {
    "id": "kind_rogue_f_b",
@@ -3085,7 +3105,11 @@
    "file": "assets/portraits/kind_sailor_m.webp",
    "identity": "1boy, male focus, adult, man, 38 years old, orange hair, short hair, black eyes",
    "tags": "sailor, striped shirt, bandana, earring",
-   "memo": "名もない人の型（仲間・出来事の人）"
+   "memo": "名もない人の型（仲間・出来事の人）",
+   "redraw": {
+    "modern": "襟付きの縞のポロシャツに黒のスラックス",
+    "fix": "襟の無い縞の上着か麻のシャツ、膝までのズボン、頭に布（例：collarless striped tunic, knee breeches, head scarf, barefoot）"
+   }
   },
   {
    "id": "kind_sailor_m_b",
@@ -3105,7 +3129,11 @@
    "identity": "1girl, woman, 30 years old, teal hair, medium hair, light blue eyes",
    "tags": "sailor, striped shirt, bandana, earring",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "art": 2
+   "art": 2,
+   "redraw": {
+    "modern": "セーラー服（学校の制服）",
+    "fix": "襟の無い縞の上着か麻のシャツに膝丈のズボン、頭に布（例：collarless striped tunic, knee breeches, head scarf）"
+   }
   },
   {
    "id": "kind_mage_m",
@@ -3201,7 +3229,11 @@
    "file": "assets/portraits/kind_host_m.webp",
    "identity": "1boy, male focus, adult, man, 38 years old, black hair, short hair, black eyes",
    "tags": "innkeeper, apron, friendly smile",
-   "memo": "名もない人の型（仲間・出来事の人）"
+   "memo": "名もない人の型（仲間・出来事の人）",
+   "redraw": {
+    "modern": "黒の半袖 T シャツ、キャラクターの顔の付いた前掛け",
+    "fix": "麻の長袖のシャツに無地の前掛け、袖をまくる（例：linen shirt, rolled sleeves, plain apron, tavern keeper）"
+   }
   },
   {
    "id": "kind_host_f",
@@ -3220,7 +3252,11 @@
    "file": "assets/portraits/kind_beggar_m.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, black eyes",
    "tags": "ragged clothes, dirty, tired",
-   "memo": "名もない人の型（仲間・出来事の人）"
+   "memo": "名もない人の型（仲間・出来事の人）",
+   "redraw": {
+    "modern": "ボタン留めの襟付きシャツ（胸ポケット）にサスペンダー",
+    "fix": "継ぎの当たった麻の上着、縄の帯、裸足か布を巻いた足（例：patched ragged tunic, rope belt, wrapped feet）"
+   }
   },
   {
    "id": "kind_beggar_f",
@@ -3230,7 +3266,11 @@
    "identity": "1girl, woman, 30 years old, ash blonde hair, long hair, amber eyes",
    "tags": "ragged clothes, dirty, tired",
    "memo": "名もない人の型（仲間・出来事の人）",
-   "art": 2
+   "art": 2,
+   "redraw": {
+    "modern": "白の T シャツに短パン（今の部屋着）",
+    "fix": "継ぎの当たった麻のワンピース、縄の帯、裸足（例：patched ragged dress, rope belt, barefoot）"
+   }
   },
   {
    "id": "kind_beggar_f_b",
@@ -3346,7 +3386,11 @@
    "file": "assets/portraits/kind_child_m.webp",
    "identity": "1boy, male focus, boy, child, 10 years old, white hair, short hair, grey eyes",
    "tags": "simple clothes, small",
-   "memo": "名もない子ども。子どもらしく"
+   "memo": "名もない子ども。子どもらしく",
+   "redraw": {
+    "modern": "紐付きの大きなパーカー",
+    "fix": "麻の短い上着に帯、短いズボン（例：simple linen tunic, rope belt, short trousers）"
+   }
   },
   {
    "id": "kind_child_f",
@@ -3355,7 +3399,11 @@
    "file": "assets/portraits/kind_child_f.webp",
    "identity": "1girl, girl, child, 10 years old, black hair, long hair, low twintails, blunt bangs, amber eyes",
    "tags": "simple clothes, small",
-   "memo": "名もない子ども。子どもらしく"
+   "memo": "名もない子ども。子どもらしく",
+   "redraw": {
+    "modern": "ボタン留めの桃色のカーディガンに襟とプリーツのスカート（今の子ども服）",
+    "fix": "麻のワンピースに前掛け、頭に布（例：simple linen dress, apron, head kerchief）"
+   }
   }
  ]
 }
