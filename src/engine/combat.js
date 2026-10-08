@@ -165,7 +165,7 @@
     const e = G.foeData(f);
     if (e.majin && !G.weapon().pierce && how !== "holy") {
       const W = (G.wallOf ? G.wallOf(f) : { what: "見えない壁", name: "絶界" }); // E11：絶界は黒鎧だけ。長編の若君は糸の守り
-      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い" }[how] || "刃"}は${f.name}の体の手前で、${W.what}に弾かれた。${W.name}だ。`, { fx: "wall", foe: f.name });
+      G.log("nar", `${{ fire: "炎", ice: "冷気", bolt: "雷", curse: "呪い", wind: "風", earth: "石", light: "光", dark: "闇", burn: "炎" }[how] || "刃"}は${f.name}の体の手前で、${W.what}に弾かれた。${W.name}だ。`, { fx: "wall", foe: f.name });
       return;
     }
     if (G.cbDmgMod) n = Math.max(0, Math.round(G.cbDmgMod(f, n, how)));
@@ -349,7 +349,7 @@
       let dmg = (c.fire ? G.dice([2, 6, 0]) : G.d(6)) + c.dmg;
       if (G.cbAllyDmg) dmg = G.cbAllyDmg(c, f, dmg); // E12：仲間の武器の種類と、敵の耐性・弱点
       f.hp = Math.max(0, f.hp - dmg);
-      G.log("sys", `${c.name}の${c.fire ? "魔法" : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
+      G.log("sys", `${c.name}の${c.fire ? (G.m14AllyMagic ? G.m14AllyMagic(c) : "魔法") : "攻撃"}が${f.name}に ${dmg} のダメージ（残り ${f.hp}/${f.max}）`, { fx: "hit", foe: f.name, n: dmg });
       if (f.hp <= 0) onFoeDown(f);
     } else G.note(`${c.name}の攻撃は外れた。`);
   }
@@ -424,7 +424,7 @@
         damageFoe(f, G.d(4) + pow("魔力", 20), "curse");
         if (f.hp <= 0) return;
       }
-      if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は凍りついたまま動けない。`); return; }
+      if (f.frozen > 0) { f.frozen--; G.note(`${f.name}は${f.stunText || "凍りついたまま"}動けない。`); if (!f.frozen) f.stunText = ""; return; }
       // F1：この手番の動き（溜め・構え・連撃・大技）。skip なら殴ってこない
       const mv = G.cbMove ? G.cbMove(f, e) : null;
       if (mv && mv.text) G.say(mv.text);
