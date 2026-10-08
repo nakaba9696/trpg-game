@@ -137,7 +137,7 @@
   };
 
   // ---------------------------------------------------------------- 絵
-  const GLYPH = { weapon: "剣", armor: "鎧", ring: "環", use: "薬", loot: "材", relic: "遺", other: "品" };
+  const GLYPH = { weapon: "剣", armor: "鎧", head: "兜", feet: "靴", shield: "盾", ring: "環", use: "薬", loot: "材", relic: "遺", other: "品" };
   // 魔物を小さな canvas に描く。会っていなければ影だけ
   const paintFoe = (cv, id, shadow) => {
     const e = F2.foe(id);
