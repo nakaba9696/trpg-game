@@ -1287,12 +1287,14 @@
   const ZOOM = 1.14;
   const focusNow = (st) => (st.opt.focus != null ? !!st.opt.focus : st.foes.length > 0 || !!(G.S && G.S.mode === "event"));
   // 敵の並べ方（scene.js・fx.js と同じ）
+  // 画面が見せている帯（G.foeBand()：絵の高さに対する { top, base } の割合。スマホの戦闘で本文の枠の上の帯。U30）があれば、その帯に収める
   function paintFoes(ctx, w, h, foes) {
     const n = foes.length;
+    const B = G.foeBand ? G.foeBand() : null;
     foes.forEach((f, i) => {
       const x = w * (n === 1 ? 0.5 : 0.22 + (0.56 * i) / Math.max(1, n - 1));
-      const s = h * (f.boss ? 0.78 : 0.58) * (n > 2 ? 0.85 : 1);
-      if (G.paintMonster) G.paintMonster(ctx, x, h * 0.97, s, f);
+      const s = (B ? h * (B.base - B.top) * (f.boss ? 1 : 0.86) : h * (f.boss ? 0.78 : 0.58)) * (n > 2 ? 0.85 : 1);
+      if (G.paintMonster) G.paintMonster(ctx, x, B ? h * B.base : h * 0.97, s, f);
     });
   }
   // 1コマ：取っておいた絵を（寄りなら拡大して）置き、灯りの揺れ・炎・敵・天候・周辺減光を重ねる
