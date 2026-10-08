@@ -13,7 +13,9 @@
 //     _b は二枚目の型（もとは主人公の型。冒険者・ならず者・魔法使い・神官・シェルアークの人）。seed で人ごとに半分ほどが二枚目になる。
 //     13 歳未満は child、60 歳以上は elder の型。人の姿の使徒（majin）など、合う型が無ければ絵なし
 //     R5：who に年齢があれば、年頃（若者・壮年・老境）の合う型だけ（KIND_AGE）。合う型が無ければ絵なし。
-//     名のある人（src/data/r5_named.js・C3 の名のある人・名前の付いた who.name も）は、専用の絵が無ければ絵なし（型の絵で代用しない）
+//     名のある人（src/data/r5_named.js・C3 の名のある人）は、専用の絵が無ければ絵なし（型の絵で代用しない）。
+//     R5b：名前だけの人（who.name が名前で終わる依頼人など。id が無い）は、名もない人と同じ型（汎用のモブ絵）を使い回す。名のある人の絵は型にも別の人にも使わない。
+//     三枚目の型（_c）は年頃を埋めるための型（若い型しか無い種類の壮年など）。年齢のある人だけが、年頃が合えば使う。エルフは年齢を見ない
 //   魔物（who.kind "foe"。仲間の魔物・出来事の魔物）→ 魔物の絵（G.v6Sprite。v6_monsters.js）を胸から上に切り取る。無ければ絵なし
 // 名のある人は、どの出来事でも同じ顔になるよう、who を一つに固定する（最初の出来事の who。キャラメモの人はそのデータの who）
 // 描く物の一覧と、Stable Diffusion に入れる特徴のタグは docs/art/portraits.md（機械で読める形は docs/art/portraits.json）。レーン A（絵）
@@ -75,12 +77,18 @@
     return G.r5 && G.r5.artId ? G.r5.artId(who) : null;
   };
   // R5：型の絵の年頃（docs/art/portraits.json の identity の「NN years old」。tests/checks/r5_named.mjs が合っているか確かめる）
-  const KIND_AGE = { kind_villager_m: 45, kind_villager_f: 30, kind_merchant_m: 45, kind_merchant_f: 30, kind_guard_m: 45, kind_guard_f: 30, kind_priest_m: 24, kind_priest_m_b: 20, kind_priest_f: 30, kind_priest_f_b: 20, kind_noble_m: 30, kind_noble_f: 30, kind_rogue_m: 45, kind_rogue_m_b: 20, kind_rogue_f: 30, kind_rogue_f_b: 20, kind_soldier_m: 45, kind_soldier_f: 30, kind_knight_m: 30, kind_knight_f: 30, kind_sailor_m: 38, kind_sailor_f: 30, kind_mage_m: 24, kind_mage_m_b: 20, kind_mage_f: 30, kind_mage_f_b: 20, kind_ronin_m: 45, kind_ronin_m_b: 20, kind_ronin_f: 30, kind_ronin_f_b: 20, kind_host_m: 38, kind_host_f: 30, kind_beggar_m: 45, kind_beggar_f: 30, kind_archer_m: 45, kind_archer_f: 30, kind_adventurer_m: 30, kind_adventurer_m_b: 20, kind_adventurer_f: 30, kind_adventurer_f_b: 20, kind_elder_m: 70, kind_elder_f: 70, kind_child_m: 10, kind_child_f: 10 };
+  const KIND_AGE = { kind_villager_m: 45, kind_villager_m_b: 20, kind_villager_f: 30, kind_villager_f_b: 18, kind_merchant_m: 45, kind_merchant_m_b: 24, kind_merchant_f: 30, kind_merchant_f_b: 17, kind_guard_m: 45, kind_guard_m_b: 24, kind_guard_f: 30, kind_priest_m: 24, kind_priest_m_c: 48, kind_priest_m_b: 20, kind_priest_f: 30, kind_priest_f_b: 20, kind_noble_m: 30, kind_noble_f: 30, kind_noble_f_b: 17, kind_rogue_m: 45, kind_rogue_m_b: 20, kind_rogue_f: 30, kind_rogue_f_b: 20, kind_soldier_m: 45, kind_soldier_m_b: 20, kind_soldier_f: 30, kind_knight_m: 30, kind_knight_m_b: 19, kind_knight_f: 30, kind_sailor_m: 38, kind_sailor_m_b: 22, kind_sailor_f: 30, kind_mage_m: 24, kind_mage_m_c: 50, kind_mage_m_b: 20, kind_mage_f: 30, kind_mage_f_b: 20, kind_ronin_m: 45, kind_ronin_m_b: 20, kind_ronin_f: 30, kind_ronin_f_b: 20, kind_host_m: 38, kind_host_f: 30, kind_beggar_m: 45, kind_beggar_f: 30, kind_beggar_f_b: 19, kind_archer_m: 45, kind_archer_m_b: 22, kind_archer_f: 30, kind_archer_f_b: 17, kind_adventurer_m: 30, kind_adventurer_m_b: 20, kind_adventurer_f: 30, kind_adventurer_f_b: 20, kind_elder_m: 70, kind_elder_f: 70, kind_child_m: 10, kind_child_f: 10 };
   G.V4_KIND_AGE = KIND_AGE;
   // 年頃の帯（子ども・若者・壮年・老境）。who に年齢が書いてあれば、帯が同じか、8 歳以内の型だけを使う（41 歳の人に 20 歳の型を出さない）
   const band = (a) => (a < 13 ? 0 : a < 30 ? 1 : a < 60 ? 2 : 3);
   G.v4AgeBand = band;
-  const ageOfKey = (key) => KIND_AGE[key.replace(/_(elf|beast(_[a-z]+)?)(?=(_b)?$)/, "")];
+  const ageOfKey = (key) => KIND_AGE[key.replace(/_(elf|beast(_[a-z]+)?)(?=(_[bc])?$)/, "")];
+  // 型を選ぶのに使う年齢。エルフ（尖った耳・100 歳以上）は見た目の年頃が年齢から分からないので使わない（0）
+  const ageOf = (who) => {
+    const a = Number(who && who.age) > 0 ? Number(who.age) : 0;
+    return a >= 100 || ((who && who.look) || {}).ears === "pointy" || (who && who.race) === "elf" ? 0 : a;
+  };
+  G.v4AgeOf = ageOf;
   G.v4AgeFits = (age, key) => {
     const pa = ageOfKey(key);
     return !(age > 0) || !(pa > 0) || band(age) === band(pa) || Math.abs(age - pa) <= 8;
@@ -89,14 +97,15 @@
   G.v4PortraitKey = (who) => {
     if (!who || who.kind === "foe" || who.kind === "hero") return null; // 主人公は立ち絵なし（A10）
     const id = named(who);
-    if (id != null) return id && has(id) ? id : null; // 名のある人に型の絵は使わない（名前だけの人＝"" も絵なし）
+    if (id) return has(id) ? id : null; // 名のある人に型の絵は使わない
+    // R5b：名前だけの人（id の無い依頼人など。id === ""）は、名もない人と同じ汎用のモブ絵（型）を使い回す（持ち主の決定）
     const kind = G.v4KindOf(who);
     if (!kind) return null;
     // 二枚目の型（kind_<種類>_<m|f>_b。もとは主人公の型）があれば、人ごとに（seed で）半分ほどをそちらにする
-    // R5：who に年齢があれば、年頃の合う型だけ（合う型が無ければ絵なし）。二枚目のほうが年頃が合えば、そちらを先に
-    const age = Number(who.age) > 0 ? Number(who.age) : 0;
+    // R5：who に年齢があれば、年頃の合う型だけ（合う型が無ければ絵なし）。二枚目・三枚目（_b・_c）のほうが年頃が合えば、そちらも
+    const age = ageOf(who);
     const alt = altOf(who) ? ["_b", ""] : [""];
-    if (age) alt.push(...["_b", ""].filter((x) => !alt.includes(x)));
+    if (age) alt.push(...["_b", "", "_c"].filter((x) => !alt.includes(x)));
     return first(raceOf(who).flatMap((r) => alt.map((x) => `kind_${kind}_${sexOf(who)}${r}${x}`)).filter((k) => G.v4AgeFits(age, k)));
   };
   const altOf = (who) => {
@@ -108,7 +117,8 @@
   // 名もない人の型の種類（無ければ null）。年頃で子ども・老人の型に寄せる
   G.v4KindOf = (who) => {
     if (!who || !KINDS.includes(who.kind)) return null;
-    const age = Number(who.age) > 0 ? Number(who.age) : G.personLook ? G.personLook(who).age : 0;
+    const elf = Number(who.age) >= 100 || (who.look || {}).ears === "pointy" || who.race === "elf";
+    const age = elf ? 0 : Number(who.age) > 0 ? Number(who.age) : G.personLook ? G.personLook(who).age : 0;
     return age > 0 && age < 13 ? "child" : age >= 60 ? "elder" : who.kind;
   };
   // 絵が出る人か（人物の画像の鍵か、魔物の絵の鍵。無ければ null＝絵を出さない）
