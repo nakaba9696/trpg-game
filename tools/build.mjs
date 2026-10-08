@@ -5,6 +5,7 @@
 //                                   Artifact に載せるファイルの一覧（公開パス → ローカルパス）を dist/site/files.json に書く（載せ方は docs/publish.md）
 //                                   コード（JS）は隣の dist/site/game.js に分けて、HTML から <script src="game.js?v=…"> で読む（T。10MB のコードを
 //                                   ページの中に書くと、読み込みのあいだ画面が固まる。別のファイルならブラウザが裏で読み、2 回目からは覚えておいた結果を使う）
+//                                   10MB を超えるときは、ソースのファイルの境目で game.js・game-2.js… に分け、HTML から順に読む（1 ファイル 15MB の上限のため）
 //   node tools/build.mjs --inline … 今まで通りコードも 1 枚の HTML に入れる（画像は別ファイルのまま）
 //   node tools/build.mjs --embed  … 予備。今まで通り画像を埋め込んだ 1 枚の dist/morsveld.html（上限を超えるなら差分を省く）
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync } from "node:fs";
@@ -27,7 +28,17 @@ const files = [...engine, ...ui];
 const assetsDir = path.join(root, "assets"); // 持ち主が作った画像（tools/assets.mjs・docs/art/）
 const assets = embed ? collectAssets(assetsDir, { shrink: true }) : siteAssets(assetsDir);
 assets.notes.forEach((n) => console.warn("画像：" + n));
-const js = assetsScript(assets) + files.map((f) => `// ==== ${f}\n` + readFileSync(path.join(src, f), "utf8")).join("\n");
+const parts = [assetsScript(assets), ...files.map((f) => `// ==== ${f}\n` + readFileSync(path.join(src, f), "utf8"))];
+const js = parts.join("\n");
+// コードが Artifact の 1 ファイルの上限（15MB）に近づいたので、ファイルの境目で game.js・game-2.js… に分ける（順に読む。どれも CHUNK まで）
+const CHUNK = 10 * 1024 * 1024;
+const chunks = [];
+for (const p of parts) {
+  const last = chunks[chunks.length - 1];
+  if (last && Buffer.byteLength(last) + Buffer.byteLength(p) + 1 <= CHUNK) chunks[chunks.length - 1] = last + "\n" + p;
+  else chunks.push(p);
+}
+const chunkName = (i) => (i ? `game-${i + 1}.js` : "game.js");
 if (/<\/script/i.test(js)) throw new Error("スクリプトの中に </script が含まれている");
 new vm.Script(js, { filename: "bundle.js" }); // 構文だけ確かめる
 
@@ -37,7 +48,7 @@ const css = [readFileSync(path.join(src, "style.css"), "utf8"), ...uiCss.map((n)
 let html = readFileSync(path.join(src, "index.html"), "utf8");
 html = html.replace("/*@STYLE@*/", () => css);
 // 分けるときは、版ごとに名前の後ろを変える（前の版の game.js を覚えたブラウザが、新しいページと古いコードを混ぜないように）
-const jsTag = inline ? null : `<script src="game.js?v=${createHash("sha1").update(js).digest("hex").slice(0, 10)}"></script>`;
+const jsTag = inline ? null : chunks.map((c, i) => `<script src="${chunkName(i)}?v=${createHash("sha1").update(c).digest("hex").slice(0, 10)}"></script>`).join("\n");
 html = inline ? html.replace("/*@SCRIPTS@*/", () => js) : html.replace(/<script>\s*\/\*@SCRIPTS@\*\/\s*<\/script>/, () => jsTag);
 if (!inline && !html.includes(jsTag)) throw new Error("src/index.html に <script>/*@SCRIPTS@*/</script> が無い");
 const htmlBytes = Buffer.byteLength(html);
@@ -57,8 +68,10 @@ if (embed) {
   // コード（T）。最初の回の公開にページと一緒に載るよう、一覧の先頭に置く
   const code = [];
   if (!inline) {
-    writeFileSync(path.join(site, "game.js"), js);
-    code.push({ pub: "game.js", local: rel(path.join(site, "game.js")), bytes: Buffer.byteLength(js) });
+    chunks.forEach((c, i) => {
+      writeFileSync(path.join(site, chunkName(i)), c);
+      code.push({ pub: chunkName(i), local: rel(path.join(site, chunkName(i))), bytes: Buffer.byteLength(c) });
+    });
   }
   const list = code.concat(assets.files.map((f) => {
     const dest = path.join(site, ...f.pub.split("/"));
@@ -75,7 +88,7 @@ if (embed) {
   // A12 より前に載せた Artifact を新しくするとき、1 枚ずつ載せていた基本の立ち絵・魔物の絵を消す一覧（公開パス → null）。1 回 250 個までずつ（docs/publish.md）
   const gone = assets.gone || [];
   for (let i = 0; i * SITE_LIMITS.batchFiles < gone.length; i++) writeFileSync(path.join(site, `gone-${i + 1}.json`), JSON.stringify(Object.fromEntries(gone.slice(i * SITE_LIMITS.batchFiles, (i + 1) * SITE_LIMITS.batchFiles).map((p) => [p, null])), null, 1) + "\n");
-  console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル${inline ? "" : `・コードは game.js ${kb(code[0].bytes)}`}）＋ 画像 ${list.length - code.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル／1 つの版の上限 ${SITE_LIMITS.versionFiles}）`);
+  console.log(`dist/site/index.html ${kb(htmlBytes)}（${files.length} ファイル${inline ? "" : `・コードは ${code.map((c) => `${c.pub} ${kb(c.bytes)}`).join("・")}`}）＋ 画像 ${list.length - code.length} 枚 ${kb(assets.total)}（合計 ${(plan.total / MB).toFixed(1)}MB・${plan.count} ファイル／1 つの版の上限 ${SITE_LIMITS.versionFiles}）`);
   if (assets.sprites) console.log(`  表情の差分 ${assets.merged} 枚を ${assets.sprites} 人分のスプライト（portraits/<id>.moods.svg）にまとめた`);
   if (assets.artPacks) console.log(`  基本の立ち絵と魔物の絵 ${assets.artMerged} 枚を ${assets.artPacks} 枚のスプライト（portraits/packs/・monsters/packs/）にまとめた`);
   if (assets.scenePacks) console.log(`  背景 ${assets.sceneMerged} 枚を ${assets.scenePacks} 組のスプライト（scenes/<組>.svg）にまとめた`);
