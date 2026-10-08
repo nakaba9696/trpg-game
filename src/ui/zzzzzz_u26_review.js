@@ -1,6 +1,6 @@
 // U26：持ち主のレビューから、右の行動列の直し（レーン U）
 //   1. 場所が変わったら（町に着いた・施設に入った）、前に開いていた組ではなく、その場所でいちばん使う組を開く。
-//      報告できる依頼があれば、その組を開き、報告をその組の先頭に（ギルド）。町なら「施設」。ほかは最初の組
+//      報告できる依頼があれば、その組を開き、報告をその組の先頭に（ギルド）。次に◆（依頼・噂の続き）の付いた組。町なら「施設」。ほかは最初の組
 //   2. 同じ名前の組（酒場の「教わる」が二つ、など）は一つにまとめる。中身の無い組は出さない（画面の中だけ。エンジンの G.actions は変えない）
 //   3. 開いた組の中身が見える数を増やす・戦闘の手が見出しに隠れない・所持金は上の札の一か所に・スマホの上のボタン列は一段に（ui/zzzzzz_u26_review.css）
 // u21（zzzzz_u21_side.js）・u13（u13_menu.js）は書き換えず、G.actions・G.u13.plan・G.ui.render を包む（名前の zzzzzz で u21 より後）
@@ -36,11 +36,13 @@
     return tabs.length === plan.tabs.length ? plan : Object.assign({}, plan, { tabs });
   };
   // 着いたときに開く組の key。plan は U13 の形（tabs[].ids）
-  U.preferred = (plan, groups) => {
+  // marks：依頼・噂の続きに関係ある選択肢（◆。G.actMarks）の { id: 言葉 }
+  U.preferred = (plan, groups, marks) => {
     if (!plan || !plan.tabs || !plan.tabs.length) return null;
     const acts = (groups || []).flatMap((g) => (g && g.list) || []);
     const rep = acts.filter(U.isReport).map((a) => a.id);
     if (rep.length) { const t = plan.tabs.find((x) => x.ids.some((id) => rep.includes(id))); if (t) return t.key; }
+    if (marks) { const t = plan.tabs.find((x) => x.ids.some((id) => marks[id])); if (t) return t.key; }
     const fac = plan.tabs.find((x) => x.key === "t:fac" || x.key === "here");
     return (fac || plan.tabs[0]).key;
   };
@@ -65,7 +67,9 @@
     u13.plan = (groups, S) => {
       const plan = U.mergeTabs(plan0(groups, S));
       if (arrived && plan && plan.tabs && plan.kind !== "combat") {
-        const key = U.preferred(plan, groups);
+        let marks = null;
+        try { marks = G.actMarks ? G.actMarks(S, groups) : null; } catch {}
+        const key = U.preferred(plan, groups, marks);
         if (key) u13.setOpen(plan, key);
       }
       return plan;

@@ -35,3 +35,11 @@ body.v9pc.v9combat #panel.u13fight > .u13main h3, body.v9pc.v9combat #panel.u13f
 @media (max-width: 360px) {
   .top .tools .btn { padding-inline: 4px; font-size: 11.5px; }
 }
+
+/* ---------------------------------------------------------------- 「図鑑に追加」「用語集に追加」の知らせ（#u8note）：本文の欄に重ねない
+   PC：見出しの帯のすぐ下、右の行動列の左に寄せる。戦闘：下の帯のすぐ上。スマホ：画面の上 */
+body.v9pc #u8note { left: auto; bottom: auto; top: calc(var(--v9-head) + 8px); right: calc(100vw - var(--u21-sx, 100vw) + 14px); max-width: min(420px, calc(var(--u21-sx, 100vw) - 420px)); justify-items: end; }
+body.v9pc.v9combat #u8note { top: auto; right: auto; left: var(--v9-m); bottom: calc(100vh - var(--v9-ty) + 10px); max-width: min(420px, calc(var(--v9-sx, 30vw) - var(--v9-m) * 2)); justify-items: start; }
+@media (max-width: 760px) {
+  body:not(.v9pc) #u8note { left: 8px; right: 8px; bottom: auto; top: calc(8px + env(safe-area-inset-top, 0px)); justify-items: center; }
+}

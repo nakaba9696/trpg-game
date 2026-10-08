@@ -53,6 +53,8 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
   const g2 = { tabs: [{ key: "g:a", ids: ["x"] }, { key: "g:b", ids: ["guild:report:q1"] }] };
   if (U.preferred(g2, [{ list: [a("x"), a("guild:report:q1", "報告：鼠退治")] }]) !== "g:b") fail("報告のある組を開かない");
   if (U.preferred({ tabs: [{ key: "g:x", ids: [] }, { key: "g:y", ids: [] }] }, []) !== "g:x") fail("ほかでは最初の組を開かない");
+  if (U.preferred(town, [{ list: [a("walk"), a("fac:inn"), a("q5go:1")] }], { "q5go:1": "依頼" }) !== "t:quest") fail("◆の付いた組を先に開かない");
+  if (U.preferred(g2, [{ list: [a("x"), a("guild:report:q1", "報告：鼠退治")] }], { x: "依頼" }) !== "g:b") fail("報告より◆を先に開いている");
 
   const S = { loc: "karna", mode: "explore", depth: 0 };
   if (U.placeSig(S) !== U.placeSig({ ...S })) fail("同じ場所なのに場所の印が変わる");
