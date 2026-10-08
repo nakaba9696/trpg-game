@@ -3,10 +3,11 @@
 /* ---------------------------------------------------------------- 所持金は上の札（#mbar）の一か所に。選択肢の欄の「所持金」の行は出さない（足りない選択肢には理由が出る） */
 #panel > .u11purse { display: none; }
 
-/* ---------------------------------------------------------------- 右の行動列：組の札を小さく 2 列にし、開いた組の中身に高さを渡す */
-body.u21pc #u21side .u13tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
-body.u21pc #u21side .u13tab { min-height: 34px; padding: 3px 10px; font-size: 14px; letter-spacing: .06em; }
-body.u21pc #u21side .u13tab.on { grid-column: 1 / -1; min-height: 38px; font-size: 15px; }
+/* ---------------------------------------------------------------- 右の行動列：組の札を小さくし、開いた組の中身に高さを渡す */
+/* U29：組の札は上に一列の小さな札（下の右の窓は低いので）。開いた組の中身はその下で流れる */
+body.u21pc #u21side .u13tabs { display: flex; flex-wrap: wrap; gap: 4px; }
+body.u21pc #u21side .u13tab { width: auto; flex: 1 1 auto; min-height: 32px; padding: 3px 10px; font-size: 13.5px; letter-spacing: .06em; }
+body.u21pc #u21side .u13tab.on { min-height: 32px; font-size: 13.5px; }
 body.u21pc #u21side .u13tab .u13n { font-size: 12px; }
 body.u21pc #u21side .tip { font-size: 12px; line-height: 1.5; padding: 4px 8px; }
 body.u21pc #u21side .tip .btn { padding: 2px 8px; min-height: 0; }
@@ -37,9 +38,9 @@ body.v9pc.v9combat #panel.u13fight > .u13main h3, body.v9pc.v9combat #panel.u13f
 }
 
 /* ---------------------------------------------------------------- 「図鑑に追加」「用語集に追加」の知らせ（#u8note）：本文の欄に重ねない
-   PC：見出しの帯のすぐ下、右の行動列の左に寄せる。戦闘：下の帯のすぐ上。スマホ：画面の上 */
-body.v9pc #u8note { left: auto; bottom: auto; top: calc(var(--v9-head) + 8px); right: calc(100vw - var(--u21-sx, 100vw) + 14px); max-width: min(420px, calc(var(--u21-sx, 100vw) - 420px)); justify-items: end; }
-body.v9pc.v9combat #u8note { top: auto; right: auto; left: var(--v9-m); bottom: calc(100vh - var(--v9-ty) + 10px); max-width: min(420px, calc(var(--v9-sx, 30vw) - var(--v9-m) * 2)); justify-items: start; }
+   PC：下の左の本文の欄のすぐ上。スマホ：画面の上 */
+/* U29：PC は下の左の本文の欄（ログ）のすぐ上、左寄せ（真ん中の絵と上の札に掛けない） */
+body.v9pc #u8note { top: auto; right: auto; left: var(--u21-m, var(--v9-m)); bottom: calc(var(--u21-sh, 260px) + var(--u21-m, 12px) * 2 + 18px); max-width: min(420px, 34vw); justify-items: start; }
 @media (max-width: 760px) {
   body:not(.v9pc) #u8note { left: 8px; right: 8px; bottom: auto; top: calc(8px + env(safe-area-inset-top, 0px)); justify-items: center; }
 }

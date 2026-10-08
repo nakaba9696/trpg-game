@@ -94,7 +94,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     const from = S.log.length;
     const r0 = G.rand; G.rand = () => 0.99;
     try { G.act("cb:guard"); } finally { G.rand = r0; }
-    if (!/仲間アは傷をかばって下がった/.test(text(S, from))) F("生き延びろで、深手の仲間が下がらない");
+    if (!/仲間アは傷をかばって防御を固めた/.test(text(S, from))) F("生き延びろで、深手の仲間が下がらない");
   }
   // 盾となれ：構えて受ける傷が減る。命を待て：指示が無ければ攻めずに構え（傷が半分）、指示があればする
   {

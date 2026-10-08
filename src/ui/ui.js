@@ -252,7 +252,7 @@
   let shownTip = null;
   function renderGuide(panel) {
     const S = G.S;
-    if (G.hpDanger && G.hpDanger(S)) panel.append(h("div", "danger", `HP が残り ${S.hp}。${S.combat ? "身を守る・逃げる・道具も手だ。" : "休むか、傷を手当てしたい。"}`));
+    if (G.hpDanger && G.hpDanger(S)) panel.append(h("div", "danger", `HP が残り ${S.hp}。${S.combat ? "防御・逃げる・道具も手だ。" : "休むか、傷を手当てしたい。"}`));
     const tip = G.playTip && G.P ? G.playTip(S, G.P) : null;
     shownTip = tip && tip.key;
     if (!tip) return;

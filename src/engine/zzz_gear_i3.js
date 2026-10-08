@@ -169,7 +169,7 @@
     const out = [];
     if (it.type === "weapon") { out.push(`${it.dmg[0]}D${it.dmg[1]}${it.dmg[2] ? "+" + it.dmg[2] : ""}`); if (it.hit) out.push("命中" + G.sign(it.hit)); }
     if (it.type === "armor") { out.push("防御" + (it.def || 0)); if (it.agi) out.push("敏捷" + G.sign(it.agi)); }
-    if (it.vital) out.push("急所" + G.sign(it.vital));
+    if (it.vital) out.push("会心" + G.sign(it.vital) + "%"); // F9：急所の補正は会心の出やすさに
     if (it.first) out.push("先手" + G.sign(it.first));
     if (it.drain) out.push(`吸う${Math.round(it.drain * 100)}%`);
     Object.entries(it.stats || {}).forEach(([k, n]) => out.push(G.statModText(k, n)));
@@ -197,7 +197,7 @@
       let s = baseItemEffect(it);
       if (!it || !SLOT[it.type]) return s;
       const more = [];
-      if (it.vital && !/急所/.test(s)) more.push("急所" + G.sign(it.vital));
+      if (it.vital && !/会心/.test(s)) more.push("会心" + G.sign(it.vital) + "%");
       if (it.first) more.push("先手" + G.sign(it.first));
       if (it.drain && !(it.type === "ring" && !it.i3g)) more.push(`吸う${Math.round(it.drain * 100)}%`);
       s = [s, ...more].filter(Boolean).join("・");
@@ -246,7 +246,8 @@
     if (key && cmpMemo.has(key)) return cmpMemo.get(key);
     const c = API.compare(id);
     // 差は「今より」を付けて、品そのものの性能（同じ札の前の欄）と見分けられるように（R7）
-    const v = c ? `${c.mark}${c.text ? (c.text === "鑑定前" ? c.text : "今より" + c.text) : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : "";
+    // 総合で同じくらい（＝）のときは「＝今より攻撃-1」と読めないよう、差を括弧に（R7b）
+    const v = c ? `${c.mark}${c.text ? (c.text === "鑑定前" ? c.text : c.dir === 0 ? `今と同じくらい（${c.text}）` : "今より" + c.text) : c.dir > 0 ? "今より上" : c.dir < 0 ? "今より下" : "今と同じくらい"}` : "";
     if (key) { if (cmpMemo.size > 2000) cmpMemo.clear(); cmpMemo.set(key, v); }
     return v;
   };

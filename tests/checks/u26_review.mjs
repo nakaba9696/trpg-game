@@ -55,6 +55,12 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
   if (U.preferred({ tabs: [{ key: "g:x", ids: [] }, { key: "g:y", ids: [] }] }, []) !== "g:x") fail("ほかでは最初の組を開かない");
   if (U.preferred(town, [{ list: [a("walk"), a("fac:inn"), a("q5go:1")] }], { "q5go:1": "依頼" }) !== "t:quest") fail("◆の付いた組を先に開かない");
   if (U.preferred(g2, [{ list: [a("x"), a("guild:report:q1", "報告：鼠退治")] }], { x: "依頼" }) !== "g:b") fail("報告より◆を先に開いている");
+  if (U.preferred({ tabs: [{ key: "o:hint", ids: ["f2o:1", "r3:k"] }, { key: "t:fac", ids: ["fac:inn"] }] }, [], { "r3:k": "噂" }) !== "o:hint") fail("PC で序章の手がかりの組を開かない");
+  if (U.preferred({ tabs: [{ key: "o:hint", ids: ["r3:k"] }, { key: "t:fac", ids: ["fac:inn"] }] }, []) !== "t:fac") fail("序章の手がかりが無いのに手がかりの組を開く");
+  // R8 中 13：行き先に◆が付いても、着いたら「旅立つ」「冒険」は開かない
+  const town2 = { tabs: [{ key: "t:fac", ids: ["fac:inn"] }, { key: "t:travel", ids: ["travel:x"] }] };
+  if (U.preferred(town2, [{ list: [a("fac:inn"), a("travel:x")] }], { "travel:x": "依頼" }) !== "t:fac") fail("町に着いたのに◆の付いた「旅立つ」を開く");
+  if (U.preferred({ tabs: [{ key: "here", ids: ["explore"] }, { key: "adv", ids: ["travel:x"] }] }, [], { "travel:x": "依頼" }) !== "here") fail("着いたのに◆の付いた「冒険」を開く");
 
   const S = { loc: "karna", mode: "explore", depth: 0 };
   if (U.placeSig(S) !== U.placeSig({ ...S })) fail("同じ場所なのに場所の印が変わる");

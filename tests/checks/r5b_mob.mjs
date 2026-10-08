@@ -8,6 +8,7 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import vm from "node:vm";
+import { redrawKeys } from "../../tools/assets.mjs";
 
 export default ({ G, fail, ok, seeded }) => {
   const D = G.data;
@@ -17,7 +18,8 @@ export default ({ G, fail, ok, seeded }) => {
   const vmc = vm.createContext({ console, G, Image: class { addEventListener() {} } });
   for (const f of ["art_monsters.js", "art_people.js", "r1_race.js", "v4_assets.js"]) vm.runInContext(readFileSync(new URL("src/ui/" + f, root), "utf8"), vmc, { filename: "ui/" + f });
   const json = JSON.parse(readFileSync(new URL("docs/art/portraits.json", root), "utf8"));
-  const drawn = json.portraits.filter((p) => existsSync(new URL(p.file, root)));
+  const redrawn = redrawKeys(); // 描き直し待ちの絵（R5c）は描いていないのと同じ
+  const drawn = json.portraits.filter((p) => existsSync(new URL(p.file, root)) && !redrawn.has("portraits/" + p.id));
   G.ASSETS = Object.fromEntries(drawn.map((p) => ["portraits/" + p.id, p.file]));
   const isKind = (k) => /^kind_/.test(k);
 
@@ -84,7 +86,7 @@ export default ({ G, fail, ok, seeded }) => {
 
   // ---------------------------------------------------------------- まだ描いていない型は、要る型だけ
   const drawnIds = new Set(drawn.map((p) => p.id));
-  const wanted = json.portraits.filter((p) => p.group === "people" && !drawnIds.has(p.id));
+  const wanted = json.portraits.filter((p) => p.group === "people" && !drawnIds.has(p.id) && !redrawn.has("portraits/" + p.id));
   const want = new Set();
   const save = G.ASSETS;
   for (const p of wanted) {

@@ -17,6 +17,10 @@
   D.V3_SAY = (D.V3_SAY || []).concat([
     { id: "death", peak: true, when: (S) => S.over === "dead",
       re: /^(.+)は倒れた。(.+)。$/,
-      to: (m, S) => P(LEADS[Math.abs(((S.day || 0) * 7 + (S.turn || 0)) | 0) % LEADS.length], m[0]) },
+      to: (m, S) => {
+        // 迷宮の中・屋内では、空や草の出ない段落から（R7b。src/data/r7b_places.js・engine/r7b_indoor.js）
+        const pool = G.r7b && G.r7b.indoor && G.r7b.indoor(S) && D.R7B_DEATH_IN ? D.R7B_DEATH_IN : LEADS;
+        return P(pool[Math.abs(((S.day || 0) * 7 + (S.turn || 0)) | 0) % pool.length], m[0]);
+      } },
   ]);
 })(globalThis.G = globalThis.G || {});

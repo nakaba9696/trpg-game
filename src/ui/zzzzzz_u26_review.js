@@ -1,6 +1,6 @@
 // U26：持ち主のレビューから、右の行動列の直し（レーン U）
 //   1. 場所が変わったら（町に着いた・施設に入った）、前に開いていた組ではなく、その場所でいちばん使う組を開く。
-//      報告できる依頼があれば、その組を開き、報告をその組の先頭に（ギルド）。次に◆（依頼・噂の続き）の付いた組。町なら「施設」。ほかは最初の組
+//      報告できる依頼があれば、その組を開き、報告をその組の先頭に（ギルド）。次に◆（依頼・噂の続き）の付いた組（旅立つ・冒険は除く）。町なら「施設」。ほかは最初の組
 //   2. 同じ名前の組（酒場の「教わる」が二つ、など）は一つにまとめる。中身の無い組は出さない（画面の中だけ。エンジンの G.actions は変えない）
 //   3. 開いた組の中身が見える数を増やす・戦闘の手が見出しに隠れない・所持金は上の札の一か所に・スマホの上のボタン列は一段に（ui/zzzzzz_u26_review.css）
 // u21（zzzzz_u21_side.js）・u13（u13_menu.js）は書き換えず、G.actions・G.u13.plan・G.ui.render を包む（名前の zzzzzz で u21 より後）
@@ -35,6 +35,7 @@
     });
     return tabs.length === plan.tabs.length ? plan : Object.assign({}, plan, { tabs });
   };
+  U.AWAY = ["t:travel", "adv"]; // よそへ行く組
   // 着いたときに開く組の key。plan は U13 の形（tabs[].ids）
   // marks：依頼・噂の続きに関係ある選択肢（◆。G.actMarks）の { id: 言葉 }
   U.preferred = (plan, groups, marks) => {
@@ -42,7 +43,10 @@
     const acts = (groups || []).flatMap((g) => (g && g.list) || []);
     const rep = acts.filter(U.isReport).map((a) => a.id);
     if (rep.length) { const t = plan.tabs.find((x) => x.ids.some((id) => rep.includes(id))); if (t) return t.key; }
-    if (marks) { const t = plan.tabs.find((x) => x.ids.some((id) => marks[id])); if (t) return t.key; }
+    // 序章の手がかり（f2o。PC では「手がかり」の組。ui/zzzzz_u21_side.js）があれば、それを開く
+    { const t = plan.tabs.find((x) => x.key === "o:hint" && x.ids.some((id) => /^f2o:/.test(id))); if (t) return t.key; }
+    // ◆は、着いた場所の中の組（報告・人に会う・施設…）だけで優先する。行き先に◆の付いた「旅立つ」「冒険」は開かない（着いたのに宿が見えない。R8 中 13）
+    if (marks) { const t = plan.tabs.find((x) => !U.AWAY.includes(x.key) && x.ids.some((id) => marks[id])); if (t) return t.key; }
     const fac = plan.tabs.find((x) => x.key === "t:fac" || x.key === "here");
     return (fac || plan.tabs[0]).key;
   };
@@ -53,7 +57,9 @@
     const actions0 = G.actions;
     U.actions0 = actions0;
     // 画面だけ（G.ui がある＝ブラウザ）で整える。テスト（DOM なし）では元のまま
-    G.actions = (...a) => { const gs = actions0(...a); return typeof document !== "undefined" && G.ui ? U.tidy(gs) : gs; };
+    // 戦闘で仲間の手を選んでいる間の「一つ前に戻る」（f8:back）は、手の欄の上の「↩ 一つ前に戻る」だけに（「その他」の組と二重にしない。R8 低 25）
+    U.dropBack = (gs) => (gs || []).map((g) => (g && g.list && g.list.some((x) => x.id === "f8:back") ? Object.assign({}, g, { list: g.list.filter((x) => x.id !== "f8:back") }) : g));
+    G.actions = (...a) => { const gs = actions0(...a); return typeof document !== "undefined" && G.ui ? U.tidy(G.S && G.S.combat ? U.dropBack(gs) : gs) : gs; };
   }
 
   if (typeof document === "undefined" || !G.ui || !G.ui.render) return;
