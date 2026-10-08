@@ -5,7 +5,7 @@
 //   その途中で要る話題・頼みごとの好感度は、その時の段の上限で届く（上限で詰まらない）
 // - 手がかり：上限で止まって関係の出来事が足りないとき、「絆」に薄く出て、何をすれば進むかが添えられる
 // - 古いセーブ：好感度だけのセーブは今の値に合う段に置かれ、上限を超えていても下がらない
-// - 仲間にならない人は、上限に届いて日が経てば次の段へ（共通の段の出来事）
+// - 仲間にならない人は、日数だけでは進まず、会った場所の段の出来事（C15）で最後の段まで
 // - 結婚：最後の段の前は誓い・式に進まない。恋の相手の決まりは今のまま
 // （褒美が強いかどうかは確かめない。持ち主の方針：キャラに沿った褒美）
 const PROFILE = { name: "テスト", sex: "女", age: 24, history: "テスト用", personality: "無口だが義理堅い" };
@@ -60,6 +60,11 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     const tk = (g.S.tk = g.S.tk || {}); tk.heard = tk.heard || {};
     g.data.TALK[id].topics.filter((t) => t.kind === "past" && t.step <= upTo).forEach((t) => { tk.heard[t.id] = { day: 1, k: "x", seq: 0 }; });
   };
+  // C15 の段の深い話（あれば）を、段 upTo まで聞いたことにする
+  const deep = (id, upTo) => {
+    const tk = (g.S.tk = g.S.tk || {}); tk.heard = tk.heard || {};
+    for (let k = 0; k <= upTo; k++) if (g.c15 && g.c15.hasTalk(id)) tk.heard[g.c15.topicId(id, k)] = { day: 1, k: "x", seq: 0 };
+  };
   const q9 = (id, n, end) => { const q = g.data.Q9[id]; if (!q) return; g.S.q9 = g.S.q9 || {}; g.S.q9[id] = { n: Math.min(n, q.steps.length), day: 1, r: [], end: end ? Object.keys(q.ends || {})[0] || "done" : undefined }; };
   const acts = () => g.actions().flatMap((x) => x.list);
   const bondAct = (id) => acts().find((a) => typeof a.id === "string" && a.id.startsWith(`c13:${id}:`));
@@ -89,6 +94,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     if (!join(id)) continue;
     // 上限：いくら上げても今の段の上限まで
     pump(id);
+    if (g.c14.stage(id) === 0) { deep(id, 0); pump(id); } // 顔見知り→知人は深い話（あれば）を聞いて
     const k0 = g.c14.stage(id);
     if (aff(id) > g.c14.capOf(k0)) F(`${id}: 好感度 ${aff(id)} が段「${g.c14.nameOf(k0)}」の上限を超えた`);
     // 段ごとに：関係の出来事を済ませる前は上限で止まり、手がかりが出る → 済ませて節目の出来事 → 次の段
@@ -104,6 +110,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       }
       const q = g.data.Q9[id];
       heard(id, past);
+      deep(id, k - 1);
       q9(id, qn === "end" ? 99 : qn === "half" ? Math.ceil(q.steps.length / 2) : qn, qn === "end");
       const why = playTier(id);
       if (why) { F(`${id}: ${g.c14.nameOf(k)}へ進む節目の出来事が済まない（${why}）`); okPath = false; break; }
@@ -134,17 +141,29 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   g.S.c13 = { done: { [mates[2]]: [0, 1] }, ask: {}, last: {}, wait: {} }; g.affState()[mates[2]] = 20; delete g.S.c14;
   if (g.c14.stage(mates[2]) < 3) F("C13 の節目を二つ済ませた古いセーブが「深い仲」にならない");
 
-  // 仲間にならない人：上限に届いて日が経てば次の段
+  // 仲間にならない人：日数だけでは進まない。会った場所で段の出来事（C15）を済ませると次の段（最後の段まで）
   const other = Object.keys(D.F2_PEOPLE || {}).find((id) => !(P[id] && P[id].join));
   if (other) {
     start();
+    const town = Object.keys(g.data.LOCS).find((l) => g.data.LOCS[l].type === "town");
+    g.S.loc = town; g.S.visited[town] = true; g.S.mode = "explore";
     g.affMeet(other);
-    pump(other);
-    const k = g.c14.stage(other), a = aff(other);
-    if (a > g.c14.capOf(k)) F("仲間にならない人の好感度が上限を超えた");
-    g.S.day += D.C14.OTHER_DAYS + 1;
-    g.affAdd(other, 5, true);
-    if (!(g.c14.stage(other) > k)) F("仲間にならない人が、日が経っても次の段へ進まない");
+    for (let k = 0; k < ST.length - 1; k++) {
+      pump(other);
+      const a = aff(other);
+      if (a > g.c14.capOf(k)) F(`仲間にならない人の好感度が上限を超えた（${a}）`);
+      if (g.c14.stage(other) !== k) { F(`仲間にならない人の段が ${g.c14.stage(other)}（${k} のはず）`); break; }
+      g.S.day += 60; pump(other);
+      if (g.c14.stage(other) !== k) F("仲間にならない人が、日数だけで次の段へ進んだ");
+      const act = acts().find((x) => x.id === `c15v:${other}`);
+      if (!act) { F(`仲間にならない人の段の出来事（${k}）が、会った場所で出ない`); break; }
+      g.act(act.id);
+      const ch = acts().filter((c) => c.id.startsWith("ev:"));
+      if (!ch.length) { F("仲間にならない人の段の出来事に選択肢が無い"); break; }
+      g.act(ch[0].id);
+      if (g.c14.stage(other) !== k + 1) { F(`段の出来事のあとも ${g.c14.nameOf(k + 1)} にならない`); break; }
+    }
+    if (g.c14.stage(other) !== ST.length - 1) F("仲間にならない人が、出来事で最後の段まで届かない");
   }
 
   // 結婚：最後の段の前は誓い・式に進まない
