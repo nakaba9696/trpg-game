@@ -1,0 +1,8 @@
+/* W12：図鑑の頁「古い文明」（ui/zw12_ruins.js） */
+.w12sum { margin: 4px 0 8px; }
+.w12nature { margin: 0 0 6px; }
+.w12line { margin: 6px 0; line-height: 1.8; }
+.w12secret { margin: 16px 0 4px; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 2px; background: var(--box); }
+.w12secret h3 { margin: 0 0 8px; font-family: var(--f-display); font-size: 16px; font-weight: 400; color: var(--head); }
+.w12secret p { margin: 6px 0; line-height: 1.8; }
+.w12pane .f2cell { min-height: 0; padding: 8px 6px; }
