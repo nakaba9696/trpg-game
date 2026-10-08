@@ -31,7 +31,7 @@
       const w = M.words(t);
       const box = el("section", "box m14cre");
       const bh = el("div", "boxhead");
-      bh.append(el("b", "", "術の才"), el("span", "m14lv m14lv" + t.lv, w.lv), el("span", "fine", "能力値と一緒に振り直される。種族・生まれ・職業で変わる"));
+      bh.append(el("b", "", "術の才"), el("span", "m14lv m14lv" + t.lv, w.lv), el("span", "fine", "能力値と一緒に振り直される。種族と職業で変わる"));
       box.append(bh, el("p", "m14say", w.say), affRows(t));
       if (t.lv) box.append(el("p", "fine", "得意な属性は上級まで届き、覚えやすく、成功しやすい。ふつうの属性は中級まで。苦手な属性は初級止まりで、覚えにくい。"));
       root.append(box);
