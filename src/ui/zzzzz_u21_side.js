@@ -123,7 +123,7 @@
     (groups || []).forEach((g) => {
       const list = (g && g.list) || [];
       const cats = [...new Set(list.map(u21.townCat))];
-      if (cats.length < 2 || (u13 && u13.pinned && u13.pinned(g))) { out.push(g); return; }
+      if (cats.length < 2 || u21.OWN.includes(g && g.title) || (u13 && u13.pinned && u13.pinned(g))) { out.push(g); return; }
       cats.forEach((c, i) => {
         const part = list.filter((a) => u21.townCat(a) === c);
         out.push(Object.assign({}, g, { title: i === 0 ? g.title : (u21.TOWN_CATS.find((x) => x.key === c) || {}).label || g.title, list: part }));
@@ -154,6 +154,51 @@
   if (u13 && u21.plan) {
     const planPC = u21.plan;
     u21.plan = (groups, S) => (u21.isTown(S) ? u21.townPlan(groups, S) : planPC(groups, S));
+  }
+  // R8 中 8：長編の入口（使徒を追う）・絆の褒美（絆）・想いを伝える（想い）は、「持ち物・その他」に混ぜず、その名前の組として出す
+  //   町でも町の外でも（PC の右の列だけ）。組は「旅立つ」「冒険」「持ち物・その他」「その他」の前に
+  u21.OWN = ["使徒を追う", "絆", "想い"];
+  u21.ownTabs = (plan, groups) => {
+    if (!plan || !plan.tabs || plan.kind === "combat") return plan;
+    const own = [];
+    const tabs = plan.tabs.map((t) => {
+      const keep = t.groups.filter((i) => !(groups[i] && u21.OWN.includes(groups[i].title)));
+      if (keep.length === t.groups.length) return t;
+      t.groups.filter((i) => !keep.includes(i)).forEach((i) => {
+        const title = groups[i].title;
+        let o = own.find((x) => x.label === title);
+        if (!o) { o = { key: "o:" + title, label: title, groups: [], ids: [] }; own.push(o); }
+        o.groups.push(i);
+        groups[i].list.forEach((a) => o.ids.push(a.id));
+      });
+      const ids = keep.flatMap((i) => groups[i].list.map((a) => a.id));
+      return Object.assign({}, t, { groups: keep, ids });
+    }).filter((t) => t.groups.length);
+    if (!own.length) return plan;
+    own.sort((a, b) => u21.OWN.indexOf(a.label) - u21.OWN.indexOf(b.label));
+    let at = tabs.findIndex((t) => ["t:travel", "t:misc", "adv", "misc"].includes(t.key));
+    if (at < 0) at = tabs.length;
+    tabs.splice(at, 0, ...own);
+    return Object.assign({}, plan, { tabs });
+  };
+  // 初めの手がかり（f2o・r3。スマホでは組の上に出したまま）は、PC の右下の窓では「手がかり」の組に（上に出したままだと、窓が低いので組の札が窓の外に押し出される）
+  //   答えを待つ問い（b5use「〇〇を誰に使う？」）は上に出したまま。手がかりの組は最初に置き、序章の手がかり（f2o）があれば着いたときに開く（ui/zzzzzz_u26_review.js）
+  u21.HINT_PREFIX = ["f2o", "r3"];
+  u21.hintTabs = (plan, groups) => {
+    if (!plan || !plan.tabs || plan.kind === "combat" || !(plan.top || []).length) return plan;
+    const isHint = (i) => groups[i] && (groups[i].list || []).some((a) => u21.HINT_PREFIX.includes(String(a.id || "").split(":")[0])) && !(groups[i].list || []).some((a) => /^b5use/.test(String(a.id || "")));
+    const hint = plan.top.filter(isHint);
+    if (!hint.length) return plan;
+    const ids = hint.flatMap((i) => groups[i].list.map((a) => a.id));
+    const tab = { key: "o:hint", label: hint.length === 1 ? String(groups[hint[0]].title || "手がかり").replace(/（.*$/, "") : "手がかり", groups: hint, ids };
+    return Object.assign({}, plan, { tabs: [tab, ...plan.tabs], top: plan.top.filter((i) => !hint.includes(i)) });
+  };
+  if (u13 && u21.plan) {
+    const planOwn = u21.plan;
+    u21.plan = (groups, S) => {
+      const gs = (groups || []).filter((g) => g && g.list && g.list.length);
+      return u21.hintTabs(u21.ownTabs(planOwn(groups, S), gs), gs);
+    };
   }
   // 画面が G.actions を読むとき（右の列を出している町だけ）、町の組を分けて渡す
   if (typeof G.actions === "function") {
@@ -225,6 +270,8 @@
     const box = h("div", "u21open");
     box.id = "u21open";
     after.forEach((g, k) => { if (order[k].open) box.append(g); });
+    // R8 表 4c：「施設」は名前の短い選択肢が 7 つほど並ぶので、二列に（低い窓でも全部見える。ui/u29_two.css）
+    box.classList.toggle("u29two", key === "t:fac");
     bar.classList.add("u21tabs");
     bar.after(box);
     bar.setAttribute("role", "group");
@@ -261,7 +308,9 @@
     if (where.parentNode !== mbar) { const name = mbar.querySelector(".mname"); if (name) name.after(where); else mbar.prepend(where); }
     const U28 = G.u28 || {};
     const L = ((G.data || {}).LOCS || {})[S.loc] || {};
-    wPlace.textContent = U28.placeOf ? U28.placeOf(S) : L.name || "";
+    // 旅の途中は、出発した町ではなく「〇〇への道中」（R8 低 26）
+    const T = S.travel && ((G.data || {}).LOCS || {})[S.travel];
+    wPlace.textContent = T ? `${T.name}への道中` : U28.placeOf ? U28.placeOf(S) : L.name || "";
     const d = $("#sceneDate");
     wDate.textContent = (d && d.textContent) || (G.date ? G.date() : "");
     const st = U28.stateOf ? U28.stateOf(S) : "";
@@ -281,6 +330,8 @@
       if (S && u21.active) {
         accordion(S);
         paintWhere(S);
+        // 出来事の組の見出し「どうする？」は、窓の縁の札（u28）と同じなので出さない
+        document.querySelectorAll("#panel > .agroup > h3").forEach((t) => { if (t.textContent.trim() === "どうする？" && $("#panel > .u28head")) t.hidden = true; });
         const box = $("#u21open");
         if (box) box.scrollTop = 0;
         const p = $("#panel");

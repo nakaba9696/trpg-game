@@ -102,15 +102,20 @@ body.u21pc.v9combat #u21side { -webkit-backdrop-filter: none; backdrop-filter: n
 body.u21pc.v9combat #u21side #panel { position: static; }
 /* 手の組（攻撃…）は窓の高さに合わせて縮み、組の中だけ流れる。下の見出しの札（攻撃・戦技・魔法・その他・道具）はいつも見える */
 body.u21pc.v9combat #u21side { padding-top: 12px; padding-bottom: 8px; }
-body.u21pc.v9combat #u21side #panel.u13fight { overflow: hidden; gap: 5px; }
+body.u21pc.v9combat #u21side #panel.u13fight { overflow: hidden; gap: 4px; }
 /* 下の見出しの札（攻撃・戦技・魔法・その他・道具）は一行の小さな札（町の組のボタンの形にしない） */
 body.u21pc.v9combat #u21side #panel .u13drawers { display: flex; flex-wrap: wrap; gap: 4px; }
 body.u21pc.v9combat #u21side #panel .u13drawers .u13tab { width: auto; flex: 1 1 auto; min-height: 30px; padding: 2px 10px; font-size: 13px; justify-content: center; grid-column: auto; }
 /* 仲間の HP の札は小さく一行に */
-body.u21pc.v9combat #u21side #panel .b5party { flex-wrap: wrap; gap: 3px; margin: 0; }
-body.u21pc.v9combat #u21side #panel .b5mem { padding: 1px 7px; font-size: 11.5px; gap: 4px; }
-body.u21pc.v9combat #u21side #panel .b5mem b { font-size: 12px; }
-body.u21pc.v9combat #u21side #panel .b5mem .b5g { width: 36px; }
+/* 仲間連れでも手が全部見えるように（R8 高 3）：一行の札は一段に、遊び方の一行（.tip）はどの場面でも窓の上に浮かべる（窓の中の高さを取らない） */
+body.u21pc.v9combat #u21side #panel .b5party { flex-wrap: nowrap; gap: 3px; margin: 0; }
+body.u21pc.v9combat #u21side #panel .b5mem { flex: 1 1 0; min-width: 0; padding: 1px 6px; font-size: 11px; gap: 3px; white-space: nowrap; overflow: hidden; }
+body.u21pc.v9combat #u21side #panel .b5mem b { font-size: 12px; flex: none; }
+body.u21pc.v9combat #u21side #panel .b5mem .b5g { width: 26px; flex: none; }
+body.u21pc.v9combat #u21side #panel .b5mem .f3now { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+body.u21pc.v9combat #u21side #panel .b5mem.you { flex-grow: 1.35; }
+body.u21pc.v9combat #u21side #panel > .f8who { margin: 0; line-height: 1.4; }
+body.u21pc #u21side #panel > .tip { position: fixed; z-index: 6; left: var(--u21-sx); width: var(--u21-sw); box-sizing: border-box; bottom: calc(var(--u21-sh) + var(--u21-m) + 20px); margin: 0; background: var(--win-solid); box-shadow: 0 4px 14px rgba(0, 0, 0, .4); }
 body.u21pc.v9combat #u21side #panel.u13fight > .u13main, body.u21pc.v9combat #u21side #panel.u13fight > .u13pop { flex: 1 1 auto; min-height: 2.4em; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 body.u21pc.v9combat #u21side #panel .foes { position: fixed; z-index: 5; left: var(--v9-sx); width: var(--v9-sw); top: calc(var(--v9-sy) + 10px); display: flex; justify-content: center; gap: 10px; pointer-events: none; }
 body.u21pc.v9combat #u21side #panel .foe { pointer-events: auto; min-width: 160px; box-shadow: 0 4px 14px rgba(0, 0, 0, .45); }
@@ -128,3 +133,19 @@ body.u21pc #u21side #panel .w7tmap canvas { height: clamp(120px, 20vh, 220px); }
 @media (prefers-reduced-motion: reduce) {
   body.u21pc #u21side .u13tab { transition: none; }
 }
+/* 低い画面（1280×720 など）では、手の組の見出し（攻撃（狙い：…））を出さない。狙いは敵の札の「狙い」、組は下の札で分かる */
+@media (max-height: 740px) {
+  body.u21pc.v9combat #u21side #panel.u13fight > .u13main > h3 { display: none; }
+}
+
+/* R8：「どうする？」の見出しは、窓の上の縁に掛けた小さな札に（ログの窓の場所の札と対に）。窓の中の高さを取らない。
+   いる所と今の状態は左上の札（#u29where）にあるので、ここでは出さない */
+body.u21pc #u21side #panel { position: static; }
+body.u21pc #u21side #panel > .u28head { position: absolute; z-index: 2; top: -13px; left: 18px; margin: 0; padding: 2px 14px 3px; border: 1px solid var(--win-edge); border-bottom: 1px solid var(--win-edge);
+  background: var(--win-solid); box-shadow: 0 2px 8px rgba(0, 0, 0, .25); }
+body.u21pc #u21side #panel > .u28head .u28place, body.u21pc #u21side #panel > .u28head .u28state { display: none; }
+body.u21pc #u21side #panel > .u28head .u28q { font-size: 13.5px; }
+/* 開いた組が一つだけのときは、組の見出し（町の名前など）を出さない（札の名前で分かる） */
+body.u21pc #u21open > .agroup:only-child > h3 { display: none; }
+/* 縁の札（どうする？）の下に、一段目の札が潜らないだけの余白 */
+body.u21pc #u21side:has(#panel > .u28head) { padding-top: 20px; }

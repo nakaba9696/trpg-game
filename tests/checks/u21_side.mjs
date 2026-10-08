@@ -148,6 +148,16 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
       }
     }
     if (!towns) fail("町の場面を通っていない");
+    // R8 中 8：使徒を追う・絆・想いは、自分の名前の組に（「持ち物・その他」に混ぜない）。「旅立つ」の前に
+    {
+      const gs = [{ title: "宿", list: [{ id: "fac:inn" }] }, { title: "使徒を追う", list: [{ id: "e7:a" }] }, { title: "旅立つ", list: [{ id: "travel:x" }] }, { title: "持ち物", list: [{ id: "tome:1" }] }, { title: "想い", list: [{ id: "m10tell:c1" }] }, { title: "絆", list: [{ id: "c13:r" }] }];
+      const plan = { tabs: [{ key: "t:fac", groups: [0], ids: ["fac:inn"] }, { key: "t:travel", groups: [2], ids: ["travel:x"] }, { key: "t:misc", groups: [1, 3, 4, 5], ids: ["e7:a", "tome:1", "m10tell:c1", "c13:r"] }], top: [] };
+      const p2 = u.ownTabs(plan, gs);
+      const keys = p2.tabs.map((t) => t.key).join(",");
+      if (keys !== "t:fac,o:使徒を追う,o:絆,o:想い,t:travel,t:misc") fail(`使徒を追う・絆・想いが自分の組にならない（${keys}）`);
+      if (p2.tabs.find((t) => t.key === "t:misc").ids.join() !== "tome:1") fail("「持ち物・その他」に使徒を追う・絆・想いが残る");
+      if (plan.tabs[2].groups.length !== 4) fail("元の plan を書き換えている");
+    }
     if (u.townCat({ id: "fac:inn" }) !== "fac" || u.townCat({ id: "fac:w9_senate" }) !== "spot" || u.townCat({ id: "walk" }) !== "spot" || u.townCat({ id: "travel:x" }) !== "travel" || u.townCat({ id: "zzz:1" }) !== "misc") fail("町の選択肢の分類の表が違う");
   }
 
