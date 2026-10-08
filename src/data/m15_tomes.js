@@ -41,9 +41,9 @@
         { label: "触らずに引き返す", ok: { text: "背中で、本の倒れる音が一つだけした。" } },
       ],
     },
-    // 書庫番イスメネ（仲間にして打ち解けてから。写本の町メルヴィ）：削られていない写本を一冊
+    // 書庫番イスメネ（仲間にして打ち解けてから。写本の町メルヴィにいるときだけ。町の出来事の数（W7b）に入れないよう where は town）：削られていない写本を一冊
     {
-      id: "m15_ism_copy", where: ["w7_melvi"], w: 3, once: true, cond: (S) => met("ismene")(S) && flag("m15_ism_copy")(S) && ["wind", "light", "bolt", "ice"].some((el) => can(el)(S)),
+      id: "m15_ism_copy", where: ["town"], w: 3, once: true, cond: (S) => S.loc === "w7_melvi" && met("ismene")(S) && flag("m15_ism_copy")(S) && ["wind", "light", "bolt", "ice"].some((el) => can(el)(S)),
       c2: "ismene", title: "削られていない写本", who: who("ismene"),
       text: "書庫の奥で、イスメネが鍵束を鳴らした。「規則では、見せてはいけない棚です」平らな声のまま、彼女は扉を開けた。「規則を作った人は、もう生きていません。一冊だけです。どれにしますか」",
       choices: [
