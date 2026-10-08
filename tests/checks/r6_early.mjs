@@ -35,7 +35,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         // 探索の出会い（その場所にいて）
         let S = start(cls, 6000 + s * 7 + to.length);
         S.loc = to; S.mode = "explore"; S.phase = s % 4;
-        G.startCombat(G.w6.encounter(D.LOCS[to]), {});
+        R6.wild(() => G.startCombat(G.w6.encounter(D.LOCS[to]), {}));
         tried++;
         if (hard(foesNow(S)).length) F(`${D.CLASSES[cls].name}：駆け出しのうちに ${D.LOCS[to].name} で ${hard(foesNow(S)).join("・")} に出会った`);
         // 旅の襲撃（出発地から）
@@ -55,6 +55,29 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
   }
   if (!tried) F("出発地の近くに野の場所が無い（確かめられない）");
+  // 本物の行動（「あたりを探索する」・「野営して休む」）で出会う敵
+  {
+    let fights = 0;
+    for (const cls of Object.keys(D.CLASSES)) {
+      for (const to of nearWild(D.CLASSES[cls].start)) {
+        const S = start(cls, 5000 + to.length);
+        S.loc = to; S.mode = "explore";
+        for (let k = 0; k < 40 && !S.over; k++) {
+          S.hp = S.maxHp; S.day = S.r6.day; S.fame = 0;
+          if (S.mode === "combat") { if (hard(foesNow(S)).length) F(`${D.LOCS[to].name}を探索して ${hard(foesNow(S)).join("・")} に出会った`); fights++; S.combat = null; }
+          S.mode = "explore"; S.event = null; S.fac = null; S.loc = to; S.travel = null;
+          G.act(k % 5 === 4 ? "camp" : "explore");
+        }
+      }
+    }
+    if (!fights) F("探索で一度も戦いにならない（確かめられない）");
+  }
+  // テストや出来事が直に呼ぶ戦い（野の行動の外）は替えない
+  {
+    const S = start("merc", 21);
+    G.startCombat(["zombie", "zombie"], {});
+    if (foesNow(S).join() !== "zombie,zombie") F("野の行動の外で直に始めた戦いの敵まで替えた");
+  }
   if (!hadHard) F("出発地の近くの出現表に C 級が一つも無い（守りを確かめられない）");
 
   // ---- 2. 守りが外れる・出現表は変わっていない・古いセーブ
@@ -68,7 +91,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         const S = start(cls, 9000 + s);
         S.loc = to; S.mode = "explore";
         setup(S);
-        G.startCombat(G.w6.encounter(D.LOCS[to]), {});
+        R6.wild(() => G.startCombat(G.w6.encounter(D.LOCS[to]), {}));
         if (hard(foesNow(S)).length) n++;
       }
       return n;
@@ -105,7 +128,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   {
     let S = start("merc", 4);
     S.loc = nearWild(S.loc)[0];
-    G.startCombat(["goblin", "goblin"], {});
+    R6.wild(() => G.startCombat(["goblin", "goblin"], {}));
     const f = S.combat.foes[0];
     if (!(f.r6 > 0)) F("駆け出しが出会ったゴブリンに弱め方（f.r6）が付いていない");
     else if (!(G.foeData(f).hit < D.ENEMIES.goblin.hit)) F("駆け出しが出会ったゴブリンの命中が下がっていない");
@@ -114,14 +137,14 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (S.combat.foes.some((x) => x.r6)) F("C 級に弱め方が付いた");
     S = start("merc", 6);
     S.day += R6.DAYS;
-    G.startCombat(["goblin"], {});
+    R6.wild(() => G.startCombat(["goblin"], {}));
     if (S.combat.foes.some((x) => x.r6)) F(`${R6.DAYS} 日たっても弱め方が付く`);
     // 作りたての 5 職業：ゴブリン二匹に素直な手（攻撃。魔法使いは炎、破戒神官は深手なら癒し。薬も逃げるも使わない）
     for (const cls of Object.keys(D.CLASSES)) {
       const left = []; let dead = 0;
       for (let i = 0; i < 20; i++) {
         const S = start(cls, 610000 + i * 17 + cls.length * 1000);
-        G.startCombat(["goblin", "goblin"], {});
+        R6.wild(() => G.startCombat(["goblin", "goblin"], {}));
         for (let k = 0; k < 80 && S.mode === "combat" && !S.over; k++) {
           const can = (id) => G.actions().flatMap((x) => x.list).some((a) => a.id === id && !a.disabled);
           G.act(cls === "mage" && can("cb:fire") ? "cb:fire" : cls === "priest" && S.hp < S.maxHp * 0.4 && can("cb:heal") ? "cb:heal" : "cb:attack");

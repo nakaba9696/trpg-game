@@ -6,6 +6,7 @@
 //      旅の出来事（W6）は、C 級以上と戦う出来事を引かない
 //   2. 駆け出しのうちに出会った D 級の敵は、まだ人に慣れていない（f.r6）：命中 R6.HIT・傷 R6.DMG 倍。
 //      日がたつと（R6.DAYS の間に少しずつ）ふつうの強さに戻る。使徒・ボス・名のある強敵・C 級以上には効かない
+// 野の行動の最中かは R6.wild（G.exploreAct・G.w6.next を包む）で覚える。テストが直に呼ぶ G.startCombat は替えない。
 // 「判定・戦闘はデータとルールで」の決まりどおり、乱数は G.rand / G.pick だけ。DOM なし。
 // セーブに足すもの：S.r6 = { day 旅立った日 }（古いセーブに無ければ、駆け出しの守りは無い）・敵の f.r6（その戦いのあいだの弱め方 0〜1）
 (function (G) {
@@ -60,16 +61,28 @@
   };
 
   // ---------------------------------------------------------------- 1. 出会い
-  // 出現表から引いた出会いか：勝ったときの結果が無い・ボスでない・出来事や会話の最中でない
+  // 野の行動（町の外での探索・野営・迷宮・稽古、旅立ち・旅の道中）の最中に始まった戦いだけを、出現表から引いた出会いとして扱う。
+  // 町の中の騒ぎ（衛兵・用心棒）、出来事・会話・依頼の名指しの戦いは替えない
+  let inWild = 0;
+  R6.wild = (fn) => { inWild++; try { return fn(); } finally { inWild--; } };
+  const TRAVEL = ["travel", "sail", "w6go"];
   let wild = false;
   const isWild = (S, ids, opt) => {
     const o = opt || {};
-    if (!S || o.win || o.e4raw || !Array.isArray(ids) || !ids.length) return false;
+    if (!inWild || !S || o.win || o.e4raw || !Array.isArray(ids) || !ids.length) return false;
     if (ids.some((id) => !D.ENEMIES[id] || D.ENEMIES[id].boss || D.ENEMIES[id].majin || (D.W8_FOES && D.W8_FOES[id]))) return false;
-    if (S.mode === "event" || S.mode === "combat") return false;
+    if (S.mode !== "explore") return false;
     if (S.tk && S.tk.cur) return false;
     return true;
   };
+  const act0 = G.exploreAct;
+  G.exploreAct = (head, arg, a) => {
+    const S = G.S;
+    const L = S && D.LOCS[S.loc];
+    const out = S && S.mode === "explore" && !S.fac && ((L && L.type !== "town") || TRAVEL.includes(head));
+    return out ? R6.wild(() => act0(head, arg, a)) : act0(head, arg, a);
+  };
+  if (G.w6 && G.w6.next) { const next0 = G.w6.next; G.w6.next = () => R6.wild(next0); }
 
   if (D.E4 && D.E4.shape) {
     const shape0 = D.E4.shape;
@@ -80,14 +93,15 @@
   G.startCombat = (ids, opt) => {
     const S = G.S;
     const w = isWild(S, ids, opt) && R6.guard(S);
+    const weak = !!S && (isWild(S, ids, opt) || S.mode === "event");
     const prev = wild;
     wild = w;
     let r;
     try { r = start0(w ? R6.tame(ids.slice()) : ids, opt); } finally { wild = prev; }
-    // 2. 駆け出しが出会った D 級には、弱め方を覚えておく（その戦いのあいだ。出来事の戦いでも同じ）
+    // 2. 駆け出しが野や出来事で出会った D 級には、弱め方を覚えておく（その戦いのあいだ）
     const lv = R6.level(S);
     const C = S && S.combat;
-    if (lv > 0 && C && !C.boss) C.foes.forEach((f) => { if (R6.isD(f.id) && !f.e3 && !f.e7) f.r6 = Math.round(lv * 100) / 100; });
+    if (weak && lv > 0 && C && !C.boss) C.foes.forEach((f) => { if (R6.isD(f.id) && !f.e3 && !f.e7) f.r6 = Math.round(lv * 100) / 100; });
     return r;
   };
 

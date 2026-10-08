@@ -43,7 +43,8 @@ if (process.env.ONLY !== "days") for (const cls of classes) {
     for (let i = 0; i < GAMES; i++) {
       const S = fresh(cls, 610000 + i * 17 + cls.length * 1000);
       const bot = hand === "smart" ? makeSmartBot(G) : { choose: plainHand };
-      G.startCombat(pair.slice(), {});
+      // 野で出会ったときと同じに（直す前のエンジンには G.r6 が無い）
+      if (G.r6 && G.r6.wild) G.r6.wild(() => G.startCombat(pair.slice(), {})); else G.startCombat(pair.slice(), {});
       for (let s = 0; s < 80 && S.mode === "combat" && !S.over; s++) { const id = bot.choose(); if (!id) break; G.act(id); }
       if (S.over === "dead") { dead++; left.push(0); continue; }
       if ((S.combat && S.combat.foes || []).length && S.mode === "combat") continue;
