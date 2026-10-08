@@ -31,6 +31,9 @@
   const pickOf = (arr, key) => (Array.isArray(arr) ? arr[hash(key) % arr.length] : arr);
   const knowsSk = (id, S) => !!(G.k1 && G.k1.knows && G.k1.knows(id, S));
 
+  // 図鑑の入手場所（迷宮の古い鍵は部屋の戦利品で出る。f2_bestiary.js が表を作り直すので、ここで足す）
+  D.F2_ITEM_WHERE = D.F2_ITEM_WHERE || {};
+  D.F2_ITEM_WHERE.w11_oldkey = ["大きな迷宮の魔物の巣・宝の箱"];
   // 技（K1）の選択肢を D.K1_ADD に足す（K1 の出来事の口が読む。K1 はここより後に読む）
   Object.entries(D.W11_K1 || {}).forEach(([id, list]) => { D.K1_ADD = D.K1_ADD || {}; D.K1_ADD[id] = [...(D.K1_ADD[id] || []), ...list]; });
   // 術（M14）の選択肢の MP を、術の表に合わせる（データは術の表より先に読むので、仮の値で書いてある）
