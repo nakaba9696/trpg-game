@@ -106,6 +106,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 遊ぶ
   const game = (seed, opt) => {
     const G = loadEngine();
+    G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
     G.data.Q8B.off = G.data.Q8L.off = G.data.Q8P.off = G.data.Q8Q.off = true; // Q8 の上がり方・恋人の条件・恋の相手の一覧と組み合わせは tests/checks/q8_love.mjs・q8_pairs.mjs で確かめる。ここは仕組みだけ
     const D = G.data;
     G.rand = seeded(seed);
@@ -357,6 +358,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     if (S.event !== "tk_menu") F("古いセーブで話題の一覧にならない");
     const saved = JSON.stringify(S);
     const G2 = loadEngine();
+    G2.data.C14.off = true;
     G2.data.Q8B.off = G2.data.Q8L.off = G2.data.Q8P.off = G2.data.Q8Q.off = true;
     G2.rand = seeded(1);
     G2.S = JSON.parse(saved);
