@@ -2,7 +2,7 @@
 // - 名のある人ごとに段（S.c14.st[id]）があり、段ごとに好感度の上限がある。上限に届くと、それ以上は上がらない（下がる分はそのまま）
 // - 仲間になる人は、その人の「関係の出来事」（身の上話・頼みごと〔C9〕）を済ませると、上限で C13 の節目の褒美の出来事が開き、それを済ませると次の段へ。
 //   済ませていなければ、行動の欄「絆」に薄く出して、何をすれば進むかを短く添える（C13 の tierWhy を包む）
-// - 仲間にならない人（共通の段の出来事）：上限に届いてから D.C14.OTHER_DAYS 日で次の段へ
+// - 仲間にならない人（共通の段の出来事）：その人に会う場所で、段ごとの短い出来事（C15）を済ませると次の段へ。日数だけでは進まない
 // - 結婚：誓い・式・求婚は、最後の段に届いてから（m10P.propose・r2 の求婚の段・m10Do の vow／wed を包む）。恋の相手の決まり（18 歳以上・人の姿）は今のまま
 // - Q8 の雑談の上限（chatTop）は段の上限に任せる（二重にしない）
 // セーブに足すもの：S.c14 = { st { 人: 段 }, day { 人: 段が決まった日 }, told { 人: 上限を知らせた段 } }。
@@ -76,9 +76,13 @@
     S = S || G.S;
     const need = C().NEED[k];
     const out = [];
-    if (!need || !X.isMate(id)) return out;
+    if (!X.isMate(id)) { if (k > 0 && G.c15 && G.c15.visitDone && !G.c15.visitDone(id, k - 1, S)) out.push("visit"); return out; }
+    if (!need) return out;
     if (need.joined && !((S.c2 && S.c2.joined && S.c2.joined[id]) || comp(id, S))) out.push("joined");
-    if (need.past) { const want = Math.min(need.past, X.pastMax(id)); if (want && X.pastHeard(id, S) < want) out.push("past"); }
+    // 段の深い話（C15）：書かれていればそれを、まだ無ければ身の上話（past）を見る
+    const deep = G.c15 && G.c15.hasTalk && G.c15.hasTalk(id);
+    if (need.talk && deep && !G.c15.heard(id, k - 1, S)) out.push("talk");
+    if (need.past && !deep) { const want = Math.min(need.past, X.pastMax(id)); if (want && X.pastHeard(id, S) < want) out.push("past"); }
     if (need.q9) {
       const x = q9(id, S);
       if (x.q) {
@@ -90,19 +94,20 @@
   };
   X.hint = (id, k, S) => {
     const m = X.missing(id, k, S);
-    return m.length ? C().HINT[m[0]].replace("{n}", nameOf(id, S)) : "";
+    if (!m.length) return "";
+    const where = G.c15 && G.c15.whereName ? G.c15.whereName(id, S) : "";
+    return C().HINT[m[0]].replace("{n}", nameOf(id, S)).replace("{where}", where || "会った所");
   };
-  // 上限に届いたとき、条件なしで進む段（顔見知り→知人・仲間にならない人）
+  // 上限に届いたとき、関係の出来事が済んでいれば進む段（顔見知り→知人・仲間にならない人。日数だけでは進まない）
+  //   仲間になる人の知人→友から先は、C13 の節目の褒美の出来事で進む
   const autoUp = (id, S) => {
     const k = X.stage(id, S);
     if (k >= X.last()) return false;
-    if (X.isMate(id)) {
-      if (k === 0 && !X.missing(id, 1, S).length) return X.setStage(id, 1, S);
-      return false;
-    }
-    if ((S.day || 0) - (X.state(S).day[id] || 0) >= C().OTHER_DAYS) return X.setStage(id, k + 1, S);
+    if (X.isMate(id) && k > 0) return false;
+    if (!X.missing(id, k + 1, S).length) return X.setStage(id, k + 1, S);
     return false;
   };
+  X.autoUp = autoUp;
 
   // ---------------------------------------------------------------- 上限
   // 上がる分 n を、今の段の上限までに切る。上限に届いていて進める段があれば、先に進める
@@ -119,7 +124,7 @@
   const told = (id, S) => {
     if (C().off) return;
     const s = X.state(S), k = X.stage(id, S);
-    if (s.told[id] === k || k >= X.last() || !X.isMate(id)) return;
+    if (s.told[id] === k || k >= X.last()) return;
     s.told[id] = k;
     const h = X.hint(id, k + 1, S);
     if (h && G.note) G.note(`（${nameOf(id, S)}との仲は、今はここまで。${h}）`);
