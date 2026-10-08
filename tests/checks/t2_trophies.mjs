@@ -1,5 +1,5 @@
-// T2：トロフィー 100 個（src/data/trophies_t2.js ほか）と格の見直し。
-// - 数が 100、key の重複なし、格が銅・銀・金のどれか、名前と説明がある
+// T2：トロフィー（src/data/trophies_t2.js ほか）と格の見直し。
+// - 数の縛りは無い（T3 で外した。持ち主の方針「数は気にせず節目ごとに」。格の決まりは tests/checks/t3_trophy_tiers.mjs）。100 個以上、key の重複なし、格が銅・銀・金のどれか、名前と説明がある
 // - すべての条件（test）が、作ったばかりの冒険・遊んだあと・古い記録（G.P に項目が無い）で例外なく動く
 // - test の無いトロフィーには取れる道がある（出来事・場所の報酬の trophy キーか、エンジンの G.award("key")）。出来事・報酬の trophy キーは実在する
 // - 新しいトロフィーの条件が、狙った状態で真になり、作ったばかりの冒険では（旅立ち・冒険をまたぐもの以外）偽
@@ -14,21 +14,21 @@ export default ({ G, fail, ok, seeded }) => {
   const T = D.TROPHIES;
 
   // ---------------------------------------------------------------- 表の形
-  // 使徒を正面から倒す長編（E7）のトロフィーは、長編ごとに足す（100 個の外に数える）
-  const saga = T.filter((t) => /^e7_/.test(t.key)).length;
-  if (T.length - saga !== 100) B(`トロフィーが ${T.length - saga} 個（長編の ${saga} 個を除いて 100 個のはず）`);
+  // 数の縛りは外した（T3。どの仕組みも節目ごとにトロフィーを足してよい）。T2 の 100 個が消えていないことだけ見る
+  if (T.length < 100) B(`トロフィーが ${T.length} 個（T2 の 100 個より少ない）`);
   const keys = new Set();
   for (const t of T) {
     if (keys.has(t.key)) B(`key ${t.key} が重複している`);
     keys.add(t.key);
-    if (!["銅", "銀", "金"].includes(t.tier)) B(`${t.key}: 格「${t.tier}」が銅・銀・金のどれでもない`);
+    if (!["銅", "銀", "金", "白金"].includes(t.tier)) B(`${t.key}: 格「${t.tier}」が銅・銀・金・白金のどれでもない`);
     if (!t.name || !t.desc) B(`${t.key}: 名前か説明が無い`);
     if (t.test && typeof t.test !== "function") B(`${t.key}: test が関数でない`);
   }
   const tiers = { 銅: 0, 銀: 0, 金: 0 };
   T.forEach((t) => { tiers[t.tier] = (tiers[t.tier] || 0) + 1; });
-  // 金ばかり・銅ばかりにしない（どの格も 2 割以上）
-  for (const [k, v] of Object.entries(tiers)) if (v < T.length * 0.2) B(`${k}が少ない（${v} 個）`);
+  // 金ばかり・銅ばかりにしない（銅・銀・金はどれも 1 割以上。T3 で仕組みごとの節目を足し、銅を「最初の冒険で取れる」に絞ったので 2 割から下げた。
+  // 白金〔T3〕は極めて大変なやりこみだけなので数えない）
+  for (const [k, v] of Object.entries(tiers)) if (k !== "白金" && v < T.length * 0.1) B(`${k}が少ない（${v} 個）`);
 
   // ---------------------------------------------------------------- 取れる道
   const given = new Set();
@@ -155,9 +155,9 @@ export default ({ G, fail, ok, seeded }) => {
   yes("t2_dead5", S, "五度死んだ");
 
   // ---------------------------------------------------------------- 全部取ったときの点
-  const pts = D.TROPHY_POINTS || { 銅: 1, 銀: 2, 金: 5 };
+  const pts = D.TROPHY_POINTS || { 銅: 1, 銀: 2, 金: 5, 白金: 10 };
   const sum = T.reduce((a, t) => a + pts[t.tier], 0);
   G.P = { trophies: Object.fromEntries(T.map((t) => [t.key, { name: t.name, tier: "銅" }])), graves: [] }; // 記録の格が古くても、今の表の格で数える
   if (G.cre && G.cre.trophyScore && G.cre.trophyScore() !== sum) B(`全部取ったときの点が ${G.cre.trophyScore()}（表の格では ${sum}）。記録に残った古い格で数えている`);
-  if (!bad) ok(`T2 トロフィー ${T.length} 個（銅 ${tiers.銅}・銀 ${tiers.銀}・金 ${tiers.金}。全部で ${sum} 点 → ボーナス点 +${Math.floor(sum / (D.TROPHY_PER_BONUS || 10))}）・取れる道・条件`);
+  if (!bad) ok(`T2 トロフィー ${T.length} 個（銅 ${tiers.銅}・銀 ${tiers.銀}・金 ${tiers.金}・白金 ${tiers.白金 || 0}。全部で ${sum} 点 → ボーナス点 +${Math.floor(sum / (D.TROPHY_PER_BONUS || 10))}）・取れる道・条件`);
 };

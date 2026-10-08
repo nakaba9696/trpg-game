@@ -36,8 +36,8 @@ export default ({ G, fail, seeded }) => {
     const bronze = D.TROPHIES.filter((t) => t.tier === "銅").slice(0, 10).map((t) => t.key);
     G.P.trophies = Object.fromEntries(bronze.map((k) => [k, { name: k }]));
     if (cre.trophyScore() !== 10 || cre.bonusPoints(dr0) !== D.BONUS_POINTS + 1) fail(`格の書いていない銅 10 個で +1 にならない（${cre.trophyScore()}）`);
-    // 全部取ったとき：銅 1・銀 2・金 5 の合計 ÷ 10
-    const pts = { 銅: 1, 銀: 2, 金: 5 };
+    // 全部取ったとき：銅 1・銀 2・金 5・白金 10（T3）の合計 ÷ 10
+    const pts = { 銅: 1, 銀: 2, 金: 5, 白金: 10 };
     G.P.trophies = Object.fromEntries(D.TROPHIES.map((t) => [t.key, { name: t.name, tier: t.tier }]));
     const want = Math.floor(D.TROPHIES.reduce((a, t) => a + (pts[t.tier] || 1), 0) / 10);
     if (cre.trophyBonus() !== want) fail(`全部取ったときのトロフィーの分が ${want} にならない（${cre.trophyBonus()}）`);
