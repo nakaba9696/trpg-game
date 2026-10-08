@@ -83,7 +83,22 @@ export default ({ G, fail, ok, seeded }) => {
     ["majin", "e3_five", "t3_apostles"], ["e3_kokunan", "e3_saigai"], ["majin", "e3_kokunan"], ["e4_elder", "e4_elder5"],
     ["m10_love", "m10_wed", "m10_child"], ["t2_boss1", "t2_lairs"], ["shuten", "byakuya"], ["goal", "retire"],
     ["t2_runs3", "t2_dead5"], ["t2_bond", "t3_bond"], ["t2_know", "t2_traps"],
+    // trophies_t3b.js（仕組みごとの節目）
+    ["t3_fame60", "fame150", "t3_fame300", "fame600"], ["t3_all20", "t3_all30", "t3_all45"], ["grow15", "t3_grow60"], ["t3_wanted", "t3_wanted3"],
+    ["majin", "t3_ap_b"], ["majin", "t3_ap_two"], ["t2_boss1", "t3_bosses10"], ["e4_core", "t3_cores3"], ["e4_elder5", "t3_elders_all"],
+    ["t3_spell2", "t3_spell3", "t3_spell3x3"], ["t3_elems5", "t3_elems7"], ["t3_k1lv1", "t3_skill", "t3_kiwame3"], ["t3_k2", "t3_k2_10"],
+    ["t3_plus1", "t3_forge3", "t3_plus5"], ["t3_legend", "t3_legends_all"], ["t2_travel10", "t3_travel50", "t3_travel150"], ["t3_towns15", "t3_towns30"],
+    ["t3_spot", "t3_spots10", "t3_spots30"], ["t3_depth3", "t3_depth5"], ["t3_mid", "t3_mid_all"], ["t3_side", "t3_side5"],
+    ["t2_boss1", "t3_lairs3", "t3_lairs6", "t3_lairs_all"], ["t2_lairs", "t3_lairs_all"], ["t3_ev30", "t3_ev80"], ["t3_m12", "t3_m12_end"],
+    ["t2_quest1", "t3_qkinds10", "t3_qkinds_all"], ["t2_q9", "t3_q9_10", "t3_q9_all"], ["t3_c13", "t3_c13_3", "t3_bond"], ["t3_c13", "t3_c13_10"],
+    ["t3_m6_3", "t3_m6_6"], ["t2_runs3", "t3_runs10", "t3_runs30"], ["t2_endings3", "t3_endings8"], ["t3_lore50", "t3_lore_half", "t3_lore_all"],
+    ["t3_know100", "t3_know300"], ["t3_i3_10", "t3_i3_names", "t3_i3_mats"], ["t3_purse300", "rich1", "rich2"], ["t3_trade1", "t3_trade1000", "t3_trade5000", "t3_trade20000"],
   ];
+  // 仕組みごとの分け方（D.TROPHY_GROUPS）：すべてのトロフィーがちょうど一つに入る
+  const GR = D.TROPHY_GROUPS || {};
+  const inG = Object.values(GR).flat();
+  for (const t of T) { const c = inG.filter((k) => k === t.key).length; if (c !== 1) B(`${t.key} が仕組みの分け方に ${c} 回入っている（1 回のはず）`); }
+  for (const k of inG) if (!tt(k)) B(`仕組みの分け方に無いトロフィー ${k}`);
   for (const ch of CHAINS) {
     for (let i = 1; i < ch.length; i++) {
       const a = rank(ch[i - 1]), b = rank(ch[i]);
@@ -152,5 +167,5 @@ export default ({ G, fail, ok, seeded }) => {
     for (const t of T) if (t.test) { try { t.test(s); } catch (e) { B(`${t.key}: 古い記録で例外 ${e.message}`); } }
   }
 
-  if (!bad) ok(`T3 トロフィーの格（白金 ${count.白金}・金 ${count.金}・銀 ${count.銀}・銅 ${count.銅}。作成直後は旅立ちだけ・作成の能力値の最大 ${maxStart} 点・段 ${CHAINS.length} 組）`);
+  if (!bad) ok(`T3 トロフィーの格（白金 ${count.白金}・金 ${count.金}・銀 ${count.銀}・銅 ${count.銅}。作成直後は旅立ちだけ・作成の能力値の最大 ${maxStart} 点・段 ${CHAINS.length} 組・仕組み ${Object.keys(GR).length}）`);
 };

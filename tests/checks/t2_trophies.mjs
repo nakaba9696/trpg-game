@@ -28,8 +28,9 @@ export default ({ G, fail, ok, seeded }) => {
   }
   const tiers = { 銅: 0, 銀: 0, 金: 0 };
   T.forEach((t) => { tiers[t.tier] = (tiers[t.tier] || 0) + 1; });
-  // 金ばかり・銅ばかりにしない（銅・銀・金はどれも 2 割以上。白金〔T3〕は極めて大変なやりこみだけなので数えない）
-  for (const [k, v] of Object.entries(tiers)) if (k !== "白金" && v < T.length * 0.2) B(`${k}が少ない（${v} 個）`);
+  // 金ばかり・銅ばかりにしない（銅・銀・金はどれも 1 割以上。T3 で仕組みごとの節目を足し、銅を「最初の冒険で取れる」に絞ったので 2 割から下げた。
+  // 白金〔T3〕は極めて大変なやりこみだけなので数えない）
+  for (const [k, v] of Object.entries(tiers)) if (k !== "白金" && v < T.length * 0.1) B(`${k}が少ない（${v} 個）`);
 
   // ---------------------------------------------------------------- 取れる道
   const given = new Set();
