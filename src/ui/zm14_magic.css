@@ -1,0 +1,10 @@
+/* M14：術の才（作成画面の箱・ステータスの「術」の欄） */
+.m14aff { display: flex; flex-wrap: wrap; gap: 4px 6px; margin: 4px 0; }
+.m14el { display: inline-flex; gap: 4px; align-items: baseline; padding: 2px 8px; border: 1px solid currentColor; border-radius: 999px; font-size: 12px; opacity: .8; }
+.m14el b { font-weight: 700; }
+.m14el.m14good { opacity: 1; border-width: 2px; }
+.m14el.m14bad { opacity: .55; border-style: dashed; }
+.m14el.m14none { opacity: .4; }
+.m14cre .m14say { margin: 6px 0 2px; }
+.m14lv { font-weight: 700; }
+.m14lv0 { opacity: .6; }

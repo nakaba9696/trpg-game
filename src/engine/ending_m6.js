@@ -141,7 +141,7 @@
     const days = run ? S.day : Math.max(1, Math.round((S.turns || 0) / 3));
     const world = chron.filter((c) => c.kind === "world");
     const spells = S.spells || [];
-    const learned = spells.filter((id) => !((D.SPELL_START && D.SPELL_START[S.cls]) || []).includes(id)).length;
+    const learned = spells.filter((id) => !(S.spellStart || (D.SPELL_START && D.SPELL_START[S.cls]) || []).includes(id)).length;   // S.spellStart：はじめから知っていた術（M14）
     const alive = comps.find((c) => (c.bond || 0) >= 90) || comps[0];
     // 語り手になれる仲間は、生きて別れた者だけ（死んだ者・裏切った者は語れない）
     const kept = gone.find((g) => g.how === "leave");
