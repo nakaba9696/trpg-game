@@ -53,7 +53,8 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
     // 右の列の中で、流れる箱（開いた組）の外にある物が右の列からはみ出していないか
     if (sideOn) {
       const s = out.side, over = [];
-      side.querySelectorAll(".u13tab, #panel > .agroup, #panel > .tip, #panel > .u11purse, #u21open").forEach((el) => {
+      // 組の札（と戦闘の見出しの札）はいつも窓の中に見えること。組の中身・選択肢は窓（か開いた組）の中で流れてよい
+      side.querySelectorAll(".u13tab, #u21open").forEach((el) => {
         const r = R(el);
         if (r.h && (r.b > s.b + 1 || r.y < s.y - 1)) over.push((el.className || el.id) + " " + Math.round(r.y) + "-" + Math.round(r.b));
       });
@@ -130,7 +131,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   judge("event", me, { wantSide: true });
   if (pc && me.tabs && me.tabs.length) ng(`${vn} event：出来事の選択肢が組に隠れている`);
   await shot("event");
-  // 戦闘：下の帯のまま（右の列は出さない）
+  // 戦闘：U29 から右下の窓にコマンド
   await page.evaluate(() => {
     G.S.mode = "explore"; G.S.event = null;
     Object.assign(G.S.inv, { herb: 3, potion: 2 });
@@ -138,7 +139,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   });
   await page.keyboard.press("Escape");
   await quiet();
-  judge("combat", await measure(), { wantSide: false });
+  judge("combat", await measure(), { wantSide: true }); // U29：戦闘も右下の窓にコマンド
   await shot("combat");
   if (errs.length) ng(`${vn}：ページのエラー ${errs.join("／")}`);
   await ctx.close();

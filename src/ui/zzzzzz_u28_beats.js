@@ -112,6 +112,16 @@
     if (H.bgm && snd.bgmUpdate) { try { snd.bgmUpdate(); } catch {} }
   }
   U.release = release;
+  // HP・MP・所持金の札（#mbar）：本文を出している間は押す前の値のまま。得たものの枠が出たとき（無ければ出しきったとき）に今の値へ
+  //   中の要素は id で見た目が決まっているので写しは置かず、押す前の中身をいったん戻しておき、そのときに描いた中身へ差し替える
+  const barOf = () => { const b = $("#mbar"); return b ? { html: b.innerHTML, cls: b.className } : null; };
+  let barNow = null;
+  function releaseBar() {
+    const B = barNow, b = $("#mbar");
+    barNow = null;
+    if (B && b) { b.innerHTML = B.html; b.className = B.cls; }
+  }
+  U.releaseBar = releaseBar;
 
   // ---------------------------------------------------------------- 順に見せる
   let run = null; // { rows: [el], i, timer, steps, arrive }
@@ -123,6 +133,7 @@
       R.rows[k].classList.remove("u28wait");
       R.rows[k].classList.add("u28show");
       if (k >= R.arrive) release();
+      if (kindOf(R.rows[k]) === "gain") releaseBar();
     }
     R.i = Math.max(R.i, i + 1);
     if (R.i >= R.rows.length) { finish(); return; }
@@ -137,6 +148,7 @@
     if (R) { clearTimeout(R.timer); R.rows.forEach((el) => { el.classList.remove("u28wait"); el.classList.add("u28show"); }); }
     run = null;
     release();
+    releaseBar();
     body.classList.remove("u28busy");
   }
   U.skip = () => { if (run) finish(); };
@@ -150,6 +162,11 @@
     const p = U.plan(rows.map((el) => ({ kind: kindOf(el), len: (el.textContent || "").length })));
     rows.forEach((el, i) => { if (i > 0) { el.classList.add("u28wait"); el.classList.remove("u28show"); } });
     run = { rows, i: 1, steps: p.steps, arrive: p.arrive, timer: 0 };
+    const bar = $("#mbar");
+    if (before && before.bar && bar && (bar.innerHTML !== before.bar.html || bar.className !== before.bar.cls)) {
+      barNow = { html: bar.innerHTML, cls: bar.className };
+      bar.innerHTML = before.bar.html; bar.className = before.bar.cls;
+    }
     body.classList.add("u28busy");
     if (p.arrive >= 1) {
       // 場面の切り替えを待たせる：前の名前（写し）と色を出し、新しい方は隠しておく
@@ -181,7 +198,7 @@
     if (run) finish(); // 前の分が出しきれていなければ、先に全部出す
     let before = null;
     if (doBeat) {
-      before = { labels: grab(), u14: body.dataset.u14 || "" };
+      before = { labels: grab(), u14: body.dataset.u14 || "", bar: barOf() };
       hold = { scene: null, bgm: false, copies: null };
     }
     let r;
