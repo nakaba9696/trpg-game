@@ -13,6 +13,9 @@
   <venv>/python tools/cutout_model.py --only kind_priest_m --out tmp/cut
   <venv>/python tools/cutout_model.py --in-place                # assets/ を書き換える（アルファを持つ絵は飛ばす。--force で切り直す）
   <venv>/python tools/cutout_model.py --model isnet-anime --only <id> --out tmp/cut   # うまく抜けなかった絵を別のモデルで
+  <venv>/python tools/cutout_model.py --keep-color --only kain --out tmp/cut           # 周りの物（浮かぶ物・煙・炎・光）も残す（白い背景）
+  <venv>/python tools/cutout_model.py --keep-color --key 40,110 --only graw --out tmp/cut   # 暗い・グラデーションの背景の光や霧
+  <venv>/python tools/cutout_model.py --src tmp/orig --out tmp/cut                    # 元の絵を別のフォルダから（<src>/<dir>/<id>.webp）
   <venv>/python tools/cutout_model.py --flatten assets/portraits/<id>.webp tmp.png  # 白い背景に戻す（差分の img2img の元）
 要るもの：rembg[gpu]（onnxruntime-gpu）・nvidia-cudnn-cu12 ほか CUDA 12 の pip の部品・Pillow・numpy。モデルは初回に ~/.u2net に落ちてくる。
 """
@@ -45,13 +48,28 @@ def decontaminate(rgb, alpha, B):
     return np.clip(out, 0, 255).astype(np.uint8)
 
 
-def cut(session, path, remove):
+def key_alpha(rgb, B, lo=6, hi=60):
+    """背景の色との差で決める透明度（色で抜く）。白い背景の上の煙・光・炎・浮かぶ物は、差の分だけ半透明で残る"""
+    d = np.abs(rgb.astype(np.float32) - B).max(axis=2)
+    return (np.clip((d - lo) / (hi - lo), 0, 1) * 255).astype(np.uint8)
+
+
+def border_bg(rgb):
+    """縁の画素の中央値（暗い背景・色のついた背景でも、背景の色を決める）"""
+    e = np.concatenate([rgb[0], rgb[-1], rgb[:, 0], rgb[:, -1]]).astype(np.float32)
+    return np.median(e, axis=0)
+
+
+def cut(session, path, remove, keep_color=False, key=(6, 60)):
     src = Image.open(path).convert("RGB")
     mask = remove(src, session=session, only_mask=True, post_process_mask=False)
     alpha = np.array(mask.convert("L"))
     alpha = np.where(alpha < ALPHA_FLOOR, 0, np.where(alpha >= ALPHA_CEIL, 255, alpha)).astype(np.uint8)
     rgb = np.array(src)
     B = corner_bg(np.dstack([rgb, alpha]))
+    if keep_color:
+        # モデルが背景と見なして消した、体から離れた物（浮かぶ武器・光・煙・炎）を、背景の色と違う分だけ戻す
+        alpha = np.maximum(alpha, key_alpha(rgb, border_bg(rgb) if key[0] > 6 else B, *key))
     rgb = decontaminate(rgb, alpha, B)
     rgb[alpha == 0] = 0
     return Image.fromarray(np.dstack([rgb, alpha]), "RGBA")
@@ -80,6 +98,9 @@ def main():
     ap.add_argument("--out", default="")
     ap.add_argument("--in-place", action="store_true")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--src", default=os.path.join(ROOT, "assets"), help="元の絵のフォルダ（<src>/<dir>/<id>.webp。既定は assets）")
+    ap.add_argument("--key", default="6,60", help="--keep-color の差の幅（下,上）。下を 6 より上げると、背景の色を縁の中央値で決める（暗い・グラデーションの背景）")
+    ap.add_argument("--keep-color", action="store_true", help="モデルの透明度に、背景の色との差の透明度を重ねる（周りの物まで一体の絵。白い背景の絵だけ）")
     ap.add_argument("--flatten", nargs=2, metavar=("IN", "OUT"), help="透明つきの絵を白い背景に戻した png にする（gen_portraits.mjs の差分の元）")
     a = ap.parse_args()
     if a.flatten:
@@ -97,7 +118,7 @@ def main():
     only = set(x for x in a.only.split(",") if x)
     n, t0 = 0, time.time()
     for d in [x for x in a.dirs.split(",") if x]:
-        src = os.path.join(ROOT, "assets", d)
+        src = os.path.join(a.src, d)
         names = sorted(f[:-5] for f in os.listdir(src) if f.endswith(".webp"))
         if only:
             names = [x for x in names if x in only]
@@ -105,7 +126,7 @@ def main():
             p = os.path.join(src, name + ".webp")
             if a.in_place and not a.force and has_alpha(p):
                 continue
-            im = cut(session, p, remove)
+            im = cut(session, p, remove, a.keep_color, tuple(int(x) for x in a.key.split(",")))
             if a.in_place:
                 dst = p
             else:
