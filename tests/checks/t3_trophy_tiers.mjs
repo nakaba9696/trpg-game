@@ -84,7 +84,7 @@ export default ({ G, fail, ok, seeded }) => {
     ["m10_love", "m10_wed", "m10_child"], ["t2_boss1", "t2_lairs"], ["shuten", "byakuya"], ["goal", "retire"],
     ["t2_runs3", "t2_dead5"], ["t2_bond", "t3_bond"], ["t2_know", "t2_traps"],
     // trophies_t3b.js（仕組みごとの節目）
-    ["t3_fame60", "fame150", "t3_fame300", "fame600"], ["t3_all20", "t3_all30", "t3_all45"], ["grow15", "t3_grow60"], ["t3_wanted", "t3_wanted3"],
+    ["t3_fame60", "fame150", "t3_fame300", "fame600"], ["t3_all20", "t3_all30", "t3_all45"], ["grow15", "t3_grow60", "t3_all30"], ["t3_wanted", "t3_wanted3"],
     ["majin", "t3_ap_b"], ["majin", "t3_ap_two"], ["t2_boss1", "t3_bosses10"], ["e4_core", "t3_cores3"], ["e4_elder5", "t3_elders_all"],
     ["t3_spell2", "t3_spell3", "t3_spell3x3"], ["t3_elems5", "t3_elems7"], ["t3_k1lv1", "t3_skill", "t3_kiwame3"], ["t3_k2", "t3_k2_10"],
     ["t3_plus1", "t3_forge3", "t3_plus5"], ["t3_legend", "t3_legends_all"], ["t2_travel10", "t3_travel50", "t3_travel150"], ["t3_towns15", "t3_towns30"],

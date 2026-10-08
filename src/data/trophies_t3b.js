@@ -50,7 +50,7 @@
     { key: "t3_weak10", name: "不向きを越えて", tier: "銀", desc: "職業に向かない能力値を、作ったときより 10 点伸ばした",
       test: (S) => !!G.s5AptOf && ST().some((k) => G.s5AptOf(S.cls, k) < 0 && st(S, k) - ((S.startStats || {})[k] || 0) >= 10) },
     { key: "t3_all30", name: "万能の人", tier: "金", desc: "六つの能力値すべてが 30 点に届いた", test: (S) => ST().length > 0 && ST().every((k) => st(S, k) >= 30) },
-    { key: "t3_grow60", name: "積み上げた日々", tier: "金", desc: "一度の冒険で能力値を合計 60 伸ばした", test: (S) => !!S.startStats && !!G.totalGrowth && G.totalGrowth(S) >= 60 },
+    { key: "t3_grow60", name: "積み上げた日々", tier: "銀", desc: "一度の冒険で能力値を合計 60 伸ばした", test: (S) => !!S.startStats && !!G.totalGrowth && G.totalGrowth(S) >= 60 },
     { key: "t3_all45", name: "十八の名", tier: "白金", desc: "六つの能力値すべてが 45 点に届いた（節目の名をすべて得た）", test: (S) => ST().length > 0 && ST().every((k) => st(S, k) >= 45) },
   ]);
 
@@ -58,13 +58,13 @@
   tag("職業・位・名声・評判・善悪", ["fame150", "fame600", "knight", "lord", "king", "t2_allcls"]);
   add("職業・位・名声・評判・善悪", [
     { key: "t3_fame60", name: "一人前", tier: "銅", desc: "名声が 60 に届いた", test: (S) => (S.fame || 0) >= 60 },
-    { key: "t3_pure", name: "清い手", tier: "銅", desc: "善い行いを四つ重ね、罪の匂いは 4 に満たない", test: (S) => (S.virtue || 0) >= 4 && (S.sin || 0) < 4 },
+    { key: "t3_pure", name: "清い手", tier: "銀", desc: "善い行いを四つ重ね、罪の匂いは 4 に満たない", test: (S) => (S.virtue || 0) >= 4 && (S.sin || 0) < 4 },
     { key: "t3_fame300", name: "英雄", tier: "銀", desc: "名声が 300 に届いた", test: (S) => (S.fame || 0) >= 300 },
     { key: "t3_rep100", name: "国の誇り", tier: "銀", desc: "どこかの国での評判が 100 に届いた", test: (S) => rep(S).some((r) => (r.rep || 0) >= 100) },
     { key: "t3_wanted", name: "お尋ね者", tier: "銀", desc: "どこかの国で賞金首になった", test: (S) => rep(S).some((r) => !!r.wanted) },
     { key: "t3_cleared", name: "ほとぼり", tier: "銀", desc: "賞金首の手配が解けるまで逃げ延びた", test: (S) => chron(S, /での手配が解かれる$/) },
     { key: "t3_sinful", name: "血の匂い", tier: "銀", desc: "罪の匂いが 8 に届いた", test: (S) => (S.sin || 0) >= 8 },
-    { key: "t3_abyss", name: "淵の縁", tier: "銀", desc: "正気が 15 を切っても、正気を失わずに冒険を続けた", test: (S) => (((S.m5 || {}).low ?? 100) < 15) && !S.over },
+    { key: "t3_abyss", name: "淵の縁", tier: "銅", desc: "正気が 15 を切っても、正気を失わずに冒険を続けた", test: (S) => (((S.m5 || {}).low ?? 100) < 15) && !S.over },
     { key: "t3_beastcure", name: "獣を祓う", tier: "銀", desc: "獣の病を教会で祓ってもらった", test: (S) => chron(S, /^獣の病が祓われる$/) },
     { key: "t3_rep_all", name: "大陸の信頼", tier: "金", desc: "法の及ぶ国すべてで評判が 30 に届いた",
       test: (S) => { const ns = nations(); const R = S.repute || {}; return ns.length > 0 && ns.every((x) => ((R[x] || {}).rep || 0) >= 30); } },
@@ -106,11 +106,11 @@
   tag("技・巻物・魔導書", ["t3_skill"]);
   add("技・巻物・魔導書", [
     { key: "t3_k1lv1", name: "慣れた手", tier: "銅", desc: "技を一つ「慣れた」まで使い込んだ（6 回）", test: (S) => !!D.K1_LV && skills(S).some((id) => (uses(S)[id] || 0) >= D.K1_LV[1]) },
-    { key: "t3_skills3", name: "三つの技", tier: "銅", desc: "技とスキルを三つ身につけた", test: (S) => skills(S).length >= 3 },
+    { key: "t3_skills3", name: "三つの技", tier: "銀", desc: "技とスキルを三つ身につけた", test: (S) => skills(S).length >= 3 },
     { key: "t3_k2", name: "体が覚えた", tier: "銀", desc: "経験からスキルを一つ身につけた", test: (S) => skills(S).some((id) => id.startsWith("k2_")) },
     { key: "t3_scrollgift", name: "師の巻物", tier: "銀", desc: "師から巻物を譲られた", test: (S) => Object.keys((S.k5 && S.k5.gift) || {}).some((k) => k.startsWith("t:")) },
     { key: "t3_tomes4", name: "書架", tier: "銀", desc: "魔導書を四冊手元に置いた", test: (S) => Object.keys(S.inv || {}).filter((id) => (D.ITEMS[id] || {}).type === "tome").length >= 4 },
-    { key: "t3_sk3", name: "奥伝", tier: "金", desc: "上級の技を身につけた", test: (S) => skills(S).some((id) => k5tier(id) === 3) },
+    { key: "t3_sk3", name: "奥伝", tier: "銀", desc: "上級の技を身につけた", test: (S) => skills(S).some((id) => k5tier(id) === 3) },
     { key: "t3_kiwame3", name: "三つの極み", tier: "金", desc: "技を三つ、極みまで使い込んだ", test: (S) => !!D.K1_LV && skills(S).filter((id) => (uses(S)[id] || 0) >= D.K1_LV[D.K1_LV.length - 1]).length >= 3 },
     { key: "t3_k2_10", name: "傷だらけの手引き", tier: "金", desc: "スキルを十身につけた", test: (S) => skills(S).filter((id) => id.startsWith("k2_")).length >= 10 },
   ]);
@@ -118,7 +118,7 @@
   // ---------------------------------------------------------------- 装備・伝説の武具・防具（稀さ 並・上・逸品・伝説。鍛冶 +5 まで）
   tag("装備・伝説の武具・防具", ["t2_gear", "volgrim", "byakuya"]);
   add("装備・伝説の武具・防具", [
-    { key: "t3_plus1", name: "焼き直し", tier: "銅", desc: "武具を一度鍛え直した（+1）", test: (S) => plus(S, 1) },
+    { key: "t3_plus1", name: "焼き直し", tier: "銀", desc: "武具を一度鍛え直した（+1）", test: (S) => plus(S, 1) },
     { key: "t3_stash", name: "宿の預かり", tier: "銅", desc: "宿に品を預けた", test: (S) => n((S.i3 || {}).stash) >= 1 },
     { key: "t3_epic", name: "逸品", tier: "銀", desc: "逸品以上の武具を身に着けた", test: (S) => !!(G.i3 && G.i3.rarityOf) && worn(S).some((id) => G.i3.rarityOf(D.ITEMS[id]) >= 2) },
     { key: "t3_fullkit", name: "頭から爪先まで", tier: "銀", desc: "装備の枠すべてに品を着けた", test: (S) => !!(G.i2s && G.i2s.worn && G.i2s.SLOTS) && G.i2s.worn(S).length >= G.i2s.SLOTS.length },
@@ -152,7 +152,7 @@
   tag("迷宮・遺跡・山", ["t2_dungeon", "t2_lairs", "t2_traps"]);
   add("迷宮・遺跡・山", [
     { key: "t3_depth3", name: "地下三階", tier: "銅", desc: "迷宮の地下三階まで降りた", test: (S) => (S.depth || 0) >= 3 },
-    { key: "t3_mid", name: "門番", tier: "銅", desc: "迷宮の途中の番人を倒した", test: (S) => Object.keys(S.flags || {}).some((k) => k.startsWith("mid:")) },
+    { key: "t3_mid", name: "門番", tier: "銀", desc: "迷宮の途中の番人を倒した", test: (S) => Object.keys(S.flags || {}).some((k) => k.startsWith("mid:")) },
     { key: "t3_depth5", name: "底の近く", tier: "銀", desc: "迷宮の地下五階まで降りた", test: (S) => (S.depth || 0) >= 5 },
     { key: "t3_lairs3", name: "三つの最奥", tier: "銀", desc: "一度の冒険で三つの迷宮の主を倒した", test: (S) => lairs(S) >= 3 },
     { key: "t3_side", name: "脇道の静けさ", tier: "銀", desc: "迷宮の脇道の主を退けた", test: (S) => n((S.w8 || {}).cleared) >= 1 },
@@ -165,9 +165,9 @@
   // ---------------------------------------------------------------- 依頼・噂・出来事（人の筋の出来事もここ）
   tag("依頼・噂・出来事", ["t2_quest1", "quests10", "t2_quests30", "god", "c2_lab", "c4_thread", "c4_soap", "c4_defy", "c5_debate", "c5_choir", "c5_duel", "c5_chain", "c5_ledger", "c6_ledger", "c6_pawn", "c7_dirty", "c7_verse", "c7_pawn", "c8_bell", "c8_seven", "r1_ledger", "r1_seven"]);
   add("依頼・噂・出来事", [
-    { key: "t3_expose", name: "嘘の依頼", tier: "銅", desc: "依頼人の嘘を暴いた", test: (S) => (q5res(S).expose || 0) >= 1 },
-    { key: "t3_m12", name: "世の大事", tier: "銅", desc: "世の大事に加わった", test: (S) => ((S.m12 || {}).list || []).some((e) => e && e.joined) },
-    { key: "t3_here", name: "居合わせた", tier: "銅", desc: "世の出来事の場に居合わせた", test: (S) => ((S.world || {}).hist || []).some((h) => h && h.heard === "here") },
+    { key: "t3_expose", name: "嘘の依頼", tier: "銀", desc: "依頼人の嘘を暴いた", test: (S) => (q5res(S).expose || 0) >= 1 },
+    { key: "t3_m12", name: "世の大事", tier: "銀", desc: "世の大事に加わった", test: (S) => ((S.m12 || {}).list || []).some((e) => e && e.joined) },
+    { key: "t3_here", name: "居合わせた", tier: "銀", desc: "世の出来事の場に居合わせた", test: (S) => ((S.world || {}).hist || []).some((h) => h && h.heard === "here") },
     { key: "t3_turncoat", name: "寝返り", tier: "銀", desc: "依頼の途中で相手の側についた", test: (S) => (q5res(S).ally || 0) + (q5res(S).betray || 0) >= 1 },
     { key: "t3_leads", name: "掲示の隅", tier: "銀", desc: "掲示の隅の頼みごとをすべて手に取った", test: (S) => (D.R3_LEADS || []).length > 0 && D.R3_LEADS.every((x) => ((S.r3 || {}).seen || {})[x.id]) },
     { key: "t3_rumors10", name: "耳ざとい", tier: "銀", desc: "一度の冒険で噂を十書き留めた", test: (S) => ((S.q17r || {}).list || []).length >= 10 },
@@ -184,7 +184,7 @@
   // ---------------------------------------------------------------- 仲間・作戦
   tag("仲間・作戦", ["t2_ally", "party", "c2_party", "r1_kin", "t2_q9", "m11_mon", "t2_bond"]);
   add("仲間・作戦", [
-    { key: "t3_talk50", name: "焚き火の常連", tier: "銅", desc: "仲間と五十度語らった", test: (S) => (m2c(S).talk || 0) >= 50 },
+    { key: "t3_talk50", name: "焚き火の常連", tier: "銀", desc: "仲間と五十度語らった", test: (S) => (m2c(S).talk || 0) >= 50 },
     { key: "t3_betrayed", name: "背中の刃", tier: "銀", desc: "仲間に裏切られた", test: (S) => (m2c(S).betray || 0) >= 1 },
     { key: "t3_mourn", name: "看取り", tier: "銀", desc: "仲間を亡くした", test: (S) => (m2c(S).death || 0) >= 1 },
     { key: "t3_slain", name: "自らの手で", tier: "銀", desc: "刃を向けた仲間を討った", test: (S) => ((S.m2 || {}).gone || []).some((g) => g && g.how === "slain") },
@@ -202,8 +202,8 @@
   // ---------------------------------------------------------------- 絆の段・恋・結婚（絆の段は好感度 30・55・80。C13）
   tag("絆の段・恋・結婚", ["t3_bond", "m10_love", "m10_wed", "m10_home", "m10_child", "m11_ap", "r2_full"]);
   add("絆の段・恋・結婚", [
-    { key: "t3_c13", name: "最初の贈り物", tier: "銅", desc: "仲間から絆の褒美を受け取った", test: (S) => c13done(S).length >= 1 },
-    { key: "t3_spark", name: "気配", tier: "銅", desc: "仲間との恋の気配が立った", test: (S) => (m10c(S).spark || 0) >= 1 },
+    { key: "t3_c13", name: "最初の贈り物", tier: "銀", desc: "仲間から絆の褒美を受け取った", test: (S) => c13done(S).length >= 1 },
+    { key: "t3_spark", name: "気配", tier: "銀", desc: "仲間との恋の気配が立った", test: (S) => (m10c(S).spark || 0) >= 1 },
     { key: "t3_c13_3", name: "三人の褒美", tier: "銀", desc: "一度の冒険で、三人から絆の褒美を受け取った", test: (S) => c13done(S).length >= 3 },
     { key: "t3_c13_skill", name: "手ほどき", tier: "銀", desc: "絆の褒美で技か術を教わった", test: (S) => c13kind(S, ["skill", "spell"]) },
     { key: "t3_c13_quest", name: "二人の用事", tier: "銀", desc: "絆の頼みごとを果たした", test: (S) => c13kind(S, ["quest"]) },
@@ -251,7 +251,7 @@
   tag("交易・お金", ["rich1", "rich2"]);
   add("交易・お金", [
     { key: "t3_purse300", name: "重い財布", tier: "銅", desc: "所持金が 300G に届いた", test: (S) => (S.gold || 0) >= 300 },
-    { key: "t3_trade1", name: "初荷", tier: "銅", desc: "交易の荷を売って利ざやを得た", test: (S) => ((S.q4 || {}).profit || 0) > 0 },
+    { key: "t3_trade1", name: "初荷", tier: "銀", desc: "交易の荷を売って利ざやを得た", test: (S) => ((S.q4 || {}).profit || 0) > 0 },
     { key: "t3_cart", name: "荷車の主", tier: "銀", desc: "荷車を手に入れた", test: (S) => !!(S.inv || {}).q4_cart },
     { key: "t3_trade1000", name: "千枚の利ざや", tier: "銀", desc: "交易の利ざやの合計が 1000G を越えた", test: (S) => !!((S.q4 || {}).marks || {})[1000] || ((S.q4 || {}).profit || 0) >= 1000 },
     { key: "t3_trade5000", name: "ひと財産", tier: "金", desc: "交易の利ざやの合計が 5000G を越えた", test: (S) => !!((S.q4 || {}).marks || {})[5000] || ((S.q4 || {}).profit || 0) >= 5000 },
