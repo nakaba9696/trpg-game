@@ -1,0 +1,37 @@
+/* U26：持ち主のレビューから（ui/zzzzzz_u26_review.js）。右の行動列・戦闘の手・所持金・スマホの上のボタン列 */
+
+/* ---------------------------------------------------------------- 所持金は上の札（#mbar）の一か所に。選択肢の欄の「所持金」の行は出さない（足りない選択肢には理由が出る） */
+#panel > .u11purse { display: none; }
+
+/* ---------------------------------------------------------------- 右の行動列：組の札を小さく 2 列にし、開いた組の中身に高さを渡す */
+body.u21pc #u21side .u13tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+body.u21pc #u21side .u13tab { min-height: 34px; padding: 3px 10px; font-size: 14px; letter-spacing: .06em; }
+body.u21pc #u21side .u13tab.on { grid-column: 1 / -1; min-height: 38px; font-size: 15px; }
+body.u21pc #u21side .u13tab .u13n { font-size: 12px; }
+body.u21pc #u21side .tip { font-size: 12px; line-height: 1.5; padding: 4px 8px; }
+body.u21pc #u21side .tip .btn { padding: 2px 8px; min-height: 0; }
+body.u21pc #u21side #panel { gap: 6px; }
+body.u21pc #u21side .agroup h3 { margin: 0 0 1px; font-size: 12px; }
+
+/* ---------------------------------------------------------------- 戦闘（PC の下の帯）：仲間の札を一行に、遊び方の一行を小さく。手の組は全部見え、入りきらなければ組の中だけ流れる */
+body.v9pc.v9combat #panel .b5party { gap: 4px; margin-top: 4px; }
+body.v9pc.v9combat #panel .b5mem { display: flex; align-items: center; gap: 6px; padding: 2px 8px; min-width: 0; font-size: 12px; }
+body.v9pc.v9combat #panel .b5mem b { font-size: 13px; }
+body.v9pc.v9combat #panel .b5mem .b5g { display: inline-block; width: 56px; }
+body.v9pc.v9combat #panel > .tip { font-size: 12px; line-height: 1.5; padding: 4px 8px; }
+body.v9pc.v9combat #panel > .tip .btn { padding: 2px 8px; min-height: 0; }
+body.v9pc.v9combat #panel.u13fight { overflow: hidden; min-height: 0; }
+body.v9pc.v9combat #panel.u13fight > .u13main, body.v9pc.v9combat #panel.u13fight > .u13pop { flex: 1 1 auto; min-height: 4.5em; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+body.v9pc.v9combat #panel.u13fight > .u13main h3, body.v9pc.v9combat #panel.u13fight > .u13pop h3 { position: sticky; top: 0; z-index: 1; margin: 0; background: var(--win-solid); }
+
+/* ---------------------------------------------------------------- スマホ：上のボタン列を一段に（字と余白を詰める。設定は歯車だけ） */
+@media (max-width: 760px) {
+  .top .tools { flex-wrap: nowrap; justify-content: flex-end; gap: 3px; min-width: 0; max-width: 100%; }
+  .top .tools .btn { padding-inline: 6px; font-size: 12px; min-width: 0; flex-shrink: 1; white-space: nowrap; letter-spacing: 0; }
+  .top .tools .u11key { display: none; }
+  .top .tools .q7setbtn { padding-inline: 8px; flex-shrink: 0; }
+  .top .tools .q7sysbtn { flex-shrink: 0; }
+}
+@media (max-width: 360px) {
+  .top .tools .btn { padding-inline: 4px; font-size: 11.5px; }
+}
