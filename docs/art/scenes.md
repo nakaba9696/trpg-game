@@ -3,7 +3,7 @@
 > このファイルは [scenes.json](scenes.json) から `node tools/scenes.mjs` で作る。直すときは json を直してから作り直す。
 > 作り方は [README.md](README.md) の「背景の絵（A11）」。設定は [style_scenes.json](style_scenes.json)。1344×768 で作り、1232×704 の webp に縮めて `assets/scenes/<id>.webp` に置く（1 枚 150KB 以下）。
 
-全部で 141 枚（場所 72・施設の中 57・迷宮の中 12）。
+全部で 143 枚（場所 74・施設の中 57・迷宮の中 12）。
 
 ## 試しの 5 枚
 
@@ -17,7 +17,7 @@
 | `in_tavern` | 酒場 | 施設の中 |
 | `in_ruins` | エル・ナフ遺構の中 | 迷宮の中 |
 
-## 場所（72）
+## 場所（74）
 
 町・荒野・迷宮の外の景色（場所の id ごとに 1 枚）。屋外は昼・晴れで作り、時間帯・季節・天候はゲームが色味と雨・雪・霧の粒で重ねる。`sky` が night・red の場所は空が決まっている（朧島は夜、使徒領は赤い空）。
 
@@ -95,6 +95,8 @@
 | `majincastle` | 黒鎧の使徒の居城（使徒領・迷宮）・空 red | `majin` | realm | castle made of bones and black iron, open gate, red sky, ominous fortress, ash in the air |
 | `e2_kitchen` | 肉の谷の大厨房（使徒領・迷宮）・空 red | `e2_kitchen` | realm | gigantic castle-like kitchen building at the bottom of a valley, many chimneys with steam, red sky, giant cauldrons |
 | `w4_canopy` | 使徒領・天蓋の原（使徒領・荒野） | `w4_canopy` | realm | white salt flat, mirror-like ground reflecting the sky, blurred horizon, huge round shadow on the ground |
+| `w10_roune` | 眠り山ロウネ（レオネスト王国・荒野） | `w10_roune` | leonest | gentle extinct volcano with wide grassy slopes, flat cloud-capped summit, scattered white goats, shepherd's stone hut with thin smoke, winding footpath, stone cairns |
+| `w10_drause` | 鉄冠岳ドラウゼ（ノルディア帝国・荒野） | `w10_drause` | nordia | rust-red rocky mountain with a jagged crown of black rock spires at the summit, snowfields, abandoned mine entrances on the slopes, ruined miners' village at the foot, frozen rails |
 
 ## 施設の中（57）
 
