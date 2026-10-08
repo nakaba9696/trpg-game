@@ -38,7 +38,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     G.act("cb:attack");
     if (whoName(S) !== "f8c0") F(`主人公の手のあと、仲間アの番にならない（${whoName(S)}）`);
     const gs = G.actions();
-    if (!gs.length || gs.some((g) => !["attack", "tech", "magic", "misc", "item"].includes(g.cat))) F("仲間の番の手が 5 つの見出しに分かれていない");
+    if (!gs.length || gs.some((g) => !["attack", "guard", "tech", "magic", "misc", "item"].includes(g.cat))) F("仲間の番の手が 6 つの見出しに分かれていない");
     if (!ids().includes("f3:ord:f8c0:attack") || ids().includes("f3:ord:f8c0:heal")) F("仲間アの番に、仲間アの手（だけ）が出ない");
     if (!ids().includes("f8:back")) F("仲間の番に「一つ前に戻る」が無い");
     G.act("f8:back");
@@ -54,8 +54,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     G.act("f3:ord:f8c1:back");
     if (S.combat.round === round && S.turn === turn) F("全員の手が決まっても、一巡が解けない");
     const text = S.log.slice(logN).map((l) => l.text || "").join("\n");
-    if (!/身を守る/.test(text)) F("主人公の手（身を守る）で解かれない");
-    if (!/仲間アは下がって|仲間イは下がって/.test(text)) F("仲間の手（下がる）で解かれない");
+    if (!/防御する/.test(text)) F("主人公の手（防御）で解かれない");
+    if (!/仲間アは防御を固めて|仲間イは防御を固めて/.test(text)) F("仲間の手（防御）で解かれない");
     if (whoName(S) !== "you" || (S.combat && S.combat.f3ord && Object.keys(S.combat.f3ord).length)) F("一巡のあと、主人公の番に戻らない（か、指示が残る）");
   }
 

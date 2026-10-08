@@ -1,7 +1,7 @@
-// F4：戦闘の手を 5 つの見出し（攻撃・戦技・魔法・その他・道具）にまとめる（engine/zzzzzzzzzzzzzz_f4_menu.js）
+// F4：戦闘の手を 6 つの見出し（攻撃・防御・戦技・魔法・その他・道具。防御は F9）にまとめる（engine/zzzzzzzzzzzzzz_f4_menu.js）
 // - どの職業・どの手番でも、すべての手が 5 つの見出しのどれかの組（cat）に入る。見出しは決まった順で、同じ見出しは一度だけ（作戦・仲間への指示はその他の小見出し）
 // - 中身の無い見出しは出ない。戦技は技を持つときだけ、魔法は術があるときだけ
-// - 手の振り分け：ふつうの攻撃・急所は攻撃、気力の技は戦技、術は魔法、守る・逃げるはその他、持ち物と目つぶしは道具
+// - 手の振り分け：ふつうの攻撃は攻撃、防御（古い躱すも）は防御、気力の技は戦技、術は魔法、逃げる・話すはその他、持ち物と目つぶしは道具
 // - 「誰に使う？」（B5 の相手選び）の間はまとめない
 // - 画面のまとめ方（u13_menu.js）：見出しの札は 5 つの順。仲間がいて組が見出しより多くても、まとめた組の数が描いた組の数と合う（合わないと見出しが出ない）
 // - 「前と同じ」：前の手番の手が今も選べれば返す。作戦・指示（手番が進まない）は数えない
@@ -15,7 +15,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const D = G.data;
   const F4 = G.f4;
   if (!F4 || !F4.arrange || !F4.catOf) { fail("G.f4 が無い"); return; }
-  const CATS = ["attack", "tech", "magic", "misc", "item"];
+  const CATS = ["attack", "guard", "tech", "magic", "misc", "item"];
 
   const begin = (seed, cls, comps) => {
     G.rand = seeded(seed);
@@ -49,10 +49,11 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       if (g.sub && !heads.has("misc") && !gs.some((x) => x.cat === "misc" && !x.sub)) { /* 守る・逃げるが無い場面でも小見出しだけは出てよい */ }
       g.list.forEach((a) => {
         const id = a.id;
-        if (/^cb:(attack|vital)$/.test(id) && g.cat !== "attack") fail(`${where}：${id} が攻撃に無い`);
+        if (/^cb:attack$/.test(id) && g.cat !== "attack") fail(`${where}：${id} が攻撃に無い`);
         if (/^cb:k1:/.test(id) && g.cat !== "tech") fail(`${where}：${id} が戦技に無い`);
         if (/^cb:item:/.test(id) && g.cat !== "item") fail(`${where}：${id} が道具に無い`);
-        if (/^cb:(guard|flee)$/.test(id) && g.cat !== "misc") fail(`${where}：${id} がその他に無い`);
+        if (/^cb:guard$/.test(id) && g.cat !== "guard") fail(`${where}：${id} が防御に無い`);
+        if (/^cb:flee$/.test(id) && g.cat !== "misc") fail(`${where}：${id} がその他に無い`);
         const m = id.match(/^cb:([^:]+)/);
         if (m && D.SPELLS && D.SPELLS[m[1]] && g.cat !== "magic") fail(`${where}：術 ${id} が魔法に無い`);
       });
@@ -109,7 +110,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   }
 
   // ---------------------------------------------------------------- 振り分け（id から）
-  const want = { "cb:attack": "attack", "cb:vital": "attack", "cb:k1:k1_x": "tech", "cb:item:herb": "item", "b5:pick:item:herb": "item", "cb:f1throw": "item", "cb:guard": "misc", "cb:flee": "misc", "cb:talk": "misc", "cb:pray": "misc" };
+  const want = { "cb:attack": "attack", "cb:k1:k1_x": "tech", "cb:item:herb": "item", "b5:pick:item:herb": "item", "cb:f1throw": "item", "cb:guard": "guard", "cb:f1dodge": "guard", "cb:flee": "misc", "cb:talk": "misc", "cb:pray": "misc" };
   const sp = Object.keys(D.SPELLS || {})[0];
   if (sp) want["cb:" + sp] = "magic";
   for (const [id, c] of Object.entries(want)) if (F4.catOf(id, "") !== c) fail(`${id} の見出しが ${F4.catOf(id, "")}（${c} のはず）`);
@@ -155,7 +156,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (F4.lastAction(S)) fail("まだ何もしていないのに「前と同じ」がある");
     G.act("cb:guard");
     const a = F4.lastAction(S);
-    if (!a || a.id !== "cb:guard") fail(`身を守ったあと「前と同じ」が身を守るにならない（${a && a.id}）`);
+    if (!a || a.id !== "cb:guard") fail(`防御したあと「前と同じ」が防御にならない（${a && a.id}）`);
     G.act("f3:tac:shield");
     const b = F4.lastAction(S);
     if (!b || b.id !== "cb:guard") fail("作戦を変えると「前と同じ」が変わる");

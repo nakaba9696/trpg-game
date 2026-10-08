@@ -192,9 +192,7 @@ export function makeBot(G, goal, opt = {}) {
     const wAvg = w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2] + (w.stat === "筋力" ? Math.floor(G.s5Pow(S.stats.筋力) / 15) : Math.floor(G.s5Pow(S.stats.敏捷) / 20));
     const cand = [];
     const atk = get("cb:attack");
-    if (atk) cand.push(["cb:attack", (pct(atk) / 100) * wAvg]);
-    const vit = get("cb:vital");
-    if (vit) cand.push(["cb:vital", (pct(vit) / 100) * (w.dmg[0] * (w.dmg[1] + 1) / 2 + w.dmg[2] + Math.floor(G.s5Pow(S.stats.敏捷) / 15)) * 2]);
+    if (atk) cand.push(["cb:attack", (pct(atk) / 100) * wAvg * (1 + (G.cb && G.cb.critBonus ? G.cb.critBonus() : 0) / 100)]); // F9：急所の手は無くなり、会心の見込みに
     const fire = get("cb:fire");
     const majinWall = t && D.ENEMIES[t.id].majin && !w.pierce;
     if (fire && !majinWall && S.mp >= 3) cand.push(["cb:fire", (pct(fire) / 100) * (7 + Math.floor(G.s5Pow(S.stats.魔力) / 8)) * (S.mp >= 9 || boss ? 1 : 0.8)]);
