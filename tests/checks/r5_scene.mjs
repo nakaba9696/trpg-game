@@ -1,4 +1,4 @@
-// R5：背景が場面と合う（src/engine/zzzzzzzzzzzzzzzz_r5_scene.js・src/data/r5_scenes.js・src/ui/zzzzzzzz_r5_scene.js）
+// R5：背景が場面と合う（src/engine/zzzzzzzzzzzzzzzz_r5_scene.js・src/data/r5_scenes.js・src/ui/zzzzzz_r5_scene.js）
 // - 対応表の名前がすべて描ける絵（canvas の絵がある）：施設の室内・特色の場所（w8s・w9s）・地方の道中・海の旅
 // - 出来事の表：出来事があり、施設の種類が分かる。本文の書き出しが施設の中なのに表に無い出来事が無い（見落とし探し。外の出来事は D.R5_OUTDOOR）
 // - 場面ごと：道中の戦闘は野の絵（町の絵でない）・酒場の中の出来事は酒場・施設から始まった出来事と戦闘はその施設・迷宮の中は迷宮のまま・町の通りはそのまま
@@ -121,7 +121,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const got = [];
   G.paintScene = (cv, opt) => got.push([cv.id, opt.key]);
   G.ui = undefined;
-  vm.runInContext(readFileSync(new URL("zzzzzzzz_r5_scene.js", dir), "utf8"), vmc, { filename: "ui/zzzzzzzz_r5_scene.js" });
+  vm.runInContext(readFileSync(new URL("zzzzzz_r5_scene.js", dir), "utf8"), vmc, { filename: "ui/zzzzzz_r5_scene.js" });
   reset("karna"); G.startEvent("f2_majin_2");
   G.paintScene({ id: "scene" }, { key: townScene });
   G.paintScene({ id: "other" }, { key: townScene });

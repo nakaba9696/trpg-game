@@ -1,5 +1,5 @@
 // R5：#scene の背景を場面に合わせる（道中の戦闘は道中の野の絵、酒場の中の出来事は酒場の室内）。決め方はエンジン（src/engine/zzzzzzzzzzzzzzzz_r5_scene.js の G.r5.sceneOf）。
-// ui.js は書き換えず、G.paintScene をいちばん外から包む（名前の z の数で、v1_stage.js・v9_pc.js・w9_spots.js より後に読ませる）。
+// ui.js は書き換えず、G.paintScene をいちばん外から包む（名前の z の数で、v1_stage.js・v9_pc.js・w9_spots.js より後、F5 の描き直しの包み（zzzzzzz_f5_finish.js）より前に読ませる）。
 // ui.js の描き直しの印には場面の種類が入っていないので、G.ui.render を包み、決まった絵が変わったら描き直す。レーン A（R5）
 (function (G) {
   const paint0 = G.paintScene;
