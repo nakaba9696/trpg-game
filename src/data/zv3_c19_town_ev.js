@@ -171,6 +171,8 @@
     },
   );
 
+  D.R5_EVENT_SCENE = Object.assign(D.R5_EVENT_SCENE || {}, { c19_clar_song: "church" });
+
   // ================================================================ 特色の場所の行い：マルグリットとヒルデガルトの二度目の場面の入口（町の出来事の数は増やさない）
   const SP = D.W9_SPOTS || {};
   if (SP.w9_theater) SP.w9_theater.acts.push({
