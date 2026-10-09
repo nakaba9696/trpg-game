@@ -120,6 +120,8 @@
   }
   // scene.js と同じ並べ方で、敵の立ち位置を出す
   function spot(i, n, boss, L) {
+    // 舞台の配置（V9。スマホは U31 が大きく並べ直す）があれば、それと同じ立ち位置に
+    if (G.v9 && G.v9.foeSpot && document.body.classList.contains("v9pc")) return G.v9.foeSpot(i, n, boss, L.w, L.h);
     const x = L.w * (n === 1 ? 0.5 : 0.22 + (0.56 * i) / Math.max(1, n - 1));
     const s = L.h * (boss ? 0.78 : 0.58) * (n > 2 ? 0.85 : 1);
     return { x, base: L.h * 0.97, s };
