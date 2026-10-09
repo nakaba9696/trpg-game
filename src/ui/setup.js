@@ -221,12 +221,15 @@
     s4.append(g3, eff("goal"));
     const gcards = h("div", "cards compact");
     const cg = h("div", "field");
-    const setGoalFine = () => { gFine.textContent = draft.goal === "custom" ? TX.customFine : TX.goalFine; cg.hidden = draft.goal !== "custom"; };
+    const setGoalFine = () => { gFine.textContent = draft.goal === "custom" ? TX.customFine : draft.goal === "none" ? TX.noneFine || "" : TX.goalFine; cg.hidden = draft.goal !== "custom"; };
+    // 目的は旅の目安（果たしても果たさなくてもいい）。「自分で決める」（hidden）は選べない（R7c）
+    s4.append(h("p", "fine creGoalNote", TX.goalNote || ""));
     Object.entries(D.GOALS).forEach(([id, g]) => {
+      if (g.hidden && draft.goal !== id) return;
       const l = h("label", "card");
       const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
       inp.onchange = () => { draft.goal = id; setGoalFine(); };
-      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text));   // 行き先・手順は出さない（目指すことだけ）
+      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text || g.blurb || ""));   // 行き先・手順は出さない（目指すことだけ）
       gcards.append(l);
     });
     s4.append(gcards);
@@ -384,7 +387,7 @@
     const top = h("header", "csTop");
     const nm = h("div");
     nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, p.sex].join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）`));
-    nm.append(h("span", "csLine", `目的：${o.goalText}${o.goal === "custom" ? (D.CRE_TEXT || {}).customSheet || "" : ""}`));
+    nm.append(h("span", "csLine", `目的：${o.goalText || "なし"}${o.goal === "custom" ? (D.CRE_TEXT || {}).customSheet || "" : ""}`));
     top.append(nm);
     paper.append(top);
 

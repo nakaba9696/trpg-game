@@ -626,7 +626,7 @@
     const S = {
       v: 1, id: "r" + Date.now().toString(36) + Math.floor(G.rand() * 1e6).toString(36),
       profile: { ...opt.profile }, cls: opt.cls, clsName: c.name,
-      goal: { id: opt.goal, text: opt.goalText || D.GOALS[opt.goal].text },
+      goal: { id: opt.goal, text: opt.goalText || (D.GOALS[opt.goal] || {}).text || "" },   // 目的なし（none）は text が空
       stats, caps: Object.fromEntries(D.STATS.map((k) => [k, 999])), startStats: { ...stats },   // caps は古い形のために置くだけ。上限としては使わない（S2）
       s5: 1, s5exp: {},   // 能力値は点（S5）。s5exp は次の点までの経験
       maxHp: G.maxHpOf(stats), hp: G.maxHpOf(stats), maxMp: G.maxMpOf(stats), mp: G.maxMpOf(stats),
@@ -641,7 +641,7 @@
     S.spells = [...((D.SPELL_START && D.SPELL_START[opt.cls]) || [])]; // 覚えている術（M1）
     S.visited[S.loc] = true;
     const L = G.loc();
-    G.chron(`${L.name}にて、${c.name}${S.profile.name}の冒険が始まる。目的は「${S.goal.text}」`, "start");
+    G.chron(`${L.name}にて、${c.name}${S.profile.name}の冒険が始まる。${S.goal.text ? `目的は「${S.goal.text}」` : ""}`, "start"); // 目的なしなら目的に触れない（R7c）
     G.log("title", L.name);
     G.say(L.desc);
     G.say(`${S.profile.name}、${S.profile.age}歳。今日から、ここで生きていく。`);
