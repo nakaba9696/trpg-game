@@ -33,7 +33,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 URL = "http://127.0.0.1:7860"
 SIZE = {"portraits": (512, 640), "monsters": (512, 512)}
 MAXKB = {"portraits": 80, "monsters": 60}
-BGS = {"blue": ((20, 60, 200), "plain blue background"), "green": ((0, 170, 70), "plain green background"), "grey": ((128, 128, 128), "plain grey background")}
+BGS = {"blue": ((20, 60, 200), "plain blue background"), "green": ((0, 170, 70), "plain green background"), "grey": ((128, 128, 128), "plain grey background"),
+       "black": ((0, 0, 0), "plain black background")}
+AUTO = ("blue", "green", "grey")  # 自動で選ぶ色。黒は --bg black で指定したときだけ（光・気・煙・もやのある絵）
 
 
 def dry(kind, i):
@@ -59,20 +61,21 @@ def pick_bg(rgb, fg):
     """絵の中にいちばん少ない色の背景を選ぶ（その色に近い画素の割合が小さいもの）"""
     px = rgb[fg].astype(np.float32)
     best, score = "blue", 9.0
-    for name, (c, _) in BGS.items():
+    for name in AUTO:
+        c = BGS[name][0]
         near = (np.abs(px - np.array(c, np.float32)).max(axis=1) < 70).mean() if len(px) else 0
         if near < score:
             best, score = name, near
     return best
 
 
-def build_init(orig_path, mask_path, size):
+def build_init(orig_path, mask_path, size, force=""):
     """土台：元の絵の、体（mask の透明でない所）はそのまま、背景だけを単色に。
     mask は BiRefNet＋色を残す切り抜き（白い服・白い肌を背景と見なさないため。色だけで決めると白い服まで塗ってしまう）"""
     o = np.array(Image.open(orig_path).convert("RGB").resize(size, Image.LANCZOS)).astype(np.float32)
     c = np.array(Image.open(mask_path).convert("RGBA").resize(size, Image.LANCZOS)).astype(np.float32)
     a = c[..., 3:] / 255
-    name = pick_bg(o.astype(np.uint8), a[..., 0] > 0.5)
+    name = force or pick_bg(o.astype(np.uint8), a[..., 0] > 0.5)
     col = np.array(BGS[name][0], np.float32)
     return Image.fromarray((o * a + col * (1 - a)).astype(np.uint8)), name
 
@@ -102,6 +105,19 @@ def despill(im, bgname, band=4):
     return Image.fromarray(np.dstack([r, g, b, alpha]).clip(0, 255).astype(np.uint8), "RGBA")
 
 
+def black_key(src, mask_rgba, lo=12, hi=90):
+    """黒の上に描いた絵：体は BiRefNet の透明度、光・気・煙は黒からの明るさの透明度。2 つの大きい方を使い、色は黒から割り戻す"""
+    c = np.array(Image.open(src).convert("RGB")).astype(np.float32)
+    m = np.array(mask_rgba)[..., 3].astype(np.float32) / 255
+    lum = np.clip((c.max(axis=2) - lo) / (hi - lo), 0, 1)
+    a = np.maximum(m, lum)
+    # 光の所（体の外）は c = a·F（黒の上）なので F = c / a。体の中は c のまま
+    glow = (lum > m)[..., None]
+    f = np.where(glow, c / np.maximum(a, 0.05)[..., None], c)
+    f[a <= 0] = 0
+    return Image.fromarray(np.dstack([f.clip(0, 255), a * 255]).astype(np.uint8), "RGBA")
+
+
 def save(im, path, kind):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     for q in (88, 84, 80, 76, 72, 68):
@@ -127,6 +143,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--den", type=float, default=0.4)
     ap.add_argument("--init-cut", default="")
+    ap.add_argument("--bg", default="", choices=["", *BGS], help="描き直しの背景の色を決める（光・気・煙のある絵は black）")
     ap.add_argument("--step", default="mask,draw,cut", help="mask（元の絵の体の形）・draw（描く）・cut（抜く＋despill）")
     ap.add_argument("ids", nargs="+")
     a = ap.parse_args()
@@ -153,7 +170,7 @@ def main():
             t = time.time()
             settings, pos, neg = dry(a.kind, i)
             W, H = settings.get("width", 1024), settings.get("height", 1024)
-            init, bg = build_init(os.path.join(a.orig, a.kind, i + ".webp"), os.path.join(masks, i + ".webp"), (W, H))
+            init, bg = build_init(os.path.join(a.orig, a.kind, i + ".webp"), os.path.join(masks, i + ".webp"), (W, H), a.bg)
             if a.init_cut and os.path.exists(os.path.join(a.init_cut, a.kind, i + ".webp")):
                 # 土台を透明つきの絵（木を消したティモなど）にする：mask の色をそのまま使う
                 c = np.array(Image.open(os.path.join(masks, i + ".webp")).convert("RGBA").resize((W, H), Image.LANCZOS)).astype(np.float32)
@@ -175,8 +192,11 @@ def main():
             if not os.path.exists(src) or os.path.exists(dst):
                 continue
             bg = json.load(open(os.path.join(raw, i + ".json")))["bg"]
-            im = cm.cut(ses, src, remove, keep_color=True, key=(40, 110))
-            save(despill(im, bg), dst, a.kind)
+            if bg == "black":
+                im = black_key(src, cm.cut(ses, src, remove))
+            else:
+                im = despill(cm.cut(ses, src, remove, keep_color=True, key=(40, 110)), bg)
+            save(im, dst, a.kind)
             print(f"cut {i}", flush=True)
 
 
