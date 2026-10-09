@@ -91,7 +91,7 @@
    "region": "レオネスト王国",
    "name": "エル・ナフ遺構",
    "pack": "west",
-   "tags": "ancient ruins, broken white stone pillars standing in tall grass like ribs, crumbling stone stairs leading underground, huge circular stone tablet carved with symbols, overgrown"
+   "tags": "ancient sunken temple of a lost kingdom, broken white stone pillars standing in tall grass like ribs, the ground line of a sinking visible on the walls, sand and earth pouring into a stairway leading underground, huge circular stone tablet carved with symbols, overgrown"
   },
   {
    "id": "w3_bells",
@@ -271,7 +271,7 @@
    "region": "レオネスト王国",
    "name": "灰の観測所",
    "pack": "leonest",
-   "tags": "half-buried domed observatory in volcanic ash, on a volcano slope, door boarded up with planks, ash-covered ground"
+   "tags": "half-buried domed observatory in volcanic ash on a volcano slope, round dome with star-shaped holes, listening tubes into the mountain, door boarded up with planks, ash-covered ground, smoking volcano above"
   },
   {
    "id": "frost",
@@ -372,7 +372,7 @@
    "region": "ノルディア帝国",
    "name": "古い鉄の道",
    "pack": "nordia",
-   "tags": "abandoned mine entrance in a snowy mountain, ancient iron railway tracks leading inside, boarded wooden barricade, rusted machinery"
+   "tags": "abandoned mine in snowy mountains, ancient straight iron rails running into the mountainside, a rounded white-metal carriage stopped on the slope, wooden boards nailed over a tunnel mouth"
   },
   {
    "id": "fort",
@@ -472,7 +472,7 @@
    "region": "人と魔の境",
    "name": "断界の古関",
    "pack": "border",
-   "tags": "ancient massive stone gatehouse sealing a mountain crevice, unreadable inscription above the gate, height notches carved on the gate, cliffs"
+   "tags": "colossal ancient gatehouse blocking a mountain pass, towering gate far taller than any door, height notches carved on the gateposts, scale pans hanging beside the gate, uncarved weathered stone, snowy peaks"
   },
   {
    "id": "w2_echo",
@@ -1265,7 +1265,7 @@
    "scene": "ruins_in",
    "name": "エル・ナフ遺構の中",
    "pack": "dungeon_a",
-   "tags": "inside ancient ruins, underground temple hall, broken pillars, carved glyphs, dust, light from cracks in the ceiling",
+   "tags": "inside a sunken ancient temple, prayer hall with hundreds of kneeling hollows in the floor, broken white pillars, sand drifting from cracks in the ceiling into small heaps, carved glyphs, dust in shafts of light",
    "trial": true
   },
   {
@@ -1282,7 +1282,7 @@
    "scene": "w3_ashvault_in",
    "name": "灰の観測所の中",
    "pack": "dungeon_a",
-   "tags": "inside an abandoned observatory, ash-covered telescope, broken instruments, boarded windows, dome ceiling"
+   "tags": "inside an ancient volcano watch-house observatory, ash-covered shelves of identical ledgers, brass rings of a moon calendar, listening holes in the wall, dome ceiling with star holes clogged by ash"
   },
   {
    "id": "in_w4_rail",
@@ -1290,7 +1290,7 @@
    "scene": "w4_rail_in",
    "name": "古い鉄の道の中",
    "pack": "dungeon_a",
-   "tags": "abandoned mine tunnel, ancient iron rails, rusted machinery, timber supports, darkness"
+   "tags": "ancient mine tunnel, straight iron rails, white metal walls scraped in streaks, old water pipes with valves, a rounded white carriage stopped on the tracks with soot shadows in the seats, timber supports, darkness"
   },
   {
    "id": "in_w4_pass",
@@ -1298,7 +1298,47 @@
    "scene": "w4_pass_in",
    "name": "断界の古関の中",
    "pack": "dungeon_b",
-   "tags": "inside an ancient gatehouse, massive stone corridors, giant doors, carved runes"
+   "tags": "inside an ancient border gatehouse, giant stone corridors, height notches on the walls, tally marks, enormous doors with bars on both sides, carved runes"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "dungeon_a",
+   "id": "in_w12_hall",
+   "scene": "w12_hall_in",
+   "name": "エル・ナフ遺構：光の回廊（仕掛けを解いた先）",
+   "tags": "long secret gallery behind an ancient altar, beams of sunlight bounced by old mirrors from wall to wall, painted murals of a glowing ancient city with dragons and floating ships, gold trims, dust motes, no sand, golden light at the far altar"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "dungeon_b",
+   "id": "in_w12_dome",
+   "scene": "w12_dome_in",
+   "name": "灰の観測所：星図の天井（仕掛けを解いた先）",
+   "tags": "round underground chamber with a painted star map dome ceiling, gold constellation lines and concentric moon calendar rings, a red moon in the center of the dome, clean floor with a great calendar disc, candles, awe"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "realm",
+   "id": "in_w12_gate",
+   "scene": "w12_gate_in",
+   "name": "断界の古関：取引の大広間（仕掛けを解いた先）",
+   "tags": "colossal hall beyond giant opened doors far taller than any door, enormous pillars with height notches, huge hanging scale pans, a giant staircase climbing upward into cold blue light, tiny torch for scale"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "dungeon_b",
+   "id": "in_w12_station",
+   "scene": "w12_station_in",
+   "name": "古い鉄の道：待合の間（仕掛けを解いた先）",
+   "tags": "ancient underground station hall, rounded white-metal carriages lined along the platform, faint glowing lamp stones in a vaulted ceiling, water pipes with brass valves, human-shaped soot shadows in the carriage windows, eerie stillness"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "dungeon_a",
+   "id": "in_w12_vault",
+   "scene": "w12_vault_in",
+   "name": "エル・ナフ遺構の祭壇の下：沈んだ都を見下ろす窓",
+   "tags": "small stone study with walls covered in scribbled writing, arched window looking down into a vast underground cavern, an entire ancient city sunk in the earth below with roofs towers and streets, roots hanging from the earth ceiling, a glowing white lamp stone on a desk, breathtaking"
   },
   {
    "id": "in_w2_acid",
