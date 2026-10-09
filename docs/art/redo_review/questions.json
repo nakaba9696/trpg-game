@@ -38,9 +38,10 @@
   "id": "celestin",
   "file": "docs/art/redo_review/celestin.webp",
   "moods": "docs/art/redo_review/celestin_moods.webp",
-  "what": "（WebUI が要る）手の青い物を外すか、分かる物にする。表情の差分も描き直す",
-  "status": "needs_webui",
-  "answer": null
+  "what": "(b) 手の青く光る物を外し、腰の札を光らない紙にした。木なしで長弓を持つ（表情の差分も）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/celestin_check.webp"
  },
  {
   "id": "clarisse",
@@ -192,9 +193,10 @@
   "id": "gerhard",
   "file": "docs/art/redo_review/gerhard.webp",
   "moods": "docs/art/redo_review/gerhard_moods.webp",
-  "what": "（WebUI が要る）手の小さい家を外す。表情の差分も描き直す",
-  "status": "needs_webui",
-  "answer": null
+  "what": "(b) 小さい家を外し、両手をベルトに置く形で描き直した（表情の差分も）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/gerhard_check.webp"
  },
  {
   "id": "noeris",
@@ -226,9 +228,10 @@
   "id": "souhaku",
   "file": "docs/art/redo_review/souhaku.webp",
   "moods": "docs/art/redo_review/souhaku_moods.webp",
-  "what": "（WebUI が要る）手が 3 本 → 描き直す。表情の差分も描き直す",
-  "status": "needs_webui",
-  "answer": null
+  "what": "(b) 手が 2 本の形で描き直した（釣り竿を肩に、片手を腰に。表情の差分も）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/souhaku_check.webp"
  },
  {
   "id": "margot",
@@ -432,9 +435,11 @@
  {
   "id": "albert",
   "file": "docs/art/redo_review/albert.webp",
-  "what": "（WebUI が要る）髪の後ろに白い部分が残る → 立ち絵を作り直す。表情の差分も描き直す",
-  "status": "needs_webui",
-  "answer": null
+  "what": "(b) 描き直した（髪の後ろの白が残らない絵。鼻眼鏡）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/albert_check.webp",
+  "moods": null
  },
  {
   "id": "angelica",
@@ -489,9 +494,11 @@
  {
   "id": "valdun",
   "file": "docs/art/redo_review/valdun.webp",
-  "what": "（WebUI が要る）手に持つ変な物を外す（何も持たせないか、世界観に合う普通の物）。表情の差分も描き直す",
-  "status": "needs_webui",
-  "answer": null
+  "what": "(b) 手に持つ物を外し、腕を組む形で描き直した（表情の差分も）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/valdun_check.webp",
+  "moods": "docs/art/redo_review/valdun_moods.webp"
  },
  {
   "id": "timo",

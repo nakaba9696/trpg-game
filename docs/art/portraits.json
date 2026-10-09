@@ -995,7 +995,8 @@
    "identity": "1boy, male focus, adult, 36 years old, grey hair, long hair, brown eyes, sharp eyes, round pince-nez, white priest vestment, blue cape, sun emblem",
    "tags": "priest, pushing up pince-nez",
    "face": "calm",
-   "memo": "鼻眼鏡の司祭。眼鏡を押し上げる癖"
+   "memo": "鼻眼鏡の司祭。眼鏡を押し上げる癖",
+   "art": 2
   },
   {
    "id": "dominik",
@@ -1919,7 +1920,8 @@
     "faint_smile": "slight smile, soft eyes, closed mouth",
     "troubled": "troubled, worried eyebrows, awkward smile, scratching between horns"
    },
-   "memo": "C8・仲間。断界山脈の山の民の長。竜の血で角と鱗の大男。熱血で民思い、押し花と詩の帳面"
+   "memo": "C8・仲間。断界山脈の山の民の長。竜の血で角と鱗の大男。熱血で民思い、押し花と詩の帳面",
+   "art": 2
   },
   {
    "id": "gensai",
@@ -2260,7 +2262,7 @@
    "name": "セレスティン",
    "type": "bishonen",
    "file": "assets/portraits/celestin.webp",
-   "identity": "1boy, male focus, elf, pointy ears, young man, slender, pale skin, green hair, dark green hair, long hair, single braid, cyan eyes, sleepy eyes, thin eyebrows, silver earring, dark green hooded cloak, silver chain clasp, leather bracer, longbow, small paper charm tied at waist",
+   "identity": "1boy, male focus, elf, pointy ears, young man, slender, pale skin, green hair, dark green hair, long hair, single braid, cyan eyes, sleepy eyes, thin eyebrows, silver earring, dark green hooded cloak, silver chain clasp, leather bracer, longbow, paper talisman strip tied at waist",
    "tags": "standing, holding a longbow in one hand, other hand empty at his side, looking up at the sky",
    "face": "blank stare, absent-minded",
    "variants": {
