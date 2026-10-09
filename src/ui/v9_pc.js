@@ -5,7 +5,7 @@
 //   ・戦闘：魔物の一枚絵を中央〜右に大きく、味方を左に小さく、文章と行動は下の帯に
 //   ・操作：選択肢は 1〜9 のキー、Enter で次へ（文章の続き。選択肢は押さない）、Esc で開いている窓を閉じる。手引きの用語にマウスを乗せると短い説明
 //   ・演出：場面が変わると暗転してフェード。出来事の大事な場面（大成功・大失敗・トロフィー・人との出会い）で少し光る・揺れる
-// 幅が足りない画面（スマホ・小さな窓）では何もしない（今の縦に積む画面のまま）。凝った見せ方は PC だけ。
+// 幅が足りない画面（スマホ・小さな窓）は、U31（ui/zzzzz_u31_mobile.js）が v9.mobileOn と縦長・横長の配置を足して、同じ舞台を使う。
 // 立ち絵は V5（G.stand.whoOf・sig・big・nameOf）で人を決め、G.drawPortrait（V4 の画像・V8 の表情の差し替えが包む入口）で描く。
 // 魔物は V6 の G.paintMonster で描く（並べ方は scene.js・fx.js と同じ）。見た目は ui/v9_pc.css。レーン U（画面）が管理
 (function (G) {
@@ -174,7 +174,8 @@
   window.addEventListener("resize", () => { vwMemo = RO ? readVw() : 0; }, true);
   const vh = () => window.innerHeight;
   const playing = () => { const p = $("#play"); return !!(p && !p.hidden && G.S); };
-  const on = () => v9.isPC(vw(), vh()) && playing();
+  // U31：スマホ・狭い窓でも、同じ舞台の配置（縦長・横長のスマホ向けの形。ui/zzzzz_u31_mobile.js が v9.mobileOn と配置を足す）
+  const on = () => (v9.isPC(vw(), vh()) || !!(v9.mobileOn && v9.mobileOn(vw(), vh()))) && playing();
   v9.on = on;
 
   // ---------------------------------------------------------------- 部品を足す
@@ -414,6 +415,8 @@
   // ---------------------------------------------------------------- 選択肢の番号
   const acts = () => Array.from(document.querySelectorAll("#panel .act"));
   function numberActs() {
+    // U31：スマホ（キーボードの無い画面）では番号を付けない
+    if (body.classList.contains("u31m")) { document.querySelectorAll("#panel .act > .v9key").forEach((k) => k.remove()); return; }
     acts().forEach((b, i) => {
       if (i >= 9 || b.querySelector(".v9key")) return;
       const k = h("kbd", "v9key", String(i + 1));

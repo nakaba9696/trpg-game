@@ -27,7 +27,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const TH = D.F2_THREADS || {};
     if (Object.keys(TH).length < 4) F("因縁が四つ無い");
     if (!G.f2o || G.f2o === G.f2) F("G.f2o が無いか、図鑑の G.f2 と同じ入れ物（名前がぶつかる）");
-    for (const g of Object.keys(D.GOALS)) if (g !== "custom" && !TH[g]) F(`目的 ${g} の因縁が無い`);
+    for (const g of Object.keys(D.GOALS)) if (D.GOALS[g].text && !TH[g]) F(`目的 ${g} の因縁が無い`); // 目的の文が無いもの（自分で決める・目的なし）は名前から因縁を選ぶ
     for (const [home, wild] of Object.entries(D.F2_WILD)) {
       const near = D.LOCS[home].legs || D.LOCS[home].links || {};   // C16：近さは道のり（links は日数に直してある）
       const d = near[wild];
@@ -77,7 +77,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
           if (!S.f2o || S.f2o.step !== 1 || S.f2o.home !== home) { F(`${cls}/${goal}: 因縁を持たない`); continue; }
           seen.add(S.f2o.th);
           const th = D.F2_THREADS[S.f2o.th];
-          if (goal !== "custom" && S.f2o.th !== goal) F(`${cls}/${goal}: 目的と違う因縁 ${S.f2o.th}`);
+          if (D.GOALS[goal].text && S.f2o.th !== goal) F(`${cls}/${goal}: 目的と違う因縁 ${S.f2o.th}`);
           if (!S.log.some((x) => x.text === th.arrive)) F(`${cls}/${goal}: 着いた文に因縁が無い`);
           const t = top(G);
           if (!t || t.title !== th.title || t.list[0].id !== "f2o:1") F(`${cls}/${goal}: 因縁が行動の欄のいちばん上に無い`);

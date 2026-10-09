@@ -292,7 +292,7 @@
   });
   function keyTen() {
     const b = document.querySelectorAll("#panel .act")[9];
-    if (!b || b.querySelector(".v9key") || !document.body.classList.contains("v9pc")) return;
+    if (!b || b.querySelector(".v9key") || !document.body.classList.contains("v9pc") || document.body.classList.contains("u31m")) return;
     const k = h("kbd", "v9key", "0");
     k.setAttribute("aria-hidden", "true");
     b.prepend(k);

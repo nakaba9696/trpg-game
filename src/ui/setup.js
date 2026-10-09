@@ -221,12 +221,15 @@
     s4.append(g3, eff("goal"));
     const gcards = h("div", "cards compact");
     const cg = h("div", "field");
-    const setGoalFine = () => { gFine.textContent = draft.goal === "custom" ? TX.customFine : TX.goalFine; cg.hidden = draft.goal !== "custom"; };
+    const setGoalFine = () => { gFine.textContent = draft.goal === "custom" ? TX.customFine : draft.goal === "none" ? TX.noneFine || "" : TX.goalFine; cg.hidden = draft.goal !== "custom"; };
+    // 目的は旅の目安（果たしても果たさなくてもいい）。「自分で決める」（hidden）は選べない（R7c）
+    s4.append(h("p", "fine creGoalNote", TX.goalNote || ""));
     Object.entries(D.GOALS).forEach(([id, g]) => {
+      if (g.hidden && draft.goal !== id) return;
       const l = h("label", "card");
       const inp = h("input"); inp.type = "radio"; inp.name = "goal"; inp.value = id; inp.checked = draft.goal === id;
       inp.onchange = () => { draft.goal = id; setGoalFine(); };
-      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text));   // 行き先・手順は出さない（目指すことだけ）
+      l.append(inp, h("b", "", g.name), h("span", "", g.hint || g.text || g.blurb || ""));   // 行き先・手順は出さない（目指すことだけ）
       gcards.append(l);
     });
     s4.append(gcards);
@@ -315,8 +318,8 @@
     bh.append(h("span", "bonusLeft num" + (left ? " has" : ""), `残り ${left} 点`));
     const tb = cre.trophyBonus ? cre.trophyBonus() : 0;
     const ts = cre.trophyScore ? cre.trophyScore() : 0;
-    if (ts) bh.append(h("span", "trophyBonus num", `トロフィー ${ts} 点で +${tb}（次の +1 まであと ${cre.trophyNext()} 点）`));
-    bh.append(h("span", "fine", "好きな能力値に足す。トロフィーは銅 1・銀 2・金 5・白金 10 点で数え、10 点ごとにボーナス点 +1"));
+    if (ts) bh.append(h("span", "trophyBonus num", `トロフィーでボーナス +${tb}（トロフィーの点数 ${ts}。あと ${cre.trophyNext()} でボーナス +${tb + 1}）`));
+    bh.append(h("span", "fine", "ボーナスは、好きな能力値に配って足せます。トロフィーを集めるとボーナスが増えます（トロフィーの点数は銅 1・銀 2・金 5・白金 10。点数が 10 たまるごとにボーナス +1）"));
     box.append(bh);
     const list = h("div", "statlist creStats num");
     D.STATS.forEach((k) => {
@@ -384,7 +387,7 @@
     const top = h("header", "csTop");
     const nm = h("div");
     nm.append(h("b", "csName", p.name), h("span", "csLine", `${[c.name, p.sex].join("・")}・${p.age}歳（${D.AGES[p.ageBand].name}）`));
-    nm.append(h("span", "csLine", `目的：${o.goalText}${o.goal === "custom" ? (D.CRE_TEXT || {}).customSheet || "" : ""}`));
+    nm.append(h("span", "csLine", `目的：${o.goalText || "なし"}${o.goal === "custom" ? (D.CRE_TEXT || {}).customSheet || "" : ""}`));
     top.append(nm);
     paper.append(top);
 

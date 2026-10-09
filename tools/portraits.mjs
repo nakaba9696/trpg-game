@@ -1,7 +1,7 @@
 // docs/art/portraits.json（人物の絵の一覧。こちらが元）から docs/art/portraits.md（読む用の表）を作る。
 // node tools/portraits.mjs        … md を書き直す
 // tests/checks/v4_assets.mjs が、md が json と合っているかを見る（renderPortraitsMd を使う）
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -73,12 +73,28 @@ export function renderPortraitsMd(data) {
   types.push("| 獣 | 耳と尻尾のタグ |", "|---|---|");
   for (const [k, t] of Object.entries(beasts)) types.push(`| \`${k}\` | ${cell(t)} |`);
   types.push("");
-  // R5c：描き直し待ち（今の絵は載せない。その人は絵なし）
+  // R5c・R5d：画像のセッションへ。描き直し待ち（今の絵は載せない。その人は絵なし）と、まだ描いていない型
   const redo = portraits.filter((p) => p.redraw);
+  const wanted = portraits.filter((p) => p.group === "people" && !p.redraw && !["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(here, "..", p.file.replace(/\.webp$/, "." + e)))));
+  if (redo.length || wanted.length) {
+    const ids = (a) => a.map((p) => p.id).join(",");
+    L.push(`## 画像のセッションへ：描くもの（${redo.length + wanted.length}）`, "");
+    L.push("下の二つの表が、今描いてほしい絵のすべて（R5c・R5d）。タグは一覧（json）に入っているので、そのまま作れる：", "");
+    if (redo.length) L.push(`1. 描き直し：\`node tools/gen_portraits.mjs --only ${ids(redo)} --force --new-seed\`（今のファイルを上書きする。作ると一覧の \`redraw\` が消え、次のビルドから載る）`);
+    if (wanted.length) L.push(`${redo.length ? 2 : 1}. まだ描いていない型：\`node tools/gen_portraits.mjs --only ${ids(wanted)}\``);
+    L.push(`${(redo.length ? 1 : 0) + (wanted.length ? 1 : 0) + 1}. 港の用心棒（魔物の一覧）は [monsters.md](monsters.md) の「描き直し待ち」。`);
+    L.push("", "型の人・描き直し待ちの絵は、ネガティブに今の服の語（school uniform・necktie・zipper・hoodie など）が自動で足される（`tools/gen_portraits.mjs` の MODERN）。それでも今の服に見えたら `--new-seed` で作り直す。どれも胸から上・一人だけ・この世界（剣と魔法の中世風）の服。", "");
+  }
   if (redo.length) {
-    L.push(`## 描き直し待ち（${redo.length}）`, "", "今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（その人は絵なし。canvas には戻さない）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す。", "");
-    L.push("| ファイル | 名前 | 何が合わないか | どう直すか |", "|---|---|---|---|");
-    for (const p of redo) L.push(`| \`${p.file}\` | ${cell(p.name)} | ${cell(p.redraw.modern)} | ${cell(p.redraw.fix)} |`);
+    L.push(`## 描き直し待ち（${redo.length}）`, "", "今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（その人は絵なし。canvas には戻さない）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す（`gen_portraits.mjs` で作れば自動で外れる）。", "");
+    L.push("| ファイル | 名前 | 何が合わないか | どう直すか | 特徴のタグ |", "|---|---|---|---|---|");
+    for (const p of redo) L.push(`| \`${p.file}\` | ${cell(p.name)} | ${cell(p.redraw.modern)} | ${cell(p.redraw.fix)} | ${tagsCell(p)} |`);
+    L.push("");
+  }
+  if (wanted.length) {
+    L.push(`## まだ描いていない型（${wanted.length}）`, "", "年頃の合う型が無くて、絵の出ていない人のための型（R5b。年齢が 8 歳より離れた型は使わない）。描くまでは、その人は絵なし。", "");
+    L.push("| ファイル | 名前 | 特徴のタグ | 誰のため |", "|---|---|---|---|");
+    for (const p of wanted) L.push(`| \`${p.file}\` | ${cell(p.name)} | ${tagsCell(p)} | ${cell(String(p.memo || "").replace(/^名もない人の型の[二三]枚目（R5b：年頃の合う型が無かった人のため。/, "").replace(/。まだ描いていない）$/, ""))} |`);
     L.push("");
   }
   for (const [g, title, note] of GROUPS) {

@@ -217,7 +217,7 @@
       line(N.open),
       // 生い立ちは作成から無くした（U17）。古いセーブで書いてあった人だけ一言。無い人は生まれの行ごと出さない
       L.history ? line(T.BIRTH) : "",
-      L.ageN ? line(T.DEPART) : fill(`{start}から歩き出した。目当ては「{goal}」。`),
+      L.ageN ? line(T.DEPART) : L.goal ? fill(`{start}から歩き出した。目当ては「{goal}」。`) : fill(`{start}から歩き出した。`), // 目的なしなら目的に触れない（R7c）
     ].join(""));
 
     // 2. 印象的な出来事（人生の長さで数を決める。短い人生は短く、長い人生は選んで長くしすぎない）

@@ -3,7 +3,7 @@
 //   G.r5.person(who, evId) → { id, name, role } か null：src/data/r5_named.js の名のある人（出来事の id・who.seed・仲間の名前で当てる）
 //   G.r5.properName(name)  → who.name が名前で終わるか（「写し場の古株ヤン」「狩人頭のオルガ婆」「サンテール卿」。「量り売りの本屋の女主人」は違う）
 //   G.r5.named(who, evId)  → 名のある人か（キャラメモの人・v4 の名のある人・C3 の名のある人・上の二つ）。名のある人に型の絵は使わない（src/ui/v4_assets.js）
-//   G.r5.artId(who, evId)  → 名のある人の専用の絵の id（assets/portraits/<id>.webp。名前だけの人は ""）。名の無い人は null
+//   G.r5.artId(who, evId)  → 名のある人の専用の絵の id（assets/portraits/<id>.webp。名前だけの人と、表で mob の人は ""＝型の絵。R5b・R5d）。名の無い人は null
 //   G.whoTag を包み、r5_named.js の人の札を「名前（肩書き）」にする（型の札「冒険者」を出さない）
 // レーン A（R5）
 (function (G) {
@@ -29,7 +29,7 @@
     const m = /^(c2|v4):(.+)$/.exec(seed);
     if (m) return m[2];
     const p = R5.person(who, evId);
-    if (p) return p.id;
+    if (p) return (T()[p.id] || {}).mob ? "" : p.id;
     const pid = G.whoPerson ? G.whoPerson(who, evOf(who, evId)) : null;
     if (pid) return pid;
     if (R5.properName(who.name)) return "";

@@ -43,12 +43,13 @@ export function renderMonstersMd(data) {
   L.push("- 「**異形**」と書いた魔物（一覧の `style: \"eldritch\"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。");
   L.push("- 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。");
   L.push("");
-  // R5c：描き直し待ち（今の絵は載せない。その敵は絵なし）
+  // R5c・R5d：描き直し待ち（今の絵は載せない。その敵は絵なし）
   const redo = monsters.filter((m) => m.redraw);
   if (redo.length) {
-    L.push(`## 描き直し待ち（${redo.length}）`, "", "今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（戦闘では絵なし）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す。", "");
-    L.push("| ファイル | 名前 | 何が合わないか | どう直すか |", "|---|---|---|---|");
-    for (const m of redo) L.push(`| \`${m.file}\` | ${cell(m.name)} | ${cell(m.redraw.modern)} | ${cell(m.redraw.fix)} |`);
+    L.push(`## 描き直し待ち（${redo.length}）`, "", "今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（戦闘では絵なし）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す（`gen_portraits.mjs` で作れば自動で外れる。人の姿の敵は、ネガティブに今の服の語が自動で足される）。", "");
+    L.push(`作る：\`node tools/gen_portraits.mjs --monsters --only ${redo.map((m) => m.id).join(",")} --force --new-seed\`（人物の描き直しは [portraits.md](portraits.md) の「画像のセッションへ」）`, "");
+    L.push("| ファイル | 名前 | 何が合わないか | どう直すか | 特徴のタグ |", "|---|---|---|---|---|");
+    for (const m of redo) L.push(`| \`${m.file}\` | ${cell(m.name)} | ${cell(m.redraw.modern)} | ${cell(m.redraw.fix)} | ${cell(m.tags)} |`);
     L.push("");
   }
   for (const [g, title, note] of GROUPS) {

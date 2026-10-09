@@ -127,6 +127,9 @@ const baseOf = (p) => {
 };
 
 const join = P.joinTags;
+// R5d：型の人（kind_）・人の姿の敵・描き直し待ち（redraw）は、今の時代の服に寄らないよう、ネガティブに今の服の語を足す（R5c で現代の服に見えた絵の語）
+const MODERN = "modern clothes, contemporary fashion, school uniform, serafuku, necktie, collared shirt, polo shirt, t-shirt, hoodie, zipper, cardigan, suspenders, trench coat, epaulettes, tank top, shorts, pleated skirt, name tag, security guard, police uniform";
+const isPeriod = (p) => !!p.redraw || /^kind_/.test(p.id) || (MON && p.human);
 // 人の姿の敵（魔物の一覧の human: true）は、設定の human の項目で後置き・ネガティブを替える
 const styleOf = (p) => { const b = baseOf(p); return p.human && b.human ? Object.assign({}, b, b.human) : b; };
 // 男は style_male.json の drop_tags（頬の赤らみなど）を、人物のタグ・差分の表情からも外す（ネガティブにも入っている）
@@ -163,6 +166,7 @@ function bodyOf(p) {
   for (const k of PASS) if (st[k] !== undefined) b[k] = st[k];
   if (st.negative !== undefined && b.negative_prompt === undefined) b.negative_prompt = st.negative;
   if (b.negative_prompt) b.negative_prompt = negOf(p, b.negative_prompt);
+  if (isPeriod(p)) b.negative_prompt = joinNeg(b.negative_prompt, MODERN);
   return Object.assign(b, baseOf(p).extra || {});
 }
 async function txt2img(p) {
@@ -256,8 +260,8 @@ for (const p of todo) {
     const small = await shrink(p.id, png);
     const out = save(p.id, small);
     if (Number.isInteger(seed)) { seeds[p.id] = { seed, at: new Date().toISOString() }; writeFileSync(seedsPath, JSON.stringify(seeds, null, 1) + "\n"); }
-    // 絵の版（A9）：新しく描いた基本の絵の版を一覧に残す（差分をこの版の prefix で作るため）。作り直しの印（redo）も消す
-    if (!MON && (p.art !== P.artNow(style) || p.redo)) { p.art = P.artNow(style); delete p.redo; writeFileSync(JSON_PATH, JSON.stringify(data, null, 1) + "\n"); writeFileSync(MD_PATH, KIND.render(data)); }
+    // 絵の版（A9）：新しく描いた基本の絵の版を一覧に残す（差分をこの版の prefix で作るため）。作り直しの印（redo）と描き直し待ち（redraw。R5c）も消す（描いた絵が次のビルドから載る）
+    if (p.redraw || (!MON && (p.art !== P.artNow(style) || p.redo))) { if (!MON) p.art = P.artNow(style); delete p.redo; delete p.redraw; writeFileSync(JSON_PATH, JSON.stringify(data, null, 1) + "\n"); writeFileSync(MD_PATH, KIND.render(data)); }
     console.log(`${path.relative(root, out)}  ${(small.buf.length / 1024).toFixed(0)}KB  seed ${seed ?? "?"}${small.buf.length > (size.maxKB || 80) * 1024 ? `（${size.maxKB || 80}KB を超えた。webpQuality を下げる）` : ""}`);
     made++;
   } catch (e) {
