@@ -2812,7 +2812,7 @@
    "type": "classic",
    "file": "assets/portraits/kind_villager_m_b.webp",
    "identity": "1boy, male focus, adult, young man, 20 years old, dark brown hair, short hair, messy hair, brown eyes",
-   "tags": "townsperson, simple tunic",
+   "tags": "townsperson, simple linen tunic, rope belt",
    "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い町の男・徒弟・助手（15〜29 歳）が 22 件。まだ描いていない）"
   },
   {
@@ -2830,7 +2830,7 @@
    "name": "町の人（女・二）",
    "file": "assets/portraits/kind_villager_f_b.webp",
    "identity": "1girl, young woman, 18 years old, auburn hair, medium hair, braid, green eyes",
-   "tags": "townsperson, simple tunic, apron",
+   "tags": "townsperson, linen blouse, long skirt, apron",
    "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。町の娘（15〜19 歳）が 14 件。まだ描いていない）"
   },
   {
@@ -2840,7 +2840,7 @@
    "type": "ojisan",
    "file": "assets/portraits/kind_merchant_m.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes",
-   "tags": "merchant, vest, coin pouch",
+   "tags": "merchant, linen tunic, leather jerkin with laces, belt pouch, small scales, spectacles pushed up on forehead",
    "memo": "名もない人の型（仲間・出来事の人）",
    "redraw": {
     "modern": "ファスナー付きの多ポケットのベスト（釣り・撮影用のような）に襟付きのシャツ",
@@ -2854,7 +2854,7 @@
    "type": "classic",
    "file": "assets/portraits/kind_merchant_m_b.webp",
    "identity": "1boy, male focus, adult, young man, 24 years old, brown hair, short hair, brown eyes",
-   "tags": "merchant, vest, coin pouch",
+   "tags": "merchant, linen tunic, leather jerkin with laces, belt pouch",
    "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い商人・骨董屋（26〜28 歳）が 2 件。まだ描いていない）"
   },
   {
@@ -2863,7 +2863,7 @@
    "name": "商人（女）",
    "file": "assets/portraits/kind_merchant_f.webp",
    "identity": "1girl, woman, 30 years old, chestnut brown hair, bob cut, blunt bangs, violet eyes",
-   "tags": "merchant, vest, coin pouch",
+   "tags": "merchant, linen blouse, laced bodice, long skirt, belt pouch",
    "memo": "名もない人の型（仲間・出来事の人）",
    "art": 2,
    "redraw": {
@@ -2877,7 +2877,7 @@
    "name": "商人（女・二）",
    "file": "assets/portraits/kind_merchant_f_b.webp",
    "identity": "1girl, young woman, 17 years old, light brown hair, ponytail, brown eyes",
-   "tags": "merchant, vest, coin pouch, cart",
+   "tags": "merchant, linen blouse, laced bodice, long skirt, belt pouch",
    "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。荷馬車の娘（16 歳）が 1 件。まだ描いていない）"
   },
   {
@@ -2966,7 +2966,7 @@
    "type": "classic",
    "file": "assets/portraits/kind_noble_m.webp",
    "identity": "1boy, male focus, adult, man, 30 years old, black hair, short hair, spiky hair, black eyes",
-   "tags": "noble, elegant clothes, jewelry",
+   "tags": "noble, embroidered doublet, cape, signet ring",
    "memo": "名もない人の型（仲間・出来事の人）",
    "redraw": {
     "modern": "黒のタンクトップに腕輪（貴族に見えず、今の運動着に見える）",
@@ -2989,7 +2989,7 @@
    "name": "貴族（女・二）",
    "file": "assets/portraits/kind_noble_f_b.webp",
    "identity": "1girl, young woman, 17 years old, platinum blonde hair, long hair, blue eyes",
-   "tags": "noble, elegant clothes, jewelry",
+   "tags": "noble, embroidered gown, jewelry",
    "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い貴族の娘（17 歳）が 1 件。まだ描いていない）"
   },
   {
@@ -2999,7 +2999,7 @@
    "type": "ojisan",
    "file": "assets/portraits/kind_rogue_m.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes",
-   "tags": "rogue, bandana, dark leather clothes, dagger, scar",
+   "tags": "rogue, hooded cloak, leather jerkin, dagger at belt, scar",
    "memo": "名もない人の型（仲間・出来事の人）",
    "redraw": {
     "modern": "肩章とボタンの並ぶトレンチコート（近代の軍服に見える）",
@@ -3022,7 +3022,7 @@
    "name": "ならず者・盗賊（女）",
    "file": "assets/portraits/kind_rogue_f.webp",
    "identity": "1girl, woman, 30 years old, dark blue hair, long hair, blunt bangs, amber eyes",
-   "tags": "rogue, bandana, dark leather clothes, dagger, scar",
+   "tags": "rogue, hooded cloak, leather bodice, dagger at belt, scar",
    "memo": "名もない人の型（仲間・出来事の人）",
    "art": 2,
    "redraw": {
@@ -3104,7 +3104,7 @@
    "type": "brute",
    "file": "assets/portraits/kind_sailor_m.webp",
    "identity": "1boy, male focus, adult, man, 38 years old, orange hair, short hair, black eyes",
-   "tags": "sailor, striped shirt, bandana, earring",
+   "tags": "sailor, collarless striped tunic, knee breeches, head scarf, earring",
    "memo": "名もない人の型（仲間・出来事の人）",
    "redraw": {
     "modern": "襟付きの縞のポロシャツに黒のスラックス",
@@ -3118,7 +3118,7 @@
    "type": "classic",
    "file": "assets/portraits/kind_sailor_m_b.webp",
    "identity": "1boy, male focus, adult, young man, 22 years old, dark hair, short hair, tan skin, black eyes",
-   "tags": "sailor, striped shirt, bandana",
+   "tags": "sailor, collarless striped tunic, knee breeches, head scarf",
    "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い水夫・漁師（20〜29 歳）が 8 件。まだ描いていない）"
   },
   {
@@ -3127,7 +3127,7 @@
    "name": "船乗り（女）",
    "file": "assets/portraits/kind_sailor_f.webp",
    "identity": "1girl, woman, 30 years old, teal hair, medium hair, light blue eyes",
-   "tags": "sailor, striped shirt, bandana, earring",
+   "tags": "sailor, collarless striped tunic, knee breeches, head scarf, earring",
    "memo": "名もない人の型（仲間・出来事の人）",
    "art": 2,
    "redraw": {
@@ -3228,7 +3228,7 @@
    "type": "brute",
    "file": "assets/portraits/kind_host_m.webp",
    "identity": "1boy, male focus, adult, man, 38 years old, black hair, short hair, black eyes",
-   "tags": "innkeeper, apron, friendly smile",
+   "tags": "innkeeper, tavern keeper, linen shirt, rolled sleeves, plain apron, friendly smile",
    "memo": "名もない人の型（仲間・出来事の人）",
    "redraw": {
     "modern": "黒の半袖 T シャツ、キャラクターの顔の付いた前掛け",
@@ -3251,7 +3251,7 @@
    "type": "ojisan",
    "file": "assets/portraits/kind_beggar_m.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, black eyes",
-   "tags": "ragged clothes, dirty, tired",
+   "tags": "patched ragged tunic, rope belt, wrapped feet, dirty, tired",
    "memo": "名もない人の型（仲間・出来事の人）",
    "redraw": {
     "modern": "ボタン留めの襟付きシャツ（胸ポケット）にサスペンダー",
@@ -3264,7 +3264,7 @@
    "name": "物乞い・囚人（女）",
    "file": "assets/portraits/kind_beggar_f.webp",
    "identity": "1girl, woman, 30 years old, ash blonde hair, long hair, amber eyes",
-   "tags": "ragged clothes, dirty, tired",
+   "tags": "patched ragged dress, rope belt, barefoot, dirty, tired",
    "memo": "名もない人の型（仲間・出来事の人）",
    "art": 2,
    "redraw": {
@@ -3278,7 +3278,7 @@
    "name": "物乞い・囚人（女・二）",
    "file": "assets/portraits/kind_beggar_f_b.webp",
    "identity": "1girl, young woman, 19 years old, dark brown hair, long hair, messy hair, grey eyes",
-   "tags": "ragged clothes, dirty, tired",
+   "tags": "patched ragged dress, rope belt, barefoot, dirty, tired",
    "memo": "名もない人の型の二枚目（R5b：年頃の合う型が無かった人のため。若い逃亡奴隷・物乞い（20 歳）が 1 件。まだ描いていない）"
   },
   {
@@ -3385,7 +3385,7 @@
    "type": "boy",
    "file": "assets/portraits/kind_child_m.webp",
    "identity": "1boy, male focus, boy, child, 10 years old, white hair, short hair, grey eyes",
-   "tags": "simple clothes, small",
+   "tags": "child, simple linen tunic, rope belt, short trousers",
    "memo": "名もない子ども。子どもらしく",
    "redraw": {
     "modern": "紐付きの大きなパーカー",
@@ -3398,7 +3398,7 @@
    "name": "子ども（女）",
    "file": "assets/portraits/kind_child_f.webp",
    "identity": "1girl, girl, child, 10 years old, black hair, long hair, low twintails, blunt bangs, amber eyes",
-   "tags": "simple clothes, small",
+   "tags": "child, simple linen dress, apron, head kerchief",
    "memo": "名もない子ども。子どもらしく",
    "redraw": {
     "modern": "ボタン留めの桃色のカーディガンに襟とプリーツのスカート（今の子ども服）",
