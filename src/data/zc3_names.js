@@ -28,7 +28,8 @@
     raios: { name: "ライオス", role: "第一王子" },
     serios: { name: "セリオス", role: "第二王子" },
     farina: { name: "ファリナ", role: "第三王子" },
-    greol: { name: "グレオル", role: "第四王子" },
+    // 第四王子は、皇帝グレイオルと名が近すぎたので改めた（C19。前の名は was に残して古いセーブを読み替える）
+    greol: { name: "アルマン", full: "アルマン・レオネスト", role: "第四王子", was: ["グレオル"] },
     neilas: { name: "ネイラス", role: "第五王子" },
     tiria: { name: "ティリア", role: "第六王子" },
     sixth: { name: "オルヴェイン", full: "オルヴェイン＝ザイフェルト", role: "第六騎士団の団長", was: ["第六騎士団の団長"] },
