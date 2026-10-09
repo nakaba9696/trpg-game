@@ -6,6 +6,7 @@
 // - 仲間になる名のある人（シグルン・ロデリク・ケイル）も型の絵を使わない
 import { readFileSync, existsSync } from "node:fs";
 import vm from "node:vm";
+import { redrawKeys } from "../../tools/assets.mjs";
 
 export default ({ G, fail, ok }) => {
   const D = G.data;
@@ -18,7 +19,8 @@ export default ({ G, fail, ok }) => {
   // 型の絵は一覧（docs/art/portraits.json）にあるものだけ。名のある人の絵は、どの id でもあるふり
   const json = JSON.parse(readFileSync(new URL("../../docs/art/portraits.json", import.meta.url), "utf8"));
   // 「まだ描いていない」型（R5b）は一覧にあってもファイルが無いので、ファイルのあるものだけ
-  const kinds = new Set(json.portraits.filter((p) => p.group === "people" && existsSync(new URL("../../" + p.file, import.meta.url))).map((p) => p.id));
+  const redrawn = redrawKeys(); // 描き直し待ちの絵（R5c）は描いていないのと同じ
+  const kinds = new Set(json.portraits.filter((p) => p.group === "people" && existsSync(new URL("../../" + p.file, import.meta.url)) && !redrawn.has("portraits/" + p.id)).map((p) => p.id));
   const all = (only) => { G.ASSETS = new Proxy({}, { get: (t, k) => { if (typeof k !== "string" || !k.startsWith("portraits/")) return undefined; const id = k.slice(10); return (/^kind_/.test(id) ? kinds.has(id) : true) && (!only || only(id)) ? "x.webp" : undefined; } }); };
 
   // ---------------------------------------------------------------- 表
@@ -103,7 +105,7 @@ export default ({ G, fail, ok }) => {
   if (pick({ kind: "mage", sex: "女", age: 140 }) !== "kind_mage_f" && pick({ kind: "mage", sex: "女", age: 140 }) !== "kind_mage_f_b") F(`140 歳（エルフ）の魔法使いが老人の型 ${pick({ kind: "mage", sex: "女", age: 140 })} になる（エルフは年齢で型を選ばない）`);
   kinds.delete("kind_priest_m_c");
   if (pick({ kind: "guard", sex: "男", age: 72 }) !== "kind_elder_m") F("72 歳の衛兵が老人の型にならない");
-  if (pick({ kind: "villager", sex: "男", age: 11 }) !== "kind_child_m") F("11 歳の村人が子どもの型にならない");
+  if (pick({ kind: "villager", sex: "男", age: 11 }) !== (kinds.has("kind_child_m") ? "kind_child_m" : null)) F("11 歳の村人が子どもの型にならない（描き直し待ちなら絵なし）");
   G.ASSETS = undefined;
   if (!errs.length) ok(`R5 名のある人：表 ${Object.keys(R).length} 人、名のある人の出来事 ${namedN}・名もない人の出来事 ${kindN}。名のある人に型の絵は出ない・年頃の合わない型は出ない`);
 };

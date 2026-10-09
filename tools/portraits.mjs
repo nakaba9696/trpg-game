@@ -73,6 +73,14 @@ export function renderPortraitsMd(data) {
   types.push("| 獣 | 耳と尻尾のタグ |", "|---|---|");
   for (const [k, t] of Object.entries(beasts)) types.push(`| \`${k}\` | ${cell(t)} |`);
   types.push("");
+  // R5c：描き直し待ち（今の絵は載せない。その人は絵なし）
+  const redo = portraits.filter((p) => p.redraw);
+  if (redo.length) {
+    L.push(`## 描き直し待ち（${redo.length}）`, "", "今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（その人は絵なし。canvas には戻さない）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す。", "");
+    L.push("| ファイル | 名前 | 何が合わないか | どう直すか |", "|---|---|---|---|");
+    for (const p of redo) L.push(`| \`${p.file}\` | ${cell(p.name)} | ${cell(p.redraw.modern)} | ${cell(p.redraw.fix)} |`);
+    L.push("");
+  }
   for (const [g, title, note] of GROUPS) {
     const rows = portraits.filter((p) => p.group === g);
     L.push(`## ${title}（${rows.length}）`, "", note, "");

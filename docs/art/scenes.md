@@ -3,7 +3,7 @@
 > このファイルは [scenes.json](scenes.json) から `node tools/scenes.mjs` で作る。直すときは json を直してから作り直す。
 > 作り方は [README.md](README.md) の「背景の絵（A11）」。設定は [style_scenes.json](style_scenes.json)。1344×768 で作り、1232×704 の webp に縮めて `assets/scenes/<id>.webp` に置く（1 枚 150KB 以下）。
 
-全部で 141 枚（場所 72・施設の中 57・迷宮の中 12）。
+全部で 180 枚（場所 74・施設の中 57・迷宮の中 49）。
 
 ## 試しの 5 枚
 
@@ -17,7 +17,7 @@
 | `in_tavern` | 酒場 | 施設の中 |
 | `in_ruins` | エル・ナフ遺構の中 | 迷宮の中 |
 
-## 場所（72）
+## 場所（74）
 
 町・荒野・迷宮の外の景色（場所の id ごとに 1 枚）。屋外は昼・晴れで作り、時間帯・季節・天候はゲームが色味と雨・雪・霧の粒で重ねる。`sky` が night・red の場所は空が決まっている（朧島は夜、使徒領は赤い空）。
 
@@ -30,7 +30,7 @@
 | `w7_russen` | 渡しの町リュッセン（レオネスト王国・町） | `w7_ferry` | west | river ferry town, wide river with a flat ferry boat, wooden landing piers, small toll booth hut, half-timbered houses on the bank |
 | `nerva` | 港町ヴァレンツァ（レオネスト王国・町）・**試し** | `port` | west | harbor town, wooden piers, moored sailing ships with heavy wet sails, fishing nets, warehouses, misty sea, lighthouse, seagulls |
 | `forest` | 迷いの森（レオネスト王国・荒野）・**試し** | `forest` | west | dense dark forest, branches interlocking overhead, thick moss on the ground, gnarled old trees, dim light through the canopy, narrow overgrown path, old barrel by the path |
-| `ruins` | エル・ナフ遺構（レオネスト王国・迷宮） | `ruins` | west | ancient ruins, broken white stone pillars standing in tall grass like ribs, crumbling stone stairs leading underground, huge circular stone tablet carved with symbols, overgrown |
+| `ruins` | エル・ナフ遺構（レオネスト王国・迷宮） | `ruins` | west | ancient sunken temple of a lost kingdom, broken white stone pillars standing in tall grass like ribs, the ground line of a sinking visible on the walls, sand and earth pouring into a stairway leading underground, huge circular stone tablet carved with symbols, overgrown |
 | `w3_bells` | 鐘撞きの丘（レオネスト王国・荒野） | `w3_bells` | west | low grassy hills, an old stone watchtower on each hilltop, bronze bell hanging in each tower, bell ropes, windy grassland |
 | `w1_holy` | 聖都エルヴィナ（光天教会領・町） | `w1_holy` | west | holy city, white stone pavement, golden spires, grand cathedral, many bell towers, pilgrim road lined with candles and flowers |
 | `w7_norve` | 祈りの浜ノルヴェ（光天教会領・町） | `w7_prayerbeach` | west | fishing beach village, small boats pulled up on sand, fishing nets drying on poles, tiny wooden shrine on the beach |
@@ -48,7 +48,7 @@
 | `w7_zaigros` | 辺境の都ザイグロス（レオネスト王国・町） | `w7_frontier` | leonest | frontier military town on a hill, stone barracks on the hilltop, low stone houses ringing it, watchtower with a bell, noticeboard in the square, distant snowy mountains to the north |
 | `w3_lignoa` | 森と湖の都リグノア（レオネスト王国・町） | `w3_lake` | leonest | fortress city on a lake, surrounded by deep forest, raised drawbridge, stone walls, calm lake, flock of birds over the forest |
 | `w3_frosleia` | 火山の都フロスレイア（レオネスト王国・町） | `w3_volcano` | leonest | volcano city, black ash slopes, white plaster houses in terraces, research observatory, brooms leaning on ash-covered roofs, smoking volcano behind |
-| `w3_ashvault` | 灰の観測所（レオネスト王国・迷宮） | `w3_ashvault` | leonest | half-buried domed observatory in volcanic ash, on a volcano slope, door boarded up with planks, ash-covered ground |
+| `w3_ashvault` | 灰の観測所（レオネスト王国・迷宮） | `w3_ashvault` | leonest | half-buried domed observatory in volcanic ash on a volcano slope, round dome with star-shaped holes, listening tubes into the mountain, door boarded up with planks, ash-covered ground, smoking volcano above |
 | `frost` | 凍てつく街道（ノルディア帝国・荒野） | `snow` | nordia | frozen highway across a snowfield, blizzard, snow-covered wooden signpost, dead trees, distant snowy mountains |
 | `garmund` | 帝都ノルディア（ノルディア帝国・町）・空 overcast | `snowcity` | nordia | vast fortified city of black stone seen from above, many black stone buildings and towers, snow on the roofs, high fortress walls, straight columns of chimney smoke, war banners, barracks, orderly streets, overcast sky |
 | `w7_eldenholm` | 緑の都エルデンホルム（ノルディア帝国・町） | `w7_greenvale` | nordia | green valley town in a snowy land, warm spring with steam, grove of trees around it, archery butts and practice range, herb gardens, wooden houses |
@@ -58,7 +58,7 @@
 | `w2_zalgros` | 闘技の都ザルグロス（ノルディア帝国・町） | `w2_arena` | nordia | (huge round stone colosseum:1.3) in the middle of a snowy town, barracks, betting booths, snowy rooftops, banners |
 | `w4_kaesverg` | 鉱山の都カースヴェルグ（ノルディア帝国・町） | `w4_mine` | nordia | mining town in snowy mountains, mine entrances in the mountainside with smoke, old iron rails running through the town, rusted mine cart covered in snow |
 | `w4_valmiria` | 市の都ヴァルミリア（ノルディア帝国・町） | `w4_market` | nordia | bustling market town, many colorful market tents and stalls, stone houses around a snowy town square, four roads meet, tall stone pillar in the center, snow |
-| `w4_oldrail` | 古い鉄の道（ノルディア帝国・迷宮） | `w4_rail` | nordia | abandoned mine entrance in a snowy mountain, ancient iron railway tracks leading inside, boarded wooden barricade, rusted machinery |
+| `w4_oldrail` | 古い鉄の道（ノルディア帝国・迷宮） | `w4_rail` | nordia | abandoned mine in snowy mountains, ancient straight iron rails running into the mountainside, a rounded white-metal carriage stopped on the slope, wooden boards nailed over a tunnel mouth |
 | `fort` | 黒鉄の砦（人類の最前線・町） | `fort` | border | black iron fortress wall blocking a narrow mountain pass, watchtowers with alarm bells, graveyard outside the wall, rugged mountains |
 | `w7_frostgate` | 北の烽火台ヴェルト（人類の最前線・町） | `w7_beacon` | border | northern beacon station by a cold sea, three stone beacon towers with fire and smoke, firewood piles, soldiers |
 | `w7_widows` | 鐘待ちの村リーネ（人類の最前線・町） | `w7_widows` | border | farming village of soldiers' families, ploughed fields, a graveyard slightly larger than the fields, distant watchtower |
@@ -68,7 +68,7 @@
 | `w7_hermitage` | 峠の庵ザレム（人と魔の境・町） | `w7_hermitage` | border | misty mountain pass with a crumbling hermitage and an old altar, small huts of settlers, fog |
 | `w7_lastvillage` | 最後の村ハルト（人と魔の境・町） | `w7_lastvillage` | border | last human village on a mountain shoulder, a dozen stone houses, small statues facing away from the peaks, snowy mountains |
 | `graveyard` | 竜の墓場（人と魔の境・迷宮） | `bones` | border | valley of giant dragon skeletons, huge white ribcages taller than houses, piles of bones, wind-swept barren valley |
-| `w4_pass` | 断界の古関（人と魔の境・迷宮） | `w4_pass` | border | ancient massive stone gatehouse sealing a mountain crevice, unreadable inscription above the gate, height notches carved on the gate, cliffs |
+| `w4_pass` | 断界の古関（人と魔の境・迷宮） | `w4_pass` | border | colossal ancient gatehouse blocking a mountain pass, towering gate far taller than any door, height notches carved on the gateposts, scale pans hanging beside the gate, uncarved weathered stone, snowy peaks |
 | `w2_echo` | 懺悔の谷（ノルディア帝国・荒野） | `w2_echo` | border | valley with crumbled city walls, roofless houses half-buried in the valley floor, steep cliffs, desolate |
 | `w2_shadow` | 影の谷（ノルディア帝国・荒野） | `w2_shadow` | border | ruined empty town, black scorched shadow stains on walls and cobblestones, laundry lines, abandoned streets |
 | `w2_acid` | 酸の谷（ノルディア帝国・迷宮） | `w2_acid` | border | melting valley, green acidic steam, rows of rusted giant iron robots kneeling, corroded metal, toxic pools |
@@ -95,6 +95,8 @@
 | `majincastle` | 黒鎧の使徒の居城（使徒領・迷宮）・空 red | `majin` | realm | castle made of bones and black iron, open gate, red sky, ominous fortress, ash in the air |
 | `e2_kitchen` | 肉の谷の大厨房（使徒領・迷宮）・空 red | `e2_kitchen` | realm | gigantic castle-like kitchen building at the bottom of a valley, many chimneys with steam, red sky, giant cauldrons |
 | `w4_canopy` | 使徒領・天蓋の原（使徒領・荒野） | `w4_canopy` | realm | white salt flat, mirror-like ground reflecting the sky, blurred horizon, huge round shadow on the ground |
+| `w10_roune` | 眠り山ロウネ（レオネスト王国・荒野） | `w10_roune` | leonest | gentle extinct volcano with wide grassy slopes, flat cloud-capped summit, scattered white goats, shepherd's stone hut with thin smoke, winding footpath, stone cairns |
+| `w10_drause` | 鉄冠岳ドラウゼ（ノルディア帝国・荒野） | `w10_drause` | nordia | rust-red rocky mountain with a jagged crown of black rock spires at the summit, snowfields, abandoned mine entrances on the slopes, ruined miners' village at the foot, frozen rails |
 
 ## 施設の中（57）
 
@@ -160,7 +162,7 @@
 | `in_w9s_lake` | 湖の舟着き場（アミュレイン） | `w9s_lake` | special_in | wooden boat landing on a misty lake behind a hot spring town, small rowboats tied up, steam drifting over the water, distant shore |
 | `in_w9s_canopy` | 大樹の見張り台（ナグリス） | `w9s_canopy` | special_in | wooden lookout platform high in the branches of a giant tree, rope ladders, a vast forest canopy below, the shadow of a colossal tree on the horizon |
 
-## 迷宮の中（12）
+## 迷宮の中（49）
 
 迷宮に入ったあと（深さ 1 から）の絵。汎用の石の通路と洞窟、迷宮ごとの中。竜の墓場と黒鎧の使徒の居城は外と同じ絵を使う。
 
@@ -168,14 +170,51 @@
 |---|---|---|---|---|
 | `in_dungeon` | 石の通路（迷宮の中の汎用） | `dungeon` | dungeon_a | dungeon corridor, stone brick walls, torches, dark depths, cobwebs |
 | `in_cave` | 洞窟（迷宮の中の汎用） | `cave` | dungeon_a | natural cave, stalactites, damp rock, faint glow, underground |
-| `in_ruins` | エル・ナフ遺構の中・**試し** | `ruins_in` | dungeon_a | inside ancient ruins, underground temple hall, broken pillars, carved glyphs, dust, light from cracks in the ceiling |
+| `in_ruins` | エル・ナフ遺構の中・**試し** | `ruins_in` | dungeon_a | inside a sunken ancient temple, prayer hall with hundreds of kneeling hollows in the floor, broken white pillars, sand drifting from cracks in the ceiling into small heaps, carved glyphs, dust in shafts of light |
 | `in_w1_catacomb` | エルヴィナの地下墓地の中 | `w1_catacomb_in` | dungeon_a | catacombs, walls and ceiling made of skulls and bones, skeletal hands folded in prayer, candles, endless tunnels |
-| `in_w3_ashvault` | 灰の観測所の中 | `w3_ashvault_in` | dungeon_a | inside an abandoned observatory, ash-covered telescope, broken instruments, boarded windows, dome ceiling |
-| `in_w4_rail` | 古い鉄の道の中 | `w4_rail_in` | dungeon_a | abandoned mine tunnel, ancient iron rails, rusted machinery, timber supports, darkness |
-| `in_w4_pass` | 断界の古関の中 | `w4_pass_in` | dungeon_b | inside an ancient gatehouse, massive stone corridors, giant doors, carved runes |
+| `in_w3_ashvault` | 灰の観測所の中 | `w3_ashvault_in` | dungeon_a | inside an ancient volcano watch-house observatory, ash-covered shelves of identical ledgers, brass rings of a moon calendar, listening holes in the wall, dome ceiling with star holes clogged by ash |
+| `in_w4_rail` | 古い鉄の道の中 | `w4_rail_in` | dungeon_a | ancient mine tunnel, straight iron rails, white metal walls scraped in streaks, old water pipes with valves, a rounded white carriage stopped on the tracks with soot shadows in the seats, timber supports, darkness |
+| `in_w4_pass` | 断界の古関の中 | `w4_pass_in` | dungeon_b | inside an ancient border gatehouse, giant stone corridors, height notches on the walls, tally marks, enormous doors with bars on both sides, carved runes |
+| `in_w12_hall` | エル・ナフ遺構：光の回廊（仕掛けを解いた先） | `w12_hall_in` | dungeon_a | long secret gallery behind an ancient altar, beams of sunlight bounced by old mirrors from wall to wall, painted murals of a glowing ancient city with dragons and floating ships, gold trims, dust motes, no sand, golden light at the far altar |
+| `in_w12_dome` | 灰の観測所：星図の天井（仕掛けを解いた先） | `w12_dome_in` | dungeon_b | round underground chamber with a painted star map dome ceiling, gold constellation lines and concentric moon calendar rings, a red moon in the center of the dome, clean floor with a great calendar disc, candles, awe |
+| `in_w12_gate` | 断界の古関：取引の大広間（仕掛けを解いた先） | `w12_gate_in` | realm | colossal hall beyond giant opened doors far taller than any door, enormous pillars with height notches, huge hanging scale pans, a giant staircase climbing upward into cold blue light, tiny torch for scale |
+| `in_w12_station` | 古い鉄の道：待合の間（仕掛けを解いた先） | `w12_station_in` | dungeon_b | ancient underground station hall, rounded white-metal carriages lined along the platform, faint glowing lamp stones in a vaulted ceiling, water pipes with brass valves, human-shaped soot shadows in the carriage windows, eerie stillness |
+| `in_w12_vault` | エル・ナフ遺構の祭壇の下：沈んだ都を見下ろす窓 | `w12_vault_in` | dungeon_a | small stone study with walls covered in scribbled writing, arched window looking down into a vast underground cavern, an entire ancient city sunk in the earth below with roofs towers and streets, roots hanging from the earth ceiling, a glowing white lamp stone on a desk, breathtaking |
 | `in_w2_acid` | 酸の谷の底 | `w2_acid_in` | dungeon_b | bottom of an acid valley, green toxic pools, corroded giant iron wrecks, steam |
 | `in_e2_garden` | 腐れ庭園の奥 | `e2_garden_in` | dungeon_b | deep in a rotting garden, overgrown flower maze, giant flowers, mist, eerie |
 | `in_e2_kitchen` | 大厨房の中 | `e2_kitchen_in` | dungeon_b | giant kitchen interior, enormous cauldrons, stoves with fire, hanging meat hooks, steam, huge cleavers |
 | `in_onigashima` | 鬼ヶ島の洞窟の奥 | `onigashima_in` | dungeon_b | cave lair, warm wet rock walls, sake barrels, bonfire, feast remains, scattered bones |
 | `in_w3_seacave` | 潮鳴りの洞の中 | `w3_seacave_in` | dungeon_b | inside a sea cave, tide water, glowing algae, wet rocks |
+| `in_w11_graveyard_trap` | 竜の墓場・罠の通路 | `w11_graveyard_trap_in` | w11_graveyard | narrow chasm in a valley of dragon bones, a single huge dragon rib laid across as a bridge, saw marks, small skulls hanging on ropes, dark |
+| `in_w11_graveyard_chest` | 竜の墓場・宝の部屋 | `w11_graveyard_chest_in` | w11_graveyard | sleeping dragon skeleton curled on the ground, old treasure chest held between its rib bones, scattered gold, dim cave light |
+| `in_w11_graveyard_rest` | 竜の墓場・休み場 | `w11_graveyard_rest_in` | w11_graveyard | ruined dry stone hut on a rocky ledge among giant bones, old stone hearth with a small campfire, carved tally marks on the wall |
+| `in_w11_graveyard_lair` | 竜の墓場・巣 | `w11_graveyard_lair_in` | w11_graveyard | huge dragon ribcage used as a nest, glowing yellow eyes in the dark, scattered bones, faint green glow |
+| `in_w11_graveyard_stairs` | 竜の墓場・下への階段 | `w11_graveyard_stairs_in` | w11_graveyard | stone steps descending into a dark hole, bone-strewn cave floor, cold blue light rising from below |
+| `in_w11_graveyard_lore` | 竜の墓場・昔のかけら | `w11_graveyard_lore_in` | w11_graveyard | rows of upright dragon bones standing like grave markers, each carved with short ancient glyphs, torchlight |
+| `in_w11_graveyard_vault` | 竜の墓場・隠し部屋 | `w11_graveyard_vault_in` | w11_graveyard | small hidden stone storeroom, shelves with old skulls and bone tools, open treasure chest glowing, shaft of light from above, dust motes |
+| `in_w11_graveyard_deep` | 竜の墓場・最奥（最奥の特別な一枚） | `w11_graveyard_deep_in` | w11_graveyard | vast round hollow at the bottom of a valley, several giant dragon skeletons curled asleep in a ring, single beam of light from a crack in the ceiling, eerie green flame in the center, mist, epic |
+| `in_w11_majincastle_trap` | 黒鎧の使徒の居城・罠の通路 | `w11_majincastle_trap_in` | w11_majincastle | dark corridor of black iron and bone, square trapdoors in the ceiling, steel spikes thrust up from holes in the floor, torches |
+| `in_w11_majincastle_chest` | 黒鎧の使徒の居城・宝の部屋 | `w11_majincastle_chest_in` | w11_majincastle | black iron hall, chest of a fallen challenger with a paper note on the lid, dark red banners, torchlight |
+| `in_w11_majincastle_rest` | 黒鎧の使徒の居城・休み場 | `w11_majincastle_rest_in` | w11_majincastle | small antechamber in a dark castle, simple bed with clean sheets, table with a loaf of black bread and a water jar, small fire |
+| `in_w11_majincastle_lair` | 黒鎧の使徒の居城・巣 | `w11_majincastle_lair_in` | w11_majincastle | barracks hall, empty suits of black armor with names painted in white, red glowing eyes in the dark |
+| `in_w11_majincastle_stairs` | 黒鎧の使徒の居城・下への階段 | `w11_majincastle_stairs_in` | w11_majincastle | bone and iron corridor, stairway descending into darkness, cold blue light from below |
+| `in_w11_majincastle_lore` | 黒鎧の使徒の居城・昔のかけら | `w11_majincastle_lore_in` | w11_majincastle | upside-down relief carving on the ceiling, rows of kneeling soldiers, huge beast on a throne, face chiseled away |
+| `in_w11_majincastle_vault` | 黒鎧の使徒の居城・隠し部屋 | `w11_majincastle_vault_in` | w11_majincastle | hidden armory sealed inside a wall, racks of ancient spears and halberds, open chest of gold, shaft of light |
+| `in_w11_majincastle_deep` | 黒鎧の使徒の居城・最奥（最奥の特別な一枚） | `w11_majincastle_deep_in` | w11_majincastle | colossal throne hall of bone pillars, giant spiked bone throne silhouetted against a breach in the wall showing a blood red sunset sky and jagged mountains, a small wooden chair facing the throne on a red carpet, epic |
+| `in_w11_w1_catacomb_trap` | エルヴィナの地下墓地・罠の通路 | `w11_w1_catacomb_trap_in` | w11_w1_catacomb | catacomb corridor, hanging bronze censers on chains, sweet smoke crawling along the floor, skulls in the walls |
+| `in_w11_w1_catacomb_chest` | エルヴィナの地下墓地・宝の部屋 | `w11_w1_catacomb_chest_in` | w11_w1_catacomb | catacomb chamber, stone sarcophagi, burial chest with a family crest, candlelight |
+| `in_w11_w1_catacomb_rest` | エルヴィナの地下墓地・休み場 | `w11_w1_catacomb_rest_in` | w11_w1_catacomb | small altar in a catacomb niche, three candles always burning, stone basin of reddish water, warm light |
+| `in_w11_w1_catacomb_lair` | エルヴィナの地下墓地・巣 | `w11_w1_catacomb_lair_in` | w11_w1_catacomb | catacomb hall, dried corpses kneeling in prayer, thin threads of golden light rising from their necks to the ceiling, red eyes in the dark |
+| `in_w11_w1_catacomb_stairs` | エルヴィナの地下墓地・下への階段 | `w11_w1_catacomb_stairs_in` | w11_w1_catacomb | catacomb corridor, stairway descending into darkness, cold blue light from below |
+| `in_w11_w1_catacomb_lore` | エルヴィナの地下墓地・昔のかけら | `w11_w1_catacomb_lore_in` | w11_w1_catacomb | wall of bones with scratched writing, a row of skulls, candlelight |
+| `in_w11_w1_catacomb_vault` | エルヴィナの地下墓地・隠し部屋 | `w11_w1_catacomb_vault_in` | w11_w1_catacomb | secret ossuary niche, neatly stacked skulls, open chest, shaft of light, dust |
+| `in_w11_w1_catacomb_deep` | エルヴィナの地下墓地・最奥（最奥の特別な一枚） | `w11_w1_catacomb_deep_in` | w11_w1_catacomb | enormous cavern beneath a cathedral altar, thousands of kneeling skeletal pilgrims, countless threads of golden light rising from them and converging on a glowing point in the ceiling like a starry sky, beautiful and eerie, epic |
+| `in_w11_onigashima_trap` | 鬼ヶ島の洞窟・罠の通路 | `w11_onigashima_trap_in` | w11_onigashima | warm cave tunnel, straw mat laid over a pit, rope hanging from the ceiling with a giant iron club swinging above, wooden sign |
+| `in_w11_onigashima_chest` | 鬼ヶ島の洞窟・宝の部屋 | `w11_onigashima_chest_in` | w11_onigashima | cave storeroom with sake barrels, gambling money chest, lanterns |
+| `in_w11_onigashima_rest` | 鬼ヶ島の洞窟・休み場 | `w11_onigashima_rest_in` | w11_onigashima | remains of an ogre feast in a cave, huge red sake cup, barrels, embers of a bonfire |
+| `in_w11_onigashima_lair` | 鬼ヶ島の洞窟・巣 | `w11_onigashima_lair_in` | w11_onigashima | cave sleeping quarters full of snoring ogres in the dark, glowing eyes, scattered bones, paper lanterns |
+| `in_w11_onigashima_stairs` | 鬼ヶ島の洞窟・下への階段 | `w11_onigashima_stairs_in` | w11_onigashima | rocky cave, steps descending into a dark hole, cold blue light from below |
+| `in_w11_onigashima_lore` | 鬼ヶ島の洞窟・昔のかけら | `w11_onigashima_lore_in` | w11_onigashima | cave wall covered with names carved by sword tips, old swords stuck in the ground, torchlight |
+| `in_w11_onigashima_vault` | 鬼ヶ島の洞窟・隠し部屋 | `w11_onigashima_vault_in` | w11_onigashima | hidden rock niche, old sword guard and keepsakes, open chest, shaft of light |
+| `in_w11_onigashima_deep` | 鬼ヶ島の洞窟・最奥（最奥の特別な一枚） | `w11_onigashima_deep_in` | w11_onigashima | huge sea cave opening onto the open ocean at dawn, sunrise on the horizon, path of golden light across the waves into the cave, giant red sake cup and barrels on the rocks, white chain glowing under the water, epic |
 

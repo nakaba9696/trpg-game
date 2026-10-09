@@ -11,6 +11,14 @@
 - 「**異形**」と書いた魔物（一覧の `style: "eldritch"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。
 - 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。
 
+## 描き直し待ち（1）
+
+今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（戦闘では絵なし）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す。
+
+| ファイル | 名前 | 何が合わないか | どう直すか |
+|---|---|---|---|
+| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | 警備員の制服（襟とネクタイ、写真入りの名札、革靴）に警棒に見える棍棒 | 港の荒くれ：袖をまくった麻のシャツか胴衣、頭に布、腰に鈴、樫の棍棒、裸足か革のサンダル（例：rolled-up linen shirt, leather vest, bandana, small bell on belt, oak club, sandals） |
+
 ## 使徒・ボス（30）
 
 使徒の魔物の姿と、ボス。特にていねいに。気に入った絵は `--keep <id>` で seed を残す。
@@ -48,7 +56,7 @@
 | `assets/monsters/e3_azlag.webp` | 剣翼の使徒ヴァルグレア | (dorontabi:1.3), (colossal black bird god:1.3), (silver steel blade wings:1.4), (mechanical wings of overlapping sword blades:1.3), no soft feathers, enormous blade wings spread wide, blades raining down, golden glowing eyes with slit pupils, sharp steel beak, crest of swords, talons, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：刃の羽を持つ巨きな黒い鳥。羽ばたくたびに刃が降る |
 | `assets/monsters/e3_yuzuel.webp` | 問答の使徒ユズエル | (dorontabi:1.3), (towering inhuman aristocrat:1.3), impossibly tall and thin, (face hidden in shadow:1.2), only a glowing red eye behind a monocle visible, long dark wine red hair, black tailcoat with deep purple waistcoat, white cravat with red gem pin, (long arms ending in thin blades:1.2), bowing politely, (a ring of floating blades behind it:1.2), names engraved on the blades, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：片眼鏡の老紳士の形をした、刃で問いに答えるもの |
 
-## 魔物（150）
+## 魔物（156）
 
 ふつうの敵のうち、魔物の姿のもの。
 
@@ -204,6 +212,12 @@
 | `assets/monsters/e4_redscorpion_x.webp` | 赤砂の女王蠍 | giant scorpion, red carapace, stinger tail, four glowing eyes, red sand, much larger, old, grizzled, many battle scars, imposing | 赤砂の蠍の強い個体。ひと回り大きく、古傷だらけ |
 | `assets/monsters/e4_cinderhound.webp` | 火口の犬 | volcanic hound, charcoal black fur, glowing orange lava cracks, embers, smoke, fangs, spiked tail | 火山の斜面の、炭のような毛の犬 |
 | `assets/monsters/e4_firearrowimp.webp` | 火矢の小鬼 | small goblin archer, brown skin, pointy ears, grin, shortbow with flaming arrow, ragged clothes, smoke, pair | 見張り塔に火矢を射かける小鬼 |
+| `assets/monsters/w10_rockgoat.webp` | 岩跳び山羊 | （`e4_thornboar` と同じ絵） | 崖の上から頭突きする野の山羊。干し肉の包みを盗む。まぬけ |
+| `assets/monsters/w10_screemole.webp` | ガレ場の土竜 | （`e4k_furrowmole` と同じ絵） | 石の斜面の下を掘る大土竜 |
+| `assets/monsters/w10_fogimp.webp` | 霧かぶり | （`e4_reedimp` と同じ絵） | 霧をかぶって道標をずらす小鬼。いたずら好き |
+| `assets/monsters/w10_cragbird.webp` | 尾根の大鷲 | （`e4k_cliffwatch` と同じ絵） | 尾根で足をすくって谷へ落とす大鷲 |
+| `assets/monsters/w10_snowape.webp` | 雪の大猿 | （`e4_frostbear` と同じ絵） | 雪玉に石を仕込む白い大猿。帽子を集める |
+| `assets/monsters/w10_icebat.webp` | 氷柱蝙蝠 | （`e4_bellbat` と同じ絵） | 坑道の氷柱に混じる蝙蝠。翼の縁が刃 |
 
 ## 人の姿の敵（23）
 
