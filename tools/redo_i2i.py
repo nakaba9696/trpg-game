@@ -44,7 +44,12 @@ def dry(kind, i):
     elif "_" in i and not i.startswith("kind_"):
         args.insert(2, "--variants")
     out = subprocess.run(args, cwd=ROOT, capture_output=True, text=True, encoding="utf-8").stdout
-    settings = json.loads(re.search(r"送る設定：(\{.*\})", out).group(1))
+    m = re.search(r"送る設定：(\{.*\})", out)
+    if m:
+        settings = json.loads(m.group(1))
+    else:  # 差分の --dry は送る設定を出さないので、基本の絵の設定（大きさ・サンプラー・モデル）を使う
+        base = next(b for b in (i.rsplit("_", n)[0] for n in (1, 2)) if os.path.exists(os.path.join(ROOT, "assets", kind, b + ".webp")))
+        settings = dry(kind, base)[0]
     pos = re.search(r"^\s+\+ (.*)$", out, re.M).group(1)
     neg = re.search(r"^\s+- (.*)$", out, re.M).group(1)
     return settings, pos, neg
