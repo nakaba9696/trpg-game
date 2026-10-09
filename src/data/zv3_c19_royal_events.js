@@ -219,6 +219,8 @@
 
   list.forEach((e) => { if (!e.who) throw new Error(`C19 の出来事 ${e.id} に絵が無い`); });
   D.EVENTS.push(...list);
+  // 書き出しが施設の中の出来事の背景（R5。src/data/r5_scenes.js の表に足す）
+  D.R5_EVENT_SCENE = Object.assign(D.R5_EVENT_SCENE || {}, { c19r_serios_sketch: "forge", c19r_bride_suitor: "tavern" });
   // 確かめ用（tests/checks/c19_royal.mjs）：足した出来事の id
   (G.c19royal = G.c19royal || {}).events = list.map((e) => e.id);
 })(globalThis.G = globalThis.G || {});
