@@ -20,7 +20,7 @@
     mithril: { name: "ミスリルの剣", type: "weapon", dmg: [1, 8, 5], stat: "筋力", hit: 10, price: 700, desc: "軽く、鋼より硬い。" },
     oniclub: { name: "鬼の金棒", type: "weapon", dmg: [2, 8, 2], stat: "筋力", hit: -15, price: 400, desc: "鬼が振るっていた鉄の棒。" },
     volgrim: { name: "鉤槍ヴォルグリム", type: "weapon", dmg: [2, 6, 6], stat: "筋力", hit: 10, pierce: true, key: true, price: 0, desc: "竜の骨を削って作った黒い鉤槍。物は言わない。強い相手の方へ、鉤がひとりでに向く。黒鎧の絶界の継ぎ目にも掛かるという。" },
-    byakuya: { name: "明けの鎖", type: "weapon", dmg: [2, 6, 5], stat: "筋力", hit: 15, pierce: true, key: true, price: 0, desc: "白い鎖。振れば打ち、投げれば絡みつく。夜明け前になると、輪が触れ合って勝手に鳴る。黒鎧の絶界にも届くという。" },
+    byakuya: { name: "明けの鎖", type: "weapon", dmg: [2, 6, 5], stat: "敏捷", hit: 15, pierce: true, key: true, price: 0, desc: "白い鎖。振れば打ち、投げれば絡みつく。夜明け前になると、輪が触れ合って勝手に鳴る。黒鎧の絶界にも届くという。" },
 
     // 防具
     leather: { name: "革の鎧", type: "armor", def: 1, agi: 0, price: 30 },
