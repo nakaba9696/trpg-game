@@ -200,5 +200,26 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
   }
 
+  // ---- 7. 危険度 1 の野で昼に出る D 級は、斬撃が通りにくくない（学びとしての相性は危険度 2 から。夜だけ出る者は除く）
+  for (const L of Object.values(D.LOCS)) {
+    if ((L.danger || 0) !== 1 || L.type === "town") continue;
+    [...(L.pool || []), ...(L.e4pool || [])].forEach((id) => {
+      const e = D.ENEMIES[id];
+      if (!e || e.boss || !R6.isD(id) || (e.when && e.when.night)) return;
+      if (G.dmgMod(id, "slash") < 1) F(`${L.name}の${e.name}（昼・D 級）に斬撃が通りにくい`);
+    });
+  }
+  // ---- 8. 戦闘の札：効き目がふつう（等倍）の種類に「通りが悪い」を付けない
+  {
+    const S = start("merc", 31);
+    S.maxHp = S.hp = 999;
+    const foe = "e4_thornboar";
+    if (G.e12 && G.e12.learn) G.e12.learn(foe, "slash");
+    G.startCombat([foe], {});
+    const a = G.actions().flatMap((g) => g.list).find((x) => x.id === "cb:attack");
+    if (G.dmgMod(foe, "slash") === 1 && a && /通りが悪い/.test(a.sub || "")) F(`等倍の斬撃の札に「通りが悪い」が付く（${a.sub}）`);
+    if (G.e12 && G.e12.feel && G.e12.feel(S.combat.foes[0], "slash") !== "") F("等倍の効き目に一言が付く");
+  }
+
   if (!bad) ok(`R6 序盤：出発地の近くの出会い ${tried} 回に C 級なし・守りは日と名声で外れる・旅の出来事・D 級の強さ・商店の先頭は薬草`);
 };

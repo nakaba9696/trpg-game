@@ -1,0 +1,10 @@
+/* U30（R8）：画面の指摘の直し。ui/zu30_gainsdup.js ほか */
+/* 「得たもの」の枠と同じ中身の、数だけの一行（所持金 +3G・HP -1）は本文に出さない */
+#log > .u30dup { display: none; }
+/* スマホの戦闘：図鑑・用語集の知らせとトロフィーの知らせは、上の HP・MP の札に重ねず、下（手の組の札の上）に出す（R8 中 15） */
+@media (max-width: 760px) {
+  body.u13combat:not(.v9pc) #u8note { top: auto; left: 8px; right: 8px; bottom: calc(112px + env(safe-area-inset-bottom, 0px)); justify-items: center; }
+  body.u13combat:not(.v9pc) #toast { top: auto; bottom: calc(220px + env(safe-area-inset-bottom, 0px)); }
+  /* 魔物の絵を収める帯（本文の枠の上）を少し高く */
+  body.u13combat:not(.v9pc) .scene { height: 150px; }
+}

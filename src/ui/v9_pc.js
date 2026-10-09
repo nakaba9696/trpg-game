@@ -3,7 +3,7 @@
 //   ・左：立ち絵。話している人が前に出て明るく、ほかの仲間は後ろに少し暗く並ぶ（最大 3 人）。出入りはフェードと少しのスライド
 //   ・右〜中央：文章の窓（1 行 35〜40 字）。窓には今の手番の文章だけを出し、前の文章は「記録」の窓で読む。その下に選択肢
 //   ・戦闘：魔物の一枚絵を中央〜右に大きく、味方を左に小さく、文章と行動は下の帯に
-//   ・操作：選択肢は 1〜9 のキー、Enter で次へ（文章の続き → 一つしかない選択肢）、Esc で開いている窓を閉じる。手引きの用語にマウスを乗せると短い説明
+//   ・操作：選択肢は 1〜9 のキー、Enter で次へ（文章の続き。選択肢は押さない）、Esc で開いている窓を閉じる。手引きの用語にマウスを乗せると短い説明
 //   ・演出：場面が変わると暗転してフェード。出来事の大事な場面（大成功・大失敗・トロフィー・人との出会い）で少し光る・揺れる
 // 幅が足りない画面（スマホ・小さな窓）では何もしない（今の縦に積む画面のまま）。凝った見せ方は PC だけ。
 // 立ち絵は V5（G.stand.whoOf・sig・big・nameOf）で人を決め、G.drawPortrait（V4 の画像・V8 の表情の差し替えが包む入口）で描く。
@@ -496,7 +496,9 @@
       return;
     }
     if (ev.key !== "Enter" || (ev.target && ev.target.closest && ev.target.closest("button, a, summary, [role=button]"))) return;
-    // Enter：ボスの前口上を閉じる → 文章の続きを送る → 選択肢が一つならそれを選ぶ → 最初の選択肢へ
+    // Enter：ボスの前口上を閉じる → 文章の続きを送る → 遊び方の一行を閉じる。ここまで
+    // 選択肢は Enter では押さず、焦点も当てない（R8 高 1：本文の早送りの Enter を連打すると、最初の選択肢や「振り直す」まで押されていた）。
+    // 選ぶのは、選択肢を押す・数字のキー・Tab で焦点を当ててから Enter
     const banner = $(".bossBanner:not(.out)");
     if (banner) { ev.preventDefault(); banner.click(); return; }
     const log = $("#log");
@@ -506,9 +508,6 @@
       return;
     }
     const tip = $("#panel .tip .btn");
-    if (tip) { ev.preventDefault(); tip.click(); return; }
-    const live = acts().filter((b) => !b.disabled);
-    if (live.length === 1) { ev.preventDefault(); live[0].click(); return; }
-    if (live.length) { ev.preventDefault(); live[0].focus(); }
+    if (tip) { ev.preventDefault(); tip.click(); }
   });
 })(globalThis.G = globalThis.G || {});
