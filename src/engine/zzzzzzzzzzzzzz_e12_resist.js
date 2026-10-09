@@ -348,6 +348,7 @@
     if (!foe || !type) return "";
     const k = API.known(foe.id).find((x) => x.type === type);
     if (!k || !k.known) return "";
+    if (k.m === 1) return ""; // ふつうの効き目は札に書かない（等倍を「通りが悪い」と見せない。R6）
     return k.m === 0 ? "効かない" : k.m > 1 ? "よく効く" : "通りが悪い";
   };
   API.spellType = (id) => {

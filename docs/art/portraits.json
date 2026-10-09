@@ -952,7 +952,7 @@
   {
    "id": "hans",
    "group": "named",
-   "name": "宿の主人ハンス",
+   "name": "宿の主人ウルリヒ",
    "type": "ojisan",
    "file": "assets/portraits/hans.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 58 years old, muscular, bald, black eyes, thick eyebrows, stubble, black shirt, apron",
@@ -963,7 +963,7 @@
   {
    "id": "greta",
    "group": "named",
-   "name": "宿の女将グレタ",
+   "name": "宿の女将ドーレ",
    "file": "assets/portraits/greta.webp",
    "identity": "1girl, middle-aged woman, 50 years old, ash blonde hair, hair bun, blunt bangs, brown eyes, blue kerchief, white blouse, orange apron",
    "tags": "innkeeper, hands on hips, holding a ladle",
