@@ -161,7 +161,8 @@ def main():
                 if cut and os.path.exists(cut):
                     Image.open(cut).save(os.path.join(masks, i + ".webp"), "WEBP", lossless=True)
                 else:
-                    cm.cut(ses, os.path.join(a.orig, a.kind, i + ".webp"), remove, keep_color=True).save(os.path.join(masks, i + ".webp"), "WEBP", lossless=True)
+                    # 黒の背景のとき：色を残す切り抜きだと、塗られた背景（空・グラデーション）まで体と見なして黒にならないので、モデルの形だけ
+                    cm.cut(ses, os.path.join(a.orig, a.kind, i + ".webp"), remove, keep_color=(a.bg != "black")).save(os.path.join(masks, i + ".webp"), "WEBP", lossless=True)
                 print(f"mask {i}", flush=True)
     if "draw" in steps:
         for i in a.ids:
