@@ -184,7 +184,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     const src = readFileSync(fileURLToPath(new URL("../../src/ui/setup.js", import.meta.url)), "utf8");
     if (!/上振れ/.test(src) || !/lucky/.test(src)) fail("作成画面に上振れの印が無い");
     if (!/cre\.bonusPoints\(draft\)/.test(src)) fail("作成画面にボーナス点が出ない");
-    if (!/trophyScore/.test(src) || !/次の \+1 まであと/.test(src)) fail("作成画面に、トロフィーの点と次の +1 までが出ない");
+    if (!/trophyScore/.test(src) || !/cre\.trophyNext\(\)/.test(src)) fail("作成画面に、トロフィーの点と次のボーナスまでが出ない");
     if (/才能限界|鍵をかけ|大当たり|m8ui|才の付きやすい/.test(src)) fail("作成画面に、なくした仕組みの言葉が残っている");
     if (/String\(o\.stats\[k\]\)/.test(src)) fail("作成画面のシートが割合のまま出している");
     // 目的は行き先・手順を出さない（名前と目指すことだけ。「自分で決める」の遊び方の説明は残す）
