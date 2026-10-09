@@ -7,7 +7,7 @@
 //   ・下の右「コマンド・選択肢」：#panel をここへ移す。町・探索の行動の組（U13／U23 の組のボタン）、出来事の選択肢、戦闘の手（F1・U13）。長いときはこの窓の中だけ流れる
 //   下の二つの窓は同じ高さ（画面の 3 分の 1 ほど）で左右に並ぶ。戦闘・会話・町・迷宮のどの場面でも同じ形
 // 組は U13（ui/u13_menu.js）のまとめ方（町は U23 の 施設・特色の場所…）。最初に開く組は U26 が決める。選択肢の中身（印・成功率・1〜9 のキー）は触らない。
-// スマホ・狭い窓（V9 の PC でないとき）は何もしない。ui.js は書き換えず、G.ui.render と G.v9.layout・G.v9.placeCast・G.u13.plan を包む
+// スマホ・狭い窓は U31（ui/zzzzz_u31_mobile.js）が同じ四つの窓を縦長・横長の形に並べ直す（body.u31m。u21.layout・u21.placeCast を包む）。ui.js は書き換えず、G.ui.render と G.v9.layout・G.v9.placeCast・G.u13.plan を包む
 // （名前の zzzzz で、v9_pc・u13・u14・u19 より後に読まれる）。見た目は ui/zzzzz_u21_side.css。エンジンは読むだけ。レーン U（U21・U23・U29）
 (function (G) {
   const u21 = (G.u21 = G.u21 || {});
@@ -233,7 +233,10 @@
   const playing = () => !!(play && !play.hidden && G.S);
   function place() {
     const panel = $("#panel"), tome = tomeEl();
-    const want = !!(playing() && v9.isPC(vwNow(), window.innerHeight) && G.S); // U29：戦闘でも同じ形（右下の窓にコマンド）
+    const pc = v9.isPC(vwNow(), window.innerHeight);
+    const mobile = !pc && !!(v9.mobileOn && v9.mobileOn(vwNow(), window.innerHeight)); // U31：スマホは縦長・横長の形（ui/zzzzz_u31_mobile.js）
+    const want = !!(playing() && (pc || mobile) && G.S); // U29：戦闘でも同じ形（右下の窓にコマンド）
+    body.classList.toggle("u31m", want && mobile);
     u21.active = want;
     body.classList.toggle("u21pc", want);
     if (!panel || !tome) return want;
