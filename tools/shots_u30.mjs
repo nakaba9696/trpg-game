@@ -75,7 +75,8 @@ const openPage = async (w, h, scale) => {
     const R = (s) => { const e = document.querySelector(s); return e && getComputedStyle(e).display !== "none" && !e.hidden ? e.getBoundingClientRect() : null; };
     const bar = R("#mbar"), toast = R("#toast"), note = R("#u8note");
     const over = (a) => !!(a && bar && a.top < bar.bottom && a.bottom > bar.top);
-    return { over: over(toast) || over(note), band: G.u30.band() };
+    const m31 = document.body.classList.contains("u31m"); // U31：知らせは上の帯に重ねて短く出す（決めごと）。コマンドの窓に掛からないことは shots_u31 が見る
+    return { over: !m31 && (over(toast) || over(note)), band: document.body.classList.contains("u31m") ? true : G.u30.band() }; // U31 からスマホも V9 の舞台に魔物を描く
   });
   if (r.over) ng("スマホの戦闘で知らせが HP・MP の札に重なる");
   if (!r.band) ng("スマホの戦闘で魔物を収める帯が無い");

@@ -1,0 +1,3 @@
+/* U31：スマホの画面（ui/zzzzz_u31_mobile.js・ui/zzzzzzzz_u31_mobile.css）で、選択肢を親指で押しやすい高さ（44px 以上）に。
+   選択肢の並べ方・大きさなので、zu12_layout.css より前の名前に置く（tests/checks/u12_*.mjs）。#u21side の id で一行の決まり（U12）より強い */
+body.u31m #u21side .act { min-height: 44px; }

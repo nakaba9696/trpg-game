@@ -2,7 +2,7 @@
 // node tools/build.mjs && node tools/shots_u21.mjs
 // docs/shots/u21/<1280x720|1366x768|1920x1080|phone>_<town|adv|shop|event|combat>.jpg を書く。
 // 確かめること（PC の 3 つの大きさ）：ページが動かない（縦・横）・本文の欄と右の列が画面の中で重ならない・右の列の中の札と選択肢が右の列からはみ出さない
-// （開いた組の中で流れるのはよい）・組の札を押すと、その組がすぐ下に開く・出来事の選択肢は組に隠さない・戦闘は下の帯のまま。スマホは今のまま（右の列を出さない）
+// （開いた組の中で流れるのはよい）・組の札を押すと、その組がすぐ下に開く・出来事の選択肢は組に隠さない。スマホは U31 の縦の形（tools/shots_u31.mjs が細かく見る）
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -66,7 +66,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   });
   const judge = (name, m, { wantSide }) => {
     console.log(vn, name, JSON.stringify({ page: `${m.sw}x${m.sh}/${m.vw}x${m.vh}`, scroll: [m.sx, m.sy], side: !!m.side, tabs: m.tabs, acts: m.acts }));
-    if (!pc) { if (m.sideOn) ng(`${vn} ${name}：スマホで右の列が出ている`); return; }
+    if (!pc) { if (!m.sideOn) ng(`${vn} ${name}：スマホでコマンドの窓が出ていない（U31 から、スマホも同じ窓を縦に並べる）`); return; }
     if (m.sy || m.sx || m.sh > m.vh + 1 || m.sw > m.vw + 1) ng(`${vn} ${name}：ページが動く（${m.sw}×${m.sh}）`);
     if (wantSide !== m.sideOn) ng(`${vn} ${name}：右の列が${wantSide ? "出ていない" : "出ている"}`);
     const inside = (r) => r && r.x >= -1 && r.y >= -1 && r.r <= m.vw + 1 && r.b <= m.vh + 1;
