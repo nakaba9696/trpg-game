@@ -80,10 +80,19 @@
   // ---------------------------------------------------------------- 縁で読んだ行は、段が浅くなると言葉が欠ける（手引き・図鑑どちらも D.LORE の文を読むので、文そのものを差し替える）
   const hash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h >>> 0; };
   const KEEP = /[、。「」（）\s\n・ー！？]/;
+  // 欠け方は文と段の差だけで決まるので、一度作ったものを覚えておく（行を読むたびに一字ずつ作り直すと重い）
+  const MASKED = new Map();
   X.mask = (text, gap) => {
     if (gap <= 0) return text;
     const pct = Math.min(45, 12 * gap);
-    return [...text].map((ch, i) => (!KEEP.test(ch) && hash(text + "#" + i) % 100 < pct ? "・" : ch)).join("");
+    const key = pct + "|" + text;
+    let out = MASKED.get(key);
+    if (out === undefined) {
+      out = [...text].map((ch, i) => (!KEEP.test(ch) && hash(text + "#" + i) % 100 < pct ? "・" : ch)).join("");
+      if (MASKED.size > 5000) MASKED.clear();
+      MASKED.set(key, out);
+    }
+    return out;
   };
   X.depthOf = (id, key) => (M.DEPTH || {})[`${id}:${key}`] || 0;
   Object.entries(D.LORE || {}).forEach(([id, e]) => (e.lines || []).forEach((l) => {
