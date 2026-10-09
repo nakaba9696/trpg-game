@@ -1146,7 +1146,7 @@
    "type": "ojisan",
    "file": "assets/portraits/gerhard.webp",
    "identity": "1boy, male focus, adult, old man, 56 years old, very tall, muscular, broad shoulders, tan skin, grey hair, ash grey hair, short hair, crew cut, green eyes, sharp eyes, thick eyebrows, short grey beard, scar across eyebrow, deep wrinkles, battered dark steel armor, fur-lined cloak, greatsword on back",
-   "tags": "standing upright, holding a tiny wooden toy horse in his palm",
+   "tags": "standing upright, both hands resting on his belt",
    "face": "big grin",
    "variants": {
     "joy": "grin, teeth, happy",
@@ -1908,7 +1908,7 @@
    "type": "brute",
    "file": "assets/portraits/valdun.webp",
    "identity": "1boy, male focus, adult, middle-aged man, 47 years old, very tall, huge man, muscular, broad shoulders, tan skin, dark brown hair, long hair, wild hair, amber eyes, sharp eyes, thick eyebrows, two curved horns on forehead, scales on cheeks and forearms, full beard, scar on cheek, fur mantle, battered bronze armor, greatsword on back",
-   "tags": "holding a small notebook with pressed flowers",
+   "tags": "standing, arms crossed",
    "face": "serious, frown",
    "variants": {
     "joy": "gentle smile, closed eyes",
@@ -2260,8 +2260,8 @@
    "name": "セレスティン",
    "type": "bishonen",
    "file": "assets/portraits/celestin.webp",
-   "identity": "1boy, male focus, elf, pointy ears, young man, slender, pale skin, green hair, dark green hair, long hair, single braid, cyan eyes, sleepy eyes, thin eyebrows, silver earring, dark green hooded cloak, silver chain clasp, leather bracer, longbow, glowing paper charm at waist",
-   "tags": "standing, holding a longbow in one hand, bow string, looking up at the sky",
+   "identity": "1boy, male focus, elf, pointy ears, young man, slender, pale skin, green hair, dark green hair, long hair, single braid, cyan eyes, sleepy eyes, thin eyebrows, silver earring, dark green hooded cloak, silver chain clasp, leather bracer, longbow, small paper charm tied at waist",
+   "tags": "standing, holding a longbow in one hand, other hand empty at his side, looking up at the sky",
    "face": "blank stare, absent-minded",
    "variants": {
     "joy": "small gentle smile, looking away",
