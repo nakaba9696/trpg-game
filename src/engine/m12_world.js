@@ -164,7 +164,7 @@
         ev.until = at + span(...Kd.stages[ev.st].days);
         ev.since2 = at;
         // 激化の日に、あなたが舞台の町にいたら（前触れから日がたっていれば）居合わせる
-        ev.hereDue = !!(Kd.here && ev.st === Kd.here.st && at - ev.since >= X.HERE_GAP * (X.PACE || 1) && X.places(ev).includes(S.loc));
+        ev.hereDue = !!(Kd.here && ev.st === Kd.here.st && at - ev.since >= X.HERE_GAP && X.places(ev).includes(S.loc));
       }
     }
     flags(S);

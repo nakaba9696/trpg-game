@@ -29,10 +29,11 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!G.f2o || G.f2o === G.f2) F("G.f2o が無いか、図鑑の G.f2 と同じ入れ物（名前がぶつかる）");
     for (const g of Object.keys(D.GOALS)) if (g !== "custom" && !TH[g]) F(`目的 ${g} の因縁が無い`);
     for (const [home, wild] of Object.entries(D.F2_WILD)) {
-      const d = (D.LOCS[home].links || {})[wild];
-      if (!(d <= 2)) F(`${home} から三段目の野 ${wild} まで二日より遠い（${d}）`);
-      const n = (D.LOCS[home].links || {})[D.F2_NEXT[home]];
-      if (!(n <= 3)) F(`${home} から五段目の町 ${D.F2_NEXT[home]} まで三日より遠い（${n}）`);
+      const near = D.LOCS[home].legs || D.LOCS[home].links || {};   // C16：近さは道のり（links は日数に直してある）
+      const d = near[wild];
+      if (!(d <= 2)) F(`${home} から三段目の野 ${wild} まで道のり 2 より遠い（${d}）`);
+      const n = near[D.F2_NEXT[home]];
+      if (!(n <= 3)) F(`${home} から五段目の町 ${D.F2_NEXT[home]} まで道のり 3 より遠い（${n}）`);
       if (D.LOCS[wild].type === "dungeon") F(`三段目の野 ${wild} が迷宮`);
     }
     for (const [id, th] of Object.entries(TH)) {

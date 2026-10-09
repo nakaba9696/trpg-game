@@ -2,7 +2,7 @@
 // - 季節・年を引く仕組み（日付・空・仲間の予定・賽の夜・世界の出来事・大事の季節）が、みな同じ暦（G.cal*）を使う
 // - 仲間の予定（時期 × 場所）が暦の範囲内。どの日も居場所が一つに決まる
 // - 協定の結び直しが 1130 年の春にある
-// - 時間の進み（G.c16）：道のり → 日数（町と町 7〜21 日）・旅で日数ぶん進む・野の探索は 1 日（同じ時間帯から続く）・町の中は 4 分の 1 日
+// - 時間の進み（G.c16）：道のり → 日数（陸路 7〜21 日・寄り道は本道より遅い）・旅で日数ぶん進む・野の探索は 1 日（同じ時間帯から続く）・町の中は 4 分の 1 日
 // 値（今は 1 季節 90 日・1 年 360 日）を変えても、この確認はそのまま通るように書く
 export default ({ fail, ok, loadEngine, seeded }) => {
   let n = 0;
@@ -92,12 +92,16 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       for (const [id, L] of Object.entries(D.LOCS)) {
         for (const [to, d] of Object.entries(L.links || {})) {
           if (!D.LOCS[to]) continue;
-          const tt = L.type === "town" && D.LOCS[to].type === "town";
-          if (!(d >= (tt ? 7 : 3) && d <= 21)) F(`${id}→${to}：陸路 ${d} 日（${tt ? "町と町は 7〜21" : "野・迷宮へは 3〜21"} 日のはず）`);
+          if (!(d >= 7 && d <= 21)) F(`${id}→${to}：陸路 ${d} 日（7〜21 日のはず）`);
           if (D.LOCS[to].links[id] !== d) F(`${id}⇔${to}：行きと帰りの日数が違う`);
           if (!(L.legs && L.legs[to] >= 1)) F(`${id}→${to}：元の道のりが残っていない`);
         }
         for (const [to, s] of Object.entries(L.sea || {})) if (!(s.days >= 5 && s.days <= 21 && s.legs >= 1)) F(`${id}→${to}：船 ${s.days} 日（5〜21 日のはず）`);
+      }
+      // 寄り道（二つの道）が、同じ二つの場所を結ぶ本道より早くならない
+      for (const [a, A] of Object.entries(D.LOCS)) for (const [b, dab] of Object.entries(A.links || {})) for (const [c, dbc] of Object.entries((D.LOCS[b] || {}).links || {})) {
+        const dac = (A.links || {})[c];
+        if (c !== a && dac != null && dab + dbc < dac) F(`${a}→${c}：${b} を回るほうが本道より早い（${dab + dbc} 日 < ${dac} 日）`);
       }
       // 旅：日数ぶん進み、旅の出来事の数は道のりで決まる
       const S = start(G, 21);
@@ -132,5 +136,5 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     }
   }
 
-  if (!n) ok("C16 暦の長さが一か所（G.SEASON_DAYS・G.YEAR_DAYS）・日付に月・時間の進み（町と町 1〜3 週間・野と迷宮は 1 日・町の中は 4 分の 1 日）");
+  if (!n) ok("C16 暦の長さが一か所（G.SEASON_DAYS・G.YEAR_DAYS）・日付に月・時間の進み（陸路 1〜3 週間・寄り道は本道より遅い・野と迷宮は 1 日・町の中は 4 分の 1 日）");
 };
