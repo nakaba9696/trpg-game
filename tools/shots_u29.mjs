@@ -68,7 +68,8 @@ for (const [w, h] of [[1280, 720], [1366, 768], [1920, 1080]]) {
   await quiet();
   const atk = await page.evaluate(visible, "#panel .u13main");
   console.log(w, "攻撃", JSON.stringify(atk));
-  if (atk.all < 5 || atk.vis < atk.all) ng(`${w}：仲間連れの戦闘で攻撃の手が ${atk.vis}/${atk.all} しか見えない`);
+  // F9 から「攻撃」「防御」は押すとすぐ決まる札になり、開いた見出し（戦技など）の手だけが一覧に出る。一覧の手が全部見えること
+  if (!atk.all || atk.vis < atk.all) ng(`${w}：仲間連れの戦闘で攻撃の手が ${atk.vis}/${atk.all} しか見えない`);
   await shot("party");
   // 仲間の番の「その他」：「一つ前に戻る」は上の札だけ
   await page.evaluate(() => { G.act("cb:attack"); G.ui.render(); });
