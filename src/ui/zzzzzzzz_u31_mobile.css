@@ -1,0 +1,117 @@
+/* U31：スマホの画面（ui/zzzzz_u31_mobile.js が body.u31m を付ける。PC の大きさでないとき。縦長・横長とも）。
+   上の細い帯（状態を一行・メニュー）／舞台（背景と立ち絵・魔物だけ）／ログ（短く・押すと全文）／コマンド（組の札を横に・中身だけ流れる）
+   置き場所の数は JS の配置（u31.layout）から、V9・U21 と同じ変数（--v9-t*・--v9-c*・--v9-s*・--u21-s*）と --u31-* で受け取る。画面全体は動かさない */
+body.u31m { margin: 0; overflow: hidden; }
+.u31menu, .u31logbtn { display: none; }
+
+/* ---------------------------------------------------------------- 上の細い帯：今の状態を一行（いる所・日付・HP と MP・所持金）＋メニュー */
+body.u31m .top { position: fixed; z-index: 20; left: 0; right: 0; top: 0; height: var(--u31-head, 48px); margin: 0; padding: 0 6px; display: flex; align-items: center; justify-content: flex-end;
+  pointer-events: auto; border-bottom: 1px solid var(--win-edge); background: color-mix(in srgb, var(--win-solid) 90%, transparent);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .3); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+body.u31m .top .tools { display: none; }
+body.u31m .u31menu { display: inline-flex; align-items: center; justify-content: center; flex: none; min-height: 44px; min-width: 64px; padding: 0 8px; font-size: 13.5px; letter-spacing: .06em; z-index: 22; }
+body.u31m.u31menuopen .u31menu { color: var(--head); border-color: var(--accent); }
+body.u31m #mbar { position: fixed; z-index: 21; top: 0; left: 0; right: 80px; height: var(--u31-head, 48px); max-width: none; margin: 0; padding: 0 2px 0 8px;
+  display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; overflow: hidden; background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; font-size: 12px; }
+body.u31m #mbar .mname, body.u31m #mbar .b5band, body.u31m #mbar .u11party, body.u31m #mbar .u11party:not([hidden]), body.u31m #mbar .u11saved { display: none; }
+body.u31m #mbar #u29where { display: flex; flex: 1 1 auto; flex-wrap: nowrap; min-width: 6.5em; margin: 0; padding: 0; border: 0; gap: 0 6px; align-items: baseline; flex-basis: auto; }
+body.u31m #u29where .u29wplace { font-size: 13px; letter-spacing: .02em; flex: 0 1 auto; min-width: 0; }
+body.u31m #u29where .u29wdate { font-size: 11px; flex: none; white-space: nowrap; }
+body.u31m #u29where .u29wstate { display: none; }
+body.u31m #mbar .mbars { display: flex; flex: none; flex-wrap: nowrap; gap: 5px; margin: 0; align-items: center; font-size: 11.5px; }
+body.u31m #mbar .gauge { display: inline-flex; align-items: center; gap: 3px; font-size: 0; white-space: nowrap; }
+body.u31m #mbar .gauge > span { font-size: 11.5px; }
+body.u31m #mbar .gauge .g { width: 14px; height: 5px; }
+body.u31m #mbar .u11gold { padding: 0 5px; gap: 1px; font-size: 10.5px; border-width: 1px; }
+body.u31m #mbar .u11gold .u11coin { width: 11px; height: 11px; }
+body.u31m #mbar .u11gold .u11lab { display: none; }
+body.u31m #mbar .u11gold .u11n { font-size: 12px; }
+/* 所持金の増減（+260 G）は帯の中に（上へ飛び出さない） */
+body.u31m #mbar .u11gold .u11d { top: auto; bottom: -2px; left: auto; right: 0; transform: none; font-size: 10px; line-height: 1; padding: 0 3px; }
+/* メニューを開く：道具のボタンを一枚の板に（その中の「…」「システム」の小さな板は開いたまま並べる） */
+body.u31m.u31menuopen .top .tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; position: fixed; z-index: 40; top: calc(var(--u31-head, 48px) + 4px); left: 6px; right: 6px;
+  max-height: calc(100vh - var(--u31-head, 48px) - 16px); overflow-y: auto; padding: 10px; margin: 0; border: 1px solid var(--win-edge); border-radius: 3px; background: var(--win-solid); box-shadow: 0 12px 34px rgba(0, 0, 0, .55); }
+body.u31m.u31menuopen .top .tools .q7more, body.u31m.u31menuopen .top .tools .q7sys, body.u31m.u31menuopen .top .tools .q7sysbox { display: contents; }
+body.u31m.u31menuopen .top .tools .q7morebtn, body.u31m.u31menuopen .top .tools .q7sysbtn, body.u31m.u31menuopen .top .tools .q7top, body.u31m.u31menuopen .top .tools .u11key { display: none; }
+body.u31m.u31menuopen .top .tools .btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-height: 44px; width: 100%; padding: 4px 6px; font-size: 13.5px; white-space: nowrap; }
+body.u31m.u31menuopen .top .tools .btn[hidden], body.u31m.u31menuopen .top .tools .btn.q7morebtn, body.u31m.u31menuopen .top .tools .btn.q7sysbtn { display: none; }
+body.u31m.u31menuopen .top .tools .q7setword { display: inline; }
+body.u31m.u31menuopen .top .tools .wide { display: none; }
+body.u31m .top #v9place, body.u31m .top .f4date, body.u31m .top .logo { display: none; }
+
+/* ---------------------------------------------------------------- 舞台：立ち絵は足元までログの窓の上に（名前は足元に） */
+body.u31m:not(.v9combat) .v9fig .v9name { bottom: 34px; left: 50%; transform: translateX(-50%); max-width: 80%; font-size: 13px; padding: 2px 12px; }
+body.u31m.v9combat #v9cast { display: none; }
+
+/* ---------------------------------------------------------------- ログ：短く（最新の数行）。押すと全文が開き、「閉じる」で戻る */
+body.u31m .tome { left: var(--v9-tx); width: var(--v9-tw); top: var(--v9-ty); height: var(--v9-th); padding: 14px 12px 6px; gap: 4px; cursor: pointer; z-index: 6; }
+body.u31m #log { display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; max-height: none; font-size: 14px; line-height: 1.65; padding-right: 0; }
+body.u31m #log > * { flex: none; margin-block: 0 4px; }
+body.u31m #log > .v9old, body.u31m #log > .u31aside { display: none; }
+body.u31m .tome .u31logbtn { display: inline-flex; align-items: center; justify-content: center; position: absolute; z-index: 3; right: 6px; top: -22px; min-height: 44px; min-width: 76px; padding: 0 10px;
+  font: 700 12.5px/1 var(--f-ui); letter-spacing: .06em; color: var(--ink); background: linear-gradient(var(--btn-a), var(--btn-b)); border: 1px solid var(--win-edge); border-radius: 3px; box-shadow: 0 2px 8px rgba(0, 0, 0, .35); cursor: pointer; }
+body.u31m.u31logopen .tome { top: var(--u31-oy); height: var(--u31-oh); z-index: 15; cursor: default; box-shadow: 0 14px 40px rgba(0, 0, 0, .6); background: var(--win-solid); }
+body.u31m.u31logopen #log { justify-content: flex-start; overflow-y: auto; overscroll-behavior: contain; }
+body.u31m.u31logopen #log > .v9old, body.u31m.u31logopen #log > .u31aside { display: block; }
+body.u31m.u31logopen .tome::after { content: ""; }
+/* 看板（場所・戦闘の札）は小さく */
+body.u31m .tome .u14sign, body.u31m .u14sign { transform: scale(.82); transform-origin: left bottom; }
+body.u31m .tome > .logHead, body.u31m .tome .u19pager { display: none; }
+
+/* ---------------------------------------------------------------- コマンド：組の札を横に（折り返して並ぶ）。開いた組の中身だけが流れる。押す所は 44px 以上 */
+body.u31m #u21side { padding: 18px 8px 8px; }
+/* 遊び方の一行（はじめだけ・「わかった」で消える）は、コマンドの窓の中ではなく、ログの窓のすぐ上に浮かべる */
+body.u31m #u21side #panel > .tip { position: fixed; z-index: 7; left: var(--v9-tx); width: var(--v9-tw); bottom: calc(100vh - var(--v9-ty) + 30px); top: auto; box-sizing: border-box;
+  font-size: 12px; line-height: 1.5; padding: 4px 8px; background: var(--win-solid); box-shadow: 0 4px 14px rgba(0, 0, 0, .4); }
+body.u31m.u31logopen #u21side #panel > .tip { display: none; }
+body.u31m #u21side .u13tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 5px; }
+body.u31m #u21side .u13tab .u21caret { display: none; }
+body.u31m #u21side .u13tab .u13lab { overflow: visible; text-overflow: clip; }
+body.u31m #u21side .u13tab { min-height: 44px; padding: 4px 8px; gap: 4px; font-size: 13.5px; letter-spacing: 0; }
+body.u31m #u21side .u13tab.on { min-height: 44px; }
+body.u31m #u21side #panel > .u28head .u28q { font-size: 12.5px; }
+body.u31m #u21side #panel > .u28head { top: -12px; left: 12px; padding: 1px 10px 2px; }
+
+/* 戦闘：一行の札・誰の手か → 「攻撃」「防御」を大きく（F9 の札）→ ほかの見出し → 開いた見出しの中身（ここだけ流れる） */
+body.u31m.v9combat #u21side #panel.u13fight { display: flex; flex-direction: column; gap: 5px; padding-bottom: 0; }
+body.u31m.v9combat #u21side #panel > .b5party { order: 1; }
+body.u31m.v9combat #u21side #panel > .f8who { order: 2; }
+body.u31m.v9combat #u21side #panel > .u13drawers { order: 3; position: static; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; padding: 0; margin: 0; background: none; border: 0; box-shadow: none; }
+body.u31m.v9combat #u21side #panel > .u13main, body.u31m.v9combat #u21side #panel > .u13pop { order: 4; position: static; max-height: none; box-shadow: none; padding: 0; }
+body.u31m.v9combat #u21side #panel .u13drawers .u13tab { min-height: 44px; padding: 3px 6px; font-size: 13px; }
+body.u31m.v9combat #u21side #panel .u13drawers .u13now { grid-column: span 2; min-height: 54px; padding: 4px 10px; font-size: 16px; }
+body.u31m.v9combat #u21side #panel .u13drawers .u13now { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; }
+body.u31m.v9combat #u21side #panel .u13drawers .u13now .u13lab { flex: none; overflow: visible; }
+body.u31m.v9combat #u21side #panel .u13drawers .u13now .u13nowsub { max-width: 100%; font-size: 11px; }
+body.u31m.v9combat #u21side #panel .u13drawers .u13again { position: static; grid-column: 1 / -1; max-width: none; margin: 0; }
+body.u31m.v9combat #u21side #panel .aimHint { display: none; }
+/* 敵の札は舞台の上（上の帯のすぐ下）に小さく。魔物はその下に全身 */
+body.u31m.v9combat #u21side #panel .foes { top: calc(var(--u31-head, 48px) + 4px); gap: 6px; padding: 0 6px; }
+body.u31m.v9combat #u21side #panel .foe { min-width: 0; flex: 1 1 0; max-width: 48%; padding: 3px 8px; font-size: 12px; }
+
+/* ---------------------------------------------------------------- 知らせ：立ち絵・コマンドに重ねず、短く（一行・新しいものだけ）
+   トロフィーなどの通知（#toast）は上の帯に重ねる。図鑑・用語集に追加（#u8note）はログの窓の上の縁に重ねる */
+body.u31m #toast { top: 2px; bottom: auto; left: 6px; right: 6px; transform: none; max-width: none; height: calc(var(--u31-head, 48px) - 4px); overflow: hidden; z-index: 45;
+  padding: 0 10px; font-size: 12.5px; line-height: 1.4; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
+body.u31m #toast[hidden] { display: none; }
+body.u31m #toast > :not(:last-child) { display: none; }
+body.u31m #toast > * { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.u31m #u8note { top: calc(var(--v9-ty) - 18px); bottom: auto; left: auto; right: calc(100vw - var(--v9-tx) - var(--v9-tw) + 90px); max-width: calc(var(--v9-tw) - 100px); z-index: 46; justify-items: end; }
+body.u31m #u8note > * { font-size: 12px; padding: 3px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; box-sizing: border-box; }
+body.u31m #u8note > :not(:last-child) { display: none; }
+body.u31m.u31logopen #u8note { display: none; }
+
+/* 狭い縦長（〜370px）：上の帯を詰める（いる所は短く切る） */
+@media (max-width: 370px) {
+  body.u31m #mbar { right: 74px; gap: 4px; padding-left: 6px; }
+  body.u31m #mbar #u29where { min-width: 2.6em; }
+  body.u31m #mbar .mbars { gap: 4px; }
+  body.u31m #mbar .gauge > span { font-size: 11px; }
+  body.u31m .u31menu { min-width: 60px; padding: 0 6px; font-size: 13px; }
+}
+
+/* 組の札：狭い画面では字を少し小さく（「特色の場所 2」が一枚に収まる） */
+@media (max-width: 440px) {
+  body.u31m #u21side .u13tab { font-size: 12.5px; padding: 4px 6px; }
+  body.u31m #u21side .u13tab .u13n { font-size: 11.5px; }
+}
