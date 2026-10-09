@@ -59,7 +59,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   two(G.whoTag(ev("c2_lab_door").who, S, "c2_lab_door"), "ロウェル", "王国軍の隊長", "寡黙な隊長の出来事");
   two(G.whoTag(ev("c2_lab").who, S, "c2_lab"), "モルヴァン", "王国に雇われた博士", "博士の出来事");
   two(G.whoTag({ kind: "noble", seed: "fac:garmund:chancellor", name: "宰相" }, S, null), "オスヴィン", "帝国の宰相", "帝都の王城の宰相");
-  two(G.whoTag(D.EVENT_WHO.r1_elf_ledger || { kind: "host" }, S, "r1_elf_ledger"), "ハンス", "宿の主人", "宿の主人ハンスの出来事");
+  two(G.whoTag(D.EVENT_WHO.r1_elf_ledger || { kind: "host" }, S, "r1_elf_ledger"), "ウルリヒ", "宿の主人", "宿の主人ウルリヒの出来事");
   two(G.whoTag({ kind: "sailor", seed: "ev:m6_wall_captain" }, S, "m6_wall_captain"), "コルサーノ", "東へ出る船の船長", "東へ出る船の船長");
   two(G.whoTag({ kind: "majin" }, S, "mirza"), "日傘の銀髪の男", "灰の荒野の貴人", "人の姿の使徒（呼び名のまま）");
   // 名の無い人：型の札
