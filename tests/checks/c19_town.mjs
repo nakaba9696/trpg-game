@@ -10,7 +10,7 @@ const NEW = {
   c19_pie_flood: ["pietro", "w4_tulier"], c19_aga_due: ["agathe", "w7_lumie"], c19_ser_night: ["seraphina", "w7_serena"],
   c19_tom_card: ["tomas", "w7_orbe"], c19_gan_weigh: ["ganzou", "w7_saltisle"], c19_yae_hair: ["yae", "w7_netisle"],
   c19_yae_back: ["yae", "w7_netisle"], c19_fil_pipe: ["filie", "w2_amyrein"], c19_clar_song: ["clarisse", "w1_holy"],
-  c19_mar_rope: ["marguerite", "w7_salyues"], c19_hil_ladder: ["hildegard", "w7_melvi"],
+  c19_mar_rope: ["marguerite", "w7_salyues"], c19_hil_ladder: ["hildegard", "w7_melvi"], c19_doro_ink: ["dorothea", "karna"],
 };
 const SPOT_ACTS = { w9_theater: ["c19_rope", "c19_mar_rope"], w9_scriptorium: ["c19_ladder", "c19_hil_ladder"] };
 
@@ -44,7 +44,26 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     ["c6_ode_job", /夫が上がってこぉへんかった|海で上がらへん人もおるのに/],
     ["c6_ber_debt", /許せないだけ/],
     ["c4_bart_ship", /毎回そう言っているらしい/],
+    ["c5_gau_extra", /わたし|炭鉱へ行かせた/],
+    ["c5_gau_rolling", /なぜか/],
+    ["c5_con_ledger", /顔を上げずに/],
+    ["c5_amb_sister", /一度も信じたことがねえ/],
+    ["c7_diet_paper", /来たときより少し遅かった/],
   ];
+  // 足したもの（続き）：怒りの歌・汚い手・表向きの嘘・壁の字
+  const HAVE = [["c5_sev_fight", /歌い出した/], ["c5_amb_sister", /噂を流したのは俺だ/], ["c7_diet_paper", /署名しただけ/], ["c5_mag_eighth", /三層目/]];
+  for (const [id, re] of HAVE) { const e = ev(id); if (!e || !re.test(allText(e))) F(`${id} に足したはずの文が無い：${re}`); }
+  // ヴィットリオの「相棒」は一つの流れ（書き出し＋一つの結果）で二度まで
+  for (const id of ["c5_vit_chest", "c5_vit_funeral", "c5_vit_trap"]) {
+    const e = ev(id);
+    if (!e) { F(`${id} が無い`); continue; }
+    const k = (t) => ((t || "").match(/相棒/g) || []).length;
+    for (const c of e.choices) for (const o of [c.ok, c.ng, c.win, c.ok && c.ok.win].filter(Boolean)) if (k(e.text) + k(o.text) > 2) F(`${id}「${c.label}」で「相棒」が三度以上`);
+  }
+  // 「顔を上げずに」は自分側の名のある人の出来事でグラモン一人だけ
+  const MINE43 = new Set("salphiel musette gerhard bartolo clarisse titta iori dorothea vittorio violaine yuzuel severin rufina constance ambroise shione filie leopold gauthier magda baudouin gramont berangere marion sylvestre odette otmar oren dietrich matthias liesel jonas rudger rionetta graul pietro marguerite hildegard agathe seraphina tomas ganzou yae".split(" "));
+  const faceUp = D.EVENTS.filter((e) => /^c(\d+|19)_/.test(e.id) && [].concat(e.c2 || []).some((x) => MINE43.has(x)) && /顔を上げずに/.test(allText(e))).map((e) => e.id);
+  if (faceUp.join() !== "c6_gra_audit") F(`「顔を上げずに」がグラモン一人でない：${faceUp.join("・")}`);
   for (const [id, re] of GONE) { const e = ev(id); if (!e) F(`${id} が無い`); else if (re.test(allText(e))) F(`${id} に説明の文が残っている：${allText(e).match(re)[0]}`); }
   for (const id of ["c12_pie_ledger", "c12_tom_staff", "c19_pie_flood", "c19_tom_card"]) { const e = ev(id); if (e && /わし/.test(allText(e))) F(`${id} に「わし」（年寄りの「わし」はヤエだけに）`); }
   const des = ev("w6g_deserter");
