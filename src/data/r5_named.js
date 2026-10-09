@@ -17,7 +17,7 @@
     // ---------------------------------------------------------------- 縁の続き（F4）
     keil: { name: "ケイル", role: "若い傭兵", events: ["f4r_cure_young"], names: ["傭兵のケイル"] },
     // ---------------------------------------------------------------- 町と野の人（W3・W6・W7）
-    benno_changer: { name: "ベンノ", role: "両替商", events: ["w3_o_k_scale"] },
+    benno_changer: { name: "ヴェンツェル", role: "両替商", events: ["w3_o_k_scale"] },
     marek: { name: "マレク", role: "取り立て屋", events: ["w3_o_k_debt"] },
     oswin_tailor: { name: "オズヴィン", role: "仕立屋", events: ["w3_o_l_tailor"] },
     hannes: { name: "ハンネス", role: "鍛冶の親方", events: ["w3_o_d_bellows", "w3_o_d_bellows2"] },
@@ -28,7 +28,7 @@
     benno_bridge: { name: "ベンノ", role: "橋番", events: ["w3_t_whistle"] },
     hugo_priest: { name: "フーゴ", role: "神父", events: ["w3_t_chapelrain"] },
     seebeck: { name: "ゼーベック", role: "研究所の老学者", events: ["w3_t_roarlog", "w3_t_roar2"] },
-    rita_ash: { name: "リタ", role: "見習い学者", events: ["w3_t_dig", "w3_t_dig2"] },
+    rita_ash: { name: "コレット", role: "見習い学者", events: ["w3_t_dig", "w3_t_dig2"] },
     balt: { name: "バルト", role: "流れの傭兵", events: ["w6g_merc", "w6g_merc2"] },
     anselm_relic: { name: "アンセルム", role: "遺物売り", events: ["w6g_relic", "w6g_relic2"] },
     rosa: { name: "ロサ", role: "船の水夫", events: ["w6s_fishing"] },
@@ -43,7 +43,7 @@
     emil: { name: "エミール", role: "学院の助手", events: ["r3_z_frog", "r3_z_frog3"] },
     arnaud: { name: "アルノー", role: "古本屋", events: ["r3_z_book"] },
     loch: { name: "ロッホ", role: "湯守", events: ["r3_z_bath2"] },
-    rita_bread: { name: "リタ", role: "パン屋の娘", events: ["r3_l_bread", "r3_l_bread3"] },
+    rita_bread: { name: "ニノン", role: "パン屋の娘", events: ["r3_l_bread", "r3_l_bread3"] },
     konrad: { name: "コンラート", role: "若い兵士", events: ["r3_l_valley"] },
     // ---------------------------------------------------------------- 糸の使徒の筋（E7。seed "e7:<名>"）
     cornelius: { name: "コルネリウス", role: "靴売り", seeds: ["e7:cornelius"] },
