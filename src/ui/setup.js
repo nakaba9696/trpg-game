@@ -315,8 +315,8 @@
     bh.append(h("span", "bonusLeft num" + (left ? " has" : ""), `残り ${left} 点`));
     const tb = cre.trophyBonus ? cre.trophyBonus() : 0;
     const ts = cre.trophyScore ? cre.trophyScore() : 0;
-    if (ts) bh.append(h("span", "trophyBonus num", `トロフィー ${ts} 点で +${tb}（次の +1 まであと ${cre.trophyNext()} 点）`));
-    bh.append(h("span", "fine", "好きな能力値に足す。トロフィーは銅 1・銀 2・金 5・白金 10 点で数え、10 点ごとにボーナス点 +1"));
+    if (ts) bh.append(h("span", "trophyBonus num", `トロフィーのおかげで +${tb} 点（いまトロフィー ${ts} 点。あと ${cre.trophyNext()} 点で +${tb + 1} 点）`));
+    bh.append(h("span", "fine", "ボーナス点は、好きな能力値に配って足せます。トロフィーを集めると増えます（銅 1 点・銀 2 点・金 5 点・白金 10 点。合わせて 10 点ごとにボーナス点が 1 点増える）"));
     box.append(bh);
     const list = h("div", "statlist creStats num");
     D.STATS.forEach((k) => {
