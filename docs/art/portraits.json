@@ -50,7 +50,7 @@
    "type": "ojisan",
    "file": "assets/portraits/kaidel.webp",
    "identity": "1boy, male focus, adult, man, 30 years old, muscular, broad shoulders, tan skin, black hair, jet black hair, short hair, short topknot, red headband, black eyes, droopy eyes, thick eyebrows, stubble, scar on face, bandages on arms, worn dark grey martial arts gi, open collar, torn sleeves, black martial arts belt, rugged face, square jaw",
-   "tags": "hands behind head",
+   "tags": "hands behind head, dark grey gi, grey clothes",
    "face": "big grin",
    "variants": {
     "joy": "smile, teeth, happy",
@@ -61,7 +61,8 @@
     "surprise": "surprised, wide-eyed, open mouth",
     "troubled": "troubled, awkward grin, sweatdrop"
    },
-   "memo": "傷だらけの古武道使いの傭兵。黒髪・無精ひげ・太い眉。お気楽で、迷ったら殴る。屈託のない笑い"
+   "memo": "傷だらけの古武道使いの傭兵。黒髪・無精ひげ・太い眉。お気楽で、迷ったら殴る。屈託のない笑い",
+   "art": 2
   },
   {
    "id": "nora",
@@ -69,7 +70,7 @@
    "name": "ノラミ（ノラ）",
    "file": "assets/portraits/nora.webp",
    "identity": "1girl, dog girl, 18 years old, athletic, curvy, tan skin, brown hair, chestnut brown hair, medium hair, messy wild hair, ahoge, brown dog ears, floppy ears, brown dog tail, brown eyes, round eyes, thick eyebrows, fang, dirt on face, brown leather hunter clothes, short sleeves, bandaged fists",
-   "tags": "energetic, hands on hips",
+   "tags": "energetic, hands on hips, brown leather tunic, brown leather shorts, leather hunter outfit",
    "face": "big grin",
    "variants": {
     "joy": "smile, open mouth, happy, wagging tail",
@@ -82,7 +83,8 @@
     "pout": "pout, puffed cheeks, ears back",
     "shy": "embarrassed, blush, looking away, ears down"
    },
-   "memo": "森の犬の獣人。明るい愛すべきあほ。弓は苦手で拳の力自慢。歯を見せて笑う"
+   "memo": "森の犬の獣人。明るい愛すべきあほ。弓は苦手で拳の力自慢。歯を見せて笑う",
+   "art": 2
   },
   {
    "id": "sheila",
@@ -420,7 +422,7 @@
    "type": "elder",
    "file": "assets/portraits/hermes.webp",
    "identity": "1boy, male focus, old man, 62 years old, short, wiry, tan skin, white hair, snow white hair, short hair, wild hair, bushy white beard, blue eyes, round eyes, bushy eyebrows, brown explorer hat, brown coat, leather satchel, dirt on clothes, deep wrinkles, big nose",
-   "tags": "energetic, hand on hat, holding a magnifying glass",
+   "tags": "energetic, hand on hat, holding a magnifying glass in other hand in front of chest",
    "face": "big grin",
    "variants": {
     "joy": "smile, closed eyes, happy",
@@ -431,7 +433,8 @@
     "surprise": "surprised, wide-eyed, open mouth",
     "tired": "tired, sweat, open mouth"
    },
-   "memo": "元気な考古学者の爺さん。遺跡が生きがい"
+   "memo": "元気な考古学者の爺さん。遺跡が生きがい",
+   "art": 2
   },
   {
    "id": "yurina",
@@ -535,8 +538,8 @@
    "group": "c2",
    "name": "マリエッタ（流れの大槌使い）",
    "file": "assets/portraits/bride.webp",
-   "identity": "1girl, woman, 34 years old, athletic, fair skin, blonde hair, golden blonde hair, long hair, wavy hair, yellow eyes, gentle eyes, thin eyebrows, black eyepatch with a yellow lightning bolt mark, white flower in hair, silver armor, war hammer resting on shoulder",
-   "tags": "blush, hand on hip",
+   "identity": "1girl, woman, 34 years old, athletic, fair skin, blonde hair, golden blonde hair, long hair, wavy hair, yellow eyes, gentle eyes, thin eyebrows, black eyepatch, small yellow lightning bolt emblem printed on the eyepatch, white flower in hair, silver armor, war hammer resting on shoulder",
+   "tags": "blush, hand on hip, other hand gripping the handle of the war hammer on shoulder",
    "face": "closed eyes, big grin",
    "variants": {
     "joy": "smile, open mouth, closed eyes",
@@ -547,7 +550,8 @@
     "smitten": "dreamy eyes, blush, smile",
     "pout": "pout, puffed cheeks, looking away"
    },
-   "memo": "めちゃくちゃ強い、婚期を逃したお姉さん。波打つ金髪に稲妻の眼帯。豪快に笑う"
+   "memo": "めちゃくちゃ強い、婚期を逃したお姉さん。波打つ金髪に稲妻の眼帯。豪快に笑う",
+   "art": 2
   },
   {
    "id": "boku",
@@ -966,9 +970,10 @@
    "name": "宿の女将グレタ",
    "file": "assets/portraits/greta.webp",
    "identity": "1girl, middle-aged woman, 50 years old, ash blonde hair, hair bun, blunt bangs, brown eyes, blue kerchief, white blouse, orange apron",
-   "tags": "innkeeper, hands on hips, holding a ladle",
+   "tags": "innkeeper, one hand on hip, holding a ladle in other hand",
    "face": "smile",
-   "memo": "宿の女将。世話焼き"
+   "memo": "宿の女将。世話焼き",
+   "art": 2
   },
   {
    "id": "gert",
@@ -1060,7 +1065,7 @@
    "name": "トゥーラ",
    "file": "assets/portraits/tula.webp",
    "identity": "1girl, teenage girl, 14 years old, short, stocky, small, tan skin, chestnut brown hair, brown hair, short hair, messy hair, bear ears, round ears, green eyes, round eyes, thick eyebrows, bandaged knuckles, bandage on nose, oversized padded brown work jacket, rolled-up sleeves, fur cap, wooden carrying frame on back",
-   "tags": "arms crossed",
+   "tags": "arms crossed, dull brown quilted work coat, earth-toned clothes, wooden A-frame backpack carrier on back",
    "face": "scowl, frown",
    "variants": {
     "joy": "embarrassed smile, blush, looking away",
@@ -1071,7 +1076,8 @@
     "pout": "pout, frown, puffed cheeks",
     "surprise": "surprised, wide-eyed, open mouth, ears up"
    },
-   "memo": "C4・仲間。帝国の坑夫長屋の熊の獣人の娘。背は低いが怪力、口が悪くて世話焼き。茶色のはね髪、丸い熊の耳、大きすぎる作業着、背負子"
+   "memo": "C4・仲間。帝国の坑夫長屋の熊の獣人の娘。背は低いが怪力、口が悪くて世話焼き。茶色のはね髪、丸い熊の耳、大きすぎる作業着、背負子",
+   "art": 2
   },
   {
    "id": "mirlene",
@@ -1119,7 +1125,7 @@
    "name": "人形遣いの爺さん（眷属ミュゼット）",
    "file": "assets/portraits/musette.webp",
    "identity": "1girl, petite, young girl, pale skin, lilac hair, grey hair, bob cut, straight bangs, violet eyes, half-closed eyes, very long eyelashes, expressionless, black frock coat too large for her, white cravat, sewing needles stuck in sleeve, thread wrapped around fingers",
-   "tags": "sitting on the shoulder of a giant wooden marionette of an old gentleman in a tailcoat, holding a needle and thread",
+   "tags": "standing, holding a needle and thread, small wooden marionette of an old gentleman in a tailcoat hanging on strings from her other hand",
    "face": "expressionless, blank stare",
    "variants": {
     "joy": "very slight smile",
@@ -1130,7 +1136,8 @@
     "exasperated": "exasperated, half-closed eyes, deadpan",
     "tired": "tired, half-closed eyes, expressionless"
    },
-   "memo": "C4・眷属。日傘の若君の人形師。老紳士の大きな操り人形の中にいる、まつげの長い無表情な小娘。薄紫のおかっぱ、大きすぎる燕尾服、糸を巻いた指"
+   "memo": "C4・眷属。日傘の若君の人形師。老紳士の大きな操り人形の中にいる、まつげの長い無表情な小娘。薄紫のおかっぱ、大きすぎる燕尾服、糸を巻いた指",
+   "art": 2
   },
   {
    "id": "gerhard",
@@ -1139,7 +1146,7 @@
    "type": "ojisan",
    "file": "assets/portraits/gerhard.webp",
    "identity": "1boy, male focus, adult, old man, 56 years old, very tall, muscular, broad shoulders, tan skin, grey hair, ash grey hair, short hair, crew cut, green eyes, sharp eyes, thick eyebrows, short grey beard, scar across eyebrow, deep wrinkles, battered dark steel armor, fur-lined cloak, greatsword on back",
-   "tags": "crouching, holding a small wooden horse toy",
+   "tags": "standing upright, holding a tiny wooden toy horse in his palm",
    "face": "big grin",
    "variants": {
     "joy": "grin, teeth, happy",
@@ -1150,7 +1157,8 @@
     "serious": "serious, determined, frown",
     "surprise": "surprised, wide-eyed, open mouth"
    },
-   "memo": "C4・町。黒鉄の砦の砦主。熱血で民思い、宝箱が好き。冬ごとに名前を失う。白髪まじりの短髪、灰色の短い髭、傷だらけの鎧、木彫りの馬"
+   "memo": "C4・町。黒鉄の砦の砦主。熱血で民思い、宝箱が好き。冬ごとに名前を失う。白髪まじりの短髪、灰色の短い髭、傷だらけの鎧、木彫りの馬",
+   "art": 2
   },
   {
    "id": "bartolo",
@@ -1159,7 +1167,7 @@
    "type": "brute",
    "file": "assets/portraits/bartolo.webp",
    "identity": "1boy, male focus, adult, man, 44 years old, huge man, burly, big belly, tan skin, black hair, dark hair, slicked back hair, short hair, narrow eyes, squinting eyes, black eyes, thick eyebrows, stubble, scar on chin, gold earring, red bandana around neck, open vest over striped shirt, coin pouch",
-   "tags": "holding a rolled treasure map, hand raised beckoning",
+   "tags": "holding a rolled paper scroll in one hand, other hand on belly",
    "face": "sly grin",
    "variants": {
     "joy": "grin, closed eyes",
@@ -1170,7 +1178,8 @@
     "panic": "flustered, panicking, sweatdrop, open mouth",
     "smug": "smug, grin"
    },
-   "memo": "C4・町。ヴァレンツァの糸目の賞金首。小悪党だが子どもに甘く、人買いを嫌う。糸目、撫でつけた黒髪、金の耳飾り、偽の宝の地図"
+   "memo": "C4・町。ヴァレンツァの糸目の賞金首。小悪党だが子どもに甘く、人買いを嫌う。糸目、撫でつけた黒髪、金の耳飾り、偽の宝の地図",
+   "art": 2
   },
   {
    "id": "clarisse",
@@ -1178,7 +1187,7 @@
    "name": "クラリス",
    "file": "assets/portraits/clarisse.webp",
    "identity": "1girl, teenage girl, 17 years old, petite, short, fair skin, golden blonde hair, blonde hair, long hair, single braid, green eyes, round eyes, blush, white plate armor with gold sun emblem, white tabard, huge war hammer",
-   "tags": "holding a huge war hammer with one hand, other hand fidgeting",
+   "tags": "both hands gripping the handle of a huge war hammer, hammer head resting on the ground beside her",
    "face": "nervous, worried eyebrows, blush",
    "variants": {
     "joy": "smile, blush, happy",
@@ -1190,7 +1199,8 @@
     "cry": "crying, tears, open mouth",
     "serious": "serious, determined, closed mouth"
    },
-   "memo": "C4・町。聖都の聖堂騎士見習い。小柄で可愛いのに怪力。堅物、からかうと慌てる、すぐ落ち込む。金の三つ編み、白い鎧と太陽の紋、身の丈ほどの戦鎚"
+   "memo": "C4・町。聖都の聖堂騎士見習い。小柄で可愛いのに怪力。堅物、からかうと慌てる、すぐ落ち込む。金の三つ編み、白い鎧と太陽の紋、身の丈ほどの戦鎚",
+   "art": 2
   },
   {
    "id": "titta",
@@ -1218,7 +1228,7 @@
    "type": "bishonen",
    "file": "assets/portraits/iori.webp",
    "identity": "1boy, male focus, adult, young man, 19 years old, slender, frail, very pale skin, black hair, blue-black hair, long hair, low tied hair, side bangs, violet eyes, sleepy eyes, eye bags, thin eyebrows, pale lavender kimono, dark haori, white hand towel in sleeve",
-   "tags": "sitting before a game board, holding a game piece",
+   "tags": "standing, holding a small wooden go board under one arm, holding a black go stone between fingers of other hand",
    "face": "sleepy, looking down",
    "variants": {
     "joy": "small smile",
@@ -1230,7 +1240,8 @@
     "serious": "serious, focused eyes, closed mouth",
     "faint_smile": "faint smile, soft eyes"
    },
-   "memo": "C4・旅。シェルアークの盤指しの若者。病弱で天然、眠りながら指して勝つ。人と目を合わせない。黒い長髪を低く束ね、淡い藤色の着物"
+   "memo": "C4・旅。シェルアークの盤指しの若者。病弱で天然、眠りながら指して勝つ。人と目を合わせない。黒い長髪を低く束ね、淡い藤色の着物",
+   "art": 2
   },
   {
    "id": "dorothea",
@@ -1385,7 +1396,7 @@
    "name": "マルゴ",
    "file": "assets/portraits/margot.webp",
    "identity": "1girl, mature female, adult, 41 years old, tall, tan skin, dark red hair, long hair, high ponytail, red kerchief headband, sharp eyes, brown eyes, raised eyebrows, scar on cheek, gold hoop earrings, leather vest over loose white shirt, rolled-up sleeves, belt with small poison vials and daggers, coin pouch",
-   "tags": "sitting on a barrel, flipping a gold coin",
+   "tags": "standing, one hand on hip, flipping a gold coin with other hand",
    "face": "confident grin",
    "variants": {
     "joy": "laughing, open mouth",
@@ -1398,7 +1409,8 @@
     "serious": "serious, sharp eyes, closed mouth",
     "smitten": "smitten, blush, gentle smile, looking away"
    },
-   "memo": "C6・仲間。街道の密輸屋の女親分。欲深で卑怯だが子どもと年寄りの荷には手を出さない。赤い髪を布でまとめ、金の耳飾り、毒の小瓶"
+   "memo": "C6・仲間。街道の密輸屋の女親分。欲深で卑怯だが子どもと年寄りの荷には手を出さない。赤い髪を布でまとめ、金の耳飾り、毒の小瓶",
+   "art": 2
   },
   {
    "id": "solenne",
@@ -1427,7 +1439,7 @@
    "name": "ピピネル",
    "file": "assets/portraits/pipinelle.webp",
    "identity": "1girl, elf, pointy ears, child, small, petite, pale skin, green hair, very long hair, sleepy eyes, golden eyes, raised eyebrows, white hooded robe with leaf embroidery, wooden circlet with leaves, gnarled wooden staff, honey pot",
-   "tags": "sitting cross-legged, arms crossed",
+   "tags": "standing, arms crossed, gnarled wooden staff leaning on shoulder",
    "face": "smug, half-closed eyes",
    "variants": {
     "joy": "smile, closed eyes",
@@ -1439,7 +1451,8 @@
     "sleepy": "sleepy, yawning, half-closed eyes",
     "faint_smile": "gentle motherly smile, soft eyes"
    },
-   "memo": "C6・仲間。迷いの森の祠の、子どもの姿の古い婆さま。年寄りの口ぶりで、人の子の腹具合にうるさい。苔色の長髪、尖った耳、蜂蜜の壺。恋の相手にしない"
+   "memo": "C6・仲間。迷いの森の祠の、子どもの姿の古い婆さま。年寄りの口ぶりで、人の子の腹具合にうるさい。苔色の長髪、尖った耳、蜂蜜の壺。恋の相手にしない",
+   "art": 2
   },
   {
    "id": "lisette",
@@ -1507,7 +1520,7 @@
    "kin": "moulin",
    "file": "assets/portraits/marion.webp",
    "identity": "1girl, mature female, old woman, 63 years old, short, small, hunched back, tan skin, grey hair, hair bun, smiling eyes, green eyes, wrinkles, flour-dusted brown dress, white apron, kerchief on head, broom",
-   "tags": "holding a broom, hand on lower back",
+   "tags": "holding a single broom with both hands, hunched back, small old woman",
    "face": "smile",
    "variants": {
     "joy": "warm smile, closed eyes",
@@ -1518,7 +1531,8 @@
     "faint_smile": "gentle motherly smile, soft eyes",
     "serious": "serious, focused eyes, closed mouth"
    },
-   "memo": "C6・町（家族）。バルナベの母。腰の曲がった小さな粉挽きの女房。息子を箒で追い回す。水車の帳面は全部この人"
+   "memo": "C6・町（家族）。バルナベの母。腰の曲がった小さな粉挽きの女房。息子を箒で追い回す。水車の帳面は全部この人",
+   "art": 2
   },
   {
    "id": "sylvestre",
@@ -1527,7 +1541,7 @@
    "type": "elder",
    "file": "assets/portraits/sylvestre.webp",
    "identity": "1boy, male focus, old man, 74 years old, thin, pale skin, grey hair, long hair, long white beard, sleepy eyes, brown eyes, raised eyebrows, deep wrinkles, round spectacles, crimson long robe, silver chain of office, soot on sleeves, wooden staff",
-   "tags": "holding a closed old book under arm, standing beside a small bonfire",
+   "tags": "standing, holding a closed old book under arm, holding a wooden staff",
    "face": "mischievous smile",
    "variants": {
     "joy": "gentle smile, closed eyes",
@@ -1538,7 +1552,8 @@
     "faint_smile": "slight smile, soft eyes",
     "tired": "tired, half-closed eyes, sigh"
    },
-   "memo": "C6・町（師匠）。王都の焚書官長。焼く前に必ず読む飄々とした老人。ラザールの師で、その両親の写本屋を焼いた本人"
+   "memo": "C6・町（師匠）。王都の焚書官長。焼く前に必ず読む飄々とした老人。ラザールの師で、その両親の写本屋を焼いた本人",
+   "art": 2
   },
   {
    "id": "odette",
@@ -1650,7 +1665,7 @@
    "type": "bishonen",
    "file": "assets/portraits/noeris.webp",
    "identity": "1boy, male focus, adult, young man, 27 years old, slender, tall, pointy ears, elf, pale skin, silver-white hair, platinum silver hair, long hair, low ponytail, light blue eyes, narrowed eyes, thin eyebrows, mole under eye, dangling earring, dark purple loose robe, embroidered sash, rings on fingers",
-   "tags": "rolling a die between fingers, sitting behind a gambling table",
+   "tags": "standing, rolling a die between fingers",
    "face": "gentle closed-eye smile",
    "variants": {
     "joy": "soft smile, eyes slightly open",
@@ -1662,7 +1677,8 @@
     "smug": "smug, closed eyes, smile",
     "surprise": "surprised, eyes open, wide-eyed"
    },
-   "memo": "C7・仲間・恋。湯の町アミュレインの賭場の胴元のエルフ。糸目、柔らかな話し方で騙すと言って騙す。学院の二番。銀白の長髪を低く束ね、紫の衣、骰子"
+   "memo": "C7・仲間・恋。湯の町アミュレインの賭場の胴元のエルフ。糸目、柔らかな話し方で騙すと言って騙す。学院の二番。銀白の長髪を低く束ね、紫の衣、骰子",
+   "art": 2
   },
   {
    "id": "ingrid",
@@ -1791,7 +1807,7 @@
    "type": "elder",
    "file": "assets/portraits/oren.webp",
    "identity": "1boy, male focus, old man, 84 years old, thin, frail, wrinkled skin, bald, white beard, long white beard, grey eyes, droopy eyes, bushy white eyebrows, dark blue council robe, silver council badge, wooden cane",
-   "tags": "sitting formally on his knees by a lake",
+   "tags": "standing, both hands resting on a wooden cane",
    "face": "gentle smile",
    "variants": {
     "joy": "smile, closed eyes",
@@ -1802,7 +1818,8 @@
     "pout": "pout, frown, stubborn",
     "serious": "serious, stern, closed mouth"
    },
-   "memo": "C7・町。共和国の評議会の最古参の老議員。頑固だが、湖の小さなお方の前では子どものよう。禿頭、白く長い髭、紺の議員の衣、杖"
+   "memo": "C7・町。共和国の評議会の最古参の老議員。頑固だが、湖の小さなお方の前では子どものよう。禿頭、白く長い髭、紺の議員の衣、杖",
+   "art": 2
   },
   {
    "id": "dietrich",
@@ -1931,7 +1948,7 @@
    "name": "ツユハ",
    "file": "assets/portraits/tsuyuha.webp",
    "identity": "1girl, elf, pointy ears, petite, small, pink hair, very long hair, hime cut, amber eyes, sleepy eyes, half-closed eyes, thin eyebrows, indigo kimono with white wave pattern, red obi, oversized old katana at waist",
-   "tags": "sitting on a wooden bench, holding a tea cup",
+   "tags": "standing, holding a tea cup",
    "face": "sleepy smile",
    "variants": {
     "joy": "gentle smile, closed eyes",
@@ -1943,7 +1960,8 @@
     "faint_smile": "slight smile, soft eyes, closed mouth",
     "exasperated": "exasperated, half-closed eyes, deadpan, sigh"
    },
-   "memo": "C8・仲間（子どもの姿）。島の都の茶屋の婆さま。四百年生きたエルフ。昼行灯で母のよう、刀は島一番。桜色の長髪、藍の着物、大きすぎる刀"
+   "memo": "C8・仲間（子どもの姿）。島の都の茶屋の婆さま。四百年生きたエルフ。昼行灯で母のよう、刀は島一番。桜色の長髪、藍の着物、大きすぎる刀",
+   "art": 2
   },
   {
    "id": "takimaru",
@@ -1994,7 +2012,7 @@
    "name": "イズラ",
    "file": "assets/portraits/izra.webp",
    "identity": "1girl, adult woman, 27 years old, bird girl, hawk wings on back, brown wings, one wing with black feathers, tall, slender, dark brown hair, long hair, golden eyes, sharp eyes, scar on cheek, old leather collar on neck, dark red leather armor, spear",
-   "tags": "perched on a rock, wings half spread",
+   "tags": "standing, wings half spread, holding a spear",
    "face": "confident smirk",
    "variants": {
     "joy": "wide eyes, sparkling eyes, holding a round pastry",
@@ -2006,7 +2024,8 @@
     "surprise": "surprised, wide-eyed, open mouth, feathers ruffled",
     "shy": "embarrassed, blush, looking away, wings folded tight"
    },
-   "memo": "C8・仲間（恋の相手）。使徒領から来た鷹の獣人。黒鎧の居城の元門番。戦闘狂で親身、人の暮らしを珍しがる。片方だけ黒い翼、首の革の輪、槍"
+   "memo": "C8・仲間（恋の相手）。使徒領から来た鷹の獣人。黒鎧の居城の元門番。戦闘狂で親身、人の暮らしを珍しがる。片方だけ黒い翼、首の革の輪、槍",
+   "art": 2
   },
   {
    "id": "anselmo",
@@ -2115,7 +2134,7 @@
    "name": "ロスヴィタ",
    "file": "assets/portraits/roswitha.webp",
    "identity": "1girl, adult woman, 31 years old, soldier, light brown hair, short hair, bob cut, grey eyes, freckles, sharp eyes, worried eyebrows, dark circles under eyes, grey padded gambeson, steel pauldron, many small name patches sewn on sleeve, spear on back",
-   "tags": "holding a ledger and a quill",
+   "tags": "holding an open ledger in one hand and a quill in other hand, spear on back",
    "face": "expressionless, serious",
    "variants": {
     "joy": "small smile, slight blush",
@@ -2127,7 +2146,8 @@
     "faint_smile": "slight smile, soft eyes, closed mouth",
     "tired": "tired, exhausted, half-closed eyes, sweat"
    },
-   "memo": "C8・仲間。黒鉄の砦の兵站係。有能で不憫、くじは外れ、砦主に毎冬名前を忘れられる。薄茶の短い髪、そばかす、灰色の綿入れ、袖に名札がいっぱい、帳簿"
+   "memo": "C8・仲間。黒鉄の砦の兵站係。有能で不憫、くじは外れ、砦主に毎冬名前を忘れられる。薄茶の短い髪、そばかす、灰色の綿入れ、袖に名札がいっぱい、帳簿",
+   "art": 2
   },
   {
    "id": "jonas",
@@ -2198,7 +2218,7 @@
    "type": "ojisan",
    "file": "assets/portraits/souhaku.webp",
    "identity": "1boy, male focus, old man, 63 years old, short, slim, wiry, tan skin, white hair, silver-white hair, long hair, topknot, fox ears, fox tail, amber eyes, smiling eyes, wrinkles, stubble, white eyebrows, faded brown kimono, straw sandals, katana with worn scabbard at waist",
-   "tags": "holding a fishing rod over shoulder, sitting on a pier",
+   "tags": "standing, holding a fishing rod over shoulder",
    "face": "relaxed grin, squinting",
    "variants": {
     "joy": "laughing, closed eyes, open mouth",
@@ -2210,7 +2230,8 @@
     "smitten": "smitten, blush, dreamy eyes, gentle smile",
     "faint_smile": "slight smile, soft eyes, closed mouth"
    },
-   "memo": "C5・仲間。島の都の桟橋の釣り好きの狐の獣人の老人。爺と呼ばせる昼行灯。抜けば誰も届かない。白い髷、色あせた着物、歯形の残った鞘、釣り竿"
+   "memo": "C5・仲間。島の都の桟橋の釣り好きの狐の獣人の老人。爺と呼ばせる昼行灯。抜けば誰も届かない。白い髷、色あせた着物、歯形の残った鞘、釣り竿",
+   "art": 2
   },
   {
    "id": "adele",
@@ -2218,7 +2239,7 @@
    "name": "アデル",
    "file": "assets/portraits/adele.webp",
    "identity": "1girl, adult, young woman, 24 years old, athletic, tan skin, freckles, cream blonde hair, pale blonde hair, long hair, high ponytail, amber eyes, round eyes, bandage on cheek, patched leather armor, brown scarf, worn boots, spear",
-   "tags": "holding a spear, pointing finger, proud pose",
+   "tags": "holding a spear upright in one hand, other hand on hip, proud pose, long sleeves, pleated skirt, knee boots",
    "face": "proud grin, confident",
    "variants": {
     "joy": "big smile, closed eyes",
@@ -2230,7 +2251,8 @@
     "panic": "panicking, flustered, sweatdrop",
     "serious": "serious, determined, focused eyes, gripping spear"
    },
-   "memo": "C5・仲間。麦の都の先輩冒険者。教えることは間違っているが槍は本物。ウブで貧乏。淡い金の高いポニーテール、そばかす、つぎはぎの革鎧"
+   "memo": "C5・仲間。麦の都の先輩冒険者。教えることは間違っているが槍は本物。ウブで貧乏。淡い金の高いポニーテール、そばかす、つぎはぎの革鎧",
+   "art": 2
   },
   {
    "id": "celestin",
@@ -2239,7 +2261,7 @@
    "type": "bishonen",
    "file": "assets/portraits/celestin.webp",
    "identity": "1boy, male focus, elf, pointy ears, young man, slender, pale skin, green hair, dark green hair, long hair, single braid, cyan eyes, sleepy eyes, thin eyebrows, silver earring, dark green hooded cloak, silver chain clasp, leather bracer, longbow, glowing paper charm at waist",
-   "tags": "sitting on a tree branch, holding a longbow, looking up at the sky",
+   "tags": "standing, holding a longbow in one hand, bow string, looking up at the sky",
    "face": "blank stare, absent-minded",
    "variants": {
     "joy": "small gentle smile, looking away",
@@ -2251,7 +2273,8 @@
     "surprise": "mildly surprised, slightly widened eyes, slow reaction",
     "cold": "cold eyes, narrowed eyes, expressionless"
    },
-   "memo": "C5・仲間。迷いの森の木の上で暮らすエルフの弓手（九十二歳）。ぼんやりして三拍遅れて返事をする。兄への届かない手紙。深緑の長い三つ編み、深緑の外套、長弓、光る札"
+   "memo": "C5・仲間。迷いの森の木の上で暮らすエルフの弓手（九十二歳）。ぼんやりして三拍遅れて返事をする。兄への届かない手紙。深緑の長い三つ編み、深緑の外套、長弓、光る札",
+   "art": 2
   },
   {
    "id": "felix",
@@ -2956,8 +2979,9 @@
    "name": "神官・修道女（女・二）",
    "file": "assets/portraits/kind_priest_f_b.webp",
    "identity": "1girl, young woman, 20 years old, white hair, medium hair, bob cut, red eyes",
-   "tags": "priest, white vestment, sun emblem, mace, disheveled",
-   "memo": "名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる）"
+   "tags": "priest, white vestment, sun emblem, holding a mace in one hand at her side, disheveled",
+   "memo": "名もない人の型の二枚目（もとは主人公の型。A10 で主人公の立ち絵をやめたので回した。同じ種類・性別の人の半分ほどがこの絵になる）",
+   "art": 2
   },
   {
    "id": "kind_noble_m",
@@ -3209,8 +3233,9 @@
    "name": "八雲の人（侍・巫女）（女）",
    "file": "assets/portraits/kind_ronin_f.webp",
    "identity": "1girl, woman, 30 years old, black hair, medium hair, blunt bangs, amber eyes",
-   "tags": "samurai, kimono, katana",
-   "memo": "名もない人の型（仲間・出来事の人）"
+   "tags": "samurai, kimono, hakama, sheathed katana at waist, hand resting on katana hilt",
+   "memo": "名もない人の型（仲間・出来事の人）",
+   "art": 2
   },
   {
    "id": "kind_ronin_f_b",
@@ -3385,12 +3410,13 @@
    "type": "boy",
    "file": "assets/portraits/kind_child_m.webp",
    "identity": "1boy, male focus, boy, child, 10 years old, white hair, short hair, grey eyes",
-   "tags": "simple clothes, small",
+   "tags": "simple linen tunic, rope belt, short trousers, small",
    "memo": "名もない子ども。子どもらしく",
    "redraw": {
     "modern": "紐付きの大きなパーカー",
     "fix": "麻の短い上着に帯、短いズボン（例：simple linen tunic, rope belt, short trousers）"
-   }
+   },
+   "art": 2
   },
   {
    "id": "kind_child_f",
@@ -3398,12 +3424,13 @@
    "name": "子ども（女）",
    "file": "assets/portraits/kind_child_f.webp",
    "identity": "1girl, girl, child, 10 years old, black hair, long hair, low twintails, blunt bangs, amber eyes",
-   "tags": "simple clothes, small",
+   "tags": "simple linen dress, apron, head kerchief, small",
    "memo": "名もない子ども。子どもらしく",
    "redraw": {
     "modern": "ボタン留めの桃色のカーディガンに襟とプリーツのスカート（今の子ども服）",
     "fix": "麻のワンピースに前掛け、頭に布（例：simple linen dress, apron, head kerchief）"
-   }
+   },
+   "art": 2
   }
  ]
 }
