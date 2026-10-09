@@ -20,29 +20,30 @@
   const as = (x) => (x == null ? [] : Array.isArray(x) ? x : [x]);
   const WANT_W = 3;   // 狙った人の出会いの出来事の重み
   const WANT_MAX = 3; // 狙える人数
-  const SHIFT = 6;    // 予定が前後する日数（冒険ごと）
+  const SHIFT = () => Math.max(1, Math.round((G.SEASON_DAYS || 30) / 15)); // 予定が前後する日数（冒険ごと。季節 90 日なら 6 日）
 
   // ---------------------------------------------------------------- 暦
   const SEASONS = () => G.SEASONS || ["春", "夏", "秋", "冬"];
-  F4.doy = (day) => ((((day - 1) % 360) + 360) % 360) + 1; // 年の中の日 1〜360
-  F4.seasonOf = (day) => SEASONS()[Math.floor((F4.doy(day) - 1) / 90)];
-  // 今日（画面の上の帯が読む）：{ y 年, season 季節, si 季節の番号, d 季節の中の日, text「1127年 春 9日」, phase 時間帯 }
+  const SD = () => G.SEASON_DAYS, YD = () => G.YEAR_DAYS;   // 暦の長さ（core.js。C16）
+  F4.doy = (day) => G.calDoy(day); // 年の中の日 1〜G.YEAR_DAYS
+  F4.seasonOf = (day) => SEASONS()[G.calSi(day)];
+  // 今日（画面の上の帯が読む）：{ y 年, season 季節, si 季節の番号, month 月, mi 月の番号, d 月の中の日, sd 季節の中の日, text「1127年 春 一の月 9日」, phase 時間帯 }
   G.f4Today = (S) => {
     S = S || G.S;
     if (!S) return null;
     const text = G.dateOf ? G.dateOf(S.day) : `${S.day}日目`;
     const m = /^(\d+)年/.exec(text);
-    const si = Math.floor((F4.doy(S.day) - 1) / 90);
-    return { y: m ? Number(m[1]) : 0, season: SEASONS()[si], si, d: ((F4.doy(S.day) - 1) % 90) + 1, text, phase: (G.PHASES || [])[S.phase] || "" };
+    const si = G.calSi(S.day);
+    return { y: m ? Number(m[1]) : 0, season: SEASONS()[si], si, month: G.MONTHS[G.calMi(S.day)], mi: G.calMi(S.day), d: G.calMd(S.day), sd: G.calSd(S.day), text, phase: (G.PHASES || [])[S.phase] || "" };
   };
   const edge = (x, end) => {
     const si = SEASONS().indexOf(x);
-    if (si >= 0) return end ? (si + 1) * 90 : si * 90 + 1;
-    return Math.max(1, Math.min(360, Number(x) || 1));
+    if (si >= 0) return end ? (si + 1) * SD() : si * SD() + 1;
+    return Math.max(1, Math.min(YD(), Number(x) || 1));
   };
   const inRange = (doy, from, to) => (from <= to ? doy >= from && doy <= to : doy >= from || doy <= to);
   // 予定の一行が含む季節
-  F4.seasonsOf = (e) => SEASONS().filter((s, i) => inRange(i * 90 + 45, edge(e.from), edge(e.to, true)));
+  F4.seasonsOf = (e) => SEASONS().filter((s, i) => inRange(i * SD() + Math.ceil(SD() / 2), edge(e.from), edge(e.to, true)));
   // 予定の一行の時期の言い方（「秋」「春から夏」「一年じゅう」）
   F4.whenText = (e) => {
     const ss = F4.seasonsOf(e);
@@ -441,7 +442,7 @@
   G.newGame = (opt) => {
     const S = baseNew(opt);
     const shift = {};
-    Object.keys(P()).filter((id) => F4.joinable(id) && F4.schedule(id, null)).forEach((id) => { shift[id] = Math.round((G.rand() * 2 - 1) * SHIFT); });
+    Object.keys(P()).filter((id) => F4.joinable(id) && F4.schedule(id, null)).forEach((id) => { shift[id] = Math.round((G.rand() * 2 - 1) * SHIFT()); });
     S.f4 = { shift, want: Object.keys(prof().want).filter((id) => prof().want[id] && F4.joinable(id)), heard: {} };
     return S;
   };

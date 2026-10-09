@@ -163,7 +163,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const hw = { id: "m4h901", day: S.day - 20, kind: "emp_dead", loc: "garmund", heard: "" };
     W.hist.push(hw);
     G.act("fac:tavern");
-    for (let i = 0; i < 12 && !hw.heard; i++) { S.gold = 100; G.act("tavern:rumor"); }
+    // C16：世の大事（M12）が長く続くようになり、酒場の噂を取り合う話が増えたので、聞く回数を多めに
+    for (let i = 0; i < 30 && !hw.heard; i++) { S.gold = 100; G.act("tavern:rumor"); }
     if (hw.heard !== "rumor") fail("酒場で世の中の噂を聞けない");
     if (!S.chronicle.some((c) => c.kind === "world" && /皇帝/.test(c.text))) fail("聞いた噂が年表に残らない");
     const far = { id: "m4h902", day: S.day, kind: "raid", loc: "w1_oboro", by: "dance", heard: "" };

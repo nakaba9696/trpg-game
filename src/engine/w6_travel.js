@@ -4,12 +4,12 @@
 //   2. 襲撃（今までの「何者かに襲われた」戦い）は、今までと同じ割合で決め、起きるなら道中の最後に置く（戦いが終われば着く）
 //   3. 出来事を一つずつ起こす。選んで結果が出たら（戦いになったら戦いが終わったら）、手番の終わり（G.endTurn）で次へ進む。残りが無ければ着く
 // 出来事は D.EVENTS に、where: ["w6"]・w: 0（ふつうの出来事の抽選には出ない）と、旅の条件 w6 を付けて置く（src/data/events_w6_*.js）
-//   w6: { w 重み, on "land"|"sea"|"any"（既定 land）, reg [地方]（出発地か行き先のどちらかが当たれば）, dmin / dmax 危険度, days 何日以上の旅,
+//   w6: { w 重み, on "land"|"sea"|"any"（既定 land）, reg [地方]（出発地か行き先のどちらかが当たれば）, dmin / dmax 危険度, days 道のりがこれ以上の旅（C16：日数ではなく道のり 1〜4）,
 //         season [季節], weather [天候]（行き先の空）, tod [時間帯]（その出来事が起きる時。旅の中で引く）, comp 仲間がいるとき, fame 名声がこれ以上,
 //         flag この印があるとき, noflag この印が無いとき }
 //   地方：leo レオネスト王国（商都ブランデール・港町ヴァレンツァのあたりも）・nord ノルディア帝国・elm エルメシア共和国・holy 光天教会領・front 人類の最前線と断界山脈・isle シェルアーク・realm 使徒領
 // 結果（G.apply）に足せるもの：heard "話"（図鑑の聞いた話。G.heard が無ければ覚え書き）・detour true（寄り道。近くの別の場所に着く）・banter "camp"|"road"（仲間の掛け合いを一つ）
-// セーブに足すもの：S.w6 = { dest, from, sea, days, danger, left 残りの回数, raid 襲撃が残っているか, seen [この旅で起きた出来事], tod }（着いたら null）
+// セーブに足すもの：S.w6 = { dest, from, sea, days 日数, legs 道のり, danger, left 残りの回数, raid 襲撃が残っているか, seen [この旅で起きた出来事], tod }（着いたら null）
 //   south 王国の南の商いの道（W6.SOUTH の場所。国はレオネスト王国だが、旅の出来事では王都のあたり leo と分けて引く。王国じゅうの出来事は reg に両方書く。D10 までは地方 free だった）
 //   reg の "free"（前の地方）は "south" として読む（ほかの枝から来た出来事のため）
 //   S.w6recent = [最近の旅の出来事]（同じ出来事が続かないように）。古いセーブに無くても動く。旅の途中の古いセーブ（S.travel だけある）は、次の手番で着く
@@ -50,7 +50,7 @@
     const w = S.w6 || {};
     const sky = (G.skyAt && w.dest && G.skyAt(w.dest)) || {};
     return {
-      sea: !!w.sea, days: w.days || 1, danger: w.danger || 0, tod: w.tod || "昼",
+      sea: !!w.sea, days: w.legs || w.days || 1, danger: w.danger || 0, tod: w.tod || "昼",   // days は道のり（出来事の w6.days「これだけ遠い旅」と比べる）
       reg: [W6.regionOf(w.from), W6.regionOf(w.dest)], season: sky.season, weather: sky.weather,
     };
   };
@@ -110,11 +110,13 @@
     G.passDays(days);
     S.counters.travels++;
     const danger = Math.max(from.danger || 0, T.danger || 0);
-    let n = W6.count(days, danger, sea);
-    const raid = !sea && G.rand() < W6.raidChance(days, danger);
+    // 出来事の数と襲撃の割合は、日数ではなく道のり（近い・遠い。C16 が日数に直す前の数）で決める
+    const legs = G.c16 ? G.c16.legsOf(fromId, dest, sea) : days;
+    let n = W6.count(legs, danger, sea);
+    const raid = !sea && G.rand() < W6.raidChance(legs, danger);
     if (raid && n >= W6.MAX) n = W6.MAX - 1;
     S.travel = dest;
-    S.w6 = { dest, from: fromId, sea, days, danger, left: n, raid, seen: [], tod: "昼" };
+    S.w6 = { dest, from: fromId, sea, days, legs, danger, left: n, raid, seen: [], tod: "昼" };
     W6.next();
   };
 

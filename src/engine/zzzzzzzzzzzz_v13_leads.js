@@ -26,13 +26,30 @@
   V.SCAN = 800;       // 境目を探す範囲（日）。一年より長ければよい
   const seasonOf = (d) => (G.seasonOf ? G.seasonOf(d) : null);
   // その季節が始まる日のうち、day の前後にあるもの（古い順）
+  // 暦の長さが一か所の定数（C16 の G.SEASON_DAYS・G.YEAR_DAYS・G.calSi）にあれば、日ごとに探さず数で出す（答えは同じ。日ごとに探すと、遊ぶたびに重い）
+  // G.seasonOf が差し替えられて暦の定数と合わないとき（テストで別の暦にするなど）は、日ごとに探すほうへ
+  const calc = () => {
+    if (!(G.SEASON_DAYS && G.YEAR_DAYS && G.calSi && G.calSd && G.SEASONS && G.seasonOf)) return false;
+    const SD = G.SEASON_DAYS, YD = G.YEAR_DAYS;
+    return [1, SD, SD + 1, YD, YD + 1, 2 * SD + 1].every((d) => G.seasonOf(d) === G.SEASONS[G.calSi(d)]);
+  };
   V.seasonStarts = (season, day) => {
     const out = [];
+    if (calc()) {
+      const si = G.SEASONS.indexOf(season);
+      if (si < 0) return out;
+      const lo = Math.max(2, day - V.SCAN), hi = day + V.SCAN, SD = G.SEASON_DAYS, YD = G.YEAR_DAYS;
+      for (let s = Math.floor((lo - 1) / YD) * YD + si * SD + 1; s <= hi; s += YD) if (s >= lo) out.push(s);
+      if (day - V.SCAN < 2 && si === G.calSi(1)) out.unshift(1);
+      return out;
+    }
     for (let d = Math.max(2, day - V.SCAN); d <= day + V.SCAN; d++) if (seasonOf(d) === season && seasonOf(d - 1) !== season) out.push(d);
     if (day - V.SCAN < 2 && seasonOf(1) === season) out.unshift(1);
     return out;
   };
-  V.seasonLength = (start) => { let n = 0; const s = seasonOf(start); while (n < V.SCAN && seasonOf(start + n) === s) n++; return n; };
+  V.seasonLength = (start) => {
+    if (calc() && G.calSd(start) === 1) return Math.min(V.SCAN, G.SEASON_DAYS);
+    let n = 0; const s = seasonOf(start); while (n < V.SCAN && seasonOf(start + n) === s) n++; return n; };
   // 季節の催しの、今の日を含む時期 { key, start, from, to }（無ければ null）。from（前の季節の半ば）〜 to（その季節の半ば）
   V.seasonWindow = (set, day) => {
     for (const start of V.seasonStarts(set.season, day)) {

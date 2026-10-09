@@ -8,7 +8,7 @@
   M.reg("locust", {
     name: "蝗の年", glyph: "麦", w: 2, nation: "レオネスト王国",
     // 麦の育つ季節（春・夏）に始まる
-    cond: (S) => Math.floor(((S.day - 1) % 360) / 90) <= 1,
+    cond: (S) => G.calSi(S.day) <= 1,
     targets: ["w2_granbel"], at: ["w2_granbel", "plains", "leavel"],
     stageNames: ["前触れ", "蝗の雲", "麦が尽きる"],
     joinChron: "蝗の年に麦の都の人々を手伝う",

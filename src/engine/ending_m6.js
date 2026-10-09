@@ -115,7 +115,7 @@
   G.retire = () => { const S = G.S; if (!S || S.over) return; const m = G.m6Best(S); G.endStory(m ? m.id : "plain"); };
 
   // ---------------------------------------------------------------- 人生の中身（冒険中の S でも、墓碑でも）
-  const yearOf = (day) => 1127 + Math.floor(((day || 1) - 1) / 360);
+  const yearOf = (day) => G.calYear(day || 1);
   const lifeOf = (S) => {
     const run = !!S.profile;
     const p = S.profile || { name: S.name };
@@ -221,7 +221,7 @@
     ].join(""));
 
     // 2. 印象的な出来事（人生の長さで数を決める。短い人生は短く、長い人生は選んで長くしすぎない）
-    let want = L.days <= 10 ? 1 : L.days <= 40 ? 2 : L.days <= 150 ? 3 : 4;
+    let want = L.days <= 30 ? 1 : L.days <= 120 ? 2 : L.days <= 450 ? 3 : 4;   // C16：旅が 1〜3 週間になったので、日数の目安を 3 倍に
     if (L.over === "end") want = Math.max(2, want);
     const nOf = { quests: L.quests, bosses: L.bosses, kills: L.kills, wander: L.visited };
     const cands = [];
@@ -301,7 +301,7 @@
       paras[paras.length - 1] += line(N.close);
       return { paras, epitaph: fill(T.EPITAPH.wall), death: { key: "wall" } };
     }
-    const a0 = (L.ageN || 25) + Math.floor(L.days / 360);
+    const a0 = (L.ageN || 25) + Math.floor(L.days / G.YEAR_DAYS);
     let extra = 12 + G.d(33);
     if (a0 + extra > 96) extra = Math.max(3, 96 - a0);
     const deathAge = a0 + extra;

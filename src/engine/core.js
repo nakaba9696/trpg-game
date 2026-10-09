@@ -19,11 +19,21 @@
   // ---------------------------------------------------------------- 暦と時間
   G.PHASES = ["朝", "昼", "夕", "夜"];
   G.SEASONS = ["春", "夏", "秋", "冬"];
-  G.dateOf = (day) => {
-    const y = 1127 + Math.floor((day - 1) / 360);
-    const r = (day - 1) % 360;
-    return `${y}年 ${G.SEASONS[Math.floor(r / 90)]} ${(r % 90) + 1}日`;
-  };
+  // 暦の長さはここだけで決める（C16。1 季節 90 日・1 年 360 日）。季節・年を日数で割る式は、すべて下の G.cal* を使う
+  G.SEASON_DAYS = 90;
+  G.YEAR_DAYS = G.SEASON_DAYS * G.SEASONS.length;
+  G.YEAR0 = 1127;                                                                       // 1 日目の年
+  G.calDoy = (day) => ((((day || 1) - 1) % G.YEAR_DAYS) + G.YEAR_DAYS) % G.YEAR_DAYS + 1; // 年の中の日（1〜YEAR_DAYS）
+  G.calSi = (day) => Math.floor((G.calDoy(day) - 1) / G.SEASON_DAYS);                    // 季節の番号（0 春〜3 冬）
+  G.calSd = (day) => ((G.calDoy(day) - 1) % G.SEASON_DAYS) + 1;                          // 季節の中の日
+  // 月（C16）：季節を MONTH_DAYS 日ずつに分け、季節の中で「一の月」「二の月」「三の月」と呼ぶ（町ごとの呼び名は docs/lore/life.md。画面と文はこの形にそろえる）
+  G.MONTH_DAYS = 30;
+  G.MONTHS = ["一の月", "二の月", "三の月"];
+  G.calMi = (day) => Math.min(G.MONTHS.length - 1, Math.floor((G.calSd(day) - 1) / G.MONTH_DAYS)); // 季節の中の月の番号（0〜）
+  G.calMd = (day) => G.calSd(day) - G.calMi(day) * G.MONTH_DAYS;                           // 月の中の日
+  G.calYi = (day) => Math.floor(((day || 1) - 1) / G.YEAR_DAYS);                         // 1 日目から何年目か（0〜）
+  G.calYear = (day) => G.YEAR0 + G.calYi(day);
+  G.dateOf = (day) => `${G.calYear(day)}年 ${G.SEASONS[G.calSi(day)]} ${G.MONTHS[G.calMi(day)]} ${G.calMd(day)}日`;
   G.date = () => G.dateOf(G.S.day);
   G.pass = (n) => { const S = G.S; S.phase += n; while (S.phase >= 4) { S.phase -= 4; S.day++; } };
   G.passDays = (n) => { G.S.day += n; G.S.phase = 2; };

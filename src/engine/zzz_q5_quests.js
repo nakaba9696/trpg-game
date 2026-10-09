@@ -41,13 +41,14 @@
   Q5.RES = { ok: "果たした", fail: "しくじった", lost: "横取りされた", late: "期限切れ", betray: "依頼人を裏切った", ally: "相手と手を組んだ", expose: "依頼人の嘘を暴いた", trap: "罠を切り抜けた" };
 
   // ---------------------------------------------------------------- 道のり（陸路と船。日数の少ない道）
-  const edges = (id) => {
+  // 行き先の選び方・報酬は道のり（近い・遠い。L.legs）で、期限は本当の日数（L.links。C16 が道のりから直したもの）で測る
+  const edges = (id, real) => {
     const L = D.LOCS[id] || {};
-    const e = Object.assign({}, L.links || {});
-    Object.entries(L.sea || {}).forEach(([k, s]) => { if (e[k] == null || s.days < e[k]) e[k] = s.days; });
+    const e = Object.assign({}, (real ? L.links : L.legs || L.links) || {});
+    Object.entries(L.sea || {}).forEach(([k, s]) => { const d = real ? s.days : s.legs || s.days; if (e[k] == null || d < e[k]) e[k] = d; });
     return e;
   };
-  Q5.distFrom = (from) => {
+  Q5.distFrom = (from, real) => {
     const dist = { [from]: 0 };
     const done = new Set();
     for (;;) {
@@ -55,7 +56,7 @@
       for (const k in dist) if (!done.has(k) && (cur === null || dist[k] < dist[cur])) cur = k;
       if (cur === null) return dist;
       done.add(cur);
-      for (const [n, d] of Object.entries(edges(cur))) {
+      for (const [n, d] of Object.entries(edges(cur, real))) {
         if (!D.LOCS[n]) continue;
         const nd = dist[cur] + d;
         if (dist[n] == null || nd < dist[n]) dist[n] = nd;
@@ -158,7 +159,7 @@
     else reward = t.pay[0] + t.pay[1] * danger + G.d(20);
     if (twist === "ambush") reward = Math.round(reward * 1.3); // 罠の依頼は、相場より妙に高い
     const fame = L.type === "town" ? 2 + ((t.fame || 0) >= 20 ? 3 : 1) : 1 + 3 * danger + ((t.fame || 0) >= 20 ? 2 : 0);
-    const dur = Math.max(3, t.days + days * 2);
+    const dur = Math.max(3, t.days + ((o.realDist || Q5.distFrom(here, true))[loc] || days) * 2);   // 行って帰る日数＋仕事の日数（C16：旅の本当の日数で）
     let item = "";
     if (danger >= 2 && L.type !== "town" && G.rand() < 0.18) {
       const goods = Object.keys(D.ITEMS).filter((id) => /^i(1|3[a-z]?)_/.test(id) && ["weapon", "armor", "ring"].includes(D.ITEMS[id].type) && D.ITEMS[id].price >= 30 && D.ITEMS[id].price <= 90 * danger);
@@ -189,13 +190,13 @@
     const bias = market || Q.NATION_BIAS[L.nation || L.region] || {};
     const types = Q.TYPES.filter((t) => S.fame >= (t.fame || 0) && rep >= (t.rep || 0));
     const size = Q5.boardSize(S);
-    const dist = Q5.distFrom(S.loc);
+    const dist = Q5.distFrom(S.loc), realDist = Q5.distFrom(S.loc, true);
     const maxDanger = G.clamp(1 + Math.floor(S.fame / 40), 1, 5);
     const list = [], used = {};
     for (let tries = 0; list.length < size && tries < size * 4; tries++) {
       const t = wpick(types, (x) => x.w * (bias[x.key] || 1) / (1 + 3 * (used[x.key] || 0)));
       if (!t) break;
-      const q = Q5.make(t, S, { dist, maxDanger, i: list.length });
+      const q = Q5.make(t, S, { dist, realDist, maxDanger, i: list.length });
       if (!q) continue;
       used[t.key] = (used[t.key] || 0) + 1;
       list.push(q);

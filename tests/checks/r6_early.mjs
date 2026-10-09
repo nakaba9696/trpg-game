@@ -20,8 +20,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   };
   const hard = (ids) => ids.filter((id) => R6.hard(id));
   const foesNow = (S) => (S.combat ? S.combat.foes.map((f) => f.id) : []);
-  // 出発地から陸路で 2 日までの、危険度 R6.DMAX までの野の場所
-  const nearWild = (home) => Object.entries(D.LOCS[home].links || {})
+  // 出発地から陸路で道のり 2 までの、危険度 R6.DMAX までの野の場所（C16：links は日数に直してあるので、元の道のり legs で測る）
+  const nearWild = (home) => Object.entries(D.LOCS[home].legs || D.LOCS[home].links || {})
     .filter(([to, d]) => d <= 2 && D.LOCS[to].type !== "town" && (D.LOCS[to].danger || 0) <= R6.DMAX && (D.LOCS[to].pool || []).length).map(([to]) => to);
 
   // ---- 1. 出発地の近くの出会い
@@ -189,7 +189,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   for (const [cls, C] of Object.entries(D.CLASSES)) {
     const w = D.ITEMS[C.weapon] || {};
     const types = [].concat(w.dtype || []);
-    for (const [to, d] of Object.entries(D.LOCS[C.start].links || {})) {
+    for (const [to, d] of Object.entries(D.LOCS[C.start].legs || D.LOCS[C.start].links || {})) {
       const L = D.LOCS[to];
       if (d > 2 || L.type === "town" || (L.danger || 0) > 1) continue;
       [...(L.pool || []), ...(L.e4pool || [])].forEach((id) => {

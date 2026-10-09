@@ -55,7 +55,8 @@
       todo.sort((x, y) => dist[y] - dist[x]);
       const u = todo.pop();
       const L = D.LOCS[u];
-      const next = [...Object.entries(L.links || {}), ...Object.entries(L.sea || {}).map(([k, s]) => [k, s.days])];
+      // 値の上がり方は道のり（近い・遠い。C16 が日数に直す前の L.legs）で測る
+      const next = [...Object.entries(L.legs || L.links || {}), ...Object.entries(L.sea || {}).map(([k, s]) => [k, s.legs || s.days])];
       for (const [v, d] of next) {
         if (!D.LOCS[v]) continue;
         const nd = dist[u] + d;

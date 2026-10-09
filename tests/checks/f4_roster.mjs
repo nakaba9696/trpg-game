@@ -13,7 +13,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.rand = seeded(seed);
     return G.newGame({ cls: Object.keys(D.CLASSES)[0], stats: Object.fromEntries(D.STATS.map((k) => [k, 50])), caps: Object.fromEntries(D.STATS.map((k) => [k, 80])), profile: { name: "試し", age: 20, sex: "男", history: "旅の者" }, goal: Object.keys(D.GOALS)[0] });
   };
-  const MID = { 春: 45, 夏: 135, 秋: 225, 冬: 315 };
+  // 季節の真ん中の日（C16：暦の長さは G.SEASON_DAYS。どのエンジンでも同じ値）
+  const SD = loadEngine().SEASON_DAYS, YD = SD * 4;
+  const MID = { 春: SD / 2, 夏: SD * 1.5, 秋: SD * 2.5, 冬: SD * 3.5 };
   const joiners = (D) => Object.keys(D.C2_PEOPLE).filter((id) => D.C2_PEOPLE[id].join);
 
   // ---------------------------------------------------------------- 予定と居場所
@@ -69,7 +71,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       let found = false;
       for (const e of sc) {
         for (const s of F4.seasonsOf(e)) {
-          S.day = MID[s] + 360 * 2;
+          S.day = MID[s] + YD * 2;
           S.loc = e.loc;
           if (F4.entriesHere(id, S).length) found = true;
           // 別の場所（その人の予定に無い町）では、その人の出会いの出来事は起きない
@@ -119,8 +121,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         // 条件（連れている人）をそろえる：流れの入口の条件を満たす仲間を先に入れる
         // 予定のうち、出会いの出来事が起きる時期・場所へ
         let spot = null;
-        for (const e of sc) for (const ss of F4.seasonsOf(e)) { S.day = MID[ss] + 360; S.loc = e.loc; if (!spot && F4.entriesHere(id, S).length) spot = [S.day, e.loc]; }
-        if (!spot) { for (const need of ["rui", "dil"]) if (D.C2_PEOPLE[need] && need !== id) { G.c2Join(need); } for (const e of sc) for (const ss of F4.seasonsOf(e)) { S.day = MID[ss] + 360; S.loc = e.loc; if (!spot && F4.entriesHere(id, S).length) spot = [S.day, e.loc]; } }
+        for (const e of sc) for (const ss of F4.seasonsOf(e)) { S.day = MID[ss] + YD; S.loc = e.loc; if (!spot && F4.entriesHere(id, S).length) spot = [S.day, e.loc]; }
+        if (!spot) { for (const need of ["rui", "dil"]) if (D.C2_PEOPLE[need] && need !== id) { G.c2Join(need); } for (const e of sc) for (const ss of F4.seasonsOf(e)) { S.day = MID[ss] + YD; S.loc = e.loc; if (!spot && F4.entriesHere(id, S).length) spot = [S.day, e.loc]; } }
         if (!spot) { F(`${id}: 知っていても、訪ねられる時期・場所が無い`); break; }
         [S.day, S.loc] = spot;
         S.mode = "explore"; S.travel = null; S.depth = 0;
@@ -151,7 +153,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         if (want) F4.setWant(id, true);
         const S = start(G, 600 + s);
         const e0 = F4.schedule(id, null)[0];
-        S.loc = e0.loc; S.day = MID[F4.seasonsOf(e0)[0]] + 360;
+        S.loc = e0.loc; S.day = MID[F4.seasonsOf(e0)[0]] + YD;
         const e = G.randomEvent();
         if (e && F4.entryOf(e, id)) hit++;
       }
@@ -242,10 +244,10 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const S3 = start(G3, 5);
     delete S3.f4;
     G3.randomEvent();
-    if (!G3.f4.whereOn(id, S3, 45)) F("古いセーブ（S.f4 が無い）で予定が引けない");
+    if (!G3.f4.whereOn(id, S3, MID.春)) F("古いセーブ（S.f4 が無い）で予定が引けない");
     if (!G3.f4How(id) || G3.f4Count().joined !== 0) F("古い profile で数が変");
     // 日付：状態から引ける
-    S3.day = 1 + 360 + 90 + 8;
+    S3.day = 1 + YD + SD + 8;
     const t = G3.f4Today(S3);
     if (!t || t.season !== "夏" || t.d !== 9 || t.text !== G3.dateOf(S3.day)) F(`日付が状態から引けない ${JSON.stringify(t)}`);
     if (n === before) ok("F4 仲間にした方法と会った場所＋時期が profile に残る・予定の書き換えと会えなくなる・古いセーブ・日付");
