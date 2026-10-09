@@ -32,7 +32,7 @@
     dr.cls = pickR(rnd, Object.keys(D.CLASSES));
     dr.sex = pickR(rnd, ["男", "女"]);
     dr.ageBand = rnd() < 0.2 ? "old" : pickR(rnd, ["young", "prime"]);
-    dr.goal = pickR(rnd, Object.keys(D.GOALS).filter((g) => g !== "custom"));
+    dr.goal = pickR(rnd, Object.keys(D.GOALS).filter((g) => !D.GOALS[g].hidden && D.GOALS[g].text)); // おまかせは、はっきりした目的から（目的なし・自分で決めるは選ばない。R7c）
     dr.profile = { name: cre.gen(dr, "name", rnd), age: cre.gen(dr, "age", rnd) };
     dr.bonus = {};
     cre.roll(dr, rnd);
@@ -157,7 +157,7 @@
   };
 
   // ---------------------------------------------------------------- 仕上げ
-  cre.goalText = (dr) => (dr.goal === "custom" ? (String(dr.customGoal || "").trim() || "自由に生きる") : D.GOALS[dr.goal].text);
+  cre.goalText = (dr) => (dr.goal === "custom" ? (String(dr.customGoal || "").trim() || "自由に生きる") : (D.GOALS[dr.goal] || {}).text || "");
 
   // G.newGame に渡す形
   cre.options = (dr, rnd) => {
@@ -191,7 +191,7 @@
     return [
       P.world.slice(),
       [fill(P.who), past].filter(Boolean),
-      [fill(P.arrive) + (P.place[startId] ? P.place[startId] : ""), fill(g.id !== "custom" && D.GOALS[g.id] ? P.goal : P.custom), P.close],
+      [fill(P.arrive) + (P.place[startId] ? P.place[startId] : ""), g.id === "none" || !text ? P.none || "" : fill(g.id !== "custom" && D.GOALS[g.id] ? P.goal : P.custom), P.close].filter(Boolean),
     ];
   };
 })(globalThis.G = globalThis.G || {});

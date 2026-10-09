@@ -194,7 +194,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const leads = D0.R3_LEADS || [];
     const homes = [...new Set(Object.values(D0.CLASSES).map((c) => c.start))];
     for (const goal of Object.keys(D0.GOALS)) {
-      if (goal !== "custom" && !leads.some((l) => l.dir === goal)) F(`目的 ${goal} への導線になる依頼が無い`);
+      if (D0.GOALS[goal].text && !leads.some((l) => l.dir === goal)) F(`目的 ${goal} への導線になる依頼が無い`);
     }
     // 出発地のギルドに入ると並ぶ（目的によらず同じ）
     for (const home of homes) {

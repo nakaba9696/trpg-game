@@ -358,7 +358,7 @@
   // 「能力」のタブの表：目的と、体の状態（日付・場所は場面の絵の下、所持金は帯、仲間は「仲間」のタブにあるので出さない。Q7）
   function sheetSelfRows() {
     const S = G.S;
-    return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")],
+    return [["目的", (S.goal.text || "なし") + (G.goalDone(S) ? "（達成）" : "")],   // 目的なし（R7c）
       ...(G.r1Rows ? G.r1Rows(S) : []), ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ...(G.m10Rows ? G.m10Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`]];
   }
   // 装備の表（装備の枠を足すときはここの行に足す）
@@ -524,7 +524,7 @@
   async function copyLog() {
     const S = G.S;
     const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}が伸びた ${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
-    const txt = `${S.clsName} ${S.profile.name}の人生 ── 目的：${S.goal.text}\n` + lines.join("\n");
+    const txt = `${S.clsName} ${S.profile.name}の人生${S.goal.text ? ` ── 目的：${S.goal.text}` : ""}\n` + lines.join("\n");
     try { await navigator.clipboard.writeText(txt); ui.toast("ログをコピーしました"); }
     catch { const ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.append(ta); ta.select(); try { document.execCommand("copy"); ui.toast("ログをコピーしました"); } catch { ui.toast("コピーできませんでした"); } ta.remove(); }
   }
@@ -583,7 +583,7 @@
     $("#profTitle").textContent = `${p.name}（${S.clsName}）`;
     const dl = $("#profBody");
     dl.textContent = "";
-    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["目的", S.goal.text]]
+    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["目的", S.goal.text || "なし"]]
       .forEach(([k, v]) => { if (v) dl.append(h("dt", "", k), h("dd", "", v)); });
     $("#dlgProfile").showModal();
   };
@@ -636,7 +636,7 @@
       const cls = run.clsName || run.cls;
       const race = G.r1GraveLine ? G.r1GraveLine(run) : "";
       ep.append(h("b", "", end === "dead" ? `${race ? race + "の" : ""}${cls} ${name}、ここに眠る` : `${race ? race + "の" : ""}${cls} ${name}、物語を終える`));
-      ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
+      ep.append(h("span", "", `目的：${(run.goal && typeof run.goal === "object" ? run.goal.text : run.goal) || "なし"}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
       ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${G.s5GraveStats(run)[k]}`).join(" ")));
       // 生きた時代の世の大事（M12）
@@ -678,7 +678,7 @@
     P.graves.forEach((g) => {
       const b = h("button", "grave");
       b.type = "button";
-      b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : g.epitaph || "物語を終えた"}　${g.turns} 手番`));
+      b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal || "なし"}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : g.epitaph || "物語を終えた"}　${g.turns} 手番`));
       b.onclick = () => { $("#dlgTrophy").close(); ui.openChronicle(g, false); };
       gl.append(b);
     });
