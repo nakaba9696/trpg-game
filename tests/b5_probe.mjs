@@ -10,7 +10,7 @@ const ev0 = G.startEvent;
 G.startEvent = (e) => { if (e === "m2_farewell" || (e && e.id === "m2_farewell")) t.dooms++; return ev0(e); };
 const log0 = G.log;
 G.log = (k, text, x) => { if (x && x.fx === "allydown") t.falls++; if (x && x.fx === "ally") t.allyHits++; if (x && x.fx === "hurt") t.heroHits++; return log0(k, text, x); };
-const classes = Object.keys(D.CLASSES), goals = Object.keys(D.GOALS).filter((k) => k !== "custom");
+const classes = Object.keys(D.CLASSES), goals = Object.keys(D.GOALS).filter((k) => D.GOALS[k].text);
 for (let i = 0; i < games; i++) {
   const cls = classes[i % classes.length];
   G.rand = seeded(777000 + i);
