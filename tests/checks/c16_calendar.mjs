@@ -21,7 +21,10 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const G = loadEngine();
     const SD = G.SEASON_DAYS, YD = G.YEAR_DAYS;
     if (!(SD > 0) || YD !== SD * G.SEASONS.length) F(`1 季節 ${SD} 日・1 年 ${YD} 日が食い違う`);
-    const want = [[1, "1127年 春 1日"], [SD, `1127年 春 ${SD}日`], [SD + 1, "1127年 夏 1日"], [SD * 3 + 1, "1127年 冬 1日"], [YD, `1127年 冬 ${SD}日`], [YD + 1, "1128年 春 1日"], [YD * 3 + 1, "1130年 春 1日"]];
+    const MD = G.MONTH_DAYS, last = G.MONTHS[G.MONTHS.length - 1];
+    if (MD * G.MONTHS.length !== SD) F(`月の日数 ${MD}×${G.MONTHS.length} が季節の日数 ${SD} と合わない`);
+    const want = [[1, "1127年 春 一の月 1日"], [MD, `1127年 春 一の月 ${MD}日`], [MD + 1, "1127年 春 二の月 1日"], [MD + 12, "1127年 春 二の月 12日"], [SD, `1127年 春 ${last} ${MD}日`],
+      [SD + 1, "1127年 夏 一の月 1日"], [SD * 3 + 1, "1127年 冬 一の月 1日"], [YD, `1127年 冬 ${last} ${MD}日`], [YD + 1, "1128年 春 一の月 1日"], [YD * 3 + 1, "1130年 春 一の月 1日"]];
     want.forEach(([d, t]) => { if (G.dateOf(d) !== t) F(`${d}日目が「${G.dateOf(d)}」（「${t}」のはず）`); });
     const S = start(G, 3);
     for (let d = 1; d <= YD * 2 && n < 5; d++) {
@@ -33,7 +36,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (G.yearOf(d) !== Math.floor((d - 1) / YD)) F(`${d}日目の年の番号が ${G.yearOf(d)}`);
       S.day = d;
       const t = G.f4Today(S);
-      if (!t || t.season !== s || t.d !== ((d - 1) % SD) + 1 || t.text !== G.dateOf(d)) F(`${d}日目の今日が ${JSON.stringify(t)}`);
+      if (!t || t.season !== s || t.sd !== ((d - 1) % SD) + 1 || t.d !== ((d - 1) % G.MONTH_DAYS) + 1 || t.month !== G.MONTHS[Math.floor(((d - 1) % SD) / G.MONTH_DAYS)] || t.text !== G.dateOf(d)) F(`${d}日目の今日が ${JSON.stringify(t)}`);
     }
     // 大事（M12）の季節の条件
     const K = (G.data.M12 && G.data.M12.KINDS) || {};

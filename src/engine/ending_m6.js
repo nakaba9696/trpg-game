@@ -221,7 +221,7 @@
     ].join(""));
 
     // 2. 印象的な出来事（人生の長さで数を決める。短い人生は短く、長い人生は選んで長くしすぎない）
-    let want = L.days <= 10 ? 1 : L.days <= 40 ? 2 : L.days <= 150 ? 3 : 4;
+    let want = L.days <= 30 ? 1 : L.days <= 120 ? 2 : L.days <= 450 ? 3 : 4;   // C16：旅が 1〜3 週間になったので、日数の目安を 3 倍に
     if (L.over === "end") want = Math.max(2, want);
     const nOf = { quests: L.quests, bosses: L.bosses, kills: L.kills, wander: L.visited };
     const cands = [];

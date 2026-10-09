@@ -27,14 +27,14 @@
   const SD = () => G.SEASON_DAYS, YD = () => G.YEAR_DAYS;   // 暦の長さ（core.js。C16）
   F4.doy = (day) => G.calDoy(day); // 年の中の日 1〜G.YEAR_DAYS
   F4.seasonOf = (day) => SEASONS()[G.calSi(day)];
-  // 今日（画面の上の帯が読む）：{ y 年, season 季節, si 季節の番号, d 季節の中の日, text「1127年 春 9日」, phase 時間帯 }
+  // 今日（画面の上の帯が読む）：{ y 年, season 季節, si 季節の番号, month 月, mi 月の番号, d 月の中の日, sd 季節の中の日, text「1127年 春 一の月 9日」, phase 時間帯 }
   G.f4Today = (S) => {
     S = S || G.S;
     if (!S) return null;
     const text = G.dateOf ? G.dateOf(S.day) : `${S.day}日目`;
     const m = /^(\d+)年/.exec(text);
     const si = G.calSi(S.day);
-    return { y: m ? Number(m[1]) : 0, season: SEASONS()[si], si, d: G.calSd(S.day), text, phase: (G.PHASES || [])[S.phase] || "" };
+    return { y: m ? Number(m[1]) : 0, season: SEASONS()[si], si, month: G.MONTHS[G.calMi(S.day)], mi: G.calMi(S.day), d: G.calMd(S.day), sd: G.calSd(S.day), text, phase: (G.PHASES || [])[S.phase] || "" };
   };
   const edge = (x, end) => {
     const si = SEASONS().indexOf(x);

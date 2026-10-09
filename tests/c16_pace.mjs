@@ -5,6 +5,7 @@
 //   3. 世界の大事（M12）・帝国の筋（M4）・長編（E7）・人の予定がどこまで進むか
 //   4. 時限の出来事の密度：日ごとに「今動ける時限の出来事」がいくつ開いているか・何も開いていない空白の長さ
 //      時限の出来事 = 進行中の世界の大事（M12）＋帝国の戦（M4）＋期限つきの依頼（受けたもの）＋進行中の長編（E7）
+//                    ＋季節の催し（V13 の表の季節の出来事で、今がその季節・まだ済んでいない・舞台が今いる所か同じ国か道でつながる所）
 // を Markdown の表で出す。乱数は種で固定。
 import { loadEngine, seeded } from "./lib.mjs";
 import { makeSmartBot } from "./bot.mjs";
@@ -38,6 +39,16 @@ function openTimed(S) {
   if (S.world && S.world.war) n++;
   n += (S.quests || []).filter((q) => q.q5 && !q.done && q.deadline != null && q.deadline >= S.day).length;
   n += Object.values(S.e7 || {}).filter((st) => st && st.on && !st.end).length;
+  const V = G.v13, sets = (D.V13 && D.V13.LEADS) || [];
+  if (V && V.distance && G.seasonOf) {
+    const now = G.seasonOf(S.day);
+    sets.filter((set) => set.kind === "season" && set.season === now).forEach((set) => {
+      const e = (D.EVENTS || []).find((x) => x.id === set.ev);
+      if (!e || (e.once && S.flags && S.flags["ev:" + e.id])) return;
+      const targets = [].concat(e.where || []).filter((id) => D.LOCS[id]);
+      if (targets.some((t) => V.distance({ set, targets: [t] }, S.loc) !== "far")) n++;
+    });
+  }
   return n;
 }
 
