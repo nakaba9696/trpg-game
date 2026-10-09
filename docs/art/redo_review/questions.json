@@ -28,10 +28,11 @@
   "id": "bride",
   "file": "docs/art/redo_review/bride.webp",
   "moods": "docs/art/redo_review/bride_moods.webp",
-  "what": "(a) 髪・手・槌の柄のまわりの白いふち（線画の外の白い輪）を消した。左の髪の外の細い光の筋は薄くなった（tools/cutout_defringe.py。表情の差分も）",
+  "what": "(a) 腕と髪の間は、もう透明だった（拡大図）。髪・手・槌の柄のまわりの白い輪は前に消した",
   "status": "fixed",
   "answer": null,
-  "check": "docs/art/redo_review/bride_check.webp"
+  "check": "docs/art/redo_review/bride_check.webp",
+  "neck": "docs/art/redo_review/bride_neck.webp"
  },
  {
   "id": "celestin",
@@ -86,10 +87,11 @@
   "id": "kind_child_f",
   "file": "docs/art/redo_review/kind_child_f.webp",
   "moods": null,
-  "what": "(a) 髪の毛先と首の横の白いふちを消した（tools/cutout_defringe.py。表情の差分も）",
+  "what": "(a) 顔の左の、黒髪の房と頬の下・首の間の白い区画を抜いた",
   "status": "fixed",
   "answer": null,
-  "check": "docs/art/redo_review/kind_child_f_check.webp"
+  "check": "docs/art/redo_review/kind_child_f_check.webp",
+  "neck": "docs/art/redo_review/kind_child_f_neck.webp"
  },
  {
   "id": "kind_child_m",
@@ -120,10 +122,11 @@
   "id": "marion",
   "file": "docs/art/redo_review/marion.webp",
   "moods": "docs/art/redo_review/marion_moods.webp",
-  "what": "(a) 髪の外側の白いふちと、左の髪と肩の間の白い塊を消した。左の髪の縁に少しギザギザが残る（tools/cutout_defringe.py。表情の差分も）",
+  "what": "(a) 顔の左の、銀髪の房とあご・首の間の白い区画を、1 枚ごとに点を選んだ塗りつぶしで抜いた（表情の差分 8 枚とも。差分で場所がずれるので点を 2 つ）",
   "status": "fixed",
   "answer": null,
-  "check": "docs/art/redo_review/marion_check.webp"
+  "check": "docs/art/redo_review/marion_check.webp",
+  "neck": "docs/art/redo_review/marion_neck.webp"
  },
  {
   "id": "mirza",
@@ -153,19 +156,21 @@
   "id": "tula",
   "file": "docs/art/redo_review/tula.webp",
   "moods": "docs/art/redo_review/tula_moods.webp",
-  "what": "(a) 髪の毛先の白いふちを消した（tools/cutout_defringe.py。表情の差分も）",
+  "what": "(a) 髪と首の間は、基本の絵と表情の差分すべてで、もう透明だった（拡大図）。毛先の白いふちは前に消した",
   "status": "fixed",
   "answer": null,
-  "check": "docs/art/redo_review/tula_check.webp"
+  "check": "docs/art/redo_review/tula_check.webp",
+  "neck": "docs/art/redo_review/tula_neck.webp"
  },
  {
   "id": "musette",
   "file": "docs/art/redo_review/musette.webp",
   "moods": "docs/art/redo_review/musette_moods.webp",
-  "what": "(a) 髪の毛先の白いふちを消した（tools/cutout_defringe.py。表情の差分も）",
+  "what": "(a) 髪と首・襟の間の白い区画を抜いた。基本の絵と多くの差分ではもう透明で、faint_smile・exasperated の 2 枚に残っていた",
   "status": "fixed",
   "answer": null,
-  "check": "docs/art/redo_review/musette_check.webp"
+  "check": "docs/art/redo_review/musette_check.webp",
+  "neck": "docs/art/redo_review/musette_neck.webp"
  },
  {
   "id": "tsuyuha",
@@ -195,10 +200,11 @@
   "id": "noeris",
   "file": "docs/art/redo_review/noeris.webp",
   "moods": "docs/art/redo_review/noeris_moods.webp",
-  "what": "(a) 髪の外側の白いふちを消した。左の耳の下から首の横の束は、白い髪か残った背景か見分けられず、そのまま（白い背景なら印を）（tools/cutout_defringe.py。表情の差分も）",
+  "what": "(a) 左の髪の房と首の間の白い区画を抜いた（表情の差分も）",
   "status": "fixed",
   "answer": null,
-  "check": "docs/art/redo_review/noeris_check.webp"
+  "check": "docs/art/redo_review/noeris_check.webp",
+  "neck": "docs/art/redo_review/noeris_neck.webp"
  },
  {
   "id": "oren",
