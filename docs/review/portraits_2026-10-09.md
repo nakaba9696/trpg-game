@@ -51,7 +51,7 @@
 - **現代風の服**：
   - neumann（スーツ）、neilas（白衣と板）、rudger（白衣風）、doctor（白衣と丸眼鏡）。
   - magda・rodolphe（デニム）、nora（白 T シャツ）、dominik（T シャツ）、bertrand（トレンチ風）。
-  - trude（トグルボタンのコート）、kind_rogue_m（トレンチ風）。
+  - trude（トグルボタンのコート）。
 - **指定と違う色・小物**：
   - mirza（傘が赤でなく紺）、ferida（鎧が水色でなく金）、kaidel（道着が濃い灰でなく白）。
   - ilse・doctor（片眼鏡でなく丸眼鏡）、solenne（空の鞘でなく剣）、valdun（鱗が無い）。
