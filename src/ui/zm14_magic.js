@@ -34,9 +34,11 @@
       const w = M.words(t);
       const box = el("section", "box m14cre");
       const bh = el("div", "boxhead");
-      bh.append(el("b", "", "術の才"), el("span", "m14lv m14lv" + t.lv, w.lv), el("span", "fine", "能力値と一緒に振り直される。種族と職業で変わる"));
+      bh.append(el("b", "", "術の才"), el("span", "m14lv m14lv" + t.lv, w.lv), el("span", "fine", "能力値と一緒に振り直される。職業で変わる")); // 主人公は人間だけなので「種族と」は書かない（R7b）
       box.append(bh, el("p", "m14say", w.say), affRows(t));
       if (t.lv) box.append(el("p", "fine", "得意な属性は上級まで届き、覚えやすく、成功しやすい。ふつうの属性は中級まで。苦手な属性は初級止まりで、覚えにくい。"));
+      // 初めから術を持たない職業でも、才があれば得意な属性の初級を一つ知って始まる（engine/m14_magic.js の newGame。R7b）
+      if (t.lv && !(D.SPELL_START || {})[draft.cls]) box.append(el("p", "fine", "才があるので、得意な属性の初級の術を一つ知って旅立つ。"));
       root.append(box);
     };
   }
