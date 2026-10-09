@@ -32,3 +32,15 @@
 ComfyUI は持ち主の HunyuanVideo 用とは別に、`H:\game\comfyui-qwen`（専用の venv）に入れた。モデルは Comfy-Org/Qwen-Image-2.1 の 3 つ（約 14.3GB）：
 `diffusion_models/qwen_image_2.1_int8_convrot.safetensors`・`text_encoders/qwen3vl_8b_w4a8.safetensors`・`vae/qwen_image_2.1_vae_bf16.safetensors`。
 起動：`venv\Scripts\python main.py --listen 127.0.0.1 --port 8188`。使い方は `tools/qwen_cut.py` の先頭。
+
+### 持ち主が自分で ComfyUI を起動するとき（Claude Code のメモリ不足の停止を避ける）
+
+1. WebUI を閉じる。
+2. コマンドプロンプト（PowerShell でもよい）で：
+   ```
+   cd /d H:\game\comfyui-qwen
+   venv\Scripts\python main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --disable-smart-memory --cache-none
+   ```
+   「To see the GUI go to: http://127.0.0.1:8188」と出たら起動済み。窓は開いたままにする（閉じると止まる）。
+3. Claude には「ComfyUI を 8188 で起動した」と伝える。Claude は `http://127.0.0.1:8188` に絵を送るだけで、ComfyUI の起動・停止はしない。
+4. 終わったと言われたら、その窓で Ctrl+C を押して止める。
