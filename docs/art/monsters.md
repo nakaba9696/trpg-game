@@ -13,11 +13,13 @@
 
 ## 描き直し待ち（1）
 
-今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（戦闘では絵なし）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す。
+今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（戦闘では絵なし）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す（`gen_portraits.mjs` で作れば自動で外れる。人の姿の敵は、ネガティブに今の服の語が自動で足される）。
 
-| ファイル | 名前 | 何が合わないか | どう直すか |
-|---|---|---|---|
-| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | 警備員の制服（襟とネクタイ、写真入りの名札、革靴）に警棒に見える棍棒 | 港の荒くれ：袖をまくった麻のシャツか胴衣、頭に布、腰に鈴、樫の棍棒、裸足か革のサンダル（例：rolled-up linen shirt, leather vest, bandana, small bell on belt, oak club, sandals） |
+作る：`node tools/gen_portraits.mjs --monsters --only w3_smuggler --force --new-seed`（人物の描き直しは [portraits.md](portraits.md) の「画像のセッションへ」）
+
+| ファイル | 名前 | 何が合わないか | どう直すか | 特徴のタグ |
+|---|---|---|---|---|
+| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | 警備員の制服（襟とネクタイ、写真入りの名札、革靴）に警棒に見える棍棒 | 港の荒くれ：袖をまくった麻のシャツか胴衣、頭に布、腰に鈴、樫の棍棒、裸足か革のサンダル（例：rolled-up linen shirt, leather vest, bandana, small bell on belt, oak club, sandals） | thug, burly man, thick neck, bandana, stubble, grin, rolled-up linen shirt, leather vest, oak club, small bell on belt, sandals |
 
 ## 使徒・ボス（30）
 
@@ -235,7 +237,7 @@
 | `assets/monsters/m5_nightwatch.webp` | 夜番崩れ | 1boy, man, huge man, night watchman, hairy, black beard, glowing eyes, lantern on belt, leather armor, holding hatchet, chipped blade | 夜番崩れの大男 |
 | `assets/monsters/m3_hunter.webp` | 賞金稼ぎ | 1boy, man, bounty hunter, hooded cloak, scar, smirk, holding sword, wanted posters, pouch | 賞金稼ぎ |
 | `assets/monsters/m2_traitor.webp` | 裏切った仲間 | 1boy, man, hooded, scarf, smirk, ragged cloak, holding dagger | 裏切った仲間 |
-| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | thug, burly man, thick neck, bandana, stubble, grin, holding wooden club, small bell on belt, dock worker clothes | 密輸の荷の見張り。腰に鈴 |
+| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | thug, burly man, thick neck, bandana, stubble, grin, rolled-up linen shirt, leather vest, oak club, small bell on belt, sandals | 密輸の荷の見張り。腰に鈴 |
 | `assets/monsters/w3_silentmonk.webp` | 口縫いの修道士 | monk, grey hooded robe, lips sewn shut with thick thread, finger on lips, holding wooden staff, gaunt | 唇を縫った修道士 |
 | `assets/monsters/e4k_bouncer.webp` | 賭場の用心棒 | 1boy, burly man, gambling den bouncer, black hair, scars, stubble, purple kimono-like outfit, scarf, holding club | 賭場の用心棒 |
 | `assets/monsters/e4_poacher.webp` | 密猟者 | 1boy, man, poacher, lean, stubble, leather cap, green hunting cloak, holding longbow, quiver, wary expression | 領主の森の密猟者。追い詰められた男 |
