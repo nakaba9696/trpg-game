@@ -72,22 +72,36 @@ body.u31m #u21side .u13tab.on { min-height: 44px; }
 body.u31m #u21side #panel > .u28head .u28q { font-size: 12.5px; }
 body.u31m #u21side #panel > .u28head { top: -12px; left: 12px; padding: 1px 10px 2px; }
 
-/* 戦闘：一行の札・誰の手か → 「攻撃」「防御」を大きく（F9 の札）→ ほかの見出し → 開いた見出しの中身（ここだけ流れる） */
+/* 戦闘：一行の札・誰の手か → 開いた見出しの中身（ここだけ流れる）→ いちばん下に「攻撃」「防御」（F9 の札。大きく）とほかの見出し（戦技・魔法・その他・道具）
+   開いた見出しの中身は札のすぐ上に出し、コマンドの窓の中に収める（敵の絵は隠さない） */
+body.u31m.v9combat #u21side { padding-top: 8px; }
 body.u31m.v9combat #u21side #panel.u13fight { display: flex; flex-direction: column; gap: 5px; padding-bottom: 0; }
+body.u31m.v9combat #u21side #panel > .u28head { display: none; }
+/* 戦闘の遊び方の一行（はじめだけ）は、敵の絵に重ねず、コマンドの窓の頭に小さく */
+body.u31m.v9combat #u21side #panel > .tip { order: 0; position: static; width: auto; box-shadow: none; font-size: 11.5px; line-height: 1.45; padding: 3px 8px; }
 body.u31m.v9combat #u21side #panel > .b5party { order: 1; }
 body.u31m.v9combat #u21side #panel > .f8who { order: 2; }
-body.u31m.v9combat #u21side #panel > .u13drawers { order: 3; position: static; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; padding: 0; margin: 0; background: none; border: 0; box-shadow: none; }
-body.u31m.v9combat #u21side #panel > .u13main, body.u31m.v9combat #u21side #panel > .u13pop { order: 4; position: static; max-height: none; box-shadow: none; padding: 0; }
+body.u31m.v9combat #u21side #panel > .u13main, body.u31m.v9combat #u21side #panel > .u13pop { order: 3; flex: 1 1 auto; min-height: 0; overflow-y: auto; position: static; max-height: none; box-shadow: none; padding: 0; }
+body.u31m.v9combat #u21side #panel > .u13drawers { order: 4; flex: none; position: static; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; padding: 0; margin: 0; background: none; border: 0; box-shadow: none; }
 body.u31m.v9combat #u21side #panel .u13drawers .u13tab { min-height: 44px; padding: 3px 6px; font-size: 13px; }
-body.u31m.v9combat #u21side #panel .u13drawers .u13now { grid-column: span 2; min-height: 54px; padding: 4px 10px; font-size: 16px; }
-body.u31m.v9combat #u21side #panel .u13drawers .u13now { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; }
+body.u31m.v9combat #u21side #panel .u13drawers .u13now { grid-column: span 2; min-height: 50px; padding: 4px 10px; font-size: 16px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; }
 body.u31m.v9combat #u21side #panel .u13drawers .u13now .u13lab { flex: none; overflow: visible; }
 body.u31m.v9combat #u21side #panel .u13drawers .u13now .u13nowsub { max-width: 100%; font-size: 11px; }
 body.u31m.v9combat #u21side #panel .u13drawers .u13again { position: static; grid-column: 1 / -1; max-width: none; margin: 0; }
 body.u31m.v9combat #u21side #panel .aimHint { display: none; }
-/* 敵の札は舞台の上（上の帯のすぐ下）に小さく。魔物はその下に全身 */
-body.u31m.v9combat #u21side #panel .foes { top: calc(var(--u31-head, 48px) + 4px); gap: 6px; padding: 0 6px; }
-body.u31m.v9combat #u21side #panel .foe { min-width: 0; flex: 1 1 0; max-width: 48%; padding: 3px 8px; font-size: 12px; }
+/* 敵の札（名前・HP）：絵の上に小さく重ねる（別の枠にしない）。押すと狙いを替えられる */
+body.u31m.v9combat #u21side #panel .foes { top: calc(var(--u31-head, 48px) + 4px); gap: 4px; padding: 0 6px; }
+body.u31m.v9combat #u21side #panel .foe { min-width: 0; flex: 1 1 0; max-width: 46%; padding: 2px 8px 3px; font-size: 11.5px; line-height: 1.3; border-width: 1px;
+  background: color-mix(in srgb, var(--win-solid) 84%, transparent); box-shadow: 0 2px 6px rgba(0, 0, 0, .35); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+body.u31m.v9combat #u21side #panel .foe b, body.u31m.v9combat #u21side #panel .foe .fname { font-size: 12px; }
+body.u31m.v9combat #u21side #panel .foe .g { height: 4px; margin: 2px 0 1px; }
+body.u31m.v9combat #u21side #panel .foe .fine, body.u31m.v9combat #u21side #panel .foe .num { font-size: 10.5px; }
+/* 戦闘の見出し（戦闘・場所・敵の数）は、敵の絵の下の縁に細い帯で重ねる。ログの窓は本文だけ */
+body.u31m.v9combat #u14sign { position: absolute; z-index: 7; top: -6px; left: 2px; transform: translateY(-100%); max-width: calc(100% - 96px); padding: 2px 10px; gap: 8px;
+  background: color-mix(in srgb, var(--win-solid) 78%, transparent); box-shadow: 0 2px 8px rgba(0, 0, 0, .35); }
+body.u31m.v9combat #u14sign .u14name { font-size: 13px; }
+body.u31m.v9combat #u14sign .u14marks { font-size: 11px; }
+body.u31m.v9combat .tome { padding-top: 6px; }
 
 /* ---------------------------------------------------------------- 知らせ：立ち絵・コマンドに重ねず、短く（一行・新しいものだけ）
    トロフィーなどの通知（#toast）は上の帯に重ねる。図鑑・用語集に追加（#u8note）はログの窓の上の縁に重ねる */
@@ -115,3 +129,7 @@ body.u31m.u31logopen #u8note { display: none; }
   body.u31m #u21side .u13tab { font-size: 12.5px; padding: 4px 6px; }
   body.u31m #u21side .u13tab .u13n { font-size: 11.5px; }
 }
+/* 横長の戦闘：コマンドの窓が低いので、6 つの札（攻撃・防御・戦技・魔法・その他・道具）を一段に */
+html.u31land body.u31m.v9combat #u21side #panel > .u13drawers { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+html.u31land body.u31m.v9combat #u21side #panel .u13drawers .u13now { grid-column: span 1; min-height: 44px; font-size: 14px; }
+html.u31land body.u31m.v9combat #u21side #panel .u13drawers .u13now .u13nowsub { display: none; }

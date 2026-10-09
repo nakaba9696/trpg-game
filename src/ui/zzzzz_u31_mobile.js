@@ -16,13 +16,14 @@
   u31.HEAD = 48; // 上の細い帯の高さ（縦長）。メニューのボタン（44px）が入る高さ
   u31.HEAD_LAND = 48; // 横長
   u31.STAGE = 0.47; // 縦長：舞台の下端（画面の高さに対して）。上の帯の下〜ここまでが絵だけの場所
-  u31.STAGE_COMBAT = 0.44; // 戦闘は手の欄を少し広く
+  u31.STAGE_COMBAT = 0.52; // 戦闘：敵の絵を大きく（持ち主「敵が小さすぎ」。画面の上 5 割ほど）
+  u31.LOG_COMBAT = 64; // 戦闘のログ：最新の 1〜2 行（判定の結果など）。全文は「全文」で
   u31.LOG = 0.15; // 縦長：ログの窓の高さ（画面の高さに対して。最新の 3〜4 行）
   u31.LOG_MIN = 92;
   u31.LOG_MAX = 150;
   u31.GAP = 6;
   u31.SIGN = 26; // ログの窓の上の縁に掛かる場所の札（U14）の分。上の帯に潜らないように空ける
-  u31.FOES = 58; // 戦闘：舞台の上に並ぶ敵の札の高さ（魔物はその下に全身）
+  u31.FOES = 54; // 戦闘：敵の札（名前・HP）は絵の上に小さく重ねる。魔物の頭がそこに掛からないよう、絵はこの分だけ下から立つ
   // スマホの形にするか：PC の大きさでなければ（縦長・横長とも）
   u31.isMobile = (vw, vh) => !v9.isPC(vw, vh) && (vw || 0) >= 300 && (vh || 0) >= 300;
   v9.mobileOn = (vw, vh) => u31.isMobile(vw, vh);
@@ -37,23 +38,23 @@
     let tome, side, cast, stage;
     if (!land) {
       const sb = Math.round(vh * (combat ? u31.STAGE_COMBAT : u31.STAGE));
-      const lh = Math.round(Math.max(u31.LOG_MIN, Math.min(u31.LOG_MAX, vh * u31.LOG)));
+      const lh = combat ? u31.LOG_COMBAT : Math.round(Math.max(u31.LOG_MIN, Math.min(u31.LOG_MAX, vh * u31.LOG)));
       tome = { x: m, y: sb, w: vw - m * 2, h: lh, min: lh };
       const sy = tome.y + tome.h + u31.GAP;
       side = { x: m, y: sy, w: vw - m * 2, h: vh - m - sy };
       cast = { x: 0, y: head, w: vw, h: sb - head };
-      stage = combat ? { x: 0, y: head + u31.FOES, w: vw, h: sb - head - u31.FOES } : null;
+      stage = combat ? { x: 0, y: head, w: vw, h: sb - head } : null;
     } else {
       // 横長：左を舞台、右にログ（上・短く）とコマンド（下）
       const cw = Math.round(vw * 0.46);
       const rx = cw + m;
       const rw = vw - m - rx;
-      const lh = Math.round(Math.max(64, Math.min(110, (vh - head) * 0.25)));
+      const lh = combat ? u31.LOG_COMBAT - 8 : Math.round(Math.max(64, Math.min(110, (vh - head) * 0.25)));
       tome = { x: rx, y: head + u31.SIGN, w: rw, h: lh, min: lh };
       const sy = tome.y + tome.h + u31.GAP;
       side = { x: rx, y: sy, w: rw, h: vh - m - sy };
       cast = { x: 0, y: head, w: cw, h: vh - head };
-      stage = combat ? { x: 0, y: head + u31.FOES, w: cw, h: vh - head - u31.FOES - m } : null;
+      stage = combat ? { x: 0, y: head, w: cw, h: vh - head } : null;
     }
     // 全文を開いたときのログの窓：上の帯の下から、コマンドの窓の上まで
     const open = { x: tome.x, y: head + u31.SIGN, w: tome.w, h: Math.max(tome.h, (land ? vh - m : side.y - u31.GAP) - (head + u31.SIGN)) };
@@ -78,6 +79,15 @@
   u21.layout = (vw, vh, combat) => (u31.isMobile(vw, vh) ? u31.layout(vw, vh, combat) : layout0(vw, vh, combat));
   const place0 = u21.placeCast;
   u21.placeCast = (L, list) => (L && L.mobile ? u31.placeCast(L, list) : place0(L, list));
+  // 戦闘の魔物の立ち位置（スマホ）：舞台いっぱいに大きく。上の FOES の分（敵の札）は空け、足元は舞台の下端。何体いても横に並べる
+  u31.foeSpot = (i, n, boss, w, h) => {
+    n = Math.max(1, n);
+    const room = Math.max(40, h - u31.FOES);
+    const s = Math.min(room * (boss ? 1 : 0.94), (w / n) * (n === 1 ? 1.1 : 1.2));
+    return { x: w * ((i + 0.5) / n), base: h * 0.995, s };
+  };
+  const spot0 = v9.foeSpot;
+  v9.foeSpot = (i, n, boss, w, h) => (typeof document !== "undefined" && document.body && document.body.classList.contains("u31m") ? u31.foeSpot(i, n, boss, w, h) : spot0(i, n, boss, w, h));
 
   if (typeof document === "undefined" || typeof window === "undefined" || !G.ui || !G.ui.render) return;
   const ui = G.ui;
