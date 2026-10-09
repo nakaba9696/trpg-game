@@ -23,16 +23,18 @@
   const K = () => M.KINDS || {};
 
   X.FIRST = [30, 60];       // はじめの大事が始まる日（はじめのひと月は、身近なことだけ）
-  X.GAP = [40, 110];        // 一つ始まってから、次が始まるまでの日数
+  X.GAP = [60, 150];        // 一つ始まってから、次が始まるまでの日数（C16：旅が 1〜3 週間になったので広げた）
+  X.PACE = 2;               // 段階・名残りの日数（表の days）にかける倍率（C16：旅ひとつで段階が過ぎてしまわないように）
   X.MAX_ON = 2;             // 同時に進む大事の数の上限
   X.AFTER = [30, 60];       // 決着のあと、話が残る日数
-  X.SAME = 300;             // 同じ種類の大事を、これだけの日数のうちには繰り返さない
+  X.SAME = 540;             // 同じ種類の大事を、これだけの日数のうちには繰り返さない（C16：一年半）
   X.KEEP = 24;              // 済んだ大事を覚えておく数
   X.HERE_GAP = 6;           // 前触れからこれだけの日数がたつまで、居合わせる出来事は起こさない
   const STAGE = ["omen", "start", "peak", "after"];
   X.STAGE = STAGE;
 
   const rng = (a, b) => a + Math.floor(G.rand() * (b - a + 1));
+  const span = (a, b) => Math.round(rng(a, b) * (X.PACE || 1));   // 表の日数（段階・名残り）に倍率をかける
   const as = (x) => (x == null ? [] : Array.isArray(x) ? x : [x]);
   const exists = (id) => !!(id && D.LOCS[id]);
   const townsOf = (ids) => as(ids).filter((id) => exists(id) && D.LOCS[id].type === "town");
@@ -98,7 +100,7 @@
     const pick = pickW(cand, ([, Kd]) => Kd.w || 1);
     if (!pick) return null;
     const [kind, Kd] = pick;
-    const ev = { id: "m12e" + ++W.n, kind, st: 0, since: day, until: day + rng(...Kd.stages[0].days), v: {}, part: 0, side: { a: 0, b: 0 }, joined: false, out: "", heard: {}, done: {}, end: 0 };
+    const ev = { id: "m12e" + ++W.n, kind, st: 0, since: day, until: day + span(...Kd.stages[0].days), v: {}, part: 0, side: { a: 0, b: 0 }, joined: false, out: "", heard: {}, done: {}, end: 0 };
     // 舞台になる町（今いる町は、はじめのうちは避ける）
     const ts = as(Kd.targets).filter(exists);
     const tsAway = ts.filter((id) => id !== S.loc);
@@ -129,7 +131,7 @@
     const O = Kd.outcomes[ev.out] || {};
     as(O.fx).forEach((f) => {
       const ids = f.id === "@t" ? [ev.v.t] : String(f.id || "").startsWith("@") ? as(ev.v[f.id.slice(1)]) : as(f.id);
-      const until = day + rng(...(f.days || [40, 80]));
+      const until = day + span(...(f.days || [40, 80]));
       if (f.type === "town") ids.filter(exists).forEach((id) => { W.fx = W.fx.filter((x) => !(x.type === "town" && x.id === id)); W.fx.push({ type: "town", id, st: f.st, until, kind: ev.kind, ev: ev.id, seen: false }); });
       else if (f.type === "price") W.fx.push({ type: "price", nations: as(f.nations), ids: ids.filter(exists), rate: f.rate, until, kind: ev.kind, ev: ev.id });
       else if (f.type === "road") W.fx.push({ type: "road", a: f.a === "@t" ? ev.v.t : f.a, b: f.b === "@t" ? ev.v.t : f.b, why: f.why || "", until, kind: ev.kind, ev: ev.id });
@@ -157,12 +159,12 @@
     while (ev.st < 4 && day >= ev.until) {
       const at = ev.until;
       ev.st++;
-      if (ev.st === 3) { settle(W, ev, at, S); ev.until = at + rng(...X.AFTER); }
+      if (ev.st === 3) { settle(W, ev, at, S); ev.until = at + span(...X.AFTER); }
       else if (ev.st < 3) {
-        ev.until = at + rng(...Kd.stages[ev.st].days);
+        ev.until = at + span(...Kd.stages[ev.st].days);
         ev.since2 = at;
         // 激化の日に、あなたが舞台の町にいたら（前触れから日がたっていれば）居合わせる
-        ev.hereDue = !!(Kd.here && ev.st === Kd.here.st && at - ev.since >= X.HERE_GAP && X.places(ev).includes(S.loc));
+        ev.hereDue = !!(Kd.here && ev.st === Kd.here.st && at - ev.since >= X.HERE_GAP * (X.PACE || 1) && X.places(ev).includes(S.loc));
       }
     }
     flags(S);
