@@ -140,7 +140,7 @@
       who: { kind: "villager", sex: "男", age: 34, seed: "c2:barnabe", look: { hair: "#c8a060", hairStyle: "short", eyes: "round", iris: "#6a8a4a", mouth: "grin", brows: "raised", outfit: "apron", head: "kerchief", gear: "none", chest: "none", cloth: "#d8cbb0", build: "broad", marks: ["freckles", "dirt"], bg: "#b8a060" } },
       join: {
         cls: "粉挽き", desc: "力は王都いち。勘定は村いちばん下", power: 64, dmg: 3, trait: "proud", bond: 56, home: ["w2_granbel"],
-        life: { home: "麦の都グランベールの川べりの水車小屋", kin: "腰の曲がった母ちゃん", food: "焼きたての白パン（一度に四つ）", habit: "人の荷を頼まれる前に全部担いでしまう", secret: "毎年同じ日に、迷いの森の同じ木の根もとに、野の花を置いてくる", keep: "優勝のときにもらった、名前入りの木の札（自分では読めない）" },
+        life: { home: "麦の都グランベールの川べりの水車小屋", kin: "腰の曲がった母ちゃん", food: "焼きたての白パン（一度に四つまで）", habit: "人の荷を頼まれる前に全部担いでしまう", secret: "毎年同じ日に、迷いの森の同じ木の根もとに、野の花を置いてくる", keep: "優勝のときにもらった、名前入りの木の札（自分では読めない）" },
       },
     }),
     selevan: P({
