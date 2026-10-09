@@ -98,18 +98,34 @@ for (const [vn, [w, h]] of Object.entries(VIEWS)) {
   await page.waitForTimeout(300);
   await shot("menu");
   await page.click(".u31menu").catch(() => {});
-  // 戦闘
-  await page.evaluate(() => {
-    G.S.mode = "explore"; G.S.event = null;
-    G.addCompanion({ name: "ディル", cls: "剣士", desc: "", power: 50, dmg: 3, hp: 22, maxHp: 22 });
-    Object.assign(G.S.inv, { herb: 3, potion: 2 });
-    G.startCombat(["orc", "goblin"], {}); G.main.save(); G.ui.render();
-  });
-  await page.keyboard.press("Escape");
-  await page.waitForTimeout(1200);
-  await quiet();
-  judge("combat", await measure(), { foes: true });
-  await shot("combat");
+  // 戦闘：敵 1 体・3 体 × 仲間なし・あり（持ち主「敵が小さすぎ」）
+  for (const [cn, foes, party] of [["combat1", ["orc"], 0], ["combat3", ["goblin", "orc", "goblin"], 0], ["combat1p", ["orc"], 2], ["combat3p", ["goblin", "orc", "goblin"], 2]]) {
+    await page.evaluate(({ foes, party }) => {
+      G.S.mode = "explore"; G.S.event = null; G.S.combat = null;
+      G.S.companions = [];
+      if (party) { G.addCompanion({ name: "ディル", cls: "剣士", desc: "", power: 50, dmg: 3, hp: 22, maxHp: 22 }); G.addCompanion({ name: "カイデル", cls: "戦士", desc: "", power: 50, dmg: 3, hp: 38, maxHp: 38 }); }
+      Object.assign(G.S.inv, { herb: 3, potion: 2 });
+      G.startCombat(foes, {}); G.main.save(); G.ui.render();
+    }, { foes, party });
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(1200);
+    await quiet();
+    judge(cn, await measure(), { foes: true });
+    if (check) {
+      const r = await page.evaluate(() => {
+        const st = document.getElementById("v9foes"), tome = document.querySelector(".tome");
+        const s = st && st.getBoundingClientRect(), t = tome && tome.getBoundingClientRect();
+        const cards = [...document.querySelectorAll("#panel .foes .foe")].map((c) => c.getBoundingClientRect());
+        const side = document.getElementById("u21side").getBoundingClientRect();
+        const tabsIn = [...document.querySelectorAll("#panel .u13drawers .u13tab")].every((b) => { const r = b.getBoundingClientRect(); return r.top >= side.top - 1 && r.bottom <= side.bottom + 1; });
+        return { stageH: s ? s.height : 0, vh: innerHeight, vw: innerWidth, land: innerWidth > innerHeight, cardsInStage: cards.every((c) => s && c.top >= s.top - 1 && c.bottom <= s.bottom + 1), tomeTop: t ? t.top : 0, tabsIn };
+      });
+      if (!r.land && r.stageH < r.vh * 0.38) ng(`${vn} ${cn}：敵の絵の場所が低い（${Math.round(r.stageH)}px）`);
+      if (!r.cardsInStage) ng(`${vn} ${cn}：敵の札が絵の上に重なっていない`);
+      if (!r.tabsIn) ng(`${vn} ${cn}：戦闘の札（攻撃・防御・戦技…）がコマンドの窓からはみ出す`);
+    }
+    await shot(cn);
+  }
   // 知らせ
   await page.evaluate(() => { document.querySelectorAll("#toast, #u8note").forEach((x) => { x.style.display = ""; }); G.ui.toast("トロフィー獲得『一流』銀"); try { G.gloss.announce("魔物"); } catch (e) { /* 無くても撮る */ } });
   await page.waitForTimeout(400);
