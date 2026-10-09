@@ -55,7 +55,7 @@
 - **指定と違う色・小物**：
   - mirza（傘が赤でなく紺）、ferida（鎧が水色でなく金）、kaidel（道着が濃い灰でなく白）。
   - ilse・doctor（片眼鏡でなく丸眼鏡）、solenne（空の鞘でなく剣）、valdun（鱗が無い）。
-  - tsuyuha（大刀が見えない）、yura（3 歳より年上に見える）、kind_host_m（前掛けに漫画の顔）。
+  - tsuyuha（大刀が見えない）、yura（3 歳より年上に見える）。
 - **浮いている物・背景**：
   - aubin（頭の横の「…」の泡と剣 2 本）、salphiel（盆から水が落ちる）、dietrich（一部の差分だけ雪の粒）。
   - konoha・yoihime（煙が画面いっぱい）、aurelia（羽が左右で切れる）。
