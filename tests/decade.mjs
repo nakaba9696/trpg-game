@@ -26,7 +26,7 @@ for (let i = 0; i < RUNS; i++) {
   const r = { cls, mad: 0, madYear: null, died: 0, years: [], low: 100 };
   // 倒れても続ける
   const die0 = G.die, end0 = G.m5End;
-  G.die = (cause) => { const S = G.S; r.died++; S.hp = S.maxHp; S.conds = []; S.combat = null; S.event = null; S.mode = "explore"; S.depth = 0; S.loc = D.CLASSES[S.cls].start; };
+  G.die = (cause) => { const S = G.S; r.died++; S.hp = S.maxHp; S.conds = []; if (!S.combat) { S.event = null; S.mode = "explore"; S.depth = 0; S.loc = D.CLASSES[S.cls].start; } };   // 戦いの途中は HP だけ戻す（戦いの片付けは戦いの側で）
   G.m5End = (kind) => { const S = G.S; if (kind === "mad") { r.mad++; if (r.madYear == null) r.madYear = G.calYi(S.day) + 1; S.sanity = 50; } else { S.beast = 0; } };
   let lastDay = 0, still = 0, steps = 0;
   try {
