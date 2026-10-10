@@ -1,5 +1,5 @@
 // R11：時間の進みに合わせた仕組み（src/engine/zzzzzzzzzzzzzzzzzzz_r11_pace.js・src/ui/zzzzzzzzz_r11_pace.js）
-// - ギルドの依頼の期限：野・迷宮の依頼は「仕事の日数 × R11.WORK ＋ 行き帰り」で、現場に十分いられる。町の依頼は今まで通り
+// - ギルドの依頼の期限：野・迷宮の依頼は「仕事の日数 × R11.WORK ＋ 行き帰り」で、現場に十分いられる。町の依頼は × R11.WORK_TOWN
 // - 期限が近い依頼は、依頼の窓で「期限が近い」、旅立つの札の印に「急ぎ」
 // - 討伐の依頼の場所の戦いで、依頼の魔物が出やすい
 // - 旅の出来事の数が日数に比例する（7 日で 1〜2 件、19 日で 4〜5 件）。上限は R11.TRIP_MAX
@@ -36,7 +36,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         const trip = (real[q.loc] || 0) * 2;
         if (L.type === "town") {
           town++;
-          if (q.dur !== Math.max(3, t.days + trip)) F(`町の依頼 ${q.kind} の期限が変わった（${q.dur}日・仕事 ${t.days}・行き帰り ${trip}）`);
+          if (q.dur !== Math.max(3, t.days * R11.WORK_TOWN + trip)) F(`町の依頼 ${q.kind} の期限が ${q.dur}日（仕事 ${t.days}×${R11.WORK_TOWN}・行き帰り ${trip}）`);
         } else {
           field++;
           const stay = q.dur - trip;
@@ -66,7 +66,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         if (w2 && /急ぎ/.test(w2.why)) F("期限まで 10 日あるのに「急ぎ」");
       }
     } else F("掲示板に依頼が無い");
-    if (!bad) ok(`依頼の期限（野・迷宮 ${field} 件はどれも現場に ${minStay} 日以上いられる・町 ${town} 件は今まで通り・期限が近いと「急ぎ」）`);
+    if (!bad) ok(`依頼の期限（野・迷宮 ${field} 件はどれも現場に ${minStay} 日以上いられる・町 ${town} 件は仕事の日数が ${R11.WORK_TOWN} 倍・期限が近いと「急ぎ」）`);
   }
 
   // ---------------------------------------------------------------- 討伐の相手
