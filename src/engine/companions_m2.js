@@ -345,7 +345,10 @@
           if (S.gold < 30 && L.poor && !keep) { if (G.m2Why) G.m2Why(c, "poor", L.poor * n); G.m2Bond(c, L.poor * n, true); }
           if (S.gold >= 300 && L.rich) G.m2Bond(c, L.rich * n, true);
           // 十日以上、口をきいていないと不満がたまる
-          if (S.day - (c.talkDay || c.joined || S.day) > 10 && !keep) { if (G.m2Why) G.m2Why(c, "talk", -n); G.m2Bond(c, -n, true); }
+          // 放っておかれて下がるのは「ふつう」の下の端まで（R12 中 3。嫌われるのは裏切り・大失敗・金の催促など）
+          const floor = G.bondFromAff ? Math.ceil(G.bondFromAff(-19)) : 41;
+          const k = Math.min(n, Math.max(0, (c.bond || 0) - floor));
+          if (S.day - (c.talkDay || c.joined || S.day) > 10 && !keep && k > 0) { if (G.m2Why) G.m2Why(c, "talk", -k); G.m2Bond(c, -k, true); }
         });
       }
       // 深手の仲間を看取る

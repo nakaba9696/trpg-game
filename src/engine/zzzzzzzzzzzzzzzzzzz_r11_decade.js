@@ -128,7 +128,9 @@
     else if (w && S.weapon !== "fists" && w.name) item = { kind: "weapon", name: w.name };
     // 年表の大きな出来事（十年の知らせ・引退そのものは除く）
     // 重い順（D.R11.CHRON_KINDS）に探し、いちばん重い種類の中から一つ。ただのトロフィーの行は使わない
-    const chronAll = (S.chronicle || []).filter((c) => R.CHRON_KINDS.includes(c.kind) && c.text && !/を迎える（冒険者でいられる|十年の旅を終え|節目に着く：十年|^トロフィー/.test(c.text));
+    // 暦の節目（「一年」「十年」。D.M6.MILESTONES の id）は出来事として語らない（R12 中 2）
+    const cal = ((D.M6 && D.M6.MILESTONES) || []).filter((m) => R.CAL_MILESTONES.includes(m.id)).map((m) => `節目に着く：${m.title}`);
+    const chronAll = (S.chronicle || []).filter((c) => R.CHRON_KINDS.includes(c.kind) && c.text && !cal.includes(c.text) && !/を迎える（冒険者でいられる|十年の旅を終え|節目に着く：十年|^トロフィー/.test(c.text));
     const kind = R.CHRON_KINDS.find((k) => chronAll.some((c) => c.kind === k));
     const chron = chronAll.filter((c) => c.kind === kind);
     return {
