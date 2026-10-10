@@ -56,6 +56,22 @@ def bg_region(rgb, body, conf):
     bg = (body < 0.5) | holes
     if conf.get("drop"):
         bg |= poly_mask(conf["drop"], (W, H))
+    if conf.get("drop_arc"):
+        # 体の後ろの弧など、決まった色（くすんだ桃色）の所だけを、四角の中で背景にする
+        R, G, Bc = c[..., 0], c[..., 1], c[..., 2]
+        arc = (R - G > 25) & (R - G < 80) & (np.abs(G - Bc) < 14) & (G > 95) & (R > 140)
+        box = np.zeros(arc.shape, bool)
+        for x0, y0, x1, y1 in conf["drop_arc"]:
+            box[y0:y1, x0:x1] = True
+        # 弧の縁の薄い所（白に溶ける所）も含める
+        am = ndimage.binary_dilation(arc & box, iterations=3) & box & ((R - G > 8) | (c.min(axis=2) > 200))
+        if conf.get("arc_keep"):
+            am &= ~poly_mask(conf["arc_keep"], (W, H))  # 顔など、弧の色に近い体の所は弧として消さない
+        if conf.get("arc_keep_dark"):
+            # 角など：四角の中の暗い所（とその 1 画素のまわり）だけを残す
+            dark = ndimage.binary_dilation((G < 80) & (R < 180), iterations=1)
+            am &= ~(poly_mask(conf["arc_keep_dark"], (W, H)) & dark)
+        bg |= am
     if conf.get("keep"):
         bg &= ~poly_mask(conf["keep"], (W, H))
     return bg, B
@@ -82,14 +98,21 @@ def main():
         conf = confs.get(base, {})
         path = os.path.join(a.src, i + ".webp")
         rgb = np.array(Image.open(path).convert("RGB"))
+        # 体の形は元の絵から（塗り直しの前に。塗り直した所を体と見なさないため）
+        body = np.array(cm.cut(ses, path, remove))[..., 3].astype(np.float32) / 255
         yellow = lambda c: (c[..., 0].astype(int) > 110) & (c[..., 0].astype(int) - c[..., 2] > 45) & (c[..., 1].astype(int) - c[..., 2] > 25)
         for x0, y0, x1, y1 in conf.get("patch_yellow", []):
             # 体に重なった麦の穂など（黄色）を、まわりの黄色でない色で塗り直す
             box = np.zeros(rgb.shape[:2], bool); box[y0:y1, x0:x1] = True
             c16 = rgb.astype(int)
             # 麦：黄色に加え、羽の灰黒より明るく赤みのある所（薄茶・白っぽい穂）も
-            wheat = yellow(rgb) | ((c16.mean(axis=2) > 95) & (c16[..., 0] - c16[..., 2] > 12))
-            spot = box & wheat
+            wheat = yellow(rgb) | ((c16.mean(axis=2) > 95) & (c16[..., 0] - c16[..., 2] > 12)) | ((c16[..., 0] - c16[..., 2] > 22) & (c16[..., 1] - c16[..., 2] > 8))
+            wheat = ndimage.binary_dilation(wheat, iterations=1)
+            # 体の形の、麦の茎で切れたすき間を閉じる（四角の中だけ）
+            cbox = poly_mask(conf["close_poly"], (rgb.shape[1], rgb.shape[0])) if conf.get("close_poly") else box
+            closed = ndimage.binary_fill_holes(ndimage.binary_closing(body > 0.5, iterations=8)) & cbox
+            body = np.where(closed, 1.0, body).astype(np.float32)
+            spot = box & wheat & (body > 0.5)  # 体の中だけ塗り直す（外の麦は背景として抜く）
             if spot.any():
                 # 塗る色は、四角の中の暗く色の無い所（羽）からとる
                 ref = box & ~ndimage.binary_dilation(spot, iterations=2) & (c16.mean(axis=2) < 90) & (c16.max(axis=2) - c16.min(axis=2) < 30)
@@ -110,11 +133,12 @@ def main():
             p2 = os.path.join(a.out, "_patched_" + i + ".png")
             Image.fromarray(rgb).save(p2)
             path = p2
-        body = np.array(cm.cut(ses, path, remove))[..., 3].astype(np.float32) / 255
         bg, B = bg_region(rgb, body, conf)
         if conf.get("drop_yellow"):
             # 残った麦（黄色）は背景として消す（keep の所は除く）
             ky = yellow(rgb)
+            if conf.get("keep_yellow"):
+                ky &= ~poly_mask(conf["keep_yellow"], (rgb.shape[1], rgb.shape[0]))  # 目など、黄色でも残す所
             bg |= ndimage.binary_dilation(ky, iterations=1)
         if conf.get("solid"):
             # 止まり木の岩など：麦に隠れた所も含めて形ごと残す（黄色は岩の灰色に塗り直す）
@@ -134,6 +158,14 @@ def main():
         fg = cm.decontaminate(rgb, (a_fg[..., 0] * 255).astype(np.uint8), B).astype(np.float32)
         # 3. クロマキー：緑は塗った所にしか無いので、G − max(R,B) で出る透明度は塗った量（1 − soft）と同じになる
         alpha = 1 - soft
+        # 本体から離れた小さな点（背景の残り）を消す
+        lab, n = ndimage.label(alpha > 0.05)
+        if n > 1:
+            sizes = ndimage.sum(np.ones_like(alpha), lab, range(1, n + 1))
+            big = int(np.argmax(sizes)) + 1
+            for k in range(1, n + 1):
+                if k != big and sizes[k - 1] < conf.get("min_island", 80):
+                    alpha[lab == k] = 0
         col = fg.copy()
         a8 = (alpha * 255).astype(np.uint8)
         a8 = np.where(a8 < 8, 0, np.where(a8 > 247, 255, a8)).astype(np.uint8)
