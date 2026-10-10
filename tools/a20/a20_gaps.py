@@ -5,6 +5,7 @@
 # 境目の 2px は半透明にして白を抜く（ソフトマット）。透明を持つ絵は keyOut がそのまま使う（transparent()）ので、外周の背景も透明にした完成品にする。
 # すでに透明な絵・描き直し待ち（redraw）の絵・別のセッションが直している絵（SKIP）は飛ばす。魔物は足もとが下の縁に付くので keyOut に bottom。
 # 比べる背景の色は、外の背景の色をぼかして広げた「その場所の背景の色」（縁や上下で濃淡のある背景でも、囲まれた所を近くの背景と比べる）。
+# 囲まれた背景を消した絵だけを書く（見つからない絵は元のまま）。持ち主が点検で崩れを見つけた人は overrides.json で "keep"（作り直し候補）。
 # 使い方：python3 tools/a20/a20_gaps.py [出力先（既定は assets/。上書き）] [名前の正規表現]。要るもの：Python 3・numpy・scipy・Pillow（webp つき）・node
 # 結果の一覧は <出力先>/a20_result.json（assets/ に書くときは assets/a20_result.json。消してよい。確かめの一覧画像は docs/review/a20/）。レーン A（絵）
 import sys, os, io, re, json, struct, subprocess, numpy as np
@@ -13,6 +14,8 @@ from scipy import ndimage as ndi
 from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
+# 元の絵（白い背景）の置き場。既定は assets/。置き換えたあとでやり直すときは、元の絵を取り出した所を A20_SRC に（例：git archive <元の版> assets | tar -x -C /tmp/a20src → A20_SRC=/tmp/a20src/assets）
+SRC = os.environ.get("A20_SRC") or os.path.join(REPO, "assets")
 
 # ---- ゲームの白抜き（node）
 class Keyer:
@@ -44,7 +47,10 @@ def decide(s, n, mon=False):
     big_flat = s["area"] >= 2000 and s["med"] <= 3 and s["sd"] <= 2.0 and s["dloc"] <= 1.0  # 大きく、近くの背景とまったく同じ色の塊（マントの下など）
     if s["ink"] < (0.4 if big_flat else 0.5): return False  # 縁が線画に囲まれていない（茸の斑点・歯・模様）
     if s["isl"] >= 0.03: return False  # 中に閉じこめた物がある（仮面の目・頭蓋の穴・羊毛の巻き毛）
-    if s["tint"] >= 5: return False  # 色みがある（色白の肌・色のついた白）
+    if s["tint"] >= 3: return False  # 色みがある（色白の肌・色のついた白）
+    # 近く（40px）の外の背景の色とずれている塊は残す。近くに外の背景が無い（奥まった）塊は、背景の色ちょうどの所が多いときだけ
+    if s["dloc"] < 99 and s["dloc"] > 4: return False
+    if s["dloc"] >= 99 and s["area"] >= 100 and not (s["exact"] >= 0.5 and s["med"] <= 4): return False
     if s["area"] >= 40 and (s["th"] < 1.6 or s["wmax"] <= 2.9): return False  # 細く長い白（服の縁取り・光の筋）
     # 中身：背景に近く平ら（囲まれた所の背景は、外の背景より少しだけ色がずれていることが多い）
     if s["area"] <= n * 0.004:
@@ -176,7 +182,7 @@ def base(d, n):
     return n
 def targets():
     for d in ("portraits", "monsters"):
-        for f in sorted(os.listdir(f"{REPO}/assets/{d}")):
+        for f in sorted(os.listdir(f"{SRC}/{d}")):
             if not f.endswith(".webp"): continue
             n = f[:-5]; b = base(d, n)
             if b in SKIP or n in SKIP or f"{d}/{b}" in redraw or f"{d}/{n}" in redraw: continue
@@ -191,7 +197,7 @@ def work(t):
     b = base(d, n)
     if K is None:
         K = Keyer()
-    path = f"{REPO}/assets/{d}/{n}.webp"
+    path = f"{SRC}/{d}/{n}.webp"
     src = Image.open(path); orig = os.path.getsize(path)
     im = np.array(src.convert("RGBA"))
     a = im[..., 3]
@@ -203,8 +209,10 @@ def work(t):
     for q, aq in ((72, 75), (65, 70), (58, 65), (52, 60)):
         data = enc(res, q, aq)
         if len(data) <= orig * 1.15: break
-    os.makedirs(f"{OUT}/{d}", exist_ok=True)
-    open(f"{OUT}/{d}/{n}.webp", "wb").write(data)
+    kill0 = (keyed[..., 3] >= 16) & (res[..., 3] < 16)
+    if kill0.any() or os.environ.get("A20_ALL"):  # 囲まれた背景を消した絵だけを書く（ほかは元のまま。ゲームの白抜きで外周が消える）
+        os.makedirs(f"{OUT}/{d}", exist_ok=True)
+        open(f"{OUT}/{d}/{n}.webp", "wb").write(data)
     # 確かめ用：消した所（keyOut 後に消した囲まれた背景）
     kill = (keyed[..., 3] >= 16) & (res[..., 3] < 16)
     if os.environ.get("A20_KILL"): np.save(f"{OUT}/{d}/{n}.kill.npy", np.packbits(kill))
