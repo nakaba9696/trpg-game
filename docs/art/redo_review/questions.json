@@ -61,13 +61,13 @@
  },
  {
   "id": "hermes",
-  "file": "docs/art/redo_review/p7/hermes.webp",
-  "moods": "docs/art/redo_review/p7/hermes_moods.webp",
-  "what": "(a) 前に描き直して持ち主がデザインはよいとした絵を土台に、単色の背景で描き直して（denoise 0.4。顔・髪・服はそのまま）抜いた。縁の背景の色を抜き、白いふちを消した。首の横・髪の内側は黒・マゼンタの上で透明（<id>_neck.webp）。表情差分も",
+  "file": "docs/art/redo_review/p7c/hermes.webp",
+  "moods": "docs/art/redo_review/p7c/hermes_moods.webp",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/hermes_check.webp",
-  "neck": "docs/art/redo_review/p7/hermes_neck.webp"
+  "neck": "docs/art/redo_review/p7c/hermes_neck.webp"
  },
  {
   "id": "iori",
@@ -87,23 +87,23 @@
  },
  {
   "id": "kind_child_f",
-  "file": "docs/art/redo_review/p7/kind_child_f.webp",
+  "file": "docs/art/redo_review/p7c/kind_child_f.webp",
   "moods": null,
-  "what": "(a) 前に描き直して持ち主がデザインはよいとした絵を土台に、単色の背景で描き直して（denoise 0.4。顔・髪・服はそのまま）抜いた。縁の背景の色を抜き、白いふちを消した。首の横・髪の内側は黒・マゼンタの上で透明（<id>_neck.webp）。表情差分も",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/kind_child_f_check.webp",
-  "neck": "docs/art/redo_review/p7/kind_child_f_neck.webp"
+  "neck": "docs/art/redo_review/p7c/kind_child_f_neck.webp"
  },
  {
   "id": "kind_child_m",
-  "file": "docs/art/redo_review/p7/kind_child_m.webp",
+  "file": "docs/art/redo_review/p7c/kind_child_m.webp",
   "moods": null,
-  "what": "(a) 元の絵を土台に、単色の背景で描き直して（denoise 0.4。顔・髪・服はそのまま）抜いた。縁の背景の色を抜き、白いふちを消した。首の横・髪の内側は黒・マゼンタの上で透明（<id>_neck.webp）。表情差分も。元の絵のデザインのまま",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/kind_child_m_check.webp",
-  "neck": "docs/art/redo_review/p7/kind_child_m_neck.webp"
+  "neck": "docs/art/redo_review/p7c/kind_child_m_neck.webp"
  },
  {
   "id": "kind_priest_f_b",
@@ -123,13 +123,13 @@
  },
  {
   "id": "marion",
-  "file": "docs/art/redo_review/p7/marion.webp",
-  "moods": "docs/art/redo_review/p7/marion_moods.webp",
-  "what": "(a) 前に描き直して持ち主がデザインはよいとした絵を土台に、単色の背景で描き直して（denoise 0.4。顔・髪・服はそのまま）抜いた。縁の背景の色を抜き、白いふちを消した。首の横・髪の内側は黒・マゼンタの上で透明（<id>_neck.webp）。表情差分も",
+  "file": "docs/art/redo_review/p7c/marion.webp",
+  "moods": "docs/art/redo_review/p7c/marion_moods.webp",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/marion_check.webp",
-  "neck": "docs/art/redo_review/p7/marion_neck.webp"
+  "neck": "docs/art/redo_review/p7c/marion_neck.webp"
  },
  {
   "id": "mirza",
@@ -202,13 +202,13 @@
  },
  {
   "id": "noeris",
-  "file": "docs/art/redo_review/p7/noeris.webp",
-  "moods": "docs/art/redo_review/p7/noeris_moods.webp",
-  "what": "(a) 前に描き直して持ち主がデザインはよいとした絵を土台に、単色の背景で描き直して（denoise 0.4。顔・髪・服はそのまま）抜いた。縁の背景の色を抜き、白いふちを消した。首の横・髪の内側は黒・マゼンタの上で透明（<id>_neck.webp）。表情差分も",
+  "file": "docs/art/redo_review/p7c/noeris.webp",
+  "moods": "docs/art/redo_review/p7c/noeris_moods.webp",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/noeris_check.webp",
-  "neck": "docs/art/redo_review/p7/noeris_neck.webp"
+  "neck": "docs/art/redo_review/p7c/noeris_neck.webp"
  },
  {
   "id": "oren",
@@ -464,23 +464,23 @@
  },
  {
   "id": "rui",
-  "file": "docs/art/redo_review/p7/rui.webp",
-  "what": "(a) 元の絵を土台に、単色の背景で描き直して（denoise 0.4。顔・髪・服はそのまま）抜いた。縁の背景の色を抜き、白いふちを消した。首の横・髪の内側は黒・マゼンタの上で透明（<id>_neck.webp）。表情差分も",
+  "file": "docs/art/redo_review/p7c/rui.webp",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/rui_check.webp",
-  "moods": "docs/art/redo_review/p7/rui_moods.webp",
-  "neck": "docs/art/redo_review/p7/rui_neck.webp"
+  "moods": "docs/art/redo_review/p7c/rui_moods.webp",
+  "neck": "docs/art/redo_review/p7c/rui_neck.webp"
  },
  {
   "id": "severin",
-  "file": "docs/art/redo_review/p7/severin.webp",
-  "what": "(a) 元の絵を土台に、単色の背景で描き直して（denoise 0.4。顔・髪・服はそのまま）抜いた。縁の背景の色を抜き、白いふちを消した。首の横・髪の内側は黒・マゼンタの上で透明（<id>_neck.webp）。表情差分も",
+  "file": "docs/art/redo_review/p7c/severin.webp",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/severin_check.webp",
-  "moods": "docs/art/redo_review/p7/severin_moods.webp",
-  "neck": "docs/art/redo_review/p7/severin_neck.webp"
+  "moods": "docs/art/redo_review/p7c/severin_moods.webp",
+  "neck": "docs/art/redo_review/p7c/severin_neck.webp"
  },
  {
   "id": "e4_gravejackal",
