@@ -33,12 +33,12 @@
       dr.rolled[k] = min;
       floored.push(k);
     });
-    // 体（HP の元）：要の能力値でなくても、R.BODY より下げない
+    // 体（HP の元）：要の能力値の下支えより R.BODY が高ければ、そちらまで
     const body = "体力";
-    if (R.BODY && !r13.keys(dr.cls).includes(body) && dr.rolled[body] < R.BODY) {
+    if (R.BODY && dr.rolled[body] < R.BODY) {
       dr.dice[body] = R.BODY - cre.classMod(dr.cls, body);
       dr.rolled[body] = R.BODY;
-      floored.push(body);
+      if (!floored.includes(body)) floored.push(body);
     }
     dr.r13 = Object.assign(r13.of(dr), { floored });
     dr.best = Math.max(dr.best || 0, cre.total(dr));
@@ -71,7 +71,7 @@
     const out = [];
     const x = dr && dr.r13;
     if (!x) return out;
-    if (x.floored && x.floored.length) out.push({ k: "floor", text: fill(R.FLOORED, { list: x.floored.map((k) => `${k}は ${r13.keys(dr.cls).includes(k) ? R.FLOOR[r13.keys(dr.cls).indexOf(k)] : R.BODY}`).join("、") }) });
+    if (x.floored && x.floored.length) out.push({ k: "floor", text: fill(R.FLOORED, { list: x.floored.map((k) => `${k}は ${dr.rolled[k]}`).join("、") }) });
     if (x.lv) out.push({ k: "low", text: fill(R.LOW, { total: cre.baseTotal(dr), usual: r13.usual(dr), pts: x.pts, gold: x.gold, herb: x.herb, key: r13.keys(dr.cls)[0] }) });
     return out;
   };

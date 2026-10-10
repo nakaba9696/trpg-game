@@ -102,7 +102,7 @@ export default ({ fail, loadEngine, seeded }) => {
     if (!S.log.slice(n).some((l) => l.text === T.STIR_HEAD)) f("町で「世の大事」の知らせが出ない");
     if (!S.chronicle.some((c) => c.kind === "world" && /動き出した/.test(c.text))) f("年表に使徒が動き出した行が無い");
     const a = G.e3List().find((x) => x.id === stirred[0]);
-    if (a.calm === "友好") f("友好の使徒が動き出した");
+    if (G.r13.plan(a).how !== "passive") f(`設定に動く理由の無い使徒が動き出した（${a.id}）`);
     if (!G.r13.todo(S).some((t) => t.stir)) f("動き出した使徒が一覧の頭に無い");
     // 次は間をおいてから
     G.r13.tick(S);
@@ -114,6 +114,27 @@ export default ({ fail, loadEngine, seeded }) => {
     if (S.r13.settled !== 1 || S.fame <= fame0) f("動き出した使徒を討っても決着にならない");
     if (!G.P.trophies[T.TROPHY_KEY]) f("トロフィー「決着」が付かない");
     if (!/決着/.test(G.r13.epilogueLine(S))) f(`決着の「その後」の一行が無い：${G.r13.epilogueLine(S)}`);
+  }
+  // 能動の使徒：勝手には動かない。場所を探り続けると、はじめて会う出来事に行き当たる
+  {
+    const passive = Object.entries(T.APOSTLES).filter(([, p]) => p.how === "passive");
+    passive.forEach(([id, p]) => { if (!p.stir || !p.why) f(`受動の使徒 ${id} に知らせの文か根拠が無い`); });
+    Object.entries(T.APOSTLES).forEach(([id]) => { if (!D.E3.LIST[id]) f(`使徒の表に無い id：${id}`); });
+    S = start(1315);
+    S.day = (T.STIR_YEAR - 1) * Y + 10 * T.STIR_GAP; S.mode = "explore";
+    for (let i = 0; i < 12; i++) { G.r13.tick(S); S.day += T.STIR_GAP; }
+    Object.keys(S.r13.stir).forEach((id) => { if ((T.APOSTLES[id] || {}).how !== "passive") f(`能動の使徒 ${id} が勝手に動き出した`); });
+    S = start(1316);
+    S.day = (T.FROM_YEAR - 1) * Y + 3; S.loc = "karna"; S.visited.karna = true; S.mode = "explore"; S.event = null;
+    const zalve = G.e3List().find((a) => a.id === "zalve");
+    if (!/あと\d+回/.test(G.r13.hint(S, zalve))) f(`能動の使徒の手がかりに「あと何回」が無い：${G.r13.hint(S, zalve)}`);
+    for (let i = 0; i < (T.APOSTLES.zalve.seek || T.SEEK) && !S.event; i++) { S.event = null; G.r13.seekStep(S, "karna"); }
+    const eid = typeof S.event === "string" ? S.event : S.event && S.event.id;
+    if (eid !== "e3_meet_zalve") f(`帳場の奥を探り続けても使徒に行き当たらない（${eid}）`);
+    S.event = null;
+    const lev = G.e3List().find((a) => a.id === "levian");
+    S.visited.ruins = true;
+    if (!/地下\d+階/.test(G.r13.hint(S, lev))) f(`迷宮の奥の使徒の手がかりに階が無い：${G.r13.hint(S, lev)}`);
   }
   // 十年の引退の「その後」に一行
   S = start(1313);

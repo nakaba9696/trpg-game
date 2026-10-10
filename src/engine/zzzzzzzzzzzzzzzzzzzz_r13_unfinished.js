@@ -5,9 +5,13 @@
 //     降り切っていない迷宮（R11 の S.r11m.deep）／足を踏み入れていない地方（近い二つ）／取り残したトロフィーの手がかり（G.P.trophies に無い金・銀）
 // - 宿屋（七年目から）：「やり残したことを数える」（本文に一覧）と「〇〇へ向かう」（宿を出て、道順の最初の一歩の旅に出る）
 // - 依頼の一覧（Q7。手帳の代わり）：七年目から「やり残したこと」の一件
-// - 八年目から：倒していない使徒（友好の者は除く）が一体ずつ動き出す。町にいるときに「世の大事」として知らせ、年表と手帳（噂）に残す。
+// - 使徒の動きは設定から（D.R13_TODO.APOSTLES。持ち主「設定をねじまげない」「受動的なイベントと能動的なイベントがある」）：
+//   受動（passive）：人の世に手を出す理由のある使徒だけが、八年目から一体ずつ動き出す。町にいるときに「世の大事」として知らせ、年表と手帳（噂）に残す
+//   能動（active）：勝手に攻めてこない。七年目から、その使徒の場所を探り続ける・迷宮を奥まで降りると、はじめて会う出来事（E3）に行き当たる
+//   一覧には使徒ごとに「次に何をすれば先へ進むか」（どこを、あと何回・何階）を出す。倒せない使徒（E8）は出さない
 //   動き出した使徒を討つと、名声と年表の一行・トロフィー「決着」。十年の引退の「その後」に、決着か、やり残したことを一行足す
-// セーブに足すもの：S.r13 = { stir: { 使徒 id: { day, told } }, next 次に動き出す日, settled 討った数, done: { 使徒 id: 1 } }。古いセーブで無くても動く。
+// セーブに足すもの：S.r13 = { stir: { 使徒 id: { day, told } }, next 次に動き出す日, settled 討った数, done: { 使徒 id: 1 },
+//   seek: { 場所 id: 探った回数 }, found: { 使徒 id: 日 } }。古いセーブで無くても動く。
 // 乱数は使わない（G.rand の並びを変えない。エピローグの一行も決まった選び方）。DOM には触らない。レーン C＋V
 (function (G) {
   const D = G.data;
@@ -17,7 +21,7 @@
   const fill = (t, o) => String(t).replace(/\{(\w+)\}/g, (m, k) => (o && o[k] != null ? o[k] : ""));
   const lines = (v) => (v == null ? [] : Array.isArray(v) ? v : [v]);
   const locName = (id) => (id && D.LOCS[id] ? D.LOCS[id].name : "");
-  const st = (S) => { const r = (S.r13 = S.r13 || {}); r.stir = r.stir || {}; r.done = r.done || {}; return r; };
+  const st = (S) => { const r = (S.r13 = S.r13 || {}); r.stir = r.stir || {}; r.done = r.done || {}; r.seek = r.seek || {}; r.found = r.found || {}; return r; };
   X.state = st;
   const year = (S) => G.r11.yearNo(S);
   X.open = (S) => !!(S && S.profile && !S.over && year(S) >= T.FROM_YEAR);
@@ -54,9 +58,32 @@
   X.slain = (S, a) => !!(S.flags && S.flags[a.flag]);
   X.known = (S, a) => {
     const r = st(S), lair = lairOf(a);
-    return !!(r.stir[a.id] || (S.e7 && S.e7[a.id]) || (a.meet && loreHas(S, a.meet.lore)) || (G.e3Tries && G.e3Tries(a.id) > 0) || (lair && S.visited && S.visited[lair]));
+    return !!(r.stir[a.id] || r.found[a.id] || (S.e7 && S.e7[a.id]) || (a.meet && loreHas(S, a.meet.lore)) || (G.e3Tries && G.e3Tries(a.id) > 0) || (lair && S.visited && S.visited[lair]));
   };
-  const apostles = () => (G.e3List ? G.e3List() : []);
+  // 倒せる使徒だけ（E8 の倒せない使徒は「やり残したこと」にしない）
+  const apostles = () => (G.e3List ? G.e3List() : []).filter((a) => !a.noslay && (!G.e3Slayable || G.e3Slayable(a.id)));
+  X.plan = (a) => (T.APOSTLES[a.id] || { how: "active" });
+  X.weak = (S, a) => { const ks = a.keys || []; let got = 0; ks.forEach((k) => { try { if (k.test && k.test(S)) got++; } catch (e) { /* 条件の書き損じは数えない */ } }); return { got, all: ks.length }; };
+  X.metEvent = (a) => (D.EVENTS || []).find((e) => e.id === "e3_meet_" + a.id) || null;
+  // 能動の使徒に、ここで行き当たれるか（行き当たるまでの残り）。{ left 回, depth 必要な階 } か null
+  X.seekNeed = (S, a) => {
+    const p = X.plan(a), ap = X.apostle(a);
+    if (ap.lair || !ap.to || !X.metEvent(a)) return null;
+    const L = D.LOCS[ap.to] || {};
+    if (p.deep && L.floors) { const need = Math.max(1, L.floors - 1); return { depth: need, left: Math.max(0, need - (((S.r11m || {}).deep || {})[ap.to] || 0)) }; }
+    if (p.seek == null && p.how !== "active") return null;
+    return { left: Math.max(0, (p.seek || T.SEEK) - (st(S).seek[ap.to] || 0)) };
+  };
+  // 使徒ごとの「次に何をすれば先へ進むか」
+  X.hint = (S, a) => {
+    const ap = X.apostle(a), r = st(S);
+    if (X.known(S, a)) return fill(r.stir[a.id] ? T.APOSTLE_STIR : T.HINT_KEYS, Object.assign({}, ap, X.weak(S, a)));
+    if (ap.lair) { const L = D.LOCS[ap.lair] || {}; return fill(T.HINT_LAIR, { place: ap.place, n: L.floors || "?", d: ((S.r11m || {}).deep || {})[ap.lair] || 0 }); }
+    const need = X.seekNeed(S, a);
+    if (!need) return "";
+    if (need.depth) return fill(T.HINT_DEEP, { place: ap.place, n: need.depth, d: need.depth - need.left });
+    return fill(T.HINT_SEEK, { place: ap.place, n: Math.max(1, need.left) });
+  };
 
   // ---------------------------------------------------------------- やり残したことの一覧
   X.todo = (S) => {
@@ -64,14 +91,16 @@
     if (!S || !S.profile) return [];
     const r = st(S);
     const out = [];
-    // 使徒：動き出した者 → 知っている者 → 知らない者の数
+    // 使徒：動き出した者 → 会った者 → 居場所に足を踏み入れた者（何をすれば会えるか）→ 知らない者は一行
     let unknown = 0;
     const alive = apostles().filter((a) => !X.slain(S, a));
-    alive.sort((a, b) => (r.stir[b.id] ? 1 : 0) - (r.stir[a.id] ? 1 : 0));
+    alive.sort((a, b) => (r.stir[b.id] ? 1 : 0) - (r.stir[a.id] ? 1 : 0) || (X.known(S, b) ? 1 : 0) - (X.known(S, a) ? 1 : 0));
     alive.forEach((a) => {
-      if (!X.known(S, a)) { unknown++; return; }
       const p = X.apostle(a);
-      out.push({ k: "apostle", id: a.id, text: fill(r.stir[a.id] ? T.APOSTLE_STIR : T.APOSTLE, p), to: p.to, why: r.stir[a.id] ? `${p.label}が動き出した` : `${p.label}がいる`, stir: !!r.stir[a.id] });
+      const near = X.known(S, a) || (p.to && S.visited && S.visited[p.to]);
+      const text = near ? X.hint(S, a) : "";
+      if (!text) { unknown++; return; }
+      out.push({ k: "apostle", id: a.id, text, to: p.to, why: r.stir[a.id] ? `${p.label}が動き出した` : X.known(S, a) ? `${p.label}がいる` : `${p.place}を探りに`, stir: !!r.stir[a.id] });
     });
     // 仲間の頼みごと（一行にいる人だけ）
     const Q9 = D.Q9 || {}, C9 = G.q9;
@@ -170,7 +199,29 @@
       if (act) { const [h2, ...rest] = act.id.split(":"); return ex0(h2, rest.join(":"), act); }
       return;
     }
-    return ex0(head, arg, a);
+    // 能動の使徒：七年目から、その場所を探った回数を数え、足りたら会う出来事に行き当たる
+    const SEEK_HEADS = ["explore", "walk", "deeper"];
+    if (!S || !SEEK_HEADS.includes(head)) return ex0(head, arg, a);
+    const loc = S.loc;
+    const out = ex0(head, arg, a);
+    try { if (G.S === S && S.loc === loc) X.seekStep(S, loc); } catch (e) { /* 数えられなくても探索はそのまま */ }
+    return out;
+  };
+  X.seekStep = (S, loc) => {
+    if (!X.open(S) || S.over) return;
+    const r = st(S);
+    r.seek[loc] = (r.seek[loc] || 0) + 1;
+    if (S.event || S.combat || S.mode === "combat") return;
+    const a = apostles().find((x) => {
+      if (X.slain(S, x) || r.found[x.id] || X.known(S, x) || X.plan(x).how !== "active" || X.apostle(x).to !== loc) return false;
+      const need = X.seekNeed(S, x);
+      const ev = X.metEvent(x);
+      return need && need.left <= 0 && ev && (!ev.cond || ev.cond(S));
+    });
+    if (!a) return;
+    r.found[a.id] = S.day;
+    G.say(T.FOUND);
+    G.startEvent(X.metEvent(a));
   };
 
   // ---------------------------------------------------------------- 依頼の一覧（手帳）
@@ -197,7 +248,7 @@
   X.stirCandidates = (S) => {
     const r = st(S);
     return apostles()
-      .filter((a) => !X.slain(S, a) && !r.stir[a.id] && a.calm !== "友好" && X.apostle(a).to)
+      .filter((a) => !X.slain(S, a) && !r.stir[a.id] && X.plan(a).how === "passive" && X.plan(a).stir)
       .sort((a, b) => (X.known(S, b) ? 1 : 0) - (X.known(S, a) ? 1 : 0) || (RANK[a.rank] ?? 1) - (RANK[b.rank] ?? 1));
   };
   X.tick = (S) => {
@@ -232,9 +283,8 @@
     r.stir[id].told = S.day;
     if (!a || X.slain(S, a)) return;
     const p = X.apostle(a);
-    const n = Object.keys(r.stir).indexOf(id);
     G.log("title", T.STIR_HEAD);
-    G.say(fill(T.STIR[n % T.STIR.length], p));
+    G.say(fill(X.plan(a).stir, p));
     G.memo(fill(T.STIR_MEMO, p));
     G.chron(fill(T.STIR_CHRON, p), "world");
   };
