@@ -41,3 +41,12 @@ html.u31land body.u31m #u8note { top: auto; bottom: 8px; left: calc(var(--v9-cx)
 
 /* 低 26：窓（dialog）の見出しの帯は流しても上に貼り付くので、透けない色に（スマホの図鑑で、並べ替えの欄が「図鑑」の裏に透けて見えた） */
 dialog .dhead { background: var(--win-solid, var(--sheet)); z-index: 3; }
+
+/* 高 1 の続き：いる所・日付の一行は、名前の横の「📍」を押したときだけ（body.r11whereon）。変わったときは本文に小さく一行（.r11wline） */
+body.u21pc:not(.r11whereon) #mbar #u29where { display: none; }
+#mbar .r11wbtn { flex: none; display: inline-flex; align-items: center; gap: 3px; min-height: 26px; padding: 1px 8px; margin: 0 0 0 6px; font-size: 11.5px; letter-spacing: .04em; line-height: 1.2; }
+#mbar .r11wbtn[aria-expanded="true"] { border-color: var(--accent); color: var(--head); }
+#mbar .r11wbtn .r11wpin { font-size: 12px; line-height: 1; }
+body.u31m #mbar .r11wbtn { min-height: 40px; min-width: 36px; padding: 0 6px; margin: 0; justify-content: center; }
+body.u31m #mbar .r11wbtn .r11wlab { display: none; }
+#log .r11wline { font-size: .86em; color: var(--muted); letter-spacing: .04em; }

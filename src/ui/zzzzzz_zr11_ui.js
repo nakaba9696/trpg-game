@@ -7,6 +7,9 @@
 // - 低 27：スマホ（と指で触る画面）の遊び方の一行から「数字キーでも選べる」を外す
 // - 低 31：戦闘が始まった手番に出たトロフィーの行（迷宮の階に着いた『地下三階』など）は、戦闘の頭の文に挟まず、戦いのあとに回す。
 //   戦闘の間は本文で隠し（.r11later）、結果の場面・死の場面の「トロフィー」の項目に足す（u13.afterGroups・u13.result を包む）。戦闘が終わったら本文にも戻す
+// - 高 1 の続き（持ち主「邪魔過ぎる。ログにだけ残せばいい。それかクリックで表示するようにして」）：
+//   左上の状態の窓（スマホは上の帯）の「いる所・日付」の一行（u21 の #u29where）は、初めは閉じておき、名前の横の「📍」を押したときだけ開く（もう一度で閉じる）。
+//   開け閉めは localStorage（morsveld-r11-where）で覚える（使えなくても動く）。いる所が変わった・日付が進んだときは、本文に一行残す（G.log の "sys"・{ r11where: 1 }）
 // - 中 13：スマホの施設の中（S.mode が fac）は body.r11fac。CSS でログの窓を一行ほどに畳み、組の札を一段に並べて、一覧（#u21open）に高さを渡す
 (function (G) {
   const ui = G.ui;
@@ -17,6 +20,69 @@
   const has = (c) => body.classList.contains(c);
   const touch = () => has("u31m") || !!(window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches);
   R.noKeys = (t) => String(t || "").replace(/（数字キーでも選べる）/g, "");
+
+  // ---------------------------------------------------------------- 高 1 の続き：いる所・日付は押したときだけ／変わったら本文に一行
+  const WKEY = "morsveld-r11-where";
+  let whereOn = false;
+  try { whereOn = localStorage.getItem(WKEY) === "1"; } catch (e) { /* 覚えられなくても閉じたまま */ }
+  const wbtn = document.createElement("button");
+  wbtn.type = "button";
+  wbtn.className = "btn small r11wbtn";
+  wbtn.setAttribute("aria-controls", "u29where");
+  wbtn.title = "いる所と日付";
+  wbtn.append(Object.assign(document.createElement("span"), { className: "r11wpin", textContent: "📍" }), Object.assign(document.createElement("span"), { className: "r11wlab", textContent: "いる所・日付" }));
+  function paintWbtn() {
+    body.classList.toggle("r11whereon", whereOn);
+    wbtn.setAttribute("aria-expanded", String(whereOn));
+    wbtn.setAttribute("aria-label", whereOn ? "いる所と日付を閉じる" : "いる所と日付を開く");
+    const bar = $("#mbar");
+    if (!bar) return;
+    if (wbtn.parentNode !== bar) { const name = bar.querySelector(".mname"); if (name) name.after(wbtn); else bar.prepend(wbtn); }
+  }
+  wbtn.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    whereOn = !whereOn;
+    try { localStorage.setItem(WKEY, whereOn ? "1" : "0"); } catch (e) { /* 覚えられなくても開け閉めはできる */ }
+    paintWbtn();
+  });
+  R.whereOn = () => whereOn;
+  // いる所（町・野・迷宮の名前。旅の途中は「〇〇への道中」。施設の出入りでは変わらない）と日付（時間帯は入れない）
+  R.whereOf = (S) => {
+    const L = (G.data && G.data.LOCS) || {};
+    if (!S) return "";
+    if (S.travel && L[S.travel]) return `${L[S.travel].name}への道中`;
+    return (L[S.loc] || {}).name || "";
+  };
+  R.whereLine = (place, date) => `📍 ${[place, date].filter(Boolean).join("　")}`;
+  if (typeof G.act === "function" && typeof G.log === "function") {
+    const act0 = G.act;
+    G.act = (...a) => {
+      const S0 = G.S;
+      const before = S0 ? { run: S0.id, place: R.whereOf(S0), date: G.date ? G.date() : "", last: S0.log[S0.log.length - 1] || null } : null;
+      const r = act0(...a);
+      try {
+        const S = G.S;
+        if (before && S && S.id === before.run && !S.combat && !S.over) {
+          const place = R.whereOf(S), date = G.date ? G.date() : "";
+          if (place !== before.place || date !== before.date) {
+            // 今の行動で増えた記録（記録は 240 件で古い方から消えるので、数ではなく前の最後の記録から数える）
+            const at = before.last ? S.log.lastIndexOf(before.last) : -1;
+            const fresh = S.log.slice(at + 1);
+            // 着いた所の見出し（記録の "title"。本文では日付と並ぶ）が今出ていれば、それで足りる
+            const headed = !!place && fresh.some((e) => e && e.k === "title" && String(e.text || "").includes(place));
+            if (!headed) G.log("sys", R.whereLine(place, date), { r11where: 1 });
+          }
+        }
+      } catch (e) { /* 一行残せなくても行動はそのまま */ }
+      return r;
+    };
+  }
+  // 本文の一行は小さく（ui.logEl：記録の種類ごとの描き方の入口。ほかのファイル（U27）が置いたものを包む）
+  const logEl0 = ui.logEl;
+  ui.logEl = (e) => {
+    if (e && e.r11where) { const p = document.createElement("p"); p.className = "l-sys r11wline"; p.textContent = e.text; return p; }
+    return logEl0 ? logEl0(e) : null;
+  };
 
   // ---------------------------------------------------------------- 高 2：遊び方の一行を窓の外へ
   function liftTip() {
@@ -83,6 +149,7 @@
   ui.render = (...a) => {
     const r = base(...a);
     const S = G.S;
+    try { paintWbtn(); } catch (e) { /* 札が置けなくても描画は止めない */ }
     try { deferTrophies(S); } catch (e) { /* 回せなくても本文はそのまま */ }
     body.classList.toggle("r11fac", !!(S && S.mode === "fac" && !S.combat && !S.over));
     try { liftTip(); } catch (e) { /* 案内を動かせなくても描画は止めない */ }

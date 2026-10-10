@@ -1,6 +1,7 @@
 // R11（R10 のプレイレビュー 2026-10-10 の画面の指摘：高 1・高 2・中 6・中 13・低 25・26・27・31）
 // 作りを読んで確かめる（DOM なし）。Chromium（Playwright）と dist/site/index.html があれば、実際の画面でも確かめる（CI には無いので、そのときは作りだけ）
 // - 高 1：本文を順に出す仕組み（u28）が #mbar を丸ごと書き戻さない（HP・MP・所持金の中身だけ）。いる所の一行（.u29where）は描くたびに一つだけ。描画を十回しても #mbar .u29where が一つ
+//   持ち主の声で：いる所・日付の一行は初めは閉じていて、名前の横の「📍」を押すと一つだけ開く（もう一度で閉じる）。いる所・日付が変わったら本文に一行
 // - 高 2：初回の遊び方の一行（.tip）は右の窓の外に出し、PC（1600×900・1366×768）でもスマホ（縦・横）でも画面の中に収まる
 // - 中 6：「戦いのあと」の行が多くても「先へ進む」が見えて押せる（窓の下に貼り付ける）
 // - 中 13：スマホの施設の中は一覧（#u21open）に高さを渡す（商店の「買う」が 200px 以上）
@@ -28,6 +29,8 @@ export default async ({ fail: failTo, ok }) => {
   const u21 = code(read("src/ui/zzzzz_u21_side.js"));
   if (!/querySelectorAll\("\.u29where"\)[^\n]*x !== where[^\n]*remove\(\)/.test(u21)) fail("高 1：paintWhere が写しの .u29where を消していない");
   const js = code(read("src/ui/zzzzzz_zr11_ui.js")), css = read("src/ui/zzzzzzzzz_r11_ui.css");
+  if (!/body\.u21pc:not\(\.r11whereon\) #mbar #u29where \{ display: none; \}/.test(css)) fail("高 1：いる所・日付の一行を常に出している");
+  if (!/G\.log\("sys", R\.whereLine\(place, date\), \{ r11where: 1 \}\)/.test(js)) fail("高 1：いる所・日付が変わっても本文に残さない");
   if (!/play\.after\(tip\)/.test(js)) fail("高 2：遊び方の一行を右の窓の外へ出していない");
   if (!/body\.u21pc:not\(\.u31m\) \.r11tip \{ position: fixed;/.test(css) || !/body\.u31m \.r11tip \{ position: fixed;/.test(css)) fail("高 2：外へ出した遊び方の一行の置き場所が無い");
   if (!/\.u13result \.u13go, \.u13death \.u13go \{ position: sticky;/.test(css)) fail("中 6：「先へ進む」を窓の下に貼り付けていない");
@@ -84,6 +87,28 @@ export default async ({ fail: failTo, ok }) => {
         worst = Math.max(worst, await page.evaluate(() => document.querySelectorAll("#mbar .u29where").length));
       }
       if (worst !== 1) fail(`高 1：十回描くと #mbar .u29where が ${worst} 個になる`);
+      // 初めは閉じている → 押すと一つだけ開く → もう一度で閉じる
+      const seen = () => page.evaluate(() => [...document.querySelectorAll("#mbar .u29where")].filter((x) => getComputedStyle(x).display !== "none").length);
+      if ((await seen()) !== 0) fail("高 1：いる所・日付の一行が初めから開いている");
+      await page.click("#mbar .r11wbtn");
+      await page.waitForTimeout(100);
+      if ((await seen()) !== 1) fail(`高 1：「📍」を押しても、いる所・日付の一行が一つだけ開かない（${await seen()}）`);
+      await page.evaluate(() => { for (let i = 0; i < 10; i++) G.ui.render(); });
+      if ((await page.evaluate(() => document.querySelectorAll("#mbar .u29where").length)) !== 1) fail("高 1：開いたまま十回描くと行が増える");
+      await page.click("#mbar .r11wbtn");
+      await page.waitForTimeout(100);
+      if ((await seen()) !== 0) fail("高 1：もう一度押しても閉じない");
+      const moved = await page.evaluate(() => {
+        G.S.mode = "explore"; G.S.event = null; G.S.combat = null;
+        const n = G.S.log.length, d0 = G.date();
+        const a = G.actions().flatMap((g) => g.list).find((x) => !x.disabled && /^(travel|go):/.test(x.id));
+        if (!a) return null;
+        G.act(a.id);
+        if (G.date() === d0 || G.S.combat) return null; // 日付が進まなかった・戦闘になった（このときは残さない）
+        const fresh = G.S.log.slice(n - 240 > 0 ? 0 : n);
+        return fresh.some((e) => e.r11where) || fresh.some((e) => e.k === "title" && /[\u3040-\u9fff]/.test(e.text) && G.r11.whereOf(G.S) && e.text.includes(G.r11.whereOf(G.S)));
+      });
+      if (moved === false) fail("高 1：旅で日付が進んでも、本文に いる所・日付 が残らない");
       if (page.errs.length) fail("高 1：画面のエラー " + page.errs[0]);
       await page.close();
     }
