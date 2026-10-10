@@ -8,6 +8,7 @@
 使い方（cutout の venv の Python で）：
   <venv>/python tools/keep_orig.py --src <元の絵の根> --out <出す根> --preview <見る用> --kind monsters id1 id2 …
   docs/art/keep_orig.json：{"<id>": {"drop": [[x1,y1,x2,y2,…], …], "keep": [[…]], "min_area": 40, "tol": 14, "holes": false}}
+    patch_yellow: [[x0,y0,x1,y1]] の四角の中の黄色（体に重なった麦など）を、まわりの色で塗り直す。drop_yellow: true で残りの黄色を背景にする
     patch: [[x0,y0,x1,y1]] の四角の中の白い点を、まわりの色で埋めてから抜く（外套の中の白い点など）
     holes: false で、背景の色に近い塊を自動では抜かない（白い肌・白い髪・白い体の絵。囲まれた背景は drop で手で決める）（512 幅の座標の多角形。keep は抜かない所）
   表情違いは基本の絵の設定を使う（<id>_<表情> → <id>）
@@ -81,6 +82,24 @@ def main():
         conf = confs.get(base, {})
         path = os.path.join(a.src, i + ".webp")
         rgb = np.array(Image.open(path).convert("RGB"))
+        yellow = lambda c: (c[..., 0].astype(int) > 110) & (c[..., 0].astype(int) - c[..., 2] > 45) & (c[..., 1].astype(int) - c[..., 2] > 25)
+        for x0, y0, x1, y1 in conf.get("patch_yellow", []):
+            # 体に重なった麦の穂など（黄色）を、まわりの黄色でない色で塗り直す
+            box = np.zeros(rgb.shape[:2], bool); box[y0:y1, x0:x1] = True
+            c16 = rgb.astype(int)
+            # 麦：黄色に加え、羽の灰黒より明るく赤みのある所（薄茶・白っぽい穂）も
+            wheat = yellow(rgb) | ((c16.mean(axis=2) > 95) & (c16[..., 0] - c16[..., 2] > 12))
+            spot = box & wheat
+            if spot.any():
+                # 塗る色は、四角の中の暗く色の無い所（羽）からとる
+                ref = box & ~ndimage.binary_dilation(spot, iterations=2) & (c16.mean(axis=2) < 90) & (c16.max(axis=2) - c16.min(axis=2) < 30)
+                if not ref.any():
+                    ref = ~spot
+                _, (iy, ix) = ndimage.distance_transform_edt(~ref, return_indices=True)
+                rgb[spot] = rgb[iy, ix][spot]
+            p2 = os.path.join(a.out, "_patched_" + i + ".png")
+            Image.fromarray(rgb).save(p2)
+            path = p2
         for x0, y0, x1, y1 in conf.get("patch", []):
             # 塗りの中に残った背景の白い点（外套の穴など）を、まわりの色で埋める
             box = np.zeros(rgb.shape[:2], bool); box[y0:y1, x0:x1] = True
@@ -93,6 +112,21 @@ def main():
             path = p2
         body = np.array(cm.cut(ses, path, remove))[..., 3].astype(np.float32) / 255
         bg, B = bg_region(rgb, body, conf)
+        if conf.get("drop_yellow"):
+            # 残った麦（黄色）は背景として消す（keep の所は除く）
+            ky = yellow(rgb)
+            bg |= ndimage.binary_dilation(ky, iterations=1)
+        if conf.get("solid"):
+            # 止まり木の岩など：麦に隠れた所も含めて形ごと残す（黄色は岩の灰色に塗り直す）
+            sm = poly_mask(conf["solid"], (rgb.shape[1], rgb.shape[0]))
+            yy = sm & yellow(rgb)
+            if yy.any():
+                ref = sm & ~yellow(rgb) & (rgb.max(axis=2).astype(int) - rgb.min(axis=2) < 40)
+                if ref.any():
+                    _, (iy, ix) = ndimage.distance_transform_edt(~ref, return_indices=True)
+                    rgb = rgb.copy(); rgb[yy] = rgb[iy, ix][yy]
+            bg &= ~sm
+        rgb_used = rgb
         # 2. 背景を緑で塗る（縁はなめらかに。縁の色は元の背景の色を割り戻す）
         soft = ndimage.gaussian_filter(bg.astype(np.float32), 0.8)
         soft[bg] = 1.0
