@@ -1,4 +1,4 @@
-// R11：時間の進みに合わせた仕組み（src/engine/zzzzzzzzzzzzzzzzzzz_r11_pace.js・src/ui/zzzzzzzzz_r11_pace.js）
+// R11：時間の進みに合わせた仕組み（src/engine/zzzzzzzzzzzzzzzzzzz_r11_pace.js・src/ui/zzzzzz_u99_r11_pace.js）
 // - ギルドの依頼の期限：野・迷宮の依頼は「仕事の日数 × R11.WORK ＋ 行き帰り」で、現場に十分いられる。町の依頼は × R11.WORK_TOWN
 // - 期限が近い依頼は、依頼の窓で「期限が近い」、旅立つの札の印に「急ぎ」
 // - 討伐の依頼の場所の戦いで、依頼の魔物が出やすい
