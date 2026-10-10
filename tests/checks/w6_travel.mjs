@@ -115,6 +115,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   {
     const H = fresh(601);
     const S = H.S;
+    if (H.r11) H.r11.years = () => 999;   // 同じ道を何百回も往復すると十年を越えるので、十年の引退（R11）は止めておく
     // 手で場所を置いて、同じ道を何度も往復する
     const trial = (from, to, times) => {
       let sum = 0, max = 0, arrived = 0;
@@ -135,7 +136,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const wild = trial("mountains", "wasteland", 120); // 3日・危険度 5
     [short, mid, long, wild].forEach((t) => t.max > W6.MAX && F(`一つの旅で ${t.max} 回（上限 ${W6.MAX}）`));
     if (!(short.avg < mid.avg && mid.avg < long.avg)) F(`日数で回数が増えない（1日 ${short.avg.toFixed(2)}・2日 ${mid.avg.toFixed(2)}・4日 ${long.avg.toFixed(2)}）`);
-    if (!(short.avg > 0.15 && short.avg < 0.7)) F(`短い道で起きすぎる・起きなさすぎる（${short.avg.toFixed(2)}）`);
+    // R11：旅の出来事は日数に比例する（日数 ÷ 4。いちばん短い 7 日の道で 1〜2 件。G.r11）
+    if (!(short.avg > 1 && short.avg < 2.5)) F(`短い道で起きすぎる・起きなさすぎる（${short.avg.toFixed(2)}）`);
     if (!(long.avg >= 1)) F(`長い道で出来事が少ない（${long.avg.toFixed(2)}）`);
     const exp = (d, g) => W6.expect(d, g, false);
     if (!(exp(3, 5) > exp(3, 0))) F("危険度で回数の期待値が増えない");
