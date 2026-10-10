@@ -1,0 +1,530 @@
+{
+"note": "A20：tools/a20/a20_gaps.py で、外周と囲まれた背景（髪のすき間・腕と胴のあいだなど）を透明にした絵。囲まれた背景が見つからなかった絵・自動では崩れる絵は元のまま（ゲームの白抜きで外周だけ消える）。tests/checks/a20_gaps.mjs が見る",
+"files": {
+"monsters/barrelgob": {
+"bytes": 18614,
+"orig": 16200,
+"gapPx": 776
+},
+"monsters/bonedragon": {
+"bytes": 28886,
+"orig": 23000,
+"gapPx": 20336
+},
+"monsters/chimera": {
+"bytes": 15942,
+"orig": 11814,
+"gapPx": 14699
+},
+"monsters/e1_bonepicker": {
+"bytes": 26962,
+"orig": 23932,
+"gapPx": 5217
+},
+"monsters/e1_herald": {
+"bytes": 18928,
+"orig": 16782,
+"gapPx": 1415
+},
+"monsters/e2_cookgob": {
+"bytes": 16046,
+"orig": 14522,
+"gapPx": 2520
+},
+"monsters/e2_mordu": {
+"bytes": 23044,
+"orig": 17132,
+"gapPx": 6916
+},
+"monsters/e2_rotbloom": {
+"bytes": 22630,
+"orig": 17798,
+"gapPx": 1351
+},
+"monsters/e4_bellbat": {
+"bytes": 21716,
+"orig": 19934,
+"gapPx": 373
+},
+"monsters/e4_bonecarter": {
+"bytes": 19064,
+"orig": 18990,
+"gapPx": 439
+},
+"monsters/e4_candlewidow": {
+"bytes": 15496,
+"orig": 14094,
+"gapPx": 297
+},
+"monsters/e4_firearrowimp": {
+"bytes": 22566,
+"orig": 20282,
+"gapPx": 855
+},
+"monsters/e4_hillorc_x": {
+"bytes": 29456,
+"orig": 28016,
+"gapPx": 1549
+},
+"monsters/e4_ladderGob_x": {
+"bytes": 23076,
+"orig": 21056,
+"gapPx": 1404
+},
+"monsters/e4_lampghost": {
+"bytes": 14960,
+"orig": 13236,
+"gapPx": 406
+},
+"monsters/e4_mudcroc_x": {
+"bytes": 25312,
+"orig": 23868,
+"gapPx": 339
+},
+"monsters/e4_penitent": {
+"bytes": 14770,
+"orig": 12922,
+"gapPx": 975
+},
+"monsters/e4_pressgang": {
+"bytes": 16498,
+"orig": 15044,
+"gapPx": 3389
+},
+"monsters/e4_shadewalker": {
+"bytes": 21740,
+"orig": 19094,
+"gapPx": 315
+},
+"monsters/e4_thornboar": {
+"bytes": 17492,
+"orig": 15392,
+"gapPx": 564
+},
+"monsters/e4k_cauldron": {
+"bytes": 14990,
+"orig": 13620,
+"gapPx": 397
+},
+"monsters/e4k_ember": {
+"bytes": 25284,
+"orig": 23800,
+"gapPx": 1142
+},
+"monsters/e4k_greenwatch": {
+"bytes": 20016,
+"orig": 18996,
+"gapPx": 2205
+},
+"monsters/e4k_rootling": {
+"bytes": 11432,
+"orig": 11180,
+"gapPx": 246
+},
+"monsters/ninja": {
+"bytes": 21920,
+"orig": 19488,
+"gapPx": 908
+},
+"monsters/oni": {
+"bytes": 24920,
+"orig": 22158,
+"gapPx": 535
+},
+"monsters/royalguard": {
+"bytes": 19612,
+"orig": 17892,
+"gapPx": 14489
+},
+"monsters/w1_tanuki": {
+"bytes": 14616,
+"orig": 12288,
+"gapPx": 1377
+},
+"monsters/w4_hushed": {
+"bytes": 16094,
+"orig": 15278,
+"gapPx": 2889
+},
+"monsters/werewolf": {
+"bytes": 20682,
+"orig": 18196,
+"gapPx": 545
+},
+"portraits/alicia": {
+"bytes": 23970,
+"orig": 23076,
+"gapPx": 665
+},
+"portraits/alicia_anger": {
+"bytes": 28678,
+"orig": 25152,
+"gapPx": 656
+},
+"portraits/alicia_cold": {
+"bytes": 28420,
+"orig": 24970,
+"gapPx": 646
+},
+"portraits/alicia_faint_smile": {
+"bytes": 28562,
+"orig": 25036,
+"gapPx": 656
+},
+"portraits/alicia_fun": {
+"bytes": 28740,
+"orig": 25158,
+"gapPx": 793
+},
+"portraits/alicia_joy": {
+"bytes": 25922,
+"orig": 25010,
+"gapPx": 793
+},
+"portraits/alicia_smug": {
+"bytes": 29002,
+"orig": 25274,
+"gapPx": 789
+},
+"portraits/alicia_sorrow": {
+"bytes": 28740,
+"orig": 25238,
+"gapPx": 655
+},
+"portraits/baudouin": {
+"bytes": 28770,
+"orig": 27156,
+"gapPx": 400
+},
+"portraits/baudouin_anger": {
+"bytes": 31174,
+"orig": 30124,
+"gapPx": 562
+},
+"portraits/baudouin_exasperated": {
+"bytes": 31046,
+"orig": 30132,
+"gapPx": 458
+},
+"portraits/baudouin_faint_smile": {
+"bytes": 30774,
+"orig": 29986,
+"gapPx": 459
+},
+"portraits/baudouin_fun": {
+"bytes": 31022,
+"orig": 30216,
+"gapPx": 513
+},
+"portraits/baudouin_joy": {
+"bytes": 31162,
+"orig": 30156,
+"gapPx": 504
+},
+"portraits/baudouin_serious": {
+"bytes": 30962,
+"orig": 30020,
+"gapPx": 553
+},
+"portraits/baudouin_sorrow": {
+"bytes": 30956,
+"orig": 30022,
+"gapPx": 464
+},
+"portraits/berangere": {
+"bytes": 37578,
+"orig": 38306,
+"gapPx": 760
+},
+"portraits/berangere_anger": {
+"bytes": 40812,
+"orig": 43540,
+"gapPx": 773
+},
+"portraits/berangere_fun": {
+"bytes": 41144,
+"orig": 43504,
+"gapPx": 774
+},
+"portraits/berangere_joy": {
+"bytes": 39794,
+"orig": 42240,
+"gapPx": 783
+},
+"portraits/berangere_pout": {
+"bytes": 41120,
+"orig": 43652,
+"gapPx": 777
+},
+"portraits/berangere_shy": {
+"bytes": 41694,
+"orig": 43810,
+"gapPx": 772
+},
+"portraits/berangere_smug": {
+"bytes": 40818,
+"orig": 43328,
+"gapPx": 779
+},
+"portraits/berangere_sorrow": {
+"bytes": 40858,
+"orig": 43472,
+"gapPx": 777
+},
+"portraits/bruno_anger": {
+"bytes": 45444,
+"orig": 52540,
+"gapPx": 76
+},
+"portraits/bruno_cry": {
+"bytes": 45560,
+"orig": 52958,
+"gapPx": 78
+},
+"portraits/bruno_fear": {
+"bytes": 45814,
+"orig": 52800,
+"gapPx": 78
+},
+"portraits/bruno_fun": {
+"bytes": 45270,
+"orig": 52402,
+"gapPx": 78
+},
+"portraits/bruno_joy": {
+"bytes": 45684,
+"orig": 52510,
+"gapPx": 76
+},
+"portraits/bruno_panic": {
+"bytes": 45582,
+"orig": 52470,
+"gapPx": 78
+},
+"portraits/bruno_serious": {
+"bytes": 45708,
+"orig": 52402,
+"gapPx": 78
+},
+"portraits/captain": {
+"bytes": 46700,
+"orig": 46146,
+"gapPx": 90
+},
+"portraits/captain_east": {
+"bytes": 31406,
+"orig": 32482,
+"gapPx": 2147
+},
+"portraits/dario": {
+"bytes": 37042,
+"orig": 37882,
+"gapPx": 57
+},
+"portraits/dario_anger": {
+"bytes": 39806,
+"orig": 41224,
+"gapPx": 60
+},
+"portraits/dario_faint_smile": {
+"bytes": 39676,
+"orig": 41416,
+"gapPx": 111
+},
+"portraits/dario_fun": {
+"bytes": 39676,
+"orig": 41224,
+"gapPx": 61
+},
+"portraits/dario_joy": {
+"bytes": 39684,
+"orig": 41158,
+"gapPx": 60
+},
+"portraits/dario_serious": {
+"bytes": 39498,
+"orig": 41280,
+"gapPx": 110
+},
+"portraits/dario_surprise": {
+"bytes": 39990,
+"orig": 41210,
+"gapPx": 112
+},
+"portraits/filie_faint_smile": {
+"bytes": 21946,
+"orig": 21204,
+"gapPx": 77
+},
+"portraits/filie_fun": {
+"bytes": 22200,
+"orig": 21464,
+"gapPx": 78
+},
+"portraits/gramont_cold": {
+"bytes": 24194,
+"orig": 26094,
+"gapPx": 7
+},
+"portraits/gramont_serious": {
+"bytes": 24230,
+"orig": 26028,
+"gapPx": 12
+},
+"portraits/gustav_anger": {
+"bytes": 35168,
+"orig": 33516,
+"gapPx": 19
+},
+"portraits/gustav_fun": {
+"bytes": 34962,
+"orig": 33432,
+"gapPx": 16
+},
+"portraits/hans": {
+"bytes": 24426,
+"orig": 22856,
+"gapPx": 24
+},
+"portraits/joachim": {
+"bytes": 24912,
+"orig": 24052,
+"gapPx": 1938
+},
+"portraits/kind_adventurer_f": {
+"bytes": 27682,
+"orig": 26010,
+"gapPx": 5754
+},
+"portraits/kind_adventurer_m": {
+"bytes": 31734,
+"orig": 31362,
+"gapPx": 753
+},
+"portraits/kind_priest_m_b": {
+"bytes": 25122,
+"orig": 22830,
+"gapPx": 11
+},
+"portraits/neumann": {
+"bytes": 21208,
+"orig": 20014,
+"gapPx": 501
+},
+"portraits/sig": {
+"bytes": 32236,
+"orig": 32118,
+"gapPx": 224
+},
+"portraits/sig_anger": {
+"bytes": 34218,
+"orig": 34474,
+"gapPx": 117
+},
+"portraits/sig_fun": {
+"bytes": 34236,
+"orig": 34622,
+"gapPx": 203
+},
+"portraits/sig_joy": {
+"bytes": 34262,
+"orig": 34444,
+"gapPx": 202
+},
+"portraits/sig_serious": {
+"bytes": 34076,
+"orig": 34752,
+"gapPx": 192
+},
+"portraits/sig_sorrow": {
+"bytes": 34512,
+"orig": 34814,
+"gapPx": 195
+},
+"portraits/sig_surprise": {
+"bytes": 34198,
+"orig": 34502,
+"gapPx": 191
+},
+"portraits/sig_troubled": {
+"bytes": 34306,
+"orig": 34704,
+"gapPx": 190
+},
+"portraits/valeon_anger": {
+"bytes": 42930,
+"orig": 45314,
+"gapPx": 8
+},
+"portraits/zalve_anger": {
+"bytes": 30176,
+"orig": 30062,
+"gapPx": 109
+},
+"portraits/zalve_cold": {
+"bytes": 30076,
+"orig": 29454,
+"gapPx": 81
+},
+"portraits/zalve_fun": {
+"bytes": 30342,
+"orig": 29632,
+"gapPx": 84
+},
+"portraits/zalve_sorrow": {
+"bytes": 30132,
+"orig": 30004,
+"gapPx": 109
+},
+"portraits/zalve_surprise": {
+"bytes": 30260,
+"orig": 29636,
+"gapPx": 77
+},
+"portraits/zerina": {
+"bytes": 37106,
+"orig": 37808,
+"gapPx": 1077
+},
+"portraits/zerina_anger": {
+"bytes": 39002,
+"orig": 41574,
+"gapPx": 1247
+},
+"portraits/zerina_exasperated": {
+"bytes": 40092,
+"orig": 41724,
+"gapPx": 1193
+},
+"portraits/zerina_fun": {
+"bytes": 39276,
+"orig": 41436,
+"gapPx": 1185
+},
+"portraits/zerina_joy": {
+"bytes": 39272,
+"orig": 41342,
+"gapPx": 1284
+},
+"portraits/zerina_smug": {
+"bytes": 38956,
+"orig": 41090,
+"gapPx": 1204
+},
+"portraits/zerina_sorrow": {
+"bytes": 39898,
+"orig": 41280,
+"gapPx": 1236
+},
+"portraits/zerina_sparkle": {
+"bytes": 39224,
+"orig": 41074,
+"gapPx": 1163
+},
+"portraits/zerina_surprise": {
+"bytes": 39114,
+"orig": 41478,
+"gapPx": 1199
+}
+}
+}

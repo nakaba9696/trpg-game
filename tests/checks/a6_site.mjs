@@ -2,7 +2,7 @@
 // - assets/ の画像が Artifact の決まりに収まる（index.html 16MB 未満・1 枚 15MB 未満・全体 256MB 未満・511 ファイルまで）。1 回の公開（250 ファイル・60MB の目安）を超えるなら分けて載せる案内を出す
 // - 回ごとの分け方：どの回も目安に収まり、全部の画像がちょうど一度ずつ載る
 // - 外のファイルの一覧：鍵 → 相対パス・バイト数。G.ASSET_MODE が "files"
-// - 予備の埋め込み（--embed）：上限を超えるなら差分を省く
+// - 予備の埋め込み（--embed）：上限を超えるなら差分を省く（それでも超えるなら背景、大きい絵の順。A20）
 // - 絵の部品：外のファイルの相対パスをそのまま読み、読めなければ絵を出さない（A10）。魔物の先読みは起動の後に回す
 // - ビルドしてあれば（dist/site/）：index.html に画像が埋め込まれていない、files.json のファイルがすべてある、HTML の一覧と合う
 import { readFileSync, existsSync, statSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, readdirSync } from "node:fs";
@@ -61,9 +61,12 @@ export default ({ G, fail, ok }) => {
     if (c2.G.ASSET_MODE !== "embed" || !String(c2.G.ASSETS["portraits/nora"]).startsWith("data:")) F("埋め込みの形の印か中身が違う");
     const small = collectAssets(dir, { limit: Math.ceil(e.total * 0.8), shrink: true });
     if (small.map["portraits/nora_joy"] || !small.map["portraits/nora"] || small.dropped.join() !== "portraits/nora_joy") F("埋め込みが上限を超えるとき、差分だけを省いていない");
+    // A20：差分を省いても超えるなら、大きい絵から省く（予備の HTML ではその人・敵は絵なし）
+    const tiny = collectAssets(dir, { limit: Math.ceil(e.total * 0.5), shrink: true });
+    if (tiny.dropped.join() !== "portraits/nora_joy,portraits/nora" || !tiny.map["monsters/goblin"] || tiny.total > e.total * 0.5) F(`差分を省いても上限を超えるとき、大きい絵から省いていない（${tiny.dropped.join()}）`);
     let threw = false;
-    try { collectAssets(dir, { limit: 100, shrink: true }); } catch { threw = true; }
-    if (!threw) F("差分を省いても上限を超えるのに止まらない");
+    try { collectAssets(dir, { limit: 100 }); } catch { threw = true; }
+    if (!threw) F("縮めない埋め込みが上限を超えるのに止まらない");
     if (!isVariant("portraits/nora_sorrow") || isVariant("portraits/nora") || isVariant("monsters/x_joy")) F("差分の見分け方が違う");
   } finally {
     rmSync(dir, { recursive: true, force: true });

@@ -7,7 +7,7 @@
 //                                   ページの中に書くと、読み込みのあいだ画面が固まる。別のファイルならブラウザが裏で読み、2 回目からは覚えておいた結果を使う）
 //                                   10MB を超えるときは、ソースのファイルの境目で game.js・game-2.js… に分け、HTML から順に読む（1 ファイル 15MB の上限のため）
 //   node tools/build.mjs --inline … 今まで通りコードも 1 枚の HTML に入れる（画像は別ファイルのまま）
-//   node tools/build.mjs --embed  … 予備。今まで通り画像を埋め込んだ 1 枚の dist/morsveld.html（上限を超えるなら差分を省く）
+//   node tools/build.mjs --embed  … 予備。今まで通り画像を埋め込んだ 1 枚の dist/morsveld.html（上限を超えるなら差分・背景・大きい絵の順に省く）
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
@@ -58,7 +58,7 @@ mkdirSync(out, { recursive: true });
 if (embed) {
   if (htmlBytes >= SITE_LIMITS.page) throw new Error(`dist/morsveld.html が ${(htmlBytes / MB).toFixed(1)}MB で、Artifact の 1 ページの上限 ${SITE_LIMITS.page / MB}MB を超える`);
   writeFileSync(path.join(out, "morsveld.html"), html);
-  console.log(`dist/morsveld.html ${kb(htmlBytes)}（${files.length} ファイル${assets.files.length ? `・画像 ${assets.files.length} 枚 ${kb(assets.total)}` : ""}${assets.dropped.length ? `・差分 ${assets.dropped.length} 枚を省いた` : ""}）`);
+  console.log(`dist/morsveld.html ${kb(htmlBytes)}（${files.length} ファイル${assets.files.length ? `・画像 ${assets.files.length} 枚 ${kb(assets.total)}` : ""}${assets.dropped.length ? `・${assets.dropped.length} 枚を省いた（差分・背景・大きい絵の順）` : ""}）`);
 } else {
   const site = path.join(out, "site");
   rmSync(site, { recursive: true, force: true });
