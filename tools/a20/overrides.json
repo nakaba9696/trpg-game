@@ -4,14 +4,7 @@
  "monsters/e4k_nailer": "keep",
  "monsters/e4k_puppet": "keep",
  "monsters/warlock": "keep",
- "portraits/azlag": [
-  [
-   160,
-   140,
-   350,
-   270
-  ]
- ],
+ "portraits/azlag": "keep",
  "portraits/barnabe": "keep",
  "portraits/berangere": [
   [
@@ -21,20 +14,7 @@
    640
   ]
  ],
- "portraits/boku": [
-  [
-   95,
-   285,
-   165,
-   355
-  ],
-  [
-   365,
-   285,
-   435,
-   355
-  ]
- ],
+ "portraits/boku": "keep",
  "portraits/captain_east": [
   [
    200,
@@ -57,14 +37,7 @@
    120
   ]
  ],
- "portraits/dil": [
-  [
-   40,
-   280,
-   470,
-   640
-  ]
- ],
+ "portraits/dil": "keep",
  "portraits/doctor": "keep",
  "portraits/filie": [
   [
@@ -116,35 +89,9 @@
    600
   ]
  ],
- "portraits/rufina": [
-  [
-   100,
-   210,
-   195,
-   340
-  ],
-  [
-   215,
-   225,
-   325,
-   410
-  ],
-  [
-   330,
-   280,
-   512,
-   560
-  ]
- ],
+ "portraits/rufina": "keep",
  "portraits/sheila": "keep",
- "portraits/natalia": [
-  [
-   240,
-   380,
-   380,
-   455
-  ]
- ],
+ "portraits/natalia": "keep",
  "portraits/takimaru": [
   [
    150,
@@ -178,37 +125,10 @@
  ],
  "portraits/magda": "keep",
  "portraits/mirlene": "keep",
- "portraits/matthias": [
-  [
-   50,
-   270,
-   190,
-   570
-  ],
-  [
-   330,
-   270,
-   470,
-   570
-  ]
- ],
- "portraits/selevan": [
-  [
-   220,
-   20,
-   290,
-   75
-  ]
- ],
+ "portraits/matthias": "keep",
+ "portraits/selevan": "keep",
  "portraits/yura": "keep",
- "portraits/valg": [
-  [
-   245,
-   0,
-   305,
-   65
-  ]
- ],
+ "portraits/valg": "keep",
  "portraits/wolfram": [
   [
    180,
@@ -217,14 +137,7 @@
    90
   ]
  ],
- "portraits/aubin": [
-  [
-   150,
-   60,
-   360,
-   200
-  ]
- ],
+ "portraits/aubin": "keep",
  "portraits/erna": "keep",
  "portraits/kind_archer_m": [
   [
@@ -386,5 +299,38 @@
     420
    ]
   ]
- }
+ },
+ "portraits/kind_elder_m": "keep",
+ "portraits/mordu": "keep",
+ "portraits/kind_elder_f": "keep",
+ "portraits/kind_ronin_f_b": "keep",
+ "portraits/lazare": "keep",
+ "monsters/e4_warbeast": "keep",
+ "portraits/kind_archer_f": "keep",
+ "portraits/kind_mage_m": "keep",
+ "portraits/yurien": "keep",
+ "portraits/yurina": "keep",
+ "monsters/e4k_cliffwatch": "keep",
+ "monsters/e2_meatling": "keep",
+ "portraits/kind_priest_f": "keep",
+ "portraits/walker": "keep",
+ "portraits/greol": "keep",
+ "portraits/kind_ronin_m": "keep",
+ "portraits/borg": "keep",
+ "portraits/ilse": "keep",
+ "portraits/polf": "keep",
+ "portraits/violaine": "keep",
+ "monsters/e4k_guiltdog": "keep",
+ "portraits/gigra": "keep",
+ "portraits/ambroise": "keep",
+ "portraits/kind_villager_m": "keep",
+ "portraits/vittorio": "keep",
+ "monsters/e4k_squire": "keep",
+ "portraits/solenne": "keep",
+ "portraits/rodolphe": "keep",
+ "monsters/rize": "keep",
+ "portraits/neilas": "keep",
+ "portraits/kind_adventurer_f_b": "keep",
+ "portraits/jonas": "keep",
+ "monsters/kin": "keep"
 }

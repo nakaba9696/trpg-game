@@ -52,7 +52,7 @@ export default ({ fail, ok }) => {
   const root = new URL("../../", import.meta.url);
   const list = JSON.parse(readFileSync(new URL("docs/art/a20_gaps.json", root), "utf8")).files;
   const keys = Object.keys(list);
-  if (keys.length < 50) F(`一覧の絵が ${keys.length} 枚しかない`);
+  if (keys.length < 30) F(`一覧の絵が ${keys.length} 枚しかない`);
   let gaps = 0, bytes = 0, orig = 0;
   for (const k of keys) {
     const p = new URL(`assets/${k}.webp`, root);

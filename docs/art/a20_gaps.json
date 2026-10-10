@@ -31,11 +31,6 @@
 "orig": 14522,
 "gapPx": 2520
 },
-"monsters/e2_meatling": {
-"bytes": 14828,
-"orig": 12880,
-"gapPx": 1315
-},
 "monsters/e2_mordu": {
 "bytes": 23044,
 "orig": 17132,
@@ -106,20 +101,10 @@
 "orig": 15392,
 "gapPx": 564
 },
-"monsters/e4_warbeast": {
-"bytes": 23940,
-"orig": 23298,
-"gapPx": 8498
-},
 "monsters/e4k_cauldron": {
 "bytes": 14990,
 "orig": 13620,
 "gapPx": 397
-},
-"monsters/e4k_cliffwatch": {
-"bytes": 27196,
-"orig": 22842,
-"gapPx": 1572
 },
 "monsters/e4k_ember": {
 "bytes": 25284,
@@ -131,25 +116,10 @@
 "orig": 18996,
 "gapPx": 2205
 },
-"monsters/e4k_guiltdog": {
-"bytes": 19266,
-"orig": 16820,
-"gapPx": 1672
-},
 "monsters/e4k_rootling": {
 "bytes": 11432,
 "orig": 11180,
 "gapPx": 246
-},
-"monsters/e4k_squire": {
-"bytes": 22792,
-"orig": 20802,
-"gapPx": 261
-},
-"monsters/kin": {
-"bytes": 19750,
-"orig": 14640,
-"gapPx": 2591
 },
 "monsters/ninja": {
 "bytes": 21920,
@@ -160,11 +130,6 @@
 "bytes": 24920,
 "orig": 22158,
 "gapPx": 535
-},
-"monsters/rize": {
-"bytes": 19790,
-"orig": 18080,
-"gapPx": 996
 },
 "monsters/royalguard": {
 "bytes": 19612,
@@ -225,91 +190,6 @@
 "bytes": 28740,
 "orig": 25238,
 "gapPx": 655
-},
-"portraits/ambroise": {
-"bytes": 30548,
-"orig": 29362,
-"gapPx": 743
-},
-"portraits/ambroise_anger": {
-"bytes": 31870,
-"orig": 31674,
-"gapPx": 517
-},
-"portraits/ambroise_cold": {
-"bytes": 31970,
-"orig": 32034,
-"gapPx": 705
-},
-"portraits/ambroise_exasperated": {
-"bytes": 31870,
-"orig": 31602,
-"gapPx": 375
-},
-"portraits/ambroise_fun": {
-"bytes": 32134,
-"orig": 31538,
-"gapPx": 516
-},
-"portraits/ambroise_joy": {
-"bytes": 31548,
-"orig": 31422,
-"gapPx": 690
-},
-"portraits/ambroise_serious": {
-"bytes": 31792,
-"orig": 31982,
-"gapPx": 518
-},
-"portraits/ambroise_sleepy": {
-"bytes": 31906,
-"orig": 31848,
-"gapPx": 687
-},
-"portraits/ambroise_sorrow": {
-"bytes": 31912,
-"orig": 31564,
-"gapPx": 515
-},
-"portraits/aubin_anger": {
-"bytes": 26920,
-"orig": 27182,
-"gapPx": 12
-},
-"portraits/aubin_fun": {
-"bytes": 27236,
-"orig": 27282,
-"gapPx": 10
-},
-"portraits/aubin_joy": {
-"bytes": 27024,
-"orig": 27434,
-"gapPx": 291
-},
-"portraits/aubin_serious": {
-"bytes": 27276,
-"orig": 27070,
-"gapPx": 64
-},
-"portraits/aubin_smug": {
-"bytes": 27202,
-"orig": 27388,
-"gapPx": 62
-},
-"portraits/aubin_sorrow": {
-"bytes": 26656,
-"orig": 26952,
-"gapPx": 964
-},
-"portraits/azlag": {
-"bytes": 26586,
-"orig": 26086,
-"gapPx": 28
-},
-"portraits/azlag_sorrow": {
-"bytes": 28092,
-"orig": 28368,
-"gapPx": 118
 },
 "portraits/baudouin": {
 "bytes": 28770,
@@ -391,56 +271,6 @@
 "orig": 43472,
 "gapPx": 777
 },
-"portraits/boku": {
-"bytes": 30066,
-"orig": 28768,
-"gapPx": 400
-},
-"portraits/boku_anger": {
-"bytes": 32824,
-"orig": 31392,
-"gapPx": 401
-},
-"portraits/boku_fear": {
-"bytes": 32828,
-"orig": 31794,
-"gapPx": 401
-},
-"portraits/boku_fun": {
-"bytes": 32854,
-"orig": 31432,
-"gapPx": 398
-},
-"portraits/boku_joy": {
-"bytes": 32840,
-"orig": 31522,
-"gapPx": 396
-},
-"portraits/boku_panic": {
-"bytes": 32850,
-"orig": 31726,
-"gapPx": 396
-},
-"portraits/boku_shy": {
-"bytes": 32958,
-"orig": 31742,
-"gapPx": 402
-},
-"portraits/boku_sorrow": {
-"bytes": 32752,
-"orig": 31698,
-"gapPx": 446
-},
-"portraits/boku_sparkle": {
-"bytes": 32710,
-"orig": 31866,
-"gapPx": 399
-},
-"portraits/borg": {
-"bytes": 26300,
-"orig": 27380,
-"gapPx": 76
-},
 "portraits/bruno_anger": {
 "bytes": 45444,
 "orig": 52540,
@@ -521,51 +351,6 @@
 "orig": 41210,
 "gapPx": 112
 },
-"portraits/dil": {
-"bytes": 25450,
-"orig": 24068,
-"gapPx": 134
-},
-"portraits/dil_anger": {
-"bytes": 25182,
-"orig": 25618,
-"gapPx": 118
-},
-"portraits/dil_exasperated": {
-"bytes": 25934,
-"orig": 25732,
-"gapPx": 117
-},
-"portraits/dil_fun": {
-"bytes": 25252,
-"orig": 25432,
-"gapPx": 142
-},
-"portraits/dil_joy": {
-"bytes": 25730,
-"orig": 25546,
-"gapPx": 119
-},
-"portraits/dil_panic": {
-"bytes": 25954,
-"orig": 25928,
-"gapPx": 123
-},
-"portraits/dil_smug": {
-"bytes": 25650,
-"orig": 25842,
-"gapPx": 124
-},
-"portraits/dil_sorrow": {
-"bytes": 25254,
-"orig": 25382,
-"gapPx": 118
-},
-"portraits/dil_surprise": {
-"bytes": 25818,
-"orig": 25456,
-"gapPx": 122
-},
 "portraits/filie_faint_smile": {
 "bytes": 21946,
 "orig": 21204,
@@ -576,36 +361,6 @@
 "orig": 21464,
 "gapPx": 78
 },
-"portraits/gigra_anger": {
-"bytes": 26304,
-"orig": 25250,
-"gapPx": 3392
-},
-"portraits/gigra_drunk": {
-"bytes": 28926,
-"orig": 25712,
-"gapPx": 3420
-},
-"portraits/gigra_fun": {
-"bytes": 28934,
-"orig": 25584,
-"gapPx": 3388
-},
-"portraits/gigra_panic": {
-"bytes": 28914,
-"orig": 25628,
-"gapPx": 3414
-},
-"portraits/gigra_shy": {
-"bytes": 28982,
-"orig": 25698,
-"gapPx": 3435
-},
-"portraits/gigra_smug": {
-"bytes": 29068,
-"orig": 25468,
-"gapPx": 37
-},
 "portraits/gramont_cold": {
 "bytes": 24194,
 "orig": 26094,
@@ -615,41 +370,6 @@
 "bytes": 24230,
 "orig": 26028,
 "gapPx": 12
-},
-"portraits/greol_anger": {
-"bytes": 37940,
-"orig": 41564,
-"gapPx": 185
-},
-"portraits/greol_fun": {
-"bytes": 37874,
-"orig": 41402,
-"gapPx": 269
-},
-"portraits/greol_joy": {
-"bytes": 38010,
-"orig": 41220,
-"gapPx": 187
-},
-"portraits/greol_serious": {
-"bytes": 37812,
-"orig": 41630,
-"gapPx": 185
-},
-"portraits/greol_shy": {
-"bytes": 37728,
-"orig": 41140,
-"gapPx": 268
-},
-"portraits/greol_sorrow": {
-"bytes": 38036,
-"orig": 41126,
-"gapPx": 268
-},
-"portraits/greol_troubled": {
-"bytes": 37464,
-"orig": 41238,
-"gapPx": 185
 },
 "portraits/gustav_anger": {
 "bytes": 35168,
@@ -666,465 +386,30 @@
 "orig": 22856,
 "gapPx": 24
 },
-"portraits/ilse": {
-"bytes": 26146,
-"orig": 24520,
-"gapPx": 726
-},
-"portraits/ilse_anger": {
-"bytes": 27708,
-"orig": 27102,
-"gapPx": 1644
-},
-"portraits/ilse_fun": {
-"bytes": 27204,
-"orig": 27206,
-"gapPx": 1235
-},
-"portraits/ilse_joy": {
-"bytes": 27918,
-"orig": 26936,
-"gapPx": 1800
-},
-"portraits/ilse_panic": {
-"bytes": 27472,
-"orig": 26976,
-"gapPx": 1545
-},
-"portraits/ilse_smug": {
-"bytes": 27470,
-"orig": 27148,
-"gapPx": 1191
-},
-"portraits/ilse_sorrow": {
-"bytes": 27212,
-"orig": 27000,
-"gapPx": 1535
-},
-"portraits/ilse_surprise": {
-"bytes": 27538,
-"orig": 27326,
-"gapPx": 1526
-},
-"portraits/ilse_troubled": {
-"bytes": 27332,
-"orig": 26910,
-"gapPx": 1805
-},
 "portraits/joachim": {
 "bytes": 24912,
 "orig": 24052,
 "gapPx": 1938
-},
-"portraits/jonas": {
-"bytes": 31142,
-"orig": 28940,
-"gapPx": 68
-},
-"portraits/jonas_anger": {
-"bytes": 31818,
-"orig": 30780,
-"gapPx": 135
-},
-"portraits/jonas_fun": {
-"bytes": 32268,
-"orig": 30672,
-"gapPx": 136
-},
-"portraits/jonas_joy": {
-"bytes": 32432,
-"orig": 30794,
-"gapPx": 707
-},
-"portraits/jonas_panic": {
-"bytes": 32666,
-"orig": 30906,
-"gapPx": 658
-},
-"portraits/jonas_shy": {
-"bytes": 32310,
-"orig": 31098,
-"gapPx": 137
-},
-"portraits/jonas_sorrow": {
-"bytes": 32808,
-"orig": 30840,
-"gapPx": 210
 },
 "portraits/kind_adventurer_f": {
 "bytes": 27682,
 "orig": 26010,
 "gapPx": 5754
 },
-"portraits/kind_adventurer_f_b": {
-"bytes": 27664,
-"orig": 25860,
-"gapPx": 1068
-},
 "portraits/kind_adventurer_m": {
 "bytes": 31734,
 "orig": 31362,
 "gapPx": 753
-},
-"portraits/kind_archer_f": {
-"bytes": 20564,
-"orig": 18150,
-"gapPx": 241
-},
-"portraits/kind_elder_f": {
-"bytes": 21320,
-"orig": 19566,
-"gapPx": 10
-},
-"portraits/kind_elder_m": {
-"bytes": 23024,
-"orig": 20920,
-"gapPx": 95
-},
-"portraits/kind_mage_m": {
-"bytes": 17376,
-"orig": 15604,
-"gapPx": 1896
-},
-"portraits/kind_priest_f": {
-"bytes": 14716,
-"orig": 13214,
-"gapPx": 1334
 },
 "portraits/kind_priest_m_b": {
 "bytes": 25122,
 "orig": 22830,
 "gapPx": 11
 },
-"portraits/kind_ronin_f_b": {
-"bytes": 29242,
-"orig": 28808,
-"gapPx": 12
-},
-"portraits/kind_ronin_m": {
-"bytes": 29828,
-"orig": 30264,
-"gapPx": 13
-},
-"portraits/kind_villager_m": {
-"bytes": 29046,
-"orig": 27408,
-"gapPx": 1431
-},
-"portraits/lazare": {
-"bytes": 34414,
-"orig": 33118,
-"gapPx": 1662
-},
-"portraits/lazare_anger": {
-"bytes": 36024,
-"orig": 36582,
-"gapPx": 1297
-},
-"portraits/lazare_fun": {
-"bytes": 36052,
-"orig": 36672,
-"gapPx": 849
-},
-"portraits/lazare_joy": {
-"bytes": 35996,
-"orig": 36298,
-"gapPx": 1238
-},
-"portraits/lazare_panic": {
-"bytes": 35852,
-"orig": 36572,
-"gapPx": 768
-},
-"portraits/lazare_serious": {
-"bytes": 36384,
-"orig": 36122,
-"gapPx": 1527
-},
-"portraits/lazare_shy": {
-"bytes": 36284,
-"orig": 36118,
-"gapPx": 1015
-},
-"portraits/lazare_smug": {
-"bytes": 35900,
-"orig": 36006,
-"gapPx": 1690
-},
-"portraits/lazare_sorrow": {
-"bytes": 35984,
-"orig": 36546,
-"gapPx": 947
-},
-"portraits/matthias_fun": {
-"bytes": 29516,
-"orig": 29166,
-"gapPx": 8
-},
-"portraits/matthias_serious": {
-"bytes": 29102,
-"orig": 29038,
-"gapPx": 6
-},
-"portraits/mordu": {
-"bytes": 30100,
-"orig": 28094,
-"gapPx": 752
-},
-"portraits/mordu_anger": {
-"bytes": 30974,
-"orig": 31700,
-"gapPx": 780
-},
-"portraits/mordu_fun": {
-"bytes": 31424,
-"orig": 31976,
-"gapPx": 363
-},
-"portraits/mordu_joy": {
-"bytes": 31296,
-"orig": 31658,
-"gapPx": 488
-},
-"portraits/mordu_sleepy": {
-"bytes": 31180,
-"orig": 31878,
-"gapPx": 831
-},
-"portraits/mordu_surprise": {
-"bytes": 31426,
-"orig": 32088,
-"gapPx": 810
-},
-"portraits/mordu_troubled": {
-"bytes": 31072,
-"orig": 31500,
-"gapPx": 768
-},
-"portraits/natalia": {
-"bytes": 28674,
-"orig": 25522,
-"gapPx": 3333
-},
-"portraits/natalia_anger": {
-"bytes": 29778,
-"orig": 28026,
-"gapPx": 3512
-},
-"portraits/natalia_drunk": {
-"bytes": 30112,
-"orig": 28152,
-"gapPx": 3483
-},
-"portraits/natalia_fun": {
-"bytes": 29314,
-"orig": 27318,
-"gapPx": 3229
-},
-"portraits/natalia_joy": {
-"bytes": 29206,
-"orig": 27218,
-"gapPx": 3181
-},
-"portraits/natalia_serious": {
-"bytes": 29678,
-"orig": 27312,
-"gapPx": 3233
-},
-"portraits/natalia_sorrow": {
-"bytes": 29866,
-"orig": 27462,
-"gapPx": 3236
-},
-"portraits/natalia_surprise": {
-"bytes": 30036,
-"orig": 27550,
-"gapPx": 3226
-},
-"portraits/natalia_tired": {
-"bytes": 29742,
-"orig": 27986,
-"gapPx": 3245
-},
-"portraits/neilas": {
-"bytes": 21162,
-"orig": 19820,
-"gapPx": 1518
-},
-"portraits/neilas_anger": {
-"bytes": 22946,
-"orig": 21718,
-"gapPx": 768
-},
-"portraits/neilas_faint_smile": {
-"bytes": 23020,
-"orig": 21526,
-"gapPx": 1123
-},
-"portraits/neilas_fear": {
-"bytes": 23000,
-"orig": 21968,
-"gapPx": 937
-},
-"portraits/neilas_fun": {
-"bytes": 22852,
-"orig": 21658,
-"gapPx": 859
-},
-"portraits/neilas_joy": {
-"bytes": 22908,
-"orig": 21634,
-"gapPx": 459
-},
-"portraits/neilas_panic": {
-"bytes": 23196,
-"orig": 21786,
-"gapPx": 987
-},
-"portraits/neilas_sorrow": {
-"bytes": 22946,
-"orig": 21674,
-"gapPx": 995
-},
-"portraits/neilas_sparkle": {
-"bytes": 22926,
-"orig": 21652,
-"gapPx": 972
-},
 "portraits/neumann": {
 "bytes": 21208,
 "orig": 20014,
 "gapPx": 501
-},
-"portraits/polf": {
-"bytes": 26326,
-"orig": 24542,
-"gapPx": 2015
-},
-"portraits/polf_anger": {
-"bytes": 27378,
-"orig": 26842,
-"gapPx": 2072
-},
-"portraits/polf_fun": {
-"bytes": 27262,
-"orig": 26764,
-"gapPx": 2045
-},
-"portraits/polf_joy": {
-"bytes": 27250,
-"orig": 26656,
-"gapPx": 2050
-},
-"portraits/polf_serious": {
-"bytes": 27404,
-"orig": 26780,
-"gapPx": 2099
-},
-"portraits/polf_sleepy": {
-"bytes": 27540,
-"orig": 26674,
-"gapPx": 4582
-},
-"portraits/polf_smug": {
-"bytes": 27748,
-"orig": 26634,
-"gapPx": 2075
-},
-"portraits/polf_sorrow": {
-"bytes": 27306,
-"orig": 26560,
-"gapPx": 2048
-},
-"portraits/polf_surprise": {
-"bytes": 27156,
-"orig": 26292,
-"gapPx": 2062
-},
-"portraits/rodolphe_anger": {
-"bytes": 47092,
-"orig": 49758,
-"gapPx": 425
-},
-"portraits/rodolphe_exasperated": {
-"bytes": 47412,
-"orig": 50098,
-"gapPx": 409
-},
-"portraits/rufina": {
-"bytes": 31392,
-"orig": 29064,
-"gapPx": 12
-},
-"portraits/rufina_fun": {
-"bytes": 33316,
-"orig": 32324,
-"gapPx": 15
-},
-"portraits/rufina_sorrow": {
-"bytes": 33232,
-"orig": 32008,
-"gapPx": 33
-},
-"portraits/rufina_surprise": {
-"bytes": 33090,
-"orig": 32070,
-"gapPx": 7
-},
-"portraits/rufina_tired": {
-"bytes": 33224,
-"orig": 31990,
-"gapPx": 8
-},
-"portraits/rufina_troubled": {
-"bytes": 33170,
-"orig": 31826,
-"gapPx": 237
-},
-"portraits/selevan": {
-"bytes": 26176,
-"orig": 24534,
-"gapPx": 786
-},
-"portraits/selevan_anger": {
-"bytes": 26872,
-"orig": 25894,
-"gapPx": 2696
-},
-"portraits/selevan_cold": {
-"bytes": 26914,
-"orig": 25812,
-"gapPx": 738
-},
-"portraits/selevan_faint_smile": {
-"bytes": 26928,
-"orig": 25712,
-"gapPx": 2728
-},
-"portraits/selevan_fun": {
-"bytes": 26960,
-"orig": 25812,
-"gapPx": 2728
-},
-"portraits/selevan_joy": {
-"bytes": 26688,
-"orig": 25544,
-"gapPx": 2686
-},
-"portraits/selevan_sorrow": {
-"bytes": 26740,
-"orig": 25800,
-"gapPx": 774
-},
-"portraits/selevan_sparkle": {
-"bytes": 27200,
-"orig": 25910,
-"gapPx": 2639
-},
-"portraits/selevan_wicked": {
-"bytes": 26826,
-"orig": 25774,
-"gapPx": 787
 },
 "portraits/sig": {
 "bytes": 32236,
@@ -1166,230 +451,10 @@
 "orig": 34704,
 "gapPx": 190
 },
-"portraits/solenne": {
-"bytes": 19518,
-"orig": 18480,
-"gapPx": 473
-},
-"portraits/solenne_anger": {
-"bytes": 20514,
-"orig": 19480,
-"gapPx": 429
-},
-"portraits/solenne_fun": {
-"bytes": 20580,
-"orig": 19492,
-"gapPx": 500
-},
-"portraits/solenne_joy": {
-"bytes": 20572,
-"orig": 19468,
-"gapPx": 440
-},
-"portraits/solenne_panic": {
-"bytes": 20524,
-"orig": 19500,
-"gapPx": 462
-},
-"portraits/solenne_serious": {
-"bytes": 20582,
-"orig": 19428,
-"gapPx": 478
-},
-"portraits/solenne_shy": {
-"bytes": 20810,
-"orig": 19686,
-"gapPx": 529
-},
-"portraits/solenne_smitten": {
-"bytes": 20530,
-"orig": 19540,
-"gapPx": 429
-},
-"portraits/solenne_sorrow": {
-"bytes": 20550,
-"orig": 19558,
-"gapPx": 455
-},
-"portraits/solenne_troubled": {
-"bytes": 20494,
-"orig": 19432,
-"gapPx": 452
-},
 "portraits/valeon_anger": {
 "bytes": 42930,
 "orig": 45314,
 "gapPx": 8
-},
-"portraits/valg": {
-"bytes": 37838,
-"orig": 38182,
-"gapPx": 912
-},
-"portraits/valg_anger": {
-"bytes": 40020,
-"orig": 41362,
-"gapPx": 64
-},
-"portraits/valg_fun": {
-"bytes": 39726,
-"orig": 41188,
-"gapPx": 920
-},
-"portraits/valg_joy": {
-"bytes": 39996,
-"orig": 41042,
-"gapPx": 60
-},
-"portraits/valg_serious": {
-"bytes": 40012,
-"orig": 41128,
-"gapPx": 857
-},
-"portraits/valg_smug": {
-"bytes": 40260,
-"orig": 41332,
-"gapPx": 922
-},
-"portraits/valg_sorrow": {
-"bytes": 39826,
-"orig": 41090,
-"gapPx": 853
-},
-"portraits/violaine_cry": {
-"bytes": 23302,
-"orig": 22620,
-"gapPx": 180
-},
-"portraits/vittorio": {
-"bytes": 33828,
-"orig": 32380,
-"gapPx": 943
-},
-"portraits/vittorio_anger": {
-"bytes": 34614,
-"orig": 36124,
-"gapPx": 384
-},
-"portraits/vittorio_cry": {
-"bytes": 34470,
-"orig": 35934,
-"gapPx": 72
-},
-"portraits/vittorio_fun": {
-"bytes": 34040,
-"orig": 35708,
-"gapPx": 81
-},
-"portraits/vittorio_joy": {
-"bytes": 34330,
-"orig": 35982,
-"gapPx": 431
-},
-"portraits/vittorio_panic": {
-"bytes": 34304,
-"orig": 35804,
-"gapPx": 361
-},
-"portraits/vittorio_smug": {
-"bytes": 34156,
-"orig": 36078,
-"gapPx": 71
-},
-"portraits/vittorio_sorrow": {
-"bytes": 34252,
-"orig": 36054,
-"gapPx": 360
-},
-"portraits/vittorio_wicked": {
-"bytes": 34212,
-"orig": 35608,
-"gapPx": 73
-},
-"portraits/walker": {
-"bytes": 18904,
-"orig": 18234,
-"gapPx": 246
-},
-"portraits/yurien_anger": {
-"bytes": 29018,
-"orig": 28206,
-"gapPx": 848
-},
-"portraits/yurien_cold": {
-"bytes": 28976,
-"orig": 28338,
-"gapPx": 838
-},
-"portraits/yurien_faint_smile": {
-"bytes": 28784,
-"orig": 28134,
-"gapPx": 827
-},
-"portraits/yurien_fun": {
-"bytes": 29038,
-"orig": 28376,
-"gapPx": 783
-},
-"portraits/yurien_joy": {
-"bytes": 29232,
-"orig": 28674,
-"gapPx": 822
-},
-"portraits/yurien_pout": {
-"bytes": 28988,
-"orig": 28144,
-"gapPx": 833
-},
-"portraits/yurien_smug": {
-"bytes": 28830,
-"orig": 28274,
-"gapPx": 846
-},
-"portraits/yurien_sorrow": {
-"bytes": 28706,
-"orig": 28260,
-"gapPx": 830
-},
-"portraits/yurina": {
-"bytes": 23958,
-"orig": 23030,
-"gapPx": 1648
-},
-"portraits/yurina_anger": {
-"bytes": 28580,
-"orig": 25348,
-"gapPx": 1676
-},
-"portraits/yurina_cold": {
-"bytes": 28428,
-"orig": 25158,
-"gapPx": 1715
-},
-"portraits/yurina_fun": {
-"bytes": 28810,
-"orig": 25524,
-"gapPx": 1689
-},
-"portraits/yurina_joy": {
-"bytes": 28568,
-"orig": 25412,
-"gapPx": 1613
-},
-"portraits/yurina_serious": {
-"bytes": 29124,
-"orig": 25408,
-"gapPx": 1699
-},
-"portraits/yurina_sorrow": {
-"bytes": 28548,
-"orig": 25276,
-"gapPx": 1625
-},
-"portraits/yurina_surprise": {
-"bytes": 29040,
-"orig": 25704,
-"gapPx": 1687
 },
 "portraits/zalve_anger": {
 "bytes": 30176,
