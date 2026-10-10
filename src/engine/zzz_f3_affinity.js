@@ -12,7 +12,7 @@
 //
 // 出来事の結果に書けるもの：aff: { 人物の id: 増減 }（好感度の目盛り。会っていなければ会ったことにする）
 //   仲間の主役への増減は今まで通り bond（M2。0〜100 の目盛り）で書いてよい。同じ数が動く
-// 通知は M2 と同じ形：「〇〇の好感度 +6（24・好意）」。仲間の好感度の表示も、この目盛りにそろえる
+// 通知は M2 と同じ形：「〇〇の好感度 +6（好意）」（括弧は段の名前だけ。R10 低 21）。仲間の好感度の表示も、この目盛りにそろえる
 // レーン F＋C（F3）
 (function (G) {
   const D = G.data;
@@ -71,7 +71,7 @@
     const A = G.affState(S);
     const a = A[id];
     A[id] = clampA(a + n);
-    if (!quiet && A[id] !== a) G.note(`${F3.name(id)}の好感度 ${G.sign(A[id] - a)}（${A[id]}・${G.affWord(A[id])}）`);
+    if (!quiet && A[id] !== a) G.note(`${F3.name(id)}の好感度 ${G.sign(A[id] - a)}（${G.affWord(A[id])}）`); // 括弧の中は段の名前だけ（R10 低 21）
   };
 
   // ---------------------------------------------------------------- 仲間の bond を好感度の窓にする
@@ -172,7 +172,7 @@
     c.bond = G.clamp(Math.round(a + n), 0, 100);
     if (!quiet && c.bond !== a) {
       const x = G.affFromBond(a), y = G.affFromBond(c.bond);
-      G.note(`${G.m2Short(c)}の好感度 ${G.sign(y - x)}（${y}・${G.affWord(y)}）`);
+      G.note(`${G.m2Short(c)}の好感度 ${G.sign(y - x)}（${G.affWord(y)}）`);
     }
   };
   const acts0 = G.exploreActions;
@@ -183,7 +183,7 @@
     groups.forEach((g) => (g.list || []).forEach((a) => {
       if (typeof a.id !== "string" || !a.id.startsWith("m2talk:")) return;
       const c = S.companions.find((x) => x.id === a.id.slice(7));
-      if (c && typeof a.sub === "string") a.sub = a.sub.replace(`（${c.bond}）`, `（${G.affFromBond(c.bond)}）`); // M10 などが足した言葉は残す
+      if (c && typeof a.sub === "string") a.sub = a.sub.replace(`（${c.bond}）`, ""); // 数は出さず段の名前だけ（R10 低 21）。M10 などが足した言葉は残す
     }));
     return groups;
   };
