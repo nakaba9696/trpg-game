@@ -84,7 +84,8 @@
     G.say(G.pick(R.END_SAY));
     S.mode = "explore"; S.fac = null;
     if (S.m6) S.m6.pending = null;
-    if (G.endStory("decade")) G.award("r11_decade");
+    G.award("r11_decade");   // 墓碑を書く前に（トロフィーの記録が冒険の記録と一緒に残るように）
+    G.endStory("decade");
   };
   const endTurn0 = G.endTurn;
   G.endTurn = () => { endTurn0(); X.tick(); };
