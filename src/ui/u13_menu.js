@@ -207,16 +207,6 @@
       head.classList.toggle("u13many", many);
       if (list) mergePicks(S, head, G.actions().filter((g) => g.list.length)[open.groups[0]]);
     }
-    // 前の手番と同じ手を、すぐ選べるように
-    const again = G.f4 && G.f4.lastAction ? G.f4.lastAction(S) : null;
-    if (again) {
-      const b = h("button", "btn small u13again");
-      b.type = "button";
-      b.title = "前の手番と同じ手をもう一度";
-      b.append(h("span", "", "↻ 前と同じ："), h("b", "", again.label));
-      b.onclick = () => { G.act(again.id); ui.after(); };
-      bar.prepend(b);
-    }
     if (head) head.after(bar); else panel.append(bar);
     panel.classList.add("u13on", "u13fight");
     // 戦闘が始まったら、スマホでは見出しの道具を画面の外へ送り、絵・記録・手が一画面に入るようにする
