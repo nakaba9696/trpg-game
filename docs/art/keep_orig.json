@@ -1,7 +1,46 @@
 {
- "e4k_drowned": {"tol": 10, "min_area": 30, "keep": [[95, 120, 345, 120, 345, 455, 95, 455]]},
- "e4k_moonhare": {"holes": false},
- "shuten": {"holes": false},
- "farina": {"holes": false},
- "mirza": {"holes": false}
+ "e4k_drowned": {
+  "tol": 10,
+  "min_area": 30,
+  "keep": [
+   [
+    95,
+    120,
+    345,
+    120,
+    345,
+    455,
+    95,
+    455
+   ]
+  ]
+ },
+ "e4k_moonhare": {
+  "holes": false
+ },
+ "shuten": {
+  "holes": false
+ },
+ "farina": {
+  "holes": false
+ },
+ "mirza": {
+  "holes": false
+ },
+ "e4_ashogre": {
+  "holes": false
+ },
+ "e4_bogleech": {
+  "holes": false
+ },
+ "general": {
+  "patch": [
+   [
+    6,
+    80,
+    30,
+    102
+   ]
+  ]
+ }
 }

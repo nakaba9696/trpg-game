@@ -8,6 +8,7 @@
 使い方（cutout の venv の Python で）：
   <venv>/python tools/keep_orig.py --src <元の絵の根> --out <出す根> --preview <見る用> --kind monsters id1 id2 …
   docs/art/keep_orig.json：{"<id>": {"drop": [[x1,y1,x2,y2,…], …], "keep": [[…]], "min_area": 40, "tol": 14, "holes": false}}
+    patch: [[x0,y0,x1,y1]] の四角の中の白い点を、まわりの色で埋めてから抜く（外套の中の白い点など）
     holes: false で、背景の色に近い塊を自動では抜かない（白い肌・白い髪・白い体の絵。囲まれた背景は drop で手で決める）（512 幅の座標の多角形。keep は抜かない所）
   表情違いは基本の絵の設定を使う（<id>_<表情> → <id>）
 """
@@ -80,6 +81,16 @@ def main():
         conf = confs.get(base, {})
         path = os.path.join(a.src, i + ".webp")
         rgb = np.array(Image.open(path).convert("RGB"))
+        for x0, y0, x1, y1 in conf.get("patch", []):
+            # 塗りの中に残った背景の白い点（外套の穴など）を、まわりの色で埋める
+            box = np.zeros(rgb.shape[:2], bool); box[y0:y1, x0:x1] = True
+            spot = box & (rgb.min(axis=2) > 110)
+            if spot.any():
+                _, (iy, ix) = ndimage.distance_transform_edt(spot, return_indices=True)
+                rgb[spot] = rgb[iy, ix][spot]
+            p2 = os.path.join(a.out, "_patched_" + i + ".png")
+            Image.fromarray(rgb).save(p2)
+            path = p2
         body = np.array(cm.cut(ses, path, remove))[..., 3].astype(np.float32) / 255
         bg, B = bg_region(rgb, body, conf)
         # 2. 背景を緑で塗る（縁はなめらかに。縁の色は元の背景の色を割り戻す）
