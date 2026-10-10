@@ -3,7 +3,7 @@
 //   中 7：訓練場の稽古・酒場などで教わる技に、使える武器の型（「拳で使う」）を出す。今の武器で使えない技は a.off（画面が薄くする）
 //   中 10：仲間の好感度が下がったとき、理由を一行（G.m2Why。companions_m2.js の日ごと・戦いのあとから呼ぶ）
 //   低 29：探索・施設で、仲間の手当ての組に「薬草を使う（自分に）」を並べる（b5self:<品>。手番は進まない。持ち物欄から使うのと同じ）
-//   低 30：訓練場の「今は選べない」稽古を、理由ごとに一行にまとめる
+//   低 30：訓練場の「今は選べない」稽古を、理由ごとに一行にまとめる（能力値が足りないものは技ごとのまま）
 // セーブ（G.S）に足すもの：S.r11why = { "仲間の id:理由": { day, sum } }（理由の行を出した日と、まだ出していない減り）。無くても動く
 (function (G) {
   const D = G.data;
@@ -57,13 +57,15 @@
         });
         // 訓練場：押せない稽古を理由ごとに一行（理由が同じものが二つ以上なら）
         if (!/^教官に稽古/.test(grp.title || "")) return;
+        //   能力値が足りない稽古は、技ごとに足りない能力が違うので一行ずつのまま（どの技に何が要るか分かるように）
+        const whyOf = (a) => (a.disabled && skillOf(a) && !K.needMiss(skillOf(a), S).length ? K.trainWhy(skillOf(a), S) || "今は選べない" : null);
         const by = new Map();
-        grp.list.forEach((a) => { if (a.disabled && skillOf(a)) { const w = K.trainWhy(skillOf(a), S) || "今は選べない"; if (!by.has(w)) by.set(w, []); by.get(w).push(a); } });
+        grp.list.forEach((a) => { const w = whyOf(a); if (w != null) { if (!by.has(w)) by.set(w, []); by.get(w).push(a); } });
         const out = [];
         let n = 0;
         grp.list.forEach((a) => {
-          const w = a.disabled && skillOf(a) ? K.trainWhy(skillOf(a), S) || "今は選べない" : null;
-          if (w == null) { out.push(a); return; }
+          const w = whyOf(a);
+          if (w == null) { if (a.disabled && skillOf(a)) a.locked = true; out.push(a); return; }
           const same = by.get(w);
           if (same.length < 2) { a.locked = true; out.push(a); return; }
           if (same[0] !== a) return;

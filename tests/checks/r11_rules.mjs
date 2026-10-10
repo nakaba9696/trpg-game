@@ -63,7 +63,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (!grp) F("訓練場に稽古の組が無い");
       else {
         const seen = {};
-        grp.list.filter((x) => x.disabled).forEach((x) => { seen[x.sub] = (seen[x.sub] || 0) + 1; });
+        grp.list.filter((x) => x.disabled && !/が足りない/.test(x.sub || "")).forEach((x) => { seen[x.sub] = (seen[x.sub] || 0) + 1; });
         const dup = Object.entries(seen).filter(([, n]) => n > 1);
         if (dup.length) F(`訓練場の押せない稽古が同じ理由で並ぶ：${dup.map(([w, n]) => `${w}×${n}`).join("・")}`);
         if (!grp.list.some((x) => /^k1trainlock:/.test(x.id))) console.log("NOTE R11 訓練場：まとめる行が無かった（理由が一つずつ）");
