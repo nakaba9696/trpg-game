@@ -24,12 +24,16 @@
     const st = (S.r11why = S.r11why || {});
     const key = `${c.id}:${why}`;
     const r = (st[key] = st[key] || { day: -99, sum: 0 });
+    // 数は出さず段の言葉で（R12 中 3）。まだ出していない減りの前の bond を r.from に覚え、段が変わったら「ふつう → 警戒」
+    if (typeof r.from !== "number") r.from = c.bond;
     r.sum += v * 2;
     if (why === "talk" || why === "poor") { if (S.day - r.day < 5) return; }
     const n = G.m2Short ? G.m2Short(c) : c.name;
-    G.note(`${(WHY[why] || WHY.lose).replace("{n}", n)}。（好感度 ${Math.round(r.sum)}）`);
+    const w0 = G.m2Mood(r.from), w1 = G.m2Mood(G.clamp(Math.round(c.bond + v), 0, 100));
+    G.note(`${(WHY[why] || WHY.lose).replace("{n}", n)}。${w0 !== w1 ? `（${w0} → ${w1}）` : ""}`);
     r.day = S.day;
     r.sum = 0;
+    r.from = null;
   };
 
   // ---------------------------------------------------------------- 中 7・低 30：稽古と教わる技
