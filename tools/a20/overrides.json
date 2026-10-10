@@ -1,0 +1,258 @@
+{
+ "monsters/e4k_dreamsheep": "keep",
+ "monsters/e4_minerghost": "keep",
+ "monsters/e4k_nailer": "keep",
+ "monsters/e4k_puppet": "keep",
+ "monsters/warlock": "keep",
+ "portraits/azlag": [
+  [
+   160,
+   140,
+   350,
+   270
+  ]
+ ],
+ "portraits/barnabe": [
+  [
+   310,
+   10,
+   390,
+   110
+  ]
+ ],
+ "portraits/berangere": [
+  [
+   380,
+   540,
+   512,
+   640
+  ]
+ ],
+ "portraits/boku": [
+  [
+   95,
+   285,
+   165,
+   355
+  ],
+  [
+   365,
+   285,
+   435,
+   355
+  ]
+ ],
+ "portraits/captain_east": [
+  [
+   200,
+   100,
+   320,
+   225
+  ]
+ ],
+ "portraits/chezar": [
+  [
+   190,
+   0,
+   350,
+   120
+  ]
+ ],
+ "portraits/dil": [
+  [
+   40,
+   280,
+   470,
+   640
+  ]
+ ],
+ "portraits/doctor": "keep",
+ "portraits/filie": [
+  [
+   140,
+   30,
+   370,
+   190
+  ]
+ ],
+ "portraits/gauthier": [
+  [
+   200,
+   20,
+   370,
+   210
+  ]
+ ],
+ "portraits/ingrid": [
+  [
+   260,
+   140,
+   350,
+   250
+  ]
+ ],
+ "portraits/kind_guard_m": [
+  [
+   0,
+   0,
+   90,
+   220
+  ]
+ ],
+ "portraits/kind_knight_f": [
+  [
+   220,
+   0,
+   310,
+   70
+  ]
+ ],
+ "portraits/kind_soldier_f": [
+  [
+   60,
+   0,
+   150,
+   120
+  ],
+  [
+   235,
+   45,
+   295,
+   105
+  ]
+ ],
+ "portraits/kind_noble_f": "keep",
+ "portraits/kind_priest_m_b": [
+  [
+   190,
+   150,
+   290,
+   230
+  ]
+ ],
+ "portraits/kind_villager_f": [
+  [
+   160,
+   160,
+   340,
+   250
+  ]
+ ],
+ "portraits/rufina": [
+  [
+   100,
+   210,
+   195,
+   340
+  ],
+  [
+   215,
+   225,
+   325,
+   410
+  ]
+ ],
+ "portraits/sheila": "keep",
+ "portraits/natalia": [
+  [
+   240,
+   380,
+   380,
+   455
+  ]
+ ],
+ "portraits/takimaru": [
+  [
+   150,
+   90,
+   340,
+   270
+  ]
+ ],
+ "portraits/trude": [
+  [
+   100,
+   0,
+   420,
+   280
+  ]
+ ],
+ "portraits/yuzuel": "keep",
+ "portraits/dario": [
+  [
+   140,
+   0,
+   380,
+   170
+  ]
+ ],
+ "portraits/elnea": [
+  [
+   80,
+   250,
+   430,
+   410
+  ],
+  [
+   130,
+   20,
+   390,
+   140
+  ]
+ ],
+ "portraits/magda": [
+  [
+   410,
+   330,
+   512,
+   420
+  ]
+ ],
+ "portraits/mirlene": [
+  [
+   0,
+   0,
+   170,
+   230
+  ]
+ ],
+ "portraits/matthias": [
+  [
+   50,
+   270,
+   190,
+   570
+  ],
+  [
+   330,
+   270,
+   470,
+   570
+  ]
+ ],
+ "portraits/selevan": [
+  [
+   220,
+   20,
+   290,
+   75
+  ]
+ ],
+ "portraits/yura": "keep",
+ "portraits/valg": [
+  [
+   245,
+   0,
+   305,
+   65
+  ]
+ ],
+ "portraits/wolfram": [
+  [
+   180,
+   0,
+   300,
+   90
+  ]
+ ]
+}
