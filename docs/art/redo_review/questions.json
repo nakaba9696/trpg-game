@@ -444,11 +444,12 @@
  {
   "id": "angelica",
   "file": "docs/art/redo_review/angelica.webp",
-  "what": "（WebUI が要る）同じ人物設定のまま立ち絵を最初から描き直し、単色の背景で描いてから抜く。首の横・髪の内側に背景が残らないことを黒とマゼンタの上で確かめる。表情差分も",
-  "status": "needs_webui",
-  "answer": "首の横がちゃんと透過されていない。作り直したほうが早そう",
+  "what": "(b) 同じ人物設定で最初から描き直した（灰色の背景で描き、BiRefNet で抜いて縁の白いふちを消した）。31 歳に見えるよう大人の女性のタグを足した。首の横・髪の内側は黒・マゼンタの上で透明（angelica_neck.webp）。表情差分 8 枚も",
+  "status": "fixed",
+  "answer": null,
   "check": "docs/art/redo_review/angelica_check.webp",
-  "moods": "docs/art/redo_review/angelica_moods.webp"
+  "moods": "docs/art/redo_review/angelica_moods.webp",
+  "neck": "docs/art/redo_review/angelica_neck.webp"
  },
  {
   "id": "kind_host_f",
