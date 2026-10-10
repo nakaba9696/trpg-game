@@ -373,7 +373,8 @@
     "smug": "smug, proud smile, half-closed eyes",
     "surprise": "surprised, wide-eyed, open mouth"
    },
-   "memo": "王国軍の女隊長。敵だが抜けていて人がいい。おばさん呼ばわりに怒る"
+   "memo": "王国軍の女隊長。敵だが抜けていて人がいい。おばさん呼ばわりに怒る",
+   "art": 2
   },
   {
    "id": "captain",
