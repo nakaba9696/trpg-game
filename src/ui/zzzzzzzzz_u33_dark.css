@@ -1,0 +1,150 @@
+/* U33：暗い画面・明るい画面で、字の色と実際の地の色が食い違う所を直す（コントラスト比 4.5:1、大きい字は 3:1。測り方は tools/audit_u33_contrast.mjs）。
+   原因の一つは、窓だけが羊皮紙の地（語りの場面の本の頁・右の列。ほかは明るい画面の窓）なのに、金・銀・銅などの色の組が暗い画面の淡い色のまま残っていたこと。
+   字に使う「読める版」の色（--gold-t など）を窓の地に合わせて持ち、字はそれを使う。窓の地の色は変えない。 */
+
+/* 字に使う金・銀・銅・白金の色。明るい地（羊皮紙）では深く、暗い地では明るく */
+:root {
+  --gold-t: #6b4e08; --silver-t: #4b5560; --bronze-t: #7a3f1c; --platinum-t: #46566a; --plus-t: #25561f;
+  --accent: #6f4414; --muted: #5a4c38; --head: #6a3c10; --ok: #356024; --ng: #9c2a19; --crit: #7a4e04;
+  --u33-ink-on-metal: #1c1710;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --gold-t: #e2c172; --silver-t: #c4c8c8; --bronze-t: #cf9466; --platinum-t: #dfe6ec; --plus-t: #7fc17a;
+    --accent: #c9a86c; --muted: #a49c86; --head: #ead6a6; --ok: #9cc38a; --ng: #e07a64; --crit: #e6c06a;
+  }
+}
+:root[data-theme="dark"] {
+  --gold-t: #e2c172; --silver-t: #c4c8c8; --bronze-t: #cf9466; --platinum-t: #dfe6ec; --plus-t: #7fc17a;
+  --accent: #c9a86c; --muted: #a49c86; --head: #ead6a6; --ok: #9cc38a; --ng: #e07a64; --crit: #e6c06a;
+}
+/* 暗い画面でも地が羊皮紙のままの窓：語りの場面の本の頁と右の列（zu14_scenes.css・zzzzz_u21_side.css）。字は明るい版の色 */
+body[data-u14="story"] .tome, body.u21pc[data-u14="story"] #u21side {
+  --gold-t: #6b4e08; --silver-t: #4b5560; --bronze-t: #7a3f1c; --platinum-t: #46566a; --plus-t: #25561f;
+  --gold: #8f6a12; --silver: #66707a; --bronze: #8e4f25; --hp: #a83a2c; --mp: #2e5f7a; --blood: #9e2a1e;
+  --accent: #6f4414; --muted: #5a4c38; --head: #6a3c10; --ok: #356024; --ng: #9c2a19; --crit: #7a4e04;
+}
+
+/* 金・銀・銅の字は、窓の地に合わせた「読める版」で */
+.l-trophy, .u8term.u8new, .u8term.u8new::before, #u8note .u8star, .world dt.u8newdt::before { color: var(--gold-t); }
+.u8term.u8new { text-shadow: 0 0 10px color-mix(in srgb, var(--gold-t) 40%, transparent); }
+.troTiers b.白金 { color: var(--platinum-t); } .troTiers b.金 { color: var(--gold-t); } .troTiers b.銀 { color: var(--silver-t); } .troTiers b.銅 { color: var(--bronze-t); }
+#toast b { color: var(--gold-t); }
+.l-title .u8term, .l-trophy .u8term { color: inherit; }
+
+/* 古い行は薄くしても読める程度に（本文の地に対して 4.5:1 を保つ） */
+#log .u14past { opacity: .9; }
+#log .u14past:hover { opacity: 1; }
+
+/* トロフィー：メダルの字は金属の上に墨色、鍵のかかった札も読める濃さ */
+.tro .medal, .tro span.medal { color: var(--u33-ink-on-metal); }
+.tro.locked { opacity: .82; }
+.tro.locked .medal, .tro.locked .medal.白金 { background: color-mix(in srgb, var(--muted) 45%, var(--paper)); color: var(--u33-ink-on-metal); box-shadow: none; }
+
+/* 図鑑：まだ知らない項目は色で控えめにし、透かさない */
+.f2cell.unknown { opacity: 1; color: var(--muted); }
+
+/* 能力値の ▲ */
+.statlist .nm .aptUp { color: var(--plus-t); }
+
+/* ---------------------------------------------------------------- 絵の上に重なる窓：明るい画面では地を濃くして、暗い絵が透けて字の地を暗くしないように（U23 の「絵が透けて見える窓」は暗い画面ではそのまま） */
+:root { --u33-mix: 94%; --u33-mix-fight: 94%; --u33-mix-side: 94%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u33-mix: 74%; --u33-mix-fight: 80%; --u33-mix-side: 88%; } }
+:root[data-theme="dark"] { --u33-mix: 74%; --u33-mix-fight: 80%; --u33-mix-side: 88%; }
+body.u21pc:not([data-u14="story"]) .tome, body.u21pc:not([data-u14="story"]) #u21side { background: color-mix(in srgb, var(--win-solid) var(--u33-mix), transparent); }
+body.v9pc.v9combat .tome { background: color-mix(in srgb, var(--win-solid) var(--u33-mix-fight), transparent); }
+body.u21pc.v9combat #u21side { background: color-mix(in srgb, var(--win-solid) var(--u33-mix-side), transparent); }
+/* 語りの場面の窓（羊皮紙）：絵が透けて地が暗くならないよう、ほぼ不透明に */
+body.u21pc[data-u14="story"] .tome { background: radial-gradient(ellipse 120% 90% at 50% 35%, rgba(245, 236, 214, .985) 30%, rgba(230, 213, 176, .98)); }
+body.u21pc[data-u14="story"] #u21side { background: radial-gradient(ellipse 120% 90% at 50% 35%, rgba(245, 236, 214, .975) 30%, rgba(230, 213, 176, .97)); }
+
+/* 「どうする？」の札は不透明な地に */
+body #panel > .u28head { background: var(--win-solid); }
+body[data-u14="story"] #panel > .u28head { background: #ece0c2; }
+
+/* 得たもの・失ったものの札 */
+:root { --u27-good: #25561f; --u27-bad: #962616; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u27-good: #8fd47e; --u27-bad: #ff8f78; } }
+:root[data-theme="dark"] { --u27-good: #8fd47e; --u27-bad: #ff8f78; }
+body[data-u14="story"] .tome, body.u21pc[data-u14="story"] #u21side { --u27-good: #25561f; --u27-bad: #962616; --u27-good-bg: rgba(64, 140, 52, .12); --u27-bad-bg: rgba(190, 50, 30, .1); }
+#log .l-gain .u27-good .u27mark, #log .l-gain .u27-bad .u27mark, #log .l-gain .u27-info .u27mark { color: var(--u33-on-strong); }
+#log .l-gain .u27k-gold .u27mark { background: #8f6a12; color: #fffaf0; }
+
+/* 判定の「成功／失敗」の札：濃い地には明るい字、薄い地には暗い字 */
+:root { --u33-on-strong: #fffaf0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u33-on-strong: #0a0d0d; } }
+:root[data-theme="dark"] { --u33-on-strong: #0a0d0d; }
+body[data-u14="story"] .tome, body.u21pc[data-u14="story"] #u21side { --u33-on-strong: #fffaf0; }
+.verdict { color: var(--u33-on-strong); }
+
+/* 札の中の数・▾ は透かさない */
+.u13tab .u13n, .u13tab .u21caret { opacity: 1; }
+body.u21pc #u21side .u13tab .u13n, body.u21pc #u21side .u13tab .u21caret { opacity: 1; }
+
+/* 戦闘の場面の名前（赤）：明るい地では深い赤、暗い地では明るい赤 */
+:root { --u14-combat-t: #9c2816; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u14-combat-t: #ea7058; } }
+:root[data-theme="dark"] { --u14-combat-t: #ea7058; }
+#u14sign[data-kind="combat"] .u14name { color: var(--u14-combat-t); }
+
+/* メダル：金・銀・銅は、明るい画面では濃い金属色なので明るい字、暗い画面では墨色の字 */
+:root { --u33-ink-on-metal: #fffaf0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u33-ink-on-metal: #1c1710; } }
+:root[data-theme="dark"] { --u33-ink-on-metal: #1c1710; }
+
+/* タイトル：明るい画面でも字の後ろを少し暗くして、淡い字を読めるように */
+.titleHero { position: relative; isolation: isolate; }
+.titleHero::before { content: ""; position: absolute; z-index: -1; inset: -40% -30% -20%; pointer-events: none;
+  background: radial-gradient(ellipse 50% 50% at 50% 55%, rgba(14, 10, 6, .62), rgba(14, 10, 6, .4) 55%, transparent 100%); }
+
+/* ---------------------------------------------------------------- 札・印の字：地の色に合わせる */
+/* 場面の札（荒野・出来事・戦闘…）。地は場面の色なので、字は濃い墨か明るい紙の色を固定で */
+#u14sign .u14tag { color: #1b150b; }
+#u14sign[data-kind="combat"] .u14tag { background: #a93a25; color: #fffaf0; }
+/* 右上の状態の札（戦闘・迷宮・荒野…）と「どうする？」の札の状態：地は固定色なので、字は紙の色で */
+body.u21pc #u29where .u29wstate, #panel > .u28head .u28state { color: var(--u33-on-strong); }
+body.u21pc #u29where[data-state="戦闘"] .u29wstate, body.u21pc #u29where[data-state="旅の途中"] .u29wstate, body.u21pc #u29where[data-state="出来事"] .u29wstate, body.u21pc #u29where[data-state="会話"] .u29wstate,
+body.u21pc #u29where[data-state^="迷宮"] .u29wstate, body.u21pc #u29where[data-state="荒野"] .u29wstate,
+#panel > .u28head[data-state="戦闘"] .u28state, #panel > .u28head[data-state="旅の途中"] .u28state, #panel > .u28head[data-state="出来事"] .u28state, #panel > .u28head[data-state="会話"] .u28state { color: #fffaf0; }
+/* メダル：白金は明るい金属なので、どちらの画面でも墨色の字。鍵のかかった札は地に合う字 */
+.tro .medal.白金, .tro span.medal.白金 { color: #1c1710; }
+.tro.locked .medal, .tro.locked span.medal, .tro.locked .medal.白金, .tro.locked span.medal.白金 { color: var(--ink); }
+/* 図鑑の「見つけたものだけ」などの押された札 */
+.f2view .btn[aria-pressed="true"] { color: var(--u33-on-strong); }
+/* 読みものの薄い字（透かし）を、地に対して読める濃さに */
+.k1hint, .k1lv { opacity: 1; }
+.k1hint { color: var(--muted); }
+/* 戦闘の場面の行の見出し（赤）と回復の数 */
+#log .u14cutline { color: var(--u14-combat-t); }
+:root { --q7-heal: #14561f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --q7-heal: #8de29a; } }
+:root[data-theme="dark"] { --q7-heal: #8de29a; }
+body[data-u14="story"] .tome { --q7-heal: #14561f; }
+/* 上の状態の帯：明るい画面では地を濃く */
+:root { --u33-mix-bar: 94%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u33-mix-bar: 82%; } }
+:root[data-theme="dark"] { --u33-mix-bar: 82%; }
+body.u21pc #mbar { background: color-mix(in srgb, var(--win-solid) var(--u33-mix-bar), transparent); }
+
+/* ステータスの窓（絵や暗い幕の上に出る）は、地をほぼ不透明に */
+.sheet { background: color-mix(in srgb, var(--win-solid) 97%, transparent); }
+/* 鍵のかかったトロフィーの札は、透かさずに色で控えめにする */
+.tro.locked { opacity: 1; }
+.tro.locked b, .tro.locked span:not(.medal) { color: var(--muted); }
+
+/* スマホの窓（絵の上）：明るい画面では地を濃く、暗い画面では少し濃く */
+:root { --u33-mix-phone: 94%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u33-mix-phone: 88%; } }
+:root[data-theme="dark"] { --u33-mix-phone: 88%; }
+body.u31m:not([data-u14="story"]) .tome, body.u31m:not([data-u14="story"]) #u21side { background: color-mix(in srgb, var(--win-solid) var(--u33-mix-phone), transparent); }
+body.u31m.u31logopen:not([data-u14="story"]) .tome { background: var(--win-solid); }
+/* 所持金の増減の札 */
+:root { --u11-ink: #5a4005; --u11-up: #235316; --u11-down: #9a2c1a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --u11-ink: #f0cf78; --u11-up: #a8d48f; --u11-down: #ffa38d; } }
+:root[data-theme="dark"] { --u11-ink: #f0cf78; --u11-up: #a8d48f; --u11-down: #ffa38d; }
+/* スマホの戦闘の看板は絵の上に出るので、地をほぼ不透明に */
+body.u31m.v9combat #u14sign { background: color-mix(in srgb, var(--win-solid) 96%, transparent); }
+/* 着いた町の名前の幕：窓の明るい画面でも、字の後ろを十分に暗く（幕の端まで字がかかっても読める） */
+#u14card { background: radial-gradient(ellipse 100% 46% at 50% 48%, rgba(5, 8, 8, .92), rgba(5, 8, 8, .84) 60%, rgba(5, 8, 8, .58)); }
+/* 立ち絵の名札：地の影が右端で消えるので、字が絵の明るい所にかからないよう右に余白を足し、影も濃い目に */
+.v9fig .v9name { padding-right: 30px; background: linear-gradient(90deg, rgba(4, 9, 9, .82), rgba(4, 9, 9, .72) 72%, rgba(4, 9, 9, 0)); }
