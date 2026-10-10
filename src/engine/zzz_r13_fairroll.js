@@ -1,6 +1,6 @@
 // R13（R10 の中 16）：振りが悪くても序盤で詰まないように。数と文は src/data/r13_fairroll.js（D.R13_ROLL）。レーン C
 // - 職業の下支え：職業の要の能力値（一つ目 12・二つ目 10）と体力（11）は、振りが悪くてもそれより下がらない（cre.roll を包み、ダイスの目を持ち上げる。dr.r13.floored に記す）
-// - 埋め合わせ：ボーナス前の合計が、その職業のふつうより 4 点下がるごとに一段（4 段まで）。一段ごとにボーナス点 +2（cre.extraBonus に足す）・
+// - 埋め合わせ：ボーナス前の合計が、その職業のふつうより 4 点下がるごとに一段（4 段まで）。一段ごとに要の能力値と体力へ +2（ボーナス点の決まりには混ぜない）・
 //   所持金 +20G・薬草 1 つ（冒険を始めるとき。cre.options が r13 を渡し、G.newGame が足す）
 // - G.r13.off：測定（tests/r13_rolls.mjs）で、下支えも埋め合わせも無い振りと比べるため
 // 古いセーブには関わらない（作成のときだけ。S.r13roll は記録のためだけで、無くても動く）
@@ -40,12 +40,12 @@
       dr.rolled[body] = R.BODY;
       if (!floored.includes(body)) floored.push(body);
     }
-    dr.r13 = Object.assign(r13.of(dr), { floored });
+    dr.r13 = Object.assign(r13.of(dr), { floored, add: {} });
+    // 埋め合わせの点は、ボーナス点（5＋トロフィーの決まり）には混ぜず、要の能力値と体力へ順に足す
+    const to = [...new Set([...r13.keys(dr.cls), "体力"])];
+    for (let i = 0; i < dr.r13.pts; i++) { const k = to[i % to.length]; dr.rolled[k] += 1; dr.r13.add[k] = (dr.r13.add[k] || 0) + 1; }
     dr.best = Math.max(dr.best || 0, cre.total(dr));
   };
-
-  const extra0 = cre.extraBonus;
-  cre.extraBonus = (dr, ...a) => (extra0 ? extra0(dr, ...a) || 0 : 0) + (dr && dr.r13 && !r13.off ? dr.r13.pts || 0 : 0);
 
   // 冒険に渡す埋め合わせ（無ければ空）
   cre.r13Options = (dr) => (dr && dr.r13 && dr.r13.lv ? { r13: { gold: dr.r13.gold, herb: dr.r13.herb, lv: dr.r13.lv } } : {});
@@ -72,7 +72,7 @@
     const x = dr && dr.r13;
     if (!x) return out;
     if (x.floored && x.floored.length) out.push({ k: "floor", text: fill(R.FLOORED, { list: x.floored.map((k) => `${k}は ${dr.rolled[k]}`).join("、") }) });
-    if (x.lv) out.push({ k: "low", text: fill(R.LOW, { total: cre.baseTotal(dr), usual: r13.usual(dr), pts: x.pts, gold: x.gold, herb: x.herb, key: r13.keys(dr.cls)[0] }) });
+    if (x.lv) out.push({ k: "low", text: fill(R.LOW, { total: cre.baseTotal(dr) - x.pts, usual: r13.usual(dr), add: Object.entries(x.add || {}).map(([k, n]) => `${k} +${n}`).join("・"), gold: x.gold, herb: x.herb, key: r13.keys(dr.cls)[0] }) });
     return out;
   };
 })(globalThis.G = globalThis.G || {});

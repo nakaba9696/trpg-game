@@ -21,12 +21,14 @@ export default ({ fail, loadEngine, seeded }) => {
       cre.roll(dr, G.rand);
       G.r13.keys(cls).forEach((k, j) => { if (dr.rolled[k] < R.FLOOR[j]) f(`${cls} の ${k} が下支え（${R.FLOOR[j]}）より低い：${dr.rolled[k]}`); });
       if (R.BODY && dr.rolled.体力 < R.BODY) f(`${cls} の体力が ${dr.rolled.体力}（${R.BODY} より下げない）`);
-      if (dr.dice[G.r13.keys(cls)[0]] + cre.classMod(cls, G.r13.keys(cls)[0]) !== dr.rolled[G.r13.keys(cls)[0]]) f(`${cls}：ダイスの目と初期値が合わない`);
       const x = dr.r13;
+      const k0 = G.r13.keys(cls)[0];
+      if (x && dr.dice[k0] + cre.classMod(cls, k0) + ((x.add || {})[k0] || 0) !== dr.rolled[k0]) f(`${cls}：ダイスの目と初期値が合わない`);
       if (!x) { f(`${cls}：振りに r13 が無い`); break; }
       if (x.lv) {
         lows++;
-        if (cre.bonusPoints(dr) < D.BONUS_POINTS + x.pts) f(`${cls}：埋め合わせのボーナス点が足されない`);
+        if (Object.values(x.add || {}).reduce((a, b) => a + b, 0) !== x.pts) f(`${cls}：埋め合わせの点が能力値に足されない`);
+        if (cre.bonusPoints(dr) !== cre.basePoints(dr) + cre.trophyPoints(dr)) f(`${cls}：埋め合わせがボーナス点の決まりに混ざる`);
         const o = cre.options(Object.assign(dr, { goal: Object.keys(D.GOALS)[0], sex: "女", profile: { name: "テ", age: "20" } }), G.rand);
         if (!o.r13 || o.r13.gold !== x.gold || o.r13.herb !== x.herb) f(`${cls}：冒険に渡す形に埋め合わせが無い（${JSON.stringify(o.r13)}）`);
         const lines = G.r13.creLines(dr);
