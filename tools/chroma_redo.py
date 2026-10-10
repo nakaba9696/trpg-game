@@ -51,7 +51,7 @@ def white_bg_mask(rgb, min_area=40):
     return ndimage.binary_dilation(keep, iterations=1)
 
 
-def bg_mask(rgb, boxes, loose_flood=True):
+def bg_mask(rgb, boxes, loose_flood=True, body=None):
     """背景の白：縁につながった白と、指定した四角（囲まれた背景のある所）の中の白。
     白い服・白い肌も同じ白なので、囲まれた所は四角で場所を決める（docs/art/chroma_boxes.json。512×640 の座標）"""
     d = np.abs(rgb.astype(np.float32) - 255).max(axis=2)
@@ -62,6 +62,9 @@ def bg_mask(rgb, boxes, loose_flood=True):
     lab, n = ndimage.label(loose)
     edge = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
     m = np.isin(lab, list(edge))
+    if body is not None:
+        # 体（BiRefNet の形）の中は、縁につながっていても背景にしない（裾が絵の下の縁に触れる白い服・前掛けを守る）
+        m &= body < 0.5
     H, W = rgb.shape[:2]
     for x0, y0, x1, y1 in boxes:
         sx, sy = W / 512, H / 640
@@ -71,10 +74,13 @@ def bg_mask(rgb, boxes, loose_flood=True):
     return ndimage.binary_dilation(m, iterations=1)
 
 
-def build_init(orig, size, key, boxes, loose_flood=True):
+def build_init(orig, size, key, boxes, loose_flood=True, body_path=""):
     o = Image.open(orig).convert("RGB").resize(size, Image.LANCZOS)
     rgb = np.array(o)
-    m = bg_mask(rgb, boxes, loose_flood)
+    body = None
+    if body_path and os.path.exists(body_path):
+        body = np.array(Image.open(body_path).convert("RGBA").resize(size, Image.LANCZOS))[..., 3].astype(np.float32) / 255
+    m = bg_mask(rgb, boxes, loose_flood, body)
     soft = ndimage.gaussian_filter(m.astype(np.float32), 1.0)[..., None]
     out = rgb * (1 - soft) + np.array(KEYS[key], np.float32) * soft
     return Image.fromarray(out.astype(np.uint8))
@@ -129,10 +135,6 @@ def clean(rgba, key, band=6, min_area=300, faint=0.55, faint_area=4000):
             rgb[..., 1] = np.where(edge, np.minimum(rgb[..., 1], np.maximum(rgb[..., 0], rgb[..., 2]) + 4), rgb[..., 1])
     # 浮いた線（ゴーストの輪郭）：薄く（透明度 0.6 未満）、細く（太さ 2 画素ほど）、不透明な所から離れた画素を消す。
     # 髪の線は濃いので残る
-    on = a > 0.04
-    thin = ndimage.distance_transform_edt(on) <= 1.5
-    far = ndimage.distance_transform_edt(~(a > 0.9)) > 3
-    a = np.where(on & thin & far & (a < 0.6), 0, a)
     lab, n = ndimage.label(a > 0.04)
     if n > 1:
         sizes = ndimage.sum(np.ones_like(a), lab, range(1, n + 1))
@@ -169,6 +171,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--den", type=float, default=0.45)
     ap.add_argument("--key", default="", choices=["", *KEYS])
+    ap.add_argument("--body", default="", help="体の形（BiRefNet で切った透明つきの絵）のフォルダ。<body>/<id>.webp。白い服の裾を背景にしないため")
     ap.add_argument("--boxes", default=os.path.join(ROOT, "docs", "art", "chroma_boxes.json"))
     ap.add_argument("ids", nargs="+")
     a = ap.parse_args()
@@ -188,7 +191,7 @@ def main():
             ent = allboxes.get(base, [])
             # 一覧の値は四角の並び、または {"boxes": [...], "strict": true}（白い頭巾など、縁につながった白い服がある人はゆるめにたどらない）
             bx, loose = (ent, True) if isinstance(ent, list) else (ent.get("boxes", []), not ent.get("strict"))
-            init = build_init(orig, (W, H), key, bx, loose)
+            init = build_init(orig, (W, H), key, bx, loose, os.path.join(a.body, i + ".webp") if a.body else "")
             pos = re.sub(r"\(?(plain grey background|white background)(:[\d.]+)?\)?", TAGS[key], pos)
             if "solid" not in pos:
                 pos += ", " + TAGS[key]
@@ -208,8 +211,18 @@ def main():
         base = next((b for b in sorted(allboxes, key=len, reverse=True) if i == b or i.startswith(b + "_")), None)
         ent = allboxes.get(base, [])
         g, w = leftovers(rgba, key, ent if isinstance(ent, list) else ent.get("boxes", []))
-        report[i] = {"key": key, "keyish": g, "white_blobs": w}
-        print(f"{i} key={key} 残り：背景色 {g}・白い塊 {w}", flush=True)
+        holes = -1
+        bp = os.path.join(a.body, i + ".webp") if a.body else ""
+        if bp and os.path.exists(bp):
+            # 服・頭巾の穴：体の形の奥（縁から 4 画素より内側）で、透明になった画素。囲まれた背景の四角の中は数えない
+            body = np.array(Image.open(bp).convert("RGBA").resize((rgba.shape[1], rgba.shape[0])))[..., 3] > 200
+            deep = ndimage.binary_erosion(body, iterations=4)
+            inbox = np.zeros(body.shape, bool)
+            for x0, y0, x1, y1 in (ent0 if isinstance(ent0, list) else ent0.get("boxes", [])):
+                inbox[y0:y1, x0:x1] = True
+            holes = int((deep & (rgba[..., 3] < 128) & ~inbox).sum())
+        report[i] = {"key": key, "keyish": g, "white_blobs": w, "holes": holes}
+        print(f"{i} key={key} 残り：背景色 {g}・白い塊 {w}・体の中の穴 {holes}", flush=True)
         json.dump(report, open(rep_path, "w"), indent=1)
 
 

@@ -42,7 +42,8 @@
  "kind_child_f": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 181
  },
  "kind_child_m": {
   "key": "green",
@@ -52,42 +53,50 @@
  "marion": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 60
  },
  "marion_anger": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 7
+  "white_blobs": 0,
+  "holes": 158
  },
  "marion_exasperated": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 98
  },
  "marion_faint_smile": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 38
  },
  "marion_fun": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 6
+  "white_blobs": 0,
+  "holes": 134
  },
  "marion_joy": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 139
  },
  "marion_serious": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 167
  },
  "marion_sorrow": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 159
  },
  "noeris": {
   "key": "green",
@@ -182,46 +191,55 @@
  "severin": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 21,
+  "holes": 137
  },
  "severin_anger": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 123
  },
  "severin_cold": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 17,
+  "holes": 111
  },
  "severin_cry": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 292
  },
  "severin_fun": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 500
  },
  "severin_joy": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 70
  },
  "severin_smitten": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 9,
+  "holes": 141
  },
  "severin_sorrow": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 231
  },
  "severin_wicked": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 0,
+  "holes": 508
  }
 }
