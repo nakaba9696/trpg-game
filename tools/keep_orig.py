@@ -56,6 +56,21 @@ def bg_region(rgb, body, conf):
     bg = (body < 0.5) | holes
     if conf.get("drop"):
         bg |= poly_mask(conf["drop"], (W, H))
+    if conf.get("drop_greenish"):
+        # 緑がかった布（オリーブ色）とその暗い影を背景にする（本体に緑が無い絵だけ）
+        R, G, Bc = c[..., 0], c[..., 1], c[..., 2]
+        gr = (G >= R - 4) & (G > Bc + 6) & (c.mean(axis=2) < 200)
+        bg |= ndimage.binary_opening(gr, iterations=1)
+    if conf.get("only"):
+        bg |= ~poly_mask(conf["only"], (W, H))  # この多角形の外はすべて背景（布・泥など周りの物を消して本体だけにする）
+    if conf.get("drop_brown"):
+        # 木の幹・枝など（茶色）を、四角の中だけ背景にする（白い髪・服は残る）
+        R, G, Bc = c[..., 0], c[..., 1], c[..., 2]
+        brown = (R - Bc > 25) & (R >= G) & (c.max(axis=2) < 215) & (G - Bc > 5)
+        box = np.zeros(brown.shape, bool)
+        for x0, y0, x1, y1 in conf["drop_brown"]:
+            box[y0:y1, x0:x1] = True
+        bg |= ndimage.binary_dilation(brown & box, iterations=2) & box & ~(c.min(axis=2) > 225)
     if conf.get("drop_arc"):
         # 体の後ろの弧など、決まった色（くすんだ桃色）の所だけを、四角の中で背景にする
         R, G, Bc = c[..., 0], c[..., 1], c[..., 2]

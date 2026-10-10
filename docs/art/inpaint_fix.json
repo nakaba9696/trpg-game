@@ -1,0 +1,225 @@
+{
+ "anselmo": {
+  "lines": [
+   [
+    96,
+    300,
+    400,
+    178,
+    9,
+    [
+     196,
+     156,
+     104
+    ]
+   ]
+  ],
+  "mask": [
+   [
+    80,
+    290,
+    110,
+    280,
+    405,
+    165,
+    412,
+    188,
+    110,
+    320,
+    84,
+    320
+   ]
+  ],
+  "add": "wooden shovel handle in front of his chest, resting on shoulder",
+  "neg": "",
+  "den": 0.4
+ },
+ "bertrand": {
+  "mask": [
+   [
+    100,
+    300,
+    370,
+    300,
+    370,
+    445,
+    100,
+    445
+   ]
+  ],
+  "replace": [
+   [
+    "holding a sketchbook and a stick of charcoal",
+    "holding an open small leather-bound sketchbook in one hand and a charcoal pencil in the other"
+   ]
+  ],
+  "add": "small open sketchbook, paper pages",
+  "neg": "tablet, clipboard, laptop, tray",
+  "den": 0.8
+ },
+ "gensai": {
+  "mask": [
+   [
+    120,
+    150,
+    215,
+    150,
+    215,
+    270,
+    120,
+    270
+   ]
+  ],
+  "replace": [
+   [
+    "twirling a playing card between fingers",
+    "holding a pair of white dice between fingers"
+   ],
+   [
+    "standing on a pier",
+    "standing"
+   ]
+  ],
+  "add": "(holding two white dice between fingers:1.3), dice",
+  "neg": "playing card, card, cards",
+  "den": 0.9
+ },
+ "gerhard": {
+  "mask": [
+   [
+    180,
+    350,
+    320,
+    350,
+    320,
+    452,
+    180,
+    452
+   ]
+  ],
+  "add": "(armored gauntlet hands clasped together:1.2), interlocked fingers",
+  "neg": "face, head, eyes, extra fingers, fused fingers",
+  "den": 0.55
+ },
+ "otmar": {
+  "mask": [
+   [
+    92,
+    385,
+    492,
+    385,
+    492,
+    640,
+    92,
+    640
+   ]
+  ],
+  "replace": [
+   [
+    "holding a snow shovel",
+    "holding a thick leather ledger book in front of him with both hands"
+   ]
+  ],
+  "add": "thick ledger book",
+  "neg": "shovel, snow shovel, spade, cane, staff",
+  "den": 0.85
+ },
+ "salphiel": {
+  "mask": [
+   [
+    232,
+    168,
+    284,
+    168,
+    284,
+    262,
+    232,
+    262
+   ],
+   [
+    200,
+    255,
+    362,
+    255,
+    362,
+    352,
+    200,
+    352
+   ]
+  ],
+  "mask_variants": [
+   [
+    226,
+    160,
+    306,
+    160,
+    306,
+    205,
+    226,
+    205
+   ]
+  ],
+  "add": "(holding a round silver basin filled with clear water with both hands:1.2), white veil hanging down over chest, empty basin",
+  "neg": "face, second face, head, eyes, doll, small person, figurine, tray, plate",
+  "den": 0.6,
+  "paint": [
+   [
+    234,
+    172,
+    282,
+    172,
+    286,
+    262,
+    230,
+    262,
+    244,
+    244,
+    244
+   ]
+  ]
+ },
+ "severin": {
+  "bg": [
+   0,
+   255,
+   0
+  ],
+  "mask": [
+   [
+    0,
+    0,
+    512,
+    0,
+    512,
+    640,
+    0,
+    640
+   ]
+  ],
+  "add": "clean lineart, (flat solid green background:1.3)",
+  "neg": "jpeg artifacts, noise",
+  "den": 0.28
+ },
+ "bandit": {
+  "bg": [
+   0,
+   255,
+   0
+  ],
+  "mask": [
+   [
+    0,
+    0,
+    512,
+    0,
+    512,
+    512,
+    0,
+    512
+   ]
+  ],
+  "add": "clean lineart, (flat solid green background:1.3)",
+  "neg": "jpeg artifacts, noise",
+  "den": 0.3
+ }
+}
