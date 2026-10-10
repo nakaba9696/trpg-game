@@ -4,6 +4,8 @@
 - 体：BiRefNet の透明度
 - 範囲（key）：範囲の中だけ、背景の色との差から透明度を出す（後光・光の輪・煙・水しぶきなど、ふちが半透明な物）
 - 範囲（solid）：範囲の中は不透明（背景と同じような色の岩・地面など、色の差で分けられない物）
+- 範囲（drop）：範囲の中は必ず透明（体と地続きに描かれた、持ち運べない背景。洞窟のアーチなど）
+- 1 枚ごとに "lo"・"hi"（色の差の幅）も変えられる（白い背景のもやを残さないときは lo を上げる）
 二つの大きい方を透明度にし、範囲の半透明の所は背景の色を割り戻して色を戻す。
 
 範囲は docs/art/keep_regions.json（512×512 の座標）：
@@ -27,8 +29,9 @@ import cutout_model as cm  # noqa: E402
 def region_masks(shapes, size):
     key = Image.new("L", size, 0)
     solid = Image.new("L", size, 0)
+    drop = Image.new("L", size, 0)
     for s in shapes:
-        layer = key if s[-1] == "key" else solid
+        layer = {"key": key, "solid": solid, "drop": drop}[s[-1]]
         d = ImageDraw.Draw(layer)
         if s[0] == "e":
             _, cx, cy, rx, ry, _ = s
@@ -36,7 +39,7 @@ def region_masks(shapes, size):
         else:
             d.polygon(list(zip(s[1][0::2], s[1][1::2])), fill=255)
     soft = lambda m: np.array(m.filter(ImageFilter.GaussianBlur(3))).astype(np.float32) / 255
-    return soft(key), soft(solid)
+    return soft(key), soft(solid), soft(drop)
 
 
 def main():
@@ -66,10 +69,11 @@ def main():
             B = np.median(rgb[max(0, y - 4):y + 5, max(0, x - 4):x + 5].reshape(-1, 3), axis=0).astype(np.float32)
         else:
             B = cm.border_bg(rgb)
-        kmask, smask = region_masks(r["shapes"], (rgb.shape[1], rgb.shape[0]))
+        kmask, smask, dmask = region_masks(r["shapes"], (rgb.shape[1], rgb.shape[0]))
         diff = np.abs(rgb.astype(np.float32) - B).max(axis=2)
-        key = np.clip((diff - a.lo) / (a.hi - a.lo), 0, 1)
-        alpha = np.maximum(body, np.maximum(key * kmask, smask))
+        lo, hi = r.get("lo", a.lo), r.get("hi", a.hi)
+        key = np.clip((diff - lo) / (hi - lo), 0, 1)
+        alpha = np.maximum(body, np.maximum(key * kmask, smask)) * (1 - dmask)
         a8 = (alpha * 255).astype(np.uint8)
         a8 = np.where(a8 < 8, 0, np.where(a8 > 247, 255, a8)).astype(np.uint8)
         col = cm.decontaminate(rgb, a8, B)
@@ -86,7 +90,7 @@ def main():
             ov = Image.new("RGBA", p.size, (0, 0, 0, 0))
             d = ImageDraw.Draw(ov)
             for s in r["shapes"]:
-                c = (0, 255, 255, 255) if s[-1] == "key" else (255, 160, 0, 255)
+                c = {"key": (0, 255, 255, 255), "solid": (255, 160, 0, 255), "drop": (255, 0, 0, 255)}[s[-1]]
                 if s[0] == "e":
                     _, cx, cy, rx, ry, _ = s
                     d.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], outline=c, width=3)
