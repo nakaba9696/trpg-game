@@ -59,7 +59,7 @@
     q.sig = now;
     if (out.length) {
       q.bang = true;
-      if (!S.over && G.log) out.forEach((x) => G.log("quest", U.line(x)));
+      if (!S.over && G.log) out.forEach((x) => { if (x.how !== "ready") G.log("quest", U.line(x)); }); // 「果たした」は Q5 の知らせが出すので二重にしない（R12 低 6）
     }
     return out;
   };
