@@ -1,4 +1,4 @@
-/* R11（R10 のプレイレビューの画面の指摘）。zzzzzzzzz_r11_ui.js と組 */
+/* R11（R10 のプレイレビューの画面の指摘）。zzzzzz_zr11_ui.js と組 */
 
 /* 高 2：遊び方の一行は、右の窓（#u21side）の外で、窓のすぐ上に浮かべる（PC） */
 body.u21pc:not(.u31m) .r11tip { position: fixed; z-index: 6; left: var(--u21-sx); width: var(--u21-sw); box-sizing: border-box;

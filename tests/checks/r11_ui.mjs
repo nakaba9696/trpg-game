@@ -27,7 +27,7 @@ export default async ({ fail: failTo, ok }) => {
   for (const id of ["#mHp", "#mMp", "#mGold"]) if (!u28.includes(`"${id}"`)) fail(`高 1：u28 が ${id} の中身だけを戻していない`);
   const u21 = code(read("src/ui/zzzzz_u21_side.js"));
   if (!/querySelectorAll\("\.u29where"\)[^\n]*x !== where[^\n]*remove\(\)/.test(u21)) fail("高 1：paintWhere が写しの .u29where を消していない");
-  const js = code(read("src/ui/zzzzzzzzz_r11_ui.js")), css = read("src/ui/zzzzzzzzz_r11_ui.css");
+  const js = code(read("src/ui/zzzzzz_zr11_ui.js")), css = read("src/ui/zzzzzzzzz_r11_ui.css");
   if (!/play\.after\(tip\)/.test(js)) fail("高 2：遊び方の一行を右の窓の外へ出していない");
   if (!/body\.u21pc:not\(\.u31m\) \.r11tip \{ position: fixed;/.test(css) || !/body\.u31m \.r11tip \{ position: fixed;/.test(css)) fail("高 2：外へ出した遊び方の一行の置き場所が無い");
   if (!/\.u13result \.u13go, \.u13death \.u13go \{ position: sticky;/.test(css)) fail("中 6：「先へ進む」を窓の下に貼り付けていない");
