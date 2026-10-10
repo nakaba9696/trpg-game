@@ -3,9 +3,10 @@
 # 目の光・歯・白目・白い服・白い髪・白い毛皮は残す（線画に囲まれていない・陰がある・中に物を閉じこめている・外から遠い塊は消さない。迷う塊は残す）。
 # 自動で見分けられない所は overrides.json に書く（"keep"＝その人はぜんぶ残す、[[x0,y0,x1,y1], …]＝その四角に掛かる塊は残す。差分にも効く）。
 # 境目の 2px は半透明にして白を抜く（ソフトマット）。透明を持つ絵は keyOut がそのまま使う（transparent()）ので、外周の背景も透明にした完成品にする。
-# すでに透明な絵・描き直し待ち（redraw）の絵・別のセッションが直している絵（SKIP）は飛ばす。
+# すでに透明な絵・描き直し待ち（redraw）の絵・別のセッションが直している絵（SKIP）は飛ばす。魔物は足もとが下の縁に付くので keyOut に bottom。
+# 比べる背景の色は、外の背景の色をぼかして広げた「その場所の背景の色」（縁や上下で濃淡のある背景でも、囲まれた所を近くの背景と比べる）。
 # 使い方：python3 tools/a20/a20_gaps.py [出力先（既定は assets/。上書き）] [名前の正規表現]。要るもの：Python 3・numpy・scipy・Pillow（webp つき）・node
-# 結果の一覧は <出力先>/a20_result.json（確かめの一覧画像は docs/review/a20/）。レーン A（絵）
+# 結果の一覧は <出力先>/a20_result.json（assets/ に書くときは assets/a20_result.json。消してよい。確かめの一覧画像は docs/review/a20/）。レーン A（絵）
 import sys, os, io, re, json, struct, subprocess, numpy as np
 from multiprocessing import Pool
 from scipy import ndimage as ndi
@@ -40,15 +41,22 @@ def bgcolor(im, keyed):
 def decide(s, n, mon=False):
     # s: stats dict. 返り値 True＝消す
     if s["area"] < 6: return False
-    deep = s["area"] >= 400 and s["ink"] >= 0.8 and s["rimDark"] >= 0.5  # 腕と胴のあいだなど、大きく濃い線に囲まれた所は奥まででも
-    if s["dmin"] > (90 if deep else NEAR): return False
-    if s["area"] <= n * 0.004:
-        if not (s["exact"] >= 0.3 and s["med"] <= 5): return False
-    elif not (s["exact"] >= 0.6 and s["med"] <= 3 and s["sd"] <= 2.5): return False
-    if s["ink"] < 0.5: return False  # 縁が線画に囲まれていない（茸の斑点・歯・模様）
+    big_flat = s["area"] >= 2000 and s["med"] <= 3 and s["sd"] <= 2.0 and s["dloc"] <= 1.0  # 大きく、近くの背景とまったく同じ色の塊（マントの下など）
+    if s["ink"] < (0.4 if big_flat else 0.5): return False  # 縁が線画に囲まれていない（茸の斑点・歯・模様）
     if s["isl"] >= 0.03: return False  # 中に閉じこめた物がある（仮面の目・頭蓋の穴・羊毛の巻き毛）
-    if mon: return s["area"] >= 400   # 魔物：白い面・斑点・刃・仮面が多いので、大きな隙間だけ
-    if s["dmin"] <= 6 or deep: return True   # 外の透明な所と線一本でへだてられている
+    if s["tint"] >= 5: return False  # 色みがある（色白の肌・色のついた白）
+    if s["area"] >= 40 and (s["th"] < 1.6 or s["wmax"] <= 2.9): return False  # 細く長い白（服の縁取り・光の筋）
+    # 中身：背景に近く平ら（囲まれた所の背景は、外の背景より少しだけ色がずれていることが多い）
+    if s["area"] <= n * 0.004:
+        if not (s["med"] <= 6 and s["sd"] <= 4.5 and s["e6"] >= 0.5): return False
+    elif not (s["med"] <= 6 and s["e6"] >= 0.5 and s["sd"] <= 3.0): return False
+    strong = s["ink"] >= 0.95 and s["rimDark"] >= 0.8  # 濃い線にぐるりと囲まれている（腕と胴・脚のあいだ・武器と体）
+    deep = s["area"] >= 400 and s["ink"] >= 0.8 and s["rimDark"] >= 0.5
+    if mon:  # 魔物：白い面・斑点・刃・仮面が多いので、大きめの隙間だけ。股や腕の間の大きな塊は外から離れていてもよい
+        if s["area"] < 150: return False
+        return s["dmin"] <= NEAR or (deep and s["dmin"] <= 150) or (strong and s["dmin"] <= 90)
+    if s["dmin"] > (90 if (deep or strong) else NEAR): return False
+    if s["dmin"] <= 6 or deep or strong: return True   # 外の透明な所と線一本でへだてられている
     if s["area"] >= 500: return True
     return s["dmin"] <= 20 and s["rimDark"] < 0.5
 
@@ -58,9 +66,15 @@ def process(im, keyed, dbg=None, mon=False, keep=None):
     out = keyed.copy()
     if B is None: return out, []
     o = im[..., :3].astype(float)
-    dist = np.abs(o - B).max(-1)
     A = keyed[..., 3]
     outside = A < 16
+    # その場所の背景の色（外の背景の色をぼかして広げた地図。上下や縁で濃淡のある背景でも、囲まれた所はその近くの背景の色と比べる）
+    ref = outside & (np.abs(o - B).max(-1) <= 40)
+    wgt = ndi.gaussian_filter(ref.astype(float), 24)
+    Bm = np.stack([ndi.gaussian_filter(o[..., c] * ref, 24) for c in range(3)], -1)
+    ok = wgt > 0.02
+    Bm = np.where(ok[..., None], Bm / np.maximum(wgt, 1e-6)[..., None], B)
+    dist = np.abs(o - Bm).max(-1)
     cand = (dist <= TOL) & ~outside
     lab, n = ndi.label(cand)
     if n == 0: return out, []
@@ -99,8 +113,12 @@ def process(im, keyed, dbg=None, mon=False, keep=None):
             lb = o[Y0:Y1, X0:X1][ob].mean(0)
             st["dloc"] = float(np.abs(o[y0:y1, x0:x1][m].mean(0) - lb).max())
         else: st["dloc"] = 99.0
+        mc = (o[y0:y1, x0:x1][m] - Bm[y0:y1, x0:x1][m]).mean(0)
+        st["tint"] = float(mc.max() - mc.min())  # 色み（背景の色からの、色ごとのずれの差。肌・色のついた白はずれる）
         st["isl"] = float((ndi.binary_fill_holes(m).sum() - area) / area)
         per = int((m & ~ndi.binary_erosion(m)).sum())
+        st["th"] = float(area / max(1, per))  # 太さの目安
+        st["wmax"] = float(ndi.distance_transform_edt(m).max())  # いちばん太い所の半分
         st["compact"] = float(4 * np.pi * area / max(1, per) ** 2)
         st["kill"] = decide(st, H * W, mon)
         if keep == "keep": st["kill"] = False
@@ -133,12 +151,12 @@ def process(im, keyed, dbg=None, mon=False, keep=None):
     for y, x in zip(ys, xs):
         if best[y, x] < 30: continue
         F = o[py[y, x], px[y, x]]; c = o[y, x]
-        fb = F - B; L = (fb * fb).sum()
-        a = float(np.clip(((c - B) * fb).sum() / L, 0, 1))
+        Bp = Bm[y, x]; fb = F - Bp; L = (fb * fb).sum()
+        a = float(np.clip(((c - Bp) * fb).sum() / L, 0, 1))
         if a >= 0.98: continue
         a0 = res[y, x, 3] / 255
         if a <= 0.02: res[y, x, 3] = 0; continue
-        res[y, x, :3] = np.clip((res[y, x, :3] - (1 - a) * B) / a, 0, 255)
+        res[y, x, :3] = np.clip((res[y, x, :3] - (1 - a) * Bp) / a, 0, 255)
         res[y, x, 3] = a0 * a * 255
     res[gone] = 0
     out = np.round(res).astype(np.uint8)
@@ -147,7 +165,7 @@ def process(im, keyed, dbg=None, mon=False, keep=None):
     return out, stats
 
 # ---- 全部の絵
-SKIP = set("lumia e4_mudhound e3_azlag anselmo bertrand gensai gerhard otmar malvina salphiel rui severin liesel aurelia".split())
+SKIP = set("lumia e4_mudhound e3_azlag anselmo bertrand gensai gerhard otmar malvina salphiel rui severin liesel aurelia timo wolfram bandit e3_yuzuel e4_seafog w4_gatekeeper".split())
 MOODS = json.load(open(f"{REPO}/docs/art/moods.json"))["moods"].keys()
 MOODS = sorted(set(list(MOODS) + ["joy", "anger", "sorrow", "fun"]), key=len, reverse=True)
 redraw = set(os.popen(f"cd {REPO} && node -e 'import(\"./tools/assets.mjs\").then(m=>console.log([...m.redrawKeys()].join(\" \")))'").read().split())
@@ -205,5 +223,5 @@ if __name__ == "__main__":
             out.append(r)
             if i % 50 == 0: print(i, r, flush=True)
     out.sort(key=lambda r: r["key"])
-    json.dump(out, open(os.path.join(HERE, "a20_result.json") if OUT.endswith("assets") else f"{OUT}/a20_result.json", "w"), ensure_ascii=False, indent=0)
+    json.dump(out, open(f"{OUT}/a20_result.json", "w"), ensure_ascii=False, indent=0)
     print("done", sum(1 for r in out if "skip" not in r), "made", sum(1 for r in out if "skip" in r), "skipped")

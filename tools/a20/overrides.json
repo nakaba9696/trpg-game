@@ -14,10 +14,10 @@
  ],
  "portraits/barnabe": [
   [
-   310,
-   10,
-   390,
-   110
+   300,
+   0,
+   410,
+   170
   ]
  ],
  "portraits/berangere": [
@@ -89,6 +89,12 @@
    140,
    350,
    250
+  ],
+  [
+   280,
+   240,
+   380,
+   440
   ]
  ],
  "portraits/kind_guard_m": [
@@ -169,14 +175,6 @@
    270
   ]
  ],
- "portraits/trude": [
-  [
-   100,
-   0,
-   420,
-   280
-  ]
- ],
  "portraits/yuzuel": "keep",
  "portraits/dario": [
   [
@@ -253,6 +251,97 @@
    0,
    300,
    90
+  ]
+ ],
+ "portraits/aubin": [
+  [
+   150,
+   60,
+   360,
+   200
+  ]
+ ],
+ "portraits/erna": "keep",
+ "portraits/kind_archer_m": [
+  [
+   190,
+   500,
+   330,
+   640
+  ]
+ ],
+ "monsters/e1_frogprophet": [
+  [
+   200,
+   60,
+   340,
+   170
+  ],
+  [
+   40,
+   60,
+   140,
+   170
+  ]
+ ],
+ "monsters/e1_sleepgiant": "keep",
+ "monsters/e4_firearrowimp": [
+  [
+   160,
+   190,
+   240,
+   270
+  ]
+ ],
+ "monsters/e4_cliffharpy": [
+  [
+   180,
+   130,
+   260,
+   210
+  ]
+ ],
+ "monsters/e4_hillorc": [
+  [
+   340,
+   220,
+   440,
+   320
+  ],
+  [
+   350,
+   370,
+   430,
+   440
+  ]
+ ],
+ "monsters/e4k_maskguard": "keep",
+ "monsters/e4k_rustgnaw": "keep",
+ "monsters/zombie": "keep",
+ "monsters/w3_tidemaw": "keep",
+ "monsters/w4_borer": "keep",
+ "monsters/w4_borermother": "keep",
+ "monsters/slime": "keep",
+ "monsters/e4k_whiteacolyte": "keep",
+ "monsters/w1_husk": "keep",
+ "monsters/goblin": "keep",
+ "monsters/e4k_taster": "keep",
+ "monsters/orc": "keep",
+ "monsters/m5_oldbeast": "keep",
+ "monsters/w1_tanuki": [
+  [
+   120,
+   180,
+   200,
+   270
+  ]
+ ],
+ "monsters/w4_saltwalker": [
+  [
+   330,
+   330,
+   420,
+   440
   ]
  ]
 }
