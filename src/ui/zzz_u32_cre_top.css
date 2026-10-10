@@ -1,0 +1,4 @@
+/* U32：能力値の一覧の上に、合計と術の才の要約を一行ずつ */
+.u32top { display: flex; flex-direction: column; gap: 2px; padding: 4px 0 6px; border-bottom: 1px solid var(--rule); }
+.u32top .statSum { border-top: 0; padding: 2px 0; justify-content: flex-start; }
+.u32tal { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: 13.5px; }
