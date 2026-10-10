@@ -1,4 +1,4 @@
-// R11：十年の区切り・能力値 99・正気の見え方（src/engine/zzzzzzzzzzzzzzzzzzz_r11_*.js・src/data/r11_decade.js・src/ui/zzzzzzzzz_r11_mind.js）
+// R11：十年の区切り・能力値 99・正気の見え方（src/engine/zzzzzzzzzzzzzzzzzzz_r11_*.js・src/data/r11_decade.js・src/ui/zzzzzz_r11_mind.js）
 // - 能力値：成長・装備で 99 を超えない。古いセーブの 99 超えは読み込みで 99 に
 // - 十年：九年目・十年目・残り三か月の知らせが一度ずつ。十年に着くと（戦いの途中なら終わってから）節目「十年」で引退し、
 //   墓碑・年表・トロフィー（r11_decade）・「その後」（引退の歳＝始めた歳＋10）が残る。古いセーブは読み込んだ日から一年は続けられる

@@ -212,6 +212,6 @@
     return Object.assign(out, { after: r.paras, epitaph: r.epitaph, death: r.death });
   };
 
-  // ---------------------------------------------------------------- 人物の表の行（画面 src/ui/zzzzzzzzz_r11_mind.js が正気の行のあとに足す）
+  // ---------------------------------------------------------------- 人物の表の行（画面 src/ui/zzzzzz_r11_mind.js が正気の行のあとに足す）
   G.r11Rows = (S) => (S && S.profile && !S.over ? [[R.ROW_YEAR, `${X.yearNo(S)}年目・引退まで${X.leftText(S)}`]] : []);
 })(globalThis.G = globalThis.G || {});

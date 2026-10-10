@@ -115,6 +115,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   {
     const H = fresh(601);
     const S = H.S;
+    if (H.r11) H.r11.years = () => 999;   // 同じ道を何百回も往復すると十年を越えるので、十年の引退（R11）は止めておく
     // 手で場所を置いて、同じ道を何度も往復する
     const trial = (from, to, times) => {
       let sum = 0, max = 0, arrived = 0;
