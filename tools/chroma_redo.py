@@ -227,6 +227,7 @@ def main():
     ap.add_argument("--body", default="", help="体の形（BiRefNet で切った透明つきの絵）のフォルダ。<body>/<id>.webp。白い服の裾を背景にしないため")
     ap.add_argument("--boxes", default=os.path.join(ROOT, "docs", "art", "chroma_boxes.json"))
     ap.add_argument("--keep-small", type=int, default=0, help="--fresh で、縁につながらないこの画素数未満の緑は残す（緑の目の人だけ。例 100）")
+    ap.add_argument("--tint-box", default="", help="--fresh で、この四角（x0,y0,x1,y1）の中の黄緑を、近くの赤み・桃色の色に塗り直す（severin の髪）")
     ap.add_argument("--fresh", default="", help="最初から描いた絵（単色の背景）のフォルダ。土台を作らず、縁の色をキーにして抜くだけ")
     ap.add_argument("ids", nargs="+")
     a = ap.parse_args()
@@ -239,6 +240,16 @@ def main():
         for i in a.ids:
             rgb = np.array(Image.open(os.path.join(a.fresh, i + ".webp")).convert("RGB"))
             rgba, B = border_key_cut(rgb, a.keep_small)
+            if a.tint_box:
+                # 髪の房のすき間など、緑の照り返しで黄緑に描かれた所を、近くの髪の色に塗り直す（四角の中だけ）
+                x0, y0, x1, y1 = (int(v) for v in a.tint_box.split(","))
+                f = rgba[..., :3].astype(np.float32)
+                box = np.zeros(f.shape[:2], bool); box[y0:y1, x0:x1] = True
+                yg = box & (rgba[..., 3] > 0) & (f[..., 1] - f[..., 2] > 25) & (f[..., 1] >= f[..., 0] - 15)
+                ref = (rgba[..., 3] > 200) & (f[..., 0] - f[..., 1] > 20)
+                if ref.any() and yg.any():
+                    _, (iy, ix) = ndimage.distance_transform_edt(~ref, return_indices=True)
+                    rgba[yg, :3] = rgba[iy, ix][yg, :3]
             rgba = clean(rgba, "green")
             ri.save(Image.fromarray(rgba, "RGBA"), os.path.join(a.out, "cut", i + ".webp"), "portraits")
             print(f"{i} 背景 {B.astype(int).tolist()}", flush=True)
