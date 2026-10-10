@@ -308,6 +308,8 @@
   function paintWhere(S) {
     const mbar = $("#mbar");
     if (!mbar) return;
+    // 写しが残っていたら消す（R10 高 1。一行だけにする）
+    mbar.querySelectorAll(".u29where").forEach((x) => { if (x !== where) x.remove(); });
     if (where.parentNode !== mbar) { const name = mbar.querySelector(".mname"); if (name) name.after(where); else mbar.prepend(where); }
     const U28 = G.u28 || {};
     const L = ((G.data || {}).LOCS || {})[S.loc] || {};

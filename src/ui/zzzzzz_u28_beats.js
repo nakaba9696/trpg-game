@@ -113,13 +113,26 @@
   }
   U.release = release;
   // HP・MP・所持金の札（#mbar）：本文を出している間は押す前の値のまま。得たものの枠が出たとき（無ければ出しきったとき）に今の値へ
-  //   中の要素は id で見た目が決まっているので写しは置かず、押す前の中身をいったん戻しておき、そのときに描いた中身へ差し替える
-  const barOf = () => { const b = $("#mbar"); return b ? { html: b.innerHTML, cls: b.className } : null; };
+  //   帯の中にはほかのファイルが足した要素（いる所の一行 #u29where・仲間の札など）があり、参照を持たれているので、帯を丸ごと書き戻さない。
+  //   HP・MP・所持金の中身と帯の class だけを写して戻す（R10 高 1：丸ごと書き戻すと「いる所・日付」の行が一つずつ増えた）
+  const BAR_PARTS = ["#mHp", "#mMp", "#mGold", "#mHpBar", "#mMpBar"];
+  const barOf = () => {
+    const b = $("#mbar");
+    if (!b) return null;
+    const parts = BAR_PARTS.map((q) => { const el = b.querySelector(q); return el ? { q, html: el.innerHTML, cls: el.className, css: el.style.cssText } : null; }).filter(Boolean);
+    return { cls: b.className, parts, key: b.className + "|" + parts.map((x) => x.html + "/" + x.cls + "/" + x.css).join("|") };
+  };
+  const putBar = (B) => {
+    const b = $("#mbar");
+    if (!B || !b) return;
+    b.className = B.cls;
+    B.parts.forEach((x) => { const el = b.querySelector(x.q); if (!el) return; el.innerHTML = x.html; el.className = x.cls; el.style.cssText = x.css; });
+  };
   let barNow = null;
   function releaseBar() {
-    const B = barNow, b = $("#mbar");
+    const B = barNow;
     barNow = null;
-    if (B && b) { b.innerHTML = B.html; b.className = B.cls; }
+    putBar(B);
   }
   U.releaseBar = releaseBar;
 
@@ -162,10 +175,10 @@
     const p = U.plan(rows.map((el) => ({ kind: kindOf(el), len: (el.textContent || "").length })));
     rows.forEach((el, i) => { if (i > 0) { el.classList.add("u28wait"); el.classList.remove("u28show"); } });
     run = { rows, i: 1, steps: p.steps, arrive: p.arrive, timer: 0 };
-    const bar = $("#mbar");
-    if (before && before.bar && bar && (bar.innerHTML !== before.bar.html || bar.className !== before.bar.cls)) {
-      barNow = { html: bar.innerHTML, cls: bar.className };
-      bar.innerHTML = before.bar.html; bar.className = before.bar.cls;
+    const now = barOf();
+    if (before && before.bar && now && now.key !== before.bar.key) {
+      barNow = now;
+      putBar(before.bar);
     }
     body.classList.add("u28busy");
     if (p.arrive >= 1) {
