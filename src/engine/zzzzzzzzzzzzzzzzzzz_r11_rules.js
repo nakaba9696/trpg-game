@@ -2,8 +2,8 @@
 // 名前の頭の z は、k1（戦技）・b5（仲間の手当て）・m2（仲間）より後に読ませて、その結果を包むため。元のファイルはほとんど書き換えない。
 //   中 7：訓練場の稽古・酒場などで教わる技に、使える武器の型（「拳で使う」）を出す。今の武器で使えない技は a.off（画面が薄くする）
 //   中 10：仲間の好感度が下がったとき、理由を一行（G.m2Why。companions_m2.js の日ごと・戦いのあとから呼ぶ）
-//   低 29：探索・施設で、仲間の手当ての組に「薬草を使う（自分に）」を並べる（b5self:<品>。手番は進まない。持ち物欄から使うのと同じ）
-//   低 30：訓練場の「今は選べない」稽古を、理由ごとに一行にまとめる（能力値が足りないものは技ごとのまま）
+//   低 29：探索・施設で、仲間の手当ての組に「薬草を使う（自分に）」を並べる（b5self:<品>。仲間に使う b5use と同じく一手。時は進まない）
+//   低 30：訓練場の「今は選べない」稽古を、理由ごとに一行にまとめる（G.r11TrainGroups。詰めるのは画面。能力値が足りないものは技ごとのまま）
 // セーブ（G.S）に足すもの：S.r11why = { "仲間の id:理由": { day, sum } }（理由の行を出した日と、まだ出していない減り）。無くても動く
 (function (G) {
   const D = G.data;
@@ -55,27 +55,29 @@
           a.sub = [G.r11Style(id) + (off ? "（今の武器では使えない）" : ""), a.sub].filter(Boolean).join("・");
           if (off) a.off = true;
         });
-        // 訓練場：押せない稽古を理由ごとに一行（理由が同じものが二つ以上なら）
-        if (!/^教官に稽古/.test(grp.title || "")) return;
-        //   能力値が足りない稽古は、技ごとに足りない能力が違うので一行ずつのまま（どの技に何が要るか分かるように）
-        const whyOf = (a) => (a.disabled && skillOf(a) && !K.needMiss(skillOf(a), S).length ? K.trainWhy(skillOf(a), S) || "今は選べない" : null);
-        const by = new Map();
-        grp.list.forEach((a) => { const w = whyOf(a); if (w != null) { if (!by.has(w)) by.set(w, []); by.get(w).push(a); } });
-        const out = [];
-        let n = 0;
-        grp.list.forEach((a) => {
-          const w = whyOf(a);
-          if (w == null) { if (a.disabled && skillOf(a)) a.locked = true; out.push(a); return; }
-          const same = by.get(w);
-          if (same.length < 2) { a.locked = true; out.push(a); return; }
-          if (same[0] !== a) return;
-          out.push({ id: `k1trainlock:${n++}`, label: `${same.map((x) => `「${SK[skillOf(x)].name}」`).join("")}の稽古`, sub: w, disabled: true, locked: true, kw: ["技", "稽古", ...same.map((x) => SK[skillOf(x)].name)] });
-        });
-        grp.list = out;
+        // 訓練場：押せない稽古は薄く（理由は sub にある。「今は選べない」を重ねない）
+        if (/^教官に稽古/.test(grp.title || "")) grp.list.forEach((a) => { if (a.disabled && skillOf(a)) a.locked = true; });
       });
       return g;
     };
   }
+
+  // 低 30：訓練場の押せない稽古を、理由ごとにまとめる（画面が一行に詰める。選択肢そのものは残すので、id で引く所は今まで通り）
+  //   能力値が足りない稽古は、技ごとに足りない能力が違うので一行ずつのまま。返り値：[{ why, ids: [選択肢の id], label }]（二つ以上のものだけ）
+  G.r11TrainGroups = (list, S) => {
+    S = S || G.S;
+    if (!K || !S) return [];
+    const by = new Map();
+    (list || []).forEach((a) => {
+      const id = skillOf(a);
+      if (!a.disabled || !id || !/^k1train:/.test(a.id) || K.needMiss(id, S).length) return;
+      const w = K.trainWhy(id, S);
+      if (!w) return; // 押せる稽古（画面が描いている途中で押せなく見えるだけ）はまとめない
+      if (!by.has(w)) by.set(w, []);
+      by.get(w).push(a);
+    });
+    return [...by].filter(([, v]) => v.length > 1).map(([why, v]) => ({ why, ids: v.map((a) => a.id), label: `${v.slice(0, 3).map((a) => `「${SK[skillOf(a)].name}」`).join("")}${v.length > 3 ? `ほか ${v.length - 3} の` : "の"}稽古` }));
+  };
 
   // ---------------------------------------------------------------- 低 29：自分に薬草を使う
   const selfItems = (S) => Object.keys(S.inv || {}).filter((id) => { const it = D.ITEMS[id]; return it && it.type === "use" && it.hp && S.inv[id] > 0; });
@@ -92,16 +94,10 @@
     else groups.push({ title: "手当て", list });
     return groups;
   };
-  const act0 = G.act;
-  G.act = (id) => {
-    if (typeof id === "string" && id.startsWith("b5self:")) {
-      const S = G.S;
-      if (!S || S.over || S.combat) return;
-      const a = G.actions().flatMap((x) => x.list || []).find((x) => x.id === id);
-      if (!a || a.disabled) return;
-      G.useItem(id.slice(7));
-      return;
-    }
-    return act0(id);
+  // core の G.act が選択肢を確かめてから exploreAct に回す（得たもの・振り直しなど、ほかの包みもそのまま通る）
+  const exploreAct0 = G.exploreAct;
+  G.exploreAct = (head, arg, a) => {
+    if (head === "b5self") { G.useItem(arg); return; }
+    return exploreAct0(head, arg, a);
   };
 })(globalThis.G = globalThis.G || {});

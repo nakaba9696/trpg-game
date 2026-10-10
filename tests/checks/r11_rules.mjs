@@ -62,11 +62,19 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       const grp = G.actions().find((g) => /^教官に稽古/.test(g.title || ""));
       if (!grp) F("訓練場に稽古の組が無い");
       else {
-        const seen = {};
-        grp.list.filter((x) => x.disabled && !/が足りない/.test(x.sub || "")).forEach((x) => { seen[x.sub] = (seen[x.sub] || 0) + 1; });
-        const dup = Object.entries(seen).filter(([, n]) => n > 1);
-        if (dup.length) F(`訓練場の押せない稽古が同じ理由で並ぶ：${dup.map(([w, n]) => `${w}×${n}`).join("・")}`);
-        if (!grp.list.some((x) => /^k1trainlock:/.test(x.id))) console.log("NOTE R11 訓練場：まとめる行が無かった（理由が一つずつ）");
+        // 画面が詰める組（G.r11TrainGroups）：まとめたあと、同じ理由の行が二つ以上残らない
+        const groups = G.r11TrainGroups ? G.r11TrainGroups(grp.list, S) : null;
+        if (!groups) F("訓練場の稽古をまとめる G.r11TrainGroups が無い");
+        else {
+          const folded = new Set(groups.flatMap((x) => x.ids.slice(1)));
+          const seen = {};
+          grp.list.filter((x) => x.disabled && !folded.has(x.id) && !/が足りない/.test(x.sub || "")).forEach((x) => { const w = x.sub.split("・").pop(); seen[w] = (seen[w] || 0) + 1; });
+          const dup = Object.entries(seen).filter(([, n]) => n > 1);
+          if (dup.length) F(`訓練場の押せない稽古が同じ理由で並ぶ：${dup.map(([w, n]) => `${w}×${n}`).join("・")}`);
+          if (!groups.length) F("名の無い主人公の訓練場で、まとめる稽古が無い（教官はまだ相手にしない、が並ぶはず）");
+          if (groups.some((x) => !/の稽古$/.test(x.label) || !x.why)) F("まとめた行に名前か理由が無い");
+        }
+        if (grp.list.some((x) => x.disabled && !x.locked)) F("訓練場の押せない稽古に「今は選べない」が重なる（locked が無い）");
       }
     }
   }
@@ -110,10 +118,10 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const a = acts(G).find((x) => x.id === "b5self:herb");
     if (!a) F("探索中に「薬草を使う（自分に）」が無い");
     else {
-      const hp = S.hp, t = S.turn;
+      const hp = S.hp, t = S.day;
       G.act(a.id);
       if (!(S.hp > hp) || S.inv.herb) F(`「薬草を使う（自分に）」で HP が戻らない・薬草が減らない（HP ${hp} → ${S.hp}）`);
-      if (S.turn !== t) F("自分に薬草を使っただけで手番が進む");
+      if (S.day !== t) F("自分に薬草を使っただけで日がたつ");
     }
     S.hp = S.maxHp; S.inv.herb = 1;
     if (acts(G).some((x) => x.id === "b5self:herb")) F("傷が無いのに「薬草を使う（自分に）」が出る");
@@ -125,7 +133,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!G.rerollBlockedTarget) F("エンジンの振り直せない印（G.rerollBlockedTarget）が無い");
     const ctx = vm.createContext({ G: Object.assign(G, {}), console });
     ctx.globalThis = ctx;
-    vm.runInContext(readFileSync(new URL("../../src/ui/zzzzzzzzz_r11_rules.js", import.meta.url), "utf8"), ctx);
+    vm.runInContext(readFileSync(new URL("../../src/ui/zzzzzz_r11_rules.js", import.meta.url), "utf8"), ctx);
     if (ctx.G.rerollBlockedTarget({}) !== false) F("画面に戦闘中の押せない「振り直す」が出る");
   }
 
