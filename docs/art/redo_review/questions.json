@@ -1,0 +1,620 @@
+[
+ {
+  "id": "adele",
+  "file": "docs/art/redo_review/adele.webp",
+  "moods": "docs/art/redo_review/adele_moods.webp",
+  "what": "(b) 人差し指を口に当てた形（設定は「指さし」）が全部の表情に出ている。脚の横に 3 本目の長靴のような物が立っている → 槍をまっすぐ持ち、もう片手は腰に。全部の表情を描き直す",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "aurelia",
+  "file": null,
+  "moods": null,
+  "what": "(a) 蝶の羽の白い模様と縁が半透明・欠けになる（差分 4 枚） → Qwen（ComfyUI）で透明版を作り直す（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "bartolo",
+  "file": "docs/art/redo_review/bartolo.webp",
+  "moods": "docs/art/redo_review/bartolo_moods.webp",
+  "what": "(a) 股の間に残った白い三角を抜いた（表情の差分も）。縁に少しギザギザが残る所がある",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/bartolo_check.webp"
+ },
+ {
+  "id": "bride",
+  "file": "docs/art/redo_review/bride.webp",
+  "moods": "docs/art/redo_review/bride_moods.webp",
+  "what": "(a) 腕と髪の間は、もう透明だった（拡大図）。髪・手・槌の柄のまわりの白い輪は前に消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/bride_check.webp",
+  "neck": "docs/art/redo_review/bride_neck.webp"
+ },
+ {
+  "id": "celestin",
+  "file": "docs/art/redo_review/celestin.webp",
+  "moods": "docs/art/redo_review/celestin_moods.webp",
+  "what": "(b) 手の青く光る物を外し、腰の札を光らない紙にした。木なしで長弓を持つ（表情の差分も）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/celestin_check.webp"
+ },
+ {
+  "id": "clarisse",
+  "file": "docs/art/redo_review/clarisse.webp",
+  "moods": "docs/art/redo_review/clarisse_moods.webp",
+  "what": "(b) 大槌が胸の前に横に浮いている（手で持っていない。両手はハートの形） → 両手で大槌の柄を握り、槌の頭は地面に。全部の表情を描き直す",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "greta",
+  "file": "docs/art/redo_review/greta.webp",
+  "moods": null,
+  "what": "(b) お玉が手から離れて腰の横に浮いている → 片手を腰、もう片手でお玉を持つ",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "hermes",
+  "file": "docs/art/redo_review/p7c/hermes.webp",
+  "moods": "docs/art/redo_review/p7c/hermes_moods.webp",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/hermes_check.webp",
+  "neck": "docs/art/redo_review/p7c/hermes_neck.webp"
+ },
+ {
+  "id": "iori",
+  "file": "docs/art/redo_review/iori.webp",
+  "moods": "docs/art/redo_review/iori_moods.webp",
+  "what": "(b) 前に置いた物が今の電子の機械（光るボタンの盤）に見える → 立って、木の碁盤を小脇に抱え、石をつまむ形（机も背景の物なので使わない）。全部の表情を描き直す",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "kaidel",
+  "file": "docs/art/redo_review/kaidel.webp",
+  "moods": "docs/art/redo_review/kaidel_moods.webp",
+  "what": "(c) 道着が設定の濃い灰色でなく白。有名な格闘ゲームの人物に似て見える。差分の何枚かは頭と腕のすき間に白が残る → 濃い灰色の道着で描き直す。全部の表情も",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "kind_child_f",
+  "file": "docs/art/redo_review/fresh/kind_child_f.webp",
+  "moods": null,
+  "what": "(b) 持ち主の方針で最初から描き直した（txt2img。人物の説明のまま、前の絵はなぞらない）。緑の背景で描き、G − max(R,B) で緑だけ抜いた（白い服・頭巾は抜けない。緑の目のような小さい緑も残す）。首の横は透明。表情差分も新しい絵から作った",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/kind_child_f_check.webp",
+  "neck": "docs/art/redo_review/fresh/kind_child_f_neck.webp"
+ },
+ {
+  "id": "kind_child_m",
+  "file": "docs/art/redo_review/p7c/kind_child_m.webp",
+  "moods": null,
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/kind_child_m_check.webp",
+  "neck": "docs/art/redo_review/p7c/kind_child_m_neck.webp"
+ },
+ {
+  "id": "kind_priest_f_b",
+  "file": "docs/art/redo_review/kind_priest_f_b.webp",
+  "moods": null,
+  "what": "描き直しはやめ、元の絵（#412 の切り抜き）を使う",
+  "status": "ok",
+  "answer": "元の絵のまま（#412 の切り抜き）"
+ },
+ {
+  "id": "kind_ronin_f",
+  "file": "docs/art/redo_review/kind_ronin_f.webp",
+  "moods": "docs/art/redo_review/kind_ronin_f_moods.webp",
+  "what": "(c) 刀の柄が肩の横、鞘の先が右下に離れて出ている（一本につながらない）。切り抜きで鞘の先が消える → 刀を鞘ごと腰に差し、手を柄に",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "marion",
+  "file": "docs/art/redo_review/fresh/marion.webp",
+  "moods": "docs/art/redo_review/fresh/marion_moods.webp",
+  "what": "(b) 持ち主の方針で最初から描き直した（txt2img。人物の説明のまま、前の絵はなぞらない）。緑の背景で描き、G − max(R,B) で緑だけ抜いた（白い服・頭巾は抜けない。緑の目のような小さい緑も残す）。首の横は透明。表情差分も新しい絵から作った",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/marion_check.webp",
+  "neck": "docs/art/redo_review/fresh/marion_neck.webp"
+ },
+ {
+  "id": "mirza",
+  "file": null,
+  "moods": null,
+  "what": "(c) 傘から垂れる操り糸（左の白と赤の細い線）が切り抜きで消える。設定は赤い日傘だが紺の大きな傘 → 赤い日傘・指の操り糸で描き直し、糸を残す透明版にする（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "nora",
+  "file": "docs/art/redo_review/nora.webp",
+  "moods": "docs/art/redo_review/nora_moods.webp",
+  "what": "(c) 設定の革の狩人の服でなく、白い T シャツとサスペンダー（今の服）。後ろの腕が平たい水色の形になっている。sparkle の差分は星が切り抜きで消える → 茶色の革の狩人の服で、全部の表情を描き直す",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "roswitha",
+  "file": "docs/art/redo_review/roswitha.webp",
+  "moods": "docs/art/redo_review/roswitha_moods.webp",
+  "what": "(c) 設定の帳簿が無く羽ペンだけを胸の前で持つ。背中の槍の下の方が切り抜きで消える → 帳簿と羽ペンを持ち、背中の槍が一本につながる形で、全部の表情を描き直す",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "tula",
+  "file": "docs/art/redo_review/tula.webp",
+  "moods": "docs/art/redo_review/tula_moods.webp",
+  "what": "(a) 髪と首の間は、基本の絵と表情の差分すべてで、もう透明だった（拡大図）。毛先の白いふちは前に消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/tula_check.webp",
+  "neck": "docs/art/redo_review/tula_neck.webp"
+ },
+ {
+  "id": "musette",
+  "file": "docs/art/redo_review/musette.webp",
+  "moods": "docs/art/redo_review/musette_moods.webp",
+  "what": "(a) 髪と首・襟の間の白い区画を抜いた。基本の絵と多くの差分ではもう透明で、faint_smile・exasperated の 2 枚に残っていた",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/musette_check.webp",
+  "neck": "docs/art/redo_review/musette_neck.webp"
+ },
+ {
+  "id": "tsuyuha",
+  "file": "docs/art/redo_review/tsuyuha.webp",
+  "moods": "docs/art/redo_review/tsuyuha_moods.webp",
+  "what": "(c) 長椅子に座ってお茶を飲んでいる（背景の物）。前の「座る物ごと残す」は持ち主の新しい決まりで取り消し → 立ち姿（背景の物の要らないポーズ）で、同じ顔・髪・服のまま描き直す。表情の差分も",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "greol",
+  "file": null,
+  "moods": null,
+  "what": "(a) 人外の気・羽などが切り抜きで消えている（表情の差分も全部） → Qwen（ComfyUI）で元の絵を参照にした透明版を作り直す（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "gerhard",
+  "file": "docs/art/redo_review/gerhard.webp",
+  "moods": "docs/art/redo_review/gerhard_moods.webp",
+  "what": "(b) 小さい家を外し、両手をベルトに置く形で描き直した（表情の差分も）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/gerhard_check.webp"
+ },
+ {
+  "id": "noeris",
+  "file": "docs/art/redo_review/p7c/noeris.webp",
+  "moods": "docs/art/redo_review/p7c/noeris_moods.webp",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/noeris_check.webp",
+  "neck": "docs/art/redo_review/p7c/noeris_neck.webp"
+ },
+ {
+  "id": "oren",
+  "file": "docs/art/redo_review/oren.webp",
+  "moods": "docs/art/redo_review/oren_moods.webp",
+  "what": "(b) 椅子に座って肘掛けに手を置いている（椅子が写らず、切り抜くと宙に座る形） → 立ち姿（背景の物の要らないポーズ）で、同じ顔・髪・服のまま描き直す。表情の差分も",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "pipinelle",
+  "file": "docs/art/redo_review/pipinelle.webp",
+  "moods": "docs/art/redo_review/pipinelle_moods.webp",
+  "what": "(b) 見えない台に座った形で、杖が膝の前を横切る → 立ち姿（背景の物の要らないポーズ）で、同じ顔・髪・服のまま描き直す。表情の差分も",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "souhaku",
+  "file": "docs/art/redo_review/souhaku.webp",
+  "moods": "docs/art/redo_review/souhaku_moods.webp",
+  "what": "(b) 手が 2 本の形で描き直した（釣り竿を肩に、片手を腰に。表情の差分も）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/souhaku_check.webp"
+ },
+ {
+  "id": "margot",
+  "file": "docs/art/redo_review/margot.webp",
+  "moods": "docs/art/redo_review/margot_moods.webp",
+  "what": "(b) 金貨の入った樽に座っている（樽は背景の物。金貨は持ち物にできる） → 立ち姿（背景の物の要らないポーズ）で、同じ顔・髪・服のまま描き直す。表情の差分も",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "izra",
+  "file": "docs/art/redo_review/izra.webp",
+  "moods": "docs/art/redo_review/izra_moods.webp",
+  "what": "(b) 岩に腰かけている（背景の物）。鷲と槍と翼は残す → 立ち姿（背景の物の要らないポーズ）で、同じ顔・髪・服のまま描き直す。表情の差分も",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "sylvestre",
+  "file": "docs/art/redo_review/sylvestre.webp",
+  "moods": "docs/art/redo_review/sylvestre_moods.webp",
+  "what": "(b) 足元に焚き火がある（背景の物）。衣の裾に重なっていて、消すと裾が欠ける → 焚き火なしで描き直す。表情の差分も",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "blackknight",
+  "file": null,
+  "what": "(a) 左に大きく広がる黒い外套の影が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_sanno",
+  "file": null,
+  "what": "(a) 後ろの白い光（後光）が消え、緑の滴だけ残る → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_togaoi",
+  "file": null,
+  "what": "(a) 頭の後ろの淡い光輪と、外套の裾の暗い色が半透明になる。鎖も一部消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_midori",
+  "file": "docs/art/redo_review/e3_midori.webp",
+  "what": "(a) 頭の上の緑の葉の茂りと舞う葉がすべて消え、枯れ枝だけになる → Qwen-Image 2.1 で消えた所を残した透明版",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "c2_rustspawn",
+  "file": null,
+  "what": "(a) 兜から立つ煙が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e1_ashhound",
+  "file": null,
+  "what": "(a) 舞う火の粉と、足元の溶岩の一部が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e1_frostgrave",
+  "file": null,
+  "what": "(a) 周りの雪の粒が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e2_marmit",
+  "file": null,
+  "what": "(a) 足元の血だまりが消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_kurobane",
+  "file": null,
+  "what": "(a) 舞い落ちる黒い羽根が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_ashwyrm",
+  "file": "docs/art/redo_review/e4_ashwyrm.webp",
+  "what": "(a) 体の下の桃色に光る地のひびが消える → Qwen-Image 2.1 で消えた所を残した透明版",
+  "status": "ok",
+  "answer": "よい（取り込みOK）"
+ },
+ {
+  "id": "e4_ashwyrm_x",
+  "file": null,
+  "what": "(a) 体の下の桃色の光のたまりが消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_hollowknight",
+  "file": null,
+  "what": "(a) 兜の後ろにたなびく黒い煙が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_redscorpion_x",
+  "file": null,
+  "what": "(a) 足元の赤い光が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4k_chainhound",
+  "file": null,
+  "what": "(a) 足元の溶岩が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "w1_beastpriest",
+  "file": null,
+  "what": "(a) 足元の血だまりが消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "w1_choir",
+  "file": null,
+  "what": "(a) 下の音符が一つ消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "w4_gatekeeper",
+  "file": null,
+  "what": "(a) 左に伸びる赤い光の線（目の光）が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_mudhound_x",
+  "file": null,
+  "what": "(a) 足元の泥と体の一部が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_reedimp",
+  "file": null,
+  "what": "(a) 草（葦）の部分で体が欠けている → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4k_sandimp",
+  "file": null,
+  "what": "(a) 足元の砂が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_redscorpion",
+  "file": null,
+  "what": "(a) 足元の血だまりが消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_stonetroll_x",
+  "file": null,
+  "what": "(a) 後ろの岩が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4k_furrowmole",
+  "file": null,
+  "what": "(a) 足元の土が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4k_bladechick",
+  "file": null,
+  "what": "(a) 影が変に残っている → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_tidecrab",
+  "file": null,
+  "what": "(a) 足元の水と岩が消える → Qwen-Image 2.1 で消えた所を残した透明版（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "albert",
+  "file": "docs/art/redo_review/albert.webp",
+  "what": "(b) 描き直した（髪の後ろの白が残らない絵。鼻眼鏡）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "ok",
+  "answer": "よい（取り込み OK）",
+  "check": "docs/art/redo_review/albert_check.webp",
+  "moods": null
+ },
+ {
+  "id": "angelica",
+  "file": "docs/art/redo_review/angelica.webp",
+  "what": "(b) 同じ人物設定で最初から描き直した（灰色の背景で描き、BiRefNet で抜いて縁の白いふちを消した）。31 歳に見えるよう大人の女性のタグを足した。首の横・髪の内側は黒・マゼンタの上で透明（angelica_neck.webp）。表情差分 8 枚も",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/angelica_check.webp",
+  "moods": "docs/art/redo_review/angelica_moods.webp",
+  "neck": "docs/art/redo_review/angelica_neck.webp"
+ },
+ {
+  "id": "kind_host_f",
+  "file": "docs/art/redo_review/kind_host_f.webp",
+  "what": "(a) 首の左の、髪と襟の間に残った背景を抜いた。縁に少しギザギザが残る所がある",
+  "status": "ok",
+  "answer": "よい（取り込み OK）",
+  "check": "docs/art/redo_review/kind_host_f_check.webp",
+  "moods": null
+ },
+ {
+  "id": "rui",
+  "file": "docs/art/redo_review/p7c/rui.webp",
+  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/rui_check.webp",
+  "moods": "docs/art/redo_review/p7c/rui_moods.webp",
+  "neck": "docs/art/redo_review/p7c/rui_neck.webp"
+ },
+ {
+  "id": "severin",
+  "file": "docs/art/redo_review/fresh/severin.webp",
+  "what": "(b) 持ち主の方針で最初から描き直した（txt2img。人物の説明のまま、前の絵はなぞらない）。緑の背景で描き、G − max(R,B) で緑だけ抜いた（白い服・頭巾は抜けない。緑の目のような小さい緑も残す）。首の横は透明。表情差分も新しい絵から作った",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/severin_check.webp",
+  "moods": "docs/art/redo_review/fresh/severin_moods.webp",
+  "neck": "docs/art/redo_review/fresh/severin_neck.webp"
+ },
+ {
+  "id": "e4_gravejackal",
+  "file": "docs/art/redo_review/e4_gravejackal.webp",
+  "what": "(a) 墓石を残した透明版（--keep-color で切り抜いた）",
+  "status": "ok",
+  "answer": "よい（墓石を残した透明版で取り込みOK）"
+ },
+ {
+  "id": "ogre",
+  "file": "docs/art/redo_review/ogre.webp",
+  "what": "(a) 木を残した透明版（--keep-color で切り抜いた）",
+  "status": "ok",
+  "answer": "よい（木を残した透明版で取り込みOK）"
+ },
+ {
+  "id": "valdun",
+  "file": "docs/art/redo_review/valdun.webp",
+  "what": "(b) 手に持つ物を外し、腕を組む形で描き直した（表情の差分も）。WebUI で描き、切り抜いて縁の白いふちも消した",
+  "status": "fixed",
+  "answer": null,
+  "check": "docs/art/redo_review/valdun_check.webp",
+  "moods": "docs/art/redo_review/valdun_moods.webp"
+ },
+ {
+  "id": "timo",
+  "file": null,
+  "what": "(a) 木を消した透明版（表情の差分も） → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_yuzuel",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_lugu",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_notari",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "graw",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_tojizuki",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_levian",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_tetsukui",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e3_sekaiju",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_vulture",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_rockeater",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_rockeater_x",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_warcrow",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_seafog",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_cinderhound",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ },
+ {
+  "id": "e4_mudhound",
+  "file": null,
+  "what": "(a) 迷った 15 枚：デザインの一部（光・気・炎・岩の台座など）を残した透明版 → Qwen-Image 2.1（まだ。Qwen が途中で止まった）",
+  "status": "todo",
+  "answer": null
+ }
+]
