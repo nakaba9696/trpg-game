@@ -185,7 +185,9 @@ def border_key_cut(rgb, min_bg=0):
         _, (iy, ix) = ndimage.distance_transform_edt(~inner, return_indices=True)
         semi = solid & (alpha < 0.98) & (spill > 4) & ~keep_green
         f[semi] = c[iy, ix][semi]
-    f[rim & ~semi if inner.any() else rim] = f[rim & ~semi if inner.any() else rim] * 0.45
+    # 外周の線：緑かぶりのあった画素だけ暗くすると破線になるので、外周 1 画素を一様に少し暗くしてつながった線にする
+    edge1 = solid & (ndimage.distance_transform_edt(solid) <= 1.5)
+    f[edge1] = f[edge1] * 0.7
     # 縁（4 画素以内）の黄緑のふち（緑の背景の照り返しで毛先が黄緑に描かれた所）：内側の色が黄緑でなければ、内側の色にする
     if inner.any():
         yg = (f[..., 1] - f[..., 2] > 45) & (f[..., 0] - f[..., 2] > 25)
