@@ -151,7 +151,7 @@ def clean(rgba, key, band=6, min_area=300, faint=0.55, faint_area=4000):
     return out
 
 
-def border_key_cut(rgb, min_bg=100):
+def border_key_cut(rgb, min_bg=0):
     """最初から描いた絵（緑の背景。モデルは真緑でなく薄い緑・むらのある緑で描く）を抜く。
     透明度は「緑がほかの色より強い量」（G − max(R,B)）だけで決め、背景の量（縁の中央値）を基準にする。
     白・灰・肌・桃色の髪は G − max(R,B) が 0 以下なので抜けない。囲まれた所の背景も同じように全部抜ける"""
@@ -167,11 +167,36 @@ def border_key_cut(rgb, min_bg=100):
         border = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
         sizes = ndimage.sum(np.ones_like(ex), lab, range(1, n + 1))
         small = [k for k in range(1, n + 1) if k not in border and sizes[k - 1] < min_bg]
-        alpha[np.isin(lab, small)] = 1.0
+        keep_green = np.isin(lab, small)
+        alpha[keep_green] = 1.0
+    else:
+        keep_green = np.zeros(ex.shape, bool)
     # 緑かぶりを取る：残す画素の G を max(R,B) に寄せる
     f = c.copy()
     spill = np.clip(ex, 0, None)
-    f[..., 1] = c[..., 1] - spill * np.clip((1 - alpha) * 2 + 0.5, 0, 1)
+    # 緑かぶりは全部取る（G を max(R,B) まで下げる）。緑の目など残すと決めた小さい緑だけはそのまま
+    f[..., 1] = np.where(keep_green, c[..., 1], c[..., 1] - spill)
+    # 縁（透明な所から 2 画素以内）に緑かぶりのあった画素は、線の色（暗い色）に寄せる
+    solid = alpha > 0.04
+    rim = solid & (ndimage.distance_transform_edt(solid) <= 2) & (spill > 6) & ~keep_green
+    # 半透明の縁で緑かぶりのあった画素は、いちばん近い不透明な内側の画素の色にする（毛先の黄緑のふちを残さない）
+    inner = (alpha > 0.98) & (spill <= 2)
+    if inner.any():
+        _, (iy, ix) = ndimage.distance_transform_edt(~inner, return_indices=True)
+        semi = solid & (alpha < 0.98) & (spill > 4) & ~keep_green
+        f[semi] = c[iy, ix][semi]
+    f[rim & ~semi if inner.any() else rim] = f[rim & ~semi if inner.any() else rim] * 0.45
+    # 縁（4 画素以内）の黄緑のふち（緑の背景の照り返しで毛先が黄緑に描かれた所）：内側の色が黄緑でなければ、内側の色にする
+    if inner.any():
+        yg = (f[..., 1] - f[..., 2] > 45) & (f[..., 0] - f[..., 2] > 25)
+        inside = c[iy, ix]
+        in_yg = (inside[..., 1] - inside[..., 2] > 35)
+        band = solid & (ndimage.distance_transform_edt(solid) <= 4) & yg & ~in_yg & ~keep_green
+        f[band] = inside[band]
+    # 縁の線画（4 画素以内）が緑の照り返しでオリーブ色に描かれていたら、暗い茶に寄せる
+    L = f.mean(axis=2)
+    olive = solid & (ndimage.distance_transform_edt(solid) <= 4) & (L < 160) & (f[..., 1] - f[..., 2] > 18) & ~keep_green
+    f[olive] = np.stack([L * 0.8, L * 0.6, L * 0.5], axis=-1)[olive]
     a8 = (alpha * 255).astype(np.uint8)
     a8 = np.where(a8 < 10, 0, np.where(a8 > 245, 255, a8)).astype(np.uint8)
     f[a8 == 0] = 0
@@ -201,6 +226,7 @@ def main():
     ap.add_argument("--key", default="", choices=["", *KEYS])
     ap.add_argument("--body", default="", help="体の形（BiRefNet で切った透明つきの絵）のフォルダ。<body>/<id>.webp。白い服の裾を背景にしないため")
     ap.add_argument("--boxes", default=os.path.join(ROOT, "docs", "art", "chroma_boxes.json"))
+    ap.add_argument("--keep-small", type=int, default=0, help="--fresh で、縁につながらないこの画素数未満の緑は残す（緑の目の人だけ。例 100）")
     ap.add_argument("--fresh", default="", help="最初から描いた絵（単色の背景）のフォルダ。土台を作らず、縁の色をキーにして抜くだけ")
     ap.add_argument("ids", nargs="+")
     a = ap.parse_args()
@@ -212,7 +238,7 @@ def main():
     if a.fresh:
         for i in a.ids:
             rgb = np.array(Image.open(os.path.join(a.fresh, i + ".webp")).convert("RGB"))
-            rgba, B = border_key_cut(rgb)
+            rgba, B = border_key_cut(rgb, a.keep_small)
             rgba = clean(rgba, "green")
             ri.save(Image.fromarray(rgba, "RGBA"), os.path.join(a.out, "cut", i + ".webp"), "portraits")
             print(f"{i} 背景 {B.astype(int).tolist()}", flush=True)
