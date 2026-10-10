@@ -87,13 +87,13 @@
  },
  {
   "id": "kind_child_f",
-  "file": "docs/art/redo_review/p7c/kind_child_f.webp",
+  "file": "docs/art/redo_review/fresh/kind_child_f.webp",
   "moods": null,
-  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
+  "what": "(b) 持ち主の方針で最初から描き直した（txt2img。人物の説明のまま、前の絵はなぞらない）。緑の背景で描き、G − max(R,B) で緑だけ抜いた（白い服・頭巾は抜けない。緑の目のような小さい緑も残す）。首の横は透明。表情差分も新しい絵から作った",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/kind_child_f_check.webp",
-  "neck": "docs/art/redo_review/p7c/kind_child_f_neck.webp"
+  "neck": "docs/art/redo_review/fresh/kind_child_f_neck.webp"
  },
  {
   "id": "kind_child_m",
@@ -123,13 +123,13 @@
  },
  {
   "id": "marion",
-  "file": "docs/art/redo_review/p7c/marion.webp",
-  "moods": "docs/art/redo_review/p7c/marion_moods.webp",
-  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
+  "file": "docs/art/redo_review/fresh/marion.webp",
+  "moods": "docs/art/redo_review/fresh/marion_moods.webp",
+  "what": "(b) 持ち主の方針で最初から描き直した（txt2img。人物の説明のまま、前の絵はなぞらない）。緑の背景で描き、G − max(R,B) で緑だけ抜いた（白い服・頭巾は抜けない。緑の目のような小さい緑も残す）。首の横は透明。表情差分も新しい絵から作った",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/marion_check.webp",
-  "neck": "docs/art/redo_review/p7c/marion_neck.webp"
+  "neck": "docs/art/redo_review/fresh/marion_neck.webp"
  },
  {
   "id": "mirza",
@@ -474,13 +474,13 @@
  },
  {
   "id": "severin",
-  "file": "docs/art/redo_review/p7c/severin.webp",
-  "what": "(a) 3 回目：今の絵を土台に真緑（#00FF00）の背景で描き直し、背景の色に近い画素を囲まれた所も含めて全部抜いた（クロマキー。BiRefNet は使わない）。囲まれた背景の白は、人ごとに四角で場所を決めて土台で緑にした（docs/art/chroma_boxes.json）。抜いたあと、四角の中の背景の色・白い塊を数えて確かめた（leftovers.json）。首の横・髪の内側・手の間の拡大図（黒・マゼンタ・白の上）は <id>_neck.webp。表情差分も同じやり方",
+  "file": "docs/art/redo_review/fresh/severin.webp",
+  "what": "(b) 持ち主の方針で最初から描き直した（txt2img。人物の説明のまま、前の絵はなぞらない）。緑の背景で描き、G − max(R,B) で緑だけ抜いた（白い服・頭巾は抜けない。緑の目のような小さい緑も残す）。首の横は透明。表情差分も新しい絵から作った",
   "status": "fixed",
   "answer": null,
   "check": "docs/art/redo_review/severin_check.webp",
-  "moods": "docs/art/redo_review/p7c/severin_moods.webp",
-  "neck": "docs/art/redo_review/p7c/severin_neck.webp"
+  "moods": "docs/art/redo_review/fresh/severin_moods.webp",
+  "neck": "docs/art/redo_review/fresh/severin_neck.webp"
  },
  {
   "id": "e4_gravejackal",

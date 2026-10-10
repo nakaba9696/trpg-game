@@ -151,6 +151,34 @@ def clean(rgba, key, band=6, min_area=300, faint=0.55, faint_area=4000):
     return out
 
 
+def border_key_cut(rgb, min_bg=100):
+    """最初から描いた絵（緑の背景。モデルは真緑でなく薄い緑・むらのある緑で描く）を抜く。
+    透明度は「緑がほかの色より強い量」（G − max(R,B)）だけで決め、背景の量（縁の中央値）を基準にする。
+    白・灰・肌・桃色の髪は G − max(R,B) が 0 以下なので抜けない。囲まれた所の背景も同じように全部抜ける"""
+    c = rgb.astype(np.float32)
+    ex = c[..., 1] - np.maximum(c[..., 0], c[..., 2])
+    edge = np.concatenate([ex[0], ex[-1], ex[:, 0], ex[:, -1]])
+    bg = float(np.median(edge))
+    hi, lo = bg * 0.75, bg * 0.3
+    alpha = 1 - np.clip((ex - lo) / max(hi - lo, 1), 0, 1)
+    # 緑の目・緑の飾りなど、小さくて縁につながらない緑は抜かない（囲まれた背景は大きいので抜ける）
+    lab, n = ndimage.label(ex > lo)
+    if n:
+        border = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
+        sizes = ndimage.sum(np.ones_like(ex), lab, range(1, n + 1))
+        small = [k for k in range(1, n + 1) if k not in border and sizes[k - 1] < min_bg]
+        alpha[np.isin(lab, small)] = 1.0
+    # 緑かぶりを取る：残す画素の G を max(R,B) に寄せる
+    f = c.copy()
+    spill = np.clip(ex, 0, None)
+    f[..., 1] = c[..., 1] - spill * np.clip((1 - alpha) * 2 + 0.5, 0, 1)
+    a8 = (alpha * 255).astype(np.uint8)
+    a8 = np.where(a8 < 10, 0, np.where(a8 > 245, 255, a8)).astype(np.uint8)
+    f[a8 == 0] = 0
+    B = np.median(np.concatenate([c[0], c[-1], c[:, 0], c[:, -1]]), axis=0)
+    return np.dstack([f.clip(0, 255).astype(np.uint8), a8]), B
+
+
 def leftovers(rgba, key, boxes):
     """残り：不透明な画素のうち背景の色に近いもの、と、囲まれた背景の四角の中の白い平らな塊（元の背景の白）"""
     rgb, a = rgba[..., :3].astype(np.int32), rgba[..., 3]
@@ -173,6 +201,7 @@ def main():
     ap.add_argument("--key", default="", choices=["", *KEYS])
     ap.add_argument("--body", default="", help="体の形（BiRefNet で切った透明つきの絵）のフォルダ。<body>/<id>.webp。白い服の裾を背景にしないため")
     ap.add_argument("--boxes", default=os.path.join(ROOT, "docs", "art", "chroma_boxes.json"))
+    ap.add_argument("--fresh", default="", help="最初から描いた絵（単色の背景）のフォルダ。土台を作らず、縁の色をキーにして抜くだけ")
     ap.add_argument("ids", nargs="+")
     a = ap.parse_args()
     os.makedirs(os.path.join(a.out, "raw"), exist_ok=True)
@@ -180,6 +209,14 @@ def main():
     rep_path = os.path.join(a.out, "report.json")
     report = json.load(open(rep_path)) if os.path.exists(rep_path) else {}
     allboxes = json.load(open(a.boxes, encoding="utf-8")) if os.path.exists(a.boxes) else {}
+    if a.fresh:
+        for i in a.ids:
+            rgb = np.array(Image.open(os.path.join(a.fresh, i + ".webp")).convert("RGB"))
+            rgba, B = border_key_cut(rgb)
+            rgba = clean(rgba, "green")
+            ri.save(Image.fromarray(rgba, "RGBA"), os.path.join(a.out, "cut", i + ".webp"), "portraits")
+            print(f"{i} 背景 {B.astype(int).tolist()}", flush=True)
+        return
     for i in a.ids:
         raw = os.path.join(a.out, "raw", i + ".png")
         orig = os.path.join(a.orig, "portraits", i + ".webp")
