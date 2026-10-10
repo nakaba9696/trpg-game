@@ -37,7 +37,13 @@
     const tell1 = F1.tellText;
     F1.tellText = (f, k) => {
       let out = tell1(f, k);
-      for (let i = 0; i < 4 && f.r11tell === out; i++) out = tell1(f, k);
+      if (f.r11tell === out) {
+        // 選び直しは本物の乱数を使わない（テストの乱数の並びを変えない）
+        const r0 = G.rand;
+        let c = 0.13;
+        G.rand = () => (c = (c + 0.382) % 1);
+        try { for (let i = 0; i < 6 && f.r11tell === out; i++) out = tell1(f, k); } finally { G.rand = r0; }
+      }
       f.r11tell = out;
       return out;
     };
