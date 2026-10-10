@@ -4,6 +4,7 @@
   const D = (G.data = G.data || {});
   const S = (id, title, text, choices, x) => Object.assign({ id, where: ["r12"], w: 0, r12: "solo", title, text, choices }, x || {});
 
+  const WHO = { r12s_pilgrims: { kind: "priest", sex: "男", age: 70 }, r12s_shepherd: { kind: "child", sex: "女", age: 9 }, r12s_rider: { kind: "soldier", sex: "男", age: 28 } };
   D.EVENTS.push(
     S("r12s_hill", "丘の上から", "坂を登りきると、急に視界が開けた。畑の継ぎはぎが遠くまで続き、その先に、これから向かう方角の空が白く霞んでいる。", [
       { label: "腰を下ろして眺める", ok: { text: "風が汗を冷やしていく。どこかの村の鐘が、遅れて小さく届いた。立ち上がると、足が少し軽くなっていた。", hp: 3 } },
@@ -54,4 +55,7 @@
       { label: "船室へ戻って毛布にくるまる", ok: { text: "揺れる寝棚で、遠い陸の夢を見た。誰の家だったかは、起きたら忘れていた。" } },
     ], { on: "sea" }),
   );
+  D.EVENTS.forEach((e) => { if (WHO[e.id]) e.who = WHO[e.id]; });
+  // 人の姿が出ない場面（景色・独り言・物だけ）
+  D.EVENT_NOBODY = (D.EVENT_NOBODY || []).concat(["r12s_hill", "r12s_mutter", "r12s_herbs", "r12s_signpost", "r12s_shower", "r12s_stars", "r12s_brook", "r12s_gulls", "r12s_nightsea"]);
 })(globalThis.G = globalThis.G || {});

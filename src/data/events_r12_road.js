@@ -58,4 +58,6 @@
       ],
     },
   );
+  // 絵は主役の仲間の顔
+  D.EVENTS.filter((e) => e.r12 === "talk").forEach((e) => Object.defineProperty(e, "who", { get: () => G.m2Who(), enumerable: true, configurable: true }));
 })(globalThis.G = globalThis.G || {});
