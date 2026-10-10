@@ -110,7 +110,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   g = G.grow("筋力", 40);
   if (!(g[1] > 14 && g[1] < 23)) fail(`古い caps で止まった・高い点ほど伸びにくくなっていない（40 伸ばして ${g}）`);
   g = G.grow("筋力", 5000);
-  if (!(S.stats.筋力 > 99)) fail(`上限で止まった（上限は無いはず。${g}・${S.stats.筋力}）`);
+  if (S.stats.筋力 !== 99) fail(`たくさん伸ばしても 99 で止まらない（R11 で 99 が上限。${g}・${S.stats.筋力}）`);
   if (G.chance("筋力", "普通") !== 95 || G.chance("筋力", "至難") !== 95) fail("99 を超えた能力値の成功率が 95％で止まらない");
   if (G.pt(S.stats.筋力) !== S.stats.筋力) fail("99 を超えた能力値の点が出ない");
   const logN = S.log.length;

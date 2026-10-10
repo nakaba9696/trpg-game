@@ -33,7 +33,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     G.rand = () => 0.01; // 大成功（伸びる）
     let r;
     try { r = G.check("筋力", 0, "試し"); } finally { G.rand = r0; }
-    const added = S.log.slice(n);
+    // 大失敗で正気が削れたときの理由の一行（R11）は、ダイスの行のあとに出てよい
+    const added = S.log.slice(n).filter((e) => !(e.k === "sys" && /^正気が削れた──/.test(e.text || "")));
     const di = added.findIndex((e) => e.k === "dice");
     const mi = added.findIndex((e) => /^節目「/.test(e.text || ""));
     if (!(r && r.growth)) fail("判定で能力値が伸びない（測れない）");
@@ -49,7 +50,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     const r0 = G.rand;
     G.rand = () => 0.99; // 大失敗（伸びない）
     try { G.check("筋力", 0, "試し"); } finally { G.rand = r0; }
-    const added = S.log.slice(n);
+    // 大失敗で正気が削れたときの理由の一行（R11）は、ダイスの行のあとに出てよい
+    const added = S.log.slice(n).filter((e) => !(e.k === "sys" && /^正気が削れた──/.test(e.text || "")));
     if (S.log[n - 1].text !== "前の行" || added.length !== 1 || added[0].k !== "dice") fail(`伸びないときの記録が変わる（${added.map((e) => e.k)}）`);
   }
 
@@ -67,7 +69,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       const r0 = G.rand;
       G.rand = () => 0.3;
       try { G.combatAct("attack"); } finally { G.rand = r0; }
-      const added = S.log.slice(n);
+      // 大失敗で正気が削れたときの理由の一行（R11）は、ダイスの行のあとに出てよい
+    const added = S.log.slice(n).filter((e) => !(e.k === "sys" && /^正気が削れた──/.test(e.text || "")));
       const fi = added.findIndex((e) => /勢いのまま、とどめを刺した/.test(e.text || ""));
       if (fi < 0) { if (S.combat) { S.combat = null; S.mode = "explore"; } continue; }
       seen++;
