@@ -56,8 +56,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const G = loadEngine();
     let S = start(G, "priest", 1203);
     const act = () => {
-      const a = G.actions().flatMap((g) => g.list).find((x) => !x.disabled && /^(rest|wait|camp|look|explore|fac:)/.test(x.id)) || G.actions().flatMap((g) => g.list).find((x) => !x.disabled);
-      S.mode = "explore"; S.event = null; S.combat = null;
+      S.mode = "explore"; S.fac = null; S.event = null; S.combat = null;
+      const a = G.actions().flatMap((g) => g.list).find((x) => !x.disabled && /^(rest|wait|camp|look|explore)/.test(x.id)) || G.actions().flatMap((g) => g.list).find((x) => !x.disabled);
       G.act(a.id);
     };
     act();
