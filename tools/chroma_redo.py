@@ -105,6 +105,50 @@ def chroma_cut(rgb, key, lo=60, hi=150):
     return np.dstack([f.astype(np.uint8), a8])
 
 
+def clean(rgba, key, band=6, min_area=300, faint=0.55, faint_area=4000):
+    """仕上げ：
+    - 縁（透明な所から band 画素以内）の背景色かぶりを強めに取る：緑かぶりの画素は、いちばん近い内側の画素の色に寄せる
+    - 浮いた線：本体（いちばん大きい塊）とつながっていない、小さい塊・薄い塊を消す"""
+    rgb = rgba[..., :3].astype(np.float32)
+    a = rgba[..., 3].astype(np.float32) / 255
+    solid = a > 0
+    dist = ndimage.distance_transform_edt(solid)
+    edge = solid & (dist <= band)
+    inner = solid & (dist > band) & (a > 0.98)
+    if inner.any():
+        _, (iy, ix) = ndimage.distance_transform_edt(~inner, return_indices=True)
+        near = rgb[iy, ix]
+        if key == "green":
+            cast = rgb[..., 1] - np.maximum(rgb[..., 0], rgb[..., 2])
+        else:
+            cast = np.minimum(rgb[..., 0], rgb[..., 2]) - rgb[..., 1]
+        hit = edge & (cast > 2)
+        w = np.clip(cast / 15, 0, 1)[..., None]
+        rgb = np.where(hit[..., None], rgb * (1 - w) + near * w, rgb)
+        if key == "green":
+            rgb[..., 1] = np.where(edge, np.minimum(rgb[..., 1], np.maximum(rgb[..., 0], rgb[..., 2]) + 4), rgb[..., 1])
+    # 浮いた線（ゴーストの輪郭）：薄く（透明度 0.6 未満）、細く（太さ 2 画素ほど）、不透明な所から離れた画素を消す。
+    # 髪の線は濃いので残る
+    on = a > 0.04
+    thin = ndimage.distance_transform_edt(on) <= 1.5
+    far = ndimage.distance_transform_edt(~(a > 0.9)) > 3
+    a = np.where(on & thin & far & (a < 0.6), 0, a)
+    lab, n = ndimage.label(a > 0.04)
+    if n > 1:
+        sizes = ndimage.sum(np.ones_like(a), lab, range(1, n + 1))
+        means = ndimage.mean(a, lab, range(1, n + 1))
+        big = int(np.argmax(sizes)) + 1
+        for k in range(1, n + 1):
+            if k == big:
+                continue
+            if sizes[k - 1] < min_area or (means[k - 1] < faint and sizes[k - 1] < faint_area):
+                a[lab == k] = 0
+    a8 = (a * 255).astype(np.uint8)
+    out = np.dstack([rgb.clip(0, 255).astype(np.uint8), a8])
+    out[a8 == 0, :3] = 0
+    return out
+
+
 def leftovers(rgba, key, boxes):
     """残り：不透明な画素のうち背景の色に近いもの、と、囲まれた背景の四角の中の白い平らな塊（元の背景の白）"""
     rgb, a = rgba[..., :3].astype(np.int32), rgba[..., 3]
@@ -151,7 +195,14 @@ def main():
             neg += ", white background, grey background, gradient background, shadow on background"
             out, seed = ri.img2img(init, settings, pos, neg, a.den)
             out.resize(ri.SIZE["portraits"], Image.LANCZOS).save(raw)
-        rgba = chroma_cut(np.array(Image.open(raw).convert("RGB")), key)
+        rgba = clean(chroma_cut(np.array(Image.open(raw).convert("RGB")), key), key)
+        ent0 = allboxes.get(next((b for b in sorted(allboxes, key=len, reverse=True) if i == b or i.startswith(b + "_")), ""), [])
+        for poly in (ent0.get("drop", []) if isinstance(ent0, dict) else []):
+            # 手で決めた「消す所」（頭から離れた輪郭の線など。512×640 の座標の多角形）
+            from PIL import ImageDraw
+            m = Image.new("L", (rgba.shape[1], rgba.shape[0]), 0)
+            ImageDraw.Draw(m).polygon(list(zip(poly[0::2], poly[1::2])), fill=255)
+            rgba[np.array(m) > 0] = 0
         im = Image.fromarray(rgba, "RGBA")
         ri.save(im, os.path.join(a.out, "cut", i + ".webp"), "portraits")
         base = next((b for b in sorted(allboxes, key=len, reverse=True) if i == b or i.startswith(b + "_")), None)

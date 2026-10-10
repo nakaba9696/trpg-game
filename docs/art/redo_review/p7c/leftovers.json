@@ -47,7 +47,7 @@
  "kind_child_m": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 83
+  "white_blobs": 87
  },
  "marion": {
   "key": "green",
@@ -57,7 +57,7 @@
  "marion_anger": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 7
  },
  "marion_exasperated": {
   "key": "green",
@@ -72,7 +72,7 @@
  "marion_fun": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 6
  },
  "marion_joy": {
   "key": "green",
@@ -137,7 +137,7 @@
  "rui": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 7
+  "white_blobs": 10
  },
  "rui_anger": {
   "key": "green",
@@ -147,7 +147,7 @@
  "rui_cry": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 6
+  "white_blobs": 5
  },
  "rui_faint_smile": {
   "key": "green",
@@ -157,27 +157,27 @@
  "rui_fun": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 20
+  "white_blobs": 21
  },
  "rui_joy": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 27
+  "white_blobs": 26
  },
  "rui_sleepy": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 16
+  "white_blobs": 17
  },
  "rui_sorrow": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 0
+  "white_blobs": 21
  },
  "rui_surprise": {
   "key": "green",
   "keyish": 0,
-  "white_blobs": 16
+  "white_blobs": 18
  },
  "severin": {
   "key": "green",
