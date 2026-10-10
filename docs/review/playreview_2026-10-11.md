@@ -125,4 +125,4 @@
 ## 自動テスト
 - `node tools/build.mjs`：通った（dist/site 154 ファイル）。
 - `ONLY=r11,u32,c16,u31,e8,u29,u21,f3,c14,u27,m12,w6,s2,rv8 BALANCE=0 JOBS=2 node tests/run.mjs`：`DONE failures=0`（272 秒。r11_rules・r11_text・r11_decade・r11_pace・r11_ui（Chromium で画面も）・u32_cre_top・ランダムに遊ぶ、など）。
-- `node tests/run.mjs`（全部）：下の「追記」に結果を書く。
+- `node tests/run.mjs`（全部）：`DONE failures=0`・終了コード 0（約 40 分。働き手 3）。
