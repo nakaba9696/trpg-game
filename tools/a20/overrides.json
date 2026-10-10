@@ -375,5 +375,16 @@
  "monsters/banditboss": "keep",
  "monsters/e4_poacher": "keep",
  "portraits/yoihime": "keep",
- "portraits/trude": "keep"
+ "portraits/trude": "keep",
+ "portraits/radmila": "keep",
+ "monsters/e2_mordu": {
+  "force": [
+   [
+    300,
+    360,
+    350,
+    420
+   ]
+  ]
+ }
 }

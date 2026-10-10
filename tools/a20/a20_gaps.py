@@ -1,7 +1,7 @@
 # A20：囲まれて残った背景（髪のすき間・腕と胴のあいだ・武器と体のあいだ）も透明にした、透明つきの webp を作る。
 # ゲームの白抜き（src/ui/a13_cutout.js の G.a13.keyOut）を node で先にかけ、その結果に残った「背景の色ちょうどで平らな、線画に囲まれた塊」を消す。
 # 目の光・歯・白目・白い服・白い髪・白い毛皮は残す（線画に囲まれていない・陰がある・中に物を閉じこめている・外から遠い塊は消さない。迷う塊は残す）。
-# 自動で見分けられない所は overrides.json に書く（"keep"＝その人はぜんぶ残す、[[x0,y0,x1,y1], …]＝その四角に掛かる塊は残す。差分にも効く）。
+# 自動で見分けられない所は overrides.json に書く（"keep"＝その人はぜんぶ残す、[[x0,y0,x1,y1], …]＝その四角に掛かる塊は残す、{"force": [[…]]}＝その四角に中心がある平らな大きい塊は消す。差分にも効く）。
 # 境目の 2px は半透明にして白を抜く（ソフトマット）。透明を持つ絵は keyOut がそのまま使う（transparent()）ので、外周の背景も透明にした完成品にする。
 # すでに透明な絵・描き直し待ち（redraw）の絵・別のセッションが直している絵（SKIP）は飛ばす。魔物は足もとが下の縁に付くので keyOut に bottom。
 # 比べる背景の色は、外の背景の色をぼかして広げた「その場所の背景の色」（縁や上下で濃淡のある背景でも、囲まれた所を近くの背景と比べる）。
@@ -127,9 +127,13 @@ def process(im, keyed, dbg=None, mon=False, keep=None):
         st["wmax"] = float(ndi.distance_transform_edt(m).max())  # いちばん太い所の半分
         st["compact"] = float(4 * np.pi * area / max(1, per) ** 2)
         st["kill"] = decide(st, H * W, mon)
-        if keep == "keep": st["kill"] = False
-        elif keep:
-            for (rx0, ry0, rx1, ry1) in keep:
+        force = keep.get("force", []) if isinstance(keep, dict) else []
+        rects = keep.get("keep", []) if isinstance(keep, dict) else keep
+        for (rx0, ry0, rx1, ry1) in force:  # 消す四角：その中に中心がある、背景の色の平らな大きい塊は消す（判定の境で残った隙間）
+            if rx0 <= st["cx"] < rx1 and ry0 <= st["cy"] < ry1 and st["area"] >= 150 and st["med"] <= 3 and st["sd"] <= 2.5: st["kill"] = True
+        if rects == "keep": st["kill"] = False
+        elif rects:
+            for (rx0, ry0, rx1, ry1) in rects:
                 sub = lab[max(0, ry0):ry1, max(0, rx0):rx1]
                 if (sub == k + 1).any(): st["kill"] = False
         kill[k + 1] = st["kill"]

@@ -37,9 +37,9 @@
 "gapPx": 1315
 },
 "monsters/e2_mordu": {
-"bytes": 22816,
+"bytes": 23044,
 "orig": 17132,
-"gapPx": 4599
+"gapPx": 6916
 },
 "monsters/e2_rotbloom": {
 "bytes": 22630,
@@ -1040,51 +1040,6 @@
 "bytes": 27156,
 "orig": 26292,
 "gapPx": 2062
-},
-"portraits/radmila": {
-"bytes": 20902,
-"orig": 19850,
-"gapPx": 7418
-},
-"portraits/radmila_anger": {
-"bytes": 23374,
-"orig": 22162,
-"gapPx": 7331
-},
-"portraits/radmila_cold": {
-"bytes": 23136,
-"orig": 21870,
-"gapPx": 8693
-},
-"portraits/radmila_faint_smile": {
-"bytes": 23260,
-"orig": 22302,
-"gapPx": 8024
-},
-"portraits/radmila_fun": {
-"bytes": 23354,
-"orig": 22232,
-"gapPx": 8034
-},
-"portraits/radmila_joy": {
-"bytes": 23536,
-"orig": 22084,
-"gapPx": 7349
-},
-"portraits/radmila_serious": {
-"bytes": 23438,
-"orig": 21844,
-"gapPx": 8039
-},
-"portraits/radmila_sorrow": {
-"bytes": 23350,
-"orig": 22206,
-"gapPx": 8702
-},
-"portraits/radmila_wicked": {
-"bytes": 23464,
-"orig": 22284,
-"gapPx": 8017
 },
 "portraits/rodolphe_anger": {
 "bytes": 47092,
