@@ -221,5 +221,47 @@
   "add": "clean lineart, (flat solid green background:1.3)",
   "neg": "jpeg artifacts, noise",
   "den": 0.3
+ },
+ "e4_mudhound": {
+  "mask": [
+   [
+    130,
+    60,
+    260,
+    55,
+    255,
+    120,
+    200,
+    140,
+    150,
+    170,
+    128,
+    150
+   ]
+  ],
+  "add": "(round fluffy back of a dog:1.2), brown and white fur, plain white background",
+  "neg": "cloth, blanket, tent, green",
+  "den": 0.85
+ },
+ "anselmo_blade": {
+  "mask": [
+   [
+    320,
+    110,
+    470,
+    110,
+    470,
+    212,
+    400,
+    210,
+    354,
+    205,
+    320,
+    200
+   ]
+  ],
+  "add": "(shovel resting over his shoulder:1.2), (iron shovel blade behind his shoulder, partly hidden by the shoulder:1.2), wooden handle",
+  "neg": "floating blade, blade in front",
+  "den": 0.8
  }
 }
