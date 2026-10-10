@@ -99,6 +99,29 @@
 - 中身は問題ない。ほかに `.u13again` を参照する所は無い（`grep` で確認）。エンジンの `G.f4.lastAction` を残したので `tests/checks/f4_menu.mjs`・`f9_attack_guard.mjs` はそのまま通る。
 - 問題は main との衝突（中 1）。merge して衝突を解けば入れてよい。→ **#446 直す（衝突）**。
 
+## 絵の割り当て（配り役の追加の観点）
+絵の中身（描き方・透過）は見ていない。`src/ui/v4_assets.js`・`v8_moods.js`・`v8_moods_v11.js`・`src/data/v11_moods.js`・`src/engine/zzzzzzzzzzzzzzz_r5_named.js` の決め方と、`assets/portraits/`（1,065 枚）・`assets/monsters/`（203 枚）の実ファイル、ビルドが載せた鍵（`dist/site/game.js` の `G.ASSETS`）を突き合わせた。`node tools/a10_map.mjs` の表（`docs/art/a10_map.md`。今の assets で作り直しても差分なし）も使った。
+前提：ビルドは `docs/art/portraits.json`・`monsters.json` で `redraw`（描き直し待ち）の付いた絵を載せない。今それに当たるのは型 12 枚（`kind_beggar_f/m`・`kind_child_f/m`・`kind_host_m`・`kind_merchant_f/m`・`kind_noble_m`・`kind_rogue_f/m`・`kind_sailor_f/m`）と魔物 1 枚（`w3_smuggler`）。下の「型が載っていない」はこのため。
+
+### 絵が出ない人（名のある人・仲間）
+専用の絵が無い名のある人は型の絵で代用しない決まり（R5）なので、以下は今は絵なし。
+- キャラメモの人（`D.C2_PEOPLE`。会話あり）13 人：オルテンシア（`ortensia`）・イスメネ（`ismene`）・シャノ（`shano`）・オトセ（`otose`）・グィド（`guido`）・ピエトロ（`pietro`）・マルグリット（`marguerite`）・ヒルデガルト（`hildegard`）・アガテ（`agathe`）・セラフィナ（`seraphina`）・トマス（`tomas`）・ガンゾウ（`ganzou`）・ヤエ（`yae`）。このうちオルテンシア・イスメネ・シャノ・オトセ・グィドは会話の表情の指定が 30〜50 か所ずつあり、全部が絵なしに落ちる。
+- 出来事の名のある人（`src/data/r5_named.js` で専用の絵と決めた人）14 人：片目のシグルン（`sigrun`。使徒を討つ目的の導入の人）・ロデリク（`roderick`。成り上がる目的の導入の人）・笑う男ペルゴ（`pergo`）・若い傭兵ケイル（`keil`）・靴売りコルネリウス（`cornelius`）・座長会の会頭ブロンベルク（`bromberg`）・弦弾きの老人リュドガー（`rudiger`）・筆頭写字生ヒルデ（`hilde`）・峠の庵の老婆ヴィルマ（`vilma`）・綱渡りの娘フィーネ（`fine`）・稽古場の主ハルトヴィヒ（`hartwig`）・鍛冶場の主オズヴァルト（`oswald_smith`）・陣描きザビーネ（`sabine`）・鉄鍋団の団長アンゼルム（`anselm_merc`）。
+- 型の絵でよい人（`r5_named.js` の `mob`）のうち、その型が描き直し待ちで載っていない 11 人：両替商ヴェンツェル（`kind_merchant_m`）・取り立て屋マレク（`kind_rogue_m`）・両替商の婆さまイゾルテ（`kind_merchant_f`）・香辛料屋マルコ（`kind_merchant_m`）・遺物売りアンセルム（`kind_merchant_m`）・船の水夫ロサ（`kind_sailor_f`）・漁師ハルド（`kind_sailor_m`）・蜂蜜屋オズワルド（`kind_merchant_m`。導入の「ひっくり返った荷車」の人）・網元の娘ミナ（`kind_child_f`）・漁師バッソ（`kind_sailor_m`）・片目の船乗りガスパロ（`kind_sailor_m`）。型が戻れば出る。
+- 仲間（`a10_map.md`）：絵あり 227／248。絵なし 15 人＝傭兵のケイル・片目のシグルン・ロデリク（上の専用の絵なし）と、乱数の「ならず者の〇〇」11 人（30〜59 歳のならず者の型 `kind_rogue_m/f` が載っていない。若者は `_b`、老境は `kind_elder` に落ちるが、壮年は絵なし）。
+- 型の穴（`a10_map.md` の表）：子ども（9 歳）は全種類で絵なし、商人・船乗り・物乞い・宿の主（男）・貴族（男）・ならず者（壮年）も絵なし。出来事の人 1,233 人のうち 372 人が絵なしで、その多くはこの穴。
+- 敵：223 体のうち絵なしは密輸の見張り（`w3_smuggler`。描き直し待ちで載せていない）だけ。R10 の 10-08 中 5 のとおり、丘で出たときは絵なしになる。
+
+### 別人の絵が出る人
+見つからなかった。`v4_assets.js` の `NAMED` 23 人は全員に専用の絵があり、書いてある出来事の id も `D.EVENTS` に実在する。`r5_named.js` の 41 人は id と名前がずれているものがある（`rita_ash`＝コレット・`rita_bread`＝ニノン・`benno_changer`＝ヴェンツェル。昔の名前の id）が、絵の鍵は id なので、絵を作るときにファイル名を id に合わせれば問題ない。名のある人の絵を型や別の人に使い回す所も無い（`tests/checks/r5b_mob.mjs`）。
+
+### 表情が会話の指定と合わず、基本の絵に落ちる所
+会話（`D.TALK`）と出来事の `mood` を人ごとに集め、`<id>_<表情>.webp` と落とし先（`D.MOOD_TABLE` の fallback）を当てた。近い表情に落ちるもの（照れ → 喜、困り → 哀など）は決まりどおりなので除き、**落とし先も無くて基本の絵になるもの**だけ：
+- アデル：眠い（`sleepy`）×2。オーバン：呆れ（`exasperated`）×3。セレスティン：真剣（`serious`）×1。フェリクス：驚き（`surprise`）×1。ラザール：驚き×1・呆れ×1。ルシアン：眠い×1。ピピネル：慌て（`panic`）×1・真剣×2・呆れ×1。セレヴァン：真剣×5。トルーデ：真剣×1。
+- `src/data/quest_c9_d.js` の 4 か所（「森の奥」「沼の村の脈」「戻ってきた袋」「母の手紙」）が `mood: "trouble"`。表の名前は `troubled` なので、どの人でも基本の絵に落ちる。綴りを直す。レーン C（C9）。
+- 近い表情に落ちる回数が多い人（差分を足すなら先に）：アデル すね → 怒 ×17・ほんの少し笑う → 喜 ×13、フェリクス ほんの少し笑う → 喜 ×17、ブルーノ 困り → 哀 ×15・ほんの少し笑う → 喜 ×10、バルナベ 困り → 哀 ×6、リゼット 冷たい目 → 怒 ×2（`cold` の落とし先は真剣 → 怒で、リゼットには真剣が無い）。
+- 魔物のデータの `mood: "fierce"・"silly"・"calm"` は canvas 時代の見た目の指定で、立ち絵の表情ではない（表情の仕組みは読まない）。
+
 ## 自動テスト
 - `node tools/build.mjs`：通った（dist/site 154 ファイル）。
 - `ONLY=r11,u32,c16,u31,e8,u29,u21,f3,c14,u27,m12,w6,s2,rv8 BALANCE=0 JOBS=2 node tests/run.mjs`：`DONE failures=0`（272 秒。r11_rules・r11_text・r11_decade・r11_pace・r11_ui（Chromium で画面も）・u32_cre_top・ランダムに遊ぶ、など）。
