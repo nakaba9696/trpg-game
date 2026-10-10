@@ -1,0 +1,6 @@
+/* R13：遊び方の一行は、立ち絵の足元（名札）から離す。zzzzzz_zr13_tip.js と組 */
+/* PC：右上の道具の帯のすぐ下。名札をずらす R11 の動きは止める */
+body.u21pc:not(.u31m) .r11tip { top: calc(var(--v9-head, 52px) + 24px); bottom: auto; }
+body.u21pc.r11tipon:not(.v9combat) .v9fig .v9name { transform: translateX(-50%); }
+/* スマホの縦：コマンドの窓の頭に（戦闘のときと同じ置き方） */
+body.u31m #u21side #panel > .tip.r13intip { order: 0; position: static; width: auto; margin: 0 0 6px; box-shadow: none; font-size: 11.5px; line-height: 1.45; padding: 3px 8px; }
