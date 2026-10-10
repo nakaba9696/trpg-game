@@ -119,9 +119,10 @@ export default async ({ fail: failTo, ok }) => {
       await page.waitForTimeout(200);
       const during = await page.evaluate(() => [...document.querySelectorAll("#log > .l-trophy")].filter((x) => /確かめの階/.test(x.textContent)).map((x) => getComputedStyle(x).display));
       if (!during.length || during.some((d) => d !== "none")) fail(`低 31：${w}×${h} 戦闘の頭のトロフィーの行が本文に出ている`);
-      for (let i = 0; i < 20 && !(await page.evaluate(() => !!document.querySelector(".u13go"))); i++) {
-        await page.evaluate(() => { const S = G.S; if (!S.combat) return; S.combat.foes.forEach((f) => { f.hp = 0; }); const a = G.actions().flatMap((g) => g.list).find((x) => !x.disabled && /attack/.test(x.id)) || G.actions().flatMap((g) => g.list).find((x) => !x.disabled); if (a) { G.act(a.id); G.ui.after ? G.ui.after() : G.ui.render(); } });
-        await page.waitForTimeout(400);
+      for (let i = 0; i < 15 && !(await page.evaluate(() => !!document.querySelector(".u13go"))); i++) {
+        const atk = page.locator("#panel button:visible:not([disabled])", { hasText: "攻撃" }).first();
+        if (await atk.count()) await atk.click({ timeout: 3000 }).catch(() => {});
+        await page.waitForTimeout(1500);
       }
       const res = await rect(page, ".u13result");
       if (!res) { fail(`中 6：${w}×${h} 結果の場面が出ない`); await page.close(); continue; }
