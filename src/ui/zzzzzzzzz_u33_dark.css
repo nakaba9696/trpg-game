@@ -146,3 +146,5 @@ body.u31m.u31logopen:not([data-u14="story"]) .tome { background: var(--win-solid
 body.u31m.v9combat #u14sign { background: color-mix(in srgb, var(--win-solid) 96%, transparent); }
 /* 着いた町の名前の幕：窓の明るい画面でも、字の後ろを十分に暗く（幕の端まで字がかかっても読める） */
 #u14card { background: radial-gradient(ellipse 100% 46% at 50% 48%, rgba(5, 8, 8, .92), rgba(5, 8, 8, .84) 60%, rgba(5, 8, 8, .58)); }
+/* 立ち絵の名札：地の影が右端で消えるので、字が絵の明るい所にかからないよう右に余白を足し、影も濃い目に */
+.v9fig .v9name { padding-right: 30px; background: linear-gradient(90deg, rgba(4, 9, 9, .82), rgba(4, 9, 9, .72) 72%, rgba(4, 9, 9, 0)); }
