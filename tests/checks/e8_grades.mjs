@@ -1,5 +1,5 @@
 // E8：化け物の格（S・A・B・C・D 級。src/data/e8_grades.js・src/engine/e8_grade.js）
-// - すべての敵に格がある。使徒は S・A・B、S は使徒だけ。ボス・迷宮の主・名のある強敵は B 以上
+// - すべての敵に格がある。使徒は S・A・B、S は使徒だけ。ボス・迷宮の主は B 以上、名のある強敵は C 以上（段 5 以上は B）
 // - 使徒の表の rank は S・A・B（古い呼び名「天災・国難・討伐」が来ても、読み込みで直り、倍率も引ける）
 // - 戦闘の始まりと図鑑に「B 級」の形で出る。トロフィー・用語説明に古い格の呼び名が残っていない
 // - 使徒はみな「人の言葉を理解する化け物」。ただし言葉を解する化け物がみな使徒とは限らない（VISION・用語説明・GM 向けの設定）
@@ -25,7 +25,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const ap = G0.e3Of(id);
     if (ap && !["S", "A", "B"].includes(g)) fail(`使徒 ${id} の格が ${g}（S・A・B のどれか）`);
     if (!ap && g === "S") fail(`使徒でない ${id}（${e.name}）が S 級`);
-    if ((e.boss || (D0.W8_FOES || {})[id]) && !above(g, "B")) fail(`ボス・強敵 ${id}（${e.name}）が ${g} 級（B 以上に）`);
+    if (e.boss && !above(g, "B")) fail(`ボス ${id}（${e.name}）が ${g} 級（B 以上に）`);
+    if ((D0.W8_FOES || {})[id] && !above(g, "C")) fail(`強敵 ${id}（${e.name}）が ${g} 級（C 以上に）`);
     if (e.majin && !ap) fail(`絶界を持つ ${id} が使徒の表に無い`);
   }
   for (const a of Object.values(D0.E3.LIST)) if (!["S", "A", "B"].includes(a.rank)) fail(`使徒 ${a.id} の表の格が ${a.rank}`);

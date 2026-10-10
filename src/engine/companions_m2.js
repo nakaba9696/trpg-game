@@ -85,7 +85,7 @@
     if (!c || !n) return;
     const a = c.bond;
     c.bond = G.clamp(Math.round(a + n), 0, 100);
-    if (!quiet && c.bond !== a) G.note(`${G.m2Short(c)}の好感度 ${G.sign(c.bond - a)}（${c.bond}・${G.m2Mood(c.bond)}）`);
+    if (!quiet && c.bond !== a) G.note(`${G.m2Short(c)}の好感度 ${G.sign(c.bond - a)}（${G.m2Mood(c.bond)}）`);
   };
   const bondOf = (v, c) => (typeof v === "number" ? v : v && c ? (v[c.trait] !== undefined ? v[c.trait] : v._ || 0) : 0);
 
@@ -158,7 +158,9 @@
       G.m2State(S);
       const comp = S.companions[S.companions.length - 1];
       // 酒場で雇った者は金の縁、助けた者は恩の縁
-      comp.bond = S.mode === "fac" && S.fac === "tavern" ? 36 + G.d(12) : 52 + G.d(12);
+      const tav = S.mode === "fac" && S.fac === "tavern";
+      comp.bond = tav ? 36 + G.d(12) : 52 + G.d(12);
+      if (tav && !comp.c2) comp.hired = true; // 金で雇った（日ごとの不満で下がらない。R10 中 10）
       comp.joined = S.day;
       G.note(G.m2JoinLine(comp)); // 性格・好感度の札は括弧で見せず、振る舞いの一言にする（R7）
     }
@@ -318,7 +320,10 @@
         const near = S.hp < S.maxHp * 0.3;
         S.companions.forEach((c) => {
           const L = G.m2Trait(c).likes || {};
-          G.m2Bond(c, (won ? L.win || 0 : 0) + (won && f.boss ? L.boss || 0 : 0) + (near ? L.near || 0 : 0), true);
+          const v = (won ? L.win || 0 : 0) + (won && f.boss ? L.boss || 0 : 0) + (near ? L.near || 0 : 0);
+          // 下がるときは理由を一行（R10 中 10）
+          if (v < 0 && G.m2Why) G.m2Why(c, near && (L.near || 0) < 0 ? "near" : won && f.boss ? "boss" : "lose", v);
+          G.m2Bond(c, v, true);
         });
         const risk = 0.025 + (f.boss ? 0.1 : 0) + (near ? 0.06 : 0) + (won ? 0 : 0.04);
         // B5：深手を負うのは、その戦いで倒れた（戦闘不能になった）仲間だけ（G.b5Fall が f.fell に入れる）
@@ -335,10 +340,12 @@
         m.day = S.day;
         S.companions.forEach((c) => {
           const L = G.m2Trait(c).likes || {};
-          if (S.gold < 30 && L.poor) G.m2Bond(c, L.poor * n, true);
+          // 雇った仲間（酒場で金を払った c.hired）は、雇っている間は日ごとには下がらない（R10 中 10）
+          const keep = !!c.hired;
+          if (S.gold < 30 && L.poor && !keep) { if (G.m2Why) G.m2Why(c, "poor", L.poor * n); G.m2Bond(c, L.poor * n, true); }
           if (S.gold >= 300 && L.rich) G.m2Bond(c, L.rich * n, true);
           // 十日以上、口をきいていないと不満がたまる
-          if (S.day - (c.talkDay || c.joined || S.day) > 10) G.m2Bond(c, -n, true);
+          if (S.day - (c.talkDay || c.joined || S.day) > 10 && !keep) { if (G.m2Why) G.m2Why(c, "talk", -n); G.m2Bond(c, -n, true); }
         });
       }
       // 深手の仲間を看取る
