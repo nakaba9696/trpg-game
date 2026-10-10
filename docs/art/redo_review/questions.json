@@ -436,17 +436,17 @@
   "id": "albert",
   "file": "docs/art/redo_review/albert.webp",
   "what": "(b) 描き直した（髪の後ろの白が残らない絵。鼻眼鏡）。WebUI で描き、切り抜いて縁の白いふちも消した",
-  "status": "fixed",
-  "answer": null,
+  "status": "ok",
+  "answer": "よい（取り込み OK）",
   "check": "docs/art/redo_review/albert_check.webp",
   "moods": null
  },
  {
   "id": "angelica",
   "file": "docs/art/redo_review/angelica.webp",
-  "what": "(a) 首の横・髪の内側に残った背景を抜いた（表情の差分も）。縁に少しギザギザが残る所がある",
-  "status": "fixed",
-  "answer": null,
+  "what": "（WebUI が要る）同じ人物設定のまま立ち絵を最初から描き直し、単色の背景で描いてから抜く。首の横・髪の内側に背景が残らないことを黒とマゼンタの上で確かめる。表情差分も",
+  "status": "needs_webui",
+  "answer": "首の横がちゃんと透過されていない。作り直したほうが早そう",
   "check": "docs/art/redo_review/angelica_check.webp",
   "moods": "docs/art/redo_review/angelica_moods.webp"
  },
@@ -454,8 +454,8 @@
   "id": "kind_host_f",
   "file": "docs/art/redo_review/kind_host_f.webp",
   "what": "(a) 首の左の、髪と襟の間に残った背景を抜いた。縁に少しギザギザが残る所がある",
-  "status": "fixed",
-  "answer": null,
+  "status": "ok",
+  "answer": "よい（取り込み OK）",
   "check": "docs/art/redo_review/kind_host_f_check.webp",
   "moods": null
  },
