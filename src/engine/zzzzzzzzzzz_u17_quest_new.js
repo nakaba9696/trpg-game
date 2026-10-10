@@ -59,7 +59,10 @@
     q.sig = now;
     if (out.length) {
       q.bang = true;
-      if (!S.over && G.log) out.forEach((x) => { if (x.how !== "ready") G.log("quest", U.line(x)); }); // 「果たした」は Q5 の知らせが出すので二重にしない（R12 低 6）
+      if (!S.over && G.log) out.forEach((x) => { // 「果たした」は Q5 の知らせ（sys）がもう出ているなら重ねない（R12 低 6）
+        const dup = x.how === "ready" && (S.log || []).slice(-6).some((e) => e.k === "sys" && e.text && e.text.includes(x.title) && e.text.includes("ギルドに報告"));
+        if (!dup) G.log("quest", U.line(x));
+      });
     }
     return out;
   };
