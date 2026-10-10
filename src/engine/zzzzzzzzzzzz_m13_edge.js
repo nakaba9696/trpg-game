@@ -187,7 +187,8 @@
     if (G.S !== S || S.over) return;
     const b = stage(S);
     if (b < a) {
-      G.say(G.pick(M.BACK[a]));
+      const back = M.BACK[Math.min(a, M.BACK.length - 1)]; // 正気 0（段 4）から戻るときも、表の外を引かない（R10 低 32）
+      if (back) G.say(G.pick(back));
       G.log("sys", M.BACK_SYS);
     }
   };

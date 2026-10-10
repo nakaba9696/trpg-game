@@ -38,7 +38,7 @@
     if (q.desc) desc.push(String(q.desc));
     if (q.tell && !q.done && !q.revealed) desc.push(String(q.tell));
     let progress = "";
-    if (q.type === "hunt" && q.need) progress = `${Math.min(q.progress || 0, q.need)}／${q.need}体`;
+    if (q.type === "hunt" && q.need) progress = `${Math.min(q.progress || 0, q.need)}／${q.need}${q.v && /群れ$/.test(String(q.v.foe || "")) ? "群れ" : "体"}`; // 群れの魔物は「体」と数えない（R11）
     return {
       key: "g:" + q.id, src: "guild", kind: type ? type.name : "ギルドの依頼",
       title: String(q.title || "名の無い依頼"), client, from: locName(q.from),
