@@ -75,7 +75,7 @@
       look: { body: "biped", build: "lanky", skin: "#c8c0a8", head: "human", hair: "#e8e4d8", eyes: "glow", mouth: "smirk", weapon: "staff", outfit: "robe", cloth: "#2a2a24", extra: ["beard", "runes"] },
       lines: {
         open: ["骨の祭壇の前で老司祭が振り返った。「祈りが止むと聖女さまがお腹を空かせる。あなたにも祈っていただきましょう。永遠に」"],
-        turn: ["グレゴルが杖を鳴らすと、壁の骨がかたかたと祈りはじめた。", "「わしも昔は本物の神を信じておった。……何百年前だったかの」"],
+        turn: ["グレゴルが杖を鳴らすと、壁の骨がかたかたと祈りはじめた。", "「わしも昔は聖都の司祭じゃった。……何百年前だったかの」"],
       },
     },
     w1_konoha: {

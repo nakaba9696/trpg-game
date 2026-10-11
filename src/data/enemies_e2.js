@@ -10,7 +10,7 @@
     e2_gormoa: {
       name: "灼け口の使徒テルグリス", tier: 6, boss: true, majin: true, hp: 240, dmg: [3, 8, 4], hit: 70, def: 20, agi: 20, will: 999, mres: 30,
       gold: [400, 900], loot: [["gem", 1], ["elixir", 1]], shape: "giant", eye: "#ffb000",
-      desc: "熱い息を吐く、四つ足の大きなもの。背中に口が三つある。剣は体に届く前に何かに弾かれる。",
+      desc: "熱い息を吐く、四つ足の大きなもの。背中に口が三つあり、交互に噛みつく。腹が満ちているあいだは、傷の塞がりが速い。",
       look: { body: "biped", build: "giant", size: 1.18, skin: "#d8987a", skin2: "#f0c8a8", head: "ogre", eyes: "googly", eyeN: 3, mouth: "tongue", horns: "nubs", arms: "hands", weapon: "club", outfit: "loin", cloth: "#efe8da", pattern: "spots", extra: ["drool", "blush", "beard"], hair: "#6a3a2a", mood: "silly" },
       lines: {
         open: ["「おお、今日の食材は自分で歩いてくるのか！ 活きがいい！」三つの口が同時に笑った。", "「待て待て斬りかかる前に聞かせろ。お前、何味だ？」"],
