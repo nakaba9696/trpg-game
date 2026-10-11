@@ -1,0 +1,4 @@
+/* R13：作成画面の、振りの下支えと埋め合わせの一言（zzzz_r13_cre.js） */
+.r13roll { margin: 6px 0 8px; display: grid; gap: 4px; }
+.r13roll p { margin: 0; padding: 5px 9px; border-left: 3px solid var(--accent); background: var(--accent-soft); line-height: 1.55; }
+.r13roll .r13floor { border-left-color: var(--rule); background: none; }
