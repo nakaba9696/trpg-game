@@ -96,7 +96,7 @@
 | `assets/monsters/w1_candlemite.webp` | 蝋燭かじり | giant caterpillar, larva, pale yellow, wax, candle on back, googly eyes, crying, tears | 蝋燭をかじる芋虫。泣き虫。まぬけ |
 | `assets/monsters/w1_husk.webp` | 祈り殻 | undead, mummified pilgrim, dried corpse, hood, white robe, hollow eyes, praying hands, halo mark on neck, ribs | 死んだと気づかない巡礼者。哀しく不気味 |
 | `assets/monsters/w1_choir.webp` | 聖歌の髑髏 | floating skull, singing skull, open jaw, cracked skull, choir collar, musical notes, ghostly glow | 首だけの聖歌隊（群れだが一つで描く） |
-| `assets/monsters/w1_beastpriest.webp` | 獣憑きの司祭 | werewolf, wolf head, priest, white vestment, holy symbol necklace, claws, fangs, glowing eyes, blood, preaching | 獣憑きの司祭。まだ説教をやめない |
+| `assets/monsters/w1_beastpriest.webp` | 獣の司祭 | werewolf, wolf head, priest, white vestment, holy symbol necklace, claws, fangs, glowing eyes, blood, preaching | 獣の司祭。まだ説教をやめない |
 | `assets/monsters/w1_tanuki.webp` | 祭りの煙小鬼 | tanuki, raccoon dog, standing, round belly, leaf on head, tail, grin, blush, holding sake bottle | 祭りの化け狸。化けるのが下手。まぬけ |
 | `assets/monsters/e2_cookgob.webp` | 見習い料理ゴブリン | goblin, green skin, pointy ears, big nose, chef hat, apron, sweat, worried, holding peeler, potato | 必死で働く見習いゴブリン。まぬけ |
 | `assets/monsters/e2_meatling.webp` | 逃げた食材 | flesh blob, meat monster, raw meat, bones sticking out, three eyes, open jaw, bubbling | 逃げた肉の塊。おぞましい |

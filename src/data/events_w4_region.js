@@ -95,7 +95,7 @@
       ],
     },
     {
-      id: "w4_g_princess", where: ["garmund"], w: 2, once: true, cond: (S) => (S.fame || 0) >= 30, title: "皇女の馬車", who: { kind: "noble", sex: "女", age: 17, look: { head: "circlet", mouth: "flat", brows: "calm" } },
+      id: "w4_g_princess", where: ["garmund"], w: 2, once: true, cond: (S) => (S.fame || 0) >= 30, title: "皇女の馬車", who: { kind: "noble", sex: "女", age: 19, look: { head: "circlet", mouth: "flat", brows: "calm" } },
       text: "大通りが静まり返った。黒い馬車が一台、兵に囲まれて通っていく。窓の帳が少し開いて若い娘の顔が覗いた。娘の目が人混みの中のあなたで止まった。馬車があなたの前で止まった。兵の一人があなたに近づいてくる。「お名前をと」",
       choices: [
         { label: "名乗る", ok: { text: "あなたが名乗ると、窓の奥で娘が小さくうなずいた。「噂の方。北の塔の話をいつか聞かせて」馬車はそれだけで走り去った。翌日から、帝都の張り紙の端に、あなたの名前が小さく書き足されていた。", fame: 5, lore: "kouji", chron: "帝都の大通りで皇女の馬車に名を問われる" } },

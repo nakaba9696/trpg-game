@@ -39,7 +39,7 @@
       },
     },
     w1_beastpriest: {
-      name: "獣憑きの司祭", tier: 3, hp: 32, dmg: [2, 6, 1], hit: 60, def: 10, agi: 50, will: 70, mres: 5, gold: [10, 40], loot: [["holysymbol", 0.15], ["potion", 0.3]], shape: "humanoid", eye: "#ff4d4d",
+      name: "獣の司祭", tier: 3, hp: 32, dmg: [2, 6, 1], hit: 60, def: 10, agi: 50, will: 70, mres: 5, gold: [10, 40], loot: [["holysymbol", 0.15], ["potion", 0.3]], shape: "humanoid", eye: "#ff4d4d",
       desc: "法衣の下から毛が生え、口が裂けはじめた司祭。首から下げた聖印に、聖餐を受けた回数が刻んである。まだ説教をやめない。",
       look: { body: "biped", build: "brute", skin: "#5a4a3e", skin2: "#8a7a68", head: "wolf", eyes: "glow", mouth: "fangs", arms: "claws", outfit: "robe", cloth: "#e8e2d0", extra: ["blood"], mood: "fierce" },
       lines: {
@@ -75,7 +75,7 @@
       look: { body: "biped", build: "lanky", skin: "#c8c0a8", head: "human", hair: "#e8e4d8", eyes: "glow", mouth: "smirk", weapon: "staff", outfit: "robe", cloth: "#2a2a24", extra: ["beard", "runes"] },
       lines: {
         open: ["骨の祭壇の前で老司祭が振り返った。「祈りが止むと聖女さまがお腹を空かせる。あなたにも祈っていただきましょう。永遠に」"],
-        turn: ["グレゴルが杖を鳴らすと、壁の骨がかたかたと祈りはじめた。", "「わしも昔は本物の神を信じておった。……何百年前だったかの」"],
+        turn: ["グレゴルが杖を鳴らすと、壁の骨がかたかたと祈りはじめた。", "「わしも昔は聖都の司祭じゃった。……何百年前だったかの」"],
       },
     },
     w1_konoha: {
