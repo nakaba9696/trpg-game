@@ -117,7 +117,7 @@
     // 段 5
     e1_herald: {
       name: "使徒の触れ役", tier: 5, hp: 62, dmg: [2, 8, 4], hit: 70, def: 20, agi: 50, will: 85, mres: 30, gold: [50, 140], loot: [["manawater", 0.4], ["elixir", 0.08]], shape: "winged", eye: "#ff5aa0",
-      desc: "使徒たちの布告を人間の国々に触れ回る使い魔。布告の中身はたいてい「来週、どこかの町を滅ぼす」。どこかはその日の気分で決まる。",
+      desc: "どこかの使徒の気まぐれを人間の国々に触れ回る使い魔。布告の中身はたいてい「来週、どこかの町を滅ぼす」。どこかはその日の気分で決まる。",
       look: { body: "biped", build: "lanky", skin: "#8a3a6a", skin2: "#c86aa0", head: "plain", horns: "ram", eyes: "glow", mouth: "grin", weapon: "tome", wings: "bat", outfit: "robe", cloth: "#3a1a3a", extra: ["float", "plume"], mood: "fierce" },
       fleeAt: 0.25,
       lines: {
