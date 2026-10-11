@@ -1,0 +1,7 @@
+.u35dlg { max-width: min(92vw, 460px); border-radius: 12px; padding: 16px; }
+.u35body { display: flex; flex-direction: column; gap: 8px; }
+.u35body h2 { margin: 0; font-size: 18px; }
+.u35opt { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; }
+.u35h { margin: 4px 0 0; }
+.u35ul { margin: 0; padding-left: 1.2em; font-size: 13px; }
+.u35body .btn.danger { border-color: #b3382c; color: #b3382c; }
