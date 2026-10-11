@@ -82,6 +82,7 @@
       c.append(h("small", "", `${G.S.clsName} ${G.S.profile.name}・${G.dateOf ? G.dateOf(G.S.day) : G.S.day + "日目"}`));
       menu.append(c);
     }
+    menu.append(btn("データのリセット", "", () => { if (G.u35) G.u35.open(); }, "t-reset"));
     // 墓碑・トロフィー（記録）は右上から開ける（U10）。タイトルは「はじめる」と、保存があるときの「つづきから」だけ
     root.append(menu);
     if (live) root.append(h("p", "fine center", "「はじめる」で新しい者が旅立つと、つづきの冒険は消える。"));

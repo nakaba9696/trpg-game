@@ -1,7 +1,7 @@
 // U10：手引きと画面の手直し（持ち主の声）
 // - 消した文（仲間の居場所の決まり・「歩いて確かめるしかない」・暦と鐘の説明）が、どこにも残っていない
 // - トロフィーの格の点（銅 1・銀 2・金 5）10 点ごとに、キャラクター作成のボーナス点が 1 増える（古い記録・トロフィー無しでも動く）
-// - タイトルのメニューは「はじめる」（と、保存があるときの「つづきから」）だけ
+// - タイトルのメニューは「はじめる」（と、保存があるときの「つづきから」）と、小さな「データのリセット」（U35）だけ
 // - 主人公の性格・口癖・好きなもの・苦手なものは作らない・見せない。生い立ちはおまかせで埋めない（空けておける）
 // - 恋の相性は主人公の性格に頼らない（魅力で決まる）
 import { readFileSync, readdirSync } from "node:fs";
@@ -86,7 +86,7 @@ export default ({ G, fail, seeded }) => {
   const setup = readFileSync(path.join(root, "ui/setup.js"), "utf8");
   const title = setup.slice(setup.indexOf("function title("), setup.indexOf("function person("));
   const labels = [...title.matchAll(/btn\("([^"]+)"/g)].map((m) => m[1]);
-  if (labels.join("|") !== "はじめる|つづきから") fail(`タイトルのボタンが「はじめる」「つづきから」だけでない：${labels.join("・")}`);
+  if (labels.join("|") !== "はじめる|つづきから|データのリセット") fail(`タイトルのボタンが「はじめる」「つづきから」「データのリセット」だけでない：${labels.join("・")}`);
   if (!/if \(live\)[\s\S]*つづきから/.test(title)) fail("「つづきから」が保存のあるときだけになっていない");
   if (/openTrophies|btn\("記録/.test(title)) fail("タイトルに記録（墓碑・トロフィー）が残っている");
   if (!/trophyBonus/.test(setup) || !/trophyScore/.test(setup)) fail("作成画面に、トロフィーの点とボーナス点が無い");
