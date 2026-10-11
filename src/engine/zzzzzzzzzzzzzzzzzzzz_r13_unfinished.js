@@ -46,7 +46,8 @@
   X.apostle = (a) => {
     const lair = lairOf(a);
     const where = lair || lines(a.meet && a.meet.where).find((w) => D.LOCS[w]) || "";
-    const label = lair ? `${locName(lair)}の主` : (a.meet && a.meet.title) || "名も知らぬ使徒";
+    // 呼び名は噂の言い方（D.R13_TODO.NAMES）。会う出来事の見出し（「宰相府の客間」など）は場所の名なので使わない
+    const label = (T.NAMES || {})[a.id] || (lair ? `${locName(lair)}の主` : "名も知らぬ使徒");
     return { id: a.id, lair, to: where, label, place: locName(where) || "どこかの町" };
   };
   const loreHas = (S, trig) => {

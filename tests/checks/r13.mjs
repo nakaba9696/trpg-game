@@ -122,6 +122,9 @@ export default ({ fail, loadEngine, seeded }) => {
     const passive = Object.entries(T.APOSTLES).filter(([, p]) => p.how === "passive");
     passive.forEach(([id, p]) => { if (!p.stir || !p.why) f(`受動の使徒 ${id} に知らせの文か根拠が無い`); });
     Object.entries(T.APOSTLES).forEach(([id]) => { if (!D.E3.LIST[id]) f(`使徒の表に無い id：${id}`); });
+    // 呼び名は噂の言い方（D.R13_TODO.NAMES。know_l1_apostles.js と同じ）
+    G.e3List().forEach((a) => { const l = G.r13.apostle(a).label; if (!T.NAMES[a.id] || l !== T.NAMES[a.id]) f(`使徒 ${a.id} の呼び名が噂の言い方でない（${l}）`); });
+    if (/今年の秋/.test(T.APOSTLES.gormore.stir)) f("灼け口の知らせが季節に依る言い方");
     S = start(1315);
     S.day = (T.STIR_YEAR - 1) * Y + 10 * T.STIR_GAP; S.mode = "explore";
     for (let i = 0; i < 12; i++) { G.r13.tick(S); S.day += T.STIR_GAP; }
