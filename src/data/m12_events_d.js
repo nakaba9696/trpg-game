@@ -6,7 +6,7 @@
 
   // ==================================================================== 遺跡の発見と争奪
   // 舞台は迷宮の近くの町（ev.v.t）。見つかった場所は ev.v.site
-  const SITES = [["ruins", "nerva"], ["w3_ashvault", "w3_frosleia"], ["w4_oldrail", "w4_kaesverg"], ["w1_catacomb", "w1_holy"]];
+  const SITES = [["ruins", "nerva"], ["w3_ashvault", "w3_frosleia"], ["w4_oldrail", "w4_kaesverg"]];
   M.reg("dig", {
     name: "掘り出された扉", glyph: "鍬", w: 2,
     setup: (ev) => {

@@ -345,9 +345,9 @@
   {
    "id": "w1_beastpriest",
    "file": "assets/monsters/w1_beastpriest.webp",
-   "name": "獣憑きの司祭",
+   "name": "獣の司祭",
    "tags": "werewolf, wolf head, priest, white vestment, holy symbol necklace, claws, fangs, glowing eyes, blood, preaching",
-   "memo": "獣憑きの司祭。まだ説教をやめない"
+   "memo": "獣の司祭。まだ説教をやめない"
   },
   {
    "id": "w1_tanuki",

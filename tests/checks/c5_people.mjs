@@ -290,6 +290,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   if (begin("c5_vio_glove")) choose("手袋を拾って");
   if (begin("c5_gau_rolling")) choose("子どもたちと");
   g.S.day = 41;
+  { const m = g.c2State(g.S); m.met.yurina = 1; m.gone.yurina = 1; } // 空席の話はユリナが去ってから
   if (begin("c5_vio_trial")) choose("人垣を割って");
   if (!g.S.flags.c5_vio_trial) F("御前試合が終わらない");
 
