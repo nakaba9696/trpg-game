@@ -8,11 +8,11 @@ description: Run this game's roadmap as the dispatcher (配り役) — turn road
 このリポジトリのロードマップを、並行して動く子セッションに配って進める役。**配り役はゲームのコードを書かない。**
 issue を立て、子を起動し、PR を見張り、条件を満たした PR をマージし、止まった子を起こし、持ち主に状況を伝える。
 
-以下の `<owner>/<repo>` は `git remote get-url origin` のリポジトリ。このゲームでは：
-- `<必須チェック>` ＝ **`CI result`**（`.github/workflows/ci.yml`。`node tools/build.mjs && node tests/run.mjs`）
+以下の `<owner>/<repo>` は `git remote get-url origin` のリポジトリ。始めるときに、このゲームの値を決めてここに書き込む：
+- `<必須チェック>` ＝ CI のまとめのジョブの名前（例 `CI result`。中身は CLAUDE.md の検証のコマンド）
 - 持ち主の方針は **「持ち主が介入しなくても開発が進み続けること」**。項目が尽きたら §11 で次の波を自分で作る。
-- `<タグ>` ＝ **`trpg-game-lanes`**
-- このゲームは `release.yml`（自動の版上げ・Release コミット）を使わない。§4 の「Release を待つ」手順は飛ばす。
+- `<タグ>` ＝ 子のセッションに付けるタグ（例 `<ゲーム名>-lanes`）
+- 自動の版上げ（`release.yml` など）を使うかどうか。使わないなら §4 の「Release を待つ」手順は飛ばす。
 
 - 初めて始めるときの下準備（GitHub App・クラウドの環境・ルールセット・ラベル・作業の分け方・issue・配り役の始め方）：[references/setup.md](references/setup.md)
 - 子への指示の雛形：[references/prompts.md](references/prompts.md)
@@ -56,7 +56,7 @@ issue を立て、子を起動し、PR を見張り、条件を満たした PR �
 
 起動する前に確かめること：
 - 前提の issue がマージ済みか。同じレーンで同じ仕組みを触る項目は、前の PR がマージされてから次を起動する。
-- 同じ共有ファイル（`src/engine/core.js`・`src/ui/ui.js`・`src/manifest.json`・セーブの形 `G.S` など）を
+- 同じ共有ファイル（中心の仕組みのファイル・画面の土台・読み込み順の表・セーブの形など。CLAUDE.md の構成の表で決める）を
   触る子が同時に何本いるか。ぶつかりそうなら、プロンプトの「並行して動いている子・PR」に名前と、どちらが後から合わせるかを書く。
 
 起動したら `dispatch-state.md` にセッション ID を書く。子が PR を出したら `subscribe_pr_activity` する（通知か、定期チェックで `git ls-remote origin 'refs/pull/*/head'` を見て見つける）。
@@ -73,7 +73,7 @@ issue を立て、子を起動し、PR を見張り、条件を満たした PR �
 
 手順：
 1. `merge_pull_request`（`merge_method: merge`、`expectedHeadSha` に確かめた head の SHA）。
-2. （このゲームでは不要）`release.yml` を使うゲームなら、`Release vX.Y.Z` のコミットを main に push するのを待つ：
+2. （自動の版上げを使うゲームだけ）`release.yml` を使うなら、`Release vX.Y.Z` のコミットを main に push するのを待つ：
    ```bash
    for i in $(seq 1 40); do git fetch -q origin main; \
      git log -2 --format=%s origin/main | head -1 | grep -q '^Release' && \
@@ -155,7 +155,7 @@ issue を立て、子を起動し、PR を見張り、条件を満たした PR �
 6. 波を作るたびに、持ち主への次の報告で「新しい波の中身」を短く伝える（持ち主が止めたり向きを変えたりできるように）。
 
 ## 12. 遊べる版を届ける
-- マージのたびに CI が `dist/morsveld.html` を作る。持ち主は claude.ai の Artifact で遊ぶので、配り役は報告に「前回の公開からマージされたもの」を書き、持ち主（か持ち主のローカルのセッション）が公開し直せるようにする。
+- 遊べる版の作り方と届け方（ビルドの成果物・配布先）は、ゲームごとに CLAUDE.md に書く。配り役は報告に「前回の配布からマージされたもの」を書き、配布の手順を持ち主（か配布の係）に回す。
 - Cloudflare Pages などで自動公開する設定を持ち主が入れたら、その URL を報告に書く。
 
 ## やらないこと

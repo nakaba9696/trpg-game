@@ -23,8 +23,8 @@
 - main にマージがあったら取り込む（merge。rebase しない）。
 
 **決まり**（CLAUDE.md も必ず読むこと）
-- PR を出す前に CLAUDE.md の検証を通す（`node tools/build.mjs && node tests/run.mjs`。新しい仕組みには `tests/run.mjs` に確認を足す）。
-- 新しい内容は新しいファイルに書き、`src/data/`・`src/engine/`・`src/ui/` に置く（自動で読まれる。`src/manifest.json` は編集しない。CLAUDE.md の決まり）。新しい確認は `tests/checks/<id>.mjs` に置く（`tests/run.mjs` の末尾には足さない）。id は `<レーンの記号><番号>_` で始める。
+- PR を出す前に CLAUDE.md の検証を通す（<検証のコマンド>。新しい仕組みには確認を足す）。
+- 新しい内容は、なるべく新しいファイルに書く（置き場所と自動で読まれる仕組みは CLAUDE.md のとおり）。触ってよいファイルと番号の範囲を守る。
 - 普段の手番で Claude を呼ぶ仕組みは作らない（docs/VISION.md の「やらないこと」）。
 - `docs/ROADMAP.md` のチェックは編集しない。測った数字は PR の説明に書く。
 - 共有ファイル（<このゲームの共有ファイル>）は追記だけにする。
@@ -52,7 +52,7 @@
 ```
 配り役から：PR #<P> は main と衝突しています。その後に main に入ったもの：<PR 番号と中身、衝突しそうな所>。
 origin/main を merge で取り込み（rebase しない）、両方の機能が残るように解いてください。
-検証は「利用量を抑えるための約束」のとおり（衝突を解いたなら `node tools/build.mjs && node tests/run.mjs`）にして push し、
+検証は「利用量を抑えるための約束」のとおり（衝突を解いたなら <検証のコマンド>）にして push し、
 `<必須チェック>` が緑になったら PR の説明を今の状態に合わせ、`unsubscribe_pr_activity` して止まってください（定期チェックは入れない）。判断待ちがなければ配り役がマージします。
 ```
 
