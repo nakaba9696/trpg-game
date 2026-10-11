@@ -7,6 +7,8 @@ Claude Code で並行してゲームを作る進め方を、新しいゲーム�
 | 場所 | 中身 |
 |---|---|
 | `KNOWHOW.md` | ノウハウ全部 |
+| `TRANSPARENT_IMAGES.md` | 背景透過の立ち絵・魔物の絵を作るノウハウ（失敗したやり方・作り方・確かめ方） |
+| `tools/check_alpha.py` | 透過の絵を確かめる道具（表情違いとの透け方・形のずれ、白い背景のままの絵、暗い地・マゼンタの地の一覧画像） |
 | `.claude/skills/dispatcher/` | 配り役の手順書（`SKILL.md`）と、その付録（`references/`） |
 | `.claude/skills/grill-me`・`grilling`・`handoff`・`to-questionnaire`・`writing-for-agents` | 同梱した外部のスキル（下の節） |
 | `third_party/` | 同梱した外部のスキルの出典とライセンス |
