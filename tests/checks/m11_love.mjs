@@ -1,4 +1,4 @@
-// M11（#117）：恋の広がり。魔物の子分とも恋仲になれる（人の仲間より遠い道）・エルフ／獣人の恋人の一行・格の違う相手との恋の続き物。
+// M11（#117）：恋の広がり。魔物の子分は恋の相手にならず、好感度の高い子分との情の出来事になる（C11）・エルフ／獣人の恋人の一行・格の違う相手との恋の続き物。
 // 仕組みは src/engine/zz_m11_love.js、表は src/data/m11_love.js、出来事は src/data/events_m11_love.js
 export default ({ fail, ok, loadEngine, seeded }) => {
   const G = loadEngine();
@@ -16,18 +16,18 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   evs.forEach(addE);
   for (const id of ["m10_star", "m10_night", "m10_spark", "m10_confess", "m10_wedding"]) {
     const e = D.EVENTS.find((x) => x.id === id);
-    if (!e || !e.choices.some((c) => c.cond && /尻尾|星の名前|鍋を叩|一生分|耳|自分の言葉/.test(c.label))) F(`${id} に種族か魔物の子分の一行が足されていない`);
-    else e.choices.forEach((c) => { texts.push(c.label); addO(c.ok); addO(c.ng); });
+    if (["m10_star", "m10_night", "m10_spark", "m10_confess"].includes(id) && (!e || !e.choices.some((c) => c.cond && /尻尾|星の名前|一生分|耳/.test(c.label)))) F(`${id} に種族の一行が足されていない`);
+    else if (e && e.choices.some((c) => /鍋を叩いて誓|自分の言葉で、もう一度/.test(c.label))) F(`${id} に魔物の子分との恋の一行が残る`);
+    else if (e) e.choices.forEach((c) => { texts.push(c.label); addO(c.ok); addO(c.ng); });
   }
   const T = D.M11;
-  for (const L of Object.values(T.MON_LINES)) texts.push(...L);
-  texts.push(...T.MON_BALK, ...T.STORY_MON.together, ...T.STORY_MON.lost);
+  texts.push(...T.STORY_MON.together, ...T.STORY_MON.lost);
   for (const a of Object.values(T.AP)) texts.push(a.who, a.chron, ...a.story);
   for (const t of texts) {
     if (/見世物|観客|客席|舞台|台本|神々|魔王|使徒|眷属/.test(t)) F(`見せる文に書かない言葉がある「${t}」`);
     if (/ベリエラ|ドレイゼ|カルマトス|ベルファス|宵姫|ザルヴェ|ミルザ|ユラ|ルイ/.test(t)) F(`格の違う相手の名前か、子どもの姿の者が出る「${t}」`);
   }
-  for (const k of ["spark", "confess", "propose", "part", "cold"]) if (!(T.MON_LINES[k] || []).length) F(`魔物の子分の ${k} のひとことが無い`);
+  for (const e of evs.filter((x) => x.id.startsWith("m11_mon_"))) for (const c of e.choices) for (const o of [c.ok, c.ng]) if (o && o.m10) F(`${e.id}: 魔物の子分の出来事に恋の結果（m10: ${o.m10}）がある`);
   for (const t of ["m11_mon", "m11_ap"]) if (!D.TROPHIES.some((x) => x.key === t)) F(`トロフィー ${t} が無い`);
 
   // ---------------------------------------------------------------- 準備
@@ -46,65 +46,30 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const idx = (ev, re) => D.EVENTS.find((e) => e.id === ev).choices.findIndex((c) => re.test(c.label));
   G.rand = seeded(1111);
 
-  // ---------------------------------------------------------------- 魔物の子分：道はある・ずっと遠い
+  // ---------------------------------------------------------------- 魔物の子分：恋の相手にならない。好感度が高ければ情の出来事（C11）
   let S = start("女");
   G.addCompanion({ name: "樽ゴブリンのダル", cls: "ゴブリン", power: 30, dmg: 1, desc: "酒好き。戦うときも酔っている。" });
   G.addCompanion({ name: "剣士のロイド", cls: "剣士", power: 45, dmg: 1, desc: "無口だが義理堅い" });
   const [gob, hum] = S.companions;
   if (!G.m11Monster(gob) || G.m11Monster(hum)) F("魔物の子分を見分けられない");
-  if (!G.m10Can(gob)) F("魔物の子分が恋の相手になれない");
+  if (G.m10Can(gob)) F("魔物の子分が恋の相手になる");
+  if (!G.m10Can(hum)) F("人の仲間が恋の相手になれない");
   if (G.m10Can({ name: "ルイ", c2: "rui" }) && D.C2_PEOPLE && D.C2_PEOPLE.rui) F("子どもの姿の者が恋の相手になる");
-  // 気配の線：人なら立つ好感度で、魔物の子分は立たない。高くても、立つ日は少ない
-  gob.bond = hum.bond = 75;
-  let hDays = 0, gDays = 0;
-  for (let d = 0; d < 60; d++) { S.day = 100 + d; if (G.m10P.spark(hum, S)) hDays++; if (G.m10P.spark(gob, S)) gDays++; }
-  if (hDays !== 60 || gDays) F(`好感度 75 で、人の仲間 ${hDays}/60 日・魔物の子分 ${gDays}/60 日に気配が立つ`);
-  gob.bond = hum.bond = 95; gDays = 0;
-  let sday = -1;
-  for (let d = 0; d < 60; d++) { S.day = 100 + d; if (G.m10P.spark(gob, S)) { gDays++; if (sday < 0) sday = S.day; } }
-  if (!gDays || gDays > 30) F(`好感度 95 の魔物の子分に、気配の立つ日の数が変（${gDays}/60）`);
-  // 気配：魔物の子分の出来事
-  S.day = sday;
-  S.m2.force = gob.id; G.startEvent("m11_mon_rat");
-  if (S.event !== "m11_mon_rat" || S.m2.focus !== gob.id) F(`魔物の子分の気配の出来事が始まらない（${S.event}）`);
-  G.act("ev:0");
-  if (G.m10St(gob) !== "spark") F("魔物の子分に気配が立たない");
-  noBraces("魔物の子分の気配");
-  // 打ち明ける：好感度 88 までは出ない
-  S.day += 10;
-  gob.bond = 80;
-  if (has("m10tell:" + gob.id)) F("好感度 80 の魔物の子分に、もう想いを打ち明けられる");
-  gob.bond = 92;
-  if (!has("m10tell:" + gob.id)) F("好感度 92 の魔物の子分に、想いを打ち明けられない");
-  // 打ち明けて、判定に勝っても、言葉が通じきらずに空振りする（半分くらい）
-  let balk = 0, love = 0;
-  for (let i = 0; i < 200; i++) {
-    G.m10Of(gob).st = "spark"; gob.m10.cool = 0; S.m2.focus = gob.id;
-    G.rand = seeded(3000 + i);
-    G.apply({ text: "テスト", m10: "love", confess: true });
-    if (G.m10St(gob) === "love") { love++; gob.m10.st = "spark"; S.m10.lover = null; } else balk++;
-  }
-  G.rand = seeded(1112);
-  if (balk < 60 || love < 60) F(`魔物の子分への打ち明けの空振りの割合が変（空振り ${balk}・恋仲 ${love}）`);
-  if (!S.m11 || S.m11.balk !== balk) F("空振りを数えない");
-  // 人の仲間は空振りしない
-  G.m10Of(hum).st = "spark"; S.m2.focus = hum.id;
+  gob.bond = 100;
+  for (let d = 0; d < 30; d++) { S.day = 100 + d; if (G.m10P.spark(gob, S)) { F("好感度 100 の魔物の子分に恋の気配が立つ"); break; } }
+  // 打ち明け・告白・求婚・式：出来事の結果から来ても恋の間柄にならない
+  G.m10Of(gob).st = "spark"; gob.m10.cool = 0;
+  if (G.m10P.confess(gob, S) || G.m10P.sparked(gob, S)) F("気配の立った（古いセーブの）魔物の子分が告白してくる");
+  if (acts().some((a) => a.id === "m10tell:" + gob.id)) F("魔物の子分に「想いを打ち明ける」が出る");
+  S.m2.focus = gob.id;
   always(() => G.apply({ text: "テスト", m10: "love", confess: true }));
-  if (G.m10St(hum) !== "love") F("人の仲間への打ち明けが空振りする");
-  hum.m10.st = ""; S.m10.lover = null;
-  // 恋仲にする（空振りしない乱数で）
-  S.m2.force = gob.id;
-  always(() => { G.act("m10tell:" + gob.id); G.act("ev:0"); }, 0.6);
-  if (G.m10St(gob) !== "love") {
-    gob.m10.cool = 0; S.m2.focus = gob.id;
-    always(() => G.apply({ text: "テスト", m10: "love", confess: true }), 0.9);
-  }
-  if (G.m10St(gob) !== "love") F(`魔物の子分と恋仲になれない（${G.m10St(gob)}）`);
-  if (!G.P.trophies.m11_mon) F("魔物の子分と恋仲になったトロフィーが無い");
-  if (!S.chronicle.some((c) => c.text.includes("ダル") && c.text.includes("恋仲"))) F("魔物の子分と恋仲になったことが年表に残らない");
-  // 恋仲になったあとの、魔物の子分の出来事
+  if (G.m10St(gob) === "love") F("出来事の結果から、魔物の子分と恋仲になる");
+  gob.m10.st = "";
+  // 情の出来事：好感度が高い子分だけ。人の仲間では起きない。恋の結果は無い
+  gob.bond = 30;
+  if (D.EVENTS.find((x) => x.id === "m11_mon_rat").cond(S)) F("好感度の低い魔物の子分で、情の出来事が起きる");
   gob.bond = 80;
-  for (const id of ["m11_mon_words", "m11_mon_pack", "m11_mon_years", "m11_mon_town", "m11_mon_night"]) {
+  for (const id of ["m11_mon_rat", "m11_mon_words", "m11_mon_pack", "m11_mon_years", "m11_mon_town", "m11_mon_night"]) {
     S.mode = "explore"; S.loc = "karna";
     S.m2.force = gob.id;
     const e = D.EVENTS.find((x) => x.id === id);
@@ -112,33 +77,16 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.startEvent(id);
     if (S.event !== id) { F(`${id} が始まらない（${S.event}）`); continue; }
     always(() => G.act("ev:0"));
+    if (G.m10St(gob)) F(`${id} のあと、魔物の子分と恋の間柄（${G.m10St(gob)}）になる`);
   }
   noBraces("魔物の子分の暮らし");
   if (!S.log.some((l) => /アネキ/.test(l.text || ""))) F("魔物の子分が、女のあなたをアネキと呼ばない");
   if (D.EVENTS.find((x) => x.id === "m11_mon_words").cond(Object.assign({}, S, { companions: [hum] }))) F("人の仲間で、魔物の子分の出来事が起きる");
-  // 求婚：人の仲間より遠い
-  gob.bond = hum.bond = 90;
-  gob.m10.since = S.day - 12; gob.m10.miss = false; gob.m10.cool = 0;
-  if (G.m10P.propose(gob, S)) F("魔物の子分に、人の仲間と同じ線で求婚できる");
-  gob.bond = 97; gob.m10.since = S.day - 25;
-  if (!G.m10P.propose(gob, S)) F("魔物の子分に、どれだけ待っても求婚できない");
-  G.act("m10ask:" + gob.id); S.gold = 500;
-  always(() => G.act("ev:0"));
-  if (G.m10St(gob) !== "vow") F(`魔物の子分と約束できない（${G.m10St(gob)}）`);
-  // 群れのやり方の式
-  S.loc = "karna"; S.mode = "explore";
-  G.act("fac:church");
-  G.act("m10wed:" + gob.id);
-  const wi = idx("m10_wedding", /鍋を叩いて/);
-  if (S.event !== "m10_wedding" || wi < 0 || !G.eventChoices().some(({ i }) => i === wi)) F("魔物の子分との式に、群れのやり方の選択肢が出ない");
-  else G.act("ev:" + wi);
-  if (G.m10St(gob) !== "wed") F("魔物の子分と結ばれない");
-  noBraces("群れの式");
-  // 人生の物語に、魔物の子分の一文
-  S.mode = "explore";
-  const life = G.m6Compose(S).life.join("");
-  if (!T.STORY_MON.together.some((t) => life.includes(t.split("{sp}")[1].slice(0, 8)))) F(`人生の物語に魔物の子分の一文が無い ${life}`);
-  if (/\{|undefined/.test(life)) F(`物語に置き換えが残る「${life}」`);
+  gob.bond = 95;
+  S.mode = "explore"; S.m2.focus = gob.id;
+  always(() => G.apply({ text: "テスト", bond: 1 }));
+  if (!G.P.trophies.m11_mon) F("好感度 90 を超えた魔物の子分で、言葉の半分のトロフィーが無い");
+  if (G.m10Partner(S)) F("魔物の子分が恋人・連れ合いになっている");
 
   // ---------------------------------------------------------------- エルフ・獣人の恋人
   S = start("男");
@@ -234,5 +182,5 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     for (let i = 0; i < 30 && !S.over; i++) { const l = acts().filter((x) => !x.disabled); G.act(l[Math.floor(G.rand() * l.length)].id); }
   } catch (e) { F("古いセーブで例外 " + (e.stack || e)); }
 
-  if (!before.n) ok(`M11 恋の広がり（出来事 ${evs.length}・魔物の子分は遠い道：空振り ${balk}/200・種族の一行・格の違う相手の続き物 2 つ）`);
+  if (!before.n) ok(`M11 恋の広がり（出来事 ${evs.length}・魔物の子分は恋でなく情の出来事・種族の一行・格の違う相手の続き物 2 つ）`);
 };

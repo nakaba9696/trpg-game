@@ -110,7 +110,7 @@ export default ({ fail: failTo, ok, loadEngine }) => {
 
   // 入口
   if (G.placeName("nerva") !== "港町ヴァレンツァ" || G.placeShort("nerva") !== "ヴァレンツァ" || G.placeKind("nerva") !== "港町") fail("G.placeName・placeShort・placeKind が違う");
-  if (G.placeText("{place:karna}の{placeShort:nerva}・{place:nowhere}") !== "自由都市ブランデールのヴァレンツァ・{place:nowhere}") fail("G.placeText の置き換えが違う");
+  if (G.placeText("{place:karna}の{placeShort:nerva}・{place:nowhere}") !== "商都ブランデールのヴァレンツァ・{place:nowhere}") fail("G.placeText の置き換えが違う");
   if (G.regionName("シェルアーク") !== "シェルアーク諸島" || G.regionName("使徒領") !== "使徒領") fail("G.regionName が違う");
 
   if (bad > 40) failTo(`D2：ほかに ${bad - 40} 件`);

@@ -2,7 +2,7 @@
 //   ・外のファイル（既定。siteAssets）：画像は dist/site/ に別ファイルとして置き、HTML には一覧（鍵 → 相対パス・バイト数）だけを入れる。
 //     claude.ai の Artifact に「ページ＋別ファイル」で載せる（docs/publish.md）。
 //   ・埋め込み（予備。node tools/build.mjs --embed。collectAssets）：data URI にして 1 枚の HTML に入れる。上限（LIMIT）を超えるなら、
-//     差分（<id>_joy など）を省いて基本の絵だけにする。
+//     差分（<id>_joy など）→ 背景 → 大きい絵の順に省く。
 // どちらでもゲームからは G.ASSETS["portraits/<id>"]・G.ASSETS["monsters/<id>"]（V6）で引け、値はそのまま Image の src に使える。
 // ただし外のファイルの形では、差分（<id>_<表情>）は 1 人 1 枚のスプライト（portraits/<id>.moods.svg）にまとめ、値は「公開パス#xywh=x,y,w,h」（切り出す場所）になる。
 // 基本の立ち絵・魔物の絵（A12）も 25 枚ずつのスプライト（portraits/packs/*.svg・monsters/packs/*.svg）にまとめ、値は同じく「公開パス#xywh=…」。
@@ -35,6 +35,16 @@ export function variantOf(key) {
 }
 export const isVariant = (key) => !!variantOf(key);
 
+// 描き直し待ちの絵（docs/art/portraits.json・monsters.json で redraw の付いた id。R5c：現代の服に見える絵など）。載せない（その人・敵は絵なし。canvas には戻さない）
+// 差分（<id>_<表情>）もまとめて載せない。描き直して置き換えたら、一覧の redraw を外す
+export function redrawKeys() {
+  const out = new Set();
+  const read = (u, dir, k) => { try { const d = JSON.parse(readFileSync(new URL(u, import.meta.url), "utf8"))[k] || []; (Array.isArray(d) ? d : Object.values(d)).forEach((x) => { if (x && x.redraw) out.add(`${dir}/${x.id}`); }); } catch {} };
+  read("../docs/art/portraits.json", "portraits", "portraits");
+  read("../docs/art/monsters.json", "monsters", "monsters");
+  return out;
+}
+
 // assets/ を読んで、鍵ごとに使うファイルを決める：{ files: [{ key, abs, file（assets/ からの道筋）, ext, bytes }], notes }
 export function scanAssets(dir) {
   const out = { files: [], notes: [] };
@@ -57,7 +67,10 @@ export function scanAssets(dir) {
     }
   };
   walk(dir);
+  const redraw = redrawKeys();
   for (const key of Object.keys(found).sort()) {
+    const v = variantOf(key);
+    if (redraw.has(key) || (v && redraw.has(v.base))) { if (!v) out.notes.push(`${key} は描き直し待ち（一覧の redraw）なので載せない`); continue; }
     const { abs, ext } = found[key];
     const bytes = statSync(abs).size;
     out.files.push({ key, abs, file: path.relative(dir, abs).split(path.sep).join("/"), ext, bytes });
@@ -232,7 +245,7 @@ export function siteAssets(dir, { sprites = true, packs = true } = {}) {
 }
 
 // 埋め込みの形：assets/ を読んで { map: { 鍵: data URI }, files: [{ key, file, bytes, size }], total（data URI の合計の文字数）, notes: [知らせ], dropped: [省いた鍵] } を返す
-// shrink：上限を超えるなら差分（V8）を省いて作り直す（--embed の予備のため）。それでも超えるなら止まる
+// shrink：上限を超えるなら差分（V8）を省いて作り直す（--embed の予備のため）。それでも超えるなら背景、それでも超えるなら大きい絵から省く（A20）
 export function collectAssets(dir, { limit = LIMIT, shrink = false } = {}) {
   const s = scanAssets(dir);
   const make = (list) => {
@@ -259,6 +272,22 @@ export function collectAssets(dir, { limit = LIMIT, shrink = false } = {}) {
     out.dropped = [...gone, ...dropped];
     out.notes = notes;
     out.notes.push(`埋め込みが ${(was / 1048576).toFixed(1)}MB で上限の ${(limit / 1048576).toFixed(0)}MB を超えるので、${what} ${dropped.length} 枚を省いた（${(out.total / 1048576).toFixed(1)}MB）`);
+  }
+  // それでも超えるなら、大きい絵から順に省く（A20：背景を透明にした絵は大きくなる。省いた人・敵は予備の HTML では絵なし。本番の dist/site では全部出る）
+  if (out.total > limit && shrink) {
+    const gone = new Set(out.dropped);
+    const keep = s.files.filter((f) => !gone.has(f.key) && !SOUND_TYPES[f.ext]);
+    const big = keep.slice().sort((a, b) => b.bytes - a.bytes || (a.key < b.key ? -1 : 1));
+    let over = out.total - limit;
+    const drop = [];
+    for (const f of big) { if (over <= 0) break; drop.push(f.key); over -= Math.ceil(f.bytes / 3) * 4 + `data:${TYPES[f.ext]};base64,`.length; }
+    if (drop.length) {
+      const was = out.total, notes = out.notes, dset = new Set(drop);
+      out = make(s.files.filter((f) => !gone.has(f.key) && !dset.has(f.key)));
+      out.dropped = [...gone, ...drop];
+      out.notes = notes;
+      out.notes.push(`埋め込みが ${(was / 1048576).toFixed(1)}MB で上限の ${(limit / 1048576).toFixed(0)}MB を超えるので、大きい絵 ${drop.length} 枚を省いた（${(out.total / 1048576).toFixed(1)}MB）`);
+    }
   }
   if (out.total > limit) {
     const big = out.files.slice().sort((a, b) => b.size - a.size).slice(0, 5).map((f) => `${f.file} ${(f.bytes / 1024).toFixed(0)}KB`).join("、");

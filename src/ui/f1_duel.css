@@ -2,4 +2,3 @@
 .l-tell { border-left: 3px solid var(--accent, #c9a45c); padding-left: 10px; font-weight: 600; }
 .l-tell.l-brk { border-left-color: var(--ok, #6bbf7a); }
 .l-tell.l-rage { border-left-color: var(--ng, #d9534f); font-style: italic; letter-spacing: 0.02em; }
-.u13rrows dd.u13f1 { font-weight: 600; }

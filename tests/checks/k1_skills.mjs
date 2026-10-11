@@ -3,7 +3,7 @@
 // - 古いセーブ（S.skills・S.k1 が無い）でも動く。職業ごとのはじめの技
 // - 戦闘：技は「技」の組に出る。型が合わない・気力が足りない技は理由つきで押せない。気力が減り、身を守る・眠ると戻る
 //   F1 の読み合いとつながる：抜き打ちが溜めを潰す・受け流しが大技を崩して斬り返す・誘いで大技の気配が出る・見切りで ◎・毒・型
-// - 覚え方：訓練場（金と日数。しくじっても積み重ね）・師（条件が足りないとうっすら）・仲間（打ち解けると）・巻物（読めない条件）・野営の稽古
+// - 覚え方：訓練場（教官の条件・金と日数。しくじっても積み重ね）・師（条件が足りないとうっすら）・仲間（打ち解けると）・巻物（読めない条件）。野営の稽古では覚えない（K3。tests/checks/k3_pace.mjs）
 // - 熟練：使うと数え、段が上がる。戦闘の外：技で現れる選択肢（技が無ければ出ない）・施設の「身につけた技で」は一日に一度
 export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   let bad = 0;
@@ -16,7 +16,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   const ids = Object.keys(SK);
 
   // ---------------------------------------------------------------- データ
-  if (ids.length < 30 || ids.length > 50) fail(`技の数が ${ids.length}（30〜50）`);
+  const k1ids = ids.filter((id) => SK[id].kind !== "passive");   // パッシブ（K2）は tests/checks/k2_passives.mjs
+  if (k1ids.length < 30 || k1ids.length > 50) fail(`戦技と戦闘の外のスキルの数が ${k1ids.length}（30〜50）`);
   const STYLES = new Set(["剣", "刀", "短剣", "斧", "槌", "槍", "弓", "杖", "鞭", "投げ物", "拳", "盾", "二刀", "両手"]);
   const FX = new Set(["hit", "parry", "counter", "stance", "wall", "read", "heal", "focus", "feint"]);
   const facs = new Set(Object.values(D.LOCS).flatMap((L) => L.fac || []));
@@ -24,16 +25,16 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   for (const id of ids) {
     const s = SK[id];
     kinds[s.kind] = (kinds[s.kind] || 0) + 1;
-    if (!/^k1_/.test(id)) fail(`技 ${id}：id の頭が k1_ でない`);
+    if (!/^k[12]_/.test(id)) fail(`技 ${id}：id の頭が k1_・k2_ でない`);
     if (!s.name || !s.hint) fail(`技 ${id}：名前か効き目が無い`);
-    if (!["combat", "field", "both"].includes(s.kind)) fail(`技 ${id}：種類が変（${s.kind}）`);
+    if (!["combat", "field", "both", "passive"].includes(s.kind)) fail(`技 ${id}：種類が変（${s.kind}）`);
     if (s.stat !== "武器" && !D.STATS.includes(s.stat)) fail(`技 ${id}：判定の能力値が無い（${s.stat}）`);
     if (s.kind === "field" && s.stat === "武器") fail(`技 ${id}：戦闘の外の技が武器で判定する`);
     for (const k of Object.keys(s.need || {})) if (!D.STATS.includes(k)) fail(`技 ${id}：目安の能力値 ${k} が無い`);
     if (!Object.keys(s.need || {}).length) fail(`技 ${id}：必要な能力値の目安が無い`);
     for (const k of s.style || []) if (!STYLES.has(k)) fail(`技 ${id}：知らない武器の型 ${k}`);
-    if (s.kind !== "field" && (!s.fx || !FX.has(s.fx.t))) fail(`技 ${id}：戦闘の効き目が無い`);
-    if (s.kind !== "field" && !Number.isFinite(s.ki)) fail(`技 ${id}：気力が無い`);
+    if (K.isArt(id) && (!s.fx || !FX.has(s.fx.t))) fail(`技 ${id}：戦闘の効き目が無い`);
+    if (K.isArt(id) && !Number.isFinite(s.ki)) fail(`技 ${id}：気力が無い`);
     const L = s.learn || {};
     if (!L.train && !L.camp && !(L.teach || []).length && !L.scroll) fail(`技 ${id}：覚え方が無い`);
     for (const t of L.teach || []) if (!D.K1_TEACHERS[t]) fail(`技 ${id}：教える人 ${t} が無い`);
@@ -57,12 +58,11 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   for (const cls of Object.keys(D.CLASSES)) if (!(D.SKILL_START[cls] || []).length) fail(`職業 ${cls} にはじめの技が無い`);
   const scrolls = Object.keys(D.ITEMS).filter((id) => D.ITEMS[id].type === "k1scroll");
   for (const id of scrolls) { const it = D.ITEMS[id]; if (!SK[it.skill]) fail(`巻物 ${id}：技 ${it.skill} が無い`); if (!(it.price > 0) || !it.desc) fail(`巻物 ${id}：値段か説明が無い`); }
+  // K5：初級の巻物は町の店。中級・上級は師が譲る・仲間の贈り物・依頼の礼・強い敵の落とし物。どの巻物にも入手場所がある（図鑑）
   const inShop = new Set(Object.values(D.LOCS).flatMap((L) => L.shop || []).filter((id) => scrolls.includes(id)));
   const inLoot = new Set(Object.values(D.ENEMIES).flatMap((e) => (e.loot || []).map(([id]) => id)).filter((id) => scrolls.includes(id)));
-  for (const id of scrolls) if (!inShop.has(id) && !inLoot.has(id)) fail(`巻物 ${id}：店にも落とし物にも無い（図鑑の入手場所が引けない）`);
-  if (inShop.size < 10) fail(`店に並ぶ巻物が ${inShop.size} 種しかない`);
-  if (inLoot.size < 10) fail(`敵が落とす巻物が ${inLoot.size} 種しかない`);
-  for (const [loc, list] of Object.entries(D.K1_SHOP)) { if (!D.LOCS[loc]) fail(`巻物の店：場所 ${loc} が無い`); for (const id of list) if (!SK[id]) fail(`巻物の店：技 ${id} が無い`); }
+  for (const id of scrolls) if (!G.codexItemWhere(id).length) fail(`巻物 ${id}：入手場所が引けない`);
+  for (const [tid, g] of Object.entries(D.K5_GIVERS || {})) { if (!D.K1_TEACHERS[tid]) fail(`巻物を譲る師 ${tid} が無い`); for (const id of [...(g[2] || []), ...(g[3] || [])]) if (!SK[id]) fail(`巻物を譲る師：技 ${id} が無い`); }
   for (const [eid, list] of Object.entries(D.K1_DROPS)) { if (!D.ENEMIES[eid]) fail(`巻物の落とし物：敵 ${eid} が無い`); for (const [id] of list) if (!SK[id]) fail(`巻物の落とし物：技 ${id} が無い`); }
   const cats = new Set([...Object.keys(D.C10_CATS || {}), ...Object.keys(D.K1_CATS || {})]);
   for (const t of D.K1_TPL) { if (!SK[t.sk] || SK[t.sk].kind === "combat") fail(`型「${t.label}」：戦闘の外の技 ${t.sk} でない`); if (!cats.has(t.cat)) fail(`型「${t.label}」：種類 ${t.cat} が無い`); }
@@ -112,7 +112,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     S.skills = ["k1_parry", "k1_aim", "k1_drawcut", "k1_guardform", "k1_read", "k1_feint", "k1_venom", "k1_focus"];
     S.weapon = "longsword";
     G.startCombat(["bandit"]);
-    const grp = G.actions().find((g) => /^技（気力/.test(g.title || ""));
+    const grp = G.actions().find((g) => /^戦技（気力/.test(g.title || ""));
     if (!grp) fail("戦闘に「技」の組が無い");
     else {
       const aim = grp.list.find((a) => a.id === "cb:k1:k1_aim");
@@ -206,7 +206,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   // すべての戦闘の技を、合う武器で一度ずつ使っても壊れない
   {
     const WEAPON = { 剣: "longsword", 刀: "katana", 短剣: "dagger", 斧: "axe", 槌: "mace", 槍: Object.keys(D.ITEMS).find((id) => D.ITEMS[id].i3 && D.ITEMS[id].i3.k === "槍"), 弓: Object.keys(D.ITEMS).find((id) => D.ITEMS[id].i3 && D.ITEMS[id].i3.k === "弓"), 杖: "staff", 拳: "fists", 投げ物: Object.keys(D.ITEMS).find((id) => D.ITEMS[id].i3 && D.ITEMS[id].i3.k === "投げ物") };
-    for (const id of ids.filter((x) => SK[x].kind !== "field")) {
+    for (const id of ids.filter((x) => K.isArt(x))) {
       const S = start("merc", 600, 30);
       S.skills = [id];
       const need = (SK[id].style || []).find((k) => WEAPON[k] || k === "盾" || k === "二刀");
@@ -256,7 +256,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   {
     const S = start("merc", 701, 16);
     const town = Object.keys(D.LOCS).find((id) => (D.LOCS[id].fac || []).includes("train") && D.LOCS[id].type === "town");
-    S.loc = town; S.mode = "fac"; S.fac = "train";
+    S.loc = town; S.mode = "fac"; S.fac = "train"; S.fame = 40;   // 教官は名が知られた者にだけ稽古をつける（K3）
     const a = acts().find((x) => x.id === "k1train:k1_twinfang");
     if (!a || a.disabled) fail(`訓練場で返し刃を稽古できない（${a && a.sub}）`);
     else {
@@ -304,8 +304,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     const a = acts().find((x) => x.id === "k1scroll:k1s_flurry");
     if (!a || !a.disabled || !/敏捷/.test(a.sub)) fail(`敏捷が低いのに乱れ打ちの巻物が読める（${a && a.sub}）`);
     S.stats.敏捷 = 30;
-    let n = 0;
-    while (!K.knows("k1_flurry") && n++ < 20) G.act("k1scroll:k1s_flurry");
+    G.act("k1scroll:k1s_flurry");   // K5：読めば必ず覚える
     if (!K.knows("k1_flurry")) fail("巻物を読んでも技を覚えない");
     if (G.count("k1s_flurry")) fail("覚えたのに巻物が残っている");
     // 古い字の巻物は古文字読みか知力が要る
@@ -324,8 +323,10 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   {
     const S = start("merc", 1101, 30);
     S.loc = Object.keys(D.LOCS).find((id) => D.LOCS[id].type === "wild");
-    const a = acts().find((x) => /^k1camp:k1_/.test(x.id));
-    if (!a) fail("荒野で野営の稽古ができない");
+    if (acts().some((x) => /^k1camp:k\d_/.test(x.id) && !K.knows(x.id.slice(7)))) fail("荒野の野営の稽古で、新しい戦技を覚えられる（K3 で覚えないことにした）");
+    if (acts().some((x) => /^k1camp:/.test(x.id))) fail("一人の野営で、稽古の選択肢が出る（K4：巻物か仲間が要る。条件が無ければ出さない）");
+    G.give("k1s_parry");
+    if (!acts().some((x) => x.id === "k1camp:k1_parry" && !x.disabled)) fail("受け流しの巻物を持っても、野営で型を磨けない");
     S.loc = Object.keys(D.LOCS).find((id) => D.LOCS[id].type === "town");
     if (acts().some((x) => /^k1camp:/.test(x.id))) fail("町の中で野営の稽古ができる");
   }
@@ -362,5 +363,5 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     }
   }
 
-  if (!bad) ok(`スキル（技 ${ids.length}：戦闘 ${kinds.combat}・外 ${kinds.field}・両方 ${kinds.both}／師 ${Object.keys(D.K1_TEACHERS).length}・巻物 ${scrolls.length}（店 ${inShop.size}・落とし物 ${inLoot.size}）・技の選択肢のある出来事 ${withK1.length}）`);
+  if (!bad) ok(`戦技とスキル（K1 ${k1ids.length}：戦闘 ${kinds.combat}・外 ${kinds.field}・両方 ${kinds.both}／師 ${Object.keys(D.K1_TEACHERS).length}・巻物 ${scrolls.length}（店 ${inShop.size}・落とし物 ${inLoot.size}）・技の選択肢のある出来事 ${withK1.length}）`);
 };

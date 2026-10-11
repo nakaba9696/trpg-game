@@ -34,9 +34,13 @@ const FACE = {
   // C8（src/data/zc8_people.js）
   gigra: "がらっぱち", valdun: "言葉は少ない", gensai: "糸目", tsuyuha: "古風な話し方", takimaru: "威勢がよく", yurien: "無表情", roswitha: "数字で話す",
   izra: "珍しがる", anselmo: "罰当たり", polf: "盛って", jonas: "堅物", rudger: "物腰が柔らか", rionetta: "おっとり", graul: "礼儀正しく",
+  // C12（src/data/zcz_c12_people.js）
+  ortensia: "問いを一つ", ismene: "淡々と", shano: "人見知り", otose: "豪快", guido: "明日にする",
+  pietro: "帳面", marguerite: "叩いて", hildegard: "にこりともせず", agathe: "ぶっきらぼう", seraphina: "おっとり", tomas: "穏やかな話し方", ganzou: "威勢", yae: "結び目",
 };
 
 export default ({ G, fail }) => {
+  G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
   G.data.Q8B.off = G.data.Q8L.off = true; // Q8 の上がり方・恋人の条件は tests/checks/q8_love.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   let n = 0;
@@ -89,7 +93,7 @@ export default ({ G, fail }) => {
   choose("おばさん");
   if (G.affOf("angelica") !== -35) F(`「おばさん」で好感度がマイナスに入らない（${G.affOf("angelica")}）`);
   if (G.affWord(-35) !== "警戒") F(`−35 の言葉が ${G.affWord(-35)}`);
-  if (!/アンジェリカの好感度 -35（-35・警戒）/.test(lastNotes(S, 12))) F("好感度の通知が M2 の形でない");
+  if (!/アンジェリカの好感度 -35（警戒）/.test(lastNotes(S, 12))) F("好感度の通知が M2 の形でない");
   G.affAdd("angelica", -500);
   if (G.affOf("angelica") !== -100 || G.affWord(-100) !== "憎んでいる") F("好感度が −100 で止まらないか、言葉が違う");
   G.affAdd("angelica", 900, true);
@@ -121,7 +125,7 @@ export default ({ G, fail }) => {
     const saved = JSON.parse(JSON.stringify(S));
     if (saved.companions.find((x) => x.c2 === "sheila").bond !== 70 || saved.aff.sheila !== 40) F("セーブの bond と好感度が揃わない");
     const talk = G.exploreActions().flatMap((g) => g.list).find((a) => a.id === "m2talk:" + c.id);
-    if (!talk || !/（40）/.test(talk.sub)) F(`「話す」の好感度が目盛りにそろわない（${talk && talk.sub}）`);
+    if (!talk || /（-?\d+）/.test(talk.sub) || !/信頼している/.test(talk.sub)) F(`「話す」の好感度が段の名前で出ない（数は出さない。R10 低 21）（${talk && talk.sub}）`);
   }
   // 前の冒険の会った人の好感度を持って加わる
   S = start("leavel");

@@ -174,7 +174,7 @@
     seenLore = gl.snap(S);
     freshNow = new Set(got);
     got.forEach((id) => unseen.add(id));
-    if (got.length) announce(got.map((id) => G.data.LORE[id].title));
+    if (got.length) gl.announce(got.map((id) => G.data.LORE[id].title)); // gl.announce を通す（F6 が戦闘の手番を見せ終えるまで預かれるように）
     const list = wordsNow();
     const log = $("#log");
     if (log && list.length) {

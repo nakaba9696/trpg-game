@@ -2,10 +2,10 @@
 // - assets/ の画像が Artifact の決まりに収まる（index.html 16MB 未満・1 枚 15MB 未満・全体 256MB 未満・511 ファイルまで）。1 回の公開（250 ファイル・60MB の目安）を超えるなら分けて載せる案内を出す
 // - 回ごとの分け方：どの回も目安に収まり、全部の画像がちょうど一度ずつ載る
 // - 外のファイルの一覧：鍵 → 相対パス・バイト数。G.ASSET_MODE が "files"
-// - 予備の埋め込み（--embed）：上限を超えるなら差分を省く
+// - 予備の埋め込み（--embed）：上限を超えるなら差分を省く（それでも超えるなら背景、大きい絵の順。A20）
 // - 絵の部品：外のファイルの相対パスをそのまま読み、読めなければ絵を出さない（A10）。魔物の先読みは起動の後に回す
 // - ビルドしてあれば（dist/site/）：index.html に画像が埋め込まれていない、files.json のファイルがすべてある、HTML の一覧と合う
-import { readFileSync, existsSync, statSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { readFileSync, existsSync, statSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import vm from "node:vm";
 import path from "node:path";
@@ -61,9 +61,12 @@ export default ({ G, fail, ok }) => {
     if (c2.G.ASSET_MODE !== "embed" || !String(c2.G.ASSETS["portraits/nora"]).startsWith("data:")) F("埋め込みの形の印か中身が違う");
     const small = collectAssets(dir, { limit: Math.ceil(e.total * 0.8), shrink: true });
     if (small.map["portraits/nora_joy"] || !small.map["portraits/nora"] || small.dropped.join() !== "portraits/nora_joy") F("埋め込みが上限を超えるとき、差分だけを省いていない");
+    // A20：差分を省いても超えるなら、大きい絵から省く（予備の HTML ではその人・敵は絵なし）
+    const tiny = collectAssets(dir, { limit: Math.ceil(e.total * 0.5), shrink: true });
+    if (tiny.dropped.join() !== "portraits/nora_joy,portraits/nora" || !tiny.map["monsters/goblin"] || tiny.total > e.total * 0.5) F(`差分を省いても上限を超えるとき、大きい絵から省いていない（${tiny.dropped.join()}）`);
     let threw = false;
-    try { collectAssets(dir, { limit: 100, shrink: true }); } catch { threw = true; }
-    if (!threw) F("差分を省いても上限を超えるのに止まらない");
+    try { collectAssets(dir, { limit: 100 }); } catch { threw = true; }
+    if (!threw) F("縮めない埋め込みが上限を超えるのに止まらない");
     if (!isVariant("portraits/nora_sorrow") || isVariant("portraits/nora") || isVariant("monsters/x_joy")) F("差分の見分け方が違う");
   } finally {
     rmSync(dir, { recursive: true, force: true });
@@ -122,8 +125,10 @@ export default ({ G, fail, ok }) => {
   const real = siteAssets(path.join(root, "assets"));
   const page = path.join(root, "dist/site/index.html");
   const gameJs = path.join(root, "dist/site/game.js"); // コード（T）。最初の回にページと一緒に載るので、ページの分に足して見積もる
+  // 10MB を超えると game-2.js… に分かれる（tools/build.mjs）。分かれた分は別ファイルとして一覧に入る
+  const codeChunks = existsSync(path.join(root, "dist/site")) ? readdirSync(path.join(root, "dist/site")).filter((n) => /^game-\d+\.js$/.test(n)).sort((a, b) => parseInt(a.slice(5)) - parseInt(b.slice(5))) : [];
   const pageBytes = existsSync(page) ? statSync(page).size + (existsSync(gameJs) ? statSync(gameJs).size : 0) : 4 * MB; // ビルドしていなければ大きめに見積もる
-  const list = real.files.map((f) => ({ pub: f.pub, local: "dist/site/" + f.pub, bytes: f.bytes }));
+  const list = codeChunks.map((n) => ({ pub: n, local: "dist/site/" + n, bytes: statSync(path.join(root, "dist/site", n)).size })).concat(real.files.map((f) => ({ pub: f.pub, local: "dist/site/" + f.pub, bytes: f.bytes })));
   const plan = planSite({ pageBytes, files: list });
   plan.errors.forEach((e) => F("Artifact に載らない：" + e));
   if (!covers(plan, list)) F("本物の画像の分け方に、載らない画像か二度載る画像がある");
@@ -137,7 +142,8 @@ export default ({ G, fail, ok }) => {
     const tag = /<script src="game\.js(\?v=[0-9a-f]+)?"><\/script>/.exec(html0);
     const gjs = gameJs;
     if (tag && !existsSync(gjs)) F("index.html が game.js を読むのに、dist/site/game.js が無い");
-    const html = tag && existsSync(gjs) ? html0 + "\n" + readFileSync(gjs, "utf8") : html0;
+    const html = tag && existsSync(gjs) ? [html0, readFileSync(gjs, "utf8"), ...codeChunks.map((n) => readFileSync(path.join(root, "dist/site", n), "utf8"))].join("\n") : html0;
+    codeChunks.forEach((n) => { if (!new RegExp(`<script src="${n.replace(".", "\\.")}(\\?v=[0-9a-f]+)?"></script>`).test(html0)) F(`dist/site/${n} があるのに index.html が読んでいない`); });
     if (/data:image\/(webp|png|jpeg);base64/.test(html)) F("dist/site/index.html に画像が埋め込まれている（外のファイルにする）");
     const m = /G\.ASSETS = (\{[^\n]*\});/.exec(html);
     const map = m ? JSON.parse(m[1]) : {};
@@ -152,7 +158,7 @@ export default ({ G, fail, ok }) => {
       }
       if (tag && files["game.js"] !== "dist/site/game.js") F("files.json に game.js（コード）が無い");
       if (tag && plan.batches.length > 1 && existsSync(path.join(root, "dist/site/files-1.json")) && !JSON.parse(readFileSync(path.join(root, "dist/site/files-1.json"), "utf8"))["game.js"]) F("最初の回の公開（files-1.json）に game.js が無い（ページだけ載って動かない）");
-      const want = [...new Set(Object.values(map).map((v) => v.replace(/#.*$/, "")))].sort().join(), have = Object.keys(files).filter((k) => k !== "game.js").sort().join(); // 差分はスプライトの「#xywh=」（A8）
+      const want = [...new Set(Object.values(map).map((v) => v.replace(/#.*$/, "")))].sort().join(), have = Object.keys(files).filter((k) => !/^game(-\d+)?\.js$/.test(k)).sort().join(); // 差分はスプライトの「#xywh=」（A8）
       if (want !== have) F("files.json と HTML の画像の一覧が合わない（ビルドし直す）");
     }
     if (plan.batches.length > 1) for (let i = 1; i <= plan.batches.length; i++) if (!existsSync(path.join(root, `dist/site/files-${i}.json`))) F(`分けて載せる一覧 files-${i}.json が無い`);

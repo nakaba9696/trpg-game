@@ -119,6 +119,8 @@
       const S = G.S;
       if (S) {
         const same = prev && prev.run === S.id;
+        // F5：とどめの手番を順に見せている間は、戦いで得た金をまだ出さない（見せ終えて描き直したときに「+n G」）
+        if (same && G.u13 && G.u13.ghosting && G.u13.ghosting()) { const V = { gold: prev.gold }; paintBar(V, null); paintSheet(V); return r; }
         const dl = same ? u11.delta(prev.gold, S.gold) : null;
         prev = { run: S.id, gold: S.gold };
         paintBar(S, dl);

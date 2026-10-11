@@ -15,8 +15,8 @@
    "kind": "place",
    "scene": "town",
    "type": "town",
-   "region": "自由都市連合",
-   "name": "自由都市ブランデール",
+   "region": "レオネスト王国",
+   "name": "商都ブランデール",
    "pack": "west",
    "tags": "medieval fantasy town, cobblestone main street, half-timbered houses, money changer signboards, large guild hall with banners, stone town gate, grassy low hills beyond the town wall",
    "trial": true
@@ -26,7 +26,7 @@
    "kind": "place",
    "scene": "w7_vineyard",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "葡萄の町ヴィナレ",
    "pack": "west",
    "tags": "vineyard town on gentle south-facing slopes, terraced grape trellises, wooden wine barrels, press house, warm sunlight"
@@ -36,7 +36,7 @@
    "kind": "place",
    "scene": "w7_diggers",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "発掘人の町ドゥルム",
    "pack": "west",
    "tags": "diggers' town grown from tents, canvas tents beside rough stone houses, broken white ancient pillars in the distance, shovels and carts"
@@ -46,7 +46,7 @@
    "kind": "place",
    "scene": "w7_mercs",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "傭兵の町グラッツ",
    "pack": "west",
    "tags": "mercenary town around a fenced drill yard, wooden palisade, large notice board covered with paper postings, inns, taverns and smithy"
@@ -56,7 +56,7 @@
    "kind": "place",
    "scene": "w7_ferry",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "渡しの町リュッセン",
    "pack": "west",
    "tags": "river ferry town, wide river with a flat ferry boat, wooden landing piers, small toll booth hut, half-timbered houses on the bank"
@@ -66,7 +66,7 @@
    "kind": "place",
    "scene": "port",
    "type": "town",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "港町ヴァレンツァ",
    "pack": "west",
    "tags": "harbor town, wooden piers, moored sailing ships with heavy wet sails, fishing nets, warehouses, misty sea, lighthouse, seagulls",
@@ -77,7 +77,7 @@
    "kind": "place",
    "scene": "forest",
    "type": "wild",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "迷いの森",
    "pack": "west",
    "tags": "dense dark forest, branches interlocking overhead, thick moss on the ground, gnarled old trees, dim light through the canopy, narrow overgrown path, old barrel by the path",
@@ -88,17 +88,17 @@
    "kind": "place",
    "scene": "ruins",
    "type": "dungeon",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "エル・ナフ遺構",
    "pack": "west",
-   "tags": "ancient ruins, broken white stone pillars standing in tall grass like ribs, crumbling stone stairs leading underground, huge circular stone tablet carved with symbols, overgrown"
+   "tags": "ancient sunken temple of a lost kingdom, broken white stone pillars standing in tall grass like ribs, the ground line of a sinking visible on the walls, sand and earth pouring into a stairway leading underground, huge circular stone tablet carved with symbols, overgrown"
   },
   {
    "id": "w3_bells",
    "kind": "place",
    "scene": "w3_bells",
    "type": "wild",
-   "region": "自由都市連合",
+   "region": "レオネスト王国",
    "name": "鐘撞きの丘",
    "pack": "west",
    "tags": "low grassy hills, an old stone watchtower on each hilltop, bronze bell hanging in each tower, bell ropes, windy grassland"
@@ -271,7 +271,7 @@
    "region": "レオネスト王国",
    "name": "灰の観測所",
    "pack": "leonest",
-   "tags": "half-buried domed observatory in volcanic ash, on a volcano slope, door boarded up with planks, ash-covered ground"
+   "tags": "half-buried domed observatory in volcanic ash on a volcano slope, round dome with star-shaped holes, listening tubes into the mountain, door boarded up with planks, ash-covered ground, smoking volcano above"
   },
   {
    "id": "frost",
@@ -312,7 +312,7 @@
    "region": "ノルディア帝国",
    "name": "北の港アイゼルヴァン",
    "pack": "nordia",
-   "tags": "cold northern harbor, ice-covered wooden piers and mooring posts, fishing boats tied up, rough grey ocean waves, warehouses, overcast stormy sky"
+   "tags": "northern harbor town in winter, snow on the rooftops and warehouses, ice-covered wooden piers and mooring posts, fishing boats tied up, floating ice on calm deep blue sea, crisp clear blue winter sky, snowy mountains"
   },
   {
    "id": "w7_grishaim",
@@ -372,7 +372,7 @@
    "region": "ノルディア帝国",
    "name": "古い鉄の道",
    "pack": "nordia",
-   "tags": "abandoned mine entrance in a snowy mountain, ancient iron railway tracks leading inside, boarded wooden barricade, rusted machinery"
+   "tags": "abandoned mine in snowy mountains, ancient straight iron rails running into the mountainside, a rounded white-metal carriage stopped on the slope, wooden boards nailed over a tunnel mouth"
   },
   {
    "id": "fort",
@@ -472,7 +472,7 @@
    "region": "人と魔の境",
    "name": "断界の古関",
    "pack": "border",
-   "tags": "ancient massive stone gatehouse sealing a mountain crevice, unreadable inscription above the gate, height notches carved on the gate, cliffs"
+   "tags": "colossal ancient gatehouse blocking a mountain pass, towering gate far taller than any door, height notches carved on the gateposts, scale pans hanging beside the gate, uncarved weathered stone, snowy peaks"
   },
   {
    "id": "w2_echo",
@@ -741,6 +741,26 @@
    "tags": "white salt flat, mirror-like ground reflecting the sky, blurred horizon, huge round shadow on the ground"
   },
   {
+   "id": "w10_roune",
+   "kind": "place",
+   "scene": "w10_roune",
+   "type": "wild",
+   "region": "レオネスト王国",
+   "name": "眠り山ロウネ",
+   "pack": "leonest",
+   "tags": "gentle extinct volcano with wide grassy slopes, flat cloud-capped summit, scattered white goats, shepherd's stone hut with thin smoke, winding footpath, stone cairns"
+  },
+  {
+   "id": "w10_drause",
+   "kind": "place",
+   "scene": "w10_drause",
+   "type": "wild",
+   "region": "ノルディア帝国",
+   "name": "鉄冠岳ドラウゼ",
+   "pack": "nordia",
+   "tags": "rust-red rocky mountain with a jagged crown of black rock spires at the summit, snowfields, abandoned mine entrances on the slopes, ruined miners' village at the foot, frozen rails"
+  },
+  {
    "id": "in_inn",
    "kind": "facility",
    "scene": "inn",
@@ -854,6 +874,376 @@
    "tags": "hunting ground in a deep forest, morning mist, animal tracks, hunting blind, giant trees"
   },
   {
+   "id": "in_w8s_karna_bourse",
+   "kind": "facility",
+   "scene": "w8s_karna_bourse",
+   "name": "金貨の取引所（ブランデール）",
+   "pack": "special_in",
+   "tags": "grand exchange hall, wooden counters, giant brass balance scale, stacks of gold coins, coin purses, ledgers"
+  },
+  {
+   "id": "in_w8s_nerva_horn",
+   "kind": "facility",
+   "scene": "w8s_nerva_horn",
+   "name": "霧笛小屋（ヴァレンツァ）",
+   "pack": "special_in",
+   "tags": "small hut on a foggy cape, huge brass foghorn, names carved on wooden wall, sea mist through window"
+  },
+  {
+   "id": "in_w8s_carmel_yard",
+   "kind": "facility",
+   "scene": "w8s_carmel_yard",
+   "name": "造船所（カルメラント）",
+   "pack": "special_in",
+   "tags": "(shipbuilding yard on dry land:1.3), (half-built wooden ship hull resting on wooden blocks on the shore:1.3), hull planks missing so the ribs show, tall wooden scaffolding and ladders, stacks of timber and planks, sawhorses and workbenches, wood shavings on the ground, harbor in the background",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_lignoa_lake",
+   "kind": "facility",
+   "scene": "w8s_lignoa_lake",
+   "name": "湖の舟着き場（リグノア）",
+   "pack": "special_in",
+   "tags": "wooden pier on a misty forest lake, flat-bottomed boats moored, small island with a stone shrine in the distance, calm water",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_frosleia_crater",
+   "kind": "facility",
+   "scene": "w8s_frosleia_crater",
+   "name": "火口の祭壇（フロスレイア）",
+   "pack": "special_in",
+   "tags": "rim of a volcanic crater, black stone altar on the edge, rising steam and ash, glowing lava far below, rope path with wooden stakes, barren rocks",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_zaigros_tower",
+   "kind": "facility",
+   "scene": "w8s_zaigros_tower",
+   "name": "北の見張り塔（ザイグロス）",
+   "pack": "special_in",
+   "tags": "top of a stone watchtower, open battlements, bronze bell with colored cloth ribbons, brass telescope on a stand, snowy plain on the northern horizon",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_russen_isle",
+   "kind": "facility",
+   "scene": "w8s_russen_isle",
+   "name": "渡し舟の中洲（リュッセン）",
+   "pack": "special_in",
+   "tags": "sandbar in the middle of a wide river, small ferry hut, ferry boats pulled up on the sand, driftwood and a round shield drying on the sand",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_glatz_post",
+   "kind": "facility",
+   "scene": "w8s_glatz_post",
+   "name": "傭兵の詰所（グラッツ）",
+   "pack": "special_in",
+   "tags": "mercenary guardhouse, wall covered with hundreds of small wooden tags, weapon racks, fireplace, long table"
+  },
+  {
+   "id": "in_w8s_durm_shed",
+   "kind": "facility",
+   "scene": "w8s_durm_shed",
+   "name": "欠片の鑑定小屋（ドゥルム）",
+   "pack": "special_in",
+   "tags": "cramped appraiser shed, shelves full of strange ancient fragments, old gears and glass shards, magnifying glass on a workbench, rope ladders, muddy boots"
+  },
+  {
+   "id": "in_w8s_vinale_cellar",
+   "kind": "facility",
+   "scene": "w8s_vinale_cellar",
+   "name": "醸造所の酒蔵（ヴィナレ）",
+   "pack": "special_in",
+   "tags": "stone wine cellar, barrels stacked to the ceiling with three different brand marks, grape pressing vat"
+  },
+  {
+   "id": "in_w8s_kaes_shaft",
+   "kind": "facility",
+   "scene": "w8s_kaes_shaft",
+   "name": "古い坑道（カースヴェルグ）",
+   "pack": "special_in",
+   "tags": "old mine entrance, wooden tags hanging on nails, mine cart rails, lanterns, snow outside"
+  },
+  {
+   "id": "in_w8s_valm_pillar",
+   "kind": "facility",
+   "scene": "w8s_valm_pillar",
+   "name": "石の柱の広場（ヴァルミリア）",
+   "pack": "special_in",
+   "tags": "(snowy:1.3) market square in a winter town, snow on the ground, tall black stone pillar circled by wooden stakes, colorful tribal tents and stalls, large cooking pot over a fire",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_brenark_wall",
+   "kind": "facility",
+   "scene": "w8s_brenark_wall",
+   "name": "爪痕の城壁（ブレイナーク）",
+   "pack": "special_in",
+   "tags": "(view from the top of a city wall:1.3), stone walkway with battlements running into the distance, (four huge claw marks gouged into the stone parapet:1.3), grey stone, frozen sea beyond the wall",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_gris_visit",
+   "kind": "facility",
+   "scene": "w8s_gris_visit",
+   "name": "塔の面会所（グリスハイム）",
+   "pack": "special_in",
+   "tags": "prison tower visiting room, iron bars, two stools facing each other, chalk line on the floor, small window"
+  },
+  {
+   "id": "in_w8s_eisen_ice",
+   "kind": "facility",
+   "scene": "w8s_eisen_ice",
+   "name": "氷の漁場（アイゼルヴァン）",
+   "pack": "special_in",
+   "tags": "frozen bay, (small wooden ice fishing huts:1.3) around round holes in the ice, fishing lines and buckets, rope path across the ice, (huge whale skeleton ribs sticking out of the ice far away:1.2), no living animals",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_elden_garden",
+   "kind": "facility",
+   "scene": "w8s_elden_garden",
+   "name": "泉の森の薬草園（エルデンホルム）",
+   "pack": "special_in",
+   "tags": "herb garden around a steaming warm spring, green rows of herbs amid snow, archery target on the wooden fence, wicker baskets",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_fort_wall",
+   "kind": "facility",
+   "scene": "w8s_fort_wall",
+   "name": "黒い壁の上（黒鉄の砦）",
+   "pack": "special_in",
+   "tags": "(walkway on top of a fortress wall:1.3), black iron and stone battlements in the foreground, three different national banners on poles, (mountain pass seen from the wall:1.2)",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_kern_well",
+   "kind": "facility",
+   "scene": "w8s_kern_well",
+   "name": "深い井戸（ケルン）",
+   "pack": "special_in",
+   "tags": "small town square of a fort town, (old round stone well with a wooden roof and a pulley:1.4), rope with countless knots, wooden bucket on the well rim, separate big iron porridge cauldron hanging over a campfire nearby, stone houses around the square",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_rine_field",
+   "kind": "facility",
+   "scene": "w8s_rine_field",
+   "name": "鐘待ちの畑（リーネ）",
+   "pack": "special_in",
+   "tags": "village field with hoes left in the soil, small graveyard beside the field, distant watchtower with a bell",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_velt_beacon",
+   "kind": "facility",
+   "scene": "w8s_velt_beacon",
+   "name": "烽火台（ヴェルト）",
+   "pack": "special_in",
+   "tags": "(three round stone beacon towers:1.3) with stacked firewood on top on a cliff, thin smoke, northern sea on one side, mountains on the other side",
+   "outdoor": true
+  },
+  {
+   "id": "in_w8s_halt_carver",
+   "kind": "facility",
+   "scene": "w8s_halt_carver",
+   "name": "像彫りの小屋（ハルト）",
+   "pack": "special_in",
+   "tags": "stone carver's hut, dozens of small faceless stone statues, all facing away from the mountains, window on the far side"
+  },
+  {
+   "id": "in_w8s_zalem_altar",
+   "kind": "facility",
+   "scene": "w8s_zalem_altar",
+   "name": "庵の奥の祭壇（ザレム）",
+   "pack": "special_in",
+   "tags": "inside a crumbling mountain hermitage, mossy stone altar with plates of bread, pile of walking staffs, candles"
+  },
+  {
+   "id": "in_w9s_cathedral",
+   "kind": "facility",
+   "scene": "w9s_cathedral",
+   "name": "大聖堂の奥（エルヴィナ）",
+   "pack": "special_in",
+   "tags": "inner nave of a vast white cathedral, soaring gothic vaults, gilded pillars with carved ornaments, rows of empty pews, bell ropes hanging, shafts of light"
+  },
+  {
+   "id": "in_w9s_relics",
+   "kind": "facility",
+   "scene": "w9s_relics",
+   "name": "聖遺物の間（エルヴィナ）",
+   "pack": "special_in",
+   "tags": "reliquary hall, rows of glass cases with double locks, old bones and rusted relics on velvet, brass scales on a scholar's desk, candlelight, stone vaults"
+  },
+  {
+   "id": "in_w9s_staffs",
+   "kind": "facility",
+   "scene": "w9s_staffs",
+   "name": "杖の納め所（オルベ）",
+   "pack": "special_in",
+   "tags": "wooden shed at the edge of a pilgrim town, (hundreds of wooden walking staffs standing upright in rows:1.4), small wooden tags hanging from each staff, dusty light through the slats"
+  },
+  {
+   "id": "in_w9s_scriptorium",
+   "kind": "facility",
+   "scene": "w9s_scriptorium",
+   "name": "修道院の写字室（メルヴィ）",
+   "pack": "special_in",
+   "tags": "monastery scriptorium, long writing desks in rows, ink pots and quills, stacks of parchment, tall arched windows, river beyond the window"
+  },
+  {
+   "id": "in_w9s_chandlery",
+   "kind": "facility",
+   "scene": "w9s_chandlery",
+   "name": "蝋燭工房（リュミエ）",
+   "pack": "special_in",
+   "tags": "candle workshop, (hundreds of white candles hanging from the ceiling on strings:1.4), iron pots of melted wax over a hearth, wooden dipping racks, beehives seen through the open back door"
+  },
+  {
+   "id": "in_w9s_spring",
+   "kind": "facility",
+   "scene": "w9s_spring",
+   "name": "泉の縁（セレナ）",
+   "pack": "special_in",
+   "tags": "(small natural spring in a mossy rock basin:1.4), ancient rough stones around it, clear water with copper coins on the bottom, flat kneeling stones, wildflowers, on a grassy seaside cliff top, the sea far below, medieval, no tiles",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_shrine",
+   "kind": "facility",
+   "scene": "w9s_shrine",
+   "name": "浜の祠（ノルヴェ）",
+   "pack": "special_in",
+   "tags": "tiny wooden shrine on a fishing beach, a single stone inside with a fish offering, small boats pulled up on the sand, fishing nets drying",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_dojo",
+   "kind": "facility",
+   "scene": "w9s_dojo",
+   "name": "島の道場（シェルアーク）",
+   "pack": "special_in",
+   "tags": "wooden dojo hall built over the sea on stilts, (plank floor with gaps showing sea waves below:1.2), open side facing the sea, rows of blank wooden plaques on the wall, wooden practice swords on a rack"
+  },
+  {
+   "id": "in_w9s_council",
+   "kind": "facility",
+   "scene": "w9s_council",
+   "name": "顔役の会所（シェルアーク）",
+   "pack": "special_in",
+   "tags": "harbor meeting house, low wooden table with floor cushions, abacus and a small wooden board on the table, rafters covered with knotted ropes, open side toward the piers"
+  },
+  {
+   "id": "in_w9s_yagura",
+   "kind": "facility",
+   "scene": "w9s_yagura",
+   "name": "夜祭りの櫓（朧島）",
+   "pack": "special_in",
+   "tags": "wooden festival tower on a beach at night hung with many glowing paper lanterns, big taiko drum on the platform, white paper masks hanging on a rack, incense smoke, festival stalls",
+   "outdoor": true,
+   "sky": "night"
+  },
+  {
+   "id": "in_w9s_saltpan",
+   "kind": "facility",
+   "scene": "w9s_saltpan",
+   "name": "塩田（ソルネ）",
+   "pack": "special_in",
+   "tags": "(rows of square shallow salt evaporation ponds:1.4) along a beach reflecting the sky like mirrors, (white salt heaps:1.2), wooden rakes, a small weighing hut, glaring sunlight",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_netyard",
+   "kind": "facility",
+   "scene": "w9s_netyard",
+   "name": "網干し場（カラヴ）",
+   "pack": "special_in",
+   "tags": "small island beach, (dozens of large fishing nets hanging to dry on ropes between wooden posts:1.4), nets billowing in the wind like sails, net floats and shells tied in the meshes",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_belltower",
+   "kind": "facility",
+   "scene": "w9s_belltower",
+   "name": "霧の鐘楼（ミストラ）",
+   "pack": "special_in",
+   "tags": "(huge bronze bell hanging in a small open stone bell tower:1.4) on a rocky sea cliff, (thick sea fog:1.3), worn stone floor",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_pearlcove",
+   "kind": "facility",
+   "scene": "w9s_pearlcove",
+   "name": "潜りの入り江（ヨナ）",
+   "pack": "special_in",
+   "tags": "shallow turquoise cove with white sand bottom, small boats anchored, oyster shells piled on the boats, huts roofed with empty shells on the beach",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_sluice",
+   "kind": "facility",
+   "scene": "w9s_sluice",
+   "name": "水門の番小屋（トゥリエル）",
+   "pack": "special_in",
+   "tags": "wooden sluice gate on a lake canal, large winch with a crank wheel, gatekeeper's hut with a water level post, small boats waiting, plank walkways over the water",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_theater",
+   "kind": "facility",
+   "scene": "w9s_theater",
+   "name": "芝居小屋（サリュエス）",
+   "pack": "special_in",
+   "tags": "small wooden theater with half the roof made of canvas, stage with painted landscape backdrops, rows of benches, layers of old torn posters on the walls, colorful murals"
+  },
+  {
+   "id": "in_w9s_eldertree",
+   "kind": "facility",
+   "scene": "w9s_eldertree",
+   "name": "長老の樹（レヴァンデル）",
+   "pack": "special_in",
+   "tags": "enormous ancient tree in a hidden forest village, houses built into the trunk, a doorway high on the trunk, hundreds of small cloth strips tied to the roots, moss",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_lighthouse",
+   "kind": "facility",
+   "scene": "w9s_lighthouse",
+   "name": "白い灯台（ヴォルエラ）",
+   "pack": "special_in",
+   "tags": "(tall white stone lighthouse:1.4) standing on rocks at a calm bay, view from the shore, a shelf of driftwood objects at its foot, clear sky",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_senate",
+   "kind": "facility",
+   "scene": "w9s_senate",
+   "name": "議場の傍聴席（エルメシア）",
+   "pack": "special_in",
+   "tags": "circular senate hall seen from the gallery, empty seats in a ring at the same height, circular carved pattern on the floor, crystal light from above"
+  },
+  {
+   "id": "in_w9s_lake",
+   "kind": "facility",
+   "scene": "w9s_lake",
+   "name": "湖の舟着き場（アミュレイン）",
+   "pack": "special_in",
+   "tags": "wooden boat landing on a misty lake behind a hot spring town, small rowboats tied up, steam drifting over the water, distant shore",
+   "outdoor": true
+  },
+  {
+   "id": "in_w9s_canopy",
+   "kind": "facility",
+   "scene": "w9s_canopy",
+   "name": "大樹の見張り台（ナグリス）",
+   "pack": "special_in",
+   "tags": "wooden lookout platform high in the branches of a giant tree, rope ladders, a vast forest canopy below, the shadow of a colossal tree on the horizon",
+   "outdoor": true
+  },
+  {
    "id": "in_dungeon",
    "kind": "dungeon",
    "scene": "dungeon",
@@ -875,7 +1265,7 @@
    "scene": "ruins_in",
    "name": "エル・ナフ遺構の中",
    "pack": "dungeon_a",
-   "tags": "inside ancient ruins, underground temple hall, broken pillars, carved glyphs, dust, light from cracks in the ceiling",
+   "tags": "inside a sunken ancient temple, prayer hall with hundreds of kneeling hollows in the floor, broken white pillars, sand drifting from cracks in the ceiling into small heaps, carved glyphs, dust in shafts of light",
    "trial": true
   },
   {
@@ -892,7 +1282,7 @@
    "scene": "w3_ashvault_in",
    "name": "灰の観測所の中",
    "pack": "dungeon_a",
-   "tags": "inside an abandoned observatory, ash-covered telescope, broken instruments, boarded windows, dome ceiling"
+   "tags": "inside an ancient volcano watch-house observatory, ash-covered shelves of identical ledgers, brass rings of a moon calendar, listening holes in the wall, dome ceiling with star holes clogged by ash"
   },
   {
    "id": "in_w4_rail",
@@ -900,7 +1290,7 @@
    "scene": "w4_rail_in",
    "name": "古い鉄の道の中",
    "pack": "dungeon_a",
-   "tags": "abandoned mine tunnel, ancient iron rails, rusted machinery, timber supports, darkness"
+   "tags": "ancient mine tunnel, straight iron rails, white metal walls scraped in streaks, old water pipes with valves, a rounded white carriage stopped on the tracks with soot shadows in the seats, timber supports, darkness"
   },
   {
    "id": "in_w4_pass",
@@ -908,7 +1298,47 @@
    "scene": "w4_pass_in",
    "name": "断界の古関の中",
    "pack": "dungeon_b",
-   "tags": "inside an ancient gatehouse, massive stone corridors, giant doors, carved runes"
+   "tags": "inside an ancient border gatehouse, giant stone corridors, height notches on the walls, tally marks, enormous doors with bars on both sides, carved runes"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "dungeon_a",
+   "id": "in_w12_hall",
+   "scene": "w12_hall_in",
+   "name": "エル・ナフ遺構：光の回廊（仕掛けを解いた先）",
+   "tags": "long secret gallery behind an ancient altar, beams of sunlight bounced by old mirrors from wall to wall, painted murals of a glowing ancient city with dragons and floating ships, gold trims, dust motes, no sand, golden light at the far altar"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "dungeon_b",
+   "id": "in_w12_dome",
+   "scene": "w12_dome_in",
+   "name": "灰の観測所：星図の天井（仕掛けを解いた先）",
+   "tags": "round underground chamber with a painted star map dome ceiling, gold constellation lines and concentric moon calendar rings, a red moon in the center of the dome, clean floor with a great calendar disc, candles, awe"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "realm",
+   "id": "in_w12_gate",
+   "scene": "w12_gate_in",
+   "name": "断界の古関：取引の大広間（仕掛けを解いた先）",
+   "tags": "colossal hall beyond giant opened doors far taller than any door, enormous pillars with height notches, huge hanging scale pans, a giant staircase climbing upward into cold blue light, tiny torch for scale"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "dungeon_b",
+   "id": "in_w12_station",
+   "scene": "w12_station_in",
+   "name": "古い鉄の道：待合の間（仕掛けを解いた先）",
+   "tags": "ancient underground station hall, rounded white-metal carriages lined along the platform, faint glowing lamp stones in a vaulted ceiling, water pipes with brass valves, human-shaped soot shadows in the carriage windows, eerie stillness"
+  },
+  {
+   "kind": "dungeon",
+   "pack": "dungeon_a",
+   "id": "in_w12_vault",
+   "scene": "w12_vault_in",
+   "name": "エル・ナフ遺構の祭壇の下：沈んだ都を見下ろす窓",
+   "tags": "small stone study with walls covered in scribbled writing, arched window looking down into a vast underground cavern, an entire ancient city sunk in the earth below with roofs towers and streets, roots hanging from the earth ceiling, a glowing white lamp stone on a desk, breathtaking"
   },
   {
    "id": "in_w2_acid",
@@ -949,6 +1379,262 @@
    "name": "潮鳴りの洞の中",
    "pack": "dungeon_b",
    "tags": "inside a sea cave, tide water, glowing algae, wet rocks"
+  },
+  {
+   "id": "in_w11_graveyard_trap",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_trap_in",
+   "name": "竜の墓場・罠の通路",
+   "pack": "w11_graveyard",
+   "tags": "narrow chasm in a valley of dragon bones, a single huge dragon rib laid across as a bridge, saw marks, small skulls hanging on ropes, dark"
+  },
+  {
+   "id": "in_w11_graveyard_chest",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_chest_in",
+   "name": "竜の墓場・宝の部屋",
+   "pack": "w11_graveyard",
+   "tags": "sleeping dragon skeleton curled on the ground, old treasure chest held between its rib bones, scattered gold, dim cave light"
+  },
+  {
+   "id": "in_w11_graveyard_rest",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_rest_in",
+   "name": "竜の墓場・休み場",
+   "pack": "w11_graveyard",
+   "tags": "ruined dry stone hut on a rocky ledge among giant bones, old stone hearth with a small campfire, carved tally marks on the wall"
+  },
+  {
+   "id": "in_w11_graveyard_lair",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_lair_in",
+   "name": "竜の墓場・巣",
+   "pack": "w11_graveyard",
+   "tags": "huge dragon ribcage used as a nest, glowing yellow eyes in the dark, scattered bones, faint green glow"
+  },
+  {
+   "id": "in_w11_graveyard_stairs",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_stairs_in",
+   "name": "竜の墓場・下への階段",
+   "pack": "w11_graveyard",
+   "tags": "stone steps descending into a dark hole, bone-strewn cave floor, cold blue light rising from below"
+  },
+  {
+   "id": "in_w11_graveyard_lore",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_lore_in",
+   "name": "竜の墓場・昔のかけら",
+   "pack": "w11_graveyard",
+   "tags": "rows of upright dragon bones standing like grave markers, each carved with short ancient glyphs, torchlight"
+  },
+  {
+   "id": "in_w11_graveyard_vault",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_vault_in",
+   "name": "竜の墓場・隠し部屋",
+   "pack": "w11_graveyard",
+   "tags": "small hidden stone storeroom, shelves with old skulls and bone tools, open treasure chest glowing, shaft of light from above, dust motes"
+  },
+  {
+   "id": "in_w11_graveyard_deep",
+   "kind": "dungeon",
+   "scene": "w11_graveyard_deep_in",
+   "name": "竜の墓場・最奥（最奥の特別な一枚）",
+   "pack": "w11_graveyard",
+   "tags": "vast round hollow at the bottom of a valley, several giant dragon skeletons curled asleep in a ring, single beam of light from a crack in the ceiling, eerie green flame in the center, mist, epic"
+  },
+  {
+   "id": "in_w11_majincastle_trap",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_trap_in",
+   "name": "黒鎧の使徒の居城・罠の通路",
+   "pack": "w11_majincastle",
+   "tags": "dark corridor of black iron and bone, square trapdoors in the ceiling, steel spikes thrust up from holes in the floor, torches"
+  },
+  {
+   "id": "in_w11_majincastle_chest",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_chest_in",
+   "name": "黒鎧の使徒の居城・宝の部屋",
+   "pack": "w11_majincastle",
+   "tags": "black iron hall, chest of a fallen challenger with a paper note on the lid, dark red banners, torchlight"
+  },
+  {
+   "id": "in_w11_majincastle_rest",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_rest_in",
+   "name": "黒鎧の使徒の居城・休み場",
+   "pack": "w11_majincastle",
+   "tags": "small antechamber in a dark castle, simple bed with clean sheets, table with a loaf of black bread and a water jar, small fire"
+  },
+  {
+   "id": "in_w11_majincastle_lair",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_lair_in",
+   "name": "黒鎧の使徒の居城・巣",
+   "pack": "w11_majincastle",
+   "tags": "barracks hall, empty suits of black armor with names painted in white, red glowing eyes in the dark"
+  },
+  {
+   "id": "in_w11_majincastle_stairs",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_stairs_in",
+   "name": "黒鎧の使徒の居城・下への階段",
+   "pack": "w11_majincastle",
+   "tags": "bone and iron corridor, stairway descending into darkness, cold blue light from below"
+  },
+  {
+   "id": "in_w11_majincastle_lore",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_lore_in",
+   "name": "黒鎧の使徒の居城・昔のかけら",
+   "pack": "w11_majincastle",
+   "tags": "upside-down relief carving on the ceiling, rows of kneeling soldiers, huge beast on a throne, face chiseled away"
+  },
+  {
+   "id": "in_w11_majincastle_vault",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_vault_in",
+   "name": "黒鎧の使徒の居城・隠し部屋",
+   "pack": "w11_majincastle",
+   "tags": "hidden armory sealed inside a wall, racks of ancient spears and halberds, open chest of gold, shaft of light"
+  },
+  {
+   "id": "in_w11_majincastle_deep",
+   "kind": "dungeon",
+   "scene": "w11_majincastle_deep_in",
+   "name": "黒鎧の使徒の居城・最奥（最奥の特別な一枚）",
+   "pack": "w11_majincastle",
+   "tags": "colossal throne hall of bone pillars, giant spiked bone throne silhouetted against a breach in the wall showing a blood red sunset sky and jagged mountains, a small wooden chair facing the throne on a red carpet, epic"
+  },
+  {
+   "id": "in_w11_w1_catacomb_trap",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_trap_in",
+   "name": "エルヴィナの地下墓地・罠の通路",
+   "pack": "w11_w1_catacomb",
+   "tags": "catacomb corridor, hanging bronze censers on chains, sweet smoke crawling along the floor, skulls in the walls"
+  },
+  {
+   "id": "in_w11_w1_catacomb_chest",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_chest_in",
+   "name": "エルヴィナの地下墓地・宝の部屋",
+   "pack": "w11_w1_catacomb",
+   "tags": "catacomb chamber, stone sarcophagi, burial chest with a family crest, candlelight"
+  },
+  {
+   "id": "in_w11_w1_catacomb_rest",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_rest_in",
+   "name": "エルヴィナの地下墓地・休み場",
+   "pack": "w11_w1_catacomb",
+   "tags": "small altar in a catacomb niche, three candles always burning, stone basin of reddish water, warm light"
+  },
+  {
+   "id": "in_w11_w1_catacomb_lair",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_lair_in",
+   "name": "エルヴィナの地下墓地・巣",
+   "pack": "w11_w1_catacomb",
+   "tags": "catacomb hall, dried corpses kneeling in prayer, thin threads of golden light rising from their necks to the ceiling, red eyes in the dark"
+  },
+  {
+   "id": "in_w11_w1_catacomb_stairs",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_stairs_in",
+   "name": "エルヴィナの地下墓地・下への階段",
+   "pack": "w11_w1_catacomb",
+   "tags": "catacomb corridor, stairway descending into darkness, cold blue light from below"
+  },
+  {
+   "id": "in_w11_w1_catacomb_lore",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_lore_in",
+   "name": "エルヴィナの地下墓地・昔のかけら",
+   "pack": "w11_w1_catacomb",
+   "tags": "wall of bones with scratched writing, a row of skulls, candlelight"
+  },
+  {
+   "id": "in_w11_w1_catacomb_vault",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_vault_in",
+   "name": "エルヴィナの地下墓地・隠し部屋",
+   "pack": "w11_w1_catacomb",
+   "tags": "secret ossuary niche, neatly stacked skulls, open chest, shaft of light, dust"
+  },
+  {
+   "id": "in_w11_w1_catacomb_deep",
+   "kind": "dungeon",
+   "scene": "w11_w1_catacomb_deep_in",
+   "name": "エルヴィナの地下墓地・最奥（最奥の特別な一枚）",
+   "pack": "w11_w1_catacomb",
+   "tags": "enormous cavern beneath a cathedral altar, thousands of kneeling skeletal pilgrims, countless threads of golden light rising from them and converging on a glowing point in the ceiling like a starry sky, beautiful and eerie, epic"
+  },
+  {
+   "id": "in_w11_onigashima_trap",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_trap_in",
+   "name": "鬼ヶ島の洞窟・罠の通路",
+   "pack": "w11_onigashima",
+   "tags": "warm cave tunnel, straw mat laid over a pit, rope hanging from the ceiling with a giant iron club swinging above, wooden sign"
+  },
+  {
+   "id": "in_w11_onigashima_chest",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_chest_in",
+   "name": "鬼ヶ島の洞窟・宝の部屋",
+   "pack": "w11_onigashima",
+   "tags": "cave storeroom with sake barrels, gambling money chest, lanterns"
+  },
+  {
+   "id": "in_w11_onigashima_rest",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_rest_in",
+   "name": "鬼ヶ島の洞窟・休み場",
+   "pack": "w11_onigashima",
+   "tags": "remains of an ogre feast in a cave, huge red sake cup, barrels, embers of a bonfire"
+  },
+  {
+   "id": "in_w11_onigashima_lair",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_lair_in",
+   "name": "鬼ヶ島の洞窟・巣",
+   "pack": "w11_onigashima",
+   "tags": "cave sleeping quarters full of snoring ogres in the dark, glowing eyes, scattered bones, paper lanterns"
+  },
+  {
+   "id": "in_w11_onigashima_stairs",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_stairs_in",
+   "name": "鬼ヶ島の洞窟・下への階段",
+   "pack": "w11_onigashima",
+   "tags": "rocky cave, steps descending into a dark hole, cold blue light from below"
+  },
+  {
+   "id": "in_w11_onigashima_lore",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_lore_in",
+   "name": "鬼ヶ島の洞窟・昔のかけら",
+   "pack": "w11_onigashima",
+   "tags": "cave wall covered with names carved by sword tips, old swords stuck in the ground, torchlight"
+  },
+  {
+   "id": "in_w11_onigashima_vault",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_vault_in",
+   "name": "鬼ヶ島の洞窟・隠し部屋",
+   "pack": "w11_onigashima",
+   "tags": "hidden rock niche, old sword guard and keepsakes, open chest, shaft of light"
+  },
+  {
+   "id": "in_w11_onigashima_deep",
+   "kind": "dungeon",
+   "scene": "w11_onigashima_deep_in",
+   "name": "鬼ヶ島の洞窟・最奥（最奥の特別な一枚）",
+   "pack": "w11_onigashima",
+   "tags": "huge sea cave opening onto the open ocean at dawn, sunrise on the horizon, path of golden light across the waves into the cave, giant red sake cup and barrels on the rocks, white chain glowing under the water, epic"
   }
  ]
 }

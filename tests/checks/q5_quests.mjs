@@ -148,7 +148,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G.rand = seeded(5);
     const low = new Set(); for (let i = 0; i < 30; i++) G.q5.board(S).list.forEach((q) => low.add(q.kind));
     if (low.has("relic") || low.has("duel") || low.has("bounty")) F("名声 0 で、名声の要る依頼が出る");
-    S.fame = 200; G.repOf("自由都市連合").rep = 30;
+    S.fame = 200; G.repOf("レオネスト王国").rep = 30;
     if (G.q5.board(S).list.length !== 5) F(`名声 200・評判 30 で掲示が ${G.q5.board(S).list.length} 件（5 件のはず）`);
   }
 
@@ -184,13 +184,13 @@ export default ({ fail, ok, loadEngine, seeded }) => {
         G.act("ev:" + G.eventChoices()[i].i);
         G.rand = seeded(12);
         if (!q.done) F("用心棒の場面で成功しても依頼が果たせない");
-        const gold = S.gold, rep = G.repOf("自由都市連合").rep;
+        const gold = S.gold, rep = G.repOf("レオネスト王国").rep;
         S.mode = "fac"; S.fac = "guild";
         G.act("guild:report:" + q.id);
         if (S.quests.includes(q)) F("報告しても依頼が残る");
         if (S.gold !== gold + q.reward) F(`報告の報酬が合わない ${S.gold - gold}／${q.reward}`);
         if (!G.has(q.item)) F("報酬の品が手に入らない");
-        if (!(G.repOf("自由都市連合").rep > rep)) F("報告しても評判が上がらない");
+        if (!(G.repOf("レオネスト王国").rep > rep)) F("報告しても評判が上がらない");
         if (!(G.P.q5 && G.P.q5.kinds.guard && G.P.q5.kinds.guard.ok === 1)) F("図鑑（依頼の記録）に残らない");
       }
     }
@@ -241,10 +241,10 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       G.act("q5go:" + q2.id);
       const c2 = G.eventChoices().find(({ c }) => c.label.includes("道理を説いて"));
       G.rand = () => 0.01; G.act("ev:" + c2.i); G.rand = seeded(26);
-      const inf = G.repOf("自由都市連合").inf;
+      const inf = G.repOf("レオネスト王国").inf;
       S2.mode = "fac"; S2.fac = "guild";
       G.act("guild:report:" + q2.id);
-      if (!(G.repOf("自由都市連合").inf > inf)) F("見抜かずに嘘の片棒を担いでも、あとで悪名が付かない");
+      if (!(G.repOf("レオネスト王国").inf > inf)) F("見抜かずに嘘の片棒を担いでも、あとで悪名が付かない");
       // 前触れ：罠・嘘の依頼は、たいてい掲示に前触れが見える。罠は報酬が高い
       const S3 = newGame(G, 27);
       S3.fame = 100; S3.loc = "karna";

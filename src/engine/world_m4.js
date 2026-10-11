@@ -17,7 +17,7 @@
   const fmt = (t, o) => String(t).replace(/\{(\w+)\}/g, (_, k) => (o && o[k] != null ? o[k] : ""));
   const lore = (x) => { if (x && G.openLores) G.openLores(x); };
 
-  G.m4Season = (day) => G.SEASONS[Math.floor(((day - 1) % 360) / 90)];
+  G.m4Season = (day) => G.SEASONS[G.calSi(day)];
 
   // ---------------------------------------------------------------- 状態
   G.m4World = (S) => {
@@ -30,7 +30,7 @@
   function makePlan(W, d) {
     W.plan = {
       worse: Math.max(d + 5, rng(18, 36)), dead: Math.max(d + 20, rng(70, 120)), civil: rng(3, 10), heir: rng(25, 50),
-      war: rng(10, 30), warLen: rng(70, 140), treaty: 1081 + rng(0, 30),
+      war: rng(10, 30), warLen: rng(70, 140), treaty: G.YEAR_DAYS * 3 + 1 + rng(0, Math.floor(G.SEASON_DAYS / 3)), // 1130年の春のはじめ（暦）
     };
     W.nextRaid = d + rng(10, 30);
   }
@@ -41,7 +41,6 @@
     if (r.includes("王国") || r.includes("教会")) return "kingdom";
     if (r.includes("帝国")) return "empire";
     if (r.includes("エルメシア") || r.includes("共和国")) return "republic";
-    if (r.includes("自由都市")) return "free";
     if (r.includes("最前線")) return "front";
     return "other";
   };
@@ -55,7 +54,8 @@
     const W = S && S.world;
     return (W && W.towns[id || S.loc]) || null;
   };
-  // 戦に巻き込まれている場所か（戦をしている国の町・砦・自由都市・前線の野外）
+  // 戦に巻き込まれている場所か（戦をしている国の町・砦・戦をしていない国の商いの町・前線の野外）
+  // "free" は、王国が戦に加わっていないときの南の商いの町（M.MARKET。どちらの側にも売る）。内部の名前なので前のまま
   G.m4WarAt = (id, S) => {
     S = S || G.S;
     const W = S && S.world;
@@ -63,7 +63,7 @@
     const n = nationOf(id);
     if (n === "empire" || n === W.war.foe) return "home";
     if (n === "front") return "fort";
-    if (n === "free") return "free";
+    if ((M.MARKET || []).includes(id)) return "free";
     if ((M.FRONT[W.war.foe] || []).includes(id)) return "front";
     return "";
   };
@@ -185,7 +185,7 @@
     }
     // 襲来
     // 年を追うごとに間が詰まる（はじめの年は大きな災いがまだ少ない）
-    if (day >= W.nextRaid) { raid(W, day, S); W.nextRaid = day + (day <= 360 ? rng(35, 65) : day <= 720 ? rng(28, 50) : rng(20, 40)); }
+    if (day >= W.nextRaid) { raid(W, day, S); W.nextRaid = day + (day <= 360 ? rng(35, 65) : day <= 720 ? rng(28, 50) : rng(20, 40)); } // 襲来の間隔は旅の日数で詰まる（暦の年とは別）
     // 町が立ち直る
     Object.entries(W.towns).forEach(([id, t]) => {
       if (day < t.until) return;

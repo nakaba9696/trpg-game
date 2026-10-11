@@ -1,4 +1,4 @@
-// K1 のスクリーンショット：戦闘の「技」の組・ステータスの「技」の欄・技を覚えた一行・訓練場の「技の稽古」を、PC とスマホで撮る
+// K1・K2 のスクリーンショット：戦闘の「戦技」の組・ステータスの「戦技」と「スキル」の欄・技を覚えた一行・訓練場の「技の稽古」を、PC とスマホで撮る
 // node tools/build.mjs && node tools/shots_k1.mjs [docs/shots/k1]（Playwright。CI では動かさない）
 import { createRequire } from "node:module";
 import { execSync } from "node:child_process";
@@ -38,7 +38,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
     D.STATS.forEach((k) => { stats[k] = 20; caps[k] = 60; });
     G.main.start({ cls: "samurai", stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "トウマ", sex: "男", age: 24, history: "確認用", personality: "無口" } });
     G.S.mode = "explore"; G.S.event = null; G.S.loc = "yakumo"; G.S.gold = 900;
-    G.S.skills.push("k1_parry", "k1_read", "k1_guardform", "k1_aim", "k1_track", "k1_lockpick");
+    G.S.skills.push("k1_parry", "k1_read", "k1_guardform", "k1_aim", "k1_track", "k1_lockpick", "k2_keyfeel", "k2_steadymind", "k2_nighteye");
     G.k1.use("k1_drawcut", 20);
     G.ui.render();
   });

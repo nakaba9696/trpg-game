@@ -133,7 +133,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
   expect("熊の冬毛（雪の体力）", diff({ race: "beast", beast: "bear" }, "体力", "frost", 1), 5);
   expect("エルフの人の目（王国の魅力）", diff({ race: "elf" }, "魅力", "leavel", 1), -5);
   expect("エルフの人の目（共和国の魅力）", diff({ race: "elf" }, "魅力", "zephara", 1), 5);
-  expect("獣人の人の目（自由都市）", diff({ race: "beast", beast: "fox" }, "魅力", "karna", 1), 0);
+  expect("獣人の人の目（商都ブランデールも王国）", diff({ race: "beast", beast: "fox" }, "魅力", "karna", 1), -3);
   // 耳：逃げるとき。見込み（G.cb.flee）と判定（G.check の「逃走」）が同じ
   let fleeVs = null;
   const flee = (race) => {
@@ -235,10 +235,11 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     if (!G.P.trophies.r1_kin) fail("人間・エルフ・獣人の一党でトロフィーが出ない");
   }
 
-  // ---------------------------------------------------------------- 評判（M3）：人の国では悪名が 1 多い。共和国・自由都市では同じ
+  // ---------------------------------------------------------------- 評判（M3）：人の国では悪名が 1 多い。共和国では同じ
   const infamy = (race, loc) => { start(race); at(loc, 1); G.crime("theft"); return G.repOf(G.nationOf()).inf; };
   expect("エルフの盗み（王国）", infamy({ race: "elf" }, "leavel") - infamy({ race: "human" }, "leavel"), 1);
-  expect("獣人の盗み（自由都市）", infamy({ race: "beast", beast: "wolf" }, "karna") - infamy({ race: "human" }, "karna"), 0);
+  expect("獣人の盗み（共和国）", infamy({ race: "beast", beast: "wolf" }, "zephara") - infamy({ race: "human" }, "zephara"), 0);
+  expect("獣人の盗み（商都ブランデールも王国）", infamy({ race: "beast", beast: "wolf" }, "karna") - infamy({ race: "human" }, "karna"), 1);
 
   // ---------------------------------------------------------------- 恋（M10）：同じ獣どうしは相性 +1
   {

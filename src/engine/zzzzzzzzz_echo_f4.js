@@ -271,12 +271,20 @@
     if (!S || head !== "shop" || !String(arg).startsWith("buy:")) return facAct0(head, arg, a);
     const adj = E.priceAdj(S, String(arg).slice(4));
     const before = S.gold;
+    const len = Array.isArray(S.log) ? S.log.length : 0;
     const r = facAct0(head, arg, a);
     if (adj && S.gold < before) {
       const n = adj > 0 ? Math.min(adj, S.gold) : adj;
       S.gold -= n;
-      if (n > 0) G.note(`店の主は、あなたにだけ値を上げた。（さらに -${n}G）`);
-      else if (n < 0) G.note(`顔なじみだからと、少しまけてくれた。（+${-n}G）`);
+      // 「〇〇を買った。（-150G）」の一行に、値の上げ下げと払った額をまとめる（二行にしない。R7b）
+      const why = n > 0 ? "店の主は、あなたにだけ値を上げた。" : "顔なじみだからと、少しまけてくれた。";
+      const log = Array.isArray(S.log) ? S.log : [];
+      let i = log.length - 1;
+      while (i >= len && !/を買った。（-\d+G）$/.test(String((log[i] || {}).text || ""))) i--;
+      const m = i >= len ? /^(.*を買った。)（-(\d+)G）$/.exec(log[i].text) : null;
+      if (m) log[i].text = `${m[1]}${why}（-${+m[2] + n}G）`;
+      else if (n > 0) G.note(`${why}（さらに -${n}G）`);
+      else if (n < 0) G.note(`${why}（+${-n}G）`);
     }
     return r;
   };

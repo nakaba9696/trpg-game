@@ -42,7 +42,7 @@ export default ({ fail, ok, loadEngine }) => {
   // ---- 表に出る名前
   const want = {
     leavel: "王都レオネスト", garmund: "帝都ノルディア", zephara: "首都エルメシア",
-    karna: "自由都市ブランデール", nerva: "港町ヴァレンツァ", w1_holy: "聖都エルヴィナ", majincastle: "黒鎧の使徒の居城",
+    karna: "商都ブランデール", nerva: "港町ヴァレンツァ", w1_holy: "聖都エルヴィナ", majincastle: "黒鎧の使徒の居城",
   };
   for (const [id, name] of Object.entries(want)) if (D.LOCS[id] && D.LOCS[id].name !== name) F(`${id} の名前が「${D.LOCS[id].name}」（${name} のはず）`);
   const regions = new Set(Object.values(D.LOCS).map((L) => L.region));
@@ -62,7 +62,7 @@ export default ({ fail, ok, loadEngine }) => {
         "鉄血帝国ガルムント": { rep: 5, inf: 31, wanted: true },
         "ゼファラ共和国": { rep: 3, inf: 2, wanted: false },
         "魔法国ゼファラ": { rep: 1, inf: 4, wanted: false },
-        "自由都市連合": { rep: 7, inf: 0, wanted: false },
+        "人類の最前線": { rep: 7, inf: 0, wanted: false },
       },
     };
     G.fixOldNames(S);
@@ -72,7 +72,7 @@ export default ({ fail, ok, loadEngine }) => {
     if (!r["ノルディア帝国"] || r["ノルディア帝国"].inf !== 31 || !r["ノルディア帝国"].wanted) F("帝国の悪名と手配が移らない");
     if (!r["エルメシア共和国"] || r["エルメシア共和国"].rep !== 4 || r["エルメシア共和国"].inf !== 6) F(`共和国の二つの名の評判がまとまらない（${JSON.stringify(r["エルメシア共和国"])}）`);
     if (Object.keys(r).some((k) => G.OLD_NATION_NAMES[k])) F("古い国名の評判が残っている");
-    if (!r["自由都市連合"] || r["自由都市連合"].rep !== 7) F("変わらない国の評判が消えた");
+    if (!r["人類の最前線"] || r["人類の最前線"].rep !== 7) F("変わらない国の評判が消えた");
     if (G.fixOldNames(null) !== null) F("セーブが無いときに落ちる");
   }
 

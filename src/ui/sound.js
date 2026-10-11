@@ -545,7 +545,7 @@
       if (/炎|火/.test(t)) return "fire";
       return null;
     }
-    if (/絶界|見えない壁に弾かれ/.test(t)) return "clang";
+    if (/絶界|見えない壁に弾かれ|糸の守り/.test(t)) return "clang";
     if (/を倒した！/.test(t)) {
       const name = t.replace(/を倒した！.*/, "");
       const id = ctx.foes[name];

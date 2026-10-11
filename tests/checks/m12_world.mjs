@@ -133,7 +133,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     // 始まって決着するまでの日数（前触れから決着まで、数十日）
     const W = S.m12;
     const lens = W.list.filter((e) => e.end).map((e) => e.end - e.since);
-    if (lens.some((n) => n < 15 || n > 80)) fail(`m12: 前触れから決着までの日数が変：${lens.join(",")}`);
+    // 上限は表の段階の日数の最長 × 倍率（C16 の PACE。表しだいで 96 日まで）
+    const most = Math.max(...Object.values(G.data.M12.KINDS).map((Kd) => Kd.stages.reduce((a, st) => a + st.days[1], 0))) * (G.m12.PACE || 1);
+    if (lens.some((n) => n < 15 || n > most)) fail(`m12: 前触れから決着までの日数が変：${lens.join(",")}（15〜${most} 日）`);
   }
 
   // ---------------------------------------------------------------- 結末が世界に残る：町の様子で施設が閉まる・値が上がる・道が閉ざされる

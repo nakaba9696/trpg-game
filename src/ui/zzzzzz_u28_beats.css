@@ -1,0 +1,40 @@
+/* U28：行動 → 記録 → 結果 → 得たもの → 選択肢 の順（ui/zzzzzz_u28_beats.js） */
+
+/* ---------------------------------------------------------------- 本文：まだ出していない行は隠し、出すときにふわりと */
+#log > .u28wait { display: none !important; }
+#log > .u28show { animation: u28in .38s ease-out both; }
+@keyframes u28in { from { opacity: 0; transform: translateY(4px); } }
+/* 出している間は、本文の欄を押すと早送りできることを示す */
+body.u28busy #log { cursor: pointer; }
+body.u28busy .tome::after { content: "▸ 押すと早送り"; position: absolute; top: auto; bottom: 6px; right: 14px; left: auto; transform: none; padding: 0; background: none; font: 400 11.5px/1 var(--f-ui); letter-spacing: .1em; color: var(--muted); opacity: .8; }
+
+/* ---------------------------------------------------------------- 選択肢：出しきるまで薄く、押せない */
+body.u28busy #panel { opacity: .32; filter: saturate(.6); pointer-events: none; transition: opacity .25s ease; }
+#panel { transition: opacity .3s ease; }
+
+/* ---------------------------------------------------------------- 場面の切り替えを待っている間：町の見出しは出さない */
+body.u28hold #u14card { display: none !important; }
+/* 着く前は、新しい場所の選択肢（見出しの場所の名前も）を見せない（場所は残して、着いたら薄く出す） */
+body.u28hold #panel { visibility: hidden; }
+.u28real { display: none !important; }
+/* 新しく出てきた人の立ち絵も、着くまで出さない */
+body.u28hold #v9cast .v9fig, body.u28hold #stand, body.u28hold #who { opacity: 0 !important; transition: none !important; }
+
+/* ---------------------------------------------------------------- 選択肢の見出し：「どうする？」・今いる所・今の状態 */
+#panel > .u28head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin: 0 0 2px; padding: 0 2px 6px; border-bottom: 2px solid var(--accent); }
+#panel > .u28head .u28q { font-family: var(--f-display); font-size: 15px; letter-spacing: .2em; color: var(--head); }
+#panel > .u28head .u28place { font-family: var(--f-display); font-weight: 400; font-size: 14px; letter-spacing: .08em; color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#panel > .u28head .u28state { margin-left: auto; padding: 1px 9px; font: 700 11.5px/1.6 var(--f-ui); letter-spacing: .12em; border-radius: 10px; color: var(--win-solid, #fff); background: var(--accent); }
+#panel > .u28head[data-state="戦闘"] .u28state { background: #b0321f; }
+#panel > .u28head[data-state="旅の途中"] .u28state, #panel > .u28head[data-state="出来事"] .u28state, #panel > .u28head[data-state="会話"] .u28state { background: #8a5c22; }
+#panel > .u28head[data-state^="迷宮"] .u28state { background: #4d5a7a; }
+#panel > .u28head[data-state="荒野"] .u28state { background: #4f6b4a; }
+/* 選択肢の組の見出し「どうする？」は、上の見出しと重なるので小さく */
+#panel > .u28head + .agroup > h3 { margin-top: 4px; }
+
+/* ---------------------------------------------------------------- スマホ：本文（本の頁）と選択肢（別の枠）を分ける */
+body:not(.v9pc) #panel { margin-top: 10px; padding: 10px 10px 12px; border: 1px solid var(--win-edge, var(--rule)); border-radius: 3px;
+  background: color-mix(in srgb, var(--win-solid, var(--sheet)) 92%, var(--accent) 5%); box-shadow: 0 -2px 0 var(--accent) inset, 0 4px 14px rgba(0, 0, 0, .12); }
+@media (prefers-reduced-motion: reduce) {
+  #log > .u28show { animation: none; }
+}

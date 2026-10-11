@@ -31,9 +31,9 @@
       ["first", "人間・エルフ・獣人などの種族の代表が、合議で治める国。よそからは「魔法国」と呼ばれる。", { hint: ["魔法国"] }],
       ["seat", "精霊と契約した者だけが議席を持ち、契約のない者は門の外で暮らす。"],
     ] },
-    u7_free: { sec: "大陸と国", title: "自由都市連合", lines: [
-      ["first", "王国の中にありながら、王子さまから自治を許された商人と傭兵の町の寄り合い。いちばん大きいのは自由都市ブランデール。王子さまへの上納金さえ払えば、口出しはされない。"],
-      ["nerva", "港町ヴァレンツァは外海への自由港。金さえあれば、たいていの物は手に入る。"],
+    u7_free: { sec: "大陸と国", title: "南の商いの町", lines: [
+      ["first", "レオネスト王国の南の草原と海辺には、商いで栄える町が多い。いちばん大きいのは商都ブランデールで、冒険者ギルドの本部がある。市の立たない日は無く、両替商の窓口はいつも混んでいる。"],
+      ["nerva", "南西の港町ヴァレンツァは外海の交易の港。金さえあれば、たいていの物は手に入る。"],
     ] },
     u7_yakumo: { sec: "大陸と国", title: "シェルアーク", lines: [
       ["first", "南西の海の島々の都。王国の第七王子の領地ということになっているが、島の者は王都より海を見て暮らしている。港町ヴァレンツァからの船で行ける。", { hint: ["シェルアーク"] }],
@@ -60,12 +60,14 @@
       ["market", "ちゃんと動く物は、まず市には出ない。直せる職人もいない。"],
     ] },
     u7_rank: { sec: "人と暮らし", title: "格", lines: [
-      ["first", "ギルドは化け物を三つに分ける。天災（人では勝てない）・国難（国の軍が要る）・討伐（一流の戦士が集まれば倒せる）。"],
-      ["notice", "天災は、依頼ではなく注意書きとして貼られる。"],
+      ["first", "ギルドは化け物を S・A・B・C・D の級に分ける。D と C は街道の魔物。B は、備えた一流の冒険者が集まれば倒せる。A は国の軍が要る。S は人では勝てない。", { hint: ["S 級", "A 級", "B 級", "C 級", "D 級"] }],
+      ["notice", "S 級は、依頼ではなく注意書きとして貼られる。物の理さえ曲げると言われる。何を考えているのか、分かった者はいない。"],
+      ["word", "使徒は、どれも B 級より上に置かれる。使徒はみな人の言葉を解する。ただ、人の言葉を解する化け物が、みな使徒とは限らない。強いから使徒なのでもない。"],
     ] },
     u7_jutsu: { sec: "人と暮らし", title: "術", lines: [
       ["first", "魔法は悪魔のもので、人は生まれつき使えないという。それでも学院で学べば、少しだけ「術」を借りるように使える者がいる。", { hint: ["魔導書"] }],
       ["nations", "教会は術に眉をひそめ、共和国は認め、帝国は軍で管理している。"],
+      ["vessel", "借りられる者と、借りられない者がいる。学院では、それを「器」と呼ぶ。器の無い者が何年学んでも、手のひらの上には何も起きない。", { hint: ["器"] }],
     ] },
 
     // ---------------------------------------------------------------- 魔物
@@ -90,7 +92,7 @@
 
   // その地方の場所に初めて着いた（出発の町も、最初の手番の終わりに開く）
   const region = {
-    "自由都市連合": "u7_free", "レオネスト王国": "u7_leonest", "ノルディア帝国": "u7_nordia", "エルメシア共和国": ["u7_elmesia", "u7_races:elf"],
+    "レオネスト王国": "u7_leonest", "ノルディア帝国": "u7_nordia", "エルメシア共和国": ["u7_elmesia", "u7_races:elf"],
     "シェルアーク": ["u7_yakumo", "u7_yakumo:land"], "人類の最前線": ["u7_veld:fort", "u7_nordia", "u7_pact:doubt", "u7_fierce:horde"],
     "人と魔の境": ["u7_veld", "u7_veld:fort", "u7_fierce:horde"], "使徒領": ["u7_veld", "u7_fierce:horde"], "光天教会領": ["u7_church", "u7_church:verm"],
   };
@@ -98,6 +100,7 @@
 
   // 場所（同じ項目は、最初の行から順に並ぶように先に書く）
   [
+    ["karna", "u7_free"],
     ["nerva", ["u7_free", "u7_free:nerva", "u7_yakumo"]],
     ["leavel", ["u7_leonest", "u7_leonest:king", "u7_leonest:ouji", "u7_pact"]],
     ["w2_granbel", ["u7_leonest", "u7_leonest:ouji"]], ["w2_dranherz", ["u7_leonest", "u7_leonest:ouji"]],
@@ -108,7 +111,7 @@
 
   // 施設
   add("fac", "church", ["u7_church", "u7_church:three"]);
-  add("fac", "academy", ["u7_jutsu", "u7_jutsu:nations"]);
+  add("fac", "academy", ["u7_jutsu", "u7_jutsu:nations", "u7_jutsu:vessel"]);
 
   // 敵（格の高い敵・術を使う敵は src/engine/lore_u7.js が見る）
   add("foe", "dogu", ["u7_silly", "u7_silly:dogu"]);
@@ -120,7 +123,7 @@
   // 遺跡の品（D.ITEMS の relic: true も lore_u7.js が見る）
   add("item", "relic", ["u7_relic", "u7_relic:market"]);
 
-  // 会った人物の国（C2 の人物の nation）・会った人の種族（自分・仲間・C2 の人物）・職業（島の剣士は海を渡ってきた。魔法使いは術を学んだ）
+  // 会った人物の国（C2 の人物の nation）・会った人の種族（自分・仲間・C2 の人物）・職業（武士は海を渡ってきた。魔法使いは術を学んだ）
   D.LORE_ON.nation = Object.assign(D.LORE_ON.nation || {}, { "レオネスト": "u7_leonest", "ノルディア": "u7_nordia", "エルメシア": "u7_elmesia" });
   D.LORE_ON.race = Object.assign(D.LORE_ON.race || {}, { elf: "u7_races:elf", beast: "u7_races:beast" });
   D.LORE_ON.cls = Object.assign(D.LORE_ON.cls || {}, { samurai: ["u7_yakumo", "u7_yakumo:land"], mage: "u7_jutsu" });

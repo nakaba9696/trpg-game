@@ -1,0 +1,3 @@
+/* R11 中 7：今の武器で使えない稽古・教わる技（押せるが、薄く） */
+button.r11off:not(:disabled) { opacity: .55; }
+button.r11off:not(:disabled) b { font-weight: 400; }

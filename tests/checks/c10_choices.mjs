@@ -54,6 +54,9 @@ export default ({ G, fail, ok, seeded }) => {
     trusted: (S) => { S.loc = townId; const n = C.nation(S); S.repute = { [n]: { rep: 80, inf: 0, wanted: false } }; },
     infamous: (S) => { S.loc = townId; const n = C.nation(S); S.repute = { [n]: { rep: 0, inf: 20, wanted: false } }; },
     titled: (S) => { S.title = "騎士"; },
+    mad1: (S) => { S.sanity = 55; },   // 正気の段（M13）
+    mad2: (S) => { S.sanity = 30; },
+    mad3: (S) => { S.sanity = 12; },
   };
   const COMP = {
     fighter: { name: "剣士のハンス", cls: "剣士", power: 50, dmg: 1, desc: "無口" },

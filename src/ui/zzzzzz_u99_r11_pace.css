@@ -1,0 +1,4 @@
+/* R11：期限の近い依頼を目立たせる（ui/zzzzzz_u99_r11_pace.js） */
+.q7qtop .r11left { font-size: 12px; padding: 1px 8px; border: 1px solid var(--rule); border-radius: 999px; white-space: nowrap; margin-left: auto; }
+.q7qtop .r11left.soon { border-color: var(--ng, var(--accent)); color: var(--ng, var(--accent)); font-weight: 700; }
+em.mark.r11soon { color: var(--ng, var(--accent)); font-weight: 700; }

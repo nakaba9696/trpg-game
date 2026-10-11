@@ -1,6 +1,6 @@
-// U16：作成画面で名前・年齢・生まれを選ぶ（engine/zu16_creation.js）を DOM なしで確かめる
-// - 名前の候補は性別と生まれの響きの表から。「別の候補」で並びが変わる。表に無い名前は選べない
-// - 歳は年頃の幅の中だけ。生まれは表から
+// U16：作成画面で名前・年齢を選ぶ（engine/zu16_creation.js）を DOM なしで確かめる（生まれは U25 で無くした）
+// - 名前の候補は性別の表から（職業の響きの表をみな合わせたもの。cre.heroNames）。「別の候補」で並びが変わる。表に無い名前は選べない
+// - 歳は年頃の幅の中だけ。職業を選び直しても、選んだ名前は動かない
 // - 選んだ値がそのまま主人公（G.newGame）に入る。「おまかせ」でも幅・表の中に収まる
 // - 18 歳未満の主人公は恋の出来事が起きない（決まりは変えない）
 export default ({ fail, ok, loadEngine, seeded }) => {
@@ -14,11 +14,13 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const dr = cre.fresh(rnd);
     for (const sex of ["男", "女"]) {
       cre.setSex(dr, sex, rnd);
-      for (const oid of Object.keys(D.ORIGINS)) {
-        cre.setOrigin(dr, oid, rnd);
+      for (const cls of Object.keys(D.CLASSES)) {
+        const keep = dr.profile.name;
+        cre.setClass(dr, cls, rnd);
+        if (dr.profile.name !== keep) no(`職業を ${cls} に選び直したら、名前 ${keep} が ${dr.profile.name} に変わった`);
         const pool = cre.namePool(dr);
-        const cul = D.ORIGINS[oid].culture;
-        if (pool.join() !== D.PROFILE.names[cul][sex].join()) no(`${oid}・${sex} の名前の表が違う`);
+        const want = [...new Set(Object.values(D.CLASSES).map((c) => c.culture))].flatMap((k) => D.PROFILE.names[k][sex]);
+        if (pool.join() !== want.join()) no(`${sex} の名前の表が違う`);
         dr.nameOpts = null;   // 作り直した候補には今の名前が入る（「別の候補」のあとは、選んだ名前が並ばなくてもよい）
         const opts = cre.nameOptions(dr, rnd);
         if (!opts.length || opts.length > cre.NAME_N) no(`候補の数がおかしい ${opts.length}`);
@@ -38,8 +40,6 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const dr = cre.fresh(rnd);
     const sex = t % 2 ? "女" : "男";
     cre.setSex(dr, sex, rnd);
-    const oid = Object.keys(D.ORIGINS)[t % Object.keys(D.ORIGINS).length];
-    cre.setOrigin(dr, oid, rnd);
     const band = Object.keys(D.AGES)[t % 3];
     cre.setAge(dr, band, rnd);
     const ages = cre.ageChoices(dr);
@@ -58,18 +58,17 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (p.sex !== sex) no(`性別 ${sex} が入らない（${p.sex}）`);
     if (String(p.age) !== String(age)) no(`歳 ${age} が入らない（${p.age}）`);
     if (p.ageBand !== band) no(`年頃 ${band} が入らない（${p.ageBand}）`);
-    if (p.origin !== oid) no(`生まれ ${oid} が入らない（${p.origin}）`);
+    if ("origin" in p) no("無くした生まれ（origin）が主人公に入っている");
     if (G.loveHeroMinor && G.loveHeroMinor(S) !== (age < 18)) no(`${age} 歳の恋の決まりが違う`);
   }
 
   // おまかせ：表と幅の中に収まる
   for (let t = 0; t < 200; t++) {
     const dr = cre.fresh(rnd);
-    cre.randomPart(dr, ["name", "age", "origin"][t % 3], rnd);
-    if (!D.ORIGINS[dr.origin]) no(`おまかせの生まれ ${dr.origin} が無い`);
+    cre.randomPart(dr, ["name", "age", "sex"][t % 3], rnd);
     if (!cre.ageChoices(dr).includes(Number(dr.profile.age))) no(`おまかせの歳 ${dr.profile.age} が ${dr.ageBand} の幅の外`);
     if (!cre.namePool(dr).includes(dr.profile.name)) no(`おまかせの名前 ${dr.profile.name} が表に無い`);
   }
 
-  if (!bad) ok("U16: 名前・年齢・生まれを選べ、選んだ値がそのまま主人公に入る");
+  if (!bad) ok("U16: 名前・年齢を選べ、選んだ値がそのまま主人公に入る");
 };

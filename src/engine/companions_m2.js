@@ -54,6 +54,15 @@
     return c;
   };
   G.m2Trait = (c) => D.M2_TRAITS[c.trait] || D.M2_TRAITS[G.m2TraitOf(c)];
+  // 加わったときの一言（D.R7_JOIN。乱数は使わない：名前で決める）
+  G.m2JoinLine = (c) => {
+    const J = D.R7_JOIN || {};
+    const key = c.trait || G.m2TraitOf(c);
+    const arr = J[key] || J.any || ["{n}が一行に加わった。"];
+    const n = G.m2Short(c);
+    const i = [...String(c.name || "")].reduce((a, ch) => a + ch.charCodeAt(0), 0) % arr.length;
+    return arr[i].replace(/\{n\}/g, n);
+  };
   G.m2Short = (c) => { const n = String((c && c.name) || ""); const i = n.lastIndexOf("の"); return i >= 0 && i < n.length - 1 ? n.slice(i + 1) : n; };
   G.m2Mood = (b) => (b >= 80 ? "心を許している" : b >= 55 ? "打ち解けている" : b >= 35 ? "様子を見ている" : b > BETRAY_AT ? "不満げ" : "危うい");
   const find = (id) => {
@@ -76,7 +85,7 @@
     if (!c || !n) return;
     const a = c.bond;
     c.bond = G.clamp(Math.round(a + n), 0, 100);
-    if (!quiet && c.bond !== a) G.note(`${G.m2Short(c)}の好感度 ${G.sign(c.bond - a)}（${c.bond}・${G.m2Mood(c.bond)}）`);
+    if (!quiet && c.bond !== a) G.note(`${G.m2Short(c)}の好感度 ${G.sign(c.bond - a)}（${G.m2Mood(c.bond)}）`);
   };
   const bondOf = (v, c) => (typeof v === "number" ? v : v && c ? (v[c.trait] !== undefined ? v[c.trait] : v._ || 0) : 0);
 
@@ -149,9 +158,11 @@
       G.m2State(S);
       const comp = S.companions[S.companions.length - 1];
       // 酒場で雇った者は金の縁、助けた者は恩の縁
-      comp.bond = S.mode === "fac" && S.fac === "tavern" ? 36 + G.d(12) : 52 + G.d(12);
+      const tav = S.mode === "fac" && S.fac === "tavern";
+      comp.bond = tav ? 36 + G.d(12) : 52 + G.d(12);
+      if (tav && !comp.c2) comp.hired = true; // 金で雇った（日ごとの不満で下がらない。R10 中 10）
       comp.joined = S.day;
-      G.note(`（${G.m2Trait(comp).name}。${G.m2Mood(comp.bond)}）`);
+      G.note(G.m2JoinLine(comp)); // 性格・好感度の札は括弧で見せず、振る舞いの一言にする（R7）
     }
     return r;
   };
@@ -309,7 +320,10 @@
         const near = S.hp < S.maxHp * 0.3;
         S.companions.forEach((c) => {
           const L = G.m2Trait(c).likes || {};
-          G.m2Bond(c, (won ? L.win || 0 : 0) + (won && f.boss ? L.boss || 0 : 0) + (near ? L.near || 0 : 0), true);
+          const v = (won ? L.win || 0 : 0) + (won && f.boss ? L.boss || 0 : 0) + (near ? L.near || 0 : 0);
+          // 下がるときは理由を一行（R10 中 10）
+          if (v < 0 && G.m2Why) G.m2Why(c, near && (L.near || 0) < 0 ? "near" : won && f.boss ? "boss" : "lose", v);
+          G.m2Bond(c, v, true);
         });
         const risk = 0.025 + (f.boss ? 0.1 : 0) + (near ? 0.06 : 0) + (won ? 0 : 0.04);
         // B5：深手を負うのは、その戦いで倒れた（戦闘不能になった）仲間だけ（G.b5Fall が f.fell に入れる）
@@ -326,10 +340,15 @@
         m.day = S.day;
         S.companions.forEach((c) => {
           const L = G.m2Trait(c).likes || {};
-          if (S.gold < 30 && L.poor) G.m2Bond(c, L.poor * n, true);
+          // 雇った仲間（酒場で金を払った c.hired）は、雇っている間は日ごとには下がらない（R10 中 10）
+          const keep = !!c.hired;
+          if (S.gold < 30 && L.poor && !keep) { if (G.m2Why) G.m2Why(c, "poor", L.poor * n); G.m2Bond(c, L.poor * n, true); }
           if (S.gold >= 300 && L.rich) G.m2Bond(c, L.rich * n, true);
           // 十日以上、口をきいていないと不満がたまる
-          if (S.day - (c.talkDay || c.joined || S.day) > 10) G.m2Bond(c, -n, true);
+          // 放っておかれて下がるのは「ふつう」の下の端まで（R12 中 3。嫌われるのは裏切り・大失敗・金の催促など）
+          const floor = G.bondFromAff ? Math.ceil(G.bondFromAff(-19)) : 41;
+          const k = Math.min(n, Math.max(0, (c.bond || 0) - floor));
+          if (S.day - (c.talkDay || c.joined || S.day) > 10 && !keep && k > 0) { if (G.m2Why) G.m2Why(c, "talk", -k); G.m2Bond(c, -k, true); }
         });
       }
       // 深手の仲間を看取る

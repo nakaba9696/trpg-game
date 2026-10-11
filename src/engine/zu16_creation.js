@@ -1,4 +1,4 @@
-// U16：作成画面で名前・年齢・生まれを選ぶ決まり（DOM に触らない）。自由入力は無いので、名前は候補から選び、「別の候補」で引き直す。
+// U16：作成画面で名前・年齢を選ぶ決まり（DOM に触らない。生まれは U25 で無くした）。自由入力は無いので、名前は候補から選び、「別の候補」で引き直す。
 // 年齢は年齢の区分の幅の中から選ぶ。どれも「おまかせ」で今までどおり自動でも決められる（cre.randomPart）。
 // 名前の頭の zu16 は、engine/u5_creation.js（G.cre）と zr1_race.js（cre.ageRange）のあとに読むため。乱数は引数 rnd（作成は G.rand を進めない）。
 // レーン U（作成画面）
@@ -11,10 +11,9 @@
 
   cre.NAME_N = 4;   // 一度に並べる名前の候補の数
 
-  // 名前の表（生まれの響きと性別で決まる。cre.gen の "name" と同じ表）
-  const cultureOf = (dr) => (D.ORIGINS[dr.origin] || {}).culture || D.CLASSES[dr.cls].culture;
-  cre.namePool = (dr) => ((D.PROFILE.names[cultureOf(dr)] || D.PROFILE.names.west)[dr.sex] || []).slice();
-  const poolKey = (dr) => cultureOf(dr) + ":" + dr.sex;
+  // 名前の表（性別で決まる。cre.gen の "name" と同じ表。cre.heroNames）
+  cre.namePool = (dr) => cre.heroNames(dr.sex).slice();
+  const poolKey = (dr) => dr.sex;
 
   // 今の候補。響きか性別が変わっていれば、今の名前を先頭に入れて作り直す（下書きに覚えておく。描き直しても同じ並び）
   cre.nameOptions = (dr, rnd) => {
@@ -61,8 +60,6 @@
       cre.nameOptions(dr, rnd);
     } else if (key === "age") {
       cre.setAge(dr, rnd() < 0.2 ? "old" : pickR(rnd, ["young", "prime"]), rnd);
-    } else if (key === "origin") {
-      cre.setOrigin(dr, rnd() < 0.5 ? D.CLASS_ORIGIN[dr.cls] : pickR(rnd, Object.keys(D.ORIGINS)), rnd);
     }
     return dr;
   };

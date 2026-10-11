@@ -106,6 +106,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 遊ぶ
   const game = (seed, opt) => {
     const G = loadEngine();
+    G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
     G.data.Q8B.off = G.data.Q8L.off = G.data.Q8P.off = G.data.Q8Q.off = true; // Q8 の上がり方・恋人の条件・恋の相手の一覧と組み合わせは tests/checks/q8_love.mjs・q8_pairs.mjs で確かめる。ここは仕組みだけ
     const D = G.data;
     G.rand = seeded(seed);
@@ -188,8 +189,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const has = (id) => G.tkTopics(dil, S).some((t) => t.id === id);
     if (!has("dil_l_nerva")) F("港町でディルの港の話が出ない");
     S.loc = "karna";
-    if (has("dil_l_nerva")) F("自由都市で港町の話が出る");
-    if (!has("dil_l_karna")) F("自由都市で自由都市の話が出ない");
+    if (has("dil_l_nerva")) F("商都ブランデールで港町の話が出る");
+    if (!has("dil_l_karna")) F("商都ブランデールで商都の話が出ない");
     if (has("dil_e_boss")) F("大物を倒していないのに、大物の話が出る");
     G.tk.record("boss", "大きな熊");
     if (!has("dil_e_boss")) F("大物を倒したあとに、大物の話が出ない");
@@ -240,11 +241,11 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     // 場所と金
     S.tk.heard.dil_a1 = { day: 1, k: "yes" };
     S.loc = "nerva"; S.gold = 100;
-    if (can(dil, "dil_a1_done")) F("港町で、自由都市の本屋の話が出る");
+    if (can(dil, "dil_a1_done")) F("港町で、商都ブランデールの本屋の話が出る");
     S.loc = "karna"; S.gold = 5;
     if (can(dil, "dil_a1_done")) F("金が足りないのに、本を買う話が出る");
     S.gold = 100;
-    if (!can(dil, "dil_a1_done")) F("自由都市で金があるのに、本を買う話が出ない");
+    if (!can(dil, "dil_a1_done")) F("商都ブランデールで金があるのに、本を買う話が出ない");
     dil.talkDay = 0; G.m2Talk(dil.id);
     S.tk.cur.menu = ["dil_a1_done"]; G.act("ev:0"); G.act("ev:0");
     if (S.gold !== 80) F(`本の代金 20G が減らない（${S.gold}）`);
@@ -357,6 +358,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     if (S.event !== "tk_menu") F("古いセーブで話題の一覧にならない");
     const saved = JSON.stringify(S);
     const G2 = loadEngine();
+    G2.data.C14.off = true;
     G2.data.Q8B.off = G2.data.Q8L.off = G2.data.Q8P.off = G2.data.Q8Q.off = true;
     G2.rand = seeded(1);
     G2.S = JSON.parse(saved);

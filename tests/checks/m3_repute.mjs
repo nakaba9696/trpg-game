@@ -38,16 +38,16 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   } catch (e) { fail(`悪名: 古いセーブで例外 ${e.message}`); }
   // 盗みを重ねると、その国でだけ賞金首になる
   const nation = G.nationOf();
-  if (nation !== "自由都市連合") fail(`悪名: ブランデールの国が ${nation}`);
+  if (nation !== "レオネスト王国") fail(`悪名: ブランデールの国が ${nation}`);
   for (let i = 0; i < 4; i++) G.crime("theft");
   if (G.wanted()) fail("悪名: 盗み 4 回（24）で手配された");
   G.crime("theft");
   if (!G.wanted() || G.bounty(nation) !== 300) fail(`悪名: 盗み 5 回（30）で手配されない（悪名 ${G.infamyHere()}）`);
   if (!S.chronicle.some((c) => c.text.includes("賞金首"))) fail("悪名: 賞金首になったことが年表に無い");
   if (!G.reputeLabel().includes("手配中")) fail(`悪名: 見出しに出ない「${G.reputeLabel()}」`);
-  if (G.wanted("レオネスト王国")) fail("悪名: よその国でも手配された");
+  if (G.wanted("ノルディア帝国")) fail("悪名: よその国でも手配された");
   if (!D.EVENTS.find((e) => e.id === "m3_eyes").cond(S)) fail("悪名: 手配中なのに衛兵の出来事が起きない");
-  S.loc = "plains";
+  S.loc = "zephara";
   if (G.wanted()) fail("悪名: 国境を越えても手配されている");
   if (!D.EVENTS.find((e) => e.id === "m3_hunter").cond(S)) fail("悪名: よその国で賞金稼ぎが来ない");
   // 日が経つと薄れ、線より 10 下がると手配が解ける
@@ -59,7 +59,7 @@ export default ({ G, fail: fail0, ok, loadEngine, seeded }) => {
   // 評判（その国で稼いだ名声）が高いと、手配の線が上がる
   S = start();
   G.addFame(200);
-  if (G.repOf("自由都市連合").rep !== 200 || G.bountyLine("自由都市連合") !== 50) fail(`悪名: 評判 ${G.repOf("自由都市連合").rep}・線 ${G.bountyLine("自由都市連合")}`);
+  if (G.repOf("レオネスト王国").rep !== 200 || G.bountyLine("レオネスト王国") !== 50) fail(`悪名: 評判 ${G.repOf("レオネスト王国").rep}・線 ${G.bountyLine("レオネスト王国")}`);
   G.crime("murder"); G.crime("murder");
   if (G.wanted()) fail("悪名: 評判が高いのに悪名 40 で手配された");
   // 衛兵を倒すと人殺し。王位を奪う一騎打ちは罪にならない

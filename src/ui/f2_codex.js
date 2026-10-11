@@ -97,8 +97,12 @@
     b.querySelectorAll(".f2bang").forEach((x) => x.remove());
     if (n) b.append(bang(n));
   });
+  // 入口の「！」は、図鑑を開いた時点で見た印として消す（中の項目の印は、その項目を見るまで残す）。開いた時の印を c.ack に覚える
+  const ackOf = () => { const c = G.codex && G.codex(); return (c && c.ack) || {}; };
+  const ackAll = () => { const c = G.codex && G.codex(); if (!c) return; c.ack = {}; freshOf().forEach((k) => { c.ack[k] = 1; }); };
   const markBtn = () => {
-    const n = freshOf().length;
+    const ack = ackOf();
+    const n = freshOf().filter((k) => !ack[k]).length;
     document.querySelectorAll("[data-codex-open]").forEach((b) => {
       b.classList.toggle("fresh", !!n);
       if (n) b.setAttribute("aria-description", `新しく載った項目が ${n} ある`); else b.removeAttribute("aria-description");
@@ -133,7 +137,7 @@
   };
 
   // ---------------------------------------------------------------- 絵
-  const GLYPH = { weapon: "剣", armor: "鎧", ring: "環", use: "薬", loot: "材", relic: "遺", other: "品" };
+  const GLYPH = { weapon: "剣", armor: "鎧", head: "兜", feet: "靴", shield: "盾", ring: "環", use: "薬", loot: "材", relic: "遺", other: "品" };
   // 魔物を小さな canvas に描く。会っていなければ影だけ
   const paintFoe = (cv, id, shadow) => {
     const e = F2.foe(id);
@@ -466,11 +470,11 @@
     detail.append(foeCanvas(id, 160, false));
     detail.append(h("h3", "f2title", e.name));
     if (apostle) {
-      detail.append(h("p", "fine", "使徒。格が違う。"));
+      detail.append(h("p", "fine", `使徒。${G.gradeOf ? `ギルドの格付けは${G.gradeName(G.gradeOf(id))}。` : ""}${G.gradeOf && G.gradeOf(id) === "S" ? "何を考えているのか、人には分からない。" : "格が違う。"}${G.e3Slayable && G.e3Of && G.e3Of(id) && !G.e3Slayable(id) ? "討った、という話は聞かない。" : ""}`));
       detail.append(flavor(G.codexFoeText(id), "foe", id));
       detail.append(h("p", "fine f2first", `初めて出会った：${[rec.by, rec.date].filter(Boolean).join("・") || "—"}`));
     } else {
-      detail.append(h("p", "fine", `${G.codexFoeRegion(id)}・格${e.tier}${e.boss ? "・主" : ""}`));
+      detail.append(h("p", "fine", `${G.codexFoeRegion(id)}・${G.gradeOf ? G.gradeName(G.gradeOf(id)) : `格${e.tier}`}${e.boss ? "・主" : ""}`));
       detail.append(kv(G.codexFoeStats(id)));
       if (!rec.kills) detail.append(h("p", "fine", "倒せば、もっと分かる。"));
       detail.append(where("主な出現場所", G.codexFoeWhere(id)));
@@ -618,7 +622,8 @@
     if (!key) key = freshOf(cur).length ? cur : (TABS.map((b) => b.dataset.tab).find((k) => freshOf(k).length) || cur);
     show(key);
     if (!dlg.open) dlg.showModal();
-    markBtn();
+    ackAll();
+    if (G.onCodexChange) G.onCodexChange(); else markBtn();
     const first = list.querySelector(".f2cell.fresh") || list.querySelector("button.f2cell") || list.querySelector(".f2cell");
     if (first) first.focus();
   };

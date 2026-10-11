@@ -1,6 +1,6 @@
 // S7：職業の向き不向きで伸びやすさが変わる（持ち主「平均的に上げるのを正解にしないでほしい」）
 // - 職業の補正（mod2）が + の能力は伸びやすく高くても伸び続け、− の能力は低いうちから鈍る。苦手を伸ばす道は残る（とても遅いだけ）
-// - 同じ回数鍛えるなら、得意 2 つに寄せた育て方の方が、全部を均等に上げた育て方より強敵（魔物将軍）に勝ち、難しい判定（40 点の相手）に通る
+// - 同じ回数鍛えるなら、得意 2 つに寄せた育て方の方が、全部を均等に上げた育て方より強敵（角兜の将）に勝ち、難しい判定（40 点の相手）に通る
 // - 画面の印（伸びやすい／ふつう／伸びにくい）、古いセーブ（職業の補正が無い・S.s5use が無い）でも動く
 export default ({ G, fail: fail0, ok, seeded }) => {
   const D = G.data;
@@ -67,7 +67,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   const focusW = F.stats[w], evenW = E.stats[w];
   if (!(focusW > evenW + 8)) fail(`得意に寄せても、武器の能力が均等の育て方より大きく伸びない（寄せる ${focusW}・均等 ${evenW}）`);
   const winF = fightRate("focus"), winE = fightRate("even");
-  if (!(winF > winE + 0.15)) fail(`得意に寄せた方が強敵（魔物将軍）に勝ちやすくなっていない（寄せる ${Math.round(winF * 100)}%・均等 ${Math.round(winE * 100)}%）`);
+  if (!(winF > winE + 0.15)) fail(`得意に寄せた方が強敵（角兜の将）に勝ちやすくなっていない（寄せる ${Math.round(winF * 100)}%・均等 ${Math.round(winE * 100)}%）`);
   // 依頼：いちばん得意な能力で、40 点の相手の判定（後半の難しい依頼）
   const hardOf = (T) => { G.S = T; T.conds = []; return Math.max(...D.STATS.map((k) => G.chance(k, { vs: 40 }))); };
   const hF = hardOf(F), hE = hardOf(E);
@@ -85,5 +85,5 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     if (!(b >= a)) fail("職業の表に無いセーブで成長が壊れる");
   }
 
-  if (!bad) ok(`S7 向き不向き（120 回鍛えて 武器の能力 寄せる ${focusW}・均等 ${evenW}、能力値の合計 ${sum(F)}・${sum(E)}。魔物将軍に勝つ ${Math.round(winF * 100)}%・${Math.round(winE * 100)}%。40 点の相手 ${hF}%・${hE}%）`);
+  if (!bad) ok(`S7 向き不向き（120 回鍛えて 武器の能力 寄せる ${focusW}・均等 ${evenW}、能力値の合計 ${sum(F)}・${sum(E)}。角兜の将に勝つ ${Math.round(winF * 100)}%・${Math.round(winE * 100)}%。40 点の相手 ${hF}%・${hE}%）`);
 };

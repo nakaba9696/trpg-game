@@ -5,7 +5,7 @@
 - [portraits.md](portraits.md)：描く人の一覧と、Stable Diffusion に入れる**特徴だけ**のタグ（元は [portraits.json](portraits.json)。md は `node tools/portraits.mjs` で作る）。名のある人物が先、乱数で作られる人の「型」が後。
 - [style.json](style.json)：持ち主の絵柄の設定（モデル・画風のタグ・ネガティブ・sampler など）。**もう入っている。**
 - 画像は `assets/portraits/<id>.webp` に置く。`node tools/build.mjs` で 25 枚ずつのスプライト（`dist/site/portraits/packs/*.svg`。A12）にまとめられ、HTML から相対パスで読まれる（`tools/assets.mjs`・公開のしかたは [../publish.md](../publish.md)）。ゲームはその人をその画像で描く（`src/ui/v4_assets.js`）。無い人（読めない人）は絵を出さない（A10：canvas の人物の絵はやめた。誰に何を当てるかは [a10_map.md](a10_map.md)。`node tools/a10_map.mjs` で作り直す）。**主人公は立ち絵を出さない**ので、主人公の型（`hero_*`）は作らない（前に作った 10 枚は、名もない人の二枚目の型 `kind_<種類>_<m|f>_b` に回した。人ごとに半分ほどが二枚目になる）。
-- 512×640（縦長・胸から上）、1枚 80KB 以下。**白い無地の背景で作る**（ゲームが白い背景を消して背景の絵になじませる。A13。`docs/publish.md`）。背景に物や色が入った絵・灰色のグラデーションの絵は、そのまま四角く出る。画像は HTML の外なので、数の上限は Artifact の決まり（1 つの版で 511 ファイル・256MB。`tests/checks/a6_site.mjs`）。予備の埋め込み（`--embed`）は 12MB までで、超えるなら差分を省く。
+- 512×640（縦長・胸から上）、1枚 80KB 以下。**白い無地の背景で作る**（ゲームが白い背景を消して背景の絵になじませる。A13。`docs/publish.md`）。背景に物や色が入った絵・灰色のグラデーションの絵は、そのまま四角く出る。画像は HTML の外なので、数の上限は Artifact の決まり（1 つの版で 511 ファイル・256MB。`tests/checks/a6_site.mjs`）。予備の埋め込み（`--embed`）は 12MB までで、超えるなら差分・背景・大きい絵の順に省く。新しい白い背景の絵を入れたら、髪のすき間などの背景も消すため `python3 tools/a20/a20_gaps.py` を動かす（A20。`docs/publish.md`）。
 
 ## 持ち主のパソコンで作る（AUTOMATIC1111 / Forge / reForge）
 

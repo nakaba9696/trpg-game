@@ -160,7 +160,7 @@ function playGames0({ mode, games, steps, seed, only, start }) {
   const D = G.data;
   const classes = Object.keys(D.CLASSES);
   classes.forEach((k) => { CLASS_NAME[k] = D.CLASSES[k].name; });
-  const goals = Object.keys(D.GOALS).filter((k) => k !== "custom");
+  const goals = Object.keys(D.GOALS).filter((k) => D.GOALS[k].text); // 果たす中身のある目的だけ（自分で決める・目的なしは除く。R7c）
   return classes.map((cls, ci) => {
     const r = { cls, games: 0, deaths: 0, errors: 0, turns: [], deathTurns: [], days: 0, places: 0, bossKills: 0, bossRuns: 0, bossMet: 0, kills: 0, causes: {}, visited: {}, diedAt: {}, bossNames: {}, bossDown: {}, milestones: {} };
     if (only && !only.includes(cls)) return r;

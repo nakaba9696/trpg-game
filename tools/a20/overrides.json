@@ -1,0 +1,336 @@
+{
+ "monsters/e4k_dreamsheep": "keep",
+ "monsters/e4_minerghost": "keep",
+ "monsters/e4k_nailer": "keep",
+ "monsters/e4k_puppet": "keep",
+ "monsters/warlock": "keep",
+ "portraits/azlag": "keep",
+ "portraits/barnabe": "keep",
+ "portraits/berangere": [
+  [
+   380,
+   540,
+   512,
+   640
+  ]
+ ],
+ "portraits/boku": "keep",
+ "portraits/captain_east": [
+  [
+   200,
+   100,
+   320,
+   225
+  ],
+  [
+   170,
+   40,
+   270,
+   110
+  ]
+ ],
+ "portraits/chezar": [
+  [
+   190,
+   0,
+   350,
+   120
+  ]
+ ],
+ "portraits/dil": "keep",
+ "portraits/doctor": "keep",
+ "portraits/filie": [
+  [
+   140,
+   30,
+   370,
+   190
+  ]
+ ],
+ "portraits/gauthier": [
+  [
+   200,
+   20,
+   370,
+   210
+  ]
+ ],
+ "portraits/ingrid": "keep",
+ "portraits/kind_guard_m": [
+  [
+   0,
+   0,
+   90,
+   220
+  ]
+ ],
+ "portraits/kind_knight_f": "keep",
+ "portraits/kind_soldier_f": "keep",
+ "portraits/kind_noble_f": "keep",
+ "portraits/kind_priest_m_b": [
+  [
+   190,
+   150,
+   290,
+   230
+  ]
+ ],
+ "portraits/kind_villager_f": [
+  [
+   160,
+   160,
+   340,
+   250
+  ],
+  [
+   350,
+   450,
+   470,
+   600
+  ]
+ ],
+ "portraits/rufina": "keep",
+ "portraits/sheila": "keep",
+ "portraits/natalia": "keep",
+ "portraits/takimaru": [
+  [
+   150,
+   90,
+   340,
+   270
+  ]
+ ],
+ "portraits/yuzuel": "keep",
+ "portraits/dario": [
+  [
+   140,
+   0,
+   380,
+   170
+  ]
+ ],
+ "portraits/elnea": [
+  [
+   80,
+   250,
+   430,
+   410
+  ],
+  [
+   130,
+   20,
+   390,
+   140
+  ]
+ ],
+ "portraits/magda": "keep",
+ "portraits/mirlene": "keep",
+ "portraits/matthias": "keep",
+ "portraits/selevan": "keep",
+ "portraits/yura": "keep",
+ "portraits/valg": "keep",
+ "portraits/wolfram": [
+  [
+   180,
+   0,
+   300,
+   90
+  ]
+ ],
+ "portraits/aubin": "keep",
+ "portraits/erna": "keep",
+ "portraits/kind_archer_m": [
+  [
+   190,
+   500,
+   330,
+   640
+  ]
+ ],
+ "monsters/e1_frogprophet": [
+  [
+   200,
+   60,
+   340,
+   170
+  ],
+  [
+   40,
+   60,
+   140,
+   170
+  ]
+ ],
+ "monsters/e1_sleepgiant": "keep",
+ "monsters/e4_firearrowimp": [
+  [
+   160,
+   190,
+   240,
+   270
+  ]
+ ],
+ "monsters/e4_cliffharpy": [
+  [
+   180,
+   130,
+   260,
+   210
+  ]
+ ],
+ "monsters/e4_hillorc": [
+  [
+   340,
+   220,
+   440,
+   320
+  ],
+  [
+   350,
+   370,
+   430,
+   440
+  ]
+ ],
+ "monsters/e4k_maskguard": "keep",
+ "monsters/e4k_rustgnaw": "keep",
+ "monsters/zombie": "keep",
+ "monsters/w3_tidemaw": "keep",
+ "monsters/w4_borer": "keep",
+ "monsters/w4_borermother": "keep",
+ "monsters/slime": "keep",
+ "monsters/e4k_whiteacolyte": "keep",
+ "monsters/w1_husk": "keep",
+ "monsters/goblin": "keep",
+ "monsters/e4k_taster": "keep",
+ "monsters/orc": "keep",
+ "monsters/m5_oldbeast": "keep",
+ "monsters/w1_tanuki": [
+  [
+   120,
+   180,
+   200,
+   270
+  ]
+ ],
+ "monsters/w4_saltwalker": [
+  [
+   330,
+   330,
+   420,
+   440
+  ]
+ ],
+ "monsters/e1_tollrat": [
+  [
+   60,
+   240,
+   150,
+   512
+  ]
+ ],
+ "monsters/e3_yura": "keep",
+ "monsters/e3_chezar": [
+  [
+   0,
+   300,
+   512,
+   512
+  ],
+  [
+   190,
+   0,
+   350,
+   120
+  ]
+ ],
+ "portraits/leopold": "keep",
+ "portraits/berna": "keep",
+ "monsters/e4_islepirate": [
+  [
+   270,
+   190,
+   360,
+   330
+  ]
+ ],
+ "monsters/e4k_moonarcher": "keep",
+ "monsters/e4k_smiler": [
+  [
+   320,
+   280,
+   390,
+   345
+  ]
+ ],
+ "monsters/e4_frostbear_x": "keep",
+ "monsters/e4_shellwitch": "keep",
+ "portraits/kind_priest_f_b": "keep",
+ "portraits/lucien": "keep",
+ "portraits/kind_guard_f": "keep",
+ "portraits/ingrid_faint_smile": "keep",
+ "portraits/ingrid_joy": "keep",
+ "portraits/ingrid_sparkle": "keep",
+ "portraits/ingrid_sorrow": "keep",
+ "portraits/ingrid_pout": "keep",
+ "portraits/ingrid_fun": "keep",
+ "portraits/ingrid_anger": "keep",
+ "portraits/ingrid_exasperated": "keep",
+ "portraits/dietrich": "keep",
+ "portraits/ferida": "keep",
+ "portraits/felix": "keep",
+ "portraits/rudger": "keep",
+ "portraits/serios": "keep",
+ "portraits/sieglinde": "keep",
+ "portraits/tiria": "keep",
+ "portraits/titta": "keep",
+ "monsters/e4_snowwolf": "keep",
+ "monsters/banditboss": "keep",
+ "monsters/e4_poacher": "keep",
+ "portraits/yoihime": "keep",
+ "portraits/trude": "keep",
+ "portraits/radmila": "keep",
+ "monsters/e2_mordu": {
+  "force": [
+   [
+    300,
+    360,
+    350,
+    420
+   ]
+  ]
+ },
+ "portraits/kind_elder_m": "keep",
+ "portraits/mordu": "keep",
+ "portraits/kind_elder_f": "keep",
+ "portraits/kind_ronin_f_b": "keep",
+ "portraits/lazare": "keep",
+ "monsters/e4_warbeast": "keep",
+ "portraits/kind_archer_f": "keep",
+ "portraits/kind_mage_m": "keep",
+ "portraits/yurien": "keep",
+ "portraits/yurina": "keep",
+ "monsters/e4k_cliffwatch": "keep",
+ "monsters/e2_meatling": "keep",
+ "portraits/kind_priest_f": "keep",
+ "portraits/walker": "keep",
+ "portraits/greol": "keep",
+ "portraits/kind_ronin_m": "keep",
+ "portraits/borg": "keep",
+ "portraits/ilse": "keep",
+ "portraits/polf": "keep",
+ "portraits/violaine": "keep",
+ "monsters/e4k_guiltdog": "keep",
+ "portraits/gigra": "keep",
+ "portraits/ambroise": "keep",
+ "portraits/kind_villager_m": "keep",
+ "portraits/vittorio": "keep",
+ "monsters/e4k_squire": "keep",
+ "portraits/solenne": "keep",
+ "portraits/rodolphe": "keep",
+ "monsters/rize": "keep",
+ "portraits/neilas": "keep",
+ "portraits/kind_adventurer_f_b": "keep",
+ "portraits/jonas": "keep",
+ "monsters/kin": "keep"
+}

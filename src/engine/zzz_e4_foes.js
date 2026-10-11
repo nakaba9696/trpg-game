@@ -23,7 +23,7 @@
     const e = E()[id], L = D.LOCS[lid];
     if (!e || !L || !(L.pool || []).length || e.boss || e.elderOf) return false;
     if ((e.where || []).includes(lid) || (e.also || []).includes(lid)) return true;
-    return !e.kinOf && !!e.rg && !!RG[e.rg] && RG[e.rg].test(L.region || "") && E4.fitTier(e.tier, L.danger || 0);
+    return !e.kinOf && !!e.rg && !!RG[e.rg] && RG[e.rg].test(L.area || L.region || "") && E4.fitTier(e.tier, L.danger || 0);
   };
   E4.spread = () => {
     const ids = Object.keys(E()).filter(isE4);
@@ -313,9 +313,9 @@
     const mark = S.log[S.log.length - 1];
     try { baseAct(arg); } finally { if (held) S.companions.splice(Math.min(held[0], S.companions.length), 0, held[1]); }
     if (aimBack && S.combat === C) { const i = C.foes.indexOf(aimBack); if (i >= 0) C.aim = i; }
-    // 弱点の上乗せ：こちらの一撃（その手番の最初のダメージ）だけ
+    // 弱点の上乗せ：こちらの一撃（その手番の最初のダメージ）だけ。E12 の耐性と弱点（aff）があればそちらが掛けるので、ここでは足さない
     const elem = kindElem(kind, itemId);
-    if (elem && !S.over) {
+    if (elem && !S.over && !E4.weakByE12) {
       const from = S.log.lastIndexOf(mark) + 1;
       const fresh = S.log.slice(from);
       const hitOnce = new Set();
@@ -389,12 +389,12 @@
     (e.acts || []).forEach((a) => KNOW_ACT[a] && add("act:" + a, KNOW_ACT[a]));
     if (e.when) add("when", `${WHEN_TEXT(e.when)}にしか出ない。避けたければ時を選べ。`);
     if (e.undead) add("undead", "不死のもの。聖水がよく効く。");
-    if (e.majin) add("majin", "見えない守り（絶界）がある。破る手立てを持たずに挑むな。");
-    if (e.mres >= 25 && e.def >= 20) add("hard", "刃も魔法も通りにくい。急所を狙うか、弱みを探せ。");
+    if ((e.majin && (!G.hasWall || !G.e3Of || !G.e3Of(id) || G.hasWall(G.e3Of(id).id)))) add("majin", "見えない守り（絶界）がある。破る手立てを持たずに挑むな。"); // E11：絶界は黒鎧だけ
+    if (e.mres >= 25 && e.def >= 20) add("hard", "刃も魔法も通りにくい。戦技の強い一撃か、弱みを探せ。");
     else {
       if (e.mres < 0) add("mres", "魔法に弱い。");
       else if (e.mres >= 25) add("mres", "魔法が効きにくい。刃で攻めよ。");
-      if (e.def >= 20) add("def", "刃が通りにくい。魔法か、急所を狙え。");
+      if (e.def >= 20) add("def", "刃が通りにくい。魔法か、戦技の強い一撃を。");
     }
     if (e.magic) add("magic", "攻撃は鎧を素通りする。鎧より体力を頼れ。");
     if (e.bribe) add("bribe", `${e.bribe}G 払えば見逃してくれる。`);

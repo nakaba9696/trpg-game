@@ -12,14 +12,14 @@
     goblin: { name: "ゴブリン", tier: 1, hp: 8, dmg: [1, 4, 1], hit: 50, def: 0, agi: 30, will: 30, mres: 0, gold: [2, 8], loot: [["fang", 0.3]], shape: "small", eye: "#e8d44d", desc: "汚い短剣を振り回す小鬼。群れると厄介。" },
     wolf: { name: "飢えた野犬", tier: 1, hp: 10, dmg: [1, 6, 0], hit: 55, def: 5, agi: 55, will: 35, mres: 0, gold: [0, 0], loot: [["pelt", 0.3]], shape: "beast", eye: "#e8d44d", desc: "痩せこけた野犬。脅せば逃げる。" },
     barrelgob: { name: "樽ゴブリン", tier: 1, hp: 6, dmg: [1, 3, 0], hit: 40, def: 0, agi: 20, will: 20, mres: 0, gold: [5, 15], loot: [["ale", 0.8]], shape: "small", eye: "#f09a3e", desc: "酒樽をかぶったゴブリン。だいたい酔っている。" },
-    dogu: { name: "ドグー", tier: 1, hp: 14, dmg: [1, 3, 0], hit: 35, def: 25, agi: 10, will: 25, mres: 0, gold: [1, 5], loot: [["gem", 0.05]], shape: "blob", eye: "#9fd6ff", desc: "泥でできた丸い人形。硬いが、のろい。" },
+    dogu: { name: "ドグー", tier: 1, hp: 14, dmg: [1, 3, 0], hit: 35, def: 25, agi: 10, will: 25, mres: 0, gold: [1, 5], loot: [["gem", 0.05]], shape: "blob", eye: "#9fd6ff", desc: "泥でできた丸い人形。硬いがのろい。" },
     bandit: { name: "街道の盗賊", tier: 1, hp: 12, dmg: [1, 6, 1], hit: 55, def: 5, agi: 40, will: 40, mres: 0, gold: [5, 20], loot: [["herb", 0.3]], shape: "humanoid", eye: "#d9d9d9", bribe: 20, desc: "食い詰めた元農民。金を払えば見逃す。" },
 
     // 段 2
     orc: { name: "オーク", tier: 2, hp: 18, dmg: [1, 8, 1], hit: 55, def: 5, agi: 30, will: 45, mres: 0, gold: [5, 25], loot: [["fang", 0.5]], shape: "humanoid", eye: "#e05a3a", desc: "豚面の大男。力任せに斧を振るう。" },
     werewolf: { name: "人狼", tier: 2, hp: 22, dmg: [2, 4, 1], hit: 60, def: 10, agi: 60, will: 60, mres: 5, gold: [0, 10], loot: [["pelt", 0.6]], shape: "beast", eye: "#f2e14a", desc: "昼は人、夜は獣。" },
     spider: { name: "大蜘蛛", tier: 2, hp: 16, dmg: [1, 6, 2], hit: 60, def: 5, agi: 55, will: 999, mres: 0, gold: [0, 0], loot: [["silk", 0.6]], shape: "swarm", eye: "#ff4d4d", desc: "牛ほどもある蜘蛛。毒の牙を持つ。" },
-    slime: { name: "酸のスライム", tier: 2, hp: 22, dmg: [1, 4, 2], hit: 50, def: 25, agi: 10, will: 999, mres: -20, gold: [0, 15], loot: [["gem", 0.08]], shape: "blob", eye: "#b6ff7a", desc: "刃が通りにくいが、魔法に弱い。" },
+    slime: { name: "酸のスライム", tier: 2, hp: 22, dmg: [1, 4, 2], hit: 50, def: 25, agi: 10, will: 999, mres: -20, gold: [0, 15], loot: [["gem", 0.08]], shape: "blob", eye: "#b6ff7a", desc: "刃が通りにくいが魔法に弱い。" },
     banditboss: { name: "山賊の頭", tier: 2, hp: 26, dmg: [1, 8, 2], hit: 60, def: 10, agi: 45, will: 55, mres: 0, gold: [20, 60], loot: [["potion", 0.5]], shape: "humanoid", eye: "#d9d9d9", bribe: 60, desc: "片目の大男。手下より話は分かる。" },
     guard: { name: "町の衛兵", tier: 2, hp: 20, dmg: [1, 6, 2], hit: 60, def: 15, agi: 40, will: 50, mres: 0, gold: [5, 20], loot: [], shape: "humanoid", eye: "#d9d9d9", bribe: 40, desc: "職務には忠実。賄賂にも忠実。" },
 
@@ -38,14 +38,14 @@
     blackknight: { name: "黒騎士", tier: 4, hp: 52, dmg: [1, 12, 3], hit: 70, def: 25, agi: 35, will: 80, mres: 10, gold: [30, 100], loot: [["plate", 0.1], ["potion", 0.4]], shape: "humanoid", eye: "#ff3a3a", desc: "使徒に仕える黒い鎧の騎士。中身を見た者はいない。" },
 
     // 段 5
-    general: { name: "魔物将軍", tier: 5, hp: 72, dmg: [2, 10, 3], hit: 70, def: 25, agi: 45, will: 85, mres: 15, gold: [60, 150], loot: [["gem", 0.4], ["elixir", 0.1]], shape: "giant", eye: "#ff3a3a", desc: "魔物の軍勢を率いる将。" },
-    kin: { name: "使徒の眷属", tier: 5, hp: 58, dmg: [2, 8, 4], hit: 70, def: 20, agi: 55, will: 90, mres: 25, gold: [40, 120], loot: [["manawater", 0.5]], shape: "winged", eye: "#c77dff", desc: "使徒が生み出した翼ある僕。" },
+    general: { name: "角兜の将", tier: 5, hp: 72, dmg: [2, 10, 3], hit: 70, def: 25, agi: 45, will: 85, mres: 15, gold: [60, 150], loot: [["gem", 0.4], ["elixir", 0.1]], shape: "giant", eye: "#ff3a3a", desc: "魔物の軍勢を率いる将。" },
+    kin: { name: "使徒の眷属", tier: 5, hp: 58, dmg: [2, 8, 4], hit: 70, def: 20, agi: 55, will: 90, mres: 25, gold: [40, 120], loot: [["manawater", 0.5]], shape: "winged", eye: "#c77dff", desc: "使徒の血を飲んで人でなくなった、翼ある者。" },
 
     // ボス
-    kain: { name: "眷属カイン", tier: 4, boss: true, hp: 95, dmg: [2, 8, 4], hit: 75, def: 20, agi: 60, will: 999, mres: 25, magic: true, gold: [150, 250], loot: [["apostleheart", 1]], shape: "humanoid", eye: "#c77dff", desc: "忘れ水の使徒ルアマリスの眷属。人の思い出を書き写した本を、遺跡で読み漁っている。" },
-    shuten: { name: "鬼の頭目ゴズ", tier: 4, boss: true, hp: 120, dmg: [2, 10, 4], hit: 70, def: 20, agi: 45, will: 999, mres: 10, gold: [100, 200], loot: [["oniclub", 1], ["onihorn", 1]], shape: "giant", eye: "#ff3a3a", desc: "鬼ヶ島を統べる大鬼。白く光る刀を戦利品として奪ったという。" },
-    bonedragon: { name: "屍竜ネクロザ", tier: 5, boss: true, hp: 150, dmg: [3, 8, 4], hit: 70, def: 25, agi: 30, will: 999, mres: 20, undead: true, gold: [200, 400], loot: [["dragonmail", 1]], shape: "dragon", eye: "#7dffb0", desc: "死してなお墓場を守る竜。その腹に一振りの剣が刺さっている。" },
-    rize: { name: "眷属リゼ", tier: 5, boss: true, hp: 120, dmg: [2, 10, 5], hit: 75, def: 25, agi: 70, will: 999, mres: 25, gold: [150, 300], loot: [["apostleheart", 1], ["elixir", 1]], shape: "humanoid", eye: "#ff3a3a", desc: "エンバルダの眷属。主人と同じく戦いに酔う女剣士。" },
+    kain: { name: "眷属カイン", tier: 4, boss: true, hp: 95, dmg: [2, 8, 4], hit: 75, def: 20, agi: 60, will: 999, mres: 25, magic: true, gold: [150, 250], loot: [["apostleheart", 1]], shape: "humanoid", eye: "#c77dff", desc: "忘れ水の使徒の眷属。人の思い出を書き写した本を、遺跡で読み漁っている。" },
+    shuten: { name: "鬼の頭目ゴズ", tier: 4, boss: true, hp: 120, dmg: [2, 10, 4], hit: 70, def: 20, agi: 45, will: 999, mres: 10, gold: [100, 200], loot: [["oniclub", 1], ["onihorn", 1]], shape: "giant", eye: "#ff3a3a", desc: "鬼ヶ島を統べる大鬼。夜明けに鳴る白い鎖を社から盗み、蔵に沈めているという。" },
+    bonedragon: { name: "屍竜ネクロザ", tier: 5, boss: true, hp: 150, dmg: [3, 8, 4], hit: 70, def: 25, agi: 30, will: 999, mres: 20, undead: true, gold: [200, 400], loot: [["dragonmail", 1]], shape: "dragon", eye: "#7dffb0", desc: "死してなお墓場を守る竜。その腹に一本の黒い槍が刺さっている。" },
+    rize: { name: "眷属リゼ", tier: 5, boss: true, hp: 120, dmg: [2, 10, 5], hit: 75, def: 25, agi: 70, will: 999, mres: 25, gold: [150, 300], loot: [["apostleheart", 1], ["elixir", 1]], shape: "humanoid", eye: "#ff3a3a", desc: "黒い鎧の使徒の眷属。主人と同じく戦いに酔う女剣士。" },
     graw: { name: "黒鎧の使徒エンバルダ", tier: 6, boss: true, majin: true, hp: 220, dmg: [2, 10, 6], hit: 80, def: 25, agi: 50, will: 999, mres: 30, gold: [500, 1000], loot: [["gem", 1], ["relic", 1]], shape: "giant", eye: "#ff2020", desc: "黒い鎧に身を包んだ、騎士のような巨きな使徒。背の大剣を抜いた記録は一度もない。そばに立つだけで、一流の戦士でも体がすくむ。絶界に守られ、並の武器では傷ひとつ付かない。" },
     royalguard: { name: "近衛騎士団長", tier: 5, boss: true, hp: 110, dmg: [2, 8, 4], hit: 75, def: 30, agi: 50, will: 999, mres: 20, gold: [0, 0], loot: [], shape: "humanoid", eye: "#d9d9d9", desc: "王位を狙う者の前に立ちはだかる、王国最強の騎士。" },
   };

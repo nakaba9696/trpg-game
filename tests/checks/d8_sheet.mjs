@@ -1,7 +1,7 @@
 // D8 #136：世界観をスプレッドシート中心に整理した（docs/lore/sheet_audit.md）
 // - src に外から混ぜた名前（八雲・侍の国・魔物界・古王国ロゥム・酒呑）が残っていない（古いセーブを移す d8_names.js だけは持ってよい）
 // - 場所の id はそのままで、表に出る名前がシートの名になっている（シェルアーク・エル・ナフ遺構・使徒領）
-// - 自由都市連合が「三国のどこにも属さない」ではなく、王国の中の自治の町として書かれている
+// - ブランデール・ヴァレンツァが「三国のどこにも属さない」ではなく、王国の町として書かれている（D10 で「自由都市連合」は無くした）
 // - 古いセーブの「八雲」「魔物界」の評判が新しい名前へ移る
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
@@ -39,8 +39,8 @@ export default ({ fail, ok, loadEngine }) => {
   for (const id of ["wasteland", "majincastle"]) if (D.LOCS[id] && D.LOCS[id].region !== "使徒領") F(`${id} の地方が「${D.LOCS[id].region}」`);
   if (!D.LAWLESS || !D.LAWLESS.includes("使徒領")) F("使徒領に衛兵がいることになっている（D.LAWLESS）");
   if (!D.ENEMIES.shuten || !/ゴズ/.test(D.ENEMIES.shuten.name)) F("鬼の頭目の名前が変わっていない（id shuten はそのまま）");
-  const free = D.WORLD.all.flatMap(([, r]) => r).find(([k]) => k === "自由都市連合");
-  if (!free || !/王国/.test(free[1])) F("自由都市連合が王国の中の町として書かれていない");
+  const free = D.WORLD.all.flatMap(([, r]) => r).find(([k]) => k === "南の商いの町");
+  if (!free || !/レオネスト王国/.test(free[1])) F("商都ブランデールが王国の町として書かれていない");
 
   const S = { titleAt: "八雲", repute: { 八雲: { rep: 4, inf: 1, wanted: false }, シェルアーク: { rep: 1, inf: 0, wanted: true } } };
   G.fixOldNames(S);
@@ -49,5 +49,5 @@ export default ({ fail, ok, loadEngine }) => {
   const r = S.repute["シェルアーク"];
   if (!r || r.rep !== 5 || r.inf !== 1 || !r.wanted || S.repute["八雲"]) F(`八雲の評判がシェルアークへまとまらない（${JSON.stringify(S.repute)}）`);
 
-  if (!failures) ok("D8 シートが主（外から混ぜた名前が src に無い・id はそのまま・自由都市は王国の中・古いセーブの地方名を移す）");
+  if (!failures) ok("D8 シートが主（外から混ぜた名前が src に無い・id はそのまま・ブランデールは王国の町・古いセーブの地方名を移す）");
 };

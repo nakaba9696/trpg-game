@@ -6,7 +6,7 @@
 // を出す。CI では動かさない（Playwright と Chromium が要る）。
 // node tools/loudness.mjs            … 今の表で測って、狙い（TARGET＋OFFSET）とのずれを出す
 // node tools/loudness.mjs --write    … 測っては倍率を直すのを 3 回くり返し、表の BGM・AMB・SFX を書き換える（前と後の数字を出す）
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -16,13 +16,15 @@ const require = createRequire(import.meta.url);
 let pw;
 try { pw = require("playwright"); } catch { pw = require(path.join(process.execPath, "../../lib/node_modules/playwright")); }
 const src = (f) => readFileSync(path.join(here, "..", "src", f), "utf8");
+// 曲の表：S4 の曲と、S6 で足した曲（src/data/s6_tracks*.js）
+const tracks = () => ["data/s4_tracks.js", ...readdirSync(path.join(here, "..", "src", "data")).filter((f) => /^s6_tracks.*\.js$/.test(f)).sort().map((f) => "data/" + f)].map(src).join("\n");
 const MIXFILE = path.join(here, "..", "src", "data", "s4_mix.js");
 const write = process.argv.includes("--write");
 
 const browser = await pw.chromium.launch(process.env.PLAYWRIGHT_BROWSERS_PATH ? {} : { executablePath: "/opt/pw-browsers/chromium" });
 const page = await browser.newPage();
 await page.setContent("<!doctype html><title>音の大きさ</title>");
-await page.addScriptTag({ content: "globalThis.G = { data: { LOCS: {}, ENEMIES: {} } };\n" + src("data/s4_tracks.js") + "\n" + src("data/s4_mix.js") });
+await page.addScriptTag({ content: "globalThis.G = { data: { LOCS: {}, ENEMIES: {} } };\n" + tracks() + "\n" + src("data/s4_mix.js") });
 await page.addScriptTag({ content: src("ui/sound.js") });
 await page.addScriptTag({ content: src("ui/sound_bgm.js") });
 

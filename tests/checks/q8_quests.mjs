@@ -7,6 +7,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   let n = 0;
   const F = (m) => { n++; fail("q8 恋と頼みごと: " + m); };
   const G = loadEngine();
+  G.data.C14.off = true; // C14 の段（上限・結婚の段）は tests/checks/c14_stages.mjs で確かめる。ここは仕組みだけ
   const D = G.data;
   G.rand = seeded(1);
   G.P = { trophies: {}, graves: [] };

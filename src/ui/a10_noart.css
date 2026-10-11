@@ -3,7 +3,3 @@ canvas.noart { display: none !important; }
 /* 主人公の顔を外したシートの頭：名前から人物を開く */
 .sname.a10who { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .sname.a10who:hover, .sname.a10who:focus-visible { color: var(--blood); outline: none; }
-/* 作成の画面：顔の欄が無いので、文だけで並べる */
-@media (max-width: 720px) {
-  .whoCard { grid-template-columns: minmax(0, 1fr); }
-}

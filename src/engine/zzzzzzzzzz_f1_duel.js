@@ -1,4 +1,4 @@
-// F1：戦闘の読み合い・賭けの技・山場・手応え。名前の頭の z の数で、ほかの戦闘の包み（E4・L1・F2・U6 など）より後に読ませる。
+// F1：戦闘の読み合い・賭けの技・山場。名前の頭の z の数で、ほかの戦闘の包み（E4・L1・F2・U6 など）より後に読ませる。
 // combat.js のつなぎ目（G.cbActs・G.cbDmgMod・G.cbMove・G.cbStruck・C.f1dodge）に中身を入れ、G.combatAct・G.combatActions・G.startCombat を包む。DOM には触らない。
 //
 // 読み合い：敵は手番の終わりに、次の手番にすることの気配を見せる（f.f1i = { k }。文は data/f1_tells.js）。気配のとおりに動く（はったりは無い）。
@@ -11,8 +11,8 @@
 // 知っている敵（図鑑で倒したことがある・覚え書きがある）は、気配のあとに一言（D.F1_HINT）が添い、合う手に「◎」が付く。成功率は変わらない（L1 と同じ考え）
 // 賭けの技：捨て身（当たりにくいが 2.5 倍、外すと無防備）・身を削る（HP を払って当てやすく 1.8 倍。HP が半分あるうち）・目つぶし（狙いが気配を見せているとき、道具をひとつ投げ捨てて、気配を潰して崩す）
 // 雑魚戦を長引かせない：ボスでない敵は、こちらの一撃で HP が 2 割を切るなら、そのまま倒れる（とどめ）
-// 手応え：勝った戦いの読み勝ち・崩し・いちばん重い一撃を記録に一行（S.f1last。結果の場面 U13 が読む）
-// セーブに足すもの：S.combat.f1（数え）・敵の f1i / f1stun / f1open / f1rage / f1struck・S.f1last。古いセーブに無くても動く
+// 手応え（勝った戦いの読み勝ち・崩しなどの一行）は、持ち主「意味あるようにみえて意味不明なので表示ごとやめて」でやめた（F5。古いセーブの S.f1last は読まない）
+// セーブに足すもの：S.combat.f1（数え）・敵の f1i / f1stun / f1open / f1rage / f1struck。古いセーブに無くても動く
 // 乱数は G.rand / G.d / G.dice / G.pick だけ。レーン B（F1）
 (function (G) {
   const D = G.data;
@@ -179,7 +179,7 @@
     // とどめ（雑魚戦を長引かせない）
     if (!isBig(f) && (blade || spell || how === "holy") && f.hp - n > 0 && f.hp - n <= Math.max(2, Math.floor(f.max * F1.P.finish))) {
       n = f.hp;
-      G.note("勢いのまま、とどめを刺した。");
+      G.log("sys", "勢いのまま、とどめを刺した。", { late: true }); // ダメージの行のあとに出る（combat.js の damageFoe）
     }
     if (n > (s.best || 0)) s.best = n;
     return n;
@@ -288,13 +288,11 @@
     const find = (id) => groups.find((g) => g.list.some((a) => a.id === id));
     const insertAfter = (id, item) => { const g = find(id); if (!g) return false; g.list.splice(g.list.findIndex((a) => a.id === id) + 1, 0, item); return true; };
     const disarmed = !!c.e4disarm;
-    insertAfter("cb:vital", { id: "cb:f1cut", label: "割り込む", sub: `${w().stat} ${F1.chance.cut()}%・弱い一撃・溜めを潰す`, disabled: disarmed, kw: ["割り込", "潰", "出鼻"] });
-    insertAfter("cb:guard", { id: "cb:f1dodge", label: "躱す", sub: `敏捷 ${F1.chance.dodge()}%・最初の一撃を外す`, kw: ["躱", "避", "かわ", "見切"] });
-    const cost = F1.bloodCost(S);
+    // F9：攻撃は「〇〇で攻撃」の一つだけ（割り込む・捨て身・身を削るは外した。持ち主「割り込むも面倒なので無くていい」）。躱すは防御に溶かした。
+    //   手の中身（G.cbActs.f1cut など）は、古いセーブ・直に呼ぶ流れのために残す
+    void insertAfter; void disarmed;
     const item = F1.throwItem(S);
     const bet = { title: "賭け", list: [
-      { id: "cb:f1all", label: "捨て身の一撃", sub: `${w().stat} ${F1.chance.all()}%・当たれば2.5倍・外せば無防備`, disabled: disarmed, kw: ["捨て身", "渾身", "全力"] },
-      { id: "cb:f1blood", label: "身を削る一撃", sub: `HP${cost}を払う・${w().stat} ${F1.chance.blood()}%・1.8倍`, disabled: disarmed || S.hp < S.maxHp / 2 || S.hp <= cost * 2, kw: ["身を削", "血"] },
       { id: "cb:f1throw", label: item ? `${D.ITEMS[item].name}を投げて目つぶし` : "目つぶし", sub: !item ? "投げる物が無い" : !t.f1i ? "狙いが何か仕掛けてくるときに" : `${D.ITEMS[item].name}を失う・敏捷 ${F1.chance.throw()}%・気配を潰して崩す`, disabled: !item || !t.f1i || walled(t), kw: ["目つぶし", "投げ"] },
     ] };
     const at = groups.indexOf(find("cb:attack"));
@@ -337,36 +335,11 @@
       rally();
       return;
     }
-    if (S.combat !== c) after(c);
   };
-
-  // 戦いの終わり：勝ったなら手応えを一行
-  function after(c) {
-    const S = G.S;
-    const won = !c.foes.some((f) => f.hp > 0);
-    if (!won) return;
-    const s = c.f1 || {};
-    const big = c.boss || c.foes.some((f) => isBig(f));
-    S.f1last = { turn: S.turn, reads: s.reads || 0, breaks: s.breaks || 0, best: s.best || 0, gwin: s.gwin || 0, glose: s.glose || 0, rounds: c.round || 1, big };
-    const text = F1.summary(S.f1last);
-    if (text) G.note(`手応え：${text}`);
-    if (big && (s.reads || 0) >= 2) G.say("相手の手は、最後にはすべて見えていた。");
-  }
-  F1.summary = (r) => {
-    if (!r) return "";
-    const parts = [];
-    if (r.reads) parts.push(`読み勝ち ${r.reads}`);
-    if (r.breaks) parts.push(`崩し ${r.breaks}`);
-    if (r.gwin || r.glose) parts.push(`賭け ${r.gwin}勝${r.glose}敗`);
-    if (r.best) parts.push(`いちばん重い一撃 ${r.best}`);
-    if (!parts.length) return "";
-    return `${parts.join("・")}（${r.rounds} 手番）`;
-  };
-  G.f1Summary = (S) => { S = S || G.S; return S && S.f1last && S.f1last.turn === S.turn ? F1.summary(S.f1last) : ""; };
 
   // ---------------------------------------------------------------- 遊び方の一行（U4）：気配が初めて見えたとき
   if (G.PLAY_TIPS && G.playTip) {
-    G.PLAY_TIPS.f1 = "読み合い：左に線の付いた太字の行は、敵が次にしそうなことの気配。気配に合う手（守る・躱す・割り込む・術）を選ぶと、結果が大きく変わる。倒したことのある敵なら、合う手に◎が付く。";
+    G.PLAY_TIPS.f1 = "読み合い：左に線の付いた太字の行は、敵が次にしそうなことの気配。気配に合う手（防御・術・戦技）を選ぶと、結果が大きく変わる。倒したことのある敵なら、合う手に◎が付く。";
     const baseTip = G.playTip;
     G.playTip = (S, P) => {
       const seen = (P && P.tips) || {};
@@ -376,7 +349,8 @@
   }
 
   // ---------------------------------------------------------------- 図鑑と覚え書き
-  if (G.l1 && G.l1.ACTS) Object.assign(G.l1.ACTS, { f1cut: "割り込み", f1dodge: "躱す", f1all: "捨て身", f1blood: "身を削る", f1throw: "目つぶし" });
+  // 覚え書きの手の名前（f1cut などは古い記録のために残す。F9：防御）
+  if (G.l1 && G.l1.ACTS) Object.assign(G.l1.ACTS, { f1cut: "割り込み", f1dodge: "躱す", f1all: "捨て身", f1blood: "身を削る", f1throw: "目つぶし", guard: "防御" });
   if (G.codexFoeStats) {
     const baseStats = G.codexFoeStats;
     G.codexFoeStats = (id) => {

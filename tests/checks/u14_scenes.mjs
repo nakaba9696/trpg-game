@@ -115,7 +115,7 @@ export default ({ fail: failTo, ok, loadEngine, seeded }) => {
     for (const type of ["town", "wild", "dungeon"]) for (const sea of [false, true]) lines.push(U.howLine({ sea, days: 3, type }, k));
   }
   for (const t of lines) if (/見世物|観客|客席|舞台|台本|魔王/.test(t)) fail(`語りに使わない言葉がある：${t}`);
-  if (U.days(5) !== "五日" || U.days(12) !== "12日") fail("日数の書き方が違う");
+  if (U.days(5) !== "五日" || U.days(12) !== "十二日" || U.days(21) !== "二十一日") fail("日数の書き方が違う");
 
   // ---- CSS
   const dir = new URL("../../src/ui/", import.meta.url);

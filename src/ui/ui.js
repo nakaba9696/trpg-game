@@ -84,7 +84,7 @@
     dice.append(h("span", "die", String(Math.floor(r / 10))), h("span", "die", String(r % 10)));
     box.append(dice, h("span", "num", `→ ${e.roll}`));
     box.append(h("span", "verdict " + (e.crit ? "crit" : e.ok ? "ok" : "ng"), e.label));
-    if (e.growth) box.append(h("span", "grow num", `${e.stat} 成長 ${e.growth[0]}→${e.growth[1]}`));
+    if (e.growth) box.append(h("span", "grow num", `${e.stat}が伸びた ${e.growth[0]}→${e.growth[1]}`)); // 成長の書き方は「〇〇が伸びた a→b」にそろえる（R7）
     if (e.rr) box.append(h("span", "fine", `（振り直し。前の出目 ${e.rr.roll}）`));
     // M7：失敗した判定の横に「振り直す（残り n）」
     if (G.rerollTarget && G.rerollTarget(e) && !busy) {
@@ -92,12 +92,20 @@
       b.type = "button";
       b.onclick = () => { if (!busy) { G.act("rr:go"); after(); } };
       box.append(b);
+    } else if (G.rerollBlockedTarget && G.rerollBlockedTarget(e) && !busy) {
+      // 戦闘中は振り直せない：ボタンを薄くして理由を添える
+      const b = h("button", "btn small", `振り直す（残り ${G.rerolls()}）`);
+      b.type = "button";
+      b.disabled = true;
+      b.title = G.REROLL_NO_COMBAT;
+      box.append(b, h("span", "fine", G.REROLL_NO_COMBAT));
     }
     return box;
   }
   const LOG_CLS = { nar: "l-nar", you: "l-you", sys: "l-sys", grow: "l-grow", trophy: "l-trophy", title: "l-title", gmtag: "l-gmtag", quest: "l-quest" };
   function logEntryEl(e) {
     if (e.k === "dice") return checkEl(e);
+    if (ui.logEl) { const el = ui.logEl(e); if (el) return el; } // 記録の種類ごとの描き方を足す入口（U27 の「得たもの」）
     return h("p", (LOG_CLS[e.k] || "l-sys") + (e.fx === "boss" ? " l-boss" : "") + (e.tell ? " l-tell" + (e.rage ? " l-rage" : e.brk ? " l-brk" : "") : ""), e.k === "you" ? "▶ " + e.text : e.text);
   }
   const LOG_KEEP = 90;
@@ -244,7 +252,7 @@
   let shownTip = null;
   function renderGuide(panel) {
     const S = G.S;
-    if (G.hpDanger && G.hpDanger(S)) panel.append(h("div", "danger", `HP が残り ${S.hp}。${S.combat ? "身を守る・逃げる・道具も手だ。" : "休むか、傷を手当てしたい。"}`));
+    if (G.hpDanger && G.hpDanger(S)) panel.append(h("div", "danger", `HP が残り ${S.hp}。${S.combat ? "防御・逃げる・道具も手だ。" : "休むか、傷を手当てしたい。"}`));
     const tip = G.playTip && G.P ? G.playTip(S, G.P) : null;
     shownTip = tip && tip.key;
     if (!tip) return;
@@ -350,7 +358,7 @@
   // 「能力」のタブの表：目的と、体の状態（日付・場所は場面の絵の下、所持金は帯、仲間は「仲間」のタブにあるので出さない。Q7）
   function sheetSelfRows() {
     const S = G.S;
-    return [["目的", S.goal.text + (G.goalDone(S) ? "（達成）" : "")],
+    return [["目的", (S.goal.text || "なし") + (G.goalDone(S) ? "（達成）" : "")],   // 目的なし（R7c）
       ...(G.r1Rows ? G.r1Rows(S) : []), ["状態", S.conds.length ? S.conds.join("、") : "なし"], ...(G.m5Rows ? G.m5Rows(S) : []), ...(G.m10Rows ? G.m10Rows(S) : []), ["振り直し", `残り ${S.rerolls || 0}${G.REROLL_MAX ? " / " + G.REROLL_MAX : ""}`]];
   }
   // 装備の表（装備の枠を足すときはここの行に足す）
@@ -378,6 +386,7 @@
       t.append(h("b", "", c.name), h("span", "fine", c.desc || ""));
       if (G.r1CompLabel && G.r1CompLabel(c)) t.append(h("span", "fine", G.r1CompLabel(c)));
       if (G.m10Label && G.m10Label(c)) t.append(h("span", "fine", G.m10Label(c)));
+      if (G.m14CompLabel) t.append(h("span", "fine", G.m14CompLabel(c)));   // 術の才（M14）
       el.append(t);
       box.append(el);
     });
@@ -514,8 +523,8 @@
 
   async function copyLog() {
     const S = G.S;
-    const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}成長${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
-    const txt = `${S.clsName} ${S.profile.name}の人生 ── 目的：${S.goal.text}\n` + lines.join("\n");
+    const lines = S.log.map((e) => e.k === "dice" ? `［判定］${e.reason}【${e.stat}】成功率${e.chance}% 出目${e.roll} ${e.label}${e.growth ? ` ${e.stat}が伸びた ${e.growth[0]}→${e.growth[1]}` : ""}` : e.k === "you" ? `▶ ${e.text}` : e.k === "title" ? `\n■ ${e.text}` : e.text);
+    const txt = `${S.clsName} ${S.profile.name}の人生${S.goal.text ? ` ── 目的：${S.goal.text}` : ""}\n` + lines.join("\n");
     try { await navigator.clipboard.writeText(txt); ui.toast("ログをコピーしました"); }
     catch { const ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.append(ta); ta.select(); try { document.execCommand("copy"); ui.toast("ログをコピーしました"); } catch { ui.toast("コピーできませんでした"); } ta.remove(); }
   }
@@ -574,7 +583,7 @@
     $("#profTitle").textContent = `${p.name}（${S.clsName}）`;
     const dl = $("#profBody");
     dl.textContent = "";
-    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ["生まれ", p.origin && G.data.ORIGINS[p.origin] ? G.data.ORIGINS[p.origin].name : ""], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["目的", S.goal.text]]
+    [["性別", p.sex], ["年齢", `${p.age}歳${p.ageBand && G.data.AGES[p.ageBand] ? `（${G.data.AGES[p.ageBand].name}）` : ""}`], ...(G.r1Rows ? G.r1Rows(S).filter(([k]) => k === "種族" || k === "気性") : []), ["目的", S.goal.text || "なし"]]
       .forEach(([k, v]) => { if (v) dl.append(h("dt", "", k), h("dd", "", v)); });
     $("#dlgProfile").showModal();
   };
@@ -627,7 +636,7 @@
       const cls = run.clsName || run.cls;
       const race = G.r1GraveLine ? G.r1GraveLine(run) : "";
       ep.append(h("b", "", end === "dead" ? `${race ? race + "の" : ""}${cls} ${name}、ここに眠る` : `${race ? race + "の" : ""}${cls} ${name}、物語を終える`));
-      ep.append(h("span", "", `目的：${run.goal && run.goal.text ? run.goal.text : run.goal}`));
+      ep.append(h("span", "", `目的：${(run.goal && typeof run.goal === "object" ? run.goal.text : run.goal) || "なし"}`));
       ep.append(h("span", "num", `${run.date || G.dateOf(run.day)}　${run.location || ""}　${end === "dead" ? "死因：" + (run.deathCause || run.cause || "") : ""}　${run.turn ?? run.turns} 手番　名声 ${run.fame ?? 0}${run.title ? "　" + run.title : ""}`));
       ep.append(h("span", "num", "最後の能力値：" + D.STATS.map((k) => `${k}${G.s5GraveStats(run)[k]}`).join(" ")));
       // 生きた時代の世の大事（M12）
@@ -659,7 +668,8 @@
     tl.textContent = "";
     all.forEach((t) => {
       const el = h("div", "tro" + (t.got ? "" : " locked"));
-      el.append(h("span", "medal " + t.tier, t.tier), h("b", "", t.got ? t.name : "？？？"), h("span", "", t.desc), h("span", "", t.got ? `${t.got.by || ""} ${t.got.date || ""}` : "未獲得"));
+      const v = G.r7 && G.r7.trophyView ? G.r7.trophyView(t, t.got) : { name: t.got ? t.name : "？？？", desc: t.got ? t.desc : "" }; // まだなら説明も伏せる（R7）
+      el.append(h("span", "medal " + t.tier, t.tier), h("b", "", v.name), h("span", "", v.desc), h("span", "", t.got ? `${t.got.by || ""} ${t.got.date || ""}` : "未獲得"));
       tl.append(el);
     });
     const gl = $("#graveList");
@@ -668,7 +678,7 @@
     P.graves.forEach((g) => {
       const b = h("button", "grave");
       b.type = "button";
-      b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : g.epitaph || "物語を終えた"}　${g.turns} 手番`));
+      b.append(h("b", "", `${g.cls} ${g.name}${g.title ? "（" + g.title + "）" : ""}`), h("span", "", `目的：${g.goal || "なし"}`), h("span", "num", `${g.date}　${g.end === "dead" ? "死因：" + g.cause : g.epitaph || "物語を終えた"}　${g.turns} 手番`));
       b.onclick = () => { $("#dlgTrophy").close(); ui.openChronicle(g, false); };
       gl.append(b);
     });

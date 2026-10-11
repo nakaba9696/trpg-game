@@ -115,7 +115,7 @@
   G.retire = () => { const S = G.S; if (!S || S.over) return; const m = G.m6Best(S); G.endStory(m ? m.id : "plain"); };
 
   // ---------------------------------------------------------------- 人生の中身（冒険中の S でも、墓碑でも）
-  const yearOf = (day) => 1127 + Math.floor(((day || 1) - 1) / 360);
+  const yearOf = (day) => G.calYear(day || 1);
   const lifeOf = (S) => {
     const run = !!S.profile;
     const p = S.profile || { name: S.name };
@@ -141,7 +141,7 @@
     const days = run ? S.day : Math.max(1, Math.round((S.turns || 0) / 3));
     const world = chron.filter((c) => c.kind === "world");
     const spells = S.spells || [];
-    const learned = spells.filter((id) => !((D.SPELL_START && D.SPELL_START[S.cls]) || []).includes(id)).length;
+    const learned = spells.filter((id) => !(S.spellStart || (D.SPELL_START && D.SPELL_START[S.cls]) || []).includes(id)).length;   // S.spellStart：はじめから知っていた術（M14）
     const alive = comps.find((c) => (c.bond || 0) >= 90) || comps[0];
     // 語り手になれる仲間は、生きて別れた者だけ（死んだ者・裏切った者は語れない）
     const kept = gone.find((g) => g.how === "leave");
@@ -164,6 +164,8 @@
       world: world.length ? { text: G.pick(world).text } : false,
       trophy: (key) => { const t = (D.TROPHIES || []).find((x) => x.key === key); return !!t && chron.some((c) => c.kind === "trophy" && (c.text || "").includes(t.name)); },
       stats: S.stats || {},
+      // 暮らしの記録（R7。宿・食事・酒場・買い物・薬草の回数）。条件つきの行（{ t, if }）がこれを見る
+      life: G.r7 && G.r7.life ? G.r7.life(S) : { inn: 0, meal: 0, tavern: 0, buy: 0, herb: 0 },
     };
     L.ending = S.ending ? (S.ending.id || S.ending) : L.over === "end" ? "plain" : "";
     return L;
@@ -202,7 +204,12 @@
         return x === undefined ? "" : String(x).includes("{") ? fill(x, extra) : x;
       });
     };
-    const line = (arr, extra) => fill(G.pick(arr), extra);
+    // 行は文字列か { t, if: (L) => 真偽 }。if が偽の行（していないことを前提にした行）は選ばない（R7）
+    const only = (arr) => {
+      const ok = (arr || []).filter((x) => typeof x === "string" || (x && (() => { try { return !!x.if(L); } catch { return false; } })()));
+      return (ok.length ? ok : (arr || []).filter((x) => typeof x === "string")).map((x) => (typeof x === "string" ? x : x.t));
+    };
+    const line = (arr, extra) => fill(G.pick(only(arr)), extra);
 
     // 1. 生まれと旅立ち
     const life = [];
@@ -210,11 +217,11 @@
       line(N.open),
       // 生い立ちは作成から無くした（U17）。古いセーブで書いてあった人だけ一言。無い人は生まれの行ごと出さない
       L.history ? line(T.BIRTH) : "",
-      L.ageN ? line(T.DEPART) : fill(`{start}から歩き出した。目当ては「{goal}」。`),
+      L.ageN ? line(T.DEPART) : L.goal ? fill(`{start}から歩き出した。目当ては「{goal}」。`) : fill(`{start}から歩き出した。`), // 目的なしなら目的に触れない（R7c）
     ].join(""));
 
     // 2. 印象的な出来事（人生の長さで数を決める。短い人生は短く、長い人生は選んで長くしすぎない）
-    let want = L.days <= 10 ? 1 : L.days <= 40 ? 2 : L.days <= 150 ? 3 : 4;
+    let want = L.days <= 30 ? 1 : L.days <= 120 ? 2 : L.days <= 450 ? 3 : 4;   // C16：旅が 1〜3 週間になったので、日数の目安を 3 倍に
     if (L.over === "end") want = Math.max(2, want);
     const nOf = { quests: L.quests, bosses: L.bosses, kills: L.kills, wander: L.visited };
     const cands = [];
@@ -294,7 +301,7 @@
       paras[paras.length - 1] += line(N.close);
       return { paras, epitaph: fill(T.EPITAPH.wall), death: { key: "wall" } };
     }
-    const a0 = (L.ageN || 25) + Math.floor(L.days / 360);
+    const a0 = (L.ageN || 25) + Math.floor(L.days / G.YEAR_DAYS);
     let extra = 12 + G.d(33);
     if (a0 + extra > 96) extra = Math.max(3, 96 - a0);
     const deathAge = a0 + extra;

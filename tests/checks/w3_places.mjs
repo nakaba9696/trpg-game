@@ -1,5 +1,5 @@
 // W3：新しい場所（src/data/locations_w3.js）と出来事（src/data/events_w3*.js）
-// - 新しい場所が 6〜8（町 2〜3・迷宮 2・ほかは野外か名所）。どれも担当の地域（自由都市連合・レオネスト王国・光天教会領・シェルアーク）の中
+// - 新しい場所が 6〜8（町 2〜3・迷宮 2・ほかは野外か名所）。どれも担当の地域（レオネスト王国・光天教会領・シェルアーク）の中
 // - どの場所にも道か船があり（片道でない）、気候・着いたときの用語説明・背景の絵（古い scene.js と V2）がある。迷宮は中の絵も
 // - 出来事が 120 以上。どの出来事も、能力値の違う解き方が二つ以上と、判定なしの選択肢がある
 // - 続き物（next）の行き先があり、行き先にしか出ない出来事（w: 0）は、どこかの next から来る。一度きり・条件つきが混ざっている
@@ -13,7 +13,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const F = (m) => { bad++; fail("W3: " + m); };
   const G = loadEngine();
   const D = G.data;
-  const REGIONS = ["自由都市連合", "レオネスト王国", "光天教会領", "シェルアーク"];
+  const REGIONS = ["レオネスト王国", "光天教会領", "シェルアーク"];
   const w3 = Object.entries(D.LOCS).filter(([id]) => id.startsWith("w3_"));
   const by = (t) => w3.filter(([, L]) => L.type === t).length;
   if (w3.length < 6 || w3.length > 8) F(`新しい場所が ${w3.length}（6〜8 のはず）`);

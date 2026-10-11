@@ -8,7 +8,9 @@
   const D = G.data;
   const U14 = (G.u14 = G.u14 || {});
   const KAN = ["〇", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
-  U14.days = (n) => (n > 0 && n <= 10 ? KAN[n] + "日" : `${n}日`);
+  // 日数を漢数字で（九十九日まで。C16：旅が 1〜3 週間になったので十日を超える）
+  U14.kan = (n) => (n <= 10 ? KAN[n] : n < 20 ? "十" + KAN[n - 10] : n < 100 ? KAN[Math.floor(n / 10)] + "十" + (n % 10 ? KAN[n % 10] : "") : String(n));
+  U14.days = (n) => (n > 0 && n < 100 ? U14.kan(n) + "日" : `${n}日`);
   const pickBy = (list, k) => list[Math.abs(k | 0) % list.length];
   const hash = (s) => { let x = 0; for (const c of String(s)) x = (x * 31 + c.charCodeAt(0)) | 0; return x; };
 

@@ -1,5 +1,5 @@
 // S2：能力値を小さな数（点）で見せる・初期値をダイスで振る（docs/s2_stats.md）
-// - 初期値：能力値ごとに 3D6（8％で +1D6）＋職業・種族・年齢・生まれの補正。だいたい 5〜18、1 人のうちどれか 1 つが 20 以上になるのが約 5％
+// - 初期値：能力値ごとに 3D6（8％で +1D6）＋職業・種族・年齢の補正（生まれは U25 で無くした）。だいたい 5〜18、1 人のうちどれか 1 つが 20 以上になるのが約 5％
 // - ボーナス点：5 点で決まり＋トロフィーの格の点（銅 1・銀 2・金 5）10 点ごとに +1（合計の上限なし）。どの能力値にも好きなだけ
 // - 鍵は無い。振り直しは初期値を振り直す（何度でも）
 // - 換算（S5）：冒険に渡す値もセーブも点そのもの（D.S2.PCT = 1）。成功率は相手・難しさの点との差（tests/checks/s5_scale.mjs）
@@ -19,7 +19,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
 
   // ---------------------------------------------------------------- 初期値
   for (const [id, c] of Object.entries(D.CLASSES)) for (const k of D.STATS) if (!(Math.abs(c.mod2[k] || 0) <= 3)) fail(`職業 ${id}: ${k} の補正 ${c.mod2[k]} が大きすぎる`);
-  for (const T of [D.AGES, D.ORIGINS, D.RACES, D.BEASTS]) for (const [id, o] of Object.entries(T)) {
+  for (const T of [D.AGES, D.RACES, D.BEASTS]) for (const [id, o] of Object.entries(T)) {
     for (const [k, v] of Object.entries(o.mod || {})) if (!D.STATS.includes(k) || Math.abs(v) > 3) fail(`補正 ${id}: ${k} ${v} が点になっていない`);
   }
   const rnd = seeded(2200);
@@ -45,7 +45,8 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   const midR = mid / n, hiR = hi20 / n;
   if (!(midR >= 0.9)) fail(`初期値が 5〜18 に収まる割合 ${(midR * 100).toFixed(1)}% が低い`);
   const perChar = chars20 / 5000;
-  if (!(perChar >= 0.035 && perChar <= 0.065)) fail(`1 人のうちどれか 1 つが 20 以上になる割合 ${(perChar * 100).toFixed(1)}% が約 5％でない`);
+  // U25 で生まれの補正（+1 が二つ）を無くした（振り方はそのまま。持ち主の決定）。約 5％ → 約 3.4％
+  if (!(perChar >= 0.025 && perChar <= 0.05)) fail(`1 人のうちどれか 1 つが 20 以上になる割合 ${(perChar * 100).toFixed(1)}% が約 3〜4％でない`);
   if (!(hiR >= 0.004 && hiR <= 0.015)) fail(`能力値ごとに 20 以上の割合 ${(hiR * 100).toFixed(2)}% が 1％弱でない`);
 
   // ---------------------------------------------------------------- 振り直し（鍵は無い）
@@ -109,7 +110,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
   g = G.grow("筋力", 40);
   if (!(g[1] > 14 && g[1] < 23)) fail(`古い caps で止まった・高い点ほど伸びにくくなっていない（40 伸ばして ${g}）`);
   g = G.grow("筋力", 5000);
-  if (!(S.stats.筋力 > 99)) fail(`上限で止まった（上限は無いはず。${g}・${S.stats.筋力}）`);
+  if (S.stats.筋力 !== 99) fail(`たくさん伸ばしても 99 で止まらない（R11 で 99 が上限。${g}・${S.stats.筋力}）`);
   if (G.chance("筋力", "普通") !== 95 || G.chance("筋力", "至難") !== 95) fail("99 を超えた能力値の成功率が 95％で止まらない");
   if (G.pt(S.stats.筋力) !== S.stats.筋力) fail("99 を超えた能力値の点が出ない");
   const logN = S.log.length;
@@ -183,7 +184,7 @@ export default ({ G, fail: fail0, ok, seeded }) => {
     const src = readFileSync(fileURLToPath(new URL("../../src/ui/setup.js", import.meta.url)), "utf8");
     if (!/上振れ/.test(src) || !/lucky/.test(src)) fail("作成画面に上振れの印が無い");
     if (!/cre\.bonusPoints\(draft\)/.test(src)) fail("作成画面にボーナス点が出ない");
-    if (!/trophyScore/.test(src) || !/次の \+1 まであと/.test(src)) fail("作成画面に、トロフィーの点と次の +1 までが出ない");
+    if (!/trophyScore/.test(src) || !/cre\.trophyNext\(\)/.test(src)) fail("作成画面に、トロフィーの点と次のボーナスまでが出ない");
     if (/才能限界|鍵をかけ|大当たり|m8ui|才の付きやすい/.test(src)) fail("作成画面に、なくした仕組みの言葉が残っている");
     if (/String\(o\.stats\[k\]\)/.test(src)) fail("作成画面のシートが割合のまま出している");
     // 目的は行き先・手順を出さない（名前と目指すことだけ。「自分で決める」の遊び方の説明は残す）
@@ -201,10 +202,9 @@ export default ({ G, fail: fail0, ok, seeded }) => {
       const base = D.STATS.reduce((a, k) => a + cre.base(dr, k), 0), all = D.STATS.reduce((a, k) => a + cre.value(dr, k), 0);
       if (cre.baseTotal(dr) !== base || cre.total(dr) !== all || all !== base + cre.bonusUsed(dr)) fail(`能力値の合計が和と合わない（${cre.baseTotal(dr)}/${base}・${cre.total(dr)}/${all}）`);
     }
-    // 人物の札（あなたは何者か）には、職業の説明・得意・出発地を出さない。最後のシートに出す
+    // 人物の札は外した（U20）。職業の説明・得意・出発地は最後のシートに出す
     {
-      const f = src.slice(src.indexOf("function refresh()"), src.indexOf("lay.append(card)"));
-      if (/c\.blurb|得意：|出発地/.test(f)) fail("作成画面の人物の札に、職業の説明・得意・出発地が残っている");
+      if (/whoCard/.test(src)) fail("作成画面に、外した人物の札が残っている");
       const sh = src.slice(src.indexOf("function sheet("));
       if (!/\["職業", c\.blurb\]/.test(sh) || !/\["得意", cre\.strengths/.test(sh) || !/\["出発地"/.test(sh)) fail("最後のシートに、職業の説明・得意・出発地が出ない");
     }

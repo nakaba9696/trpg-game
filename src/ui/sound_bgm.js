@@ -376,6 +376,48 @@
       adsr(g.gain, t, dur, 0.13 * v, 0.06, 0.2, 0.85, 0.15);
       if (B.white) { const n = B.ctx.createBufferSource(); n.buffer = B.white; n.loop = true; const bp = lp(B, f * 2, 1.5, "bandpass"); const ng = gain(B, 0); n.connect(bp); bp.connect(ng); ng.connect(out); adsr(ng.gain, t, dur, 0.025 * v, 0.04, 0.1, 0.5, 0.1); n.start(t, jr() * 0.5); n.stop(end); }
     },
+    // S6：マンドリン（二本ずつ張った弦をはじく）。長い音は細かく弾き直す（トレモロ）
+    mandolin: (B, t, f, dur, v, out) => {
+      const n = dur > 0.3 ? Math.max(2, Math.round(dur * 12.5)) : 1;
+      const step = dur / n, end = t + dur + 0.5;
+      const g = gain(B, 0); const fl = lp(B, 2600 + 1200 * v, 0.9);
+      osc(B, "sawtooth", f, t, end, -5).connect(fl); osc(B, "triangle", f, t, end, 6).connect(fl);
+      fl.connect(g); g.connect(out);
+      const p = g.gain, pk = 0.06 * v;
+      for (let i = 0; i < n; i++) {
+        const s = t + i * step, k = i ? 0.72 + 0.22 * jr() : 1;
+        p.setValueAtTime(i ? pk * 0.3 : 0, s); p.linearRampToValueAtTime(pk * k, s + 0.004); p.setTargetAtTime(pk * 0.3, s + 0.005, 0.025);
+      }
+      p.setTargetAtTime(0, t + (n > 1 ? dur : 0.01), n > 1 ? 0.06 : 0.22);
+    },
+    // S6：オカリナ（土の笛）：丸い正弦に、ほんの少しの三倍音と息
+    ocarina: (B, t, f, dur, v, out) => {
+      const end = t + dur + 0.3;
+      const g = gain(B, 0); const o = osc(B, "sine", f, t, end); const o3 = osc(B, "sine", f * 3, t, end); const g3 = gain(B, 0.035);
+      vibr(B, [o, o3], t, end, 4.6, 9, 0.35);
+      o.connect(g); o3.connect(g3); g3.connect(g); g.connect(out);
+      adsr(g.gain, t, dur, 0.15 * v, 0.045, 0.2, 0.88, 0.12);
+      if (B.white) { const nz = B.ctx.createBufferSource(); nz.buffer = B.white; nz.loop = true; const bp = lp(B, f * 1.5, 2, "bandpass"); const ng = gain(B, 0); nz.connect(bp); bp.connect(ng); ng.connect(out); adsr(ng.gain, t, Math.min(dur, 0.12), 0.02 * v, 0.02, 0.06, 0.3, 0.06); nz.start(t, jr() * 0.5); nz.stop(end); }
+    },
+    // S6：グラスハーモニカ（擦ったグラス）：二つの正弦がわずかにずれ、音量がかすかに震える。ゆっくり立ち上がり長く残る
+    glass: (B, t, f, dur, v, out) => {
+      const end = t + dur + 1.2;
+      const g = gain(B, 0); const o = osc(B, "sine", f, t, end); const o2 = osc(B, "sine", f * 2.005, t, end); const g2 = gain(B, 0.18);
+      o.connect(g); o2.connect(g2); g2.connect(g);
+      const am = gain(B, 1); const tr = osc(B, "sine", 5 + jr(), t, end); const tg = gain(B, 0.22); tr.connect(tg); tg.connect(am.gain);
+      g.connect(am); am.connect(out);
+      adsr(g.gain, t, dur, 0.11 * v, 0.14, 0.3, 0.8, 0.9);
+    },
+    // S6：ささやき：雑音を細い帯域二つ（音の高さと、その倍）に通した、息だけの声
+    whisper: (B, t, f, dur, v, out) => {
+      if (!B.white) return;
+      const end = t + dur + 0.6;
+      const n = B.ctx.createBufferSource(); n.buffer = B.white; n.loop = true;
+      const b1 = lp(B, f, 12, "bandpass"); const b2 = lp(B, f * 2, 9, "bandpass"); const g = gain(B, 0);
+      n.connect(b1); n.connect(b2); b1.connect(g); b2.connect(g); g.connect(out);
+      adsr(g.gain, t, dur, 0.9 * v, 0.25, 0.3, 0.7, 0.45);
+      n.start(t, jr() * 0.8); n.stop(end);
+    },
     // ピッツィカート（弦をはじく）
     pizz: (B, t, f, dur, v, out) => {
       const end = t + 0.6;
@@ -611,7 +653,8 @@
 
   // 今の画面から場面を決めて切り替える
   const view = () => { const s = document.getElementById("setup"); const on = !!(s && !s.hidden); return { title: on || !G.S, depart: on && s.dataset.step === "prologue" }; };
-  snd.bgmUpdate = () => { if (B) snd.bgm(snd.bgmScene(G.S, view())); };
+  // F6：とどめ・倒れる手番を順に見せている間は、終わった戦い（G.u13.inGhost）で場面を見る。曲は見せ終えてから替わる（ダイスより先に結果が分からないように）
+  snd.bgmUpdate = () => { if (!B) return; const pick = () => snd.bgmScene(G.S, view()); snd.bgm(G.u13 && G.u13.inGhost ? G.u13.inGhost(pick) : pick()); };
   function wakeBgm() {
     if (!ensure()) return;
     if (B.ctx.state === "suspended") B.ctx.resume().catch(() => {});

@@ -24,9 +24,10 @@ export default ({ G, fail, ok, seeded }) => {
     if (L.type === "dungeon" && G.dungeonScene(L) === "dungeon") miss.inside.push(id);
   }
   for (const [k, ids] of Object.entries(byScene)) if (ids.length > 1) miss.shared.push(`${k}：${ids.join("・")}`);
-  const FAC_SCENE = { castle: "throne" }; // ui.js の施設の絵の表で名前が違うもの
+  // ui.js の施設の絵の表で名前が違うもの。D.FAC_SCENE は町の特色の場所（W9。室内の絵か、町の外の景色）
+  const FAC_SCENE = { castle: "throne", ...(D.FAC_SCENE || {}) };
   const facs = new Set(Object.values(D.LOCS).flatMap((L) => L.fac || []));
-  for (const f of facs) if (!IN.has(FAC_SCENE[f] || f)) miss.fac.push(f);
+  for (const f of facs) { const k = FAC_SCENE[f] || f; if (!IN.has(k) && !(D.FAC_SCENE && D.FAC_SCENE[f] && OUT.has(k))) miss.fac.push(f); }
   for (const [id, L] of Object.entries(D.LOCS)) if ((L.fac || []).includes("castle")) {
     const w = G.facWho({ mode: "fac", fac: "castle", loc: id, flags: {} });
     if (!w || !G.PEOPLE[w.kind]) miss.castle.push(id);
@@ -94,7 +95,7 @@ export default ({ G, fail, ok, seeded }) => {
     if (L.type === "dungeon") tryPaint(`迷宮の中 ${id}`, () => G.paintScene(canvas, { key: G.dungeonScene(L), phase: 1, seed: id, foes: (L.pool || []).slice(0, 3).map((f) => ({ id: f })) }));
   }
   for (const key of IN) tryPaint(`室内 ${key}`, () => G.paintScene(canvas, { key, phase: 1, seed: key }));
-  for (const f of facs) { Object.assign(G.S, { mode: "fac", fac: f }); tryPaint(`施設 ${f}`, () => G.paintScene(canvas, { key: undefined, phase: 1, seed: f })); }
+  for (const f of facs) { Object.assign(G.S, { mode: "fac", fac: f }); tryPaint(`施設 ${f}`, () => G.paintScene(canvas, { key: (D.FAC_SCENE || {})[f], phase: 1, seed: f })); }
   G.S.mode = "explore";
   for (const id of foeIds) tryPaint(`敵 ${id}`, () => G.paintScene(canvas, { key: "plains", phase: 1, seed: id, sky: { season: "春", weather: "晴" }, foes: [{ id, boss: !!D.ENEMIES[id].boss }] }));
   for (const [where, w] of whos) tryPaint(`人物の絵 ${where}`, () => G.drawPortrait(face, w));

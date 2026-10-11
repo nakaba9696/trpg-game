@@ -1,12 +1,13 @@
 // 恋の広がり（M11・#117）。M10（src/engine/m10_love.js）の上に、次を足す。DOM には触らない。m10_love.js・zz_c2_people.js は書き換えず、包んで足す。
-// - 魔物の子分（ゴブリンなど）とも恋仲になれる。ただし人の仲間よりずっと遠い道：気配の立つ好感度が高く、立つ日も少ない。
-//   打ち明けても、言葉が通じきらずに空振りしやすい。告白と求婚の好感度も高く、求婚までの日数も長い。
 // - 格の違う相手（朧島の煙をまとった女〔香煙のベリエラ〕・ブランデールの片眼鏡の両替商〔砂塵のドレイゼ〕）との恋。仲間にはならない。何度も会いに行く続き物で、最後の一歩はごく稀にしか通らない。
 //   成就しても人の恋の形にはならない。人生の物語に一文が出る。
-// 名前の頭の zz は、zz_c2_people.js（子どもの姿の者を恋の相手から外す G.m10Can・恋のひとこと G.c2Line）より後に読ませるため（manifest は触らない）。
+// - 魔物の子分（ゴブリンなど）は恋の相手にしない（C11・持ち主の決定「人間っぽいやつ以外と恋愛させないで」）。
+//   かわりに、好感度が高い子分との情の出来事（src/data/events_m11_love.js の m11_mon_*）と、人生の物語の一文がある。
+//   人の姿でない者を恋の相手から外す最後の包みと、古いセーブの直しは src/engine/zzzzzzzz_c11_love_human.js。
+// 名前の頭の zz は、zz_c2_people.js より後に読ませるため（manifest は触らない）。
 //
 // セーブ（G.S）に足すもの。古いセーブで無くても動く（G.m11State が埋める）
-//   S.m11 = { ap: { yoi|zalve: { st 何度目まで進んだか, day 最後に会った日, won 成就した日, tries 最後の一歩を踏んだ回数 } }, balk 魔物の子分への空振りの数 }
+//   S.m11 = { ap: { yoi|zalve: { st 何度目まで進んだか, day 最後に会った日, won 成就した日, tries 最後の一歩を踏んだ回数 } }, balk 古いセーブの数（今は増えない） }
 // 出来事のデータ（src/data/events_m11_love.js）の結果に書けるもの：
 //   m11ap: "yoi" 続き物を一つ進める・m11try: "yoi" 最後の一歩（ごく稀に成就の出来事へ、だめなら断りの出来事へ）・m11won: "yoi" 成就
 //   文の中の {boss} 魔物の子分があなたを呼ぶ名（アニキ／アネキ）
@@ -15,9 +16,8 @@
   const D = G.data;
   const M = () => D.M11;
   const MONSTER = /ゴブ|ゴブリン|オーク|スライム/;
-  const hash = (s) => { let h = 0; for (const ch of String(s)) h = (Math.imul(31, h) + ch.codePointAt(0)) | 0; return Math.abs(h); };
-  // 魔物の子分の道の重さ（人の仲間との差）
-  const MON = { spark: 86, tell: 88, confess: 92, propose: 95, proposeDays: 20, balk: 0.5, sparkDays: 3 };
+  // 魔物の子分との情：好感度がこれ以上になると、トロフィー（言葉の半分）
+  const MON = { bond: 90 };
   // 格の違う相手：何度会えば最後の一歩か・次に会えるまでの日数・最後の一歩が通る割合・断られたあと待つ日数
   const AP = { stages: 4, gap: 6, win: 0.3, wait: 20 };
   G.m11Tune = { MON, AP };
@@ -45,43 +45,6 @@
 
   // ---------------------------------------------------------------- 魔物の子分
   G.m11Monster = (c) => !!c && MONSTER.test(`${c.name} ${c.cls}`);
-  // 恋の相手：魔物の子分も入れる（子どもの姿の者を外すのは、zz_c2_people.js の包みのまま）
-  const can0 = G.m10Can;
-  G.m10Can = (c) => !!c && (can0(c) || G.m11Monster(c));
-  const P = G.m10P;
-  const spark0 = P.spark, confess0 = P.confess, propose0 = P.propose;
-  // 気配が立つ日は、名前と日付で決まる（乱数を使わない。三日に一日くらい）
-  const sparkDay = (c, S) => hash(`${c.id || c.name}:${S.day}`) % MON.sparkDays === 0;
-  P.spark = (c, S) => spark0(c, S) && (!G.m11Monster(c) || (c.bond >= MON.spark && sparkDay(c, S)));
-  P.confess = (c, S) => confess0(c, S) && (!G.m11Monster(c) || c.bond >= MON.confess);
-  P.propose = (c, S) => propose0(c, S) && (!G.m11Monster(c) || (c.bond >= MON.propose && S.day - (c.m10.since ?? S.day) >= MON.proposeDays));
-
-  // 「想いを打ち明ける」：魔物の子分は、好感度がもっと高くないと出ない
-  const acts0 = G.exploreActions;
-  G.exploreActions = () => {
-    const groups = acts0();
-    const S = G.S;
-    if (!S) return groups;
-    const g = groups.find((x) => x.title === "想い");
-    if (g) {
-      g.list = g.list.filter((a) => {
-        if (!a.id.startsWith("m10tell:")) return true;
-        const c = S.companions.find((x) => "m10tell:" + x.id === a.id);
-        return !G.m11Monster(c) || c.bond >= MON.tell;
-      });
-      if (!g.list.length) groups.splice(groups.indexOf(g), 1);
-    }
-    return groups;
-  };
-
-  // 恋のひとこと：魔物の子分は、魔物の言葉で（名前で一つに決まる）
-  const line0 = G.c2Line;
-  G.c2Line = (c, k) => {
-    const r = line0 ? line0(c, k) : null;
-    if (r || !G.m11Monster(c)) return r;
-    const L = M().MON_LINES[k];
-    return L && L.length ? L[hash(c.name) % L.length] : null;
-  };
   const fill0 = G.m2Fill;
   G.m2Fill = (t) => {
     t = fill0(t);
@@ -96,11 +59,6 @@
     const S = G.S;
     if (!o || !S || S.over) return apply0(o);
     const c = G.m2Focus && G.m2Focus();
-    // 魔物の子分に打ち明けて、通じなかった
-    if (o.m10 === "love" && o.confess && G.m11Monster(c) && G.rand() < MON.balk) {
-      G.m11State(S).balk++;
-      o = { text: G.pick(M().MON_BALK), bond: 1, m10: "cool", coolDays: 12 };
-    }
     const key = o.m11ap || o.m11try || o.m11won;
     if (key) {
       const a = G.m11Ap(key, S);
@@ -121,21 +79,21 @@
     apply0(o);
     // 次に会えるまでの日数は、戻ってきた日から数える（島で過ぎた日数のあとから）
     if (o.m11ap) G.m11Ap(o.m11ap, S).day = S.day;
-    if (o.m10 === "love" && G.m11Monster(c) && G.m10St(c) === "love") G.award("m11_mon");
+    if (G.m11Monster(c) && S.companions.includes(c) && (c.bond || 0) >= MON.bond) G.award("m11_mon");
   };
 
   // ---------------------------------------------------------------- 人生の物語（M6）
-  // 恋人・連れ合いが魔物の子分だったとき、M10 の段落に一文を添える
+  // 好感度の高い魔物の子分（固い絆の仲間）がいる・いたとき、M10 の段落に一文を添える（恋の文ではない）
   const paras0 = G.m10StoryParas;
   G.m10StoryParas = (S, r) => {
     const P2 = paras0(S, r);
     try {
-      const m = S.m10;
-      const p = (S.companions || []).find((c) => ["love", "vow", "wed"].includes(G.m10St(c))) || m.atHome;
-      const rec = p || (m.spouse && m.spouse.lost ? m.spouse : null) || [...(m.past || [])].reverse()[0];
-      if (P2.life && rec && G.m11Monster(rec)) {
+      const m = S.m10 || {};
+      const live = (S.companions || []).find((c) => G.m11Monster(c) && ((c.bond || 0) >= MON.bond || c.c11));
+      const rec = live || [...(m.past || [])].reverse().find((g) => G.m11Monster(g));
+      if (P2.life && rec) {
         const name = (S.profile && S.profile.name) || S.name || "その人";
-        const T = M().STORY_MON[p ? "together" : "lost"];
+        const T = M().STORY_MON[live ? "together" : "lost"];
         P2.life += G.pick(T).replace(/\{name\}/g, name).replace(/\{sp\}/g, G.m2Short(rec));
       }
     } catch (e) { /* 一文なしでも物語は出る */ }

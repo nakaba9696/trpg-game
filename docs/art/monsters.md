@@ -11,6 +11,16 @@
 - 「**異形**」と書いた魔物（一覧の `style: "eldritch"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。
 - 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。
 
+## 描き直し待ち（1）
+
+今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（戦闘では絵なし）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す（`gen_portraits.mjs` で作れば自動で外れる。人の姿の敵は、ネガティブに今の服の語が自動で足される）。
+
+作る：`node tools/gen_portraits.mjs --monsters --only w3_smuggler --force --new-seed`（人物の描き直しは [portraits.md](portraits.md) の「画像のセッションへ」）
+
+| ファイル | 名前 | 何が合わないか | どう直すか | 特徴のタグ |
+|---|---|---|---|---|
+| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | 警備員の制服（襟とネクタイ、写真入りの名札、革靴）に警棒に見える棍棒 | 港の荒くれ：袖をまくった麻のシャツか胴衣、頭に布、腰に鈴、樫の棍棒、裸足か革のサンダル（例：rolled-up linen shirt, leather vest, bandana, small bell on belt, oak club, sandals） | thug, burly man, thick neck, bandana, stubble, grin, rolled-up linen shirt, leather vest, oak club, small bell on belt, sandals |
+
 ## 使徒・ボス（30）
 
 使徒の魔物の姿と、ボス。特にていねいに。気に入った絵は `--keep <id>` で seed を残す。
@@ -48,7 +58,7 @@
 | `assets/monsters/e3_azlag.webp` | 剣翼の使徒ヴァルグレア | (dorontabi:1.3), (colossal black bird god:1.3), (silver steel blade wings:1.4), (mechanical wings of overlapping sword blades:1.3), no soft feathers, enormous blade wings spread wide, blades raining down, golden glowing eyes with slit pupils, sharp steel beak, crest of swords, talons, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：刃の羽を持つ巨きな黒い鳥。羽ばたくたびに刃が降る |
 | `assets/monsters/e3_yuzuel.webp` | 問答の使徒ユズエル | (dorontabi:1.3), (towering inhuman aristocrat:1.3), impossibly tall and thin, (face hidden in shadow:1.2), only a glowing red eye behind a monocle visible, long dark wine red hair, black tailcoat with deep purple waistcoat, white cravat with red gem pin, (long arms ending in thin blades:1.2), bowing politely, (a ring of floating blades behind it:1.2), names engraved on the blades, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：片眼鏡の老紳士の形をした、刃で問いに答えるもの |
 
-## 魔物（150）
+## 魔物（156）
 
 ふつうの敵のうち、魔物の姿のもの。
 
@@ -69,7 +79,7 @@
 | `assets/monsters/oni.webp` | 鬼 | oni, red skin, two horns, huge, muscular, fangs, wild black hair, tiger skin loincloth, holding kanabo, sake gourd | 沖の島の鬼。酒と人肉を好む |
 | `assets/monsters/chimera.webp` | キメラ | chimera, lion body, lion head, goat head, snake tail, snake head, mane, fangs, four legs, stitches | 獅子と山羊と蛇の継ぎ合わせ |
 | `assets/monsters/blackknight.webp` | 黒騎士 | living armor, black knight, full armor, black armor, closed helmet, glowing eyes in helmet, holding greatsword, tattered black cape, no face | 使徒に仕える黒い鎧。中身は見えない |
-| `assets/monsters/general.webp` | 魔物将軍 | demon general, giant, horned helmet, heavy armor, spiked armor, red skin, tusks, muscular, holding halberd, war banner, cape | 魔物の軍勢を率いる将。威圧 |
+| `assets/monsters/general.webp` | 角兜の将 | demon general, giant, horned helmet, heavy armor, spiked armor, red skin, tusks, muscular, holding halberd, war banner, cape | 魔物の軍勢を率いる将。威圧 |
 | `assets/monsters/kin.webp` | 使徒の眷属 | demon, gargoyle, winged demon, bat wings, black skin, horns, long claws, glowing red eyes, slender, long tail | 使徒が生み出した翼ある僕 |
 | `assets/monsters/e1_crowngob.webp` | 王冠ゴブリン | goblin, green skin, pointy ears, big nose, googly eyes, grin, paper crown, red cape, holding dagger, sweat, short, proud | 紙の王冠のゴブリン王。家来はいない。まぬけ |
 | `assets/monsters/e1_bowshroom.webp` | おじぎ茸 | mushroom monster, giant mushroom, pink spotted cap, bowing, dot eyes, blush, spores, stubby legs | おじぎする茸。まぬけで憎めない |
@@ -86,7 +96,7 @@
 | `assets/monsters/w1_candlemite.webp` | 蝋燭かじり | giant caterpillar, larva, pale yellow, wax, candle on back, googly eyes, crying, tears | 蝋燭をかじる芋虫。泣き虫。まぬけ |
 | `assets/monsters/w1_husk.webp` | 祈り殻 | undead, mummified pilgrim, dried corpse, hood, white robe, hollow eyes, praying hands, halo mark on neck, ribs | 死んだと気づかない巡礼者。哀しく不気味 |
 | `assets/monsters/w1_choir.webp` | 聖歌の髑髏 | floating skull, singing skull, open jaw, cracked skull, choir collar, musical notes, ghostly glow | 首だけの聖歌隊（群れだが一つで描く） |
-| `assets/monsters/w1_beastpriest.webp` | 獣憑きの司祭 | werewolf, wolf head, priest, white vestment, holy symbol necklace, claws, fangs, glowing eyes, blood, preaching | 獣憑きの司祭。まだ説教をやめない |
+| `assets/monsters/w1_beastpriest.webp` | 獣の司祭 | werewolf, wolf head, priest, white vestment, holy symbol necklace, claws, fangs, glowing eyes, blood, preaching | 獣の司祭。まだ説教をやめない |
 | `assets/monsters/w1_tanuki.webp` | 祭りの煙小鬼 | tanuki, raccoon dog, standing, round belly, leaf on head, tail, grin, blush, holding sake bottle | 祭りの化け狸。化けるのが下手。まぬけ |
 | `assets/monsters/e2_cookgob.webp` | 見習い料理ゴブリン | goblin, green skin, pointy ears, big nose, chef hat, apron, sweat, worried, holding peeler, potato | 必死で働く見習いゴブリン。まぬけ |
 | `assets/monsters/e2_meatling.webp` | 逃げた食材 | flesh blob, meat monster, raw meat, bones sticking out, three eyes, open jaw, bubbling | 逃げた肉の塊。おぞましい |
@@ -204,6 +214,12 @@
 | `assets/monsters/e4_redscorpion_x.webp` | 赤砂の女王蠍 | giant scorpion, red carapace, stinger tail, four glowing eyes, red sand, much larger, old, grizzled, many battle scars, imposing | 赤砂の蠍の強い個体。ひと回り大きく、古傷だらけ |
 | `assets/monsters/e4_cinderhound.webp` | 火口の犬 | volcanic hound, charcoal black fur, glowing orange lava cracks, embers, smoke, fangs, spiked tail | 火山の斜面の、炭のような毛の犬 |
 | `assets/monsters/e4_firearrowimp.webp` | 火矢の小鬼 | small goblin archer, brown skin, pointy ears, grin, shortbow with flaming arrow, ragged clothes, smoke, pair | 見張り塔に火矢を射かける小鬼 |
+| `assets/monsters/w10_rockgoat.webp` | 岩跳び山羊 | （`e4_thornboar` と同じ絵） | 崖の上から頭突きする野の山羊。干し肉の包みを盗む。まぬけ |
+| `assets/monsters/w10_screemole.webp` | ガレ場の土竜 | （`e4k_furrowmole` と同じ絵） | 石の斜面の下を掘る大土竜 |
+| `assets/monsters/w10_fogimp.webp` | 霧かぶり | （`e4_reedimp` と同じ絵） | 霧をかぶって道標をずらす小鬼。いたずら好き |
+| `assets/monsters/w10_cragbird.webp` | 尾根の大鷲 | （`e4k_cliffwatch` と同じ絵） | 尾根で足をすくって谷へ落とす大鷲 |
+| `assets/monsters/w10_snowape.webp` | 雪の大猿 | （`e4_frostbear` と同じ絵） | 雪玉に石を仕込む白い大猿。帽子を集める |
+| `assets/monsters/w10_icebat.webp` | 氷柱蝙蝠 | （`e4_bellbat` と同じ絵） | 坑道の氷柱に混じる蝙蝠。翼の縁が刃 |
 
 ## 人の姿の敵（23）
 
@@ -221,7 +237,7 @@
 | `assets/monsters/m5_nightwatch.webp` | 夜番崩れ | 1boy, man, huge man, night watchman, hairy, black beard, glowing eyes, lantern on belt, leather armor, holding hatchet, chipped blade | 夜番崩れの大男 |
 | `assets/monsters/m3_hunter.webp` | 賞金稼ぎ | 1boy, man, bounty hunter, hooded cloak, scar, smirk, holding sword, wanted posters, pouch | 賞金稼ぎ |
 | `assets/monsters/m2_traitor.webp` | 裏切った仲間 | 1boy, man, hooded, scarf, smirk, ragged cloak, holding dagger | 裏切った仲間 |
-| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | thug, burly man, thick neck, bandana, stubble, grin, holding wooden club, small bell on belt, dock worker clothes | 密輸の荷の見張り。腰に鈴 |
+| `assets/monsters/w3_smuggler.webp` | 港の用心棒 | thug, burly man, thick neck, bandana, stubble, grin, rolled-up linen shirt, leather vest, oak club, small bell on belt, sandals | 密輸の荷の見張り。腰に鈴 |
 | `assets/monsters/w3_silentmonk.webp` | 口縫いの修道士 | monk, grey hooded robe, lips sewn shut with thick thread, finger on lips, holding wooden staff, gaunt | 唇を縫った修道士 |
 | `assets/monsters/e4k_bouncer.webp` | 賭場の用心棒 | 1boy, burly man, gambling den bouncer, black hair, scars, stubble, purple kimono-like outfit, scarf, holding club | 賭場の用心棒 |
 | `assets/monsters/e4_poacher.webp` | 密猟者 | 1boy, man, poacher, lean, stubble, leather cap, green hunting cloak, holding longbow, quiver, wary expression | 領主の森の密猟者。追い詰められた男 |

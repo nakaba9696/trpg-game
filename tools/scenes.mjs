@@ -41,7 +41,8 @@ export function missingScenes(data, { LOCS, facScene = FAC_SCENE, dungeonScene =
   const miss = [];
   for (const [id, l] of Object.entries(LOCS)) {
     if (!ids.has(id)) miss.push(`場所 ${id}（${l.name}）`);
-    for (const f of l.fac || []) { const k = facScene[f] || f; if (!ids.has(insideId(k))) miss.push(`施設 ${f}（${l.name}・絵 ${k}）→ ${insideId(k)}`); }
+    // 町の外の景色を使う施設（W9 の特色の場所の一部）は、その景色の場所の絵でよい
+    for (const f of l.fac || []) { const k = facScene[f] || f; if (!ids.has(insideId(k)) && !scenesOf.has(k)) miss.push(`施設 ${f}（${l.name}・絵 ${k}）→ ${insideId(k)}`); }
     if (dungeonScene && l.type === "dungeon") {
       const k = dungeonScene(l);
       if (!ids.has(insideId(k)) && !scenesOf.has(k)) miss.push(`迷宮の中 ${id}（${l.name}・絵 ${k}）→ ${insideId(k)}`);
@@ -83,7 +84,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   const { loadEngine } = await import("../tests/lib.mjs");
   const G = loadEngine();
   const changed = refreshPlaces(data, G.data.LOCS);
-  const miss = missingScenes(data, { LOCS: G.data.LOCS });
+  // 町の特色の場所（W9）：専用の絵（D.W9_ART の w9s_*）があればそれ、無ければ借りる絵（D.FAC_SCENE）
+  const miss = missingScenes(data, { LOCS: G.data.LOCS, facScene: { ...FAC_SCENE, ...(G.data.FAC_SCENE || {}), ...(G.data.W9_ART || {}) } });
   if (changed.length) { writeFileSync(JSON_PATH, JSON.stringify(data, null, 1) + "\n"); console.log(`場所のデータから取り直した：${changed.join("・")}`); }
   writeFileSync(MD_PATH, renderScenesMd(data) + "\n");
   console.log(`${path.relative(process.cwd(), MD_PATH)} を書き直した（${data.scenes.length} 枚）`);

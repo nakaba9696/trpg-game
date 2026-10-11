@@ -1,0 +1,20 @@
+/* T3：トロフィーの四つ目の格「白金」（金の上。極めて大変なやりこみ）。印は銀白の地に金の縁。表の並びと格ごとの数は src/ui/zt3_trophy_tiers.js */
+:root { --platinum: #8a96a3; --platinum-hi: #e9eef2; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --platinum: #dfe6ec; --platinum-hi: #ffffff; }
+}
+:root[data-theme="dark"] { --platinum: #dfe6ec; --platinum-hi: #ffffff; }
+
+.medal.白金 {
+  background: radial-gradient(circle at 35% 30%, var(--platinum-hi), var(--platinum) 70%);
+  box-shadow: 0 0 0 2px var(--gold);
+  color: var(--ink);
+  font-size: 11px;
+  letter-spacing: -1px;
+}
+.tro.locked .medal.白金 { background: var(--rule); box-shadow: none; color: var(--paper); }
+.troTiers { display: inline-flex; flex-wrap: wrap; gap: 4px 10px; margin-left: 10px; font-size: 12.5px; color: var(--muted); }
+.troTiers b.白金 { color: var(--platinum); }
+.troTiers b.金 { color: var(--gold); }
+.troTiers b.銀 { color: var(--silver); }
+.troTiers b.銅 { color: var(--bronze); }

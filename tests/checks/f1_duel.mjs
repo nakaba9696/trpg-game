@@ -1,10 +1,10 @@
-// F1：戦闘の読み合い・賭けの技・山場・手応え（engine/zzzzzzzzzz_f1_duel.js・data/f1_tells.js）
+// F1：戦闘の読み合い・賭けの技・山場（engine/zzzzzzzzzz_f1_duel.js・data/f1_tells.js）
 // - 気配の文と癖（D.F1_STYLE）が、今ある敵を指している。どの気配にも文がある
 // - 大技の溜め：受けると傷が小さくなって敵が崩れ、次の手番は動けない。割り込めば潰せる。躱せば丸ごと外れる
 // - 待ちの構え：刃は浅く、返しの一撃が来る。術は深く入る
 // - 賭けの技：身を削ると HP が減る。目つぶしは道具を一つ失って敵を崩す。捨て身を外すと無防備
 // - 知っている敵だけ、気配に一言と「◎」が付く（成功率は変わらない）
-// - 雑魚はとどめで早く終わる。強敵は HP が半分を切ると本気になる。勝つと手応えが一行
+// - 雑魚はとどめで早く終わる。強敵は HP が半分を切ると本気になる。勝っても「手応え」の一行は出さない（F5。持ち主の指示でやめた）
 export default ({ fail, ok, loadEngine, seeded }) => {
   let bad = 0;
   const F = (m) => { bad++; fail("F1：" + m); };
@@ -94,7 +94,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const f = fight("orc", null);
     const hp = G.S.hp;
     const acts = () => G.combatActions().flatMap((g) => g.list);
-    for (const id of ["cb:f1cut", "cb:f1dodge", "cb:f1all", "cb:f1blood", "cb:f1throw"]) if (!acts().some((a) => a.id === id)) F(`戦闘に ${id} が無い`);
+    if (!acts().some((a) => a.id === "cb:f1throw")) F("戦闘に cb:f1throw が無い");
+    // F9：割り込む・躱す・捨て身・身を削るは手の欄から外した（躱すは防御に入った。手そのものは古い流れのために残す）
+    for (const id of ["cb:f1cut", "cb:f1dodge", "cb:f1all", "cb:f1blood"]) if (acts().some((a) => a.id === id)) F(`戦闘の手に ${id} が残っている（F9 で外した）`);
     if (!acts().find((a) => a.id === "cb:f1throw").disabled) F("投げる物が無いのに目つぶしが選べる");
     const sureMiss = D.ENEMIES.orc.hit;
     D.ENEMIES.orc.hit = -999;
@@ -124,14 +126,14 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (/◎/.test(plain)) F("知らない敵なのに◎が付いた");
     G.P.codex = { foes: { ogre: { kills: 1 } }, items: {}, people: {} };
     const marked = G.combatActions().flatMap((g) => g.list).find((a) => a.id === "cb:guard").sub;
-    if (!/◎/.test(marked)) F("知っている敵の大技に、身を守るの◎が付かない");
+    if (!/◎/.test(marked)) F("知っている敵の大技に、防御の◎が付かない");
     with_(0.01, () => G.combatAct("attack"));
     const t = tellOf();
     if (G.S.combat && !(t && t.text.includes(D.F1_HINT[t.f1]))) F("知っている敵の気配に一言が付かない");
     G.S.combat = null; G.S.mode = "explore";
   }
 
-  // とどめ・本気・手応え
+  // とどめ・本気・手応えを出さない
   {
     fresh();
     G.startCombat(["orc"], {});
@@ -139,8 +141,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     f.hp = Math.ceil(f.max * 0.2) + 1;
     with_(0.2, () => G.combatAct("attack"));
     if (G.S.combat) F("雑魚の HP が 2 割を切る一撃で、とどめにならない");
-    const r = G.S.f1last;
-    if (!r || !G.f1Summary(G.S)) F("勝った戦いの手応えが残らない");
+    if (G.S.log.some((l) => /^手応え：|相手の手は、最後にはすべて見えていた/.test(l.text || ""))) F("勝った戦いのあとに「手応え」の一行が出る（やめたはず）");
+    if (G.S.f1last || G.f1Summary) F("手応えの記録（S.f1last・G.f1Summary）が残っている");
     const boss = Object.keys(D.ENEMIES).find((id) => D.ENEMIES[id].boss && !D.ENEMIES[id].majin);
     G.startCombat([boss], {});
     const b = G.S.combat.foes[0];
@@ -168,7 +170,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       G.S.hp = G.S.maxHp; G.S.mp = G.S.maxMp;
       G.give("herb", 1);
       G.startCombat([ids[i]], {});
-      const all = ["cb:attack", "cb:guard", "cb:f1cut", "cb:f1dodge", "cb:f1all", "cb:f1blood", "cb:f1throw", "cb:vital"];
+      const all = ["cb:attack", "cb:guard", "cb:f1throw"];
       for (let n = 0; n < 40 && G.S.combat && !G.S.over; n++) {
         const can = G.combatActions().flatMap((g) => g.list).filter((a) => !a.disabled && all.includes(a.id));
         G.act(can[Math.floor(G.rand() * can.length)].id);

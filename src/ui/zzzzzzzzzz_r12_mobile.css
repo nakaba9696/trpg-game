@@ -1,0 +1,4 @@
+/* R12-U（低 7・8）：スマホ縦。知らせは上の帯・窓の見出しに重ねず、舞台（帯と本文の窓のあいだ）に出す。所持金の増減の札は数字の下に */
+html:not(.u31land) body.u31m #toast { top: calc(var(--v9-ty, 120px) - 60px); bottom: auto; height: auto; min-height: 24px; padding: 3px 10px; z-index: 45; }
+html:not(.u31land) body.u31m #u8note { top: calc(var(--v9-ty, 120px) - 32px); }
+body.u31m #mbar .u11gold .u11d, body.u31m #mbar .u11gold .u11d.above { top: 100%; bottom: auto; left: auto; right: 0; margin: 2px 0 0; transform: none; z-index: 5; }

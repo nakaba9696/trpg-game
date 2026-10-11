@@ -66,6 +66,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     rich: (S) => { S.gold = 12000; },
     sword: (S) => { G.give("volgrim"); },
     custom: (S) => { S.day = 40; S.fame = 30; },
+    none: (S) => { S.day = 40; S.fame = 30; }, // 目的なし（R7c）：達成は判定せず、旅を重ねた区切りの節目「道の途中」に着く
   };
   let seed = 100;
   for (const goal of Object.keys(D.GOALS)) {

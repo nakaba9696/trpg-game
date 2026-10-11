@@ -77,7 +77,8 @@ const variants = trial && !want ? VARS : [main];
 
 const splitTags = (s) => String(s || "").split(",").map((t) => t.trim()).filter(Boolean);
 const uniq = (...a) => { const seen = new Set(); return a.flatMap(splitTags).filter((t) => { const k = t.toLowerCase(); return !seen.has(k) && seen.add(k); }).join(", "); };
-const outdoor = (s) => s.kind === "place" || s.scene === "field" || s.scene === "hunt";
+// 施設でも外の場所（造船所・火口・城壁の上など）は、一覧に outdoor: true を付ければ外の後置き（scenery, outdoors…）と昼の空で作る
+const outdoor = (s) => s.outdoor === true || s.kind === "place" || s.scene === "field" || s.scene === "hunt";
 const promptOf = (s, v) => uniq(style.prefix, (style.variants[v] || {}).prefix_add, s.tags, outdoor(s) ? style.suffix_place : style.suffix_inside, outdoor(s) && !s.sky ? style.daytime : "");
 const seedOf = (s) => (!newSeed && Number.isInteger(s.seed) ? s.seed : style.seed ?? -1);
 const PASS = ["styles", "negative_prompt", "sampler_name", "scheduler", "steps", "cfg_scale", "width", "height", "enable_hr", "hr_scale", "hr_upscaler", "hr_second_pass_steps", "hr_resize_x", "hr_resize_y", "denoising_strength", "clip_skip", "override_settings"];

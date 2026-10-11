@@ -1,0 +1,52 @@
+/* R11（R10 のプレイレビューの画面の指摘）。zzzzzz_zr11_ui.js と組 */
+
+/* 高 2：遊び方の一行は、右の窓（#u21side）の外で、窓のすぐ上に浮かべる（PC） */
+body.u21pc:not(.u31m) .r11tip { position: fixed; z-index: 6; left: var(--u21-sx); width: var(--u21-sw); box-sizing: border-box;
+  top: auto; bottom: calc(100vh - var(--u21-sy) + 12px); margin: 0; font-size: 12.5px; line-height: 1.6; padding: 6px 10px;
+  background: var(--win-solid); box-shadow: 0 4px 14px rgba(0, 0, 0, .4); }
+/* スマホ：縦長はログの窓のすぐ上、横長は左の舞台の上のほう（ログの窓の上には場所が無い）。全文を開いている間は出さない */
+body.u31m .r11tip { position: fixed; z-index: 7; left: var(--v9-tx); width: var(--v9-tw); top: auto; bottom: calc(100vh - var(--v9-ty) + 30px); box-sizing: border-box; margin: 0;
+  font-size: 12px; line-height: 1.5; padding: 4px 8px; background: var(--win-solid); box-shadow: 0 4px 14px rgba(0, 0, 0, .4); }
+html.u31land body.u31m .r11tip { left: calc(var(--v9-cx) + 6px); width: calc(var(--v9-cw) - 12px); top: calc(var(--u31-head, 48px) + 8px); bottom: auto; }
+#play[hidden] ~ .r11tip, body.u31m.u31logopen .r11tip { display: none; }
+/* 名札が案内に掛かるときだけ、案内の上へずらす */
+body.u21pc.r11tipon:not(.v9combat) .v9fig .v9name { transform: translate(-50%, calc(-1 * var(--r11-lift, 0px))); }
+
+/* 中 6：「戦いのあと」の行が多くても、「先へ進む」は窓の下に貼り付けて、いつも見えるように（下に何かあることも分かるよう、上に影） */
+.u13result .u13go, .u13death .u13go { position: sticky; z-index: 2; background: var(--win-solid, var(--sheet));
+  box-shadow: 0 -10px 12px -6px rgba(0, 0, 0, .25), 0 var(--r11-pad) 0 0 var(--win-solid, var(--sheet)); }
+/* 下の余白（窓の padding）ぶん下げて、その余白は札と同じ色で埋める（後ろの行が札の下から覗かないように） */
+.u13result .u13go { --r11-pad: 12px; bottom: -12px; }
+.u13death .u13go { --r11-pad: 14px; bottom: -14px; }
+
+/* 中 13：スマホの施設の中は、ログの窓を一行ほどに畳み（全文は「全文」で）、組の札を横一段に（はみ出す分は横に送る）。空いた分をコマンドの窓に渡す */
+body.u31m.r11fac:not(.u31logopen) .tome { height: 66px; }
+body.u31m.r11fac #u21side { top: calc(var(--v9-ty) + 72px); height: calc(100vh - var(--v9-ty) - 78px); }
+body.u31m.r11fac #u21side .u13tabs { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(84px, max-content); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+body.u31m.r11fac #u21side .u13tabs::-webkit-scrollbar { display: none; }
+body.u31m.r11fac #u21side .u13tab { white-space: nowrap; }
+
+/* 低 31：戦闘の頭に出たトロフィーの行は、戦いのあとまで隠す（結果の場面の「トロフィー」に出る） */
+#log > .r11later { display: none; }
+
+/* 低 25：スマホ
+   ・上の帯：いる所の一行が長くても、HP・MP・所持金の上にはみ出さない（はみ出す分は切る）
+   ・「行動へ ↓」（U6）は、ページが流れないスマホの配置（U31）では役に立たず、選択肢の行に重なるので出さない
+   ・横長：「敵が現れた」の札は左の舞台の真ん中に、「図鑑に追加」「用語集に追加」は舞台の下に（ログ・コマンドの窓に重ねない） */
+body.u31m #mbar #u29where { overflow: hidden; }
+body.u31m #toActs { display: none; }
+html.u31land body.u31m #s4enc { left: calc(var(--v9-cx) + var(--v9-cw) / 2); top: calc(var(--u31-head, 48px) + 22%); max-width: calc(var(--v9-cw) - 16px); box-sizing: border-box; }
+html.u31land body.u31m #s4enc .s4enc-names { font-size: 18px; }
+html.u31land body.u31m #u8note { top: auto; bottom: 8px; left: calc(var(--v9-cx) + 6px); right: auto; max-width: calc(var(--v9-cw) - 12px); justify-items: start; }
+
+/* 低 26：窓（dialog）の見出しの帯は流しても上に貼り付くので、透けない色に（スマホの図鑑で、並べ替えの欄が「図鑑」の裏に透けて見えた） */
+dialog .dhead { background: var(--win-solid, var(--sheet)); z-index: 3; }
+
+/* 高 1 の続き：いる所・日付の一行は、名前の横の「📍」を押したときだけ（body.r11whereon）。変わったときは本文に小さく一行（.r11wline） */
+body.u21pc:not(.r11whereon) #mbar #u29where { display: none; }
+#mbar .r11wbtn { flex: none; display: inline-flex; align-items: center; gap: 3px; min-height: 26px; padding: 1px 8px; margin: 0 0 0 6px; font-size: 11.5px; letter-spacing: .04em; line-height: 1.2; }
+#mbar .r11wbtn[aria-expanded="true"] { border-color: var(--accent); color: var(--head); }
+#mbar .r11wbtn .r11wpin { font-size: 12px; line-height: 1; }
+body.u31m #mbar .r11wbtn { min-height: 40px; min-width: 36px; padding: 0 6px; margin: 0; justify-content: center; }
+body.u31m #mbar .r11wbtn .r11wlab { display: none; }
+#log .r11wline { font-size: .86em; color: var(--muted); letter-spacing: .04em; }

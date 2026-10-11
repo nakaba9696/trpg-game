@@ -19,11 +19,21 @@
   // ---------------------------------------------------------------- 暦と時間
   G.PHASES = ["朝", "昼", "夕", "夜"];
   G.SEASONS = ["春", "夏", "秋", "冬"];
-  G.dateOf = (day) => {
-    const y = 1127 + Math.floor((day - 1) / 360);
-    const r = (day - 1) % 360;
-    return `${y}年 ${G.SEASONS[Math.floor(r / 90)]} ${(r % 90) + 1}日`;
-  };
+  // 暦の長さはここだけで決める（C16。1 季節 90 日・1 年 360 日）。季節・年を日数で割る式は、すべて下の G.cal* を使う
+  G.SEASON_DAYS = 90;
+  G.YEAR_DAYS = G.SEASON_DAYS * G.SEASONS.length;
+  G.YEAR0 = 1127;                                                                       // 1 日目の年
+  G.calDoy = (day) => ((((day || 1) - 1) % G.YEAR_DAYS) + G.YEAR_DAYS) % G.YEAR_DAYS + 1; // 年の中の日（1〜YEAR_DAYS）
+  G.calSi = (day) => Math.floor((G.calDoy(day) - 1) / G.SEASON_DAYS);                    // 季節の番号（0 春〜3 冬）
+  G.calSd = (day) => ((G.calDoy(day) - 1) % G.SEASON_DAYS) + 1;                          // 季節の中の日
+  // 月（C16）：季節を MONTH_DAYS 日ずつに分け、季節の中で「一の月」「二の月」「三の月」と呼ぶ（町ごとの呼び名は docs/lore/life.md。画面と文はこの形にそろえる）
+  G.MONTH_DAYS = 30;
+  G.MONTHS = ["一の月", "二の月", "三の月"];
+  G.calMi = (day) => Math.min(G.MONTHS.length - 1, Math.floor((G.calSd(day) - 1) / G.MONTH_DAYS)); // 季節の中の月の番号（0〜）
+  G.calMd = (day) => G.calSd(day) - G.calMi(day) * G.MONTH_DAYS;                           // 月の中の日
+  G.calYi = (day) => Math.floor(((day || 1) - 1) / G.YEAR_DAYS);                         // 1 日目から何年目か（0〜）
+  G.calYear = (day) => G.YEAR0 + G.calYi(day);
+  G.dateOf = (day) => `${G.calYear(day)}年 ${G.SEASONS[G.calSi(day)]} ${G.MONTHS[G.calMi(day)]} ${G.calMd(day)}日`;
   G.date = () => G.dateOf(G.S.day);
   G.pass = (n) => { const S = G.S; S.phase += n; while (S.phase >= 4) { S.phase -= 4; S.day++; } };
   G.passDays = (n) => { G.S.day += n; G.S.phase = 2; };
@@ -136,7 +146,7 @@
   };
 
   // ---------------------------------------------------------------- 能力値・判定・成長
-  // S5：能力値は「点」そのもの（S.stats。作成で 5〜18 ほど、やりこめば 99 まで。上限は無い）。docs/s2_stats.md
+  // S5：能力値は「点」そのもの（S.stats。作成で 5〜18 ほど、やりこめば 99 まで。99 で止まる：R11 の zzzzzzzzzzzzzzzzzzz_r11_cap99.js）。docs/s2_stats.md
   // 成功率は、自分の点と相手・難しさの点の差で決める（なめらかな曲線。G.s5p）。強い相手ほど、同じ点でも成功率が下がる。
   //   差 0 で約 53％・+10 で約 81％・−10 で約 23％。5〜95％で止まる（G.chance）。
   // 難しさ（D.DIFF）・敵の強さ（G.foeLv など。combat.js）も同じ目盛りの点。
@@ -250,8 +260,16 @@
     let g = 0;
     if (ok) g = G.d(4) * hard * fresh;
     else if (!fumble && G.rand() < 0.2) g = hard * fresh;
-    if (g) { const [a, b] = G.grow(stat, g); if (b > a) r.growth = [a, b]; }   // 点が上がったときだけ見せる
+    // 伸びたときに出る行（節目など）は、ダイスの行のあとに回す（ダイスより先に成否が漏れないように）
+    let held = [];
+    if (g) {
+      const last = S.log[S.log.length - 1];
+      const [a, b] = G.grow(stat, g);
+      if (b > a) r.growth = [a, b];   // 点が上がったときだけ見せる
+      held = S.log.splice(S.log.lastIndexOf(last) + 1);
+    }
     G.log("dice", "", r);
+    if (held.length) { S.log.push(...held); if (S.log.length > 240) S.log.splice(0, S.log.length - 240); }
     return r;
   };
 
@@ -465,7 +483,7 @@
     if (S.companions.length >= 3) { G.note("これ以上、仲間は連れていけない。"); return false; }
     const comp = c === "random" ? G.genCompanion() : { ...c };
     S.companions.push(comp);
-    G.note(`${comp.name}が仲間になった。（${comp.desc}）`);
+    G.note(`${comp.name}が仲間になった。`); // 性格の文（desc）は括弧で見せない。人となりは加わったときの一言（companions_m2.js）とステータスに（R7）
     G.chron(`${comp.name}が仲間に加わる`, "event");
     return true;
   };
@@ -618,7 +636,7 @@
     const S = {
       v: 1, id: "r" + Date.now().toString(36) + Math.floor(G.rand() * 1e6).toString(36),
       profile: { ...opt.profile }, cls: opt.cls, clsName: c.name,
-      goal: { id: opt.goal, text: opt.goalText || D.GOALS[opt.goal].text },
+      goal: { id: opt.goal, text: opt.goalText || (D.GOALS[opt.goal] || {}).text || "" },   // 目的なし（none）は text が空
       stats, caps: Object.fromEntries(D.STATS.map((k) => [k, 999])), startStats: { ...stats },   // caps は古い形のために置くだけ。上限としては使わない（S2）
       s5: 1, s5exp: {},   // 能力値は点（S5）。s5exp は次の点までの経験
       maxHp: G.maxHpOf(stats), hp: G.maxHpOf(stats), maxMp: G.maxMpOf(stats), mp: G.maxMpOf(stats),
@@ -633,7 +651,7 @@
     S.spells = [...((D.SPELL_START && D.SPELL_START[opt.cls]) || [])]; // 覚えている術（M1）
     S.visited[S.loc] = true;
     const L = G.loc();
-    G.chron(`${L.name}にて、${c.name}${S.profile.name}の冒険が始まる。目的は「${S.goal.text}」`, "start");
+    G.chron(`${L.name}にて、${c.name}${S.profile.name}の冒険が始まる。${S.goal.text ? `目的は「${S.goal.text}」` : ""}`, "start"); // 目的なしなら目的に触れない（R7c）
     G.log("title", L.name);
     G.say(L.desc);
     G.say(`${S.profile.name}、${S.profile.age}歳。今日から、ここで生きていく。`);

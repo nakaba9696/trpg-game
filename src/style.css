@@ -465,15 +465,7 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
 .creSteps li { flex: 1; text-align: center; border-bottom: 2px solid var(--rule); padding-bottom: 4px; letter-spacing: .1em; }
 .creSteps li.done { border-color: var(--muted); }
 .creSteps li.on { border-color: var(--blood); color: var(--ink); font-weight: 700; }
-.creHead { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; justify-content: space-between; }
-.creHead h2 { margin: 0 !important; }
 .cre2 { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 18px; align-items: start; }
-.whoCard { position: sticky; top: 12px; border: 1px solid var(--ink); background: var(--sheet); padding: 12px; display: grid; gap: 10px; justify-items: center; text-align: center; }
-.whoCard canvas { width: 168px; height: 210px; border: 1px solid var(--rule); border-radius: 2px; background: #3a3a3a; }
-.whoTxt { display: grid; gap: 4px; font-size: 13px; line-height: 1.55; }
-.whoTxt .whoName { font-family: var(--f-display); font-weight: 400; font-size: 20px; }
-.whoTxt .whoLine { font-family: var(--f-body); font-size: 13.5px; }
-.whoTxt span:not(.whoLine):not(.fine) { color: var(--muted); }
 .creForm { display: grid; gap: 16px; min-width: 0; }
 .creSec { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 12px; }
 .creSec:first-child { border-top: 0; padding-top: 0; }
@@ -551,8 +543,6 @@ canvas.face { display: block; flex: none; border: 1px solid var(--ink); backgrou
 @media (prefers-reduced-motion: reduce) { .tray.tumble .pipDie, .creStats .rolled .v, .bookPage.turn { animation: none; } }
 @media (max-width: 720px) {
   .cre2 { grid-template-columns: 1fr; }
-  .whoCard { position: static; grid-template-columns: 96px minmax(0, 1fr); justify-items: start; text-align: left; align-items: center; }
-  .whoCard canvas { width: 96px; height: 120px; }
 }
 @media (max-width: 520px) {
   .rollBar { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who who" "tray roll" "info info"; }

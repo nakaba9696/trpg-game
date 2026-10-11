@@ -16,21 +16,21 @@
     },
     w7_netisle: {
       name: "網の島カラヴ", region: "シェルアーク", type: "town", danger: 0, scene: "w7_netisle", x: 8, y: 98, marks: ["port"],
-      desc: "島の都の南の小さな島。家より網のほうが多い。浜から浜へ渡した綱に、繕いかけの網が何十枚も干してあって、風が吹くと島じゅうが帆のように鳴る。子どもは歩くより先に、結び目を覚える。",
+      desc: "島の都の南の小さな島。家より網のほうが多い。浜から浜へ渡した綱に、繕いかけの網が何十枚も干してあって、風が吹くと島じゅうが帆のように鳴る。子どもは歩くより先に結び目を覚える。",
       fac: ["inn", "tavern", "shop"],
       shop: ["q4_saltfish", "i3w_trident", "i3r_sailorring", "riceball", "jerky"],
       links: {},
     },
     w7_bellisle: {
       name: "霧鐘の島ミストラ", region: "シェルアーク", type: "town", danger: 0, scene: "w7_bellisle", x: 1, y: 87, marks: ["port", "holy"],
-      desc: "外海に向いた岩の島。崖の上に、霧の日に鳴らす大きな鐘がある。鐘守の家の壁には、霧の中で鐘を頼りに帰ってきた船の名が、帰ってこなかった船の名と並べて刻んである。並べ方に、決まりは無いらしい。",
+      desc: "外海に向いた岩の島。崖の上に霧の日に鳴らす大きな鐘がある。鐘守の家の壁には、霧の中で鐘を頼りに帰ってきた船の名が、帰ってこなかった船の名と並べて刻んである。並べ方に決まりは無いらしい。",
       fac: ["inn", "shop", "church"],
       shop: ["i3r_omamori", "holywater", "riceball", "i3a_oilcoat", "potion"],
       links: {},
     },
     w7_pearlisle: {
       name: "真珠採りの島ヨナ", region: "シェルアーク", type: "town", danger: 0, scene: "w7_pearls", x: 13.5, y: 99.5, marks: ["port", "market"],
-      desc: "島の都の南の、浅い入り江を抱えた島。女たちが息を止めて潜り、男たちが舟の上で殻を開ける。開ける前の殻に値をつける賭けが、島の一番の楽しみだ。外れた殻は、浜の小屋の屋根に葺かれる。",
+      desc: "島の都の南の、浅い入り江を抱えた島。女たちが息を止めて潜り、男たちが舟の上で殻を開ける。開ける前の殻に値をつける賭けが、島の一番の楽しみだ。外れた殻は浜の小屋の屋根に葺かれる。",
       fac: ["inn", "tavern", "shop", "alley"],
       shop: ["gem", "i3r_necklace", "i3w_kris", "q4_silk", "riceball"],
       links: {},
@@ -39,14 +39,14 @@
     // ---------------------------------------------------------------- 人類の最前線
     w7_ironwell: {
       name: "井戸の砦町ケルン", region: "人類の最前線", type: "town", danger: 0, scene: "w7_wellfort", x: 59, y: 17, marks: ["border", "market"],
-      desc: "黒鉄の砦へ送る水と粥と矢を、ここで用意する。町の真ん中の深い井戸のまわりに、兵站の倉と、兵の家族の長屋が並んでいる。井戸の縄は毎朝、新しい結び目が一つ増えている。誰が結んでいるのかは、誰も聞かない。",
+      desc: "黒鉄の砦へ送る水と粥と矢を、ここで用意する。町の真ん中の深い井戸のまわりに、兵站の倉と、兵の家族の長屋が並んでいる。井戸の縄は毎朝、新しい結び目が一つ増えている。誰が結んでいるのかは誰も聞かない。",
       fac: ["inn", "tavern", "shop", "guild"],
       shop: ["potion", "jerky", "i3w_spear", "i3w_crossbow", "chain", "w2_frostfire"],
       links: {},
     },
     w7_widows: {
       name: "鐘待ちの村リーネ", region: "人類の最前線", type: "town", danger: 0, scene: "w7_widows", x: 57, y: 35, marks: ["border", "farm"],
-      desc: "砦に出た兵の妻と子が、畑を耕しながら待つ村。北の見張り塔の鐘が鳴るたびに、鍬が一斉に止まる。鐘の数を数え終えると、また一斉に動き出す。村の墓地は、畑より少しだけ広い。",
+      desc: "砦に出た兵の妻と子が、畑を耕しながら待つ村。北の見張り塔の鐘が鳴るたびに、鍬が一斉に止まる。鐘の数を数え終えると、また一斉に動き出す。村の墓地は畑より少し広い。",
       fac: ["inn", "shop", "church"],
       shop: ["w2_whitebread", "herb", "potion", "i3r_widowring", "jerky"],
       links: {},
@@ -69,7 +69,7 @@
     },
     w7_hermitage: {
       name: "峠の庵ザレム", region: "人と魔の境", nation: "人類の最前線", type: "town", danger: 1, scene: "w7_hermitage", x: 75, y: 38, marks: ["border", "holy"],
-      desc: "山脈の南の峠の、崩れかけた庵のまわりに、山を越えられなかった者たちが住みついてできた集落。庵の奥に古い祭壇があって、そこに供えた物は、翌朝には少しずつ減っている。住人は、減ることを喜んでいる。",
+      desc: "山脈の南の峠の、崩れかけた庵のまわりに、山を越えられなかった者たちが住みついてできた集落。庵の奥に古い祭壇があって、そこに供えた物は、翌朝には少しずつ減っている。住人は減ることを喜んでいる。",
       fac: ["inn", "shop", "church"],
       shop: ["holywater", "herb", "potion", "i3r_bonebeads", "jerky"],
       links: {},

@@ -1,5 +1,5 @@
 // 季節と天候（A1）。背景の絵（ui/scene.js）が読む。
-// 季節は暦（G.dateOf と同じ 90 日ごと）と場所の寒さから、天候は日付・地方・冒険ごとの種から決める。
+// 季節は暦（G.dateOf と同じ G.SEASON_DAYS 日ごと）と場所の寒さから、天候は日付・地方・冒険ごとの種から決める。
 // 種は冒険の初めに G.rand で一度だけ引く（S.wseed）。古いセーブに無ければ冒険の id から作る。
 // G.skyAt(locId?, day?) → { season: "春|夏|秋|冬", weather: "晴|雨|霧|雪", still, label }
 // 行動のたびに、今いる場所の天候を S.weather に写す（環境音が読む）
@@ -49,7 +49,7 @@
   }
 
   G.climateOf = (id) => D.CLIMATE[id] || D.CLIMATE._default;
-  G.seasonOf = (day) => G.SEASONS[Math.floor((((day - 1) % 360) + 360) % 360 / 90)];
+  G.seasonOf = (day) => G.SEASONS[G.calSi(day)];
 
   G.skyAt = (id, day) => {
     const S = G.S || {};
