@@ -138,7 +138,7 @@
       },
     }),
     gensai: P({
-      name: "ゲンサイ", full: "朧のゲンサイ", nation: "シェルアーク", role: "シェルアーク島の都の顔役。糸目で、いつも笑い、はんなりした島言葉で物騒なことを言う。島のためなら卑劣な手も平気で使い、悪巧みを隠しもしない。そのくせ島の子どもの名前を全員覚えている。霧の夜に妻を見失った", sex: "男", age: 54, race: "human",
+      name: "ゲンサイ", full: "朧のゲンサイ", nation: "シェルアーク", role: "島の都シェルアークの顔役。糸目で、いつも笑い、はんなりした島言葉で物騒なことを言う。島のためなら卑劣な手も平気で使い、悪巧みを隠しもしない。そのくせ島の子どもの名前を全員覚えている。霧の夜に妻を見失った", sex: "男", age: 54, race: "human",
       who: { kind: "ronin", sex: "男", age: 54, seed: "c2:gensai", look: { hair: "#4a4a50", hairStyle: "topknot", eyes: "narrow", iris: "#3a3a3a", mouth: "smile", brows: "calm", outfit: "kimono", head: "none", gear: "none", chest: "none", cloth: "#2a2a3a", build: "slim", marks: ["stubble", "wrinkles"], bg: "#3a4a5a" } },
       join: {
         cls: "島の顔役", desc: "損はさせへんよ。わしはね", power: 48, dmg: 1, trait: "distrust", bond: 50, home: ["yakumo"],
