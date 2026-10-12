@@ -81,7 +81,10 @@
 
   function walk() {
     G.log("you", "町をぶらつく");
+    const fest0 = G.festPending ? G.festPending() : null; // 季節の催し（U38）：その季節にその町にいて済んでいなければ、一回ごとに高い確率で起きる
     G.pass(1);
+    const fest = fest0 || (G.festPending ? G.festPending() : null); // 時刻で決まる催し（夕暮れだけ等）は、押す前か歩いたあとのどちらかで合えば
+    if (fest && G.festRoll()) { G.startEvent(fest); return; }
     if (G.rand() < 0.55) { const e = G.randomEvent(); if (e) { G.startEvent(e); return; } }
     G.say(G.pick([
       "露店の呼び込みと、酔っ払いの歌と、どこかの喧嘩の音。いつもの町だ。",
