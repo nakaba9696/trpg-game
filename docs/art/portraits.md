@@ -15,34 +15,14 @@
 - **表情**は基本の絵の顔（プロンプトでは特徴のタグの後ろに付く）。差分（**喜・怒・哀・楽**と、その人らしい表情。種類は [moods.md](moods.md)）がある人は、基本の絵から差分を作る（`node tools/gen_portraits.mjs --variants`。`--mood shy,surprise` でその表情だけ。img2img で表情のタグだけ差し替える）。ファイルは `<id>_joy.webp`・`_shy` など。無い表情は近い表情か、基本の絵のまま。
 - png・jpg でもよい（同じ名前なら webp を使う）。埋め込みの合計が 12MB を超えるとビルドとテストが止まる（`tools/assets.mjs`）。
 
-## 画像のセッションへ：描くもの（26）
+## 画像のセッションへ：描くもの（14）
 
 下の二つの表が、今描いてほしい絵のすべて（R5c・R5d）。タグは一覧（json）に入っているので、そのまま作れる：
 
-1. 描き直し：`node tools/gen_portraits.mjs --only kind_merchant_m,kind_merchant_f,kind_noble_m,kind_rogue_m,kind_rogue_f,kind_sailor_m,kind_sailor_f,kind_host_m,kind_beggar_m,kind_beggar_f,kind_child_m,kind_child_f --force --new-seed`（今のファイルを上書きする。作ると一覧の `redraw` が消え、次のビルドから載る）
-2. まだ描いていない型：`node tools/gen_portraits.mjs --only kind_villager_m_b,kind_villager_f_b,kind_merchant_m_b,kind_merchant_f_b,kind_guard_m_b,kind_priest_m_c,kind_noble_f_b,kind_soldier_m_b,kind_knight_m_b,kind_sailor_m_b,kind_mage_m_c,kind_beggar_f_b,kind_archer_m_b,kind_archer_f_b`
-3. 港の用心棒（魔物の一覧）は [monsters.md](monsters.md) の「描き直し待ち」。
+1. まだ描いていない型：`node tools/gen_portraits.mjs --only kind_villager_m_b,kind_villager_f_b,kind_merchant_m_b,kind_merchant_f_b,kind_guard_m_b,kind_priest_m_c,kind_noble_f_b,kind_soldier_m_b,kind_knight_m_b,kind_sailor_m_b,kind_mage_m_c,kind_beggar_f_b,kind_archer_m_b,kind_archer_f_b`
+2. 港の用心棒（魔物の一覧）は [monsters.md](monsters.md) の「描き直し待ち」。
 
 型の人・描き直し待ちの絵は、ネガティブに今の服の語（school uniform・necktie・zipper・hoodie など）が自動で足される（`tools/gen_portraits.mjs` の MODERN）。それでも今の服に見えたら `--new-seed` で作り直す。どれも胸から上・一人だけ・この世界（剣と魔法の中世風）の服。
-
-## 描き直し待ち（12）
-
-今の絵は、この世界に合わない（現代の服に見えるなど）ので載せていない（その人は絵なし。canvas には戻さない）。描き直して同じファイル名で置き、一覧（json）の `redraw` を外す（`gen_portraits.mjs` で作れば自動で外れる）。
-
-| ファイル | 名前 | 何が合わないか | どう直すか | 特徴のタグ |
-|---|---|---|---|---|
-| `assets/portraits/kind_merchant_m.webp` | 商人（男） | ファスナー付きの多ポケットのベスト（釣り・撮影用のような）に襟付きのシャツ | 麻の上着か革の胴衣（紐で締める）、帯に財布と秤。眼鏡を額に上げた姿もあると、道ばたの両替商の文に合う（例：linen tunic, leather jerkin with laces, belt pouch, small scales, spectacles pushed up on forehead） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes<br>merchant, linen tunic, leather jerkin with laces, belt pouch, small scales, spectacles pushed up on forehead |
-| `assets/portraits/kind_merchant_f.webp` | 商人（女） | 学校の制服（ベスト・ネクタイ・プリーツのスカート）に肩掛けの鞄 | 麻のブラウスに胴衣、長いスカート、帯に財布（例：linen blouse, laced bodice, long skirt, belt pouch） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, chestnut brown hair, bob cut, blunt bangs, violet eyes<br>merchant, linen blouse, laced bodice, long skirt, belt pouch |
-| `assets/portraits/kind_noble_m.webp` | 貴族（男） | 黒のタンクトップに腕輪（貴族に見えず、今の運動着に見える） | 刺繍の入った上着（ダブレット）、マント、指輪（例：embroidered doublet, cape, signet ring） | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, man, 30 years old, black hair, short hair, spiky hair, black eyes<br>noble, embroidered doublet, cape, signet ring |
-| `assets/portraits/kind_rogue_m.webp` | ならず者・盗賊（男） | 肩章とボタンの並ぶトレンチコート（近代の軍服に見える） | 頭巾付きの外套か革の胴衣、腰に短刀（例：hooded cloak, leather jerkin, dagger at belt） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, brown eyes<br>rogue, hooded cloak, leather jerkin, dagger at belt, scar |
-| `assets/portraits/kind_rogue_f.webp` | ならず者・盗賊（女） | 革のライダースジャケットにプリーツのスカート | 頭巾付きの外套に革の胴衣、腰に短刀（例：hooded cloak, leather bodice, dagger at belt） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, dark blue hair, long hair, blunt bangs, amber eyes<br>rogue, hooded cloak, leather bodice, dagger at belt, scar |
-| `assets/portraits/kind_sailor_m.webp` | 船乗り（男） | 襟付きの縞のポロシャツに黒のスラックス | 襟の無い縞の上着か麻のシャツ、膝までのズボン、頭に布（例：collarless striped tunic, knee breeches, head scarf, barefoot） | 型：`brute`<br>見た目（固定）：1boy, male focus, adult, man, 38 years old, orange hair, short hair, black eyes<br>sailor, collarless striped tunic, knee breeches, head scarf, earring |
-| `assets/portraits/kind_sailor_f.webp` | 船乗り（女） | セーラー服（学校の制服） | 襟の無い縞の上着か麻のシャツに膝丈のズボン、頭に布（例：collarless striped tunic, knee breeches, head scarf） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, teal hair, medium hair, light blue eyes<br>sailor, collarless striped tunic, knee breeches, head scarf, earring |
-| `assets/portraits/kind_host_m.webp` | 宿や酒場の主（男） | 黒の半袖 T シャツ、キャラクターの顔の付いた前掛け | 麻の長袖のシャツに無地の前掛け、袖をまくる（例：linen shirt, rolled sleeves, plain apron, tavern keeper） | 型：`brute`<br>見た目（固定）：1boy, male focus, adult, man, 38 years old, black hair, short hair, black eyes<br>innkeeper, tavern keeper, linen shirt, rolled sleeves, plain apron, friendly smile |
-| `assets/portraits/kind_beggar_m.webp` | 物乞い・囚人（男） | ボタン留めの襟付きシャツ（胸ポケット）にサスペンダー | 継ぎの当たった麻の上着、縄の帯、裸足か布を巻いた足（例：patched ragged tunic, rope belt, wrapped feet） | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 45 years old, black hair, short hair, black eyes<br>patched ragged tunic, rope belt, wrapped feet, dirty, tired |
-| `assets/portraits/kind_beggar_f.webp` | 物乞い・囚人（女） | 白の T シャツに短パン（今の部屋着） | 継ぎの当たった麻のワンピース、縄の帯、裸足（例：patched ragged dress, rope belt, barefoot） | 絵の版：2<br>見た目（固定）：1girl, woman, 30 years old, ash blonde hair, long hair, amber eyes<br>patched ragged dress, rope belt, barefoot, dirty, tired |
-| `assets/portraits/kind_child_m.webp` | 子ども（男） | 紐付きの大きなパーカー | 麻の短い上着に帯、短いズボン（例：simple linen tunic, rope belt, short trousers） | 型：`boy`<br>見た目（固定）：1boy, male focus, boy, child, 10 years old, white hair, short hair, grey eyes<br>child, simple linen tunic, rope belt, short trousers |
-| `assets/portraits/kind_child_f.webp` | 子ども（女） | ボタン留めの桃色のカーディガンに襟とプリーツのスカート（今の子ども服） | 麻のワンピースに前掛け、頭に布（例：simple linen dress, apron, head kerchief） | 見た目（固定）：1girl, girl, child, 10 years old, black hair, long hair, low twintails, blunt bangs, amber eyes<br>child, simple linen dress, apron, head kerchief |
 
 ## まだ描いていない型（14）
 
