@@ -40,6 +40,7 @@
     yurina: { name: "ユリナ", role: "王国剣士団・特殊部隊" },
     ferida: { name: "フェリダ", role: "王国十指・槍騎兵団" },
     sig: { name: "シグ", role: "王国十指・重装戦斧兵団" },
+    sigrun: { name: "シグルン", role: "片目の女" },
     raisha: { name: "ライーシャ", role: "王国十指・剣士" },
     zork: { name: "ゾルク", role: "王国十指・賞金稼ぎ" },
     bride: { name: "マリエッタ", full: "マリエッタ＝ボルド", role: "流れの大槌使い", was: ["大槌の姉さん"] },

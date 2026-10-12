@@ -16,10 +16,10 @@
 
 | 鍵 | 名前 | 既定のタグ | 落とし先 | 使う場面 | 持つ人 |
 |---|---|---|---|---|---|
-| `joy` | 喜 | smile, happy | 基本 | うれしい・ほっとした | 130 |
-| `anger` | 怒 | angry, frown, v-shaped eyebrows | 基本 | 怒る・苛立つ | 130 |
-| `sorrow` | 哀 | sad, looking down, downturned mouth | 基本 | 悲しい・沈む | 130 |
-| `fun` | 楽 | laughing, open mouth, closed eyes | 基本 | 楽しい・笑い転げる | 130 |
+| `joy` | 喜 | smile, happy | 基本 | うれしい・ほっとした | 131 |
+| `anger` | 怒 | angry, frown, v-shaped eyebrows | 基本 | 怒る・苛立つ | 131 |
+| `sorrow` | 哀 | sad, looking down, downturned mouth | 基本 | 悲しい・沈む | 131 |
+| `fun` | 楽 | laughing, open mouth, closed eyes | 基本 | 楽しい・笑い転げる | 131 |
 | `surprise` | 驚き | surprised, wide-eyed, open mouth, raised eyebrows | 怯え → 基本 | 目を丸くする・息を呑む | 44 |
 | `shy` | 照れ | embarrassed, blush, looking away | 喜 → 基本 | 頬を染める・褒められて照れる（男も blush でよい。#185） | 31 |
 | `troubled` | 困り | troubled, worried eyebrows, awkward smile, sweatdrop | 哀 → 基本 | 困った顔・苦笑い | 33 |
@@ -39,7 +39,7 @@
 | `exasperated` | 呆れ | exasperated, half-closed eyes, deadpan, sigh | 困り → 疲れ → 基本 | ため息・あきれ顔 | 14 |
 | `smitten` | うっとり | smitten, blush, dreamy eyes, gentle smile | 照れ → 喜 → 基本 | 見とれる・想い人を思う | 10 |
 
-## 人ごとの割り当て（130 人）
+## 人ごとの割り当て（131 人）
 
 | 人 | 喜怒哀楽のほかの表情 |
 |---|---|
@@ -85,6 +85,7 @@
 | 剣翼の使徒ヴァルグレア（`azlag`） | 慌て（`panic`）・真剣（`serious`）・得意げ（`smug`） |
 | 百面の使徒ディエラン（北の賢人）（`chezar`） | ほんの少し笑う（`faint_smile`）・冷たい目（`cold`）・悪い笑み（`wicked`） |
 | 逆夢の使徒ベルファス（`yura`） | 眠い（`sleepy`）・驚き（`surprise`）・ほんの少し笑う（`faint_smile`） |
+| シグルン（`sigrun`） | — |
 | ベルトラン（`bertrand`） | 冷たい目（`cold`）・困り（`troubled`）・ほんの少し笑う（`faint_smile`） |
 | イルゼ（`ilse`） | 得意げ（`smug`）・慌て（`panic`）・驚き（`surprise`）・困り（`troubled`） |
 | トゥーラ（`tula`） | 照れ（`shy`）・すね（`pout`）・驚き（`surprise`） |
