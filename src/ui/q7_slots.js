@@ -117,7 +117,7 @@
     });
     body.append(ul);
     if (mode === "load" && !list.some((e) => !e.empty)) body.append(h("p", "fine", "まだ保存された冒険が無い。"));
-    if (mode === "load") body.append(h("p", "fine q7legend", "オートセーブ：町に着いたときに自動で残る。中断：最後の行動のあと（タイトルの「つづきから」）。手動：「セーブ」で残した枠。どれも死んでも消えない。"));
+    if (mode === "load") body.append(h("p", "fine q7legend", "オートセーブ：町に着いたときに自動で残る。中断：最後の行動のあと（タイトルの「つづきから」）。中断（倒れる前の行動）：倒れたときに残る、倒れる直前の写し（そこから生きたまま続けられる）。手動：「セーブ」で残した枠。どれも死んでも消えない。"));
   }
 
   ui.slotMode = () => (dlg.open ? mode : null);
