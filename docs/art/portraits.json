@@ -2796,16 +2796,6 @@
    "memo": "C12・名のある人。シェルアーク諸島の網の島カラヴの網元の婆さま。結び目で結んだ者を言い当てる。古い網に帰らなかった者の持ち物を結ぶ"
   },
   {
-   "id": "sigrun",
-   "group": "r5",
-   "name": "片目のシグルン",
-   "file": "assets/portraits/sigrun.webp",
-   "identity": "1girl, mature female, adult, woman, 41 years old, lean, weathered skin, dark auburn hair, short hair, choppy hair, grey eyes, one eye, black eyepatch, scar across eyebrow, worn grey hooded cloak, old claw marks on cloak shoulder, leather armor, sword belt",
-   "tags": "mercenary, arms crossed, leaning on wall",
-   "face": "expressionless, sharp eyes",
-   "memo": "使徒を追う片目の女（src/data/r5_named.js の sigrun。f2_majin_2・4・5・f2r_sigrun。仲間にもなる）。41 歳・傭兵・口数が少ない。本文にあるのは片目・灰色の外套・肩の古い爪痕だけで、髪と目の色は本文と食い違わないように決めた。描くまでは絵なし（十指のシグ sig.webp は別人）"
-  },
-  {
    "id": "kind_villager_m",
    "group": "people",
    "name": "町の人（男）",
