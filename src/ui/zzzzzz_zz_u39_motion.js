@@ -10,7 +10,8 @@
 // 決まり：一つの動きは 120〜400ms。動きは WAAPI（Element.animate）だけで、次の操作（押す・キー）で全部を終わりの形に飛ばす（待たせない）。
 // 「動きを減らす」（設定の窓の「画面」。G.P.u39still。セーブの外。無ければ切）か prefers-reduced-motion なら動かさない。
 // 減らすときは、ほかのファイルの動き（matchMedia("(prefers-reduced-motion: reduce)") を見ているもの）も止まるように、その問い合わせに「はい」と答える。
-// CSS の動きは html.u39still で止める（ui/zzzzzzzzzz_u39_motion.css）。
+// CSS の動きは html.u39still で止める（ui/zzzzzz_zz_u39_motion.css）。
+// 名前の zzzzzz_zz_ は、U37（zzzzzz_zu37_beats）より後・とどめの見せ方 F5（zzzzzzz_f5_finish。描き直しの包みのいちばん外）より前に読むため。
 // ui.js ほか既存のファイルは書き換えず、ui.render・ui.setSheetOpen・HTMLDialogElement の show/showModal/close を包み、DOM の変化を見て動かす。
 // 乱数は使わない（さいころの転がる間の目は、出目から作る決まった並び）。レーン U（U39）
 (function (G) {

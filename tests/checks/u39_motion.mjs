@@ -1,4 +1,4 @@
-// U39：画面の動き（src/ui/zzzzzzzzzz_u39_motion.js・.css）。DOM なしで確かめられる範囲
+// U39：画面の動き（src/ui/zzzzzz_zz_u39_motion.js・.css）。DOM なしで確かめられる範囲
 // - 動きの時間はどれも 120〜400ms、得たものの時間差には上限がある（札が多くても待たせない）
 // - 「動きを減らす」（G.P.u39still）か端末の prefers-reduced-motion なら動かさない。設定の無い古い記録・G.P が無いときは動く（落ちない）
 // - さいころの止まり方は 大成功・成功・失敗・大失敗 で違い、どれも元の形で終わる。転がる間の目は乱数を使わない（同じ出目なら同じ並び）
@@ -14,7 +14,7 @@ export default ({ fail: failTo, ok }) => {
   const ctx = vm.createContext({ console });
   let rnd = 0;
   ctx.Math = Object.create(Math, { random: { value: () => { rnd++; return 0.5; } } });
-  try { vm.runInContext("globalThis.G = { ui: { render() {} } };", ctx); vm.runInContext(src("ui/zzzzzzzzzz_u39_motion.js"), ctx, { filename: "ui/zzzzzzzzzz_u39_motion.js" }); }
+  try { vm.runInContext("globalThis.G = { ui: { render() {} } };", ctx); vm.runInContext(src("ui/zzzzzz_zz_u39_motion.js"), ctx, { filename: "ui/zzzzzz_zz_u39_motion.js" }); }
   catch (e) { return fail("DOM なしで読むと落ちる：" + e.message); }
   const u = ctx.G.u39;
   const need = ["still", "chosen", "kindOf", "land", "faces", "delay", "total", "hpPop"];
@@ -76,9 +76,9 @@ export default ({ fail: failTo, ok }) => {
   });
 
   // ---- 見た目・設定の口・エンジンに触っていない
-  const css = src("ui/zzzzzzzzzz_u39_motion.css");
+  const css = src("ui/zzzzzz_zz_u39_motion.css");
   if (!/html\.u39still[^{]*\{[^}]*animation-duration[^}]*transition-duration/.test(css)) fail("「動きを減らす」で CSS の動きを止めていない");
-  const js = src("ui/zzzzzzzzzz_u39_motion.js");
+  const js = src("ui/zzzzzz_zz_u39_motion.js");
   if (!/addSetting\(\{[\s\S]*id: "u39still"[\s\S]*section: "画面"/.test(js)) fail("設定の窓の「画面」に「動きを減らす」を足していない");
   if (/G\.S\.[a-zA-Z_]+\s*=(?!=)/.test(js)) fail("セーブ（G.S）に書いている（設定は G.P に）");
   if (/\b(gsap|import\s|require\(|https?:\/\/)/i.test(js.replace(/^\s*\/\/.*$/gm, ""))) fail("外の部品を読み込んでいる");
