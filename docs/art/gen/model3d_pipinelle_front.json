@@ -1,0 +1,163 @@
+{
+ "id": "model3d_pipinelle_front",
+ "source": "generated",
+ "method": "chain",
+ "steps": [
+  {
+   "id": "model3d_pipinelle_front",
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-12T11:55:53.421467+00:00",
+   "tool": "3D 用の全身（m3d.py）",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, elf, pointy ears, child, small, petite, pale skin, green hair, very long hair, sleepy eyes, golden eyes, raised eyebrows, white hooded robe with leaf embroidery, wooden circlet with leaves, gnarled wooden staff, honey pot, arms crossed, smug, half-closed eyes, solo, standing, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (full body:1.4), standing straight, legs, feet, long white robe to the ankles, (simple brown leather sandals:1.2), (simple white background:1.4), (no shadow:1.3), floating",
+   "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (cropped legs:1.3), out of frame, feet out of frame, (ground:1.5), (floor:1.4), (shadow:1.5), (cast shadow:1.4), dirt, sand, scenery, (sitting:1.2), sneakers, modern shoes",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 28,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1536,
+   "denoising_strength": 1.0,
+   "batch_size": 1,
+   "n_iter": 3,
+   "inpainting_fill": 2,
+   "inpaint_full_res": false,
+   "mask_blur": 10,
+   "seed": 4202,
+   "subseed": 1943155837,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "75b3a7402c3ed3748ee28fa7ade4612e01150ff0",
+   "base": {
+    "file": "assets/portraits/pipinelle.webp",
+    "sha1": "672cb6824e3d73ea2afd2899b2e6efb2906f88cd"
+   },
+   "mask": {
+    "how": "基本の絵を 1.45 倍にして 1024×1536 の白いキャンバスの上（y=24）に置き、元の絵の下の縁の 36px 上（y=916）から下を全部（ぼかし 10）。そこだけ latent noise から描く（outpaint）。外は元の画素のまま"
+   },
+   "post": {
+    "how": "マスクの外は元の画素に戻した"
+   },
+   "controlnet": [
+    {
+     "enabled": true,
+     "module": "reference_adain+attn",
+     "model": "None",
+     "weight": 0.8,
+     "threshold_a": 0.5,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true,
+     "image_sha1": "a0b7a47ecdff3ade478bac749dd7c3fe775a2e85"
+    }
+   ],
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, elf, pointy ears, child, small, petite, pale skin, green hair, very long hair, sleepy eyes, golden eyes, raised eyebrows, white hooded robe with leaf embroidery, wooden circlet with leaves, gnarled wooden staff, honey pot, arms crossed, smug, half-closed eyes, solo, standing, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (full body:1.4), standing straight, legs, feet, long white robe to the ankles, (simple brown leather sandals:1.2), (simple white background:1.4), (no shadow:1.3), floating\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (cropped legs:1.3), out of frame, feet out of frame, (ground:1.5), (floor:1.4), (shadow:1.5), (cast shadow:1.4), dirt, sand, scenery, (sitting:1.2), sneakers, modern shoes\nSteps: 28, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 4202, Size: 1024x1536, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 1.0, ControlNet 0: \"Module: reference_adain+attn, Model: None, Weight: 0.8, Resize Mode: ResizeMode.INNER_FIT, Threshold A: 0.5, Guidance Start: 0.0, Guidance End: 1.0, Pixel Perfect: True, Control Mode: ControlMode.BALANCED, Hr Option: HiResFixOption.BOTH\", Mask blur: 10, Masked content: latent noise, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d"
+  },
+  {
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-12T12:04:20.515918+00:00",
+   "tool": "3D 用の全身の直し（fix.py）",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, elf, pointy ears, child, small, petite, pale skin, green hair, very long hair, sleepy eyes, golden eyes, raised eyebrows, white hooded robe with leaf embroidery, wooden circlet with leaves, gnarled wooden staff, honey pot, sitting cross-legged, arms crossed, smug, half-closed eyes, solo, standing, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, full body, (simple white background:1.3), long white robe, (long straight wooden staff held diagonally, continuous staff:1.2), very long green hair flowing down, sandals",
+   "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, ground, floor, shadow, broken staff, two staffs, pot, jar",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 20,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1536,
+   "denoising_strength": 0.8,
+   "batch_size": 1,
+   "n_iter": 3,
+   "inpainting_fill": 1,
+   "inpaint_full_res": true,
+   "inpaint_full_res_padding": 64,
+   "mask_blur": 6,
+   "seed": 4502,
+   "subseed": 4125869680,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "10ec3a0a603185a28336d855a023f3dc72b83bea",
+   "base": {
+    "file": "pipinelle_final.png",
+    "sha1": "e49eff569d3f390583c3d706a7f8ed8e74d0303c"
+   },
+   "mask": {
+    "how": "rect:330,880,760,1520;rect:180,880,900,960（1024×1536 の座標・ぼかし 6）"
+   },
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, elf, pointy ears, child, small, petite, pale skin, green hair, very long hair, sleepy eyes, golden eyes, raised eyebrows, white hooded robe with leaf embroidery, wooden circlet with leaves, gnarled wooden staff, honey pot, sitting cross-legged, arms crossed, smug, half-closed eyes, solo, standing, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, full body, (simple white background:1.3), long white robe, (long straight wooden staff held diagonally, continuous staff:1.2), very long green hair flowing down, sandals\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, ground, floor, shadow, broken staff, two staffs, pot, jar\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 4502, Size: 1024x1536, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 6, Inpaint area: Only masked, Masked area padding: 64, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d"
+  },
+  {
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-12T12:05:10.914457+00:00",
+   "tool": "3D 用の全身の直し（fix.py）",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, elf, pointy ears, child, small, petite, pale skin, green hair, very long hair, sleepy eyes, golden eyes, raised eyebrows, white hooded robe with leaf embroidery, wooden circlet with leaves, gnarled wooden staff, honey pot, sitting cross-legged, arms crossed, smug, half-closed eyes, solo, standing, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, full body, (simple white background:1.3), very long straight green hair flowing down, continuous hair strands",
+   "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, ground, floor, shadow, ",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 20,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1536,
+   "denoising_strength": 0.6,
+   "batch_size": 1,
+   "n_iter": 2,
+   "inpainting_fill": 1,
+   "inpaint_full_res": true,
+   "inpaint_full_res_padding": 64,
+   "mask_blur": 6,
+   "seed": 4602,
+   "subseed": 1176421196,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "efc6c44a992adbb4905880d56e7f62fd03f53fe6",
+   "base": {
+    "file": "pipinelle_fx_1.png",
+    "sha1": "9c753e31f473c3d8e8823fd8624afe09ab52f753"
+   },
+   "mask": {
+    "how": "rect:90,820,400,980;rect:700,820,980,980（1024×1536 の座標・ぼかし 6）"
+   },
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, elf, pointy ears, child, small, petite, pale skin, green hair, very long hair, sleepy eyes, golden eyes, raised eyebrows, white hooded robe with leaf embroidery, wooden circlet with leaves, gnarled wooden staff, honey pot, sitting cross-legged, arms crossed, smug, half-closed eyes, solo, standing, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, full body, (simple white background:1.3), very long straight green hair flowing down, continuous hair strands\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, ground, floor, shadow, \nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 4602, Size: 1024x1536, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.6, Mask blur: 6, Inpaint area: Only masked, Masked area padding: 64, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d"
+  }
+ ],
+ "post": {
+  "background": "rembg birefnet-general で人物を切り抜き、白い地に置き直した（地面・影を消す。cleanbg.py）",
+  "upscale": "4x-AnimeSharp で 1366×2048",
+  "manual": "杖は元の絵のまま体の前に斜めに持つ（外していない）。描き足しで杖が途切れたので直し、髪のつなぎ目もなじませた"
+ }
+}
