@@ -1,4 +1,4 @@
-/* U36：左上の状態の窓の日付（ui/zzzzzzzzz_u36_date.js）。一行で、折り返さない */
+/* U36：左上の状態の窓の日付（ui/zzzzzz_u36_date.js）。一行で、折り返さない */
 #mbar .u36date { flex: none; white-space: nowrap; font-size: 12px; letter-spacing: .03em; color: var(--muted); }
 #mbar .u36date[hidden] { display: none; }
 /* PC：窓は二列の格子（名前｜📍、HP・MP・所持金｜…）。📍を一行目だけにして、その下（HP の行の右端）に日付を置く。行は増えない */

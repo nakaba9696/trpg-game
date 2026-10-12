@@ -1,4 +1,4 @@
-// U36：今日の日付を左上の状態の窓にいつも短く出す（ui/zzzzzzzzz_u36_date.js。持ち主の声「今何日かの表示は左上に出して」）
+// U36：今日の日付を左上の状態の窓にいつも短く出す（ui/zzzzzz_u36_date.js。持ち主の声「今何日かの表示は左上に出して」）
 // - 日付の文（DOM なし）：PC は年・季節・月・日、スマホは季節・月・日。暦（G.dateOf）と食い違わない
 // - 要素は一つ（#u36date）を使い回す（何手進めても行が増えない）。PC・スマホで実際に一行に収まるかは tools/shots_u36.mjs が Chromium で見る
 import { readFileSync } from "node:fs";
@@ -6,8 +6,8 @@ import vm from "node:vm";
 
 export default ({ G, fail, ok }) => {
   const F = (m) => fail("U36 日付: " + m);
-  const src = readFileSync(new URL("../../src/ui/zzzzzzzzz_u36_date.js", import.meta.url), "utf8");
-  vm.runInContext(src, vm.createContext({ G }), { filename: "ui/zzzzzzzzz_u36_date.js" });
+  const src = readFileSync(new URL("../../src/ui/zzzzzz_u36_date.js", import.meta.url), "utf8");
+  vm.runInContext(src, vm.createContext({ G }), { filename: "ui/zzzzzz_u36_date.js" });
   const U = G.u36 || {};
   if (!U.dateText) return F("G.u36.dateText が無い");
   for (const day of [0, 1, 40, 95, 400, 3000]) {
