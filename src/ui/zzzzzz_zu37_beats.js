@@ -2,8 +2,8 @@
 //   ・印の行（「三日目の夕。影が長くなった道を進む……」）が新しく出たら、移動の音（効果音 "depart"。音量・消音の設定に従う）を鳴らす
 //   ・本文の窓は、いちばん新しい印から書き直す（印より前の行は隠す。U19 と同じ "u19gone"。前の出来事の文は右上の「ログ」の窓で読める）
 //     同じ頁で印より前の「あなた」の行（▶ 〇〇へ向かう・▶ 先へ進む）は残す。U19 の「本文を積み上げる（前の形）」を選んでいれば隠さない
-//   ・印の行は道中の区切りとして、少し目立たせる（見た目は ui/zzzzzzzzzz_u37_beats.css）
-// ui.js・sound.js・u19 は書き換えず、G.ui.render・G.ui.logEl・G.sound.cues を包む（名前の z の数で U19・U28・U31 より後）。レーン U（U37）
+//   ・印の行は道中の区切りとして、少し目立たせる（見た目は ui/zzzzzz_zu37_beats.css）
+// ui.js・sound.js・u19 は書き換えず、G.ui.render・G.ui.logEl・G.sound.cues を包む（名前の順で U19・U31・U28 より後、とどめの見せ方 F5 の zzzzzzz_f5_finish より前）。レーン U（U37）
 (function (G) {
   if (typeof document === "undefined" || !G.ui) return;
   const ui = G.ui;
