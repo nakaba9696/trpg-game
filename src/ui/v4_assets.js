@@ -44,6 +44,7 @@
     albert: { events: ["r1_church_door"] },
     dominik: { events: ["r1_beast_meat"] },
     neumann: { events: ["r1_nose_ring"] },
+    sigrun: { events: ["f2_majin_2", "f2_majin_2q", "f2_majin_4", "f2_majin_5", "f2r_sigrun"], names: ["シグルン"] }, // 片目の女（使徒を追う冒険者）
   };
   G.V4_NAMED = NAMED;
   const BY_SEED = {};

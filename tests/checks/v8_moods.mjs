@@ -27,7 +27,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!p.variants) continue;
     vids.push(p.id);
     if (p.group !== "c2" && p.group !== "named") F(`差分（variants）があるのは名のある人物だけ：${p.id}（${p.group}）`);
-    else if (p.group === "c2" ? !D.C2_PEOPLE[p.id] : !(G.V4_NAMED || {})[p.id] && !D.C2_PEOPLE[p.id] && !(D.MAJIN || {})[p.id]) F(`差分の ${p.id} が人物に当たらない`);
+    else if (p.group === "c2" ? !D.C2_PEOPLE[p.id] : !(G.V4_NAMED || {})[p.id] && !D.C2_PEOPLE[p.id] && !(D.MAJIN || {})[p.id] && !(D.R5_NAMED || {})[p.id]) F(`差分の ${p.id} が人物に当たらない`);
     if (!p.face) F(`差分のある ${p.id} に基本の表情（face）が無い（差分は face を差し替えて作る）`);
     const keys = Object.keys(p.variants);
     const extra = keys.filter((k) => !MOODS.includes(k));
