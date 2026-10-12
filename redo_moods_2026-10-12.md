@@ -62,7 +62,7 @@
 | pipinelle | 基本：杖の房飾りが違う |
 | raisha | 基本：胸元が違う（ネクタイが無い） |
 | rionetta | anger：両目が透けている。joy：片目が半透明。目の色が茶・青でばらつく |
-| salphiel | cold・faint_smile・fun・joy・sorrow：顔を覆う布の位置と形が違う |
+| salphiel | cold・faint_smile・fun・joy・sorrow：顔を覆う布の位置と形が違う（持ち主も指摘）。**顔を覆う布にはマスクをかけない。目と眉だけ描き直す** |
 | serios | 頬の絵の具の色・位置がばらばら。fun・sorrow だけ筆を持つ |
 | sheila | joy：髪留めの形が違う |
 | shione | 基本：右の髪飾りが赤い花（ほかは黄）・左の髪留め・編み込みが無い |
