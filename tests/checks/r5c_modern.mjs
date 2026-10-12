@@ -27,8 +27,7 @@ export default ({ G, fail, ok }) => {
       if (!sec.split("\n## ")[0].includes(`${x.id}.webp`)) F(`${md} の「描き直し待ち」に ${x.id} が無い（node tools/${dir === "portraits" ? "portraits" : "monsters"}.mjs で作り直す）`);
     }
   }
-  if (!redrawn.has("monsters/w3_smuggler")) F("港の用心棒の絵（現代の警備員）が描き直し待ちになっていない");
-  if (!redrawn.has("portraits/kind_merchant_m")) F("商人の型の絵（現代のベスト）が描き直し待ちになっていない");
+  // 13 枚は描き直して持ち主が確かめた（確認票 23。港の用心棒は持ち主の判断で元の絵のまま）。いまは描き直し待ちが無くてよい
   // 載せない
   const dir = new URL("assets/", root).pathname;
   const site = siteAssets(dir);
