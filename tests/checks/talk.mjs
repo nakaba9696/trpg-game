@@ -274,7 +274,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     for (let i = 0; i < 60 && !seen; i++) {
       S2.tk.banterDay = 0;
       G2.act(acts(G2).find((a) => /^travel:/.test(a.id)).id);
-      while (S2.mode === "combat" || S2.mode === "event") { const x = acts(G2).find((a) => !a.disabled); if (!x) break; G2.act(x.id); }
+      // 旅の出来事のあとは「先へ進む」を待つ（U37）
+      for (let k = 0; k < 200 && !S2.over && (S2.mode === "combat" || S2.mode === "event" || S2.travel); k++) { const x = S2.travel && S2.mode === "explore" ? { id: "w6go" } : acts(G2).find((a) => !a.disabled); if (!x) break; G2.act(x.id); }
       if (Object.keys(S2.tk.bant).length) seen++;
     }
     if (!seen) F("旅を六十回しても、掛け合いが一度も起きない");

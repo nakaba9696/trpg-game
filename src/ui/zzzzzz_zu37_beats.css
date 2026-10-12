@@ -1,0 +1,10 @@
+/* U37：旅の道中の区切りの行（「三日目の夕。影が長くなった道を進む……」） */
+#log > p.l-u37 {
+  margin: 0.2em 0 0.9em;
+  padding: 0.35em 0 0.35em 0.8em;
+  border-left: 3px solid color-mix(in srgb, currentColor 35%, transparent);
+  font-style: italic;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+#log > p.l-u37-arrive { border-left-style: double; }
