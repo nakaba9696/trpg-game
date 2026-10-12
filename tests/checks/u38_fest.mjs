@@ -1,4 +1,4 @@
-// U38：季節の催しは、その季節にその町で「町をぶらつく」を押せば最初の一回で必ず起きる（V13 の season の組の全部）。済んだら起きない・季節外は起きない
+// U38：季節の催しは、その季節にその町で「町をぶらつく」を押せば一回ごとに高い確率で起きる（V13 の season の組の全部）。済んだら起きない・季節外は起きない
 export default ({ fail, loadEngine, seeded }) => {
   const G0 = loadEngine(); // 読み込みが重いので、一つを使い回して newGame でやり直す
   const sets = (G0.data.V13 && G0.data.V13.LEADS || []).filter((s) => s.kind === "season");
@@ -23,12 +23,18 @@ export default ({ fail, loadEngine, seeded }) => {
     // 「町をぶらつく」があるのは町だけ（野の催しは対象外）
     if (G.data.LOCS[set.loc].type !== "town") continue;
     if (!dayOf(start(1, set, true).S, ev, true)) { fail(`${set.id}：催しの起きる日が見つからない`); continue; }
-    // 季節の町で、最初の一回で起きる（乱数の種を変えても）
-    for (let seed = 1; seed <= 20; seed++) {
+    // 季節の町で、3 回以内にほぼ起きる（100 本中 95 本以上）
+    let hit = 0;
+    for (let seed = 1; seed <= 100; seed++) {
       const { S } = start(seed, set, true);
-      G.act("walk");
-      if (S.mode !== "event" || S.event !== set.ev) fail(`${set.id}（種 ${seed}）：季節の町でぶらついても ${set.ev} が起きない（mode ${S.mode}・event ${S.event}）`);
+      for (let i = 0; i < 3 && S.event !== set.ev; i++) {
+        S.mode = "explore"; S.event = null; S.combat = null; S.phase = 3; // 夕暮れだけの催しもあるので、時刻は合わせる
+        G.act("walk");
+        if (S.over) break;
+      }
+      if (S.event === set.ev) hit++;
     }
+    if (hit < 95) fail(`${set.id}：季節の町でぶらついて 3 回以内に起きたのは 100 本中 ${hit} 本（95 本以上のはず）`);
     // 済んだら起きない（once の催しだけ。毎年ある催しは、その年のぶんが済んだ印を持たない）
     if (ev.once) {
       const { S } = start(3, set, true);
@@ -43,12 +49,13 @@ export default ({ fail, loadEngine, seeded }) => {
     // 毎年ある催しは、この季節に一度起きたら続けて起きない（翌年の季節にはまた起きる）
     if (!ev.once) {
       const { S } = start(4, set, true);
-      G.act("walk");
-      if (S.event !== set.ev) fail(`${set.id}：一回目が起きない`);
+      for (let i = 0; i < 20 && S.event !== set.ev && !S.over; i++) { S.mode = "explore"; S.event = null; S.combat = null; G.act("walk"); }
+      if (S.event !== set.ev) fail(`${set.id}：20 回ぶらついても起きない`);
       for (let i = 0; i < 10 && !S.over; i++) {
         S.mode = "explore"; S.event = null; S.combat = null;
+        const f = G.festPending(); // 抽選（毎年ある催しが普通に混ざる）ではなく、強制の対象になるか
+        if (f && f.id === set.ev) fail(`${set.id}：毎年ある催しが、同じ季節に済んだあともまた強制の対象`);
         G.act("walk");
-        if (S.event === set.ev) fail(`${set.id}：毎年ある催しが同じ季節に続けて起きた`);
       }
       S.mode = "explore"; S.event = null; S.combat = null;
       const was = S.day;
