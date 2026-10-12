@@ -28,7 +28,8 @@
 - 普段の手番で Claude を呼ぶ仕組みは作らない（docs/VISION.md の「やらないこと」）。
 - `docs/ROADMAP.md` のチェックは編集しない。測った数字は PR の説明に書く。
 - 共有ファイル（<このゲームの共有ファイル>）は追記だけにする。
-- `.github/workflows/` は CI の issue でなければ触らない（触るなら Actions を full SHA で固定し、`bash tools/ci/check-workflows.sh` を通す）。
+- `.github/workflows/` は CI の issue でなければ触らない（触るなら Actions を full SHA で固定し、`pull_request_target` を使わない。
+  workflow の点検スクリプトがあれば通す：<例 `bash tools/ci/check-workflows.sh`。無ければこの括弧を消す>）。
 - PR は main に向けて出し、本文に `Closes #<N>` を書く。見た目が変わるなら前後のスクリーンショットを載せる。
   PR を出したら `subscribe_pr_activity` で見張り、CI が緑になるまで直す。マージはしない。
 
@@ -86,5 +87,6 @@ root cause を直して push してください（テストを飛ばす・弱め
    「持ち主の判断待ち」なし・PR の説明に未記入なし・未解決スレッドなし → merge commit で 1 本ずつ。
 3. 子がセッション上限などで failed なら create_trigger(persistent_session_id) で起こす。
 4. 働いている子（PR 待ちは数えない）が上限より少なければ次を起動：<次の候補と、その前提>。
-5. dispatch-state.md に記録し、次のチェックを 1 時間後に send_later で入れる（変化なしが 3 回続いたら止める）。
+5. 働いている子がいなくて起動できる項目も無ければ、SKILL.md §11 で次の波を作る。
+6. dispatch-state.md に記録し、次のチェックを 1 時間後に send_later で入れる（止めるのは SKILL.md §6 の条件のときだけ）。
 ```

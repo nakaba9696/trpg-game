@@ -1,4 +1,10 @@
 name: CI
+# 検証のジョブを並べ、最後の「CI result」が全部を needs で待って成否を出す。
+# ルールセットの必須チェックは「CI result」だけにする（setup.md §2）。ジョブを足しても needs に加えるだけで、ルールセットは直さずに済む。
+# <検証のコマンド> と Build の step はゲームに合わせて書き換える。Actions は full SHA で固定し、pull_request_target は使わない。
+#
+# 同時に動けるランナーが少ない（1〜2 台）とき：ジョブを増やすと待ち行列で遅くなる。その場合は test を 1 つにまとめるか、
+# まとめ役を置かずに最後のテストジョブが他のジョブを API で待つ形にする（元のゲームではそうした）。
 on:
   push:
     branches: [main]
@@ -10,54 +16,36 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  # テストは 2 つのジョブに分ける（T2。分け方は tests/run.mjs の SHARD と WEIGHT。1/2 と 2/2 で全部の確認が一度ずつ走る）。
-  # 同時に動けるランナーが 1〜2 台しかないので、ジョブは 2 つまで。まとめ役のジョブは作らず、
-  # 「CI result」が 2/2 を動かしたあと、Test 1/2 の結果を待って一緒に成否を出す（ルールセットの必須チェックは「CI result」だけ）。
-  # 1 つのジョブにまとめると、いまの中身で 20 分の timeout に近い（テストが増えて 2/2 が 20 分を超えたので、timeout は 35 分に延ばした。main の 5 分割の合計が約 21 分）。
-  test1:
-    name: Test 1/2
+  test:
+    name: Test ${{ matrix.shard }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # テストを分けないなら shard: ["1/1"] にして env の SHARD を消す
+        shard: ["1/2", "2/2"]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Build
-        run: node tools/build.mjs
+        run: <ビルドのコマンド（不要なら step ごと消す。例：node tools/build.mjs）>
       - name: Test
-        run: node tests/run.mjs
+        run: <検証のコマンド（例：node tests/run.mjs）>
         env:
-          SHARD: 1/2
+          SHARD: ${{ matrix.shard }}
   result:
     name: CI result
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
-    permissions:
-      contents: read
-      actions: read
+    timeout-minutes: 5
+    needs: [test]
+    # 前のジョブが失敗・取り消しでも必ず走り、ここで成否を決める
+    if: ${{ always() }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Build
-        run: node tools/build.mjs
-      - name: Test
-        run: node tests/run.mjs
+      - name: Check
         env:
-          SHARD: 2/2
-      - name: Wait for Test 1/2
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          RUN_ID: ${{ github.run_id }}
-          ATTEMPT: ${{ github.run_attempt }}
+          RESULT: ${{ needs.test.result }}
         run: |
-          while :; do
-            s=$(gh api "repos/$REPO/actions/runs/$RUN_ID/attempts/$ATTEMPT/jobs?per_page=100" --jq '.jobs[] | select(.name == "Test 1/2") | "\(.status) \(.conclusion)"')
-            echo "Test 1/2: ${s:-（まだ無い）}"
-            case "$s" in
-              "completed success") exit 0 ;;
-              completed*) exit 1 ;;
-            esac
-            sleep 20
-          done
+          echo "test: $RESULT"
+          [ "$RESULT" = success ]

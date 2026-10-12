@@ -10,14 +10,14 @@
    - ネットワーク：標準のままでよい
    - セットアップスクリプト：検証に要る道具を入れる（Node だけで足りるなら空でよい。Node はクラウドの環境に入っている）。
    - 子はこの環境を受け継ぐ（`create_session` で `environment_id` を省くと、配り役と同じ環境になる）。
-3. **子の考える深さ**（任意）：`.claude/settings.json` に `"effortLevel": "high"` を足す。子は main から始まるので、main に入っている必要がある。
-   モデルは `create_session` の `model` で渡す（持ち主が決める）。
+3. **`.claude/settings.json`** をキットの `templates/.claude/settings.json` から置く（コミットへの自動署名を切る `includeCoAuthoredBy: false`、
+   子の考える深さ `effortLevel`）。子は main から始まるので、main に入っている必要がある。モデルは `create_session` の `model` で渡す（持ち主が決める）。
 
 ## 2. CI とマージの守り（持ち主が一度だけ）
 並行して出る PR が main で組み合わさって落ちないようにする。
-1. **必須チェックを 1 つ決める**。例：`.github/workflows/ci.yml` の **`CI result`**。
-   ゲームが CI のジョブを足したら、全部を `needs` に持つまとめのジョブ（例 `CI result`：どれかが失敗か取り消しなら落ちる）を作り、
-   それだけを必須にすると、ジョブが増えても設定を直さずに済む。
+1. **必須チェックを 1 つ決める**。キットの `templates/.github/workflows/ci.yml` の **`CI result`** がその形：
+   検証のジョブ全部を `needs` に持ち `if: always()` で必ず走るまとめのジョブ（どれかが失敗か取り消しなら落ちる）。
+   それだけを必須にすると、ジョブが増えても `needs` に足すだけでルールセットは直さずに済む。
 2. 自動の版上げ（release.yml）を使うなら、そのためのトークンを入れる。使わないなら不要。
 3. **ルールセット**（Settings → Rules → Rulesets、default branch）：
    - **Require status checks to pass** に 1 の必須チェック。
