@@ -1015,6 +1015,22 @@
    "memo": "古道具屋。品物をじっと見せる"
   },
   {
+   "id": "sigrun",
+   "group": "named",
+   "name": "シグルン",
+   "file": "assets/portraits/sigrun.webp",
+   "identity": "1girl, mature female, adult, woman, 41 years old, tall, lean, weathered skin, dark brown hair with grey streaks, short hair, messy hair tied back, grey eyes, (black eyepatch over right eye:1.2), scar under eyepatch, tired eyes, faint wrinkles, crow's feet, thin lips, grey hooded travel cloak, old torn claw marks on cloak shoulder, worn leather armor over linen shirt, sword at hip",
+   "tags": "mercenary, adventurer, standing, arms at sides, one-eyed",
+   "face": "tired, expressionless, closed mouth",
+   "variants": {
+    "joy": "faint smile, closed mouth, softened eye",
+    "anger": "glaring, frown, clenched teeth",
+    "sorrow": "sad, looking down, downturned mouth",
+    "fun": "smirk, wry smile, closed mouth"
+   },
+   "memo": "片目の女冒険者。使徒を長く追っている。右目に眼帯。灰色の外套の肩に古い爪痕。寡黙でぶっきらぼう、疲れているが芯は強い。酒場の隅で安酒を舐めている。十指のシグとは別人"
+  },
+  {
    "id": "bertrand",
    "group": "c2",
    "name": "ベルトラン",

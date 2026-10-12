@@ -174,7 +174,7 @@
 | `assets/portraits/ganzou.webp` | ガンゾウ | 型：`brute`<br>見た目（固定）：1boy, male focus, man, 50 years old, very muscular, burly, tan skin, orange hair, short hair, crew cut, long sideburns, blue eyes, round eyes, thick eyebrows, tattoo on shoulder, white work kimono, open collar, rope belt, salt crystals on arms, brass weight in hand<br>arms crossed, standing by a salt pan<br>表情：intimidating grin<br>喜（`_joy`）：booming laugh<br>怒（`_anger`）：furious, shouting, veins<br>哀（`_sorrow`）：sad, looking at salt in palm<br>楽（`_fun`）：grin, tossing salt to a child<br>得意げ（`_smug`）：smug, holding a polished weight<br>真剣（`_serious`）：serious, weighing salt<br>困り（`_troubled`）：troubled, scratching head | C12・名のある人。シェルアーク諸島の塩の島ソルネの塩田の顔役。分銅を一つだけ拭く。子どもには塩をただでやる |
 | `assets/portraits/yae.webp` | ヤエ | 見た目（固定）：1girl, old woman, 79 years old, very short, hunched, small, tan skin, white hair, hair bun, black eyes, narrow eyes, thin eyebrows, deep wrinkles, dark blue kimono, indigo kerchief, fishing net over shoulder<br>tugging at a net knot<br>表情：sharp knowing look<br>喜（`_joy`）：toothless laugh<br>怒（`_anger`）：scolding, pointing<br>哀（`_sorrow`）：sad, looking up at old nets<br>楽（`_fun`）：grin, holding a knot<br>真剣（`_serious`）：serious, inspecting a knot<br>ほんの少し笑う（`_faint_smile`）：slight smile, touching a seashell on the net<br>驚き（`_surprise`）：surprised, wide-eyed | C12・名のある人。シェルアーク諸島の網の島カラヴの網元の婆さま。結び目で結んだ者を言い当てる。古い網に帰らなかった者の持ち物を結ぶ |
 
-## 名のある人物：出来事・施設（22）
+## 名のある人物：出来事・施設（23）
 
 出来事や施設に出る、名前の決まった人（使徒の人の姿・眷属・宰相・店や宿の主など。使徒は `D.MAJIN` の id）。どの出来事に出るかは `src/ui/v4_assets.js` の `NAMED`。どの出来事でも同じ顔に固定してある。
 
@@ -202,6 +202,7 @@
 | `assets/portraits/albert.webp` | 司祭アルベルト | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, 36 years old, grey hair, long hair, brown eyes, sharp eyes, round pince-nez, white priest vestment, blue cape, sun emblem<br>priest, pushing up pince-nez<br>表情：calm | 鼻眼鏡の司祭。眼鏡を押し上げる癖 |
 | `assets/portraits/dominik.webp` | 串焼き屋のドミニク | 型：`brute`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 40 years old, fat, fair skin, black hair, short hair, crew cut, black eyes, round eyes, thick black mustache, big nose, white headband, black t-shirt, white apron, towel around neck<br>grilling skewers<br>表情：grin | 串焼き屋の親父 |
 | `assets/portraits/neumann.webp` | 古道具屋のノイマン | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, old man, 57 years old, fair skin, grey hair, short hair, brown eyes, glasses, white shirt, black necktie, brown vest, jeweler's loupe on cord<br>antique dealer, holding a silver ring<br>表情：small smile | 古道具屋。品物をじっと見せる |
+| `assets/portraits/sigrun.webp` | シグルン | 見た目（固定）：1girl, mature female, adult, woman, 41 years old, tall, lean, weathered skin, dark brown hair with grey streaks, short hair, messy hair tied back, grey eyes, (black eyepatch over right eye:1.2), scar under eyepatch, tired eyes, faint wrinkles, crow's feet, thin lips, grey hooded travel cloak, old torn claw marks on cloak shoulder, worn leather armor over linen shirt, sword at hip<br>mercenary, adventurer, standing, arms at sides, one-eyed<br>表情：tired, expressionless, closed mouth<br>喜（`_joy`）：faint smile, closed mouth, softened eye<br>怒（`_anger`）：glaring, frown, clenched teeth<br>哀（`_sorrow`）：sad, looking down, downturned mouth<br>楽（`_fun`）：smirk, wry smile, closed mouth | 片目の女冒険者。使徒を長く追っている。右目に眼帯。灰色の外套の肩に古い爪痕。寡黙でぶっきらぼう、疲れているが芯は強い。酒場の隅で安酒を舐めている。十指のシグとは別人 |
 
 ## 型：名もない人（58）
 
