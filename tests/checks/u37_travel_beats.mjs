@@ -48,12 +48,11 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (S.mode === "combat") {
         if (!S.combat.u37seen) {
           S.combat.u37seen = 1;
-          // 襲撃（W6 の最後の戦い）：「何者かに襲われた」の行の前に、印が一つ増えている
-          const raidAt = S.log.findIndex((e, i) => i >= at() && /何者かに襲われた/.test(e.text || "") && !e.u37seen);
+          // 襲撃（W6 の最後の戦い）：「〜の途中、…に襲われた」の行の前に、印が一つ増えている
+          const raidAt = S.log.findIndex((e, i) => i >= at() && /途中.*襲われた/.test(e.text || "") && !e.u37seen);
           if (raidAt >= 0) {
             S.log[raidAt].u37seen = 1; fights++; raids++;
             if (beats(at()).filter((e) => e.u37.kind === "road").length !== n + fights) F("襲撃の前に区切りの印が無い");
-            if (!(S.log[raidAt - 1] && S.log[raidAt - 1].u37)) F("襲撃の行のすぐ前が区切りの印でない");
           }
         }
         const a = G.actions().flatMap((g) => g.list).find((x) => x.id === "cb:attack") || G.actions()[0].list[0];
@@ -99,6 +98,28 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     G2.act("travel:forest");
     if (S2.travel || S2.loc !== "forest") F("出来事の無い旅でそのまま着かない");
     if (S2.log.slice(n0 - 1).some((e) => e.u37)) F("出来事の無い旅に区切りの印がある");
+  }
+  // 襲撃だけの旅：「何者かに襲われた」の前に印、戦いのあとは着かずに待ち、到着の印から着く
+  {
+    const G4 = loadEngine();
+    const S4 = start(G4, 3704, "karna");
+    G4.w6.count = () => 0;
+    G4.w6.raidChance = () => 1;
+    G4.act("travel:forest");
+    const bi = S4.log.findIndex((e) => e.u37 && e.u37.kind === "road");
+    const ri = S4.log.findIndex((e) => /途中.*襲われた/.test(e.text || ""));
+    if (S4.mode !== "combat" || bi < 0 || !(ri > bi)) F("襲撃の前に区切りの印が無い");
+    else {
+      if (S4.combat.after === "arrive") F("襲撃の戦いが、終わればすぐ着く形のまま");
+      for (let i = 0; i < 80 && S4.mode === "combat"; i++) G4.act("cb:attack");
+      if (S4.over) F("襲撃で倒れた（確かめられない）");
+      else {
+        if (!(S4.travel && S4.w6 && S4.w6.u37hold)) F("襲撃の戦いのあとで待っていない");
+        G4.act("w6go");
+        const ai = S4.log.findIndex((e) => e.u37 && e.u37.kind === "arrive");
+        if (S4.loc !== "forest" || ai < 0) F("襲撃のあと、到着の印から着かない");
+      }
+    }
   }
   // 古いセーブ：u37 の項目が無い旅の途中でも、先へ進めて着く
   {
