@@ -1,6 +1,6 @@
 // Q7：右上の道具の列を一か所に・設定を一つの窓に（ui/zz_q7_topbar.js・ui/zz_q7_topbar.css。画面は DOM なしでは動かないので、作りを読んで確かめる。
 // 実際の並び・はみ出し・ボタンの数は tools/shots_q7_topbar.mjs が Chromium で確かめる）
-// - 並べる順（持ち主の声「右上の配置、順番がおかしい」）：図鑑・地図・依頼・ステータス ｜ ログ・トロフィーと墓碑（狭い画面では「…」に畳む）｜ システム・設定
+// - 並べる順（持ち主の声「右上の配置、順番がおかしい」。U36 で「ステータスを一番左にして、依頼を左から 2 番目に」）：ステータス・依頼・図鑑・地図 ｜ ログ・トロフィーと墓碑（狭い画面では「…」に畳む）｜ システム・設定
 // - セーブ・ロード・タイトルへは「システム」の一つのボタンの一覧に（持ち主の声「セーブ・ロード・タイトル画面は一個にまとめていい」）。S・L の近道はそのまま
 // - タイトルへ：確かめてから、中断の枠に保存して戻る
 // - 帯の下の段（U11 の図鑑・地図・依頼の並び）を外す。図鑑の赤い「！」は data-codex-open の付いた右上の図鑑に
@@ -18,9 +18,9 @@ export default ({ fail }) => {
   const js = read("ui/zz_q7_topbar.js"), css = read("ui/zz_q7_topbar.css");
   const list = (name) => { const m = new RegExp(`const ${name} = \\[([^\\]]*)\\]`).exec(js); return m ? [...m[1].matchAll(/"([^"]+)"/g)].map((x) => x[1]) : null; };
   const main = list("MAIN"), more = list("MORE"), system = list("SYSTEM"), hide = list("HIDE");
-  if (!main || main.join(",") !== "#openCodex,#openMap,#q7Quests,#openSheet") F(`右上の並びが違う：${main}`);
+  if (!main || main.join(",") !== "#openSheet,#q7Quests,#openCodex,#openMap") F(`右上の並びが違う：${main}`);
   if (!more || more.join(",") !== "#openLog,#openTrophy") F(`「…」に畳むものが違う：${more}`);
-  if (!system || system.join(",") !== "#q7TopSave,#q7TopLoad,#q7ToTitle") F(`「システム」の一覧が違う：${system}`);
+  if (!system || system.join(",") !== "#q7TopSave,#q7TopLoad,#u18SysLog,#q7ToTitle,#u36SysReset") F(`「システム」の一覧が違う：${system}`);
   if (!/tools\.append\(more, moreBtn, sysWrap, setBtn\)/.test(js)) F("右端が「…」・システム・設定の順でない");
   if (!/h\("button", "btn q7sysbtn", "システム"\)/.test(js) || !/sysBtn\.id = "q7System"/.test(js)) F("「システム」のボタンが無い");
   if (!/ui\.topOrder = \(\) => \[\.\.\.MAIN, \.\.\.MORE, "#q7System", "#openSettings"\]/.test(js)) F("G.ui.topOrder が新しい並びと違う");
