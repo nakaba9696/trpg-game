@@ -42,6 +42,7 @@
 | gerhard | 表情によって剣の模様が違う（持ち主） |
 | gramont | cold・fun・serious：クラバットに柄 |
 | graul | 背景が白（全部） |
+| greol | 表情によって別人になる（持ち主） |
 | greiol | 背景が白（全部）。基本：胸の飾り・襟の形が違う |
 | hermes | 表情によって服の模様が違う（持ち主）。fun だけ丸眼鏡・anger だけ帽子の帯が赤・帽子の染みがまちまち |
 | ingrid | 基本・exasperated・sorrow：眼鏡の縁が細い（ほかは太い黒縁） |
