@@ -15,12 +15,13 @@
 - **表情**は基本の絵の顔（プロンプトでは特徴のタグの後ろに付く）。差分（**喜・怒・哀・楽**と、その人らしい表情。種類は [moods.md](moods.md)）がある人は、基本の絵から差分を作る（`node tools/gen_portraits.mjs --variants`。`--mood shy,surprise` でその表情だけ。img2img で表情のタグだけ差し替える）。ファイルは `<id>_joy.webp`・`_shy` など。無い表情は近い表情か、基本の絵のまま。
 - png・jpg でもよい（同じ名前なら webp を使う）。埋め込みの合計が 12MB を超えるとビルドとテストが止まる（`tools/assets.mjs`）。
 
-## 画像のセッションへ：描くもの（14）
+## 画像のセッションへ：描くもの（15）
 
-下の二つの表が、今描いてほしい絵のすべて（R5c・R5d）。タグは一覧（json）に入っているので、そのまま作れる：
+下の表が、今描いてほしい絵のすべて（R5c・R5d）。タグは一覧（json）に入っているので、そのまま作れる：
 
 1. まだ描いていない型：`node tools/gen_portraits.mjs --only kind_villager_m_b,kind_villager_f_b,kind_merchant_m_b,kind_merchant_f_b,kind_guard_m_b,kind_priest_m_c,kind_noble_f_b,kind_soldier_m_b,kind_knight_m_b,kind_sailor_m_b,kind_mage_m_c,kind_beggar_f_b,kind_archer_m_b,kind_archer_f_b`
-2. 港の用心棒（魔物の一覧）は [monsters.md](monsters.md) の「描き直し待ち」。
+2. まだ描いていない名のある人：`node tools/gen_portraits.mjs --only sigrun`（下の「名のある人物：出来事（R5）」の表）
+3. 港の用心棒（魔物の一覧）は [monsters.md](monsters.md) の「描き直し待ち」。
 
 型の人・描き直し待ちの絵は、ネガティブに今の服の語（school uniform・necktie・zipper・hoodie など）が自動で足される（`tools/gen_portraits.mjs` の MODERN）。それでも今の服に見えたら `--new-seed` で作り直す。どれも胸から上・一人だけ・この世界（剣と魔法の中世風）の服。
 
@@ -202,6 +203,14 @@
 | `assets/portraits/albert.webp` | 司祭アルベルト | 型：`classic`<br>見た目（固定）：1boy, male focus, adult, 36 years old, grey hair, long hair, brown eyes, sharp eyes, round pince-nez, white priest vestment, blue cape, sun emblem<br>priest, pushing up pince-nez<br>表情：calm | 鼻眼鏡の司祭。眼鏡を押し上げる癖 |
 | `assets/portraits/dominik.webp` | 串焼き屋のドミニク | 型：`brute`<br>見た目（固定）：1boy, male focus, adult, middle-aged man, 40 years old, fat, fair skin, black hair, short hair, crew cut, black eyes, round eyes, thick black mustache, big nose, white headband, black t-shirt, white apron, towel around neck<br>grilling skewers<br>表情：grin | 串焼き屋の親父 |
 | `assets/portraits/neumann.webp` | 古道具屋のノイマン | 型：`ojisan`<br>見た目（固定）：1boy, male focus, adult, old man, 57 years old, fair skin, grey hair, short hair, brown eyes, glasses, white shirt, black necktie, brown vest, jeweler's loupe on cord<br>antique dealer, holding a silver ring<br>表情：small smile | 古道具屋。品物をじっと見せる |
+
+## 名のある人物：出来事（R5）（1）
+
+出来事に名前で出る人（`src/data/r5_named.js`。id はその表の id）。ゲームは `assets/portraits/<id>.webp` があればそれを出し、無いあいだは絵なし（型の絵・ほかの人の絵で代用しない）。見た目は本文から取り、本文に無い髪・目の色は本文と食い違わないように決める。表の人で、まだここに無い人は [a10_map.md](a10_map.md) の「絵なし」を見る（U36）。
+
+| ファイル | 名前 | 特徴のタグ | メモ |
+|---|---|---|---|
+| `assets/portraits/sigrun.webp` | 片目のシグルン | 見た目（固定）：1girl, mature female, adult, woman, 41 years old, lean, weathered skin, dark auburn hair, short hair, choppy hair, grey eyes, one eye, black eyepatch, scar across eyebrow, worn grey hooded cloak, old claw marks on cloak shoulder, leather armor, sword belt<br>mercenary, arms crossed, leaning on wall<br>表情：expressionless, sharp eyes | 使徒を追う片目の女（src/data/r5_named.js の sigrun。f2_majin_2・4・5・f2r_sigrun。仲間にもなる）。41 歳・傭兵・口数が少ない。本文にあるのは片目・灰色の外套・肩の古い爪痕だけで、髪と目の色は本文と食い違わないように決めた。描くまでは絵なし（十指のシグ sig.webp は別人） |
 
 ## 型：名もない人（58）
 

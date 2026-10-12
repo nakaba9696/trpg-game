@@ -12,6 +12,7 @@ export const MD_PATH = path.join(here, "..", "docs", "art", "portraits.md");
 const GROUPS = [
   ["c2", "名のある人物：キャラメモ", "持ち主のスプレッドシート「キャラメモ」の人（`src/data/c2_people.js`。id はデータの id）。時間軸は同じなので、どの冒険で会っても同じ一人＝一枚。出来事でも仲間になってからも同じ絵。"],
   ["named", "名のある人物：出来事・施設", "出来事や施設に出る、名前の決まった人（使徒の人の姿・眷属・宰相・店や宿の主など。使徒は `D.MAJIN` の id）。どの出来事に出るかは `src/ui/v4_assets.js` の `NAMED`。どの出来事でも同じ顔に固定してある。"],
+  ["r5", "名のある人物：出来事（R5）", "出来事に名前で出る人（`src/data/r5_named.js`。id はその表の id）。ゲームは `assets/portraits/<id>.webp` があればそれを出し、無いあいだは絵なし（型の絵・ほかの人の絵で代用しない）。見た目は本文から取り、本文に無い髪・目の色は本文と食い違わないように決める。表の人で、まだここに無い人は [a10_map.md](a10_map.md) の「絵なし」を見る（U36）。"],
   ["people", "型：名もない人", "名もない仲間・出来事の町の人と、名前だけの依頼人（id の無い人。R5b）が使い回す汎用のモブ絵。人物の種類 × 性別。13 歳未満は子ども、60 歳以上は老人の型を使う。年齢のある人は年頃（若者・壮年・老境）が同じか 8 歳以内の型だけ（二枚目 `_b`・三枚目 `_c` で年頃を埋める）。名のある人の絵はここに使わない。「まだ描いていない」は、年頃の合う型が無くて絵が出ていない人のための、描いてほしい型"],
 ];
 const cell = (s) => String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
@@ -75,14 +76,18 @@ export function renderPortraitsMd(data) {
   types.push("");
   // R5c・R5d：画像のセッションへ。描き直し待ち（今の絵は載せない。その人は絵なし）と、まだ描いていない型
   const redo = portraits.filter((p) => p.redraw);
-  const wanted = portraits.filter((p) => p.group === "people" && !p.redraw && !["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(here, "..", p.file.replace(/\.webp$/, "." + e)))));
-  if (redo.length || wanted.length) {
+  const drawn = (p) => ["webp", "png", "jpg", "jpeg"].some((e) => existsSync(path.join(here, "..", p.file.replace(/\.webp$/, "." + e))));
+  const wanted = portraits.filter((p) => p.group === "people" && !p.redraw && !drawn(p));
+  const wantedNamed = portraits.filter((p) => p.group === "r5" && !p.redraw && !drawn(p)); // U36：名のある人でまだ絵の無い人
+  if (redo.length || wanted.length || wantedNamed.length) {
     const ids = (a) => a.map((p) => p.id).join(",");
-    L.push(`## 画像のセッションへ：描くもの（${redo.length + wanted.length}）`, "");
-    L.push("下の二つの表が、今描いてほしい絵のすべて（R5c・R5d）。タグは一覧（json）に入っているので、そのまま作れる：", "");
+    L.push(`## 画像のセッションへ：描くもの（${redo.length + wanted.length + wantedNamed.length}）`, "");
+    L.push("下の表が、今描いてほしい絵のすべて（R5c・R5d）。タグは一覧（json）に入っているので、そのまま作れる：", "");
     if (redo.length) L.push(`1. 描き直し：\`node tools/gen_portraits.mjs --only ${ids(redo)} --force --new-seed\`（今のファイルを上書きする。作ると一覧の \`redraw\` が消え、次のビルドから載る）`);
-    if (wanted.length) L.push(`${redo.length ? 2 : 1}. まだ描いていない型：\`node tools/gen_portraits.mjs --only ${ids(wanted)}\``);
-    L.push(`${(redo.length ? 1 : 0) + (wanted.length ? 1 : 0) + 1}. 港の用心棒（魔物の一覧）は [monsters.md](monsters.md) の「描き直し待ち」。`);
+    let no = redo.length ? 1 : 0;
+    if (wanted.length) L.push(`${++no}. まだ描いていない型：\`node tools/gen_portraits.mjs --only ${ids(wanted)}\``);
+    if (wantedNamed.length) L.push(`${++no}. まだ描いていない名のある人：\`node tools/gen_portraits.mjs --only ${ids(wantedNamed)}\`（下の「名のある人物：出来事（R5）」の表）`);
+    L.push(`${++no}. 港の用心棒（魔物の一覧）は [monsters.md](monsters.md) の「描き直し待ち」。`);
     L.push("", "型の人・描き直し待ちの絵は、ネガティブに今の服の語（school uniform・necktie・zipper・hoodie など）が自動で足される（`tools/gen_portraits.mjs` の MODERN）。それでも今の服に見えたら `--new-seed` で作り直す。どれも胸から上・一人だけ・この世界（剣と魔法の中世風）の服。", "");
   }
   if (redo.length) {

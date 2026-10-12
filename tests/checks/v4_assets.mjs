@@ -47,6 +47,8 @@ export default ({ G, fail, ok }) => {
       const n = G.V4_NAMED[p.id];
       if (!n) fail(`一覧の ${p.id} が v4_assets.js の NAMED にいない`);
       else for (const e of n.events || []) if (!D.EVENTS.some((x) => x.id === e)) fail(`NAMED の ${p.id} の出来事 ${e} が無い`);
+    } else if (p.group === "r5") { // U36：出来事に名前で出る人（src/data/r5_named.js）。描くまでは絵なし
+      if (!(D.R5_NAMED || {})[p.id]) fail(`一覧の ${p.id} が r5_named.js の人にいない`);
     } else if (p.group === "people") {
       m = /^kind_([a-z]+)_([mf])(_[bc])?$/.exec(p.id); // _b 二枚目・_c 三枚目（R5b：年頃を埋める型）
       if (!m || !G.PEOPLE[m[1]]) fail(`一覧の ${p.id} が人物の種類（G.PEOPLE）に当たらない`);
@@ -55,7 +57,7 @@ export default ({ G, fail, ok }) => {
   for (const id of Object.keys(G.V4_NAMED)) if (!seen.has(id)) fail(`NAMED の ${id} が一覧（docs/art/portraits.json）に無い`);
   for (const k of Object.keys(data.beasts || {})) if (!D.BEASTS[k]) fail(`一覧の獣 ${k} がゲームの獣にいない`);
   if (list.some((p) => /^hero_/.test(p.id))) fail("一覧に主人公の型（hero_*）が残っている（A10：主人公は絵なし）");
-  const order = list.map((p) => (p.group === "c2" || p.group === "named" ? 0 : 1));
+  const order = list.map((p) => (p.group === "c2" || p.group === "named" || p.group === "r5" ? 0 : 1));
   if (order.some((v, i) => i && v < order[i - 1])) fail("一覧で、名のある人物が型より先に並んでいない");
   const missC2 = Object.keys(D.C2_PEOPLE).filter((id) => !seen.has(id));
   if (missC2.length) fail(`キャラメモの人が一覧に無い：${missC2.join("、")}`);
