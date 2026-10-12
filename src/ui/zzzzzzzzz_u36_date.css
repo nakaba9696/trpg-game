@@ -1,0 +1,11 @@
+/* U36：左上の状態の窓の日付（ui/zzzzzz_u36_date.js）。一行で、折り返さない */
+#mbar .u36date { flex: none; white-space: nowrap; font-size: 12px; letter-spacing: .03em; color: var(--muted); }
+#mbar .u36date[hidden] { display: none; }
+/* PC：窓は二列の格子（名前｜📍、HP・MP・所持金｜…）。📍を一行目だけにして、その下（HP の行の右端）に日付を置く。行は増えない */
+body.u21pc:not(.u31m) #mbar .r11wbtn { grid-row: 1; }
+body.u21pc:not(.u31m) #mbar .u36date { grid-column: 2; grid-row: 2; justify-self: end; align-self: start; padding-top: 2px; font-size: 11.5px; letter-spacing: 0;
+  width: 0; display: flex; justify-content: flex-end; } /* 幅 0 で右端から左へはみ出させる（列の幅を広げて所持金を次の行に押し出さない） */
+body.u21pc:not(.u31m) #mbar .u36date[hidden] { display: none; }
+body.u21pc:not(.u31m) #mbar.hasface .u36date { grid-column: 3; }
+/* スマホ：上の帯の📍の隣に小さく */
+body.u31m #mbar .u36date { order: 0; flex: 0 1 auto; min-width: 2.4em; overflow: hidden; text-overflow: ellipsis; font-size: 11px; letter-spacing: 0; margin: 0 2px; align-self: center; }

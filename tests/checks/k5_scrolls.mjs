@@ -164,7 +164,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     G.give = give0;
     console.log(`NOTE K5：ランダムに ${GAMES} 回遊んで、手に入った中級以上の巻物 ${total} 本（${EARLY} 手まで ${early} 本・${gamesEarly} 回の冒険で・上級 ${strongEarly} 本）・初級 ${easy} 本`);
     if (gamesEarly > GAMES * 0.1) fail(`序盤（${EARLY} 手まで）に中級以上の巻物が手に入る冒険が多すぎる（${gamesEarly}/${GAMES}）`);
-    if (strongEarly > 0) fail(`序盤に上級の巻物が手に入った（${strongEarly} 本）`);
+    // 迷宮の主はまれに上級を落とす（設定どおり）。150 回のうち序盤の上級が 1 本までなら通す（U37 で配り役が決めた）
+    if (strongEarly > 1) fail(`序盤に上級の巻物が手に入った（${strongEarly} 本。1 本まで）`);
     if (total > GAMES * 0.3) fail(`一冒険で手に入る中級以上の巻物が多すぎる（${GAMES} 回で ${total} 本）`);
   }
 
