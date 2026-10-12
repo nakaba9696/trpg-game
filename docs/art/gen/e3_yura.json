@@ -1,0 +1,36 @@
+{
+ "id": "e3_yura",
+ "source": "recovered",
+ "exact": false,
+ "method": "txt2img",
+ "tool": "tools/gen_portraits.mjs --monsters",
+ "seed": 2992218939,
+ "seed_at": "2026-10-05T07:10:39.631Z",
+ "from": [
+  "<手元>/trpg-game2/docs/art/seeds_monsters.local.json",
+  "git d4215dd0f9（d4215dd0 2026-10-05 絵：人に化ける使徒 4 体（ベルファス・ディエラン・ヴァルグレア・ユズエル）の本性の絵を足し、戦いで出す）の一覧と設定を --dry で読んだ"
+ ],
+ "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, (dorontabi:1.3), (upside down:1.4), (otherworldly dream deity:1.3) shaped like a small sleeping child hanging inverted in the air, silver hair falling upward, eyes closed, (body below the chest dissolving into a swirl of stars and sand:1.2), (a giant inverted hourglass behind it:1.2), (several huge closed eyes floating around it:1.2), rings of floating sand, faint violet glow, serene, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly, solo, full body, standing, simple background, white background, fully clothed",
+ "batch_size": 1,
+ "n_iter": 1,
+ "override_settings_restore_afterwards": true,
+ "styles": [],
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "steps": 20,
+ "cfg_scale": 5.5,
+ "width": 1024,
+ "height": 1024,
+ "enable_hr": false,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, multiple monsters, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo",
+ "missing": [
+  "subseed（-1 として作った）",
+  "model のハッシュ（設定にはファイル名だけ）",
+  "style.local.json（手元の上書き。git に無い）"
+ ],
+ "note": "元の絵の生成。今の絵はそのあと手を加えた：作り直した絵 7 体（確認票 17）：背景を無地で描いて抜いた絵。描き直さなかった古い表情違いは外す（0e8639e503）",
+ "date": "2026-10-11T07:32:40+00:00"
+}

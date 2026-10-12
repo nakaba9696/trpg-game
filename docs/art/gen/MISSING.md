@@ -1,0 +1,71 @@
+# 生成の記録が見つからなかった絵
+
+796 枚。今の絵を入れたコミットごと（どれも描き直し・背景を抜くなどの道具で作り、seed を残していなかった）。作り直すときは、新しい記録が自動で残る（[README.md](README.md)）。
+
+## 582aee1a79：作り直した絵 61 体（確認票 14・15 で「よい」）：背景を抜いた絵と、しゃべる人物の表情違い（204 枚）
+
+ambroise_anger、ambroise_fun、ambroise_joy、ambroise_sorrow、aubin_anger、aubin_drunk、aubin_fun、aubin_joy、aubin_serious、aubin_sleepy、aubin_smug、aubin_sorrow、azlag_anger、azlag_fun、azlag_joy、azlag_sorrow、barnabe_anger、barnabe_cry、barnabe_fun、barnabe_joy、barnabe_panic、barnabe_serious、barnabe_shy、barnabe_sorrow、barnabe_surprise、dietrich_anger、dietrich_fun、dietrich_joy、dietrich_sorrow、dil_anger、dil_fun、dil_joy、dil_sorrow、doctor_anger、doctor_fun、doctor_joy、doctor_sorrow、erna_anger、erna_fun、erna_joy、erna_sorrow、felix_anger、felix_fun、felix_joy、felix_panic、felix_serious、felix_shy、felix_sorrow、felix_tired、ferida_anger、ferida_fun、ferida_joy、ferida_sorrow、gigra_anger、gigra_fun、gigra_joy、gigra_panic、gigra_shy、gigra_smug、gigra_sorrow、gigra_wicked、greol_anger、greol_fun、greol_joy、greol_sorrow、ilse_anger、ilse_fun、ilse_joy、ilse_sorrow、kind_adventurer_f_b、kind_priest_f_b、kind_ronin_f_b、lazare_anger、lazare_fun、lazare_joy、lazare_serious、lazare_shy、lazare_smug、lazare_sorrow、leopold_anger、leopold_fun、leopold_joy、leopold_sorrow、lucien_anger、lucien_exasperated、lucien_faint_smile、lucien_fun、lucien_joy、lucien_serious、lucien_sorrow、lucien_troubled、magda_anger、magda_fun、magda_joy、magda_sorrow、mirlene_anger、mirlene_fun、mirlene_joy、mirlene_sorrow、mordu_anger、mordu_fun、mordu_joy、mordu_sorrow、natalia_anger、natalia_fun、natalia_joy、natalia_sorrow、neilas_anger、neilas_fun、neilas_joy、neilas_sorrow、polf_anger、polf_fun、polf_joy、polf_serious、polf_sleepy、polf_smug、polf_sorrow、polf_surprise、radmila_anger、radmila_fun、radmila_joy、radmila_sorrow、rodolphe_anger、rodolphe_cold、rodolphe_exasperated、rodolphe_faint_smile、rodolphe_fun、rodolphe_joy、rodolphe_serious、rodolphe_sorrow、rudger_anger、rudger_fun、rudger_joy、rudger_sorrow、rufina_anger、rufina_fun、rufina_joy、rufina_sorrow、selevan_anger、selevan_cold、selevan_faint_smile、selevan_fun、selevan_joy、selevan_sorrow、selevan_sparkle、selevan_wicked、serios_anger、serios_fun、serios_joy、serios_sorrow、sheila_anger、sheila_fun、sheila_joy、sheila_sorrow、sieglinde_anger、sieglinde_fun、sieglinde_joy、sieglinde_sorrow、solenne_anger、solenne_fun、solenne_joy、solenne_panic、solenne_serious、solenne_shy、solenne_smitten、solenne_sorrow、solenne_troubled、tiria_anger、tiria_fun、tiria_joy、tiria_sorrow、titta_anger、titta_fun、titta_joy、titta_sorrow、trude_anger、trude_exasperated、trude_fun、trude_joy、trude_panic、trude_smug、trude_sorrow、trude_sparkle、valg_anger、valg_fun、valg_joy、valg_sorrow、vittorio_anger、vittorio_fun、vittorio_joy、vittorio_sorrow、yura_anger、yura_fun、yura_joy、yura_sorrow、yurien_anger、yurien_cold、yurien_faint_smile、yurien_fun、yurien_joy、yurien_pout、yurien_smug、yurien_sorrow
+
+## a7bfa9eb9c：立ち絵・魔物の絵：持ち主が確認ページでよいとした作り直し 31 件（表情差分を含めて 208 枚）を入れる（146 枚）
+
+adele_anger、adele_fun、adele_joy、adele_panic、adele_serious、adele_shy、adele_smug、adele_sorrow、bartolo_anger、bartolo_fun、bartolo_joy、bartolo_panic、bartolo_smug、bartolo_sorrow、bartolo_wicked、bride_anger、bride_cry、bride_fun、bride_joy、bride_pout、bride_smitten、bride_sorrow、celestin_anger、celestin_cold、celestin_faint_smile、celestin_fun、celestin_joy、celestin_sleepy、celestin_sorrow、celestin_surprise、clarisse_anger、clarisse_cry、clarisse_fun、clarisse_joy、clarisse_panic、clarisse_serious、clarisse_shy、clarisse_sorrow、iori_anger、iori_faint_smile、iori_fun、iori_joy、iori_serious、iori_shy、iori_sleepy、iori_sorrow、izra_anger、izra_fun、izra_joy、izra_serious、izra_shy、izra_sorrow、izra_sparkle、izra_surprise、kaidel_anger、kaidel_fun、kaidel_joy、kaidel_serious、kaidel_sorrow、kaidel_surprise、kaidel_troubled、margot_anger、margot_fun、margot_joy、margot_serious、margot_smitten、margot_smug、margot_sorrow、margot_sparkle、margot_wicked、musette_anger、musette_exasperated、musette_faint_smile、musette_fun、musette_joy、musette_sorrow、musette_tired、nora_anger、nora_cry、nora_fun、nora_joy、nora_pout、nora_shy、nora_sorrow、nora_sparkle、nora_surprise、oren_anger、oren_fun、oren_joy、oren_pout、oren_serious、oren_sorrow、oren_sparkle、pipinelle_anger、pipinelle_faint_smile、pipinelle_fun、pipinelle_joy、pipinelle_pout、pipinelle_sleepy、pipinelle_smug、pipinelle_sorrow、roswitha_anger、roswitha_faint_smile、roswitha_fun、roswitha_joy、roswitha_serious、roswitha_sorrow、roswitha_tired、roswitha_troubled、souhaku_anger、souhaku_faint_smile、souhaku_fun、souhaku_joy、souhaku_serious、souhaku_sleepy、souhaku_smitten、souhaku_sorrow、sylvestre_anger、sylvestre_faint_smile、sylvestre_fun、sylvestre_joy、sylvestre_serious、sylvestre_sorrow、sylvestre_tired、tsuyuha_anger、tsuyuha_exasperated、tsuyuha_faint_smile、tsuyuha_fun、tsuyuha_joy、tsuyuha_serious、tsuyuha_sleepy、tsuyuha_sorrow、tula_anger、tula_fun、tula_joy、tula_pout、tula_shy、tula_sorrow、tula_surprise、valdun_anger、valdun_faint_smile、valdun_fun、valdun_joy、valdun_serious、valdun_sorrow、valdun_troubled
+
+## 5ac0f916f4：A20：崩れを見直し、隙間を消した 301 枚だけを置き換える（74 枚）
+
+alicia_anger、alicia_cold、alicia_faint_smile、alicia_joy、alicia_smug、alicia_sorrow、baudouin_anger、baudouin_exasperated、baudouin_joy、baudouin_sorrow、berangere_anger、berangere_fun、berangere_shy、berangere_smug、berangere_sorrow、chezar_anger、chezar_cold、chezar_faint_smile、chezar_fun、chezar_joy、chezar_sorrow、chezar_wicked、dario_faint_smile、gauthier_anger、gauthier_faint_smile、gauthier_fun、gauthier_joy、gauthier_serious、gauthier_sorrow、gauthier_surprise、graul_anger、graul_cold、graul_faint_smile、graul_fun、graul_joy、graul_serious、graul_sorrow、greiol_anger、greiol_cold、greiol_faint_smile、greiol_fun、greiol_joy、greiol_serious、greiol_sorrow、greiol_surprise、katia_anger、katia_fun、katia_joy、katia_serious、katia_shy、katia_sorrow、katia_surprise、katia_troubled、kind_adventurer_m_b、kind_mage_m_b、kind_rogue_f_b、kind_rogue_m_b、kind_ronin_m_b、odette_anger、odette_cold、odette_faint_smile、odette_fun、odette_joy、odette_sorrow、odette_wicked、zerina_anger、zerina_surprise、zork_anger、zork_fun、zork_joy、zork_serious、zork_smug、zork_sorrow、zork_wicked
+
+## 113e5082a3：立ち絵・魔物の絵：持ち主が確認票 9 でよいとした絵を入れる（106 枚）（74 枚）
+
+annelise_anger、annelise_fun、annelise_joy、annelise_panic、annelise_shy、annelise_smug、annelise_sorrow、annelise_surprise、constance_anger、constance_cold、constance_faint_smile、constance_fun、constance_joy、constance_serious、constance_sorrow、constance_tired、dorothea_anger、dorothea_fun、dorothea_joy、dorothea_smitten、dorothea_smug、dorothea_sorrow、dorothea_surprise、farina_anger、farina_cold、farina_faint_smile、farina_fun、farina_joy、farina_panic、farina_sorrow、lisette_anger、lisette_fun、lisette_joy、lisette_sleepy、lisette_sorrow、lisette_sparkle、lisette_troubled、lisette_wicked、mirza_anger、mirza_cold、mirza_fun、mirza_joy、mirza_smitten、mirza_sorrow、mirza_wicked、raisha_anger、raisha_cold、raisha_faint_smile、raisha_fun、raisha_joy、raisha_sleepy、raisha_sorrow、rionetta_anger、rionetta_faint_smile、rionetta_fun、rionetta_joy、rionetta_serious、rionetta_sorrow、rionetta_troubled、shione_anger、shione_fun、shione_joy、shione_panic、shione_serious、shione_sorrow、shione_sparkle、shione_troubled、sixth_anger、sixth_cold、sixth_faint_smile、sixth_fun、sixth_joy、sixth_sorrow、sixth_surprise
+
+## 7a445d637c：作り直した絵 38 体（確認票 19〜21 で「よい」）（67 枚）
+
+bruno_anger、bruno_cry、bruno_fear、bruno_fun、bruno_joy、bruno_panic、bruno_serious、bruno_shy、bruno_sorrow、captain_anger、captain_faint_smile、captain_fun、captain_joy、captain_serious、captain_sorrow、captain_troubled、dario_sorrow、elnea_anger、elnea_cry、elnea_fear、elnea_fun、elnea_joy、elnea_panic、elnea_shy、elnea_sorrow、elnea_sparkle、filie_anger、filie_faint_smile、filie_fun、filie_joy、filie_panic、filie_sorrow、filie_tired、filie_troubled、gramont_anger、gramont_cold、gramont_fun、gramont_joy、gramont_serious、gramont_smug、gramont_sorrow、gustav_anger、gustav_fun、gustav_joy、gustav_panic、gustav_serious、gustav_smug、gustav_sorrow、gustav_wicked、kind_mage_f_b、takimaru_anger、takimaru_cry、takimaru_fun、takimaru_joy、takimaru_panic、takimaru_serious、takimaru_shy、takimaru_sorrow、takimaru_sparkle、valeon_fun、valeon_joy、valeon_serious、valeon_sorrow、valeon_sparkle、valeon_surprise、zalve_joy、zalve_smug
+
+## 6560aab60a：人物と魔物の絵 11 体（表情違いも）を直した絵にする（確認票 10 で持ち主がよいとしたもの）（52 枚）
+
+gerhard_anger、gerhard_fun、gerhard_joy、gerhard_serious、gerhard_sorrow、gerhard_sparkle、gerhard_surprise、liesel_anger、liesel_exasperated、liesel_fun、liesel_joy、liesel_shy、liesel_smug、liesel_sorrow、lumia_anger、lumia_faint_smile、lumia_fun、lumia_joy、lumia_pout、lumia_sleepy、lumia_smug、lumia_sorrow、malvina_anger、malvina_cold、malvina_faint_smile、malvina_fun、malvina_joy、malvina_serious、malvina_sorrow、otmar_anger、otmar_cold、otmar_fun、otmar_joy、otmar_serious、otmar_sorrow、otmar_tired、severin_anger、severin_cold、severin_cry、severin_fun、severin_joy、severin_smitten、severin_sorrow、severin_wicked、wolfram_anger、wolfram_faint_smile、wolfram_fun、wolfram_joy、wolfram_serious、wolfram_sorrow、wolfram_tired、wolfram_troubled
+
+## ed4a1e8249：確認票の直し：8 体と表情違い（輪郭をなめらかな半透明のふちに・すき間を透明に・顔を作り直し）（38 枚）
+
+boku_anger、boku_fear、boku_fun、boku_joy、boku_panic、boku_shy、boku_sorrow、boku_sparkle、hartmut_anger、hartmut_cry、hartmut_fun、hartmut_joy、hartmut_panic、hartmut_shy、hartmut_smitten、hartmut_sorrow、raios_anger、raios_fun、raios_joy、raios_serious、raios_sorrow、raios_surprise、raios_troubled、yurina_anger、yurina_cold、yurina_fun、yurina_joy、yurina_serious、yurina_sorrow、yurina_surprise、yuzuel_anger、yuzuel_cold、yuzuel_faint_smile、yuzuel_fun、yuzuel_joy、yuzuel_smug、yuzuel_sorrow、yuzuel_sparkle
+
+## ce0c893f50：人物 4 人・魔物 1 体の絵を直す（背景を抜き直し、表情違いの形をそろえる）（32 枚）
+
+anselmo_anger、anselmo_drunk、anselmo_faint_smile、anselmo_fun、anselmo_joy、anselmo_serious、anselmo_sorrow、anselmo_wicked、gensai_anger、gensai_cold、gensai_faint_smile、gensai_fun、gensai_joy、gensai_serious、gensai_sorrow、gensai_wicked、rui_anger、rui_cry、rui_faint_smile、rui_fun、rui_joy、rui_sleepy、rui_sorrow、rui_surprise、timo_anger、timo_cry、timo_fun、timo_joy、timo_serious、timo_shy、timo_smitten、timo_sorrow
+
+## a5bb954d77：後半の人物・魔物の隙間も抜く：その場所の背景の色と比べ、魔物の股や腕の間の大きな塊も抜く（A20）（30 枚）
+
+alicia_fun、baudouin_faint_smile、baudouin_fun、baudouin_serious、berangere_joy、berangere_pout、dario_anger、dario_fun、dario_joy、dario_serious、dario_surprise、kind_priest_m_b、sig_anger、sig_fun、sig_joy、sig_serious、sig_sorrow、sig_surprise、sig_troubled、zalve_anger、zalve_cold、zalve_fun、zalve_sorrow、zalve_surprise、zerina_exasperated、zerina_fun、zerina_joy、zerina_smug、zerina_sorrow、zerina_sparkle
+
+## d46c8a2e19：人物と魔物の絵 4 体（表情違いも）を直した絵にする（確認票 11 で持ち主がよいとしたもの）（21 枚）
+
+aurelia_anger、aurelia_cold、aurelia_fun、aurelia_joy、aurelia_serious、aurelia_sorrow、aurelia_wicked、bertrand_anger、bertrand_cold、bertrand_faint_smile、bertrand_fun、bertrand_joy、bertrand_sorrow、bertrand_troubled、salphiel_anger、salphiel_cold、salphiel_faint_smile、salphiel_fun、salphiel_joy、salphiel_serious、salphiel_sorrow
+
+## 039e311d7f：立ち絵・魔物の絵：持ち主が確認ページ 4 でよいとした 7 件（表情差分を含む）を入れる（15 枚）
+
+hermes_anger、hermes_fun、hermes_joy、hermes_sorrow、hermes_sparkle、hermes_surprise、hermes_tired、noeris_anger、noeris_cold、noeris_fun、noeris_joy、noeris_smug、noeris_sorrow、noeris_surprise、noeris_wicked
+
+## 5d80b10e54：作り直した絵 10 体（確認票 16 で「よい」）（12 枚）
+
+matthias_anger、matthias_fun、matthias_joy、matthias_sorrow、violaine_anger、violaine_fun、violaine_joy、violaine_sorrow、yoihime_anger、yoihime_fun、yoihime_joy、yoihime_sorrow
+
+## 91c6739d5a：立ち絵・魔物の絵：持ち主が確認ページ 3 でよいとした 12 件（angelica は表情差分を含む）を入れる（8 枚）
+
+angelica_anger、angelica_fun、angelica_joy、angelica_panic、angelica_shy、angelica_smug、angelica_sorrow、angelica_surprise
+
+## 0e8639e503：作り直した絵 7 体（確認票 17）：背景を無地で描いて抜いた絵。描き直さなかった古い表情違いは外す（8 枚）
+
+ingrid_anger、ingrid_fun、ingrid_joy、ingrid_sorrow、jonas_anger、jonas_fun、jonas_joy、jonas_sorrow
+
+## 9716fdf025：ingrid・jonas の表情違い 7 枚（確認票 18 で「よい」）（7 枚）
+
+ingrid_exasperated、ingrid_faint_smile、ingrid_pout、ingrid_sparkle、jonas_panic、jonas_serious、jonas_shy
+
+## 8e27c503a7：立ち絵・魔物の絵：持ち主が確認ページ 5 でよいとした 5 件（marion は表情差分を含む）を入れる（7 枚）
+
+marion_anger、marion_exasperated、marion_faint_smile、marion_fun、marion_joy、marion_serious、marion_sorrow
+
+## a78d332309：人物と魔物の絵で、髪のすき間・腕と胴のあいだに残った背景も透明にする（A20）（1 枚）
+
+valeon_anger

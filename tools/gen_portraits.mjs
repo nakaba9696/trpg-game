@@ -29,6 +29,7 @@
 //   --type <型>[,<型>…]  その型の男だけ（例：--type ojisan --force で渋いおっさんを作り直す。--only と重ねられる。--variants でも使える）
 // 絵の版（A9）：style.json の art が今の版。基本の絵を作ると一覧のその人に art（今の版）を書き、redo（作り直しの印）を消す。
 //   差分は、その人の基本の絵の版（一覧の art。無ければ 1）にそろえ、style.json の art_drop[版] の語（1 なら ikezawa shin）を prefix から外して作る
+// 生成の記録：作った絵ごとに、同じ絵を出せる設定（実際の seed・モデルのハッシュ・下地の sha1 など）を docs/art/gen/<id>.json に残す（tools/gen_record.mjs）。
 // 外部のライブラリは使わない（Node 18 以上の fetch）。
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -37,6 +38,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import * as P from "./portraits.mjs";
 import * as M from "./monsters.mjs";
+import { genRecord, writeGenRecord, sha1, sha1File } from "./gen_record.mjs";
 
 // ---------------------------------------------------------------- 引数
 const argv = process.argv.slice(2);
@@ -171,14 +173,18 @@ function bodyOf(p) {
 }
 async function txt2img(p) {
   const url = (style.url || "http://127.0.0.1:7860").replace(/\/$/, "") + "/sdapi/v1/txt2img";
-  const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(bodyOf(p)) });
+  const body = bodyOf(p);
+  const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (!res.ok) throw new Error(`${url} が ${res.status}：${(await res.text()).slice(0, 300)}`);
   const j = await res.json();
   if (!j.images || !j.images[0]) throw new Error("画像が返ってこない");
   let seed = null;
   try { seed = JSON.parse(j.info).seed; } catch {}
-  return { png: Buffer.from(j.images[0].split(",").pop(), "base64"), seed };
+  return { png: Buffer.from(j.images[0].split(",").pop(), "base64"), seed, body, info: j.info };
 }
+
+// 縮め方（記録に残す）
+const postOf = (small) => ({ resize: [size.width, size.height], by: small.by, webp_quality: quality, file_sha1: sha1(small.buf) });
 
 // ---------------------------------------------------------------- 保存（必ず縮める）
 let cwebp = null;
@@ -216,7 +222,7 @@ async function shrink(id, png) {
     writeFileSync(tmp, png);
     try {
       execFileSync(cwebp, ["-quiet", "-q", String(quality), "-resize", String(size.width), String(size.height), tmp, "-o", out]);
-      return { buf: readFileSync(out), ext: "webp" };
+      return { buf: readFileSync(out), ext: "webp", by: "cwebp" };
     } catch (e) { console.warn(`\ncwebp に失敗した（${e.message}）。WebUI で縮める`); }
     finally { rmSync(tmp, { force: true }); rmSync(out, { force: true }); }
   }
@@ -224,7 +230,7 @@ async function shrink(id, png) {
     try {
       const buf = await shrinkByWebUI(png);
       const ext = kindOf(buf);
-      if (ext === "webp" || ext === "jpg") return { buf, ext };
+      if (ext === "webp" || ext === "jpg") return { buf, ext, by: "webui extra-single-image (Lanczos, crop)" };
       webuiShrink = false;
       console.warn(`\nWebUI が webp で返さなかった（${ext}）`);
     } catch (e) { webuiShrink = false; console.warn(`\nWebUI で縮められなかった（${e.message}）`); }
@@ -256,9 +262,10 @@ for (const p of todo) {
   process.stdout.write(`${p.id}（${p.name}${isEld(p) ? "・異形" : ""}）… `);
   quality = qualityOf(p);
   try {
-    const { png, seed } = await txt2img(p);
+    const { png, seed, body, info } = await txt2img(p);
     const small = await shrink(p.id, png);
     const out = save(p.id, small);
+    writeGenRecord(root, p.id, genRecord(body, info, 0, { id: p.id, method: "txt2img", tool: `tools/gen_portraits.mjs${MON ? " --monsters" : ""}`, post: postOf(small) }));
     if (Number.isInteger(seed)) { seeds[p.id] = { seed, at: new Date().toISOString() }; writeFileSync(seedsPath, JSON.stringify(seeds, null, 1) + "\n"); }
     // 絵の版（A9）：新しく描いた基本の絵の版を一覧に残す（差分をこの版の prefix で作るため）。作り直しの印（redo）と描き直し待ち（redraw。R5c）も消す（描いた絵が次のビルドから載る）
     if (p.redraw || (!MON && (p.art !== P.artNow(style) || p.redo))) { if (!MON) p.art = P.artNow(style); delete p.redo; delete p.redraw; writeFileSync(JSON_PATH, JSON.stringify(data, null, 1) + "\n"); writeFileSync(MD_PATH, KIND.render(data)); }
@@ -320,6 +327,7 @@ async function runVariants() {
       if (!r.images || !r.images[0]) throw new Error("画像が返ってこない");
       const small = await shrink(j.id, Buffer.from(r.images[0].split(",").pop(), "base64"));
       const out = save(j.id, small);
+      writeGenRecord(root, j.id, genRecord(b, r.info, 0, { id: j.id, method: "img2img", tool: "tools/gen_portraits.mjs --variants", base: { file: path.relative(root, j.base).split(path.sep).join("/"), sha1: sha1File(j.base) }, post: postOf(small) }));
       console.log(`${path.relative(root, out)}  ${(small.buf.length / 1024).toFixed(0)}KB`);
       made++;
     } catch (e) {

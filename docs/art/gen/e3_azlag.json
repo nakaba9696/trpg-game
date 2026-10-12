@@ -1,0 +1,36 @@
+{
+ "id": "e3_azlag",
+ "source": "recovered",
+ "exact": false,
+ "method": "txt2img",
+ "tool": "tools/gen_portraits.mjs --monsters",
+ "seed": 862175747,
+ "seed_at": "2026-10-05T07:11:39.621Z",
+ "from": [
+  "<手元>/trpg-game2/docs/art/seeds_monsters.local.json",
+  "git d4215dd0f9（d4215dd0 2026-10-05 絵：人に化ける使徒 4 体（ベルファス・ディエラン・ヴァルグレア・ユズエル）の本性の絵を足し、戦いで出す）の一覧と設定を --dry で読んだ"
+ ],
+ "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, (dorontabi:1.3), (colossal black bird god:1.3), (silver steel blade wings:1.4), (mechanical wings of overlapping sword blades:1.3), no soft feathers, enormous blade wings spread wide, blades raining down, golden glowing eyes with slit pupils, sharp steel beak, crest of swords, talons, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly, no humans, monster, creature, solo, full body, simple background, white background",
+ "batch_size": 1,
+ "n_iter": 1,
+ "override_settings_restore_afterwards": true,
+ "styles": [],
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "steps": 20,
+ "cfg_scale": 5.5,
+ "width": 1024,
+ "height": 1024,
+ "enable_hr": false,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, 1girl, 1boy, human, humanoid face, multiple monsters, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo",
+ "missing": [
+  "subseed（-1 として作った）",
+  "model のハッシュ（設定にはファイル名だけ）",
+  "style.local.json（手元の上書き。git に無い）"
+ ],
+ "note": "元の絵の生成。今の絵はそのあと手を加えた：人物と魔物の絵 11 体（表情違いも）を直した絵にする（確認票 10 で持ち主がよいとしたもの）（6560aab60a）",
+ "date": "2026-10-10T15:54:32+00:00"
+}

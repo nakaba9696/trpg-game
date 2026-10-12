@@ -20,6 +20,7 @@ import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { JSON_PATH, MD_PATH, renderScenesMd } from "./scenes.mjs";
+import { genRecord, writeGenRecord, sha1 } from "./gen_record.mjs";
 
 const argv = process.argv.slice(2);
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -104,11 +105,12 @@ async function call(p, method, body) {
   return res.json();
 }
 async function txt2img(s, v) {
-  const j = await call("/sdapi/v1/txt2img", "POST", bodyOf(s, v));
+  const body = bodyOf(s, v);
+  const j = await call("/sdapi/v1/txt2img", "POST", body);
   if (!j.images || !j.images[0]) throw new Error("画像が返ってこない");
   let seed = null;
   try { seed = JSON.parse(j.info).seed; } catch {}
-  return { png: Buffer.from(j.images[0].split(",").pop(), "base64"), seed };
+  return { png: Buffer.from(j.images[0].split(",").pop(), "base64"), seed, body, info: j.info };
 }
 let cwebp = null;
 try { execFileSync("cwebp", ["-version"], { stdio: "ignore" }); cwebp = "cwebp"; } catch {}
@@ -174,8 +176,10 @@ for (const { s, v } of todo) {
   if (dry) { const b = bodyOf(s, v); console.log(`\n[${s.id}] ${s.name}${tag}  seed ${b.seed}${Number.isInteger(s.seed) && !newSeed ? "（一覧）" : ""}\n  + ${b.prompt}`); continue; }
   process.stdout.write(`${s.id}（${s.name}${tag}）… `);
   try {
-    const { png, seed } = await txt2img(s, v);
+    const { png, seed, body, info } = await txt2img(s, v);
     const small = await shrink(s.id, png);
+    // 生成の記録（docs/art/gen/scene_<id>.json。試しの案は scene_<id>.<案>）
+    writeGenRecord(root, `scene_${trial && v !== main ? `${s.id}.${v}` : s.id}`, genRecord(body, info, 0, { id: s.id, method: "txt2img", tool: "tools/gen_scenes.mjs", post: { resize: [save.width, save.height], webp_quality: small.q, by: cwebp ? "cwebp" : "webui", file_sha1: sha1(small.buf) } }));
     let out;
     if (trial) {
       out = put(trialDir, `${s.id}.${v}`, small);

@@ -1,0 +1,42 @@
+{
+ "id": "izra",
+ "source": "recovered",
+ "exact": false,
+ "method": "txt2img",
+ "tool": "tools/gen_portraits.mjs",
+ "seed": 1272143040,
+ "seed_at": "2026-10-03T04:11:50.760Z",
+ "from": [
+  "<手元>/trpg-game2/docs/art/seeds.local.json",
+  "git 6de251f586（6de251f5 2026-10-03 絵：まだ絵の無い仲間 31 人の基本の立ち絵（C5・C6・C7・C8））の一覧と設定を --dry で読んだ"
+ ],
+ "redo_try": {
+  "seed": 3623531964,
+  "at": "2026-10-09T11:18:32.858Z",
+  "file": "<手元>/trpg-redo/docs/art/seeds.local.json",
+  "note": "trpg-redo で --style（緑の背景の suffix）を上書きして作った作り直しの試しの seed。今の絵とは別の絵になる（確かめた）"
+ },
+ "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, adult woman, 27 years old, bird girl, hawk wings on back, brown wings, one wing with black feathers, tall, slender, dark brown hair, long hair, golden eyes, sharp eyes, scar on cheek, old leather collar on neck, dark red leather armor, spear, perched on a rock, wings half spread, confident smirk, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
+ "batch_size": 1,
+ "n_iter": 1,
+ "override_settings_restore_afterwards": true,
+ "styles": [],
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "steps": 20,
+ "cfg_scale": 5.5,
+ "width": 1024,
+ "height": 1280,
+ "enable_hr": false,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo",
+ "missing": [
+  "subseed（-1 として作った）",
+  "model のハッシュ（設定にはファイル名だけ）",
+  "style.local.json（手元の上書き。git に無い）"
+ ],
+ "note": "元の絵の生成。今の絵はそのあと手を加えた：立ち絵・魔物の絵：持ち主が確認ページでよいとした作り直し 31 件（表情差分を含めて 208 枚）を入れる（a7bfa9eb9c）",
+ "date": "2026-10-10T10:30:12+09:00"
+}

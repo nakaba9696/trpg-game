@@ -1,0 +1,50 @@
+{
+ "id": "gauthier",
+ "source": "recovered",
+ "exact": true,
+ "method": "txt2img",
+ "tool": "tools/gen_portraits.mjs",
+ "seed": 1538490165,
+ "seed_at": "2026-10-03T04:26:41.009Z",
+ "from": [
+  "<手元>/trpg-game2/docs/art/seeds.local.json",
+  "git 1e529dbc52（1e529dbc 2026-10-03 絵：まだ絵の無い宿敵・使徒・眷属・町の人 26 人の基本の立ち絵）の一覧と設定を --dry で読んだ"
+ ],
+ "redo_try": {
+  "seed": 1538490165,
+  "at": "2026-10-03T04:26:41.009Z",
+  "file": "<手元>/trpg-redo/docs/art/seeds.local.json",
+  "note": "trpg-redo で --style（緑の背景の suffix）を上書きして作った作り直しの試しの seed。今の絵とは別の絵になる（確かめた）"
+ },
+ "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, old man, 58 years old, very tall, burly, broad shoulders, tan skin, white hair, long hair, low ponytail, green eyes, gentle eyes, braided white beard, burn scars on hand, one-armed, empty left sleeve pinned up, white apron dusted with flour, headscarf, holding a rolling pin, standing in front of a bakery, gentle smile, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
+ "batch_size": 1,
+ "n_iter": 1,
+ "override_settings_restore_afterwards": true,
+ "styles": [],
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "steps": 20,
+ "cfg_scale": 5.5,
+ "width": 1024,
+ "height": 1280,
+ "enable_hr": false,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi",
+ "missing": [
+  "subseed（-1 として作った）",
+  "model のハッシュ（設定にはファイル名だけ）",
+  "style.local.json（手元の上書き。git に無い）"
+ ],
+ "post": {
+  "resize": [
+   512,
+   640
+  ],
+  "by": "cwebp（gen_portraits.mjs）",
+  "file_sha1": "231edd4e65d6984410483cd18407915be5b23d9b"
+ },
+ "note": "今の絵は、この生成のあと手を加えていない（git でその時の絵と同じ）",
+ "date": "2026-10-10T16:09:20+00:00"
+}
