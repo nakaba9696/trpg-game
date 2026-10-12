@@ -1,0 +1,10 @@
+/* U36：右上の「システム」「…」の一覧が窓の中で切れないように（ui/zzzzzzzzz_u36_system.js）。
+   backdrop-filter のある要素は position: fixed の子の基準になるので、ぼかしは窓そのものでなく ::before に置く（見た目は同じ） */
+body.u21pc .top .tools { position: relative; isolation: isolate; -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.u21pc .top .tools::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+/* 一覧は DOM の順（zz_q7_topbar.js の SYSTEM：セーブ・ロード・更新履歴・タイトルへ・データのリセット）で並べる */
+.q7sysbox > .btn, .q7sysbox > #u18SysLog, .q7sysbox > #q7ToTitle { order: 0; }
+.q7sysbox > #u36SysReset { border-top-style: dashed; color: #b3382c; }
+/* 開いている間だけ、上の帯を遊び方の札（.r11tip）などより手前に */
+body .top:has(.q7sysbox.open, .q7more.open) { z-index: 45; }
