@@ -22,15 +22,14 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   if (by("town") < 2 || by("town") > 3) F(`新しい町が ${by("town")}（2〜3 のはず）`);
   if (by("wild") < 2 || by("wild") > 3) F(`新しい野外が ${by("wild")}（2〜3 のはず）`);
   if (by("dungeon") !== 2) F(`新しい迷宮が ${by("dungeon")}（2 のはず）`);
-  const sceneSrc = readFileSync(new URL("../../src/ui/scene.js", import.meta.url), "utf8");
   const v2Src = readFileSync(new URL("../../src/ui/scene_v2_w4.js", import.meta.url), "utf8");
   const evAt = (id) => D.EVENTS.filter((e) => e.where.includes(id));
   for (const [id, L] of locs) {
     if (!REGIONS.includes(L.region)) F(`${id}: 地域「${L.region}」が担当の外`);
     if (!D.CLIMATE || !D.CLIMATE[id]) F(`${id}: 気候（D.CLIMATE）が無い`);
     if (!D.LORE_ON.loc[id]) F(`${id}: 着いたときに開く用語説明が無い`);
-    if (!sceneSrc.includes(`${L.scene}(ctx, w, h, sk, R)`) || !v2Src.includes(`OUT.${L.scene} = `)) F(`${id}: 背景の絵 ${L.scene} が scene.js か scene_v2_w4.js に無い`);
-    if (L.type === "dungeon" && (!sceneSrc.includes(`${L.scene}_in(ctx, w, h, R)`) || !v2Src.includes(`IN.${L.scene}_in = `))) F(`${id}: 迷宮の中の絵 ${L.scene}_in が無い`);
+    if (!v2Src.includes(`OUT.${L.scene} = `)) F(`${id}: 背景の絵 ${L.scene} が scene_v2_w4.js に無い`);
+    if (L.type === "dungeon" && !v2Src.includes(`IN.${L.scene}_in = `)) F(`${id}: 迷宮の中の絵 ${L.scene}_in が無い`);
     if (!Object.keys(L.links).length) F(`${id}: 道が無い`);
     if (evAt(id).length < 6) F(`${id}: 出来事が ${evAt(id).length} 件（6 件以上のはず）`);
     if (L.type === "town") {

@@ -5,6 +5,7 @@
 // - 古いセーブ（W2 の項目が無い）でも動く。着いた町で用語説明が開く
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
+import { sceneFiles } from "../lib.mjs";
 
 export default ({ fail, ok, loadEngine, seeded }) => {
   const start = (G, seed) => {
@@ -24,10 +25,12 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   const w2 = Object.entries(D.LOCS).filter(([id]) => id.startsWith("w2_"));
   const towns = w2.filter(([, L]) => L.type === "town");
   if (towns.length < 4 || towns.length > 6) F(`新しい町が ${towns.length}（4〜6 のはず）`);
-  const sceneSrc = readFileSync(new URL("../../src/ui/scene.js", import.meta.url), "utf8");
+  const sv = vm.createContext({ console, G: { data: D } });
+  for (const f of ["art_monsters.js", "art_people.js", ...sceneFiles()]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), sv, { filename: "ui/" + f });
+  const SV2 = sv.G.SV2 || { OUT: {}, IN: {} };
   for (const [id, L] of w2) {
     if (!D.CLIMATE || !D.CLIMATE[id]) F(`${id}: 気候（D.CLIMATE）が無い`);
-    if (!sceneSrc.includes(`${L.scene}(ctx, w, h, sk, R)`)) F(`${id}: 背景の絵 ${L.scene} が scene.js に無い`);
+    if (!SV2.OUT[L.scene]) F(`${id}: 背景の絵 ${L.scene} が scene_v2*.js に無い`);
     if (!D.EVENTS.some((e) => e.where.includes(id))) F(`${id}: その場所の出来事が無い`);
     if (L.type !== "town" && !D.LORE_ON.loc[id]) F(`${id}: 着いたときに開く用語説明が無い`);
   }
@@ -181,7 +184,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 背景（施設の中も）
   {
     const vmc = vm.createContext({ console, G });
-    for (const f of ["art_monsters.js", "scene.js"]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
+    for (const f of ["art_monsters.js", "art_people.js", ...sceneFiles()]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
     const noop = () => {};
     const grad = { addColorStop: noop };
     const ctx = new Proxy({}, { get: (t, k) => (k in t ? t[k] : k === "createRadialGradient" || k === "createLinearGradient" ? () => grad : noop), set: (t, k, v) => ((t[k] = v), true) });
