@@ -1,6 +1,6 @@
 // W8：荒野を進むときの出来事（人と出会う・地形の難所・天候の急変・宝の痕跡・古戦場）。仕組みは src/engine/w8_explore.js の頭の説明
 // 書き方：where: ["w8"]・w: 0（ふつうの抽選に出さない）、条件は w8: { w, kind, land }。w8side: "@land" は、その土地でまだ見つけていない脇道を一つ見つける
-// 使う印（S.flags）：w8_deserter 脱走兵に食べ物を分けた（後編 w8_deserter2）・w8_hermit 世捨て人の茶を飲んだ・w8_conman 地図売りに騙された
+// 使う印（S.flags）：w8_deserter 脱走兵に食べ物を分けた（同じ出来事の中で畑の若い男として再会する。後編の出来事は無い）・w8_hermit 世捨て人の茶を飲んだ・w8_conman 地図売りに騙された
 // 語りは docs/lore/voice.md。レーン W＋V（W8）
 (function (G) {
   const D = (G.data = G.data || {});
