@@ -3,6 +3,13 @@
 ブラウザで遊ぶ一人用の TRPG 風ゲーム。HTML・CSS・素の JavaScript だけで作り、`tools/build.mjs` でページ（`dist/site/index.html`）とコード（`dist/site/game.js`。分けると起動が軽い）にまとめ、画像はその隣の別ファイル（`dist/site/portraits/` など）にする（`--embed` なら画像を埋め込んだ 1 枚の `dist/morsveld.html`）。
 遊ぶ場所は claude.ai の Artifact（持ち主が `dist/site/` を「ページ＋画像の別ファイル」で公開する。[docs/publish.md](docs/publish.md)）。ゲームの方向性は [docs/VISION.md](docs/VISION.md)、並行作業の分け方は [docs/ROADMAP.md](docs/ROADMAP.md)。
 
+## 仕事を始める前に（知恵袋）
+- 仕事を始める前に、知恵袋（nakaba9696/KnowledgeBase）の skill を開く。どの仕事でも session-ops、ほかは仕事の分野のもの（画像なら image-gen、物語なら story-structure・novel・characters など。一覧は KnowledgeBase の README.md）。
+  - 手元の Claude Code：/gamedev-knowhow:<分野> で開ける。
+  - クラウドのセッション：git clone --depth 1 https://github.com/nakaba9696/KnowledgeBase して skills/<分野>/SKILL.md を読む。
+  - 子を起動するときは、関係する skill の名前を指示文に入れる。
+- 持ち主の指摘を受けたら、skill add-lesson の手順で KnowledgeBase に 1 項目足して push する（push できなければ知恵袋の係に一項目と出典を送る）。
+
 ## 検証（PR の前に必ず）
 ```
 node tools/build.mjs && node tests/run.mjs
