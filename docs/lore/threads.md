@@ -33,7 +33,7 @@
 | 爪の印の地図は断界山脈へ点々と続く | f2_threads.js:f2_majin_4 | f2_sequel.js:f2r_sigrun（二枚目「さらに東へ」） | 未回収 | 印の終点・印を刻む「仕えたがる者」はどこにも出ない。方向が使徒領を指すだけで止まる |
 | 高い所で手を叩く音（影の前触れ） | f2_threads.js:f2_majin_5・f2_sequel.js:f2r_tsuba_kept・q4_paths.js:MAJIN_MILESTONE | ― | 余白 | 拍手の余白（m13_edge.js:m13_seats と同根） |
 | 羽根を持つ限り向こうから来る | f2_threads.js:f2_majin_2 | f2_threads.js:f2_majin_3 | 回収済み | 羽根は持ち物にならない（memo のみ）。majin_4 で渡さず持ち続けた場合の続きは無い |
-| 仲間になったシグルン・ロデリクの会話 | f2_sequel.js:f2r_sigrun・f2_sequel.js:f2r_rod_friend | ― | 未回収 | D.F2_MATES は generic。talk_*・c13・q9 に二人の項目無し。「次は二人で潰そう」の巣潰しも続き無し |
+| 仲間になったシグルン・ロデリクの会話 | f2_sequel.js:f2r_sigrun・f2_sequel.js:f2r_rod_friend | zzzzzzzzzzzzzzzzzzzzzzz_v17b.js:MATE_TALK | 回収済み | 持ち主の決定（2026-10-13）で 仲間の一言を二人ぶん三本ずつ足した（名のある仲間には昇格させない）。巣潰しの続きは無い |
 | 仕えたがる者は人でなくなる・名を忘れる | f2_threads.js:f2_majin_2・f2_sequel.js:f2r_sigrun | f2_bestiary.js:kin・enemies_e4_kin.js:kin | 回収済み | 知識としての回収。シグルン本人の筋では閉じない |
 | シグルンの無くなった村 | f2_threads.js:f2_majin_5 | ― | 取り下げてよい | 動機の一言として完結している |
 | ロデリク「次は別の町で会おう」 | f2_threads.js:f2_king_4 | f2_threads.js:f2_king_5 | 回収済み | |
@@ -45,10 +45,10 @@
 | 牢の手紙「出るころには使われていてほしい」 | f2_sequel.js:f2r_pergo_jailed | ― | 取り下げてよい | 出所後のペルゴは無いが手紙で完結 |
 | 「倉は空だった」の嘘 | f2_threads.js:f2_rich_4 | f2_sequel.js:f2r_rich_kept | 回収済み | |
 | 逃げたペルゴの再登場 | f2_threads.js:f2_rich_5 | f2_sequel.js:f2r_pergo_free | 回収済み | |
-| 留め具の片割れ（もう片方を探す連中） | f2_threads.js:f2_sword_1 | f2_sequel.js:f2r_tsuba_left・f2_sequel.js:f2r_tsuba_kept | 未回収 | 片割れは物として一度も出ない。i2_flavor.js:volgrim「鉤の根もとに古い字」が呼応するが結び付ける文は無い |
+| 留め具の片割れ（もう片方を探す連中） | f2_threads.js:f2_sword_1 | zzzzzzzzzzzzzzzzzzzzzzz_v17b.js:CLASP_LINE（locations.js:graveyard の鉤槍の文） | 回収済み | 持ち主の決定（2026-10-13）で 片割れは物として出さず、竜の墓場で鉤槍を手にしたとき、持ち歩いた留め具が「一度だけ鳴った」の一行だけ |
 | 「片方をもう片方が呼ぶ」→留め具が鳴る | f2_threads.js:f2_sword_2 | f2_sequel.js:f2r_tsuba_kept・f2_sequel.js:f2r_tsuba_left | 回収済み | |
 | 鉤の黒い槍と夜明けに鳴る白い鎖の昔話 | f2_threads.js:f2_sword_4 | locations.js:graveyard・events.js:RUMORS・lore_u3.js:swords | 回収済み | |
-| 読む女「片割れを見つけたら取りに来い」 | f2_threads.js:f2_sword_5 | f2_sequel.js:f2r_tsuba_left | 未回収 | 取りに行く場面が無い。預けた留め具はそのまま |
+| 読む女「片割れを見つけたら取りに来い」 | f2_threads.js:f2_sword_5 | ― | 取り下げてよい | 持ち主の決定（2026-10-13）で 鉤槍の一行（上の行）で収め、取りに行く場面は作らない |
 | 墓荒らしの地図の二重の丸＝遺跡 | f2_threads.js:f2_sword_3 | locations.js:ruins | 回収済み | 遺跡側に留め具へ触れる出来事は無い |
 | 古物商から消えた留め具「持ち主を変えたがる」 | f2_sequel.js:f2r_tsuba_sold | ― | 余白 | 鉤がひとりでに向く理由と同根 |
 | 「遠くまで歩いた足だけが着く」 | f2_threads.js:f2_sword_5 | locations.js:graveyard | 回収済み | 方向だけの示唆 |
@@ -117,10 +117,10 @@
 | 薄布の娘の予言「三つ目の扉は開けずに叩け」 | events_c4.js:c4_sal_omen | events_w4_wild.js:w4_r_door | 未回収 | w4_r_door では鍵で開けている。「叩け」の筋は拾われていない。「二つの月」「剣の重さ」は e3_apostles.js:e3_meet_tojizuki・events_c4.js:c4_sal_name で回収 |
 | 石の環の三十三番目サルフィエル／十三番目ユズエル | events_c4.js:c4_sal_name・events_c5.js:c5_yuz_name | zc4_people.js:salphiel・zc5_people.js:yuzuel | 回収済み | 環の空いた枠は余白 |
 | 砂色の外套の男との取引「冬ごとに名前を一つ」 | events_c4.js:c4_ger_deal | events_c8.js:c8_ing_tag・events_town2.js:v1_zalve | 回収済み | |
-| イオリの棋譜「最後の一手」「続きは、あなたと」 | events_c4.js:c4_iori_record | ― | 未回収 | イオリには talk も romance も無い。咳の病で次の冬は越せない人 |
+| イオリの棋譜「最後の一手」「続きは、あなたと」 | events_c4.js:c4_iori_record | v17b_threads.js:v1_boardgame（イオリの棋譜の続きから指す）・zzzzzzzzzzzzzzzzzzzzzzz_v17b.js:IORI_LINE | 回収済み | 持ち主の決定（2026-10-13）で 北の賢人との盤で棋譜を使える選択肢と、冬が明けたら年表に「冬を越せなかった」一行（S.c2.gone.iori） |
 | ブルーノの証文を両替屋の女主人が買い取った | events_c5.js:c5_bru_join | quest_c9_c.js:bruno・events_c5.js:c5_bru_chain | 回収済み | |
 | コンスタンスの帳面に載らない依頼（監査の帳簿） | events_c5.js:c5_con_job | events_c5.js:c5_con_fall | 回収済み | |
-| 墓守ボードワンの短剣をヴァレンツァの船大工の家へ | events_c5.js:c5_bau_tags | events_c5.js:c5_bau_nail | 未回収 | 届ける側（港町）の出来事が無い。印 c5_bau_tags は c5_bau_nail が読むだけ |
+| 墓守ボードワンの短剣をヴァレンツァの船大工の家へ | events_c5.js:c5_bau_tags | v17b_threads.js:v17b_bau_dagger | 回収済み | 持ち主の決定（2026-10-13）で 短剣を預かった印（v17b_bau_has）で港町に船大工の家の出来事。娘の行方は言わない |
 | マグダの八つ目の字 | events_c5.js:c5_mag_eighth | zc5_people.js:magda・zv3_c19_town2.js:c5_mag_eighth | 回収済み | |
 | ラザールの二つ名は焼かれた本の最後の頁の言葉 | events_c6.js:c6_t_laz_name | ― | 未回収 | talk_lazare.js の「二つ名の帳面」は別の話。最後の頁の言葉はどこにも無い |
 | マルゴの父の火打ち金（形見） | events_c6.js:c6_t_mgt_father | talk_margot.js:margot_b2 | 回収済み | 火打ち金を預ける |
@@ -143,7 +143,7 @@
 | 北の賢人「覚えておくぞ」・駒に謝る名「ルーペルト」 | events_town2.js:v1_boardgame | zz_e10b_events.js:e10_chezar_piece | 回収済み | 印 v1_shezar_lost は読まれない（上の行）。推す婿は余白 |
 | 竜の卵と竜に乗った赤い鎧の少女 | events_wild2.js:v2_egg | ― | 未回収 | 少女＝竜騎手カルラか。world.js の表にカルラの名はあるが、結ばれていない |
 | 凍えた旅人の、帝都の石工の娘宛ての四十年前の手紙 | events_wild2.js:v2_letter | ― | 未回収 | 預かっても印も持ち物も無く、届け先の出来事が無い |
-| 翼の触れ役「傘のお方と香のお方が町を一つ賭ける」 | events_wild2.js:v2_herald | ― | 未回収 | 賭けの結末がどこにも無い（世の大事にも無い） |
+| 翼の触れ役「傘のお方と香のお方が町を一つ賭ける」 | events_wild2.js:v2_herald | v17b_threads.js:u3_v17b_oboro_wager | 回収済み | 持ち主の決定（2026-10-13）で 結末は書かず、朧島の通行人のひとことで、芸の町の三日三晩がその賭けの町だったと読める |
 | 庭師の長話「荒野の真ん中の、どなたでしたか」 | events_wild2.js:v2_garden | events_wild2.js:v2_notari・e3_apostles.js:e3_meet_notari | 回収済み | |
 | 道端の骨の賽子の女の声「覚えておくよ」 | events_wild2.js:v2_dice | ― | 余白 | |
 | 鬼の酒盛り「頭目の刀は夜に…」 | events_wild2.js:v2_oni_feast | lore_u3.js:rumor | 回収済み | 白い鎖 |
@@ -227,11 +227,11 @@
 | 使徒どうしの縁（遊び仲間・金の貸し借り） | world.js:LORE_GM | enemies_e2.js:e2_mordu | 未回収 | GM 向け設定。噂一行で足りる |
 | 眷属会（年に一度もめる） | world.js:LORE_GM | ― | 取り下げてよい | |
 | 暁鐘会（千回の鐘・裏のディエラン） | world.js:LORE_GM | lore_u3.js:gyoushou | 未回収 | 用語説明 2 行だけ。出来事無し |
-| 夜哭城・眠らずの番兵オルド | world.js:MAJIN | ― | 未回収 | 〔秘〕の魔王に直結する場所。城も番兵も名前だけ |
-| 天の巣・竜騎手カルラ | world.js:MAJIN | e3_apostles.js:e3_meet_azlag | 未回収 | 見出し「天の巣の影」だけ。カルラは characters.js に名のみ |
+| 夜哭城・眠らずの番兵オルド | world.js:MAJIN | v17b_threads.js:v17b_ordo・v17b_ordo_gate | 回収済み | 持ち主の決定（2026-10-13）で 場所は作らず、灰の荒野の出来事の終点を城の外（泣く音のする谷）まで。オルドは門で会えるだけで戦わない。城の名・中は出さない |
+| 天の巣・竜騎手カルラ | world.js:MAJIN | v17b_kin.js:e4k_karla | 回収済み | 持ち主の決定（2026-10-13）で 天の巣は場所にせず対面の場のまま。カルラは剣翼の眷属に一体（一度倒したら出ない。倒したあとは v2_egg も出ない） |
 | 万巻の塔 | talk_banter_k9_c6c7.js:bt_k9_lh_beat | ― | 取り下げてよい | 水に沈んだ書庫に置き換え済み。ネタ台詞だけ |
 | 明けずの町カルヴァス（オスリック卿） | world.js:LORE_GM | lore_u3.js:rumor・sanity_m5.js:END_MAD | 未回収 | 場所も出来事も無い |
-| 黒騎士団長ハイデル（元四騎士） | world.js:MAJIN | m12_events.js:siege | 未回収 | 砦の包囲の噂で名だけ |
+| 黒騎士団長ハイデル（元四騎士） | world.js:MAJIN | v17b_threads.js（enemies.js:blackknight の lines.open） | 回収済み | 持ち主の決定（2026-10-13）で 人物の表には足さず、黒騎士の前口上で「団長ハイデル」の名が出るだけ |
 | 王の仇討ち（黒曜の獣ゴルヴァン） | world.js:LORE_GM・events_c2.js:c2_valeon | ― | 未回収 | 「続き物」と書かれているがゴルヴァンの出来事が無い |
 | 錆鎧の心核 | c2_people.js:c2_rustspawn | know_l1_foes.js:c2_rustspawn | 未回収 | 「心核」の語は src に無い。本体の筋無し |
 | 取り立て屋ボルグ | world.js:MAJIN | events_town2.js:v1_borg | 回収済み | |
@@ -248,7 +248,7 @@
 | 逆夢：夢の問答・夢の取引 | world.js:MAJIN | ― | 取り下げてよい | 持ち主の決定で S 級は会話にならない |
 | 剣翼：卵を返す・背に乗る | world.js:MAJIN | events_wild2.js:v2_egg・events_wild2.js:v2_ride | 回収済み | ただし印は使徒の対面につながらない（上の v2 の行） |
 | 山の村の生贄のくじ | world.js:LORE_GM | lore_u3.js:kuji・zv3_prose_v15.js:e3_after_azlag | 回収済み | 噂と、刃の羽の村のくじの箱。くじを引く場面そのものは無い |
-| 海嘯：歌に答える・積荷を捧げる・呑まれる | world.js:MAJIN | e3_apostles.js:e3_meet_lugu・e3_apostles.js:e3_f_song | 未回収 | 船旅（events_w6_sea.js）に沖の歌が無い |
+| 海嘯：歌に答える・積荷を捧げる・呑まれる | world.js:MAJIN | v17b_threads.js:w6v17b_sea_song | 回収済み | 持ち主の決定（2026-10-13）で ヴァレンツァ〜シェルアークの夜の船旅に沖の歌（灯台の港と同じ四つの音）。答える・答えない。積荷を捧げる・呑まれるは作らない |
 | 白霧：霧の市・一言の問答・場所代 | world.js:MAJIN | events_wild2.js:v2_notari・zz_e10_events.js:e10_notari_fate | 回収済み | |
 | 忘れ水：記憶を売ると知識／正気が戻る | world.js:LORE_GM | ― | 未回収 | e3_apostles.js:e3_meet_levian は挑む・覗く・去るだけ |
 | 日傘の札「持ち主が取りに来る」 | e7_mirza_1.js:e7m_2 | e7_mirza_4.js:e7r_parasol | 回収済み | |
@@ -467,7 +467,7 @@
 | 子爵 | quest_c9_d.js:solenne[2] | ― | 取り下げてよい | 一度きり |
 | 首席の徽章「あなたに預けた」 | quest_c9_d.js:solenne[3] | talk_solenne.js:solenne_b1 | 回収済み | 預けるのは絆の場面 solenne_b1。経ていないと「預けた」が食い違う |
 | 海を見たがった子＝エルマの母 | quest_c9_e.js:pipinelle[2] | talk_pipinelle.js:pipinelle_p6 | 余白 | |
-| 三つの灯台守の婆さま（エルマ 79・港町／婆さま 81・島の都／灯台守グィド） | quest_c9_e.js:pipinelle[1]・quest_c9_c.js:bruno・quest_c9_c12b.js:guido | ― | 未回収 | 別の灯台に同じ役。名を分けるか一人に寄せる（canon が指摘済み） |
+| 三つの灯台守の婆さま（エルマ 79・港町／婆さま 81・島の都／灯台守グィド） | quest_c9_e.js:pipinelle[1]・quest_c9_c.js:bruno・quest_c9_c12b.js:guido | quest_c9_e.js:pipinelle[1]（灯台守のエルマ婆さん） | 回収済み | 持ち主の決定（2026-10-13）で 別人とする。名（エルマ）は港町ヴァレンツァの婆さまだけ。島の都・北の港の灯台守は名を出さない（今の文のまま） |
 | 切り株の輪（木こりの村） | c15_talk_c2.js:pipinelle | ― | 余白 | wolfram の村・lumia の木こりの婆ハンネと混ざりやすい |
 | 婆さまハンネ（二人） | quest_c9_e.js:wolfram[2]・quest_c9_f.js:lumia[1] | ― | 取り下げてよい | 同名別人 |
 | 出てこない名（ハインツ） | c15_talk_c2.js:wolfram | talk_wolfram.js:wolfram_p2 | 回収済み | talk_wolfram では「一緒に出た兵の名は全部言える」と言う（食い違い） |
@@ -494,11 +494,11 @@
 | ヴィットリオの棺の札の古い名前 | zv3_c19_town2.js:c5_vit_funeral | ― | 未回収 | 「金狼団」でない別の名。誰かは出ない |
 | ネイラス「読めるのは四人、二人は死んでる」 | zv3_c19_royal.js:c2_neilas | ― | 未回収 | 残る一人は誰か |
 | 皇帝「数えていたか」／北の陣の通行札（名の欄が空） | zv3_c19_royal_events.js:c19r_greiol_count | ― | 未回収 | 北の陣へ行く場面が無い |
-| ネイラス「テオに紙越しなら会いたい」 | zv3_c19_royal_events.js:c19r_neilas_tray | ― | 未回収 | テオ（events_c3.js:c3_boku_name）を研究所へ連れる場面が無い |
+| ネイラス「テオに紙越しなら会いたい」 | zv3_c19_royal_events.js:c19r_neilas_tray | v17b_threads.js:v17b_teo_go・v17b_teo_door | 回収済み | 持ち主の決定（2026-10-13）で テオを誘って研究所へ。扉越しに紙をやり取りする一場面。ネイラスは扉を開けない |
 | セリオスの「三年探した顔」 | lore_w2.js:kyodai・zv3_c19_royal_events.js:c19r_serios_sketch | events_w2.js:w2_statue | 未回収 | 見つかる場面は無い（赤い髪の下絵は別の顔） |
 | ヴァルグの傷「足りん」・落とし穴が翌朝五つに | zv3_c19_royal_events.js:c19r_valg_stitch | ― | 未回収 | 皇帝の言葉の意味・誰が掘るのか |
 | ダリオ「あの子は九つで壁に寄らなくなった」 | zv3_c19_royal_events.js:c19r_dario_nine | ― | 未回収 | 誰のことか（皇帝？） |
-| マルヴィナの最初の盾（地図に無い村・拾った人） | zv3_c19_royal.js:c2_malvina・zv3_c19_royal_events.js:c19r_malvina_shield | ― | 未回収 | 「村の話は二度目の場面の盾で」と予告したまま |
+| マルヴィナの最初の盾（地図に無い村・拾った人） | zv3_c19_royal.js:c2_malvina・zv3_c19_royal_events.js:c19r_malvina_shield | v17b_threads.js:v17b_malvina_village | 回収済み | 持ち主の決定（2026-10-13）で 二度目の場面。村の暮らしだけを話し、村の名・使徒の名・拾った人は言わない |
 | アリシアに名を覚えられた前の六人の最後の一人 | zv3_c19_royal_events.js:c19r_alicia_council・events_c2.js:c2_alicia | ― | 未回収 | 「あと一人は知らん」 |
 | モルヴァンの百年先の暦・「君の脈はまた今度」 | zv3_c19_royal_events.js:c19r_doctor_almanac | ― | 未回収 | 王国の博士（〔進〕）の続きが無い |
 | ゲルトの祖父が東へ行った草の道 | zv3_c19_codex.js:c19_gert_fork | zv3_c19_codex.js:c19_gert_stone | 回収済み | 道の先（東）は出ない |
@@ -568,10 +568,10 @@
 | 世捨て人のなぞなぞ・地図売りの偽地図 | events_w8_wild.js:w8p_hermit・events_w8_wild.js:w8p_conman | ― | 取り下げてよい | 印 w8_hermit・w8_conman は読まれない。一回きりの小話でよい |
 | ゴブリン王ギギの大将軍に任じられた | events_wild2.js:v2_gigi | events_wild2.js:v2_gigi_war | 回収済み | next で続く。印 v2_gigi_general 自体は読まれない |
 | 片翼の大男の背に乗って「何も見ていない」と言った | events_wild2.js:v2_ride | ― | 未回収 | 印 v2_azrag は読まれない。ヴァルグレア（e3 azlag）の対面で「見た者」として扱われない |
-| 竜の卵を返した／帝都で売った | events_wild2.js:v2_egg | ― | 未回収 | 印 v2_egg_returned・v2_egg_sold は読まれない。E3 の「卵を返す（借りを返す）」の筋とつながっていない |
-| 北の賢人に盤上遊戯で勝った／捨て駒にされた | events_town2.js:v1_boardgame | ― | 未回収 | 印 v1_shezar_lost は読まれない。ディエラン（e3 chezar）の「盤で勝った者とだけ剣を取る」とつながっていない |
-| ヴァルグレアの着地の失敗を見た | events_town2.js:v1_skyshadow | ― | 未回収 | 印 v1_azlag_seen は読まれない。「転んだところを見た者は必ず口を封じる」の筋が無い |
-| ロデリクに手を差し出した／頬の跡を笑った | f2_threads.js:f2_king_4・f2_sequel.js:f2r_rod_foe | ― | 未回収 | 印 f2_rival_hand・f2_rival_grudge は読まれない。再会の場面で和解と遺恨の差が出ない |
+| 竜の卵を返した／帝都で売った | events_wild2.js:v2_egg | zzzzzzzzzzzzzzzzzzzzzzz_v17b.js:AZ_EGG（e3_meet_azlag） | 回収済み | 持ち主の決定（2026-10-13）で 卵を返した印で剣翼の対面が一行やわらぐ。v2_egg_sold は読まない（売った側の筋は作らない） |
+| 北の賢人に盤上遊戯で勝った／捨て駒にされた | events_town2.js:v1_boardgame | v17b_threads.js:chezar（弱る条件 board） | 回収済み | 持ち主の決定（2026-10-13）で 盤で勝った印を百面の使徒の条件（刃が届く）に足した。捨て駒にされた側は覚え書きのまま |
+| ヴァルグレアの着地の失敗を見た | events_town2.js:v1_skyshadow | zzzzzzzzzzzzzzzzzzzzzzz_v17b.js:AZ_SEEN（e3_meet_azlag） | 回収済み | 持ち主の決定（2026-10-13）で、印 v1_azlag_seen があると剣翼の対面で口を封じに先に襲ってくる（選べるのは身構えるだけ） |
+| ロデリクに手を差し出した／頬の跡を笑った | f2_threads.js:f2_king_4・f2_sequel.js:f2r_rod_foe | zzzzzzzzzzzzzzzzzzzzzzz_v17b.js（f2r_rod_friend・f2r_rod_foe） | 回収済み | 持ち主の決定（2026-10-13）で 再会の場面で印を読み、台詞を一行変える（手：握らなかった手の一言／笑い：「笑え。あの日みたいに」） |
 | 真珠採りの島で大粒の真珠を見た | w9_spots_isles.js:dive | ― | 取り下げてよい | 印 w9_bigpearl は読まれない |
 
 ## 持ち主の決定が要るもの
@@ -581,30 +581,15 @@
 |---|---|---|
 | 王の仇討ち（黒曜の獣ゴルヴァン） | world.js:LORE_GM・events_c2.js:c2_valeon | 「続き物」と書いたまま出来事が無い。E7 の A 級の長編の一本目に「王の仇討ち」を当て、依頼主を国王ヴァレオンにする（王が自ら出てくる筋は設定どおり）。作らないなら LORE_GM の「続き物」の文を消す |
 | 錆鎧の心核 | c2_people.js:c2_rustspawn | 「心核を探す続き物」も出来事が無い。ヴィオレーヌ（ユリナの席を狙う）とナタリアの筋に結び、炭鉱の奥で分かれ身を討つ B 級の続き物にする。本体（A 級）は出さない |
-| 夜哭城・眠らずの番兵オルド | world.js:MAJIN | 〔秘〕の魔王に直結する場所。場所は作らず、暁鐘会の出来事の終点を「城の外（泣く音が聞こえる所）」までにして、オルドは門で会えるだけの人にする |
 | 明けずの町カルヴァス（オスリック卿） | world.js:LORE_GM | 噂（lore_u3.js:akezu）だけで場所が無い。凍てつく街道と黒鉄の砦の間に場所を一つ足し、中の出来事は curses.md の「日記と住人の話から」の形で。朝を呼ぶ道はベルファスの筋（夢の問答）と結ぶ |
 | 暁鐘会（千回の鐘） | world.js:LORE_GM | 用語説明に二行あるだけ。「鐘を数える・千回に届かず苦情が来る・何も起きない」出来事を一つ（帝都か聖都）。黒幕のディエランは出さない |
 | 残りの使徒の長編（A・S 級の雛形） | e7_0_saga.js:SAGAS | 試作は mirza のみ。次の一本は黒鎧エンバルダ（A 級。宿敵の抜け羽・砦・王命の出来事 e10 が既にある）。S 級は最後に |
 | 砂塵 討伐後もボルグの取り立てが来る | e3_apostles.js:zalve.win | 「町じゅうの借金が白紙」と食い違う。討伐の印（e3:zalve）で v1_debt を消し、ボルグは「貸し、ひとつ」と言って去る一行に |
 | 討伐後も続く使徒の出来事（咎追い・鉄喰い・白霧・忘れ水・蝶翅） | e3_apostles.js:togaoi.after・e3_apostles.js:tetsukui.after・e3_apostles.js:notari.after・e3_apostles.js:levian.after・e3_apostles.js:aurelia.after | after の文と食い違う。zz_e3_apostles.js の STOP にこの五体の出来事（m3_togaoi・w2_iron・v2_notari・遺構の眷属・w1 の聖女）を加える |
-| 仲間になったシグルン・ロデリクの会話 | f2_sequel.js:f2r_sigrun・f2_sequel.js:f2r_rod_friend | 名のある仲間（talk・C9）には昇格させず、F2 の仲間の一言（D.F2_MATES）を二人ぶん三本ずつ足すだけにする |
-| ロデリクに手を差し出した／頬の跡を笑った | f2_threads.js:f2_king_4・f2_sequel.js:f2r_rod_foe | 印 f2_rival_hand・f2_rival_grudge を再会（f2r_rod_friend／rival／foe）で読み、台詞を一行変える。読まないなら印を外す |
-| 留め具の片割れ・読む女「取りに来い」 | f2_threads.js:f2_sword_1・f2_threads.js:f2_sword_5 | 片割れは物として出さず、竜の墓場で鉤槍を手にしたとき「留め具が鳴った」の一行だけ（鉤がひとりでに向く理由は余白のまま） |
-| 三つの灯台守の婆さま | quest_c9_e.js:pipinelle[1]・quest_c9_c.js:bruno・quest_c9_c12b.js:guido | 港町・島の都・灯台の港に同じ役が三人。同じ人にするか別人にするかを決める。推し：別人として、港町の婆さまにだけ名（エルマ）を残す |
-| ヴァルグレアの印（卵を返した・背に乗って「見ていない」・着地を見た） | events_wild2.js:v2_egg・events_wild2.js:v2_ride・events_town2.js:v1_skyshadow | 印 v2_egg_returned・v2_azrag・v1_azlag_seen を e3_meet_azlag で読み、「卵の借り」なら一行やわらぎ、「転んだのを見た者」なら口封じで先に襲ってくる（majin.md「必ず口を封じる」のまま） |
-| 北の賢人に盤で勝った | events_town2.js:v1_boardgame | 印 v1_shezar_lost を e3 の chezar の鍵に加える（「盤上遊戯で勝った者とだけ自ら剣を取る」は設定にある） |
-| 天の巣・竜騎手カルラ | world.js:MAJIN | 天の巣は場所にせず e3_meet_azlag の場のまま。カルラは眷属の戦い（enemies_e4_kin.js）に一体足す |
-| 黒騎士団長ハイデル | world.js:MAJIN | 人物の表には足さず、黒騎士（blackknight）の前口上で「団長」として名が出るだけにする |
-| 海嘯：船旅に沖の歌が無い | e3_apostles.js:lugu.after | ヴァレンツァ〜シェルアークの船旅の夜に「歌が聞こえる」出来事を一つ（答える・答えない）。灯台の港の w7_vol_answer と同じ歌 |
 | 忘れ水：記憶を売ると知識／正気が戻る | world.js:LORE_GM | e3_meet_levian に「記憶を一つ売る」の選択肢（memo が一行消え、正気が戻る）。設定どおりで小さい |
-| イオリの棋譜「続きは、あなたと」 | events_c4.js:c4_iori_record | イオリには会話も頼みごとも無い。北の賢人との盤（v1_boardgame）で棋譜を使える一行と、冬を越せなかった一行（年表）を足す |
-| 翼の触れ役「傘のお方と香のお方が町を一つ賭ける」 | events_wild2.js:v2_herald | 賭けの結末は書かない。芸の町の三日三晩（E7）が「その賭けの町だった」と読める噂を一行、朧島に置く |
-| マルヴィナの最初の盾（二度目の場面で村の話） | zv3_c19_royal_events.js:c19r_malvina_shield | 予告したまま。二度目の場面（盾の裏の村の名を言わない）を足す。村の名・使徒の名は出さない |
 | 薄布の娘の予言「三つ目の扉は開けずに叩け」 | events_c4.js:c4_sal_omen | w4_r_door に「叩く」選択肢を一つ（鍵で開けた道と結果を変える） |
 | 手紙三通（石工の娘・沈黙の森の狩人の家族・北の村の女） | events_wild2.js:v2_letter・events_w4_wild.js:w4_s_hunter・events_w7_zai.js:w7_zai_letter | 預かった手紙を持ち物にし、届け先の町に着いたとき一行で渡す（三通まとめて一つの仕組み）。やらないなら「預かる」選択肢を「読んで返す」に |
 | C10 の約束（徴兵の名簿・闇の隠れ家の借り・新月の競り・口入れ屋の塔） | c10_choices.js:v1_conscript・c10_choices.js:m3_chase・c10_fac.js:alley・c10_choices_w4.js:w4_v_contract | 徴兵の名簿だけ M4 の戦の知らせで拾う（名簿に名があれば呼び出しの一行）。残りは取り下げ |
-| ボードワンの短剣を港町の船大工の家へ | events_c5.js:c5_bau_tags | 港町に「船大工の家」の出来事を一つ（印 c5_bau_tags で開く）。娘の行方は言わない |
-| ネイラス「テオに紙越しなら会いたい」 | zv3_c19_royal_events.js:c19r_neilas_tray | テオ（c3_boku_name）を連れて研究所へ行くと、扉越しに紙をやり取りする一場面。ネイラスは扉を開けない（人と話せない設定のまま） |
 
 ## 印の調べ方
 出来事の結果で `flag` を立てるが、どこも読まない印は、次で出せる（`src/` を読むだけ。engine の組み立てる印 `e10:`・`w8foe:`・`e3:` は除く）。

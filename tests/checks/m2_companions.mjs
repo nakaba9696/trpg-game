@@ -98,8 +98,10 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const R = loadEngine();
   const RD = R.data;
   const n = { talk: 0, betray: 0, leave: 0, death: 0 };
-  const GAMES = 80;
-  for (let g = 0; g < GAMES; g++) {
+  // 死別は一回の冒険に一度あるかないか（80 回で 0〜3 回）なので、80 回で三つがそろわなければ、そろうまで 400 回まで続ける（乱数のずれで落ちないように）
+  const GAMES = 80, MAX = 400;
+  let g = 0;
+  for (; g < MAX && (g < GAMES || !n.talk || !(n.betray + n.leave) || !n.death); g++) {
     R.rand = seeded(5000 + g);
     R.P = { trophies: {}, graves: [] };
     const cls = Object.keys(RD.CLASSES)[g % Object.keys(RD.CLASSES).length];
@@ -117,6 +119,6 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     }
     for (const k of Object.keys(n)) n[k] += R.S.m2?.counts?.[k] || 0;
   }
-  console.log(`NOTE M2 ランダムに ${GAMES} 回遊んだ（仲間 2 人から）: 会話 ${n.talk}・裏切り ${n.betray}・去る ${n.leave}・死別 ${n.death}`);
+  console.log(`NOTE M2 ランダムに ${g} 回遊んだ（仲間 2 人から）: 会話 ${n.talk}・裏切り ${n.betray}・去る ${n.leave}・死別 ${n.death}`);
   if (!n.talk || !(n.betray + n.leave) || !n.death) fail(`M2: ランダムプレイで会話・別れ・死別のどれかが起きない ${JSON.stringify(n)}`);
 };

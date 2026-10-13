@@ -1,17 +1,18 @@
 // V1: 背景を画面全体に敷く（ui/v1_stage.js）。DOM を使わない部分だけ確かめる
 //   ・絵の大きさ（G.stage.fit）が画面に収まり、横長すぎ・縦長すぎにならない
-//   ・タイトルと人物づくりの背景が scene.js にある場面を指す
+//   ・タイトルと人物づくりの背景が、描ける場面（V2）を指す
 //   ・同じ絵かどうかの印（G.stage.sig）が、絵の中身で変わり、同じ中身では変わらない
 //   ・画面の側に必要なもの（背景の層・絵の窓・文章の窓・フェード）がある
 //   ・明暗（ui/v1_theme.js）：覚えた値の読み書きが壊れても動く。明るい版と暗い版で、色の変数が同じだけそろっている
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
+import { sceneFiles } from "../lib.mjs";
 
 export default ({ G, fail: failTo, ok }) => {
   let bad = 0;
   const fail = (m) => { bad++; failTo(m); };
   const src = (f) => readFileSync(new URL("../../src/" + f, import.meta.url), "utf8");
-  vm.runInContext(src("ui/scene.js"), vm.createContext({ G, Math }));
+  { const c = vm.createContext({ console, G, Math }); for (const f of ["art_monsters.js", "art_people.js", ...sceneFiles()]) vm.runInContext(src("ui/" + f), c, { filename: "ui/" + f }); }
   vm.runInContext(src("ui/v1_stage.js"), vm.createContext({ G, JSON, Math, String }));
   const st = G.stage;
   if (!st || typeof st.fit !== "function" || typeof st.sig !== "function" || typeof st.titleOpt !== "function") { fail("G.stage.fit / sig / titleOpt が無い"); return; }
@@ -30,7 +31,7 @@ export default ({ G, fail: failTo, ok }) => {
   const all = new Set([...names.out, ...names.inside]);
   for (const step of ["title", "person", "stats", "sheet"]) {
     const o = st.titleOpt(step);
-    if (!o || !all.has(o.key)) fail(`タイトルの背景（${step}）: scene.js に無い場面 ${o && o.key}`);
+    if (!o || !all.has(o.key)) fail(`タイトルの背景（${step}）: 描ける絵に無い場面 ${o && o.key}`);
   }
 
   const a = { key: "town", phase: 1, seed: "x" };
