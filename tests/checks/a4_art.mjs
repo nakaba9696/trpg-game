@@ -7,11 +7,12 @@
 // - すべての絵（場所の外と中・施設・敵・人物）を、G.rand を使わずに例外なく描ける
 import { readFileSync, existsSync } from "node:fs";
 import vm from "node:vm";
+import { sceneFiles } from "../lib.mjs";
 
 export default ({ G, fail, ok, seeded }) => {
   const D = G.data;
   const vmc = vm.createContext({ console, G });
-  for (const f of ["art_monsters.js", "art_people.js", "scene.js"]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
+  for (const f of ["art_monsters.js", "art_people.js", ...sceneFiles()]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
   const miss = { scene: [], shared: [], inside: [], fac: [], castle: [], foe: [], event: [], comp: [] };
   const { out, inside } = G.sceneNames();
   const OUT = new Set(out), IN = new Set(inside);
@@ -103,10 +104,10 @@ export default ({ G, fail, ok, seeded }) => {
 
   // ---------------------------------------------------------------- 一覧
   const LABEL = {
-    scene: "背景の絵が無い場所（汎用の丘陵に落ちる。scene.js の OUT に足す）",
-    shared: "ほかの場所と同じ背景を使い回している（scene.js の OUT に足して、場所の scene を変える）",
-    inside: "迷宮の中が石の通路（汎用）のまま（scene.js の IN に「<場所の絵>_in」を足す）",
-    fac: "室内の絵が無い施設（scene.js の IN に足す）",
+    scene: "背景の絵が無い場所（汎用の丘陵に落ちる。scene_v2_*.js の OUT に足す）",
+    shared: "ほかの場所と同じ背景を使い回している（scene_v2_*.js の OUT に足して、場所の scene を変える）",
+    inside: "迷宮の中が石の通路（汎用）のまま（scene_v2_*.js の IN に「<場所の絵>_in」を足す）",
+    fac: "室内の絵が無い施設（scene_v2_*.js の IN に足す）",
     castle: "王城の主の絵が無い（art_people.js の FAC_WHO に足す）",
     foe: "生成画像の無い敵（docs/art/monsters.json に足して絵を作る。A10）",
     event: "人物の絵（who）が無く、人が出ない出来事（D.EVENT_NOBODY）にも並んでいない出来事（who を書くか、src/data/events_who_a4.js の EVENT_NOBODY に足す）",

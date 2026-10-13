@@ -1,13 +1,14 @@
-// A1: 季節と天候（engine/weather.js）と背景の絵（ui/scene.js）。DOM なしの偽の canvas で描く。
+// A1: 季節と天候（engine/weather.js）と背景の絵（ui/scene_v2*.js）。DOM なしの偽の canvas で描く。
 // 夏・秋・冬と雨・霧・雪が来ること、町ごとの気候、古いセーブ、S.weather と環境音のつながり、
 // 全場面×季節×天候×時間帯を例外なく描けること、学院の背景があること
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
+import { sceneFiles } from "../lib.mjs";
 
 export default ({ G, fail, ok, seeded }) => {
   const D = G.data;
   const vmc = vm.createContext({ console, G });
-  for (const f of ["art_monsters.js", "scene.js", "sound.js"]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
+  for (const f of ["art_monsters.js", "art_people.js", ...sceneFiles(), "sound.js"]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
   G.rand = seeded(7);
   G.newGame({ cls: Object.keys(D.CLASSES)[0], stats: Object.fromEntries(D.STATS.map((k) => [k, 40])), caps: Object.fromEntries(D.STATS.map((k) => [k, 70])), goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "テスト用", personality: "無口" } });
   if (!(G.S.wseed > 0)) fail("新しい冒険に天候の種（wseed）が無い");
