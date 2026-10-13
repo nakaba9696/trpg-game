@@ -1,0 +1,6 @@
+{
+  "extraKnownMarketplaces": {
+    "nakaba-kb": { "source": { "source": "github", "repo": "nakaba9696/KnowledgeBase" } }
+  },
+  "enabledPlugins": { "gamedev-knowhow@nakaba-kb": true }
+}
