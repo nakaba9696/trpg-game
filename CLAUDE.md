@@ -6,7 +6,7 @@
 ## 仕事を始める前に（知恵袋）
 - 仕事を始める前に、知恵袋（nakaba9696/KnowledgeBase）の skill を開く。どの仕事でも session-ops、ほかは仕事の分野のもの（画像なら image-gen、物語なら story-structure・novel・characters など。一覧は KnowledgeBase の README.md）。
   - 手元の Claude Code：/gamedev-knowhow:<分野> で開ける。
-  - クラウドのセッション：git clone --depth 1 https://github.com/nakaba9696/KnowledgeBase して skills/<分野>/SKILL.md を読む。
+  - クラウドのセッション：repo のプラグインは読まれない。KnowledgeBase は非公開なので、まず add_repo（owner=nakaba9696, repo=KnowledgeBase, access read）で足し、その道具が示す方法で clone して skills/<分野>/SKILL.md を読む（add_repo なしの clone は認証で失敗する）。
   - 子を起動するときは、関係する skill の名前を指示文に入れる。
 - 持ち主の指摘を受けたら、skill add-lesson の手順で KnowledgeBase に 1 項目足して push する（push できなければ知恵袋の係に一項目と出典を送る）。
 
