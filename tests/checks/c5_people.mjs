@@ -97,7 +97,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       if (pt.group !== "c2" || !pt.identity || !pt.tags || !pt.memo || !pt.face) F(`${w}: 立ち絵の group・identity・tags・face・memo のどれかが無い`);
       if (isMale(pt) !== (p.sex === "男")) F(`${w}: 立ち絵の性別がデータと違う`);
       if (p.sex === "男" && pt.type !== c.type) F(`${w}: 立ち絵の型（${pt.type}）が控えの型（${c.type}）と違う`);
-      if (p.join && !(pt.variants && pt.variants.joy && pt.variants.anger && pt.variants.sorrow && pt.variants.fun)) F(`${w}: 仲間なのに表情の差分が無い`);
+      if (p.join && !pt.variants /* 喜怒哀楽はそろっていなくてよい（持ち主の決定 2026-10-13「量より質」） */) F(`${w}: 仲間なのに表情の差分が無い`);
     }
     const own = evs.filter((e) => inEv(e).includes(id));
     if (own.length < 2 || own.length > 4) F(`${w}: 出てくる出来事が 2〜4 個でない：${own.length}`);

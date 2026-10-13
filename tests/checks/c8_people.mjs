@@ -84,7 +84,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
       if (isMale(pt) !== (p.sex === "男")) F(`${w}: 立ち絵の性別がデータと違う`);
       if (isMale(pt) && pt.type !== c.type) F(`${w}: 立ち絵の型（${pt.type}）がデータ（${c.type}）と違う`);
       const vv = pt.variants;
-      if (p.join && !(vv && vv.joy && vv.anger && vv.sorrow && vv.fun)) F(`${w}: 仲間なのに表情の差分が無い`);
+      if (p.join && !vv /* 喜怒哀楽はそろっていなくてよい（持ち主の決定 2026-10-13「量より質」） */) F(`${w}: 仲間なのに表情の差分が無い`);
     }
     const own = evs.filter((e) => !e.c2talk && inEv(e).includes(id));
     if (own.length < 2 || own.length > 4) F(`${w}: 出てくる出来事が 2〜4 個でない：${own.length}`);

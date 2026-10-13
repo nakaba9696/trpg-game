@@ -53,7 +53,9 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const pv = PJ.find((x) => x.id === who);
     const have = new Set(Object.keys((pv && pv.variants) || {}));
     const tp = T[who].topics || [];
-    for (const t of tp) if (t.mood && !have.has(t.mood)) F(`${t.id}: 表情 ${t.mood} は ${who} の絵に無い`);
+    // 絵の無い表情は基本の絵に落ちる（持ち主の決定 2026-10-13「量より質」）。表情の一覧にある名前かだけを見る
+    const KNOWN = new Set(Object.keys(JSON.parse(readFileSync(new URL("../../docs/art/moods.json", import.meta.url), "utf8")).moods));
+    for (const t of tp) if (t.mood && !have.has(t.mood) && !KNOWN.has(t.mood)) F(`${t.id}: 表情 ${t.mood} は表情の一覧に無い`);
     if (tp.filter((t) => t.mood).length * 2 < tp.length) F(`${who}: 表情（mood）の付いた話題が半分未満`);
   }
   if (T.tsuyuha && T.tsuyuha.topics.some((t) => t.love)) F("ツユハ（子どもの姿）に恋の話題がある");
