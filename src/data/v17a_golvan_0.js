@@ -32,7 +32,7 @@
   // ---------------------------------------------------------------- 条件の品と骸の素材
   const items = {
     e3_golvanchip: KEY("戻らなかった黒い欠け", "黒い石の獣の体から欠け落ちた、親指ほどの欠片。ほかの割れ目はみな閉じたのに、これだけは戻らなかったという。", "握っていると、手の中の重さだけが確かになる。王宮の獲物の間の、空欄の札の下に置かれていた。"),
-    e3_d_golvan: { name: "閉じかけの割れ目の石", type: "loot", price: 900, desc: "黒い石の獣の、最後に閉じかけた割れ目から取れた石。断面が鏡のように光る。", flavor: "ときどき、勝手に縁が寄っていく。机に置くと、少しずつ北へずれる。" },
+    e3_d_golvan: { name: "閉じかけの割れ目の石", type: "loot", price: 900, desc: "黒い石の獣の、最後に閉じかけた割れ目から取れた石。断面が鏡のように光り、覗きこむと自分の顔が少し重たげに映る。", flavor: "ときどき、割れ口の縁が勝手に寄っていく。机に置いておくと、朝には北の端へずれている。王都の古道具屋は、値をつける前に必ず北を確かめる。" },
   };
   Object.assign(E3.ITEMS, items);
   Object.assign(D.ITEMS, items);
@@ -122,10 +122,10 @@
       "5 - - - - - 4 - b3 - - - 2 - - -", "b6 - - - - - 5 - 4 - - - b3 - - -", "4 - - - b3 - - - b2 - - - 7, - - -", "1 - - - - - - - . . . . 5, - - -"];
     B.TRACKS.s6_ap_saga_golvan = {
       name: "割れない石の行進", mood: "王の仇の、黒い石の獣との決戦。低い弦と鉄槌の歩みが斜面を踏み、半音ずれる金管が重さの狂いを鳴らす。後半は合唱と鐘が加わり、石が鳴いて割れる",
-      scene: "apostle", key: 40, scale: "phryg", bpm: 96, meter: 16, bars: 24, wet: 0.4, gain: 0.62,
+      scene: "apostle", key: 50, scale: "phryg", bpm: 96, meter: 16, bars: 24, wet: 0.4, gain: 0.62,
       prog: ["1", "1", "b2M", "1", "4m", "4m", "b2M", "5D"],
       parts: [
-        { inst: "bass", kind: "chord", oct: -2, vol: 0.6, pat: ["0 . . . 0 . . . 0 . 0 . 0 . . ."] },
+        { inst: "bass", kind: "chord", oct: -1, vol: 0.6, pat: ["0 . . . 0 . . . 0 . 0 . 0 . . ."] },
         { inst: "cello", kind: "chord", oct: -1, vol: 0.45, pan: -0.2, pat: ["0 . 0 . 2 . 0 . 0 . 0 . 2 . 1 ."] },
         { inst: "brass", kind: "mel", oct: 0, vol: 0.5, pan: 0.15, mel: march },
         { inst: "choir", kind: "pad", oct: 0, vol: 0.32, center: 5, on: [[8, 24]] },
