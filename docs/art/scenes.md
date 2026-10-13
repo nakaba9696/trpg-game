@@ -3,7 +3,7 @@
 > このファイルは [scenes.json](scenes.json) から `node tools/scenes.mjs` で作る。直すときは json を直してから作り直す。
 > 作り方は [README.md](README.md) の「背景の絵（A11）」。設定は [style_scenes.json](style_scenes.json)。1344×768 で作り、1232×704 の webp に縮めて `assets/scenes/<id>.webp` に置く（1 枚 150KB 以下）。
 
-全部で 180 枚（場所 74・施設の中 57・迷宮の中 49）。
+全部で 181 枚（場所 75・施設の中 57・迷宮の中 49）。
 
 ## 試しの 5 枚
 
@@ -17,7 +17,7 @@
 | `in_tavern` | 酒場 | 施設の中 |
 | `in_ruins` | エル・ナフ遺構の中 | 迷宮の中 |
 
-## 場所（74）
+## 場所（75）
 
 町・荒野・迷宮の外の景色（場所の id ごとに 1 枚）。屋外は昼・晴れで作り、時間帯・季節・天候はゲームが色味と雨・雪・霧の粒で重ねる。`sky` が night・red の場所は空が決まっている（朧島は夜、使徒領は赤い空）。
 
@@ -60,6 +60,7 @@
 | `w4_valmiria` | 市の都ヴァルミリア（ノルディア帝国・町） | `w4_market` | nordia | bustling market town, many colorful market tents and stalls, stone houses around a snowy town square, four roads meet, tall stone pillar in the center, snow |
 | `w4_oldrail` | 古い鉄の道（ノルディア帝国・迷宮） | `w4_rail` | nordia | abandoned mine in snowy mountains, ancient straight iron rails running into the mountainside, a rounded white-metal carriage stopped on the slope, wooden boards nailed over a tunnel mouth |
 | `fort` | 黒鉄の砦（人類の最前線・町） | `fort` | border | black iron fortress wall blocking a narrow mountain pass, watchtowers with alarm bells, graveyard outside the wall, rugged mountains |
+| `karvas` | 明けずの町カルヴァス（人類の最前線・町）・空 night | `karvas` | border | night, snowy valley town under a huge red moon, low dark roofs, lanterns lit in every window, a fenced rooster pen in the square, dark stone manor on the hill with one lit window |
 | `w7_frostgate` | 北の烽火台ヴェルト（人類の最前線・町） | `w7_beacon` | border | northern beacon station by a cold sea, three stone beacon towers with fire and smoke, firewood piles, soldiers |
 | `w7_widows` | 鐘待ちの村リーネ（人類の最前線・町） | `w7_widows` | border | farming village of soldiers' families, ploughed fields, a graveyard slightly larger than the fields, distant watchtower |
 | `w7_ironwell` | 井戸の砦町ケルン（人類の最前線・町） | `w7_wellfort` | border | frontier supply town, deep stone well with a wooden frame in the center, storehouses and soldiers' row houses, grey sky |

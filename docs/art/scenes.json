@@ -385,6 +385,17 @@
    "tags": "black iron fortress wall blocking a narrow mountain pass, watchtowers with alarm bells, graveyard outside the wall, rugged mountains"
   },
   {
+   "id": "karvas",
+   "kind": "place",
+   "scene": "karvas",
+   "type": "town",
+   "region": "人類の最前線",
+   "name": "明けずの町カルヴァス",
+   "pack": "border",
+   "tags": "night, snowy valley town under a huge red moon, low dark roofs, lanterns lit in every window, a fenced rooster pen in the square, dark stone manor on the hill with one lit window",
+   "sky": "night"
+  },
+  {
    "id": "w7_frostgate",
    "kind": "place",
    "scene": "w7_beacon",

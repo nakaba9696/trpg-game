@@ -79,7 +79,7 @@
 | 噂：嘴の医者が来た町に夜番・順番が逆 | m9_plague.js:RUMORS | enemies_m5.js:m5_nightwatch・m9_plague.js:m9_needles | 回収済み | |
 | 檻の男「先生の帳面にそう書いてあった」 | m9_plague.js:m9_cage | lore_u3.js:beast | 回収済み | |
 | ノラが探す「村を潰したもの」 | f2_people.js:nora | f4_roster.js:nora・quest_c9_b.js:nora | 未回収 | 探す姿は出るが、潰したものには一度も行き当たらない |
-| ヴァレオンの兄弟を殺した使徒ゴルヴァン | f2_people.js:valeon・c2_people.js:valeon | ― | 未回収 | ゴルヴァンは人物の表と world.js にだけ。e3_apostles.js に id 無し。「王の仇討ちの続き物」は無い |
+| ヴァレオンの兄弟を殺した使徒ゴルヴァン | f2_people.js:valeon・c2_people.js:valeon | v17a_golvan_1.js:SAGAS.golvan | 回収済み | V17a（t01）：長編「王の仇討ち」。ゴルヴァンは E3 に入れたが、討てるのは長編の中だけ（E8 の討てない使徒） |
 | 錆の鎧の騎士団の紋（年鑑に無い騎士団） | f2_bestiary.js:c2_rustspawn | zc2_lore.js:c2_jusshi | 未回収 | 騎士団の名はどこにも無い |
 | テオドラ・ピムとミナの兄ピム | zc3_names.js:boku・r3_hooks.js:r3_n_flute | ― | 取り下げてよい | 別人が同じ「ピム」（姓と名）。片方の名を変える案 |
 | 王国十指の空いた席 | zc2_lore.js:c2_jusshi | c2_people.js:yurina | 回収済み | |
@@ -226,19 +226,19 @@
 | 宿敵の抜け羽（城の壁に刺さった羽） | e3_apostles.js:e3_f_feather | e3_apostles.js:graw | 回収済み | 鍵の品 |
 | 使徒どうしの縁（遊び仲間・金の貸し借り） | world.js:LORE_GM | enemies_e2.js:e2_mordu | 未回収 | GM 向け設定。噂一行で足りる |
 | 眷属会（年に一度もめる） | world.js:LORE_GM | ― | 取り下げてよい | |
-| 暁鐘会（千回の鐘・裏のディエラン） | world.js:LORE_GM | lore_u3.js:gyoushou | 未回収 | 用語説明 2 行だけ。出来事無し |
+| 暁鐘会（千回の鐘・裏のディエラン） | world.js:LORE_GM | lore_u3.js:gyoushou・v17a_bells.js:v17a_bells | 回収済み | V17a（t05）：帝都の鐘楼で数を数える・苦情・何も起きない。ディエランは出さない |
 | 夜哭城・眠らずの番兵オルド | world.js:MAJIN | v17b_threads.js:v17b_ordo・v17b_ordo_gate | 回収済み | 持ち主の決定（2026-10-13）で 場所は作らず、灰の荒野の出来事の終点を城の外（泣く音のする谷）まで。オルドは門で会えるだけで戦わない。城の名・中は出さない |
 | 天の巣・竜騎手カルラ | world.js:MAJIN | v17b_kin.js:e4k_karla | 回収済み | 持ち主の決定（2026-10-13）で 天の巣は場所にせず対面の場のまま。カルラは剣翼の眷属に一体（一度倒したら出ない。倒したあとは v2_egg も出ない） |
 | 万巻の塔 | talk_banter_k9_c6c7.js:bt_k9_lh_beat | ― | 取り下げてよい | 水に沈んだ書庫に置き換え済み。ネタ台詞だけ |
-| 明けずの町カルヴァス（オスリック卿） | world.js:LORE_GM | lore_u3.js:rumor・sanity_m5.js:END_MAD | 未回収 | 場所も出来事も無い |
+| 明けずの町カルヴァス（オスリック卿） | world.js:LORE_GM | lore_u3.js:rumor・sanity_m5.js:END_MAD・v17a_karvas.js:karvas | 回収済み | V17a（t04）：場所 karvas。住人の話と家令の日記の三枚。朝を呼ぶ・館の奥はまだ無い |
 | 黒騎士団長ハイデル（元四騎士） | world.js:MAJIN | v17b_threads.js（enemies.js:blackknight の lines.open） | 回収済み | 持ち主の決定（2026-10-13）で 人物の表には足さず、黒騎士の前口上で「団長ハイデル」の名が出るだけ |
-| 王の仇討ち（黒曜の獣ゴルヴァン） | world.js:LORE_GM・events_c2.js:c2_valeon | ― | 未回収 | 「続き物」と書かれているがゴルヴァンの出来事が無い |
-| 錆鎧の心核 | c2_people.js:c2_rustspawn | know_l1_foes.js:c2_rustspawn | 未回収 | 「心核」の語は src に無い。本体の筋無し |
+| 王の仇討ち（黒曜の獣ゴルヴァン） | world.js:LORE_GM・events_c2.js:c2_valeon | v17a_golvan_1.js:SAGAS.golvan | 回収済み | V17a（t01）：依頼主は国王ヴァレオン。A 級・六章と終章 |
+| 錆鎧の心核 | c2_people.js:c2_rustspawn | know_l1_foes.js:c2_rustspawn・v17a_rust.js:v17a_rust_core | 回収済み | V17a（t02）：炭鉱の奥で分かれ身と心核を砕く。本体は出さない |
 | 取り立て屋ボルグ | world.js:MAJIN | events_town2.js:v1_borg | 回収済み | |
 | 溺れ船長ギュスタ・腹の中の町 | world.js:MAJIN | zz_e10b_events.js:e10_lugu_bell | 未回収 | 鐘の舌の噂のみ。迷宮無し |
 | 蠅の宰相ブンブ | world.js:MAJIN | zz_e10_events.js:e10_notari_fate | 回収済み | 名無しで登場 |
 | 料理長マルミット（毒見役に毒） | world.js:MAJIN | enemies_e2.js:e2_marmit | 回収済み | |
-| 残りの使徒の長編（A・S 級の雛形） | e7_0_saga.js:SAGAS | e7_mirza_1.js:e7m_1 | 未回収 | 計画。mirza のみ |
+| 残りの使徒の長編（A・S 級の雛形） | e7_0_saga.js:SAGAS | e7_mirza_1.js:e7m_1・v17a_graw_0.js:SAGAS.graw・v17a_golvan_1.js:SAGAS.golvan | 回収済み | V17a（t06・t01）：黒鎧と黒曜の獣の A 級の長編。S 級はまだ |
 | 灼け口：大食い・皿洗い・食材として追われる | world.js:MAJIN | events_e2.js:e2_gormoa_table | 回収済み | 献上は蜂蜜の焼き菓子（鍵）で代替 |
 | 砂塵：借金・抜け穴・取り立てから逃げる | world.js:MAJIN | events_town2.js:v1_zalve・romance_zalve.js:zalve | 回収済み | |
 | 蝶翅：奇跡・告発・審問から逃げる | world.js:MAJIN | events_w1.js:w1_believer・events_w1.js:w1_exposed・events_w1.js:w1_inquisition | 回収済み | |
@@ -559,7 +559,7 @@
 | 若い司祭「祈りが届いてしまった」 | ambient_u3.js:u3_priest_quiet | ― | 余白 | 祈りに応える仕組み |
 | 脱走兵に食べ物を分けた印（後編 w8_deserter2 と書いてある） | events_w8_wild.js:w8p_deserter | ― | 未回収 | 頭のコメントが「後編 w8_deserter2」と言うが、その出来事は無い。印 w8_deserter は読まれない |
 | 奥の部屋に「釘の数」を数えてくると約束した | events_w3_towns.js:w3_t_tray2 | ― | 未回収 | 印 w3_t_traynote は読まれない。約束の続き（数えて戻る）が無い |
-| 黒鎧の居城の帳面の頁を「持ち主に返すつもりで」懐に入れた | dungeon_w11_places.js:w11_mc_lore2 | ― | 未回収 | 印 w11_rize_page は読まれない。リゼに返す場面が無い |
+| 黒鎧の居城の帳面の頁を「持ち主に返すつもりで」懐に入れた | dungeon_w11_places.js:w11_mc_lore2 | v17a_graw_2.js | 回収済み | V17a：長編「膝を折らぬ者」で女剣士に返せる |
 | 墓守の新しい帳面を「何かの証に」持ち出した | dungeon_w11_places.js:w11_cc_lore2 | ― | 未回収 | 印 w11_ledger は読まれない。告発（e3 aurelia の地下墓地の証拠）に使えない |
 | 鈴の男に戸口へ鈴を掛けられた | events_w3_towns.js:w3_t_ledgers2 | ― | 未回収 | 印 w3_t_belled は読まれない（頭のコメントに「使う印」とある） |
 | 見捨てられた塔の刻み目を数えた | events_w3_wild.js:w3_w_bell_tally | ― | 未回収 | 印 w3_w_tally は読まれない |
@@ -579,11 +579,6 @@
 
 | 糸 | 張った所 | 推し案 |
 |---|---|---|
-| 王の仇討ち（黒曜の獣ゴルヴァン） | world.js:LORE_GM・events_c2.js:c2_valeon | 「続き物」と書いたまま出来事が無い。E7 の A 級の長編の一本目に「王の仇討ち」を当て、依頼主を国王ヴァレオンにする（王が自ら出てくる筋は設定どおり）。作らないなら LORE_GM の「続き物」の文を消す |
-| 錆鎧の心核 | c2_people.js:c2_rustspawn | 「心核を探す続き物」も出来事が無い。ヴィオレーヌ（ユリナの席を狙う）とナタリアの筋に結び、炭鉱の奥で分かれ身を討つ B 級の続き物にする。本体（A 級）は出さない |
-| 明けずの町カルヴァス（オスリック卿） | world.js:LORE_GM | 噂（lore_u3.js:akezu）だけで場所が無い。凍てつく街道と黒鉄の砦の間に場所を一つ足し、中の出来事は curses.md の「日記と住人の話から」の形で。朝を呼ぶ道はベルファスの筋（夢の問答）と結ぶ |
-| 暁鐘会（千回の鐘） | world.js:LORE_GM | 用語説明に二行あるだけ。「鐘を数える・千回に届かず苦情が来る・何も起きない」出来事を一つ（帝都か聖都）。黒幕のディエランは出さない |
-| 残りの使徒の長編（A・S 級の雛形） | e7_0_saga.js:SAGAS | 試作は mirza のみ。次の一本は黒鎧エンバルダ（A 級。宿敵の抜け羽・砦・王命の出来事 e10 が既にある）。S 級は最後に |
 | 砂塵 討伐後もボルグの取り立てが来る | e3_apostles.js:zalve.win | 「町じゅうの借金が白紙」と食い違う。討伐の印（e3:zalve）で v1_debt を消し、ボルグは「貸し、ひとつ」と言って去る一行に |
 | 討伐後も続く使徒の出来事（咎追い・鉄喰い・白霧・忘れ水・蝶翅） | e3_apostles.js:togaoi.after・e3_apostles.js:tetsukui.after・e3_apostles.js:notari.after・e3_apostles.js:levian.after・e3_apostles.js:aurelia.after | after の文と食い違う。zz_e3_apostles.js の STOP にこの五体の出来事（m3_togaoi・w2_iron・v2_notari・遺構の眷属・w1 の聖女）を加える |
 | 忘れ水：記憶を売ると知識／正気が戻る | world.js:LORE_GM | e3_meet_levian に「記憶を一つ売る」の選択肢（memo が一行消え、正気が戻る）。設定どおりで小さい |
