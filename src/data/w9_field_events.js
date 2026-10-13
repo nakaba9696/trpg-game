@@ -19,7 +19,7 @@
     w9fp_ashwyrm: { kind: "beast", foe: "e4_ashwyrm_x", loc: ["mountains"], why: "使徒領の灰の地竜（W8 の強敵）が、境の山へ迷い出る" },
     w9fp_kurobane: { kind: "apostle", ap: "kurobane", loc: ["w2_shadow"], why: "黒翼は影の谷の空に現れる（igyo.md 1・strata.md 7.）" },
     w9fp_ukimiyako: { kind: "apostle", loc: ["mountains"], why: "浮き都は断界山脈の上空を漂う（strata.md 6.・igyo.md 22）" },
-    w9fp_shimagame: { kind: "apostle", loc: ["w3_driftisle"], why: "島亀は八雲（シェルアーク）の沖に浮き沈みする（strata.md 6.・igyo.md 60）" },
+    w9fp_shimagame: { kind: "apostle", loc: ["w3_driftisle"], why: "島亀は島の都シェルアークの沖に浮き沈みする（strata.md 6.・igyo.md 60）" },
   };
 
   D.EVENTS.push(
