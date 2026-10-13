@@ -6,8 +6,7 @@
 ## 仕事を始める前に（知恵袋）
 - 仕事を始める前に、知恵袋（nakaba9696/KnowledgeBase）の skill を開く。どの仕事でも session-ops、ほかは仕事の分野のもの（画像なら image-gen、物語なら story-structure・novel・characters など。一覧は KnowledgeBase の README.md）。
   - 手元の Claude Code：/gamedev-knowhow:<分野> で開ける。
-  - クラウドのセッション：repo のプラグインは読まれない。KnowledgeBase は非公開のままなので、仕事を始めるときに add_repo（owner=nakaba9696, repo=KnowledgeBase, access "read"。書き足す配り役は "push"）でセッションにつなぎ、返ってきた方法で clone して skills/<分野>/SKILL.md を読む（つながずに clone すると認証で失敗する）。
-  - 子を起動するときは、指示文の最初にこのつなぎ方と読む skill の名前を入れる。
+  - クラウドのセッション（repo の設定のプラグインは読み込まれない）：仕事を始めるときに mcp__claude-code-remote__add_repo（owner nakaba9696、repo KnowledgeBase、access "read"。書き足す配り役は "push"）でセッションにつなぎ、返ってきた clone 先に clone してから skills/<分野>/SKILL.md を読む。子を起こすときは、指示文の最初にこの手順と読む skill の名前を入れる。
 - 持ち主の指摘を受けたら、skill add-lesson の手順で KnowledgeBase に 1 項目足して push する（push できなければ知恵袋の係に一項目と出典を送る）。
 
 ## 検証（PR の前に必ず）
