@@ -1,0 +1,59 @@
+{
+ "id": "serios",
+ "source": "generated",
+ "method": "fix",
+ "date": "2026-10-13T19:43:56.265838",
+ "tool": "表情違いの作り直し（mood.py）",
+ "base": {
+  "file": "assets/portraits/serios.webp（main）",
+  "sha1": "0aab71b1a333cf81d35c2f89a506e3caada6646a"
+ },
+ "fix": [
+  "透けた穴 88px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+ ],
+ "post": {
+  "webp_quality": 76,
+  "alpha_quality": 100,
+  "bytes": 20386
+ },
+ "history": [
+  {
+   "id": "serios",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T19:29:23.084628",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/serios.webp（main）",
+    "sha1": "0aab71b1a333cf81d35c2f89a506e3caada6646a"
+   },
+   "fix": [
+    "透けた穴 88px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 76,
+    "alpha_quality": 100,
+    "bytes": 20386
+   }
+  },
+  {
+   "id": "serios",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T19:19:45.622063",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/serios.webp（main）",
+    "sha1": "0aab71b1a333cf81d35c2f89a506e3caada6646a"
+   },
+   "fix": [
+    "透けた穴 88px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 76,
+    "alpha_quality": 100,
+    "bytes": 20386
+   }
+  }
+ ]
+}
