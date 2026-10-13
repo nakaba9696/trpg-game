@@ -36,11 +36,11 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
     const t = document.querySelector("#toast"); if (t) t.style.display = "none";
   });
   await shot("sheet");
-  await page.click("#sheet .q7save");
+  await page.evaluate(() => { G.ui.setSheetOpen(false); G.ui.openSlots("save"); });
   await shot("save");
   await page.click('#dlgSlots [data-slot="slot1"] .q7go');
   await shot("confirm");
-  await page.click("#dlgSlots .q7yes");
+  await page.click("#dlgSlotAsk .q7yes");
   await page.evaluate(() => document.querySelector("#dlgSlots").close());
   // 戦闘中は押せない
   await page.evaluate(() => { G.startCombat(["goblin"], {}); G.ui.render(); });
@@ -56,7 +56,7 @@ for (const [vn, vp] of Object.entries(VIEWS)) {
   await shot("load");
   await page.click('#dlgSlots [data-slot="slot2"] .q7go');
   await shot("load_confirm");
-  await page.click("#dlgSlots .q7yes");
+  await page.click("#dlgSlotAsk .q7yes");
   await page.waitForTimeout(300);
   const ok = await page.evaluate(() => !document.querySelector("#play").hidden && G.S && G.S.profile.name);
   console.log(vn, "loaded:", ok, "errors:", errs.length ? errs : "none");
