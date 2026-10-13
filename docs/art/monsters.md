@@ -48,7 +48,7 @@
 | `assets/monsters/e3_azlag.webp` | 剣翼の使徒ヴァルグレア | (dorontabi:1.3), (colossal black bird god:1.3), (silver steel blade wings:1.4), (mechanical wings of overlapping sword blades:1.3), no soft feathers, enormous blade wings spread wide, blades raining down, golden glowing eyes with slit pupils, sharp steel beak, crest of swords, talons, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：刃の羽を持つ巨きな黒い鳥。羽ばたくたびに刃が降る |
 | `assets/monsters/e3_yuzuel.webp` | 問答の使徒ユズエル | (dorontabi:1.3), (towering inhuman aristocrat:1.3), impossibly tall and thin, (face hidden in shadow:1.2), only a glowing red eye behind a monocle visible, long dark wine red hair, black tailcoat with deep purple waistcoat, white cravat with red gem pin, (long arms ending in thin blades:1.2), bowing politely, (a ring of floating blades behind it:1.2), names engraved on the blades, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：片眼鏡の老紳士の形をした、刃で問いに答えるもの |
 
-## 魔物（156）
+## 魔物（157）
 
 ふつうの敵のうち、魔物の姿のもの。
 
@@ -127,6 +127,7 @@
 | `assets/monsters/e4k_sleepwalkers.webp` | 夢遊びの子ら | group of sleepwalking children, eyes closed, holding hands, pale nightclothes, arms forward, floating | 目を閉じて歩く子どもたち |
 | `assets/monsters/e4k_bladechick.webp` | 刃羽の雛 | chick of giant bird, feathers made of soft metal blades, big round eyes, fluffy | 刃の羽の雛 |
 | `assets/monsters/e4k_cliffwatch.webp` | 崖の羽番 | bird-headed guard, beak, armor made of blade feathers, spear, feathered wings, plume | 抜け羽を鎧にした番人 |
+| `assets/monsters/e4k_karla.webp` | 竜騎手カルラ | （`wyvern` と同じ絵） | 竜に育てられた少女。持ち主が描くまで翼竜の絵を借りる |
 | `assets/monsters/e4k_bellfish.webp` | 鐘鳴り魚 | big round fish, blue spotted scales, googly eyes, small bell visible inside belly, bubbles | 腹で鐘が鳴る魚 |
 | `assets/monsters/e4k_drownedsailor.webp` | 舟歌の亡者 | drowned sailor, undead, waterlogged pale skin, bandana, tattered sailor clothes, visible ribs, reaching | 沖の歌に呑まれた水夫 |
 | `assets/monsters/e4k_unsaid.webp` | 言いかけの影 | shadow figure, black silhouette, glowing eyes, open mouth as if speaking, smoky edges, floating | 言いかけの影 |
