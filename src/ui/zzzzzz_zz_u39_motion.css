@@ -1,0 +1,14 @@
+/* U39：画面の動き（ui/zzzzzz_zz_u39_motion.js）。動きそのものは WAAPI、ここは跳ねる数の見た目と「動きを減らす」 */
+/* HP の欄で跳ねる数（+n は回復・−n は戦闘の外で受けた分） */
+.u39pop { position: fixed; z-index: 60; pointer-events: none; transform: translateX(-100%); font-family: var(--f-display); font-weight: 700; font-size: 20px; line-height: 1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .5), 0 0 8px rgba(0, 0, 0, .35); font-variant-numeric: tabular-nums; }
+.u39pop.u39-heal { color: #58c46a; }
+.u39pop.u39-hurt { color: #ff6a5a; }
+@media (max-width: 880px) { .u39pop { font-size: 18px; } }
+
+/* 「動きを減らす」（設定の窓の「画面」）を選んだとき：ほかのファイルの CSS の動きも止める。終わりの形はそのまま（一瞬で終わらせる） */
+html.u39still *, html.u39still *::before, html.u39still *::after, html.u39still ::backdrop {
+  animation-duration: 1ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+  transition-duration: 0s !important; transition-delay: 0s !important; scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) { .u39pop { display: none; } }
