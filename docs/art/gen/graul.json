@@ -1,0 +1,42 @@
+{
+ "id": "graul",
+ "source": "generated",
+ "method": "fix",
+ "date": "2026-10-13T18:37:41.179307",
+ "tool": "表情違いの作り直し（mood.py）",
+ "base": {
+  "file": "assets/portraits/graul.webp（main）",
+  "sha1": "2585674f011b9ddba457eeae929ab8ef5f038ec8"
+ },
+ "fix": [
+  "透けた穴 3px を不透明に（半透明の色は残し、足りない分はまわりの色）",
+  "白い背景を抜いた（外から続く白・囲まれた大きく平らな白。ふち 2px は白を引いて半透明。whitebg.py）"
+ ],
+ "post": {
+  "webp_quality": 77,
+  "alpha_quality": 100,
+  "bytes": 43030
+ },
+ "history": [
+  {
+   "id": "graul",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T17:47:45.100937",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/graul.webp（main）",
+    "sha1": "2585674f011b9ddba457eeae929ab8ef5f038ec8"
+   },
+   "fix": [
+    "透けた穴 3px を不透明に（半透明の色は残し、足りない分はまわりの色）",
+    "白い背景を抜いた（外から続く白・囲まれた大きく平らな白。ふち 2px は白を引いて半透明。whitebg.py）"
+   ],
+   "post": {
+    "webp_quality": 77,
+    "alpha_quality": 100,
+    "bytes": 43030
+   }
+  }
+ ]
+}
