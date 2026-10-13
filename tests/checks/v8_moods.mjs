@@ -107,7 +107,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (i >= 0) {
       G.chooseEvent(i);
       if (S.mode === "event") F("結果で終わる選択肢なのに出来事が続いている");
-      else if (S.mood !== null || G.moodOf(S) !== null) F("出来事が終わっても表情が残っている");
+      // 結果の場面は、次の行動まで結果の表情を残す（issue #157 の持ち主の決定。C17 の G.c17Linger）。S.mood は戻す
+      else if (S.mood !== null || (G.moodOf(S) !== null && !(G.c17Linger && G.c17Linger(S)))) F("出来事が終わっても表情が残っている");
     }
   }
   // 結果の mood を、続く出来事に持ち越す（続く出来事に mood が無く、文からも推せないとき）

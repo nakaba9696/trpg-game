@@ -28,7 +28,7 @@ export default ({ fail, loadEngine, seeded }) => {
     const S = G.S;
     S.mode = "explore"; S.event = null; S.combat = null;
     G.startEvent(id);
-    const i = ev(id).choices.findIndex((c) => c.label.startsWith(label));
+    const i = ev(id).choices.findIndex((c) => c.label.startsWith(label) || c.label.includes(label));
     if (i < 0) { f(`${id}: 選択肢「${label}」が無い`); return false; }
     if (!G.eventChoices().some((x) => x.i === i)) { f(`${id}: 選択肢「${label}」が出ていない`); return false; }
     withRand(roll == null ? 0.01 : roll, () => G.act(`ev:${i}`));
@@ -59,7 +59,7 @@ export default ({ fail, loadEngine, seeded }) => {
   let S = start(1701);
   {
     const a = S.stats.筋力, g = S.gold;
-    if (choose("v1_zalve", "筋力を担保に")) {
+    if (choose("v1_zalve", "500G 借りる。担保は筋力")) {
       if (S.stats.筋力 !== a - 5) f(`i28：担保で筋力が 5 下がらない（${a}→${S.stats.筋力}）`);
       if (S.gold !== g + 500) f(`i28：担保で 500G 借りられない（${g}→${S.gold}）`);
       if (S.flags.v1_debt) f("i28：担保で借りたのに、取り立ての借金も付いた");
@@ -69,7 +69,7 @@ export default ({ fail, loadEngine, seeded }) => {
   }
 
   // ---------------------------------------------------------------- i108：3〜4 段の病もベルナの高い薬で治る
-  for (const [kind, label] of [["sanity", "高い薬を頼み、正気"], ["hp", "高い薬を頼み、体"]]) {
+  for (const [kind, label] of [["sanity", "代わりに正気"], ["hp", "代わりに体"]]) {
     S = start(1702);
     S.mode = "explore"; G.startEvent("e2_berna_clinic");
     if (G.eventChoices().some((x) => /^高い薬/.test(x.c.label))) f("i108：病の無い者に高い薬が出ている");
