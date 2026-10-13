@@ -2,7 +2,7 @@
 // - 筋の出来事がそろい、next・戦う相手がみな在る。どの出来事のどの選択肢を選んでも、行き止まりにならず落ちない（戦いは勝ちきれる）
 // - ユリナと会っていなくても、会って炭鉱で別れていても、最後（心核を砕く）まで進む。会っていない冒険で、ユリナに会ったことにならない
 // - 始まったら c2_yurina は起きない。心核を砕いたら、この筋の出来事（セリオスに話す一度きりを除く）も分かれ身も出ない
-// - 心核のそばの分かれ身は B 級で、使徒の B の素の強さより下。本体（錆鎧ゼブラン）の名は出さない
+// - 心核が無事なときの戦いは合わせて B 級の手応え（分かれ身が二つ）。一体ずつは使徒の B の素の強さより下。本体（錆鎧ゼブラン）の名は出さない
 // - 文に数字・「！」・見せない言葉が無い。文の癖（千字あたり）が多すぎない
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -75,17 +75,21 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       if (/ゼブラン|錆鎧ゼ/.test(t)) F(`${e.id}: 本体の名が出る`);
     }
   }
-  for (const id of ["v17a_rust_keeper", "v17a_rust_husk", "v17a_rust_chain"]) {
-    const en = D0.ENEMIES[id];
-    if (!en) { F(`敵 ${id} が無い`); continue; }
-    if (NARR.test(en.desc + JSON.stringify(en.lines || {}))) F(`敵 ${id}: 説明に数字か「！」`);
+  // 心核が無事なときの戦いは、合わせて B 級の手応え（HP の合計が B 級の線 100 以上）。一体ずつは使徒の B の素の強さより下
+  {
+    const core = evs.find((e) => e.id === "v17a_rust_core");
+    const fights = core.choices.flatMap((c) => [c.fight, c.ok && c.ok.fight, c.ng && c.ng.fight]).filter(Boolean);
+    const total = (ids) => [].concat(ids).reduce((a, id) => a + ((D0.ENEMIES[id] || {}).hp || 0), 0);
+    const max = Math.max(...fights.map(total));
+    if (!(max >= 100)) F(`心核が無事なときの戦いが軽い（HP の合計 ${max}）`);
+    for (const id of new Set(fights.flat())) {
+      const en = D0.ENEMIES[id];
+      if (!en) continue;
+      if (!(en.hp < 200 && (en.tier || 1) < 6)) F(`分かれ身 ${id} が使徒の B の素の強さ以上`);
+      if (G0.e3Of && G0.e3Of(id)) F(`分かれ身 ${id} が使徒の表に入っている（本体は出さない）`);
+    }
+    if (Object.keys(D0.ENEMIES).some((id) => /^v17a_rust/.test(id))) F("新しい敵を足している（生成画像が要る。A10）");
   }
-  if (G0.gradeOf("v17a_rust_keeper") !== "B") F(`心核のそばの分かれ身が B 級でない（${G0.gradeOf("v17a_rust_keeper")}）`);
-  const bBase = { tier: 6, hp: 200 };   // 使徒の B 級の素の強さ（src/data/e3_apostles.js の BASE.B）
-  const kp = D0.ENEMIES.v17a_rust_keeper;
-  if (!(kp.hp < bBase.hp && kp.tier < bBase.tier)) F("心核のそばの分かれ身が使徒の B の素の強さ以上");
-  if (["A", "S"].includes(G0.gradeOf("v17a_rust_husk"))) F("ひびの入った分かれ身が強すぎる");
-  if (G0.e3Of && G0.e3Of("v17a_rust_keeper")) F("分かれ身が使徒の表に入っている（本体は出さない）");
   // 文の癖
   const r = lintFile(path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "src", "data", "v17a_rust.js"));
   if (r.rate > 2.5) F(`文の癖が多い：千字あたり ${r.rate.toFixed(2)} ${JSON.stringify(r.counts)}`);
