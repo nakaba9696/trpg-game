@@ -1,5 +1,5 @@
 // 背景の絵（V2）。遠景・中景・近景の層、空気遠近（遠いほど霞む）、光と影で描く絵画風の背景。
-// 呼び方は scene.js と同じ：G.paintScene(canvas, { key, phase, seed, foes, sky, redMoon })（scene.js の G.paintScene を上書きする）
+// 呼び方は scene.js と同じ：G.paintScene(canvas, { key, phase, seed, foes, sky, redMoon })（G.paintScene はここが置く。古い scene.js の描き方は消した）
 // - どんな縦横比でも描ける（幅と高さから地平線・主役の建物の位置を比率で決める）
 // - 静止した部分は一度だけ別の canvas に描いて取っておき、雨・雪・霧・炎・灯りの揺れだけを毎コマ重ねる
 // - 戦闘中（foes がある）と出来事中（G.S.mode === "event"）は、同じ絵を暗く・寄りにして使う。opt.focus で指定もできる
@@ -1363,14 +1363,13 @@
     looping = true; requestAnimationFrame(tick);
   }
 
-  const old = G.paintScene;
-  G.paintSceneV1 = old;
   G.sceneNamesV2 = () => ({ out: Object.keys(V.OUT), inside: Object.keys(V.IN) });
   G.paintScene = (canvas, opt) => {
     opt = opt || {};
     // 絵の決まっていない施設は、施設の名前の室内があればそれを使う（学院など）
     const key = opt.key || (G.S && G.S.mode === "fac" && V.IN[G.S.fac] ? G.S.fac : opt.key);
-    if (!V.has(key)) { if (old) return old(canvas, opt); return; }
+    // 絵の無い名前は、汎用の丘陵（plains）で描く（古い描き方 scene.js の OUT・IN は消した。issue #140）
+    if (!V.has(key)) { if (!V.has("plains")) return; opt = Object.assign({}, opt, { key: "plains" }); return V.paint(canvas, opt); }
     const dpr = Math.min(2, (typeof devicePixelRatio === "number" && devicePixelRatio) || 1);
     const rect = canvas.getBoundingClientRect();
     const w = Math.max(200, Math.round(rect.width)), h = Math.max(120, Math.round(rect.height));

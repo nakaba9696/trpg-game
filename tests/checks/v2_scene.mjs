@@ -1,6 +1,6 @@
 // V2：背景の絵（scene_v2*.js）。DOM なしで確かめられる範囲
-// - すべての場所（外・迷宮の中）と施設に、V2 の描き方が当たる（古い scene.js の絵に落ちない）
-// - 古い scene.js の絵の名前はすべて V2 にもある
+// - すべての場所（外・迷宮の中）と施設に、V2 の描き方が当たる（古い scene.js の描き方は消した。issue #140。当たらない名前は汎用の丘陵）
+// - 名前の入口（G.sceneNames）は V2 の名前を返す
 // - 横長・帯・縦長のどの縦横比でも、時間帯・季節・天候・戦闘中・出来事中で、例外なく描ける。G.rand を使わない
 // - 同じ場所・同じ条件なら、同じ絵になる（決まった種）
 import { readFileSync, readdirSync } from "node:fs";
@@ -16,12 +16,13 @@ export default ({ G, fail, ok }) => {
   for (const f of ["art_monsters.js", "art_people.js", "scene.js", ...v2]) vm.runInContext(readFileSync(new URL(f, dir), "utf8"), vmc, { filename: "ui/" + f });
   const V = G.SV2;
   if (!V || !G.sceneNamesV2) return no("G.SV2 が無い");
-  if (typeof G.paintSceneV1 !== "function") no("古い描き方（G.paintSceneV1）が残っていない");
+  if (G.paintSceneV1) no("古い描き方（G.paintSceneV1）が残っている（issue #140 で消した）");
 
   // ---------------------------------------------------------------- 描き方が当たるか
   const has = (k) => !!(V.OUT[k] || V.IN[k]);
   const old = G.sceneNames();
-  for (const k of [...old.out, ...old.inside]) if (!has(k)) no(`scene.js の絵 ${k} が V2 に無い（古い絵に落ちる）`);
+  for (const k of [...old.out, ...old.inside]) if (!has(k)) no(`G.sceneNames の絵 ${k} が V2 に無い`);
+  if (old.out.length !== Object.keys(V.OUT).length || old.inside.length !== Object.keys(V.IN).length) no("G.sceneNames が V2 の名前と食い違う");
   const FAC_SCENE = { castle: "throne", ...(D.FAC_SCENE || {}) }; // D.FAC_SCENE：町の特色の場所（W9。室内の絵か、町の外の景色）
   for (const [id, L] of Object.entries(D.LOCS)) {
     if (!V.OUT[L.scene]) no(`${id} の外の絵 ${L.scene} が V2 に無い`);

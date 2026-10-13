@@ -1,6 +1,6 @@
 // W3：新しい場所（src/data/locations_w3.js）と出来事（src/data/events_w3*.js）
 // - 新しい場所が 6〜8（町 2〜3・迷宮 2・ほかは野外か名所）。どれも担当の地域（レオネスト王国・光天教会領・シェルアーク）の中
-// - どの場所にも道か船があり（片道でない）、気候・着いたときの用語説明・背景の絵（古い scene.js と V2）がある。迷宮は中の絵も
+// - どの場所にも道か船があり（片道でない）、気候・着いたときの用語説明・背景の絵（V2）がある。迷宮は中の絵も
 // - 出来事が 120 以上。どの出来事も、能力値の違う解き方が二つ以上と、判定なしの選択肢がある
 // - 続き物（next）の行き先があり、行き先にしか出ない出来事（w: 0）は、どこかの next から来る。一度きり・条件つきが混ざっている
 // - 新しい場所ごとに出来事がある。迷宮には、階ごとの出来事がある。担当の地域の今ある場所にも出来事が増えている
@@ -23,7 +23,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- 場所
   const src = (f) => readFileSync(new URL("../../src/" + f, import.meta.url), "utf8");
-  const v1 = src("ui/scene.js"), v2 = src("ui/scene_v2_w3.js");
+  const v2 = src("ui/scene_v2_w3.js");
   for (const [id, L] of w3) {
     if (!REGIONS.includes(L.region)) F(`${id}: 地域 ${L.region} が担当の外`);
     const ways = [...Object.keys(L.links || {}), ...Object.keys(L.sea || {})];
@@ -32,9 +32,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     if (!(L.x >= 0 && L.x <= 100 && L.y >= 0 && L.y <= 100)) F(`${id}: 地図の座標が外`);
     if (!D.CLIMATE || !D.CLIMATE[id]) F(`${id}: 気候が無い`);
     if (!D.LORE_ON.loc[id]) F(`${id}: 着いたときに開く用語説明が無い`);
-    if (!v1.includes(`${L.scene}(ctx, w, h, sk, R)`)) F(`${id}: 背景の絵 ${L.scene} が scene.js に無い`);
     if (!v2.includes(`OUT.${L.scene} =`)) F(`${id}: 背景の絵 ${L.scene} が scene_v2_w3.js に無い`);
-    if (L.type === "dungeon" && (!v1.includes(`${L.scene}_in(ctx, w, h, R)`) || !v2.includes(`IN.${L.scene}_in =`))) F(`${id}: 迷宮の中の絵が無い`);
+    if (L.type === "dungeon" && !v2.includes(`IN.${L.scene}_in =`)) F(`${id}: 迷宮の中の絵が無い`);
     if (L.type !== "town" && !(L.danger >= 1 && L.danger <= 3)) F(`${id}: 危険度 ${L.danger} が 1〜3 の外`);
     if (L.type === "town" && !(D.AMBIENT || []).some((a) => a.where.includes(id))) F(`${id}: 通行人のひとことが無い`);
   }

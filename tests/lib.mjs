@@ -1,5 +1,5 @@
 // テストの共通部品：エンジンを DOM なしで読み込む・決まった乱数
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 import path from "node:path";
@@ -27,4 +27,10 @@ export function seeded(seed) {
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+// 背景の絵のファイル（scene.js は名前の入口だけ。絵は V2 の scene_v2*.js がすべて描く。issue #140）。読む順は build.mjs と同じ名前順
+export function sceneFiles() {
+  const dir = path.join(root, "ui");
+  return ["scene.js", ...readdirSync(dir).filter((f) => /^scene_v2.*\.js$/.test(f)).sort()];
 }
