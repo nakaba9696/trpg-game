@@ -579,11 +579,6 @@
 
 | 糸 | 張った所 | 推し案 |
 |---|---|---|
-| 王の仇討ち（黒曜の獣ゴルヴァン） | world.js:LORE_GM・events_c2.js:c2_valeon | 「続き物」と書いたまま出来事が無い。E7 の A 級の長編の一本目に「王の仇討ち」を当て、依頼主を国王ヴァレオンにする（王が自ら出てくる筋は設定どおり）。作らないなら LORE_GM の「続き物」の文を消す |
-| 錆鎧の心核 | c2_people.js:c2_rustspawn | 「心核を探す続き物」も出来事が無い。ヴィオレーヌ（ユリナの席を狙う）とナタリアの筋に結び、炭鉱の奥で分かれ身を討つ B 級の続き物にする。本体（A 級）は出さない |
-| 明けずの町カルヴァス（オスリック卿） | world.js:LORE_GM | 噂（lore_u3.js:akezu）だけで場所が無い。凍てつく街道と黒鉄の砦の間に場所を一つ足し、中の出来事は curses.md の「日記と住人の話から」の形で。朝を呼ぶ道はベルファスの筋（夢の問答）と結ぶ |
-| 暁鐘会（千回の鐘） | world.js:LORE_GM | 用語説明に二行あるだけ。「鐘を数える・千回に届かず苦情が来る・何も起きない」出来事を一つ（帝都か聖都）。黒幕のディエランは出さない |
-| 残りの使徒の長編（A・S 級の雛形） | e7_0_saga.js:SAGAS | 試作は mirza のみ。次の一本は黒鎧エンバルダ（A 級。宿敵の抜け羽・砦・王命の出来事 e10 が既にある）。S 級は最後に |
 | 砂塵 討伐後もボルグの取り立てが来る | e3_apostles.js:zalve.win | 「町じゅうの借金が白紙」と食い違う。討伐の印（e3:zalve）で v1_debt を消し、ボルグは「貸し、ひとつ」と言って去る一行に |
 | 討伐後も続く使徒の出来事（咎追い・鉄喰い・白霧・忘れ水・蝶翅） | e3_apostles.js:togaoi.after・e3_apostles.js:tetsukui.after・e3_apostles.js:notari.after・e3_apostles.js:levian.after・e3_apostles.js:aurelia.after | after の文と食い違う。zz_e3_apostles.js の STOP にこの五体の出来事（m3_togaoi・w2_iron・v2_notari・遺構の眷属・w1 の聖女）を加える |
 | 忘れ水：記憶を売ると知識／正気が戻る | world.js:LORE_GM | e3_meet_levian に「記憶を一つ売る」の選択肢（memo が一行消え、正気が戻る）。設定どおりで小さい |
