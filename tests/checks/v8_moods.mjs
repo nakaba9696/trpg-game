@@ -1,5 +1,5 @@
 // V8：立ち絵の喜怒哀楽（src/engine/v8_moods.js・src/ui/v8_moods.js・v5_stand.js・docs/art/portraits.json の face と variants・tools/gen_portraits.mjs --variants）
-// - variants の id が人物（キャラメモの人か、出来事の名のある人）に当たり、喜怒哀楽の 4 つがそろっている。表情のタグに性的・構図の言葉が無い
+// - variants の id が人物（キャラメモの人か、出来事の名のある人）に当たる（喜怒哀楽はそろっていなくてよい）。表情のタグに性的・構図の言葉が無い
 // - 出来事・結果の mood の値が、表情の一覧（G.MOODS。喜怒哀楽と V11 の表情）か "normal"
 // - 出来事が始まると表情が決まり（データの mood ＞ 文から推す ＞ 続いた結果の mood）、終わると通常に戻る。古いセーブ（S.mood 無し）でも動く
 // - 差分の絵が無ければ通常の絵、あれば差分。立ち絵の印は表情で変わらない（人は出入りせず、顔だけ入れ替わる）
@@ -32,7 +32,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const keys = Object.keys(p.variants);
     const extra = keys.filter((k) => !MOODS.includes(k));
     if (extra.length) F(`${p.id} の variants に、表情の一覧（G.MOODS）に無い鍵：${extra.join("、")}`);
-    for (const m of MOODS.slice(0, 4).concat(keys.filter((k) => !MOODS.slice(0, 4).includes(k)))) {
+    // 喜怒哀楽の 4 つがそろっていなくてよい（持ち主の決定 2026-10-13「量より質」。無い表情は基本の絵に落ちる）
+    for (const m of keys) {
       const t = p.variants[m];
       if (typeof t !== "string" || !t.trim()) F(`${p.id} の variants.${m} が無い`);
       else if (BAD.test(t)) F(`${p.id} の variants.${m} に、構図・性的な言葉がある：${t.match(BAD)[0]}`);

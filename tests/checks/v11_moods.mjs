@@ -56,9 +56,10 @@ export default ({ fail, ok, loadEngine }) => {
     if (!p) { F(`主要な人 ${id} が絵の一覧に無い`); continue; }
     if (!p.variants) { F(`主要な人 ${id}（${p.name}）に差分（variants）が無い`); continue; }
     const vk = Object.keys(p.variants);
-    for (const m of BASE) if (!p.variants[m]) F(`${id} に喜怒哀楽の ${m} が無い`);
+    // 持ち主の決定（2026-10-13「表情差分 量より質をあげて 無理にたくさんの表情差分つくらなくていい」）：
+    // 喜怒哀楽も、その人らしい表情も、崩れずに描けた物だけ持つ。無い表情は近い表情か基本の絵に落ちる（V11 の fallback）
     const ex = vk.filter((m) => !BASE.includes(m));
-    if (ex.length < 3 || ex.length > 5) F(`${id}（${p.name}）のその人らしい表情が ${ex.length} 個（3〜5 個）`);
+    if (ex.length > 5) F(`${id}（${p.name}）のその人らしい表情が ${ex.length} 個（5 個まで）`);
     extras += ex.length;
     if (!p.face) F(`${id} に基本の表情（face）が無い`);
     if (APOSTLES.includes(id) && !p.identity) F(`使徒 ${id} に見た目（identity）が無い（差分で別人にならないよう分ける）`);
