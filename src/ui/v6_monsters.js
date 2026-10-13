@@ -10,7 +10,7 @@
 (function (G) {
   // 一覧で same_as を付けた敵（色違いなど）→ その絵の id。docs/art/monsters.json と同じにする（tests/checks/v6_monsters.mjs が見る）
   // W10 の山の敵は、持ち主が描くまで近い魔物の絵を借りる
-  const SAME = { w10_rockgoat: "e4_thornboar", w10_screemole: "e4k_furrowmole", w10_fogimp: "e4_reedimp", w10_cragbird: "e4k_cliffwatch", w10_snowape: "e4_frostbear", w10_icebat: "e4_bellbat" };
+  const SAME = { w10_rockgoat: "e4_thornboar", w10_screemole: "e4k_furrowmole", w10_fogimp: "e4_reedimp", w10_cragbird: "e4k_cliffwatch", w10_snowape: "e4_frostbear", w10_icebat: "e4_bellbat", e4k_karla: "wyvern" };
   G.V6_SAME = SAME;
   // 人の姿の敵 → 人物の絵の id（docs/art/monsters.json の people と同じにする。tests/checks/v6_monsters.mjs が見る）
   const PEOPLE = { c4_musette: "musette", c5_violaine: "violaine", c5_severin: "severin", c8_graul: "graul", c2_nora: "nora", c2_angelica: "angelica", c2_zork: "zork", w1_konoha: "konoha", e2_berna: "berna" };

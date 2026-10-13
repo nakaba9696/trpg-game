@@ -58,7 +58,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   }
   // 条件の品と印が出来事で手に入る
   for (const [id, it] of Object.entries(E3.ITEMS)) if (it.type === "key" && !gives.has(id)) fail(`条件の品 ${id} が、どの出来事でも手に入らない`);
-  for (const f of ["e3_awake", "e3_song", "e3_shadowword", "e3_rootlie"]) if (!sets.has(f)) fail(`条件の印 ${f} が、どの出来事でも付かない`);
+  for (const f of ["e3_awake", "e3_song", "v1_shezar_lost", "e3_shadowword", "e3_rootlie"]) if (!sets.has(f)) fail(`条件の印 ${f} が、どの出来事でも付かない`);
   // 書き方：見世物の言葉を出さない・名前（刻印の読み）を地の文に出さない
   const BAD = /見世物|観客|客席|舞台|台本|神々が眺め|魔王/;
   const texts = [];
@@ -88,7 +88,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const S = G.S;
     Object.entries(G.data.E3.ITEMS).forEach(([id, it]) => { if (it.type === "key") G.give(id); });
     G.give("smoke", 2);
-    ["e3_awake", "e3_song", "e3_shadowword", "e3_rootlie", "mid:majincastle:3", "mid:e2_kitchen:3", "mid:e2_garden:3", "kain", "w1_gregor", "w1_konoha", "w2_ironwarden"].forEach((f) => { S.flags[f] = true; });
+    ["e3_awake", "e3_song", "v1_shezar_lost", "e3_shadowword", "e3_rootlie", "mid:majincastle:3", "mid:e2_kitchen:3", "mid:e2_garden:3", "kain", "w1_gregor", "w1_konoha", "w2_ironwarden"].forEach((f) => { S.flags[f] = true; });
     S.companions = [{ name: "剣士のアル", cls: "剣士", power: 70, dmg: 2, desc: "無口", bond: 90 }];
     S.day = 271; S.phase = 3; // 冬の夜
     S.world = Object.assign(S.world || {}, { emp: "civil" });

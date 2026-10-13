@@ -769,6 +769,14 @@
    "memo": "抜け羽を鎧にした番人"
   },
   {
+   "id": "e4k_karla",
+   "file": "assets/monsters/e4k_karla.webp",
+   "name": "竜騎手カルラ",
+   "same_as": "wyvern",
+   "tags": "1girl, young dragon rider, red armor, plumed helmet, holding long spear, riding a dark wyvern, fierce eyes, small build",
+   "memo": "竜に育てられた少女。持ち主が描くまで翼竜の絵を借りる"
+  },
+  {
    "id": "e4k_bellfish",
    "file": "assets/monsters/e4k_bellfish.webp",
    "name": "鐘鳴り魚",
