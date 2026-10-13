@@ -50,7 +50,8 @@ export default ({ fail, loadEngine, seeded }) => {
   // ---------------------------------------------------------------- 振りの悪い主人公と良い主人公の序盤
   {
     const H = loadEngine();
-    const rows = runRolls(H, { n: 60, steps: 200, policy: "rand", seed0: 13100 });
+    // 60 回では、振りの良い側の一回の道筋の違いで比が 1.35 を行き来した（V17b の船旅の出来事一つで落ちた）。120 回で比べる
+    const rows = runRolls(H, { n: 120, steps: 200, policy: "rand", seed0: 13100 });
     const c = compare(rows);
     if (c.lo.dead - c.hi.dead > 0.25) f(`振りの悪い主人公が序盤で死にすぎる（死んだ割合 低い振り ${c.lo.dead}・高い振り ${c.hi.dead}）`);
     if (c.lo.roundsPerFight > c.hi.roundsPerFight * 1.35) f(`振りの悪い主人公の戦いが長すぎる（一戦の手番 ${c.lo.roundsPerFight}・${c.hi.roundsPerFight}）`);
