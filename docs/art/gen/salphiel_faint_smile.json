@@ -1,0 +1,412 @@
+{
+ "id": "salphiel_faint_smile",
+ "source": "generated",
+ "method": "chain",
+ "date": "2026-10-14T02:33:15.733891",
+ "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+ "base": {
+  "file": "assets/portraits/salphiel.webp",
+  "sha1": "8289598896c04d2723b8a6cc4b575030a87e80aa"
+ },
+ "mask": {
+  "how": "顔の箱（face_yolov8n。[195, 80, 322, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+  "file": "mask/salphiel.png"
+ },
+ "steps": [
+  {
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-13T17:33:06.276851+00:00",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (gentle eyes:1.2), (smiling eyes:1.2), (white veil covering the lower face:1.4), (golden eyes:1.3)",
+   "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots, (star-shaped pupils:1.5), star, (exaggerated expression:1.4), comical, (deformed face:1.3), (wide open mouth:1.3), (laughing:1.2), chibi, (sparkling eyes:1.2), sweatdrop",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 20,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1024,
+   "denoising_strength": 0.7,
+   "batch_size": 1,
+   "n_iter": 1,
+   "inpainting_fill": 1,
+   "inpaint_full_res": true,
+   "inpaint_full_res_padding": 96,
+   "mask_blur": 4,
+   "seed": 1914889121,
+   "subseed": 2783375842,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "bfc0ffd47cc1e9ddbb7f8b2d58fcf9f6a2edc0db",
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (gentle eyes:1.2), (smiling eyes:1.2), (white veil covering the lower face:1.4), (golden eyes:1.3)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots, (star-shaped pupils:1.5), star, (exaggerated expression:1.4), comical, (deformed face:1.3), (wide open mouth:1.3), (laughing:1.2), chibi, (sparkling eyes:1.2), sweatdrop\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1914889121, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.7, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+   "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+  },
+  {
+   "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+   "keep_mask": "mask/salphiel_keep.png",
+   "eyes_found": [
+    [
+     228.5,
+     135.5,
+     14.0,
+     13.3
+    ],
+    [
+     279.0,
+     131.0,
+     17.6,
+     13.3
+    ]
+   ],
+   "iris_hue_sat": [
+    0.12174761295318604,
+    0.446277379989624
+   ]
+  }
+ ],
+ "post": {
+  "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+  "webp_quality": 90,
+  "alpha_quality": 100,
+  "bytes": 24742
+ },
+ "history": [
+  {
+   "id": "salphiel_faint_smile",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-14T01:14:36.206772",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/salphiel.webp",
+    "sha1": "8289598896c04d2723b8a6cc4b575030a87e80aa"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[195, 80, 322, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/salphiel.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T16:14:23.100687+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (gentle eyes:1.2), (smiling eyes:1.2), (white veil covering the lower face:1.4), (golden eyes:1.3)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots, (star-shaped pupils:1.5), star, (exaggerated expression:1.4), comical, (deformed face:1.3), (wide open mouth:1.3), (laughing:1.2), chibi, (sparkling eyes:1.2), sweatdrop",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.7,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1914889121,
+     "subseed": 4061336652,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "bfc0ffd47cc1e9ddbb7f8b2d58fcf9f6a2edc0db",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (gentle eyes:1.2), (smiling eyes:1.2), (white veil covering the lower face:1.4), (golden eyes:1.3)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots, (star-shaped pupils:1.5), star, (exaggerated expression:1.4), comical, (deformed face:1.3), (wide open mouth:1.3), (laughing:1.2), chibi, (sparkling eyes:1.2), sweatdrop\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1914889121, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.7, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    },
+    {
+     "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+     "keep_mask": "mask/salphiel_keep.png",
+     "eyes_found": [
+      [
+       228.5,
+       135.5,
+       14.0,
+       13.3
+      ],
+      [
+       279.0,
+       131.0,
+       17.6,
+       13.3
+      ]
+     ],
+     "iris_hue_sat": [
+      0.10427273064851761,
+      0.43734297156333923
+     ]
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 89,
+    "alpha_quality": 100,
+    "bytes": 24182
+   }
+  },
+  {
+   "id": "salphiel_faint_smile",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T18:29:07.683234",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/salphiel.webp",
+    "sha1": "8289598896c04d2723b8a6cc4b575030a87e80aa"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[195, 80, 322, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/salphiel.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T09:28:58.528913+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (gentle eyes:1.2), (smiling eyes:1.2), (white veil covering the lower face:1.4), (golden eyes:1.3)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots, (star-shaped pupils:1.5), star, (exaggerated expression:1.4), comical, (deformed face:1.3), (wide open mouth:1.3), (laughing:1.2), chibi, (sparkling eyes:1.2), sweatdrop",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.7,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1914889121,
+     "subseed": 1921078538,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "6e92b2bc81a977a6ceef4490ddf5b15e1f90d8b5",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (gentle eyes:1.2), (smiling eyes:1.2), (white veil covering the lower face:1.4), (golden eyes:1.3)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots, (star-shaped pupils:1.5), star, (exaggerated expression:1.4), comical, (deformed face:1.3), (wide open mouth:1.3), (laughing:1.2), chibi, (sparkling eyes:1.2), sweatdrop\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1914889121, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.7, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 90,
+    "alpha_quality": 100,
+    "bytes": 24630
+   }
+  },
+  {
+   "id": "salphiel_faint_smile",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T16:41:20.078824",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/salphiel.webp",
+    "sha1": "8289598896c04d2723b8a6cc4b575030a87e80aa"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[195, 80, 322, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/salphiel.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T07:41:10.880736+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.6), (closed mouth:1.6), (gentle eyes:1.6), (gentle eyes:1.6), (smiling eyes:1.6)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.74,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1914889121,
+     "subseed": 136213767,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "6e92b2bc81a977a6ceef4490ddf5b15e1f90d8b5",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.6), (closed mouth:1.6), (gentle eyes:1.6), (gentle eyes:1.6), (smiling eyes:1.6)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1914889121, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.74, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 90,
+    "alpha_quality": 100,
+    "bytes": 24576
+   }
+  },
+  {
+   "id": "salphiel_faint_smile",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T16:38:45.324161",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/salphiel.webp",
+    "sha1": "8289598896c04d2723b8a6cc4b575030a87e80aa"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[195, 80, 322, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/salphiel.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T07:38:36.134614+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (gentle eyes:1.5), (smiling eyes:1.5)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.6,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1914889121,
+     "subseed": 2305200329,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "6e92b2bc81a977a6ceef4490ddf5b15e1f90d8b5",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (gentle eyes:1.5), (smiling eyes:1.5)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth, (mouth:1.6), (lips:1.5), nose, (veil removed:1.5), dark spots\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1914889121, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.6, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 90,
+    "alpha_quality": 100,
+    "bytes": 24564
+   }
+  },
+  {
+   "id": "salphiel_faint_smile",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T15:28:09.009759",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/salphiel.webp",
+    "sha1": "8289598896c04d2723b8a6cc4b575030a87e80aa"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[195, 80, 322, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/salphiel.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T06:27:59.872850+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (gentle eyes:1.5), (smiling eyes:1.5)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1914889121,
+     "subseed": 2237868666,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "b5d1d8f5deda267ace6c184b319d8be903e3b237",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, petite, small child-like figure, pale skin, white hair, platinum blonde hair, very long hair, golden eyes, faintly glowing eyes, white veil covering lower face, sheer veil over head, white and gold robe, wide sleeves, gold embroidery, barefoot, silver water basin, holding a silver basin with water, ash floating in water, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (gentle eyes:1.5), (smiling eyes:1.5)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1914889121, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 90,
+    "alpha_quality": 100,
+    "bytes": 24532
+   }
+  }
+ ]
+}

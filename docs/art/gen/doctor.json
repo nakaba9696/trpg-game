@@ -1,0 +1,78 @@
+{
+ "id": "doctor",
+ "source": "generated",
+ "method": "fix",
+ "date": "2026-10-14T01:52:53.598594",
+ "tool": "表情違いの作り直し（mood.py）",
+ "base": {
+  "file": "assets/portraits/doctor.webp（main）",
+  "sha1": "f073eca9b91491f03e74344d94af24b5ae2c09bf"
+ },
+ "fix": [
+  "透けた穴 13px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+ ],
+ "post": {
+  "webp_quality": 79,
+  "alpha_quality": 100,
+  "bytes": 24360
+ },
+ "history": [
+  {
+   "id": "doctor",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-14T00:12:37.074787",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/doctor.webp（main）",
+    "sha1": "f073eca9b91491f03e74344d94af24b5ae2c09bf"
+   },
+   "fix": [
+    "透けた穴 13px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 79,
+    "alpha_quality": 100,
+    "bytes": 24360
+   }
+  },
+  {
+   "id": "doctor",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T17:35:09.079377",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/doctor.webp（main）",
+    "sha1": "f073eca9b91491f03e74344d94af24b5ae2c09bf"
+   },
+   "fix": [
+    "透けた穴 13px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 79,
+    "alpha_quality": 100,
+    "bytes": 24360
+   }
+  },
+  {
+   "id": "doctor",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T17:09:27.831572",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/doctor.webp（main）",
+    "sha1": "f073eca9b91491f03e74344d94af24b5ae2c09bf"
+   },
+   "fix": [
+    "透けた穴 13px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 79,
+    "alpha_quality": 100,
+    "bytes": 24360
+   }
+  }
+ ]
+}

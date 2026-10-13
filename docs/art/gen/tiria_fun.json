@@ -1,0 +1,229 @@
+{
+ "id": "tiria_fun",
+ "source": "generated",
+ "method": "chain",
+ "date": "2026-10-14T02:34:57.595332",
+ "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+ "base": {
+  "file": "assets/portraits/tiria.webp",
+  "sha1": "c94207b5374ae8010932086b3a4973cf8cfaa762"
+ },
+ "mask": {
+  "how": "顔の箱（face_yolov8n。[162, 82, 348, 256]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+  "file": "mask/tiria.png"
+ },
+ "steps": [
+  {
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-13T17:34:46.809141+00:00",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, princess, 23 years old, slim, fair skin, chestnut hair, soft brown hair, long hair, single braid over shoulder, soft bangs, hazel eyes, gentle eyes, thin eyebrows, wheat ear in hair, dirt on cheek, neat modest green dress, white collar, holding a basket, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((laughing:1.3):1.5), ((open mouth:1.2):1.5), (:d:1.5), (closed eyes:1.5), (happy:1.5), (laughing:1.5), (open mouth:1.5), (closed eyes:1.5)",
+   "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 20,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1024,
+   "denoising_strength": 0.8,
+   "batch_size": 1,
+   "n_iter": 1,
+   "inpainting_fill": 1,
+   "inpaint_full_res": true,
+   "inpaint_full_res_padding": 96,
+   "mask_blur": 4,
+   "seed": 1405785344,
+   "subseed": 168242527,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "30910de55ecf0bf037c3f0f6420c348f98edb42b",
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, princess, 23 years old, slim, fair skin, chestnut hair, soft brown hair, long hair, single braid over shoulder, soft bangs, hazel eyes, gentle eyes, thin eyebrows, wheat ear in hair, dirt on cheek, neat modest green dress, white collar, holding a basket, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((laughing:1.3):1.5), ((open mouth:1.2):1.5), (:d:1.5), (closed eyes:1.5), (happy:1.5), (laughing:1.5), (open mouth:1.5), (closed eyes:1.5)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1405785344, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+   "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+  },
+  {
+   "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+   "keep_mask": "mask/tiria_keep.png",
+   "eyes_found": [
+    [
+     219.5,
+     162.3,
+     22.3,
+     12.2
+    ],
+    [
+     293.8,
+     162.3,
+     22.3,
+     12.2
+    ]
+   ],
+   "iris_hue_sat": [
+    0.011725373566150665,
+    0.34408602118492126
+   ]
+  }
+ ],
+ "post": {
+  "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+  "webp_quality": 89,
+  "alpha_quality": 100,
+  "bytes": 20684
+ },
+ "history": [
+  {
+   "id": "tiria_fun",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-14T01:17:17.578684",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/tiria.webp",
+    "sha1": "c94207b5374ae8010932086b3a4973cf8cfaa762"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[162, 82, 348, 256]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/tiria.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T16:17:05.324886+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, princess, 23 years old, slim, fair skin, chestnut hair, soft brown hair, long hair, single braid over shoulder, soft bangs, hazel eyes, gentle eyes, thin eyebrows, wheat ear in hair, dirt on cheek, neat modest green dress, white collar, holding a basket, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((laughing:1.3):1.5), ((open mouth:1.2):1.5), (:d:1.5), (closed eyes:1.5), (happy:1.5), (laughing:1.5), (open mouth:1.5), (closed eyes:1.5)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1405785344,
+     "subseed": 2814836102,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "d8679279ecf210cac60fad97c4639a0e851ae166",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, princess, 23 years old, slim, fair skin, chestnut hair, soft brown hair, long hair, single braid over shoulder, soft bangs, hazel eyes, gentle eyes, thin eyebrows, wheat ear in hair, dirt on cheek, neat modest green dress, white collar, holding a basket, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((laughing:1.3):1.5), ((open mouth:1.2):1.5), (:d:1.5), (closed eyes:1.5), (happy:1.5), (laughing:1.5), (open mouth:1.5), (closed eyes:1.5)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1405785344, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    },
+    {
+     "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+     "keep_mask": "mask/tiria_keep.png",
+     "eyes_found": [
+      [
+       219.5,
+       162.3,
+       22.3,
+       12.2
+      ],
+      [
+       293.8,
+       162.3,
+       22.3,
+       12.2
+      ]
+     ],
+     "iris_hue_sat": [
+      0.015515650622546673,
+      0.34375
+     ]
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 89,
+    "alpha_quality": 100,
+    "bytes": 20520
+   }
+  },
+  {
+   "id": "tiria_fun",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T20:00:45.983947",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/tiria.webp（この作業で直した基本）",
+    "sha1": "c94207b5374ae8010932086b3a4973cf8cfaa762"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[162, 82, 348, 256]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/tiria.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T11:00:36.328369+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, princess, 23 years old, slim, fair skin, chestnut hair, soft brown hair, long hair, single braid over shoulder, soft bangs, hazel eyes, gentle eyes, thin eyebrows, wheat ear in hair, dirt on cheek, neat modest green dress, white collar, holding a basket, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((laughing:1.3):1.5), ((open mouth:1.2):1.5), (:d:1.5), (closed eyes:1.5), (happy:1.5), (laughing:1.5), (open mouth:1.5), (closed eyes:1.5)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1405785344,
+     "subseed": 542188575,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "267e410a0533e5ce896a1991bb7cc6b0afd1c516",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, princess, 23 years old, slim, fair skin, chestnut hair, soft brown hair, long hair, single braid over shoulder, soft bangs, hazel eyes, gentle eyes, thin eyebrows, wheat ear in hair, dirt on cheek, neat modest green dress, white collar, holding a basket, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((laughing:1.3):1.5), ((open mouth:1.2):1.5), (:d:1.5), (closed eyes:1.5), (happy:1.5), (laughing:1.5), (open mouth:1.5), (closed eyes:1.5)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1405785344, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 87,
+    "alpha_quality": 100,
+    "bytes": 21554
+   }
+  }
+ ]
+}

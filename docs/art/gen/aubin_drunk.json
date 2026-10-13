@@ -1,0 +1,287 @@
+{
+ "id": "aubin_drunk",
+ "source": "generated",
+ "method": "chain",
+ "date": "2026-10-14T01:35:58.847745",
+ "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+ "base": {
+  "file": "assets/portraits/aubin.webp",
+  "sha1": "ef71777fd9436d55d4106194e942a9159e83bb61"
+ },
+ "mask": {
+  "how": "顔の箱（face_yolov8n。[208, 50, 321, 157]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+  "file": "mask/aubin.png"
+ },
+ "steps": [
+  {
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-13T16:35:48.369981+00:00",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings, leaning on a hay bale, hand on sword hilt, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((drunk:1.3):1.5), (blush:1.5), (half-closed eyes:1.5), (open mouth:1.5), (drunk:1.5), (flushed face:1.5), (half-closed eyes:1.5), (wavy mouth:1.5)",
+   "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 20,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1024,
+   "denoising_strength": 0.8,
+   "batch_size": 1,
+   "n_iter": 1,
+   "inpainting_fill": 1,
+   "inpaint_full_res": true,
+   "inpaint_full_res_padding": 96,
+   "mask_blur": 4,
+   "seed": 796771384,
+   "subseed": 3401313191,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "66390a8cfb40570bd8e8e863242427c89c08ee9e",
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings, leaning on a hay bale, hand on sword hilt, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((drunk:1.3):1.5), (blush:1.5), (half-closed eyes:1.5), (open mouth:1.5), (drunk:1.5), (flushed face:1.5), (half-closed eyes:1.5), (wavy mouth:1.5)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 796771384, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+   "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+  },
+  {
+   "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+   "keep_mask": "mask/aubin_keep.png",
+   "eyes_found": [
+    [
+     239.0,
+     92.0,
+     16.2,
+     8.4
+    ],
+    [
+     288.5,
+     93.0,
+     15.5,
+     7.5
+    ]
+   ],
+   "iris_hue_sat": null
+  }
+ ],
+ "post": {
+  "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+  "webp_quality": 72,
+  "alpha_quality": 100,
+  "bytes": 27264
+ },
+ "history": [
+  {
+   "id": "aubin_drunk",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T23:58:07.787027",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/aubin.webp",
+    "sha1": "ef71777fd9436d55d4106194e942a9159e83bb61"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[208, 50, 321, 157]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/aubin.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T14:58:01.841275+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings, leaning on a hay bale, hand on sword hilt, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((drunk:1.3):1.5), (blush:1.5), (half-closed eyes:1.5), (open mouth:1.5), (drunk:1.5), (flushed face:1.5), (half-closed eyes:1.5), (wavy mouth:1.5)",
+     "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 796771384,
+     "subseed": 1581689762,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "f65412f06413341c5d523e6f3af1c0415f557867",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings, leaning on a hay bale, hand on sword hilt, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((drunk:1.3):1.5), (blush:1.5), (half-closed eyes:1.5), (open mouth:1.5), (drunk:1.5), (flushed face:1.5), (half-closed eyes:1.5), (wavy mouth:1.5)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 796771384, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    },
+    {
+     "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+     "keep_mask": "mask/aubin_keep.png",
+     "eyes_found": [
+      [
+       239.0,
+       92.0,
+       16.2,
+       8.4
+      ],
+      [
+       288.5,
+       93.0,
+       15.5,
+       7.5
+      ]
+     ],
+     "iris_hue_sat": [
+      0.07941307127475739,
+      0.36231884360313416
+     ]
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 73,
+    "alpha_quality": 100,
+    "bytes": 27318
+   }
+  },
+  {
+   "id": "aubin_drunk",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T16:46:55.787119",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/aubin.webp",
+    "sha1": "ef71777fd9436d55d4106194e942a9159e83bb61"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[208, 50, 321, 157]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/aubin.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T07:46:50.155433+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings, leaning on a hay bale, hand on sword hilt, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((drunk:1.3):1.5), (blush:1.5), (half-closed eyes:1.5), (open mouth:1.5), (drunk:1.5), (flushed face:1.5), (half-closed eyes:1.5), (wavy mouth:1.5)",
+     "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 796771384,
+     "subseed": 1170057587,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "dbc4e1e511d2e937f804e680edce6178d816b9b3",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings, leaning on a hay bale, hand on sword hilt, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((drunk:1.3):1.5), (blush:1.5), (half-closed eyes:1.5), (open mouth:1.5), (drunk:1.5), (flushed face:1.5), (half-closed eyes:1.5), (wavy mouth:1.5)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 796771384, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 73,
+    "alpha_quality": 100,
+    "bytes": 27328
+   }
+  },
+  {
+   "id": "aubin_drunk",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T01:19:18.569484",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/aubin.webp",
+    "sha1": "ef71777fd9436d55d4106194e942a9159e83bb61"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[208, 50, 321, 157]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/aubin.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-12T16:19:08.036308+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings, leaning on a hay bale, hand on sword hilt, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((drunk:1.3):1.3), (blush:1.3), (half-closed eyes:1.3), (open mouth:1.3), (drunk:1.3), (flushed face:1.3), (half-closed eyes:1.3), (wavy mouth:1.3)",
+     "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.72,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 796771384,
+     "subseed": 20059501,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "dbc4e1e511d2e937f804e680edce6178d816b9b3",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, 71 years old, short, wiry, weathered skin, bald, white beard, long white beard, sleepy eyes, brown eyes, white bushy eyebrows, brown stable hand tunic, straw on clothes, worn flat cap, old short sword at hip with new scabbard fittings, leaning on a hay bale, hand on sword hilt, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((drunk:1.3):1.3), (blush:1.3), (half-closed eyes:1.3), (open mouth:1.3), (drunk:1.3), (flushed face:1.3), (half-closed eyes:1.3), (wavy mouth:1.3)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 796771384, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.72, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 73,
+    "alpha_quality": 100,
+    "bytes": 27388
+   }
+  }
+ ]
+}

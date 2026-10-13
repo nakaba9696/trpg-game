@@ -1,0 +1,78 @@
+{
+ "id": "nora",
+ "source": "generated",
+ "method": "fix",
+ "date": "2026-10-14T02:24:52.034359",
+ "tool": "表情違いの作り直し（mood.py）",
+ "base": {
+  "file": "assets/portraits/nora.webp（main）",
+  "sha1": "c4977930fd22f61e3bd892f673b6a6ea182735b6"
+ },
+ "fix": [
+  "透けた穴 201px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+ ],
+ "post": {
+  "webp_quality": 89,
+  "alpha_quality": 100,
+  "bytes": 51982
+ },
+ "history": [
+  {
+   "id": "nora",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-14T01:00:56.658189",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/nora.webp（main）",
+    "sha1": "c4977930fd22f61e3bd892f673b6a6ea182735b6"
+   },
+   "fix": [
+    "透けた穴 201px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 89,
+    "alpha_quality": 100,
+    "bytes": 51982
+   }
+  },
+  {
+   "id": "nora",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T19:24:21.966276",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/nora.webp（main）",
+    "sha1": "c4977930fd22f61e3bd892f673b6a6ea182735b6"
+   },
+   "fix": [
+    "透けた穴 201px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 89,
+    "alpha_quality": 100,
+    "bytes": 51982
+   }
+  },
+  {
+   "id": "nora",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T19:03:14.868233",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/nora.webp（main）",
+    "sha1": "c4977930fd22f61e3bd892f673b6a6ea182735b6"
+   },
+   "fix": [
+    "透けた穴 201px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 89,
+    "alpha_quality": 100,
+    "bytes": 51982
+   }
+  }
+ ]
+}

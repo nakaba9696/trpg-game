@@ -1,0 +1,59 @@
+{
+ "id": "aurelia",
+ "source": "generated",
+ "method": "fix",
+ "date": "2026-10-13T17:19:06.149887",
+ "tool": "表情違いの作り直し（mood.py）",
+ "base": {
+  "file": "assets/portraits/aurelia.webp（main）",
+  "sha1": "75d808231c27b9ae4eaa27e2453dda7e136681b5"
+ },
+ "fix": [
+  "透けた穴 267px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+ ],
+ "post": {
+  "webp_quality": 89,
+  "alpha_quality": 100,
+  "bytes": 59900
+ },
+ "history": [
+  {
+   "id": "aurelia",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T16:47:25.562027",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/aurelia.webp（main）",
+    "sha1": "75d808231c27b9ae4eaa27e2453dda7e136681b5"
+   },
+   "fix": [
+    "透けた穴 267px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 89,
+    "alpha_quality": 100,
+    "bytes": 59900
+   }
+  },
+  {
+   "id": "aurelia",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T01:20:02.390189",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/aurelia.webp（main）",
+    "sha1": "75d808231c27b9ae4eaa27e2453dda7e136681b5"
+   },
+   "fix": [
+    "透けた穴 267px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 89,
+    "alpha_quality": 100,
+    "bytes": 59900
+   }
+  }
+ ]
+}

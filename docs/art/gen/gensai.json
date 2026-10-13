@@ -1,0 +1,78 @@
+{
+ "id": "gensai",
+ "source": "generated",
+ "method": "fix",
+ "date": "2026-10-14T01:55:09.482021",
+ "tool": "表情違いの作り直し（mood.py）",
+ "base": {
+  "file": "assets/portraits/gensai.webp（main）",
+  "sha1": "4412248d939093b5f159becba4e647030156e2e3"
+ },
+ "fix": [
+  "透けた穴 14px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+ ],
+ "post": {
+  "webp_quality": 68,
+  "alpha_quality": 100,
+  "bytes": 23432
+ },
+ "history": [
+  {
+   "id": "gensai",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-14T00:16:05.194813",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/gensai.webp（main）",
+    "sha1": "4412248d939093b5f159becba4e647030156e2e3"
+   },
+   "fix": [
+    "透けた穴 14px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 68,
+    "alpha_quality": 100,
+    "bytes": 23432
+   }
+  },
+  {
+   "id": "gensai",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T18:33:01.818886",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/gensai.webp（main）",
+    "sha1": "4412248d939093b5f159becba4e647030156e2e3"
+   },
+   "fix": [
+    "透けた穴 14px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 68,
+    "alpha_quality": 100,
+    "bytes": 23432
+   }
+  },
+  {
+   "id": "gensai",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-13T17:42:50.415228",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/gensai.webp（main）",
+    "sha1": "4412248d939093b5f159becba4e647030156e2e3"
+   },
+   "fix": [
+    "透けた穴 14px を不透明に（半透明の色は残し、足りない分はまわりの色）"
+   ],
+   "post": {
+    "webp_quality": 68,
+    "alpha_quality": 100,
+    "bytes": 23432
+   }
+  }
+ ]
+}

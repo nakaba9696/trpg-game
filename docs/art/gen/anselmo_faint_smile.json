@@ -1,0 +1,343 @@
+{
+ "id": "anselmo_faint_smile",
+ "source": "generated",
+ "method": "chain",
+ "date": "2026-10-14T01:33:07.127911",
+ "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+ "base": {
+  "file": "assets/portraits/anselmo.webp（この作業で直した基本）",
+  "sha1": "7e3cc452f21ee247e811fed648e8b236a5283685"
+ },
+ "mask": {
+  "how": "顔の箱（face_yolov8n。[202, 77, 326, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+  "file": "mask/anselmo.png"
+ },
+ "steps": [
+  {
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-13T16:32:58.064604+00:00",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (slight smile:1.5), (soft eyes:1.5), (closed mouth:1.5)",
+   "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 20,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1024,
+   "denoising_strength": 0.8,
+   "batch_size": 1,
+   "n_iter": 1,
+   "inpainting_fill": 1,
+   "inpaint_full_res": true,
+   "inpaint_full_res_padding": 96,
+   "mask_blur": 4,
+   "seed": 629414300,
+   "subseed": 1141932909,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "1acb5f763462f0e93ca7c4d4286737d435d43d80",
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (slight smile:1.5), (soft eyes:1.5), (closed mouth:1.5)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 629414300, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+   "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+  },
+  {
+   "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+   "keep_mask": "mask/anselmo_keep.png",
+   "eyes_found": [
+    [
+     234.0,
+     131.0,
+     23.5,
+     13.6
+    ],
+    [
+     283.0,
+     118.0,
+     23.5,
+     13.6
+    ]
+   ],
+   "iris_hue_sat": [
+    0.021572260186076164,
+    0.6845238208770752
+   ]
+  }
+ ],
+ "post": {
+  "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+  "webp_quality": 84,
+  "alpha_quality": 100,
+  "bytes": 25788
+ },
+ "history": [
+  {
+   "id": "anselmo_faint_smile",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T23:56:13.959196",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/anselmo.webp（この作業で直した基本）",
+    "sha1": "7e3cc452f21ee247e811fed648e8b236a5283685"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[202, 77, 326, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/anselmo.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T14:56:05.713407+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (slight smile:1.5), (soft eyes:1.5), (closed mouth:1.5)",
+     "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 629414300,
+     "subseed": 101415029,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "a18b9543172b1d5c933a6a0a098440b76c07a19b",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (slight smile:1.5), (soft eyes:1.5), (closed mouth:1.5)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 629414300, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    },
+    {
+     "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+     "keep_mask": "mask/anselmo_keep.png",
+     "eyes_found": [
+      [
+       234.0,
+       131.0,
+       23.5,
+       13.6
+      ],
+      [
+       283.0,
+       118.0,
+       23.5,
+       13.6
+      ]
+     ],
+     "iris_hue_sat": [
+      0.03750155493617058,
+      0.6524063944816589
+     ]
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 84,
+    "alpha_quality": 100,
+    "bytes": 25892
+   }
+  },
+  {
+   "id": "anselmo_faint_smile",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T15:03:59.399510",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/anselmo.webp（この作業で直した基本）",
+    "sha1": "7e3cc452f21ee247e811fed648e8b236a5283685"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[202, 77, 326, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/anselmo.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T06:03:51.083873+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (slight smile:1.5), (soft eyes:1.5), (closed mouth:1.5)",
+     "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 629414300,
+     "subseed": 1936967614,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "ca3a9ead4db3f2ca1e86f4e9ead98998c556e299",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.5), (closed mouth:1.5), (gentle eyes:1.5), (slight smile:1.5), (soft eyes:1.5), (closed mouth:1.5)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 629414300, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 84,
+    "alpha_quality": 100,
+    "bytes": 25970
+   }
+  },
+  {
+   "id": "anselmo_faint_smile",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T01:15:03.844674",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/anselmo.webp（この作業で直した基本）",
+    "sha1": "7e3cc452f21ee247e811fed648e8b236a5283685"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[202, 77, 326, 201]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/anselmo.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-12T16:14:52.838613+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.3), (closed mouth:1.3), (gentle eyes:1.3), (slight smile:1.3), (soft eyes:1.3), (closed mouth:1.3)",
+     "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.72,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 629414300,
+     "subseed": 315091373,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "ca3a9ead4db3f2ca1e86f4e9ead98998c556e299",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((faint smile:1.3):1.3), (closed mouth:1.3), (gentle eyes:1.3), (slight smile:1.3), (soft eyes:1.3), (closed mouth:1.3)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object, teeth, grin, open mouth\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 629414300, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.72, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 84,
+    "alpha_quality": 100,
+    "bytes": 25858
+   }
+  },
+  {
+   "id": "anselmo_faint_smile",
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-12T11:28:15.233402+00:00",
+   "tool": "表情違いの作り直し（mood.py）",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (slight smile:1.3), (soft eyes:1.3), (closed mouth:1.3)",
+   "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 20,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1024,
+   "denoising_strength": 0.6,
+   "batch_size": 1,
+   "n_iter": 1,
+   "inpainting_fill": 1,
+   "inpaint_full_res": true,
+   "inpaint_full_res_padding": 32,
+   "mask_blur": 4,
+   "seed": 629414300,
+   "subseed": 1244872720,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "ff453a84e762037a077d5d756afb784cf162a3a5",
+   "base": {
+    "file": "assets/portraits/anselmo.webp（この作業で直した基本）",
+    "sha1": "7e3cc452f21ee247e811fed648e8b236a5283685"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[202, 77, 326, 201]）の、上から 28% の高さ〜あご（下から 4% 上）の楕円（幅 94%）。列ごとに楕円の上から髪の色（[189, 73, 50]）が続く所は外し（前髪の房を守る）、透明に近いふち 2px は外した（1 倍）。2 倍に拡大して送った",
+    "file": "mask/anselmo.png"
+   },
+   "post": {
+    "how": "結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ基本に重ねた。透明度は基本のまま",
+    "webp_quality": 84,
+    "alpha_quality": 100,
+    "bytes": 25936
+   },
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, rugged, manly, stubble, thick eyebrows, deep-set eyes, sunken cheeks, nasolabial folds, wrinkles, square jaw, weathered skin, detailed face, realistic proportions, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel, holding a wine bottle, shovel on shoulder, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, (slight smile:1.3), (soft eyes:1.3), (closed mouth:1.3)\nNegative prompt: long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 629414300, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.6, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 32, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d"
+  }
+ ]
+}

@@ -1,0 +1,229 @@
+{
+ "id": "trude_panic",
+ "source": "generated",
+ "method": "chain",
+ "date": "2026-10-14T02:36:17.236244",
+ "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+ "base": {
+  "file": "assets/portraits/trude.webp",
+  "sha1": "943e996e05b1160ecb0c5b616c40d2634827a26e"
+ },
+ "mask": {
+  "how": "顔の箱（face_yolov8n。[181, 88, 327, 234]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+  "file": "mask/trude.png"
+ },
+ "steps": [
+  {
+   "source": "generated",
+   "method": "inpaint",
+   "date": "2026-10-13T17:36:07.163301+00:00",
+   "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, adult, young woman, 26 years old, petite, slender, pale skin, grey hair, ash grey hair, bob cut, straight bangs, cat ears, cat tail, red eyes, round eyes, cracked round glasses, soot on cheek, bandaged fingers, oversized grey work coat with many pockets, leather tool belt, sewing needle and thread in pocket, brass goggles around neck, holding a rolled blueprint, fist raised, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((panicking:1.3):1.5), ((wide eyes:1.3):1.5), (sweatdrop:1.5), (open mouth:1.5), (raised eyebrows:1.5), (flustered:1.5), (sweatdrop:1.5), (soot on face:1.5), (wavy mouth:1.5)",
+   "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+   "styles": [],
+   "sampler_name": "Euler a",
+   "scheduler": "Automatic",
+   "steps": 20,
+   "cfg_scale": 5.5,
+   "width": 1024,
+   "height": 1024,
+   "denoising_strength": 0.8,
+   "batch_size": 1,
+   "n_iter": 1,
+   "inpainting_fill": 1,
+   "inpaint_full_res": true,
+   "inpaint_full_res_padding": 96,
+   "mask_blur": 4,
+   "seed": 1166426636,
+   "subseed": 1006551622,
+   "subseed_strength": 0,
+   "model": {
+    "name": "waiIllustriousSDXL_v140",
+    "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+    "hash": "bdb59bac77",
+    "vae": null,
+    "vae_hash": null
+   },
+   "clip_skip": 1,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "mask_sha1": "2382944a4ed174392215175fb23acfe765f90e59",
+   "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, adult, young woman, 26 years old, petite, slender, pale skin, grey hair, ash grey hair, bob cut, straight bangs, cat ears, cat tail, red eyes, round eyes, cracked round glasses, soot on cheek, bandaged fingers, oversized grey work coat with many pockets, leather tool belt, sewing needle and thread in pocket, brass goggles around neck, holding a rolled blueprint, fist raised, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((panicking:1.3):1.5), ((wide eyes:1.3):1.5), (sweatdrop:1.5), (open mouth:1.5), (raised eyebrows:1.5), (flustered:1.5), (sweatdrop:1.5), (soot on face:1.5), (wavy mouth:1.5)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1166426636, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+   "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+  },
+  {
+   "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+   "keep_mask": "mask/trude_keep.png",
+   "eyes_found": [
+    [
+     229.5,
+     155.4,
+     13.1,
+     10.2
+    ],
+    [
+     281.9,
+     152.5,
+     13.1,
+     10.2
+    ]
+   ],
+   "iris_hue_sat": [
+    0.9674162268638611,
+    0.609225869178772
+   ]
+  }
+ ],
+ "post": {
+  "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+  "webp_quality": 79,
+  "alpha_quality": 100,
+  "bytes": 30040
+ },
+ "history": [
+  {
+   "id": "trude_panic",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-14T01:19:28.569647",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/trude.webp",
+    "sha1": "943e996e05b1160ecb0c5b616c40d2634827a26e"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[181, 88, 327, 234]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/trude.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T16:19:16.440889+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, adult, young woman, 26 years old, petite, slender, pale skin, grey hair, ash grey hair, bob cut, straight bangs, cat ears, cat tail, red eyes, round eyes, cracked round glasses, soot on cheek, bandaged fingers, oversized grey work coat with many pockets, leather tool belt, sewing needle and thread in pocket, brass goggles around neck, holding a rolled blueprint, fist raised, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((panicking:1.3):1.5), ((wide eyes:1.3):1.5), (sweatdrop:1.5), (open mouth:1.5), (raised eyebrows:1.5), (flustered:1.5), (sweatdrop:1.5), (soot on face:1.5), (wavy mouth:1.5)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1166426636,
+     "subseed": 1971192880,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "6a652b8771b1c9193478fcbab94b7e2c560c1d97",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, adult, young woman, 26 years old, petite, slender, pale skin, grey hair, ash grey hair, bob cut, straight bangs, cat ears, cat tail, red eyes, round eyes, cracked round glasses, soot on cheek, bandaged fingers, oversized grey work coat with many pockets, leather tool belt, sewing needle and thread in pocket, brass goggles around neck, holding a rolled blueprint, fist raised, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((panicking:1.3):1.5), ((wide eyes:1.3):1.5), (sweatdrop:1.5), (open mouth:1.5), (raised eyebrows:1.5), (flustered:1.5), (sweatdrop:1.5), (soot on face:1.5), (wavy mouth:1.5)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1166426636, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    },
+    {
+     "part": "守る所を基本の画素に戻し、目の色を基本の瞳の色相に合わせた（keep.py。IMG-38）",
+     "keep_mask": "mask/trude_keep.png",
+     "eyes_found": [
+      [
+       229.5,
+       155.4,
+       13.1,
+       10.2
+      ],
+      [
+       281.9,
+       152.5,
+       13.1,
+       10.2
+      ]
+     ],
+     "iris_hue_sat": [
+      0.9676055908203125,
+      0.6086956262588501
+     ]
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 79,
+    "alpha_quality": 100,
+    "bytes": 30066
+   }
+  },
+  {
+   "id": "trude_panic",
+   "source": "generated",
+   "method": "chain",
+   "date": "2026-10-13T20:05:08.761796",
+   "tool": "表情違いの作り直し（mood.py・目と口の二段）",
+   "base": {
+    "file": "assets/portraits/trude.webp（この作業で直した基本）",
+    "sha1": "943e996e05b1160ecb0c5b616c40d2634827a26e"
+   },
+   "mask": {
+    "how": "顔の箱（face_yolov8n。[181, 88, 327, 234]）。目と眉＝上から 28%〜66% の楕円（列ごとに上から髪の色が続く所＝前髪の房は外す）、口＝中心 86%・幅 44%・高さ 20% の楕円（描く前に、口の芯＝幅 34%・高さ 15% を頬の肌の色で塗りつぶす。基本の口の形を引き継がないため）。頬は描き直さない（絆創膏・傷・ほくろを基本のまま）。2 倍に拡大して送った",
+    "file": "mask/trude.png"
+   },
+   "steps": [
+    {
+     "source": "generated",
+     "method": "inpaint",
+     "date": "2026-10-13T11:04:56.572169+00:00",
+     "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, adult, young woman, 26 years old, petite, slender, pale skin, grey hair, ash grey hair, bob cut, straight bangs, cat ears, cat tail, red eyes, round eyes, cracked round glasses, soot on cheek, bandaged fingers, oversized grey work coat with many pockets, leather tool belt, sewing needle and thread in pocket, brass goggles around neck, holding a rolled blueprint, fist raised, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((panicking:1.3):1.5), ((wide eyes:1.3):1.5), (sweatdrop:1.5), (open mouth:1.5), (raised eyebrows:1.5), (flustered:1.5), (sweatdrop:1.5), (soot on face:1.5), (wavy mouth:1.5)",
+     "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object",
+     "styles": [],
+     "sampler_name": "Euler a",
+     "scheduler": "Automatic",
+     "steps": 20,
+     "cfg_scale": 5.5,
+     "width": 1024,
+     "height": 1024,
+     "denoising_strength": 0.8,
+     "batch_size": 1,
+     "n_iter": 1,
+     "inpainting_fill": 1,
+     "inpaint_full_res": true,
+     "inpaint_full_res_padding": 96,
+     "mask_blur": 4,
+     "seed": 1166426636,
+     "subseed": 2079329783,
+     "subseed_strength": 0,
+     "model": {
+      "name": "waiIllustriousSDXL_v140",
+      "file": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]",
+      "hash": "bdb59bac77",
+      "vae": null,
+      "vae_hash": null
+     },
+     "clip_skip": 1,
+     "override_settings": {
+      "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+     },
+     "mask_sha1": "c5da4bce138bef09191939f0c23b3d6841956452",
+     "infotext": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, adult, young woman, 26 years old, petite, slender, pale skin, grey hair, ash grey hair, bob cut, straight bangs, cat ears, cat tail, red eyes, round eyes, cracked round glasses, soot on cheek, bandaged fingers, oversized grey work coat with many pockets, leather tool belt, sewing needle and thread in pocket, brass goggles around neck, holding a rolled blueprint, fist raised, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed, ((panicking:1.3):1.5), ((wide eyes:1.3):1.5), (sweatdrop:1.5), (open mouth:1.5), (raised eyebrows:1.5), (flustered:1.5), (sweatdrop:1.5), (soot on face:1.5), (wavy mouth:1.5)\nNegative prompt: long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hand on face:1.3), hands, fingers, finger to mouth, tongue, extra mouth, bandage on eye, object\nSteps: 20, Sampler: Euler a, Schedule type: Automatic, CFG scale: 5.5, Seed: 1166426636, Size: 1024x1024, Model hash: bdb59bac77, Model: waiIllustriousSDXL_v140, Denoising strength: 0.8, Mask blur: 4, Inpaint area: Only masked, Masked area padding: 96, Emphasis: No norm, Version: f1.4.0dev-v1.10.1RC-latest-1428-gfd80f14d",
+     "part": "目・眉・口（口の芯は先に肌の色で塗った）"
+    }
+   ],
+   "post": {
+    "how": "各段の結果を 1 倍に縮め、マスクの所（ぼかし 1.2）だけ重ねた。透明度は基本のまま",
+    "webp_quality": 77,
+    "alpha_quality": 100,
+    "bytes": 30434
+   }
+  }
+ ]
+}
