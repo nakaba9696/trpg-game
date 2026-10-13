@@ -13,8 +13,7 @@
 .q7where, .q7at { font-size: 13px; color: var(--muted); }
 .q7side { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .q7side .btn { min-height: 40px; min-width: 72px; }
-.q7ask { font-size: 13px; font-weight: 700; flex-basis: 100%; text-align: right; }
-@media (max-width: 520px) { .q7ask { text-align: left; } }
+.q7slotAskWho { margin: 0 0 12px; }
 @media (max-width: 520px) {
   .q7slot { flex-direction: column; align-items: stretch; }
   .q7side { justify-content: flex-start; }

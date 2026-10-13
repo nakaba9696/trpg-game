@@ -27,7 +27,7 @@
   document.body.append(dlg);
 
   let mode = "save";
-  let asking = null; // 確かめている枠の id
+  let asking = null; // 確かめている枠
   let msg = null;    // { text, bad }
 
   // 枠の名前。オートセーブ（町に着いたとき）・中断（最後の行動。タイトルの「つづきから」）・手動 1〜5 の違いが分かるように
@@ -102,13 +102,10 @@
       entryInfo(e, info);
       li.append(info);
       const side = h("div", "q7side");
-      if (asking === e.id && r.confirm) {
-        side.append(h("span", "q7ask", r.confirm + "？"));
-        side.append(button("はい", "primary q7yes", () => act(e)), button("やめる", "q7no", () => { asking = null; paint(); }));
-      } else if (r.note) side.append(h("span", "fine", r.note));
+      if (r.note) side.append(h("span", "fine", r.note));
       else if (!r.off) {
         side.append(button(r.label, mode === "save" && e.empty ? "primary q7go" : "q7go", () => {
-          if (r.confirm) { asking = e.id; msg = null; paint(); const y = body.querySelector(".q7yes"); if (y) y.focus(); return; }
+          if (r.confirm) { askFor(e, r.confirm); return; }
           act(e);
         }));
       }
@@ -118,6 +115,40 @@
     body.append(ul);
     if (mode === "load" && !list.some((e) => !e.empty)) body.append(h("p", "fine", "まだ保存された冒険が無い。"));
     if (mode === "load") body.append(h("p", "fine q7legend", "オートセーブ：町に着いたときに自動で残る。中断：最後の行動のあと（タイトルの「つづきから」）。中断（倒れる前の行動）：倒れたときに残る、倒れる直前の写し（そこから生きたまま続けられる）。手動：「セーブ」で残した枠。どれも死んでも消えない。"));
+  }
+
+  // 確かめは小さな窓で出す（枠の列の中に出すと狭い画面で右に見切れた。持ち主の声「ポップアップにするとかにして」）
+  const cf = h("dialog", "q7ask q7slotask");
+  cf.id = "dlgSlotAsk";
+  cf.setAttribute("aria-labelledby", "q7slotAskTitle");
+  const cfH = h("div", "dhead");
+  const cfT = h("h2", "", "");
+  cfT.id = "q7slotAskTitle";
+  cfH.append(cfT);
+  const cfB = h("div", "dbody");
+  const cfP = h("div", "q7slotAskWho", "");
+  const cfRow = h("div", "q7askrow");
+  const cfYes = h("button", "btn primary q7yes", "はい"); cfYes.type = "button";
+  const cfNo = h("button", "btn q7no", "やめる"); cfNo.type = "button";
+  cfRow.append(cfYes, cfNo);
+  cfB.append(cfP, cfRow);
+  cf.append(cfH, cfB);
+  cf.addEventListener("click", (ev) => { if (ev.target === cf) cf.close(); });
+  cf.addEventListener("close", () => { asking = null; });
+  document.body.append(cf);
+  cfNo.onclick = () => cf.close();
+  cfYes.onclick = () => { const e = asking; cf.close(); if (e) act(e); };
+  function askFor(e, text) {
+    asking = e;
+    msg = null;
+    cfT.textContent = text + "？";
+    cfP.textContent = "";
+    const info = h("div", "q7info");
+    info.append(h("b", "q7name", entryTitle(e)));
+    entryInfo(e, info);
+    cfP.append(info);
+    try { cf.showModal(); } catch { cf.setAttribute("open", ""); }
+    cfYes.focus();
   }
 
   ui.slotMode = () => (dlg.open ? mode : null);
