@@ -29,7 +29,7 @@ const fail = (msg) => { failures++; console.log("FAIL " + msg); };
 const WEIGHT = {
   "core:2. ランダムに遊ぶ": 150,
   "e3_apostles.mjs": 270, "c2_people.mjs": 160, "m4_world.mjs": 120, "m10_love.mjs": 90, "m2_companions.mjs": 65, "m6_ending.mjs": 65,
-  "m7_reroll.mjs": 55, "m9_plague.mjs": 45, "q4_goals.mjs": 45, "u7_glossary.mjs": 35,
+  "m7_reroll.mjs": 55, "m9_plague.mjs": 45, "q4_goals.mjs": 45, "u7_glossary.mjs": 35, "t5_economy.mjs": 50, "t5_reach.mjs": 10,
   "balance:random": 0.36, "balance:smart": 1.9, // 遊ぶ一回あたり
 };
 const weightOf = (t) => t.kind === "balance" ? (t.games - (t.start || 0)) * (WEIGHT["balance:" + t.mode] || 1) : WEIGHT[t.kind === "core" ? "core:" + t.name : t.name] ?? 5;
