@@ -1,5 +1,7 @@
 # ゲーム制作スターターキット
 
+> **このキットの正本は [nakaba9696/KnowledgeBase](https://github.com/nakaba9696/KnowledgeBase) に移りました（2026-10-13）。** このブランチは移す前の写しです。新しく書き足すことは KnowledgeBase の方へ。
+
 Claude Code で並行してゲームを作る進め方を、新しいゲームですぐ使えるようにまとめたもの。ジャンルも制作ツール（ツクール・Unity・Godot・HTML など）も問わない。
 
 ## 中身
