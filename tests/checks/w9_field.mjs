@@ -88,6 +88,14 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     st.dusk = S.phase === 2 ? `${loc}:${S.day}` : st.dusk;
     return S;
   };
+  // ギルドでは「いつもの仕事と書き込み帳」から帳面を選ぶ。酒場は壁の落書きを直に読む
+  const readNote = (G) => {
+    if (G.S.fac !== "guild") return G.act("w9fnote");
+    G.act("w9fjobs");
+    const c = G.eventChoices().find(({ c }) => c.ok && c.ok.w9fJob === "note");
+    if (!c) { F("ギルドの掲示に書き込み帳の選択肢が無い"); return; }
+    G.act("ev:" + c.i);
+  };
   const evOf = (G) => (G.S.mode === "event" ? G.data.EVENTS.find((e) => e.id === G.S.event) : null);
 
   // ---------------------------------------------------------------- 段と実入り
@@ -121,7 +129,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
       let rival = 0;
       for (let i = 0; i < 300; i++) {
         const S = put(G, loc, 1);
-        S.depth = depth || 0;
+        S.depth = 0;
         G.exploreAct(depth ? "deeper" : "explore");
         const e = evOf(G);
         if (e && e.w9f && e.w9f.kind === "rival") rival++;
@@ -132,7 +140,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const a = count("forest"), b = count("mountains"), c = count("w2_shadow"), d = count("ruins", 1);
     if (!(a > 10)) F(`鉢合わせ：迷いの森で ${a} 回（300 回のうち）`);
     if (b || c) F(`鉢合わせ：奥・中ほどで起きた（断界山脈 ${b}・影の谷 ${c}）`);
-    if (!(d > 10)) F(`鉢合わせ：町に近い迷宮の地下 1 階で ${d} 回`);
+    if (!(d > 2)) F(`鉢合わせ：町に近い迷宮の地下 1 階に下りて ${d} 回`);
   }
 
   // ---------------------------------------------------------------- 夕暮れと夜
@@ -142,9 +150,10 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const S = G.S;
     S.phase = 2; // 旅は夕方に着く（G.passDays）
     G.arrive("forest");
+    G.w9f.st(S).woke = S.day - G.data.W9F.DUSK_DAYS; // 着いてから DUSK_DAYS 日歩き回った
     G.exploreAct("explore");
     let e = evOf(G);
-    if (!e || e.w9f.kind !== "dusk") F("夕暮れ：着いた日に歩き回ろうとしても夕暮れの場面が出ない");
+    if (!e || e.w9f.kind !== "dusk") F("夕暮れ：寝ずに歩き回った夕に夕暮れの場面が出ない");
     else {
       const i = e.choices.findIndex((c) => c.ok && c.ok.w9fCamp);
       const day = S.day;
@@ -164,7 +173,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
       if (S.phase !== 3 || !W.night(S)) F("夕暮れ：夜も歩くを選んでも夜にならない");
     }
     // 町へ引き返す（町への道がある野）
-    put(G, "forest", 2); W.st(S).dusk = null;
+    put(G, "forest", 2); W.st(S).dusk = null; W.st(S).woke = S.day - 9;
     G.exploreAct("explore");
     e = evOf(G);
     const back = e ? e.choices.findIndex((c) => c.ok && c.ok.w9fBack) : -1;
@@ -172,7 +181,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     else { G.chooseEvent(back); if (S.loc === "forest" && !S.travel && S.mode === "explore") F("夕暮れ：引き返しても町へ向かわない"); }
     // 町への道が無い野では、引き返す選択肢を出さない
     const G2 = fresh(12);
-    put(G2, "w3_driftisle", 2); G2.w9f.st(G2.S).dusk = null;
+    put(G2, "w3_driftisle", 2); G2.w9f.st(G2.S).dusk = null; G2.w9f.st(G2.S).woke = G2.S.day - 9;
     G2.exploreAct("explore");
     const e2 = evOf(G2);
     if (!e2 || e2.w9f.kind !== "dusk") F("夕暮れ：数の合わない島で夕暮れの場面が出ない");
@@ -250,12 +259,14 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     for (const j of D.W9F_JOBS) {
       const exp0 = (S.s5exp || {})[j.stat] || 0, st0 = S.stats[j.stat];
       for (let i = 0; i < 12; i++) {
-        const id = "w9fjob:" + j.id;
-        const a = G.actions().flatMap((g) => g.list).find((x) => x.id === id);
+        const a = G.actions().flatMap((g) => g.list).find((x) => x.id === "w9fjobs");
         if (!a || a.disabled) { F(`いつもの仕事 ${j.id}: ${i + 1} 回目に受けられない`); break; }
         S.hp = S.maxHp;
         const g0 = S.gold;
-        G.act(id);
+        G.act("w9fjobs");
+        const c = G.eventChoices().find(({ c }) => c.ok && c.ok.w9fJob === j.id);
+        if (!c) { F(`いつもの仕事 ${j.id}: 掲示に選択肢が無い`); break; }
+        G.act("ev:" + c.i);
         if (!(S.gold > g0)) F(`いつもの仕事 ${j.id}: 手間賃が入らない`);
         if (S.gold - g0 > D.W9F.JOB.PAY[0] + D.W9F.JOB.PAY[1] + 5) F(`いつもの仕事 ${j.id}: 手間賃が高すぎる（${S.gold - g0}G）`);
         if (S.hp < S.maxHp) F(`いつもの仕事 ${j.id}: 傷を負った`);
@@ -278,22 +289,22 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     const S = G.S;
     T.NOTE.TRUE = 1; T.NOTE.LIE = 0;
     const k0 = G.knowCount().known;
-    G.act("w9fnote");
+    readNote(G);
     if (!(G.knowCount().known === k0 + 1)) F(`書き込み帳：読んでも覚え書きが開かない（${k0} → ${G.knowCount().known}）`);
     if (!Object.values(G.P.know || {}).some((r) => r.how === "note")) F("書き込み帳：覚え書きのきっかけが「書き込みで」になっていない");
-    G.act("w9fnote");
+    readNote(G);
     if (G.knowCount().known !== k0 + 1) F("書き込み帳：同じ日に二度読んで、また開いた");
     S.day++;
-    G.act("w9fnote");
+    readNote(G);
     if (G.knowCount().known !== k0 + 2) F("書き込み帳：次の日に新しい書き込みが無い");
     // 酒場の落書きも読める（施設ごとに一日一つ）
     G.exploreAct("back"); G.exploreAct("fac", "tavern");
     if (!G.actions().flatMap((g) => g.list).some((x) => x.id === "w9fnote")) F("酒場に落書きが無い");
-    G.act("w9fnote");
+    readNote(G);
     if (G.knowCount().known !== k0 + 3) F("酒場の落書きを読んでも覚え書きが開かない");
     // 嘘：データの弱点と食い違うものだけ。その魔物の覚え書きが開くと、嘘と分かる
     T.NOTE.TRUE = 0; T.NOTE.LIE = 1;
-    for (let i = 0; i < 6; i++) { S.day++; G.act("w9fnote"); }
+    for (let i = 0; i < 6; i++) { S.day++; readNote(G); }
     const lies = Object.values((G.P.w9f || {}).lies || {});
     if (lies.length < 3) F(`書き込み帳：嘘が書かれない（${lies.length}）`);
     for (const x of lies) {
@@ -309,7 +320,7 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     // 自慢話は何も開かない
     T.NOTE.TRUE = 0; T.NOTE.LIE = 0;
     const k1 = G.knowCount().known;
-    S.day++; G.act("w9fnote");
+    S.day++; readNote(G);
     if (G.knowCount().known !== k1) F("書き込み帳：自慢話で覚え書きが開いた");
   }
 
@@ -325,8 +336,8 @@ export default ({ G: G0, fail, ok, loadEngine, seeded }) => {
     delete G2.S.w9f;
     G2.P = { trophies: {}, graves: [] };
     G2.exploreAct("fac", "guild");
-    G2.act("w9fjob:road");
-    G2.act("w9fnote");
+    G2.act("w9fjobs"); G2.chooseEvent(0);
+    readNote(G2);
     if (!G2.S.w9f) F("古いセーブで、いつもの仕事・書き込み帳が動かない");
   }
 

@@ -4,7 +4,7 @@
 //   1. 浅い所は荒らされている（能動的）：野と迷宮を段に分ける（W9F.tier）。shallow 町に近い野（危険度 D.W9F.SHALLOW_DMAX まで・町へ道がある）と
 //      町に近い迷宮の地下 1 階／deep 危険度 DEEP_DMIN 以上・使徒領・迷宮の半分より下／mid それ以外。
 //      探索で拾う金・出会った魔物の落とす金に D.W9F.YIELD の倍率をかける（夜はさらに NIGHT_YIELD）。浅い所では、ときどきほかの冒険者と鉢合わせる（kind rival）。
-//      野で寝ずに歩き回ると（着いた日の夕と、起きてから DUSK_DAYS 日目）日が傾き、「引き返す・野営する・夜も歩き続ける」を選ぶ（kind dusk）。
+//      野で寝ずに歩き回ると（着くか起きるかしてから DUSK_DAYS 日目に）日が傾き、「引き返す・野営する・夜も歩き続ける」を選ぶ（kind dusk）。
 //      夜（時間帯 夜）に野を歩き回ると、夜の出来事（kind night）と闇からの襲撃が足される。夜は寝る（野営・宿・朝まで待つ）まで続く。
 //   2. ギルドのいつもの仕事（能動的）：ギルドの中に、いつでも何度でも受けられる安い仕事（D.W9F_JOBS）。易しい判定を一回（成長は判定の決まりのまま）、
 //      手間賃は安く、しくじっても半分は出る。傷つくことはない。まれに小さな出来事。
@@ -101,7 +101,7 @@
     if ((LOCS()[S.loc] || {}).type !== "wild" || S.phase === 3) return false;
     const st = W.st(S);
     if (st.dusk === S.loc + ":" + S.day) return false;
-    return S.phase === 2 || S.day - st.woke >= T.DUSK_DAYS;
+    return S.day - st.woke >= T.DUSK_DAYS;
   };
   W.dusk = (S) => {
     const e = W.pick(S, "dusk");
@@ -204,18 +204,20 @@
         if (e) { begin("あたりを探索する"); return W.start(e); }
       }
     }
-    if (head === "deeper" && L.type === "dungeon" && S.depth === 1 && W.tier(S) === "shallow" && G.rand() < T.RIVAL.dungeon) {
-      const e = W.pick(S, "rival");
-      if (e) { begin("地下1階を歩き回る"); return W.start(e); }
-    }
-    const g0 = S.gold;
+    const g0 = S.gold, d0 = S.depth;
     const r = act0(head, arg, a);
     if ((head === "explore" && L.type === "wild") || (head === "deeper" && L.type === "dungeon")) W.thin(S, g0);
+    // 迷宮：地下 1 階に下りて何も起きなかったら、ときどき先に来ていた同業と鉢合わせる（下りるのは止めない）
+    if (head === "deeper" && L.type === "dungeon" && d0 === 0 && G.S === S && !S.over && S.mode === "explore" && S.depth === 1
+      && W.tier(S) === "shallow" && G.rand() < T.RIVAL.dungeon) {
+      const e = W.pick(S, "rival");
+      if (e) W.start(e);
+    }
     return r;
   };
 
   // ---------------------------------------------------------------- 結果
-  const KEYS = ["w9fBack", "w9fCamp", "w9fNight", "w9fWait", "w9fLeave", "w9fPeek"];
+  const KEYS = ["w9fJob", "w9fBack", "w9fCamp", "w9fNight", "w9fWait", "w9fLeave", "w9fPeek"];
   const apply0 = G.apply;
   G.apply = (o) => {
     const S = G.S;
@@ -225,6 +227,7 @@
     apply0(rest);
     if (S.over || G.S !== S) return;
     if (S.w9f) S.w9f.fall = false;
+    if (o.w9fJob) { S.mode = "fac"; S.fac = "guild"; if (o.w9fJob === "note") W.read(); else if (o.w9fJob !== "none") W.job(o.w9fJob); return; }
     if (o.w9fPeek) W.peek(o.w9fPeek);
     if (o.w9fLeave) G.pass(2);
     if (o.w9fWait) { G.sleep(); G.note("夜が明けた。"); }
@@ -255,27 +258,32 @@
     const S = G.S;
     if (!S || S.mode !== "fac" || !["guild", "tavern"].includes(S.fac)) return groups;
     const st = W.st(S);
-    const fresh = st.read[S.loc + ":" + S.fac] !== S.day;
+    const fresh = W.fresh(S);
     const note = { id: "w9fnote", label: S.fac === "guild" ? "書き込み帳を読む" : "壁の落書きを読む", sub: fresh ? "冒険者の書き残し・本当とは限らない" : "今日の新しい書き込みは読んだ", kw: ["書き込み", "帳面", "落書き", "読"] };
     const add = [];
+    // ギルドでは掲示板の端の札と帳面を一つの入口にまとめる（選んだ先で、仕事か帳面かを選ぶ）
     if (S.fac === "guild") {
       const [p0, p1] = T.JOB.PAY;
-      add.push({ title: "いつもの仕事（何度でも受けられる・安いが安全）", list: [
-        ...D.W9F_JOBS.map((j) => ({ id: "w9fjob:" + j.id, label: j.label, sub: `${j.sub}・${j.stat} ${G.chance(j.stat, T.JOB.DIFF)}%・手間賃 ${p0 + 1}〜${p0 + p1}G・半日`, kw: [j.label, "仕事", "手間賃"] })),
-        note,
-      ] });
-    } else add.push({ title: "壁", list: [note] });
+      add.push({ title: "", list: [{ id: "w9fjobs", label: "いつもの仕事と書き込み帳", sub: `何度でも受けられる安い仕事（手間賃 ${p0 + 1}〜${p0 + p1}G・半日）・冒険者の書き残し`, kw: ["仕事", "手間賃", "道普請", "見張り", "荷運び", "書き込み", "帳面"] }] });
+    } else add.push({ title: "", list: [note] });
     const back = groups.findIndex((g) => g.list.some((x) => x.id === "back"));
     groups.splice(back < 0 ? groups.length : back, 0, ...add);
     return groups;
   };
   const facAct0 = G.facAct;
   G.facAct = (head, arg, a) => {
+    if (head === "w9fjobs") return W.jobBoard();
     if (head === "w9fjob") return W.job(arg);
     if (head === "w9fnote") return W.read();
     return facAct0(head, arg, a);
   };
 
+  // 掲示板の端の「いつもの仕事」：どれを受けるかを出来事の形で選ぶ（選んだらギルドの中に戻る）
+  W.fresh = (S) => W.st(S).read[S.loc + ":" + S.fac] !== S.day;
+  W.jobBoard = () => {
+    G.log("you", "いつもの仕事を探す");
+    G.startEvent("w9fj_board");
+  };
   W.job = (id) => {
     const S = G.S;
     const j = D.W9F_JOBS.find((x) => x.id === id);
