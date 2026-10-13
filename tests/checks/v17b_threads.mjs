@@ -32,7 +32,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   const SETUP = {
     v17b_ordo: { loc: "wasteland" },
     v17b_ordo_gate: { loc: "wasteland" },
-    v17b_sea_song: { loc: "nerva", before: (g, S) => { S.w6 = { from: "nerva", dest: "w1_oboro", sea: true }; }, ready: (g, S) => { S.w6 = { from: "nerva", dest: "yakumo", sea: true, seen: [], tod: "夜" }; } },
+    w6v17b_sea_song: { loc: "nerva", before: (g, S) => { S.w6 = { from: "nerva", dest: "w1_oboro", sea: true }; }, ready: (g, S) => { S.w6 = { from: "nerva", dest: "yakumo", sea: true, seen: [], tod: "夜" }; } },
     v17b_malvina_village: { loc: "w2_shadow", ready: (g, S) => { g.c2Meet("malvina"); S.day = 40; Object.assign(S.flags, { "ev:c19r_malvina_shield": true, v17b_malvina_read: true }); } },
     v17b_bau_dagger: { loc: "nerva", before: (g, S) => { S.flags.c5_bau_tags = true; }, ready: (g, S) => { Object.assign(S.flags, { c5_bau_tags: true, v17b_bau_has: true }); } },
     v17b_teo_go: { loc: "zephara", ready: (g, S) => { Object.assign(S.flags, { c3_boku_name: true, v17b_neilas_teo: true }); } },
@@ -186,7 +186,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
   {
     const g = fresh();
     const S = g.S;
-    const e = byId(g.data, "v17b_sea_song");
+    const e = byId(g.data, "w6v17b_sea_song");
     if (!e || !e.w6 || e.w6.on !== "sea" || !(e.w6.tod || []).includes("夜")) F("沖の歌が夜の船旅の出来事になっていない");
     else {
       S.w6 = { from: "yakumo", dest: "nerva", sea: true, seen: [], tod: "夜" };
@@ -235,7 +235,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
 
   // ---------------------------------------------------------------- t20 朧島のひとこと
   {
-    const a = (D.AMBIENT || []).find((x) => x.id === "v17b_oboro_wager");
+    const a = (D.AMBIENT || []).find((x) => x.id === "u3_v17b_oboro_wager");
     if (!a || !a.where.includes("w1_oboro") || !/芸の町の三日三晩/.test(a.text)) F("朧島に賭けの町のひとことが無い");
     if (a && /勝った(?!か)/.test(a.text)) F("賭けの結末が書かれている");
   }
