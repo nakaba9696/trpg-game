@@ -129,7 +129,7 @@
     { key: "e7_graw_clean", name: "誰も膝をつかなかった", tier: "金", desc: "黒い鎧の最後の圧を、誰の命も膝も差し出さずに越えた", test: (S) => !!(S.flags && S.flags["e7:graw:clean"]) },
   ]);
   E7.MILESTONES = (E7.MILESTONES || []).concat([
-    { id: "e7_graw", rank: 89, title: "灰原の一騎打ち", after: "hero",
+    { id: "e7_graw", rank: 87, title: "灰原の一騎打ち", after: "hero",
       test: (S) => !!(S.flags && S.flags["e7:graw"]),
       text: "断界山脈の尾根を、黒い鎧はもう歩かない。石切りの村の溝には、春になると草が生えた。羊飼いの婆さんが、羊をそこへ連れていく。",
       end: "黒い鎧に膝をつかせた身で、旅を終える", line: "{name}は剣を置いた。最後まで、膝を折らなかったという。" },
