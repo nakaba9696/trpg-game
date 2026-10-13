@@ -8,6 +8,7 @@
 //   T5_GAMES=100 T5_STEPS=3000 node tests/t5_econ.mjs … 回数・行動の上限を変える（重い集計はこちらで）
 //   T5_SEED=1 …                               … 乱数の出発点をずらす
 //   T5_OUT=path.md …                          … 書き出す先
+//   T5_E5=0 …                                 … E5 の出口（施療院・普請・宴・家など）をボットに使わせない（遊び方は E5 の前と同じ。入口の間引き・野営の食事はゲームの側なので残る）
 //   JOBS=1 …                                  … 働き手に分けずに一つずつ（既定はコアの数。分けても数字は同じ）
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -115,6 +116,17 @@ export function census(G) {
       { name: "学院（術を覚える）", n: facN("academy"), note: `学院 ${facN("academy")}` },
     ],
   };
+  // E5 の大きな出口（src/data/e5_sinks.js）
+  if (D.E5) {
+    const E = D.E5;
+    const homeTowns = locs.filter((l) => l.type === "town" && (l.fac || []).includes("inn") && (l.nation || l.region) && !(D.LAWLESS || []).includes(l.nation || l.region)).length;
+    gold.out.push(
+      { name: "教会の普請への寄進（E5）", n: facN("church"), note: `教会のある町 ${facN("church")}・町ごとに三段（${E.build.cost.join("・")}G）` },
+      { name: "酒場の宴（E5）", n: facN("tavern"), note: `酒場のある町 ${facN("tavern")}・${E.feast.every} 日に一度（${E.feast.cost}G・都は ${E.feast.capital}G）` },
+      { name: "仲間の武具（E5）", n: facN("shop"), note: `店のある町 ${facN("shop")}・一人に三度（${E.gear.cost.join("・")}G）` },
+      { name: "家（E5）", n: homeTowns, note: `宿のある国の町 ${homeTowns}・買う ${E.home.cost}G（都は ${E.home.capital}G）・直す ${E.home.fix.join("・")}G` },
+    );
+  }
   // 資源ごとの入口・出口
   const res = items.filter(([, it]) => RESOURCE_TYPES.includes(it.type));
   const ids = res.map(([id]) => id);
@@ -152,6 +164,8 @@ export const STYLES = {
   saver: { name: "貯める", text: "買わない（店で買わない・訓練しない・仲間を雇わない）。売る・宿・教会は使う" },
 };
 const HEALS = ["potion", "herb"];
+const USE_E5 = process.env.T5_E5 !== "0";
+// 施療院・孤児院へ：薬草は 10 個から・回復薬は 8 個を超えた分・食べ物は 6 個から・魔力の水は 3 個で聖水に。賽子は酒場で売る
 
 export function makeStyleBot(G, style) {
   const D = G.data;
@@ -213,7 +227,41 @@ export function makeStyleBot(G, style) {
         if (ok("travel:" + next)) id = "travel:" + next;
       }
     }
+    if (USE_E5 && G.e5 && D.E5) id = e5Choose(id, avail, ok) || id;
     return id;
+  };
+  // E5 の出口（src/engine/zzzzzzzzzzzzzzzzzzzzzzz_e5_sinks.js）を使う：余った品を施療院・孤児院・聖水・調合・博打打ち・学院へ、
+  // 手もとに残す額（貯める型は 800G・ほかは 300G）を超えた金を普請・宴・仲間の武具・家へ。T5_E5=0 で使わない（E5 の前の遊び方）
+  const e5 = { seen: {} };
+  const e5Choose = (id, avail, ok) => {
+    const S = G.S, E = D.E5, X = G.e5;
+    const L = D.LOCS[S.loc];
+    const spare = S.gold - (style === "saver" ? 800 : 300);
+    const herb = S.inv.herb || 0, mana = S.inv.manawater || 0, food = X.foodCount(S), dice = S.inv.m7_chipdie || 0;
+    const cap = !!L.capital;
+    const st = X.state(S);
+    // 施設ごとの、したいこと（先のものから。その場で選べないものは飛ばす）
+    const want = {
+      church: () => [herb >= 10 && "e5:infsell", (S.inv.potion || 0) > 8 && "e5:infpot", food >= 6 && "e5:orphan", mana >= 3 && "e5:holy",
+        (st.build[S.loc] || 0) < E.build.cost.length && spare >= E.build.cost[st.build[S.loc] || 0] && "e5:build"],
+      shop: () => [herb >= 8 && (S.inv.potion || 0) < 5 && "e5:brew", ...(S.companions || []).map((c, i) => ((c.e5gear || 0) < E.gear.cost.length && spare >= E.gear.cost[c.e5gear || 0] ? "e5:gear:" + i : null))],
+      tavern: () => [spare >= (cap ? E.feast.capital : E.feast.cost) && "e5:feast", dice >= 1 && "e5:dice"],
+      inn: () => [X.homeHere(S) ? spare >= (E.home.fix[X.homeHere(S).lv || 0] || Infinity) && "e5:fix" : spare >= X.homeCost(S) + 200 && !X.home(S) && "e5:house"],
+      academy: () => [mana >= 4 && "e5:mana"],
+    };
+    const first = (f) => (want[f] ? want[f]().find((w) => w && ok(w)) : null) || null;
+    if (S.mode === "fac") return first(S.fac);
+    if (S.mode !== "explore" || L.type !== "town") return null;
+    // 家のある町では宿のかわりに家で休む
+    if (id === "fac:inn" && ok("e5home:rest")) return "e5home:rest";
+    if (/^fac:/.test(id) || id === "e5home:rest") return null;
+    const key = S.day + ":" + S.loc;
+    for (const f of ["church", "shop", "tavern", "inn", "academy"]) {
+      if (!(L.fac || []).includes(f) || e5.seen[f] === key || !ok("fac:" + f)) continue;
+      // 入る前は、中で選べるかまでは分からないので、したいことが一つでもあれば入る（一日に一度）
+      if (want[f]().some(Boolean)) { e5.seen[f] = key; return "fac:" + f; }
+    }
+    return null;
   };
   return { choose, mem };
 }
@@ -238,6 +286,9 @@ export function flowKind(id, mode) {
   if (["explore", "deeper", "leave", "camp"].includes(h)) return mode === "combat" ? "戦闘" : "探索・迷宮";
   if (h === "fac" || h === "back") return "施設の出入り";
   if (h === "use") return "持ち物で使う";
+  if (h === "e5home") return "家";
+  if (h === "e5") return ({ brew: "店（調合）", gear: "仲間の武具", infsell: "教会（施療院・孤児院・聖水）", infgive: "教会（施療院・孤児院・聖水）", orphan: "教会（施療院・孤児院・聖水）", holy: "教会（施療院・孤児院・聖水）",
+    build: "教会（普請の寄進）", feast: "酒場（宴）", dice: "酒場（賽子）", mana: "学院（買い取り）", house: "家", fix: "家" })[s] || "E5（ほか）";
   return h;
 }
 export const CHECK_DAYS = [1, 3, 7, 14, 30, 60, 100, 200, 365];
