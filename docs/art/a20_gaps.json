@@ -236,11 +236,6 @@
 "orig": 38306,
 "gapPx": 760
 },
-"portraits/berangere_anger": {
-"bytes": 40812,
-"orig": 43540,
-"gapPx": 773
-},
 "portraits/berangere_fun": {
 "bytes": 41144,
 "orig": 43504,
@@ -336,11 +331,6 @@
 "orig": 41224,
 "gapPx": 61
 },
-"portraits/dario_joy": {
-"bytes": 39684,
-"orig": 41158,
-"gapPx": 60
-},
 "portraits/dario_serious": {
 "bytes": 39498,
 "orig": 41280,
@@ -416,40 +406,15 @@
 "orig": 32118,
 "gapPx": 224
 },
-"portraits/sig_anger": {
-"bytes": 34218,
-"orig": 34474,
-"gapPx": 117
-},
-"portraits/sig_fun": {
-"bytes": 34236,
-"orig": 34622,
-"gapPx": 203
-},
-"portraits/sig_joy": {
-"bytes": 34262,
-"orig": 34444,
-"gapPx": 202
-},
 "portraits/sig_serious": {
 "bytes": 34076,
 "orig": 34752,
 "gapPx": 192
 },
-"portraits/sig_sorrow": {
-"bytes": 34512,
-"orig": 34814,
-"gapPx": 195
-},
 "portraits/sig_surprise": {
 "bytes": 34198,
 "orig": 34502,
 "gapPx": 191
-},
-"portraits/sig_troubled": {
-"bytes": 34306,
-"orig": 34704,
-"gapPx": 190
 },
 "portraits/valeon_anger": {
 "bytes": 42930,
