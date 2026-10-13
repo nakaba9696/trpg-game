@@ -1,6 +1,6 @@
 // v17a（持ち主の決定 t01）：黒曜の獣（刻印の環の二十四・A 級・敵対）を使徒の表（E3）に足す。長編「王の仇討ち」（E7。表は v17a_golvan_1.js）の相手。
 // 設定（docs/lore/igyo.md の二十四・canon_2026-10-11.md）：黒曜石の体の四つ足。壊れては治り続け、物では壊せない。縄張りの中では重さと方角が狂う。
-//   いちばん多くの人を殺した異形と記録される。国王ヴァレオンの兄を殺した（c2_people.js の valeon・events_c2.js の c2_valeon）。
+//   いちばん多くの人を殺したものと記録される。国王ヴァレオンの兄を殺した（c2_people.js の valeon・events_c2.js の c2_valeon）。
 // 縄張り：設定に場所が無いので、既にある断界山脈（mountains）の、人の地図の東の端の奥にする（山脈には剣翼の巣と峠の館もあるが、
 //   山脈は広く、ここは人の通らない黒い石の斜面。人と魔の境なので、王国の内に国難の獣がいて誰も手を出さない、という食い違いが起きない）。
 // 討伐の数（E8：討伐できる使徒は S 2・A 6・B 8。持ち主の決定）は変えない：この獣は「物では壊せない」ので、ふつうに挑んでも倒せない使徒（D.E8.UNSLAY）に入れ、
@@ -135,5 +135,10 @@
     };
     B.ROUTES = B.ROUTES || {};
     B.ROUTES["apostle@saga_golvan"] = ["s6_ap_saga_golvan"];
+  }
+  // 音のつり合い（S4）：tools/loudness.mjs と同じ測り方で、この曲だけ測った倍率と大きさ（狙い -26。s4_mix.js は書き換えない）
+  if (D.MIX && D.MIX.BGM) {
+    D.MIX.BGM.s6_ap_saga_golvan = 1.216;
+    if (D.MIX.MEASURED && D.MIX.MEASURED.bgm) D.MIX.MEASURED.bgm.s6_ap_saga_golvan = -26;
   }
 })(globalThis.G = globalThis.G || {});

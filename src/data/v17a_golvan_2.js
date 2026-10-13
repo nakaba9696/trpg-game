@@ -22,6 +22,9 @@
     jutta: { kind: "adventurer", sex: "女", age: 23, seed: "e7:jutta", look: { head: "hood", hairStyle: "ponytail", eyes: "sharp", mouth: "grin", marks: ["dirt"] } },
   });
 
+  // 施設の中で始まる場面の背景（R5。r5_scenes.js の表に足す）
+  D.R5_EVENT_SCENE = Object.assign(D.R5_EVENT_SCENE || {}, { e7g_0: "inn", e7g_1: "castle", e7g_2_lib: "castle", e7g_5_host: "castle", e7g_2_glass: "forge" });
+
   // ---------------------------------------------------------------- 用語に書き足す行（engine が D.LORE.golvan に足す）
   E7.LORE = Object.assign(E7.LORE || {}, {
     golvan: [
