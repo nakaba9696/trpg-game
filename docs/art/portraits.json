@@ -53,13 +53,10 @@
    "tags": "hands behind head",
    "face": "big grin",
    "variants": {
-    "joy": "smile, teeth, happy",
     "anger": "angry, clenched teeth, glaring, v-shaped eyebrows",
     "sorrow": "sad, frown, looking down, clenched jaw",
-    "fun": "laughing, open mouth, closed eyes",
     "serious": "serious, glaring, determined, closed mouth",
-    "surprise": "surprised, wide-eyed, open mouth",
-    "troubled": "troubled, awkward grin, sweatdrop"
+    "surprise": "surprised, wide-eyed, open mouth"
    },
    "memo": "傷だらけの古武道使いの傭兵。黒髪・無精ひげ・太い眉。お気楽で、迷ったら殴る。屈託のない笑い"
   },
@@ -179,7 +176,6 @@
     "joy": "smile, closed eyes, happy",
     "anger": "angry, glaring, frown, clenched teeth",
     "sorrow": "sad, teary eyes, looking down",
-    "fun": "laughing, open mouth, playful",
     "drunk": "drunk, flushed face, blush, half-closed eyes, wavy mouth",
     "serious": "serious, focused eyes, determined",
     "tired": "tired, hangover, half-closed eyes, sweat",
@@ -481,13 +477,8 @@
    "tags": "crossed arms",
    "face": "stern, angry eyebrows",
    "variants": {
-    "joy": "grin, teeth",
-    "anger": "angry, shouting, clenched teeth",
-    "sorrow": "sad, closed eyes",
-    "fun": "laughing, open mouth",
     "serious": "serious, determined, frown",
-    "surprise": "surprised, wide-eyed, open mouth",
-    "troubled": "troubled, sweatdrop, frown"
+    "surprise": "surprised, wide-eyed, open mouth"
    },
    "memo": "王国十指《戦場の鉄塊》。王国最強の盾"
   },
@@ -558,7 +549,6 @@
    "tags": "holding a notebook, pushing up glasses, pencil",
    "face": "open mouth, excited",
    "variants": {
-    "joy": "smile, open mouth",
     "anger": "pout, frown",
     "sorrow": "teary eyes, looking down",
     "fun": "laughing, open mouth",
@@ -601,7 +591,6 @@
    "tags": "hands resting on sword pommel, greatsword planted in ground",
    "face": "frown",
    "variants": {
-    "joy": "slight smile, closed mouth",
     "anger": "angry, frown, glaring",
     "sorrow": "solemn, closed eyes",
     "fun": "smile, laughing",
@@ -752,12 +741,8 @@
    "tags": "holding a red parasol, looking down on viewer, dark aura",
    "face": "gentle smile",
    "variants": {
-    "joy": "smile, closed eyes",
-    "anger": "cold smile, glaring",
-    "sorrow": "sad smile, looking down",
     "fun": "laughing, open mouth",
     "wicked": "evil smile, sinister grin, shaded face, glowing eyes",
-    "cold": "cold eyes, expressionless",
     "smitten": "smitten, blush, dreamy eyes, gentle smile"
    },
    "memo": "人の姿の使徒（使徒リスト 28）。銀髪の美青年。豪奢な衣で、いつも微笑んでいる。人の苦しむ顔を愛でる"
@@ -1507,7 +1492,6 @@
    "face": "haughty, frown",
    "variants": {
     "joy": "proud smile, chin raised",
-    "anger": "angry, frown, v-shaped eyebrows",
     "sorrow": "sad, looking down, biting lip",
     "fun": "haughty laugh, hand near mouth",
     "shy": "embarrassed, heavy blush, looking away",
@@ -1648,13 +1632,9 @@
    "tags": "hanging upside down from a tree branch, waving",
    "face": "cheerful grin",
    "variants": {
-    "joy": "big grin, sparkling eyes, blush",
-    "anger": "serious, focused, narrowed eyes, drawing bow",
-    "sorrow": "sad smile, looking at bow",
     "fun": "flustered, heart-struck, ears perked",
     "smitten": "smitten, blush, dreamy eyes, open mouth",
     "shy": "blush, embarrassed, ears down, looking away",
-    "serious": "serious, focused, narrowed eyes",
     "cry": "crying, tears, ears down"
    },
    "memo": "C7・仲間・恋。狩り場の町ナグリスの狐の獣人の見習い狩人。惚れっぽい阿呆だが矢は外さない。兄の弓。橙のはね髪、狐の耳と尻尾、緑の狩り装束"
@@ -1850,9 +1830,7 @@
    "tags": "bowing politely, holding tongs",
    "face": "polite smile, blush",
    "variants": {
-    "joy": "smile, happy, blush",
     "anger": "frown, clenched teeth",
-    "sorrow": "sad smile, looking down",
     "fun": "laughing, open mouth",
     "troubled": "troubled smile, sweatdrop, worried eyebrows",
     "serious": "serious, determined, closed mouth",
@@ -1869,13 +1847,11 @@
    "tags": "carrying a tray of beer mugs",
    "face": "smirk",
    "variants": {
-    "joy": "grin, happy",
     "anger": "angry, frown, open mouth",
     "sorrow": "sad, looking down",
     "fun": "laughing, open mouth",
     "exasperated": "exasperated, half-closed eyes, sigh",
-    "shy": "blush, embarrassed, looking away, frown",
-    "smug": "smug, smirk"
+    "shy": "blush, embarrassed, looking away, frown"
    },
    "memo": "C7・町。帝都の外れの坑夫酒場の娘。気が強い。坑夫頭の詩を捨てずに樽の上に積んでいる。赤い三つ編み、そばかす、頭巾、前掛け"
   },
@@ -1910,13 +1886,7 @@
    "tags": "holding a small notebook with pressed flowers",
    "face": "serious, frown",
    "variants": {
-    "joy": "gentle smile, closed eyes",
-    "anger": "angry, roaring, clenched teeth",
-    "sorrow": "sad, looking down, holding a flower",
-    "fun": "laughing, mouth open",
-    "serious": "serious, determined, focused eyes, closed mouth",
-    "faint_smile": "slight smile, soft eyes, closed mouth",
-    "troubled": "troubled, worried eyebrows, awkward smile, scratching between horns"
+    "joy": "gentle smile, closed eyes"
    },
    "memo": "C8・仲間。断界山脈の山の民の長。竜の血で角と鱗の大男。熱血で民思い、押し花と詩の帳面"
   },
@@ -2054,16 +2024,7 @@
    "identity": "1boy, male focus, old man, 66 years old, rat ears, round ears, very short, hunched back, bald, bald head, blue eyes, round eyes, long white eyebrows, long white mustache, small round spectacles, wrinkles, dark green tunic, red scarf, frayed bell rope tied at waist",
    "tags": "raising a walking stick, pretending to ring a bell",
    "face": "proud grin",
-   "variants": {
-    "joy": "laughing, closed eyes",
-    "anger": "angry, red face, shouting",
-    "sorrow": "sad, looking up at bell tower",
-    "fun": "boasting, puffed up",
-    "smug": "smug, puffed up, half-closed eyes, raised eyebrow",
-    "surprise": "surprised, wide-eyed, open mouth, ears up",
-    "serious": "serious, quiet, focused eyes, closed mouth",
-    "sleepy": "sleepy, drowsy, half-closed eyes, yawning"
-   },
+   "variants": {},
    "memo": "C8・仲間。黒鉄の砦の鐘番。鼠の獣人の爺さん。話を盛るが半分は本当、考えなしに突っ込む。禿げ頭、白い長い口髭、丸眼鏡、曲がった腰、鐘の綱の切れ端"
   },
   {
@@ -2134,13 +2095,9 @@
    "tags": "holding a ledger and a quill",
    "face": "expressionless, serious",
    "variants": {
-    "joy": "small smile, slight blush",
-    "anger": "annoyed, frown",
     "sorrow": "teary eyes, looking down, sewing",
     "fun": "deadpan, holding a losing lottery ticket",
-    "serious": "serious, focused eyes, closed mouth",
     "troubled": "troubled, worried eyebrows, awkward smile, sweatdrop",
-    "faint_smile": "slight smile, soft eyes, closed mouth",
     "tired": "tired, exhausted, half-closed eyes, sweat"
    },
    "memo": "C8・仲間。黒鉄の砦の兵站係。有能で不憫、くじは外れ、砦主に毎冬名前を忘れられる。薄茶の短い髪、そばかす、灰色の綿入れ、袖に名札がいっぱい、帳簿"
@@ -2218,7 +2175,6 @@
    "face": "relaxed grin, squinting",
    "variants": {
     "joy": "laughing, closed eyes, open mouth",
-    "anger": "serious, sharp eyes, frown",
     "sorrow": "sad smile, looking at the sea",
     "fun": "mischievous grin, one eye closed",
     "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
@@ -2348,7 +2304,6 @@
     "fun": "silent laughter, shoulders shaking, closed eyes",
     "smug": "pleased smirk, raised eyebrow",
     "cold": "cold eyes, narrowed eyes, expressionless",
-    "sparkle": "delighted, sparkling eyes, smile",
     "faint_smile": "slight smile, soft eyes, closed mouth"
    }
   },
@@ -2363,7 +2318,6 @@
    "face": "serene smile, eyes half-closed",
    "memo": "C5・眷属（蝶の奥方の）。聖都の聖歌隊でいちばん澄んだ声の若者。聴いた者が自分を傷つける。聖女に名を呼ばれたことがない。淡い桃色の短い髪、金の目、白い聖歌隊の衣、金色の粉",
    "variants": {
-    "joy": "serene happy smile, closed eyes",
     "anger": "angry, singing with wide mouth, glaring",
     "sorrow": "sad, teary eyes, looking up",
     "fun": "innocent smile, head tilt",
