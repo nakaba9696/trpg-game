@@ -1,0 +1,330 @@
+{
+ "id": "trude_face",
+ "date": "2026-10-15T00:53:49.241375",
+ "base_crop": {
+  "face_box": [
+   0.3184,
+   0.1437,
+   0.3469,
+   0.2775
+  ],
+  "px": [
+   163,
+   91,
+   340,
+   269
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   256,
+   256,
+   461,
+   430
+  ],
+  [
+   594,
+   256,
+   768,
+   430
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "joy": {
+   "inpainting_fill": 1,
+   "inpaint_full_res": false,
+   "mask_blur": 6,
+   "denoising_strength": 0.8,
+   "prompt": "(Inuboshi:1.2),miyanogi_jiji,Anan Shokudow,yutokamizu,ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, (portrait:1.2), (close-up face:1.3), face focus, 1girl, adult, young woman, 26 years old, petite, slender, pale skin, grey hair, ash grey hair, bob cut, straight bangs, cat ears, cat tail, red eyes, round eyes, cracked round glasses, soot on cheek, bandaged fingers, oversized grey work coat with many pockets, leather tool belt, sewing needle and thread in pocket, brass goggles around neck, holding a rolled blueprint, fist raised, (laughing:1.5), (eyes closed, happy closed eyes:1.6), (open mouth:1.4)",
+   "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hands:1.4), extra person, nsfw, (extra eyes:1.6), (third eye:1.6), (multiple eyes:1.6), (eyebrows over eyes:1.5), (eyebrows touching eyes:1.5), (eyebrows on hair:1.5), (small pupils:1.3), (blank eyes:1.3), (unfocused eyes:1.3), angry, sad, frown",
+   "seed": 2120977400,
+   "steps": 28,
+   "cfg_scale": 5.5,
+   "sampler_name": "Euler a",
+   "width": 1024,
+   "height": 1024,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "override_settings_restore_afterwards": true,
+   "controlnet": [
+    {
+     "enabled": true,
+     "module": "ip-adapter_clip_sdxl_plus_vith",
+     "model": "ip-adapter-plus-face_sdxl_vit-h [368cf551]",
+     "weight": 0.6,
+     "guidance_end": 0.8,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    },
+    {
+     "enabled": true,
+     "module": "none",
+     "model": "controlnet-canny-sdxl-1.0-xinsir-v2 [ab7dc06d]",
+     "weight": 0.6,
+     "guidance_end": 0.7,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    }
+   ],
+   "gate": {
+    "who": "trude",
+    "mood": "joy",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     0
+    ],
+    "diff": 0.121,
+    "want_tag": 0.95,
+    "sim": 0.755,
+    "top_tags": [
+     [
+      1.0,
+      "goggles around neck"
+     ],
+     [
+      1.0,
+      "general"
+     ],
+     [
+      0.99,
+      "1girl"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.97,
+      "facing viewer"
+     ],
+     [
+      0.96,
+      "goggles"
+     ],
+     [
+      0.95,
+      "smile"
+     ],
+     [
+      0.95,
+      "closed eyes"
+     ],
+     [
+      0.92,
+      "glasses"
+     ],
+     [
+      0.9,
+      "hood down"
+     ],
+     [
+      0.83,
+      "white background"
+     ],
+     [
+      0.83,
+      "hood"
+     ]
+    ]
+   },
+   "tries": [
+    {
+     "seed": 2120977400,
+     "ok": true,
+     "why": []
+    }
+   ]
+  },
+  "fun": {
+   "inpainting_fill": 1,
+   "inpaint_full_res": false,
+   "mask_blur": 6,
+   "denoising_strength": 0.8,
+   "prompt": "(Inuboshi:1.2),miyanogi_jiji,Anan Shokudow,yutokamizu,ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, (portrait:1.2), (close-up face:1.3), face focus, 1girl, adult, young woman, 26 years old, petite, slender, pale skin, grey hair, ash grey hair, bob cut, straight bangs, cat ears, cat tail, red eyes, round eyes, cracked round glasses, soot on cheek, bandaged fingers, oversized grey work coat with many pockets, leather tool belt, sewing needle and thread in pocket, brass goggles around neck, holding a rolled blueprint, fist raised, (mischievous smirk:1.6), (closed mouth:1.5), (tongue out:1.3), (one eye closed, wink:1.4)",
+   "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hands:1.4), extra person, nsfw, (extra eyes:1.6), (third eye:1.6), (multiple eyes:1.6), (eyebrows over eyes:1.5), (eyebrows touching eyes:1.5), (eyebrows on hair:1.5), (small pupils:1.3), (blank eyes:1.3), (unfocused eyes:1.3), angry, sad, frown",
+   "seed": 1465775951,
+   "steps": 28,
+   "cfg_scale": 5.5,
+   "sampler_name": "Euler a",
+   "width": 1024,
+   "height": 1024,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "override_settings_restore_afterwards": true,
+   "controlnet": [
+    {
+     "enabled": true,
+     "module": "ip-adapter_clip_sdxl_plus_vith",
+     "model": "ip-adapter-plus-face_sdxl_vit-h [368cf551]",
+     "weight": 0.6,
+     "guidance_end": 0.8,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    },
+    {
+     "enabled": true,
+     "module": "none",
+     "model": "controlnet-canny-sdxl-1.0-xinsir-v2 [ab7dc06d]",
+     "weight": 0.6,
+     "guidance_end": 0.7,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    }
+   ],
+   "gate": {
+    "who": "trude",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     1
+    ],
+    "diff": 0.102,
+    "want_tag": 0.98,
+    "sim": 0.772,
+    "top_tags": [
+     [
+      0.99,
+      "goggles around neck"
+     ],
+     [
+      0.99,
+      "general"
+     ],
+     [
+      0.99,
+      "1girl"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.98,
+      "one eye closed"
+     ],
+     [
+      0.96,
+      "smile"
+     ],
+     [
+      0.96,
+      "red eyes"
+     ],
+     [
+      0.96,
+      "glasses"
+     ],
+     [
+      0.95,
+      "hood down"
+     ],
+     [
+      0.93,
+      "goggles"
+     ],
+     [
+      0.91,
+      "hood"
+     ],
+     [
+      0.88,
+      "white background"
+     ]
+    ]
+   },
+   "tries": [
+    {
+     "seed": 1465775951,
+     "ok": true,
+     "why": []
+    }
+   ]
+  }
+ },
+ "skipped": {
+  "anger": [
+   {
+    "seed": 209365863,
+    "ok": false,
+    "why": [
+     "anger なのに笑っている（smile 0.82）"
+    ]
+   },
+   {
+    "seed": 209365864,
+    "ok": false,
+    "why": [
+     "髪の上に記号や線（463px）",
+     "anger なのに笑っている（smile 0.83）"
+    ]
+   },
+   {
+    "seed": 209365865,
+    "ok": false,
+    "why": [
+     "anger なのに笑っている（smile 0.92）"
+    ]
+   }
+  ],
+  "sorrow": [
+   {
+    "seed": 809721652,
+    "ok": false,
+    "why": [
+     "sorrow なのに笑っている（smile 0.88）"
+    ]
+   },
+   {
+    "seed": 809721653,
+    "ok": false,
+    "why": [
+     "sorrow なのに笑っている（smile 0.85）"
+    ]
+   },
+   {
+    "seed": 809721654,
+    "ok": false,
+    "why": [
+     "sorrow なのに笑っている（smile 0.88）"
+    ]
+   }
+  ],
+  "smug": [
+   {
+    "seed": 1510483625,
+    "ok": false,
+    "why": [
+     "何の表情か分からない（smug の札 0.03）",
+     "元から笑顔で、基本と同じ表情（札の似かた 0.90）"
+    ]
+   },
+   {
+    "seed": 1510483626,
+    "ok": false,
+    "why": [
+     "元から笑顔で、基本と同じ表情（札の似かた 0.92）"
+    ]
+   },
+   {
+    "seed": 1510483627,
+    "ok": false,
+    "why": [
+     "元から笑顔で、基本と同じ表情（札の似かた 0.93）"
+    ]
+   }
+  ]
+ }
+}
