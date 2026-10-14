@@ -5,6 +5,32 @@
 
 ## 未着手
 
+### 2026-10-15 シグルンとドレイゼ（zalve）をキャラデザから作り直す（持ち主。いちばん上。最初の差分の直しより先に）
+持ち主「シグルンとドレイゼはキャラデザからやり直してほしい」。
+今の絵の困る所（配り役の見立て）：
+- シグルン：41 歳の歴戦の傭兵なのに少女に見える。頭巾の影で顔がほとんど見えず、顔の窓で表情が出せない。眼帯が髪と混ざって分かりにくい。
+- ドレイゼ：「やせぎすの両替商」なのに、がっしりした普通の男に見える。使徒の不気味さ（砂の体・袖からこぼれる砂）が無い。チョッキの砂時計と札束は設定に無い。
+
+新しいデザイン（設定：src/data/f2_sequel.js の sigrun、docs/lore/majin.md の「砂塵のドレイゼ」、src/data/world.js の zalve）。画風・品質・構図はこれまでの人物と同じ。
+- **シグルン**（41 歳の女の傭兵。片目。寡黙でぶっきらぼう、疲れているが芯が強い。使徒を長く追っている）
+  - 顔を見せる：頭巾は後ろに下ろして肩に掛ける（hood down）。大人の女の顔（目尻の細いしわ・こけた頬・薄い唇・日焼けして荒れた白い肌）。
+  - 黒の短髪に白髪が少し混じる。灰色の目。右目は黒い革の眼帯（髪で隠さない）。眼帯の上下に古い傷。
+  - 背が高く細い。暗い灰色の外套（肩に古い爪痕の裂け目）・黒い革鎧・腰の剣の柄に手を置く。
+  - 顔：無表情・口を結ぶ。
+  - タグの例：1girl, mature female, 41 years old, tall, lean, weathered pale skin, crow's feet, gaunt cheeks, thin lips, black hair, short hair, streaks of grey hair, grey eyes, black leather eyepatch over right eye, old scar across eyepatch, hood down, dark grey hooded cloak, torn claw marks on cloak shoulder, black leather armor, hand on sword hilt, mercenary
+- **砂塵のドレイゼ**（使徒。やせぎすの両替商。礼儀正しく、嘘はつかないが全部は言わない。M11 の恋の相手なので、大人の色気と不気味さを両方）
+  - やせて背が高い。後ろへなでつけた暗い茶の髪、こめかみに白いもの。細い目・琥珀の瞳（瞳に輪）。銀の片眼鏡（鎖つき）。薄い笑み。無精ひげは無し。
+  - 濃い色のフロックコートかベスト・白いシャツ・腕に袖留め・黒いタイ。指先にインクの染み。片手に帳簿か羽根ペン。
+  - 使徒のしるし：袖口と指先から細い砂がこぼれる。頬か首に、乾いた砂のような細いひび（光るひびにはしない）。
+  - 砂時計・札束は描かない。影の角は立ち絵には入れない（地の文で出す）。
+  - タグの例：1boy, male focus, adult, 45 years old, tall, thin, gaunt, pale tan skin, dark brown hair, slicked back hair, grey temples, narrow eyes, amber eyes, ringed eyes, silver monocle, monocle chain, thin smile, dark frock coat, waistcoat, white shirt, sleeve garters, black necktie, ink-stained fingers, holding ledger, sand spilling from sleeves, sand trickling from fingertips, fine cracks on cheek like dry sand, money changer
+
+やり方：
+1. 一人 4 枚ずつ、seed を変えて作る（基本の絵の作り方と同じ。全身・透過）。目・指・眼帯・片眼鏡の崩れが無い物を選び、一人 3 枚までの候補にする。
+2. 候補を並べた docs/art/redesign/sigrun_zalve.webp（名前と番号つき）を置き、「済み」に書いて push。ここで持ち主が選ぶまで、この二人は進めない（最初の差分の直しは続けてよい。この二人の差分は直さない）。
+3. 選ばれたら、その絵を基本の絵にし、喜怒哀楽（＋その人らしい 1 つ：シグルンは無し、ドレイゼは smug）を、最初の差分と同じ全体の img2img で作り、そのあと最初の差分の直しと同じ形で基本に合わせる。
+4. 生成の値を docs/art/gen/<id>_base.json に残す。portraits.json の identity・tags の書き換えは、選ばれたあとで配り役がする。
+
 ### 2026-10-15 最初の差分を、表情はそのままで基本の絵に合わせて直す（いちばん上の指示。上の「止める」の続き）
 持ち主「差分同士はいい感じなんですが、元の絵と差分絵でアクセサリーが異なってたり瞳が変わってたり服が変わってたりします。どうにかならないですか？」
 持ち主は、最初の差分（main の assets/portraits/<id>_<表情>.webp。全身の img2img・seed 同じ・表情のタグだけ差し替え）を、顔の窓の四角（src/data/u41_face_box.js）で見て、表情を確かめている（確認ページ https://claude.ai/artifact/N5rxAVHvCB3bzq2jR9TLtA）。表情はこれがいちばん良い。直すのは「表情でない所が基本と違う」ことだけ。
