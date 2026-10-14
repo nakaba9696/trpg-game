@@ -10,14 +10,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.031,
+  "misfit": 0.014,
   "seam": 0,
   "diff": 0.061,
   "iris_de": [
    1.9,
    2.1
   ],
-  "region_px": 8455,
+  "region_px": 8123,
   "eye_shift": 0.03,
   "lost": 61,
   "skin_shift": [
@@ -43,14 +43,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.04,
+  "misfit": 0.033,
   "seam": 0,
   "diff": 0.06,
   "iris_de": [
    4.7,
    4.0
   ],
-  "region_px": 8528,
+  "region_px": 8205,
   "eye_shift": 0.02,
   "lost": 55,
   "skin_shift": [
@@ -76,14 +76,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.027,
+  "misfit": 0.018,
   "seam": 0,
   "diff": 0.065,
   "iris_de": [
    1.4,
    2.2
   ],
-  "region_px": 8511,
+  "region_px": 8215,
   "eye_shift": 0.02,
   "lost": 47,
   "skin_shift": [
@@ -109,14 +109,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.037,
+  "misfit": 0.023,
   "seam": 0,
   "diff": 0.062,
   "iris_de": [
    3.0,
    4.2
   ],
-  "region_px": 8424,
+  "region_px": 8113,
   "eye_shift": 0.01,
   "lost": 61,
   "skin_shift": [
@@ -142,14 +142,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.037,
+  "misfit": 0.025,
   "seam": 0,
   "diff": 0.064,
   "iris_de": [
    1.2,
    1.1
   ],
-  "region_px": 8323,
+  "region_px": 8042,
   "eye_shift": 0.03,
   "lost": 45,
   "skin_shift": [
@@ -175,14 +175,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.054,
+  "misfit": 0.042,
   "seam": 0,
   "diff": 0.078,
   "iris_de": [
    1.2,
    5.9
   ],
-  "region_px": 8358,
+  "region_px": 8089,
   "eye_shift": 0.02,
   "lost": 52,
   "skin_shift": [
@@ -208,14 +208,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.036,
+  "misfit": 0.018,
   "seam": 0,
   "diff": 0.059,
   "iris_de": [
    2.4,
    3.3
   ],
-  "region_px": 8236,
+  "region_px": 7900,
   "eye_shift": 0.02,
   "lost": 68,
   "skin_shift": [

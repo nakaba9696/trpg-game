@@ -12,15 +12,15 @@
   ],
   "misfit": 0.061,
   "seam": 3,
-  "diff": 0.073,
+  "diff": 0.072,
   "iris_de": [],
-  "region_px": 2701,
+  "region_px": 2660,
   "eye_shift": 0.0,
-  "lost": 16,
+  "lost": 18,
   "skin_shift": [
-   1,
-   -1,
-   -6
+   0,
+   0,
+   -4
   ],
   "rimfit": null,
   "eyes": [
@@ -40,17 +40,17 @@
    1.0,
    0.0
   ],
-  "misfit": 0.043,
+  "misfit": 0.047,
   "seam": 2,
-  "diff": 0.097,
+  "diff": 0.096,
   "iris_de": [],
-  "region_px": 2682,
+  "region_px": 2645,
   "eye_shift": 0.0,
   "lost": 15,
   "skin_shift": [
-   1,
    0,
-   -6
+   0,
+   0
   ],
   "rimfit": null,
   "eyes": [
@@ -74,13 +74,13 @@
   "seam": 3,
   "diff": 0.103,
   "iris_de": [],
-  "region_px": 2724,
+  "region_px": 2683,
   "eye_shift": 0.0,
   "lost": 8,
   "skin_shift": [
    0,
-   -2,
-   -7
+   0,
+   0
   ],
   "rimfit": null,
   "eyes": [
@@ -100,17 +100,17 @@
    1.0,
    0.0
   ],
-  "misfit": 0.047,
+  "misfit": 0.048,
   "seam": 3,
   "diff": 0.07,
   "iris_de": [],
-  "region_px": 2725,
+  "region_px": 2684,
   "eye_shift": 0.0,
-  "lost": 17,
+  "lost": 16,
   "skin_shift": [
    0,
-   -1,
-   -6
+   0,
+   -4
   ],
   "rimfit": null,
   "eyes": [
@@ -134,13 +134,13 @@
   "seam": 3,
   "diff": 0.071,
   "iris_de": [],
-  "region_px": 2692,
+  "region_px": 2651,
   "eye_shift": 0.0,
   "lost": 17,
   "skin_shift": [
-   2,
-   -2,
-   -7
+   0,
+   0,
+   0
   ],
   "rimfit": null,
   "eyes": [
@@ -160,17 +160,17 @@
    1.0,
    0.0
   ],
-  "misfit": 0.052,
+  "misfit": 0.053,
   "seam": 2,
-  "diff": 0.098,
+  "diff": 0.095,
   "iris_de": [],
-  "region_px": 2704,
+  "region_px": 2662,
   "eye_shift": 0.0,
   "lost": 12,
   "skin_shift": [
    0,
    0,
-   0
+   -4
   ],
   "rimfit": null,
   "eyes": [
@@ -192,15 +192,15 @@
   ],
   "misfit": 0.055,
   "seam": 3,
-  "diff": 0.07,
+  "diff": 0.071,
   "iris_de": [],
-  "region_px": 2706,
+  "region_px": 2665,
   "eye_shift": 0.0,
-  "lost": 16,
+  "lost": 17,
   "skin_shift": [
-   1,
    0,
-   -7
+   0,
+   0
   ],
   "rimfit": null,
   "eyes": [
