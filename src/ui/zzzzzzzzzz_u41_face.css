@@ -1,0 +1,18 @@
+/* U41：ADV の顔の窓（ui/zzzzzzzzzz_u41_face.js）。本文の窓の上（スマホの横長は左）に小さい四角い枠と名前の札を並べる。
+   絵は表情の絵から顔の四角だけを background-size・background-position で切り出す（位置と大きさは JS が px で入れる）。レーン U（U41） */
+#u41face { position: fixed; z-index: 30; display: none; pointer-events: none; --u41s: 140px; }
+#u41face.on { display: block; }
+#u41face .u41img { width: var(--u41s); height: var(--u41s); box-sizing: content-box; background-color: #efe5cd; background-repeat: no-repeat;
+  border: 2px solid #b8975a; outline: 1px solid rgba(20, 14, 6, .7); box-shadow: 0 4px 14px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(255, 246, 220, .5); }
+/* 名前の札は顔の右下に並べる（立ち絵の名札と同じ見た目） */
+#u41face .u41name { position: absolute; left: calc(var(--u41s) + 10px); bottom: 0; max-width: 260px; padding: 3px 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-family: var(--f-display); font-size: 16px; letter-spacing: .12em; color: #f3e8cc; text-shadow: 0 1px 3px #000;
+  background: linear-gradient(90deg, rgba(4, 9, 9, .78), rgba(4, 9, 9, .58) 70%, transparent); border-left: 2px solid var(--accent); }
+#u41face .u41name .c3role { font-size: 11px; letter-spacing: .08em; }
+/* 顔の窓を出しているあいだは、話している人の立ち絵の名札を隠す（同じ名前を二つ出さない） */
+body.u41on .v9fig.speaker .v9name, body.u41on #stand .standName { visibility: hidden; }
+/* スマホ：札を小さく。横長は顔の左に札（右は本文の窓） */
+body.u31m #u41face .u41name { font-size: 13px; padding: 2px 10px; max-width: 200px; left: calc(var(--u41s) + 8px); }
+body.u31m #u41face .u41name .c3role { font-size: 10px; }
+body.u31m #u41face.wide .u41name { left: auto; right: calc(var(--u41s) + 8px); bottom: 0; max-width: 150px;
+  background: linear-gradient(270deg, rgba(4, 9, 9, .78), rgba(4, 9, 9, .58) 70%, transparent); border-left: 0; border-right: 2px solid var(--accent); text-align: right; }
