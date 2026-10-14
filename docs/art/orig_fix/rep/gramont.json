@@ -1,0 +1,212 @@
+{
+ "gramont_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.005,
+   -0.579,
+   -0.005,
+   1.0,
+   1.082
+  ],
+  "misfit": 0.099,
+  "seam": 0,
+  "diff": 0.043,
+  "iris_de": [],
+  "region_px": 2316,
+  "eye_shift": 0.0,
+  "lost": 10,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "gramont_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.112,
+  "seam": 1,
+  "diff": 0.067,
+  "iris_de": [],
+  "region_px": 2319,
+  "eye_shift": 0.0,
+  "lost": 35,
+  "skin_shift": [
+   0,
+   -3,
+   -6
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "gramont_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.005,
+   0.491,
+   0.005,
+   1.0,
+   -1.025
+  ],
+  "misfit": 0.146,
+  "seam": 1,
+  "diff": 0.059,
+  "iris_de": [],
+  "region_px": 2323,
+  "eye_shift": 0.0,
+  "lost": 14,
+  "skin_shift": [
+   -2,
+   -6,
+   -7
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "gramont_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.006,
+   0.552,
+   0.006,
+   1.0,
+   -1.464
+  ],
+  "misfit": 0.114,
+  "seam": 0,
+  "diff": 0.048,
+  "iris_de": [],
+  "region_px": 2334,
+  "eye_shift": 0.0,
+  "lost": 12,
+  "skin_shift": [
+   0,
+   -6,
+   -8
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "gramont_cold": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.393,
+   -0.003,
+   1.0,
+   0.664
+  ],
+  "misfit": 0.154,
+  "seam": 1,
+  "diff": 0.055,
+  "iris_de": [],
+  "region_px": 2312,
+  "eye_shift": 0.0,
+  "lost": 33,
+  "skin_shift": [
+   1,
+   -6,
+   -7
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "gramont_serious": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.14,
+   -0.002,
+   1.0,
+   0.687
+  ],
+  "misfit": 0.087,
+  "seam": 1,
+  "diff": 0.055,
+  "iris_de": [],
+  "region_px": 2304,
+  "eye_shift": 0.0,
+  "lost": 12,
+  "skin_shift": [
+   -2,
+   -6,
+   -8
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "gramont_smug": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.017,
+   1.809,
+   0.017,
+   1.0,
+   -4.076
+  ],
+  "misfit": 0.168,
+  "seam": 0,
+  "diff": 0.044,
+  "iris_de": [],
+  "region_px": 2345,
+  "eye_shift": 0.0,
+  "lost": 21,
+  "skin_shift": [
+   2,
+   -5,
+   -9
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ }
+}

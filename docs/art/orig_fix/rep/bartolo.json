@@ -1,0 +1,212 @@
+{
+ "bartolo_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.061,
+  "seam": 3,
+  "diff": 0.073,
+  "iris_de": [],
+  "region_px": 2701,
+  "eye_shift": 0.0,
+  "lost": 16,
+  "skin_shift": [
+   1,
+   -1,
+   -6
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "bartolo_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.043,
+  "seam": 2,
+  "diff": 0.097,
+  "iris_de": [],
+  "region_px": 2682,
+  "eye_shift": 0.0,
+  "lost": 15,
+  "skin_shift": [
+   1,
+   0,
+   -6
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   1
+  ]
+ },
+ "bartolo_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.042,
+  "seam": 3,
+  "diff": 0.103,
+  "iris_de": [],
+  "region_px": 2724,
+  "eye_shift": 0.0,
+  "lost": 8,
+  "skin_shift": [
+   0,
+   -2,
+   -7
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "bartolo_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.047,
+  "seam": 3,
+  "diff": 0.07,
+  "iris_de": [],
+  "region_px": 2725,
+  "eye_shift": 0.0,
+  "lost": 17,
+  "skin_shift": [
+   0,
+   -1,
+   -6
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "bartolo_wicked": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.042,
+  "seam": 3,
+  "diff": 0.071,
+  "iris_de": [],
+  "region_px": 2692,
+  "eye_shift": 0.0,
+  "lost": 17,
+  "skin_shift": [
+   2,
+   -2,
+   -7
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "bartolo_panic": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.052,
+  "seam": 2,
+  "diff": 0.098,
+  "iris_de": [],
+  "region_px": 2704,
+  "eye_shift": 0.0,
+  "lost": 12,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "bartolo_smug": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.055,
+  "seam": 3,
+  "diff": 0.07,
+  "iris_de": [],
+  "region_px": 2706,
+  "eye_shift": 0.0,
+  "lost": 16,
+  "skin_shift": [
+   1,
+   0,
+   -7
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ }
+}
