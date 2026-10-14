@@ -5,27 +5,6 @@
 
 ## 未着手
 
-### 2026-10-14 止める：点検の道具を先に作る（持ち主「いれていい」。いちばん上の指示）
-持ち主「Stable diffusion のノウハウがたまってるはずなのにずっと同じ指摘してる気がする。ツールとかでもっと精度あげれないの？」→ 決まりを文章で守るのをやめ、道具で守る。
-**残り 50 人の作り直しは、ここでいったん止める**（作り途中の物は push しておく）。
-1. 道具を入れる（持ち主の許可済み）：
-   - WebUI の拡張 WD14 Tagger（wd-eva02 か wd-v1-4 系のモデル）
-   - WebUI の拡張 ADetailer（顔・目の検出モデル）
-   - IP-Adapter（ip-adapter-plus-face_sdxl_vit-h と CLIP-ViT-H を models/ControlNet に）
-   - アニメ顔の目印検出（anime-face-detector など。目・眉・口の点が取れる物。Windows で入らなければ代わりの物を探して書く）
-2. 点検の道具 tools/art/face_gate.py を作る（基本の顔と作った顔を入れると、合否と理由を出す）：
-   - 目の数（目印検出）：2 より多い・前髪で隠れた側に目がある → 落とす
-   - 眉と目の間隔（目印）：基本より狭く重なる → 落とす
-   - 表情の差（目印の形の差）：基本との差が小さい → 「変わってない」で落とす（特に元から笑顔の人の喜・楽）
-   - 表情の札（WD14）：狙った表情の札の強さが低い → 「何の表情か分からない」で落とす。multiple eyes・extra eyes・anger vein（コミカルでない人・使徒）・tears（使徒）などの札が出たら落とす。目の色・髪の札が基本と違えば「別人」で落とす
-   - 守る所と透過の縁（計算）：前髪・ひげ・眼鏡・傷・絆創膏・そばかす・顔の縁の透過が基本と違えば落とす
-   - しきい値は、round2 の 5 人と、持ち主が NG にした例（nora の怒・楽＝目 3 つ／adele・mirza＝眉と目の重なり／元から笑顔の楽／mirza の格）で合わせ、「持ち主の NG を全部落とし、OK を落とさない」ことを確かめて「済み」に結果を書く。
-3. 生成の側：目の所と口の所の 2 つだけを描き直す範囲にし、前髪・眉より上・頬の印は範囲から外す（物理的に変わらないように）。ADetailer で目の細部を、IP-Adapter で同じ人の顔を保つ。落ちた物は seed を変えて自動で作り直し、3 回落ちたら作らない表情に回す。
-4. ここまで出来たら「済み」に書いて止まる（配り役が持ち主に見せてから 50 人へ）。
-
-5. （道具のあと、手が空いたら）基本の立ち絵を同じに出し直せるよう、手元の PC にある基本の絵（WebUI の出力の PNG。埋め込みの parameters）から、モデル・プロンプト・ネガティブ・seed・サイズ・設定を拾い、docs/art/gen/<id>_base.json に残す（今 repo にあるのは表情違いの直しの記録だけ）。見つからない人は一覧にして「済み」に書く。
-
-
 ### 2026-10-14 持ち主の追加の指摘（round2 を見て）：いちばん先に読む
 持ち主「目と眉毛が重なってるし、もとから笑顔のキャラは楽しい表情変わってない」。
 - **目は 2 つ（前髪で隠れる人は見える数だけ）。顔の崩れは残さない（持ち主「ノラミの怒りと楽しい表情、顔崩壊してるけど。目 3 つあるし」）。** 前髪で片目が隠れる人は、前髪の画素を必ず基本から戻し、隠れた側に目を描かせない（前髪の所はマスクから外す・ネガティブに extra eyes, third eye, multiple eyes を入れる）。点検で目の数を数え、2 つより多い・顔の形が崩れている物は残さない。nora の怒・楽は作り直す（見える側の目と口だけで表す）。
@@ -148,4 +127,31 @@
 - 見落とした型を、fix-moods-1 の残す絵（269 枚）で計算で探した。引っかかったのは 91 枚。外れも多く、消すかは持ち主の確認のあと。
   - 透過の縁（外とつながる背景の縁で、半透明・白・赤紫が基本より増えた）：16 枚。zerina_sorrow・elnea_joy・elnea_anger・elnea_sorrow・elnea_fun・elnea_shy・valeon_anger・zalve_anger・zalve_fun・dorothea_anger・dorothea_sorrow・dorothea_smug・rionetta_joy・rionetta_anger・rionetta_sorrow・rionetta_fun
   - 白い塊（絆創膏・貼り物など、白っぽい塊の数や面積が基本と違う。歯や白目も数に入る）：75 枚。sheila_sorrow・zerina_anger・valeon_sorrow・valeon_fun・raios_fun・neilas_sorrow・sixth_anger・angelica_sorrow・hermes_fun・ferida_sorrow・ferida_fun・bride_sorrow・bride_cry・boku_anger・boku_sorrow・boku_fun・boku_sparkle・dario_sorrow・valg_anger・aurelia_joy・aurelia_sorrow・mordu_joy・mordu_fun・clarisse_panic・titta_fun・iori_sorrow・dorothea_fun・selevan_anger・solenne_joy・solenne_anger・solenne_sorrow・solenne_fun・lisette_joy・lisette_sorrow・sylvestre_anger・sylvestre_sorrow・sylvestre_fun・odette_anger・odette_fun・wolfram_joy・wolfram_sorrow・gustav_joy・gustav_anger・gustav_sorrow・sieglinde_fun・annelise_sorrow・annelise_shy・radmila_joy・radmila_fun・oren_joy・oren_anger・oren_fun・oren_sparkle・dietrich_anger・gigra_anger・gigra_sorrow・tsuyuha_sorrow・tsuyuha_fun・tsuyuha_sleepy・jonas_anger・jonas_sorrow・jonas_fun・jonas_panic・trude_sorrow・violaine_sorrow・severin_anger・severin_sorrow・severin_wicked・rufina_joy・rufina_fun・shione_sorrow・shione_fun・baudouin_joy・baudouin_anger・baudouin_sorrow
+
+### 2026-10-14 止める：点検の道具を先に作る → 道具ができたので止まる（face-trial-1・85948036）
+1. 道具：
+   - WD14 Tagger（wd-eva02-large-tagger-v3）と ADetailer は、もう入っていた。ADetailer には、目の塊の検出（AnzhcEyes-seg）・顔・髪の検出がある。
+   - IP-Adapter：ip-adapter-plus-face_sdxl_vit-h を入れた（0.85GB。持ち主に確かめてから）。CLIP の画像読み取りは、WebUI の前処理（ip-adapter_clip_sdxl_plus_vith）が自分で使う。
+   - アニメ顔の目印検出（anime-face-detector）：Windows では mmcv が入りにくいので入れていない。代わりに、目の数と位置を AnzhcEyes-seg で、眉と目の重なりを目の上の帯の暗さで見ている。
+2. 点検の道具 tools/art/face_gate.py：目の数・基本に無い所の目／眉と目の重なり／表情の差（目と口の所）／表情の札（WD14：狙った札・逆の表情・multiple eyes・使徒の anger vein・tears・blush）／元から笑顔の人の喜・楽が基本と同じか（札の並びの似かた）。
+   - 合わせの結果（round2 の 25 枚。持ち主の NG は 8 枚）：
+     - NG 8 枚のうち 6 枚を落とした：nora 楽・adele 喜・楽・得意げ・barnabe 楽・mirza 怒。
+     - 落とせなかったのは 2 枚：nora の怒（隠れた目の上に重なった目の幽霊）と、adele の怒（眉と目の重なり）。前の作り方で、髪の色を戻すと目の中まで戻ってしまっていたのが原因。数え方では拾えなかったので、生成の側で起きないようにした（3）。
+     - 持ち主 OK のうち落とした物：barnabe の喜（元から笑顔で同じ）、mirza の喜・哀・楽（使徒なのに赤面・涙）。どちらも新しい決まりでは作り直しにあたる。
+   - しきい値：表情の差 0.025・狙った札 0.08・笑顔の人の喜 0.92・楽 0.78・目の上の暗さの増え 0.22・基本に無い目 1.3 目幅。
+3. 生成 tools/art/face_make.py：
+   - 描き直す範囲は、目の検出の箱＋眉の帯（前髪の所は除く）＋口の四角だけ。前髪で隠れた目は描かない。目の箱の中は基本の画素を戻さない。
+   - IP-Adapter（重み 0.6）と canny（範囲の所を消した線画）を使う。
+   - 描いたら face_gate で点検し、落ちたら seed を変えて 3 回まで作り直す。3 回落ちたら作らない。
+   - 元から笑顔の人は、喜を「目を閉じて笑う」、楽を「いたずらっぽい口・舌を出す・片目つむり」にした。使徒・強者は抑えた表情（冷たい目・伏し目・口の端を上げる）にした。
+   - ADetailer で目の細部を描き直すのは、まだ入れていない。今は目の箱ごと描き直している。
+4. 試し（docs/art/faces_trial/round3_tools.webp。前と道具つきを並べた）：
+   - nora の怒：目は 2 つで、眉は離れた。1 回目は道具が目 3 つで落とし、2 回目が通った。
+   - nora の楽：見える側の目でつむる。
+   - adele の怒：眉と目が離れた。ただし、怒りの印が前髪の上に乗った。
+   - adele の楽：片目つむり＋舌。adele の喜：目を閉じて笑う。
+   - 自分の目で見て、どれも何の表情か分かる。
+   - 残る課題：前髪の上の怒りの印、頬に細い線が出ること。
+5. 基本の立ち絵の生成の値を拾う作業は、まだ手を付けていない。
+- ここで止まる。WebUI は動いたまま（閉じてよい）。
 
