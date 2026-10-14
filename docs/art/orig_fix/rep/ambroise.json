@@ -12,15 +12,15 @@
   ],
   "misfit": 0.049,
   "seam": 0,
-  "diff": 0.053,
+  "diff": 0.054,
   "iris_de": [],
-  "region_px": 4013,
+  "region_px": 4018,
   "eye_shift": 0.0,
   "lost": 1,
   "skin_shift": [
    3,
-   6,
-   7
+   5,
+   6
   ],
   "rimfit": null,
   "eyes": [
@@ -46,13 +46,13 @@
   "iris_de": [
    1.8
   ],
-  "region_px": 4141,
+  "region_px": 4145,
   "eye_shift": 0.06,
   "lost": 3,
   "skin_shift": [
-   -3,
+   -2,
    4,
-   8
+   6
   ],
   "rimfit": null,
   "eyes": [
@@ -64,7 +64,7 @@
  "ambroise_sorrow": {
   "ok": false,
   "why": [
-   "目の位置がずれる（0.47）"
+   "目の位置がずれる（0.48）"
   ],
   "M": [
    1.0,
@@ -74,20 +74,20 @@
    1.0,
    -0.683
   ],
-  "misfit": 0.132,
-  "seam": 10,
+  "misfit": 0.138,
+  "seam": 11,
   "diff": 0.073,
   "iris_de": [
-   5.0,
-   3.1
+   4.8,
+   3.3
   ],
-  "region_px": 4854,
-  "eye_shift": 0.47,
+  "region_px": 4680,
+  "eye_shift": 0.48,
   "lost": 5,
   "skin_shift": [
-   8,
-   8,
-   8
+   7,
+   7,
+   6
   ],
   "rimfit": null,
   "eyes": [
@@ -109,17 +109,17 @@
   ],
   "misfit": 0.04,
   "seam": 1,
-  "diff": 0.054,
+  "diff": 0.053,
   "iris_de": [
    2.7
   ],
-  "region_px": 4014,
+  "region_px": 4036,
   "eye_shift": 0.04,
   "lost": 11,
   "skin_shift": [
-   1,
-   6,
-   8
+   2,
+   5,
+   7
   ],
   "rimfit": null,
   "eyes": [
