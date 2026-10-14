@@ -5,6 +5,15 @@
 
 ## 未着手
 
+### 2026-10-14 持ち主の返事：round2 の 5 人 OK、残り 50 人へ進む
+持ち主「進めていいが、透過やキャラの性格にあった表情になっていることは注意して」。
+- round2 の 5 人（nora・otmar・adele・barnabe・mirza）はこのまま使う。adele の喜は作らない表情に回す（基本と差が小さい）。
+- 残り 50 人を同じやり方で作る（上の「主要な仲間と使徒を…全員作り直す」の指示のとおり）。
+- **透過**：髪の縁・顔の縁に白やマゼンタのふち、半透明のにじみ、穴が無いこと。マゼンタと暗い背景の両方で、顔の四角を拡大して見る。透過の縁は基本の絵のまま戻す。
+- **性格に合った表情**：その人の性格（docs/art/portraits.json の memo・tags、src/data の人物の説明）を読み、表情の出し方を合わせる。威厳のある人・冷たい人・寡黙な人は、ひと目で分かる範囲で抑えた顔に（怒りの印や大泣きは使わない）。子どもっぽい人・明るい人は大きく。その人がまずしない表情は作らない（作らない表情に回し、理由を書く）。怒りの印（青筋の記号）は、コミカルな人だけに使う。
+- 10 人ごとに区切って push し、「済み」に途中の数を書く。全部終わったら、表情の名前つきの一覧表（基本の顔と並べる）を docs/art/faces_trial/all.webp に置く。
+
+
 ### 2026-10-14 主要な仲間と使徒を、顔だけを大きく作るやり方で全員作り直す（持ち主の決定。これが上の「5 人」の指示を含み、置き換える）
 持ち主「主要な仲間と使徒は、確認を待たずに、全員を顔だけを大きく作るやり方で作り直す」。ただし、試しの顔（nora・otmar）は持ち主に「なんの表情かわからない」と言われた。**表情がひと目で分かることを最優先にする。**
 対象（55 人。顔の四角 src/data/u41_face_box.js がある人）：dil kaidel nora sheila rui zerina elnea natalia bertrand ilse tula mirlene bruno trude souhaku adele celestin felix lucien barnabe selevan aubin lazare rodolphe margot solenne pipinelle lisette wolfram hartmut gustav timo noeris ingrid lumia sieglinde annelise radmila gigra valdun gensai tsuyuha takimaru yurien roswitha izra anselmo mirza zalve aurelia yoihime mordu azlag chezar yura
