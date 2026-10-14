@@ -1,0 +1,122 @@
+{
+ "vittorio_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.041,
+  "seam": 0,
+  "diff": 0.054,
+  "iris_de": [],
+  "region_px": 2649,
+  "eye_shift": 0.01,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   8,
+   11
+  ],
+  "rimfit": null,
+  "eyes": [
+   3,
+   3,
+   3
+  ]
+ },
+ "vittorio_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.054,
+  "seam": 0,
+  "diff": 0.074,
+  "iris_de": [],
+  "region_px": 2629,
+  "eye_shift": 0.08,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   3,
+   3,
+   3
+  ]
+ },
+ "vittorio_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.049,
+  "seam": 0,
+  "diff": 0.066,
+  "iris_de": [],
+  "region_px": 2705,
+  "eye_shift": 0.08,
+  "lost": 0,
+  "skin_shift": [
+   37,
+   56,
+   49
+  ],
+  "rimfit": null,
+  "eyes": [
+   3,
+   3,
+   3
+  ]
+ },
+ "vittorio_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.052,
+  "seam": 0,
+  "diff": 0.045,
+  "iris_de": [],
+  "region_px": 2910,
+  "eye_shift": 0.02,
+  "lost": 0,
+  "skin_shift": [
+   50,
+   60,
+   55
+  ],
+  "rimfit": null,
+  "eyes": [
+   3,
+   4,
+   3
+  ]
+ }
+}

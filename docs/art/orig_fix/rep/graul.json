@@ -1,0 +1,226 @@
+{
+ "graul_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.025,
+  "seam": 0,
+  "diff": 0.054,
+  "iris_de": [
+   8.5
+  ],
+  "region_px": 2532,
+  "eye_shift": 0.04,
+  "lost": 6,
+  "skin_shift": [
+   0,
+   6,
+   7
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "graul_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.025,
+  "seam": 0,
+  "diff": 0.046,
+  "iris_de": [
+   6.7
+  ],
+  "region_px": 2533,
+  "eye_shift": 0.04,
+  "lost": 8,
+  "skin_shift": [
+   0,
+   4,
+   6
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "graul_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.038,
+  "seam": 0,
+  "diff": 0.047,
+  "iris_de": [
+   7.5
+  ],
+  "region_px": 2533,
+  "eye_shift": 0.02,
+  "lost": 8,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "graul_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.006,
+  "seam": 0,
+  "diff": 0.051,
+  "iris_de": [
+   7.5
+  ],
+  "region_px": 2530,
+  "eye_shift": 0.03,
+  "lost": 6,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "graul_cold": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.043,
+  "seam": 0,
+  "diff": 0.045,
+  "iris_de": [
+   8.2
+  ],
+  "region_px": 3283,
+  "eye_shift": 0.05,
+  "lost": 60,
+  "skin_shift": [
+   1,
+   5,
+   6
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   2,
+   1
+  ]
+ },
+ "graul_serious": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.028,
+  "seam": 0,
+  "diff": 0.04,
+  "iris_de": [
+   8.1
+  ],
+  "region_px": 3343,
+  "eye_shift": 0.03,
+  "lost": 50,
+  "skin_shift": [
+   1,
+   5,
+   7
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   2,
+   1
+  ]
+ },
+ "graul_faint_smile": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.023,
+  "seam": 0,
+  "diff": 0.051,
+  "iris_de": [
+   8.7
+  ],
+  "region_px": 2560,
+  "eye_shift": 0.02,
+  "lost": 8,
+  "skin_shift": [
+   0,
+   5,
+   6
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ }
+}

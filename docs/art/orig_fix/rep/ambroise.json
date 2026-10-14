@@ -1,0 +1,131 @@
+{
+ "ambroise_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.578,
+   -0.003,
+   1.0,
+   1.138
+  ],
+  "misfit": 0.049,
+  "seam": 0,
+  "diff": 0.053,
+  "iris_de": [],
+  "region_px": 4013,
+  "eye_shift": 0.0,
+  "lost": 1,
+  "skin_shift": [
+   3,
+   6,
+   7
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "ambroise_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.003,
+   0.62,
+   0.003,
+   1.0,
+   -0.731
+  ],
+  "misfit": 0.035,
+  "seam": 0,
+  "diff": 0.067,
+  "iris_de": [
+   1.8
+  ],
+  "region_px": 4141,
+  "eye_shift": 0.06,
+  "lost": 3,
+  "skin_shift": [
+   -3,
+   4,
+   8
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "ambroise_sorrow": {
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.47）"
+  ],
+  "M": [
+   1.0,
+   -0.003,
+   0.552,
+   0.003,
+   1.0,
+   -0.683
+  ],
+  "misfit": 0.132,
+  "seam": 10,
+  "diff": 0.073,
+  "iris_de": [
+   5.0,
+   3.1
+  ],
+  "region_px": 4854,
+  "eye_shift": 0.47,
+  "lost": 5,
+  "skin_shift": [
+   8,
+   8,
+   8
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   2,
+   2
+  ]
+ },
+ "ambroise_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.006,
+   -1.006,
+   -0.006,
+   1.0,
+   1.795
+  ],
+  "misfit": 0.04,
+  "seam": 1,
+  "diff": 0.054,
+  "iris_de": [
+   2.7
+  ],
+  "region_px": 4014,
+  "eye_shift": 0.04,
+  "lost": 11,
+  "skin_shift": [
+   1,
+   6,
+   8
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ }
+}
