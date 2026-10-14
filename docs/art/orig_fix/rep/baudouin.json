@@ -1,0 +1,214 @@
+{
+ "baudouin_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.235,
+   -0.002,
+   1.0,
+   0.475
+  ],
+  "misfit": 0.034,
+  "seam": 0,
+  "diff": 0.051,
+  "iris_de": [],
+  "region_px": 3200,
+  "eye_shift": 0.0,
+  "lost": 8,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "baudouin_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.019,
+  "seam": 0,
+  "diff": 0.051,
+  "iris_de": [],
+  "region_px": 3236,
+  "eye_shift": 0.0,
+  "lost": 16,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   1
+  ]
+ },
+ "baudouin_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.02,
+  "seam": 1,
+  "diff": 0.055,
+  "iris_de": [],
+  "region_px": 3199,
+  "eye_shift": 0.0,
+  "lost": 16,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   1
+  ]
+ },
+ "baudouin_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.386,
+   -0.003,
+   1.0,
+   0.816
+  ],
+  "misfit": 0.036,
+  "seam": 0,
+  "diff": 0.076,
+  "iris_de": [
+   2.8
+  ],
+  "region_px": 3259,
+  "eye_shift": 0.0,
+  "lost": 10,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   0
+  ]
+ },
+ "baudouin_exasperated": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.013,
+  "seam": 0,
+  "diff": 0.058,
+  "iris_de": [],
+  "region_px": 3246,
+  "eye_shift": 0.0,
+  "lost": 17,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "baudouin_serious": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.018,
+  "seam": 0,
+  "diff": 0.053,
+  "iris_de": [],
+  "region_px": 3241,
+  "eye_shift": 0.0,
+  "lost": 15,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "baudouin_faint_smile": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.019,
+  "seam": 0,
+  "diff": 0.06,
+  "iris_de": [],
+  "region_px": 3232,
+  "eye_shift": 0.0,
+  "lost": 16,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ }
+}
