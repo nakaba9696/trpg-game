@@ -12,11 +12,19 @@
   ],
   "misfit": 0.09,
   "seam": 0,
-  "diff": 0.044,
+  "diff": 0.042,
   "iris_de": [
-   4.8
+   1.5
   ],
   "region_px": 7970,
+  "eye_shift": 0.01,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -38,9 +46,17 @@
   "seam": 0,
   "diff": 0.04,
   "iris_de": [
-   2.3
+   1.9
   ],
   "region_px": 7988,
+  "eye_shift": 0.06,
+  "lost": 2,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -60,11 +76,19 @@
   ],
   "misfit": 0.081,
   "seam": 0,
-  "diff": 0.043,
+  "diff": 0.041,
   "iris_de": [
-   4.1
+   1.4
   ],
   "region_px": 8050,
+  "eye_shift": 0.06,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -86,9 +110,17 @@
   "seam": 0,
   "diff": 0.049,
   "iris_de": [
-   1.1
+   0.8
   ],
   "region_px": 8078,
+  "eye_shift": 0.03,
+  "lost": 2,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -110,9 +142,17 @@
   "seam": 0,
   "diff": 0.042,
   "iris_de": [
-   1.9
+   2.4
   ],
   "region_px": 8028,
+  "eye_shift": 0.02,
+  "lost": 1,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -132,11 +172,19 @@
   ],
   "misfit": 0.02,
   "seam": 0,
-  "diff": 0.05,
+  "diff": 0.048,
   "iris_de": [
-   2.8
+   1.2
   ],
   "region_px": 7933,
+  "eye_shift": 0.01,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -156,11 +204,19 @@
   ],
   "misfit": 0.093,
   "seam": 0,
-  "diff": 0.042,
+  "diff": 0.04,
   "iris_de": [
-   4.0
+   1.2
   ],
   "region_px": 7971,
+  "eye_shift": 0.03,
+  "lost": 2,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -180,11 +236,19 @@
   ],
   "misfit": 0.053,
   "seam": 0,
-  "diff": 0.043,
+  "diff": 0.042,
   "iris_de": [
-   3.8
+   1.4
   ],
   "region_px": 8056,
+  "eye_shift": 0.06,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
