@@ -2,11 +2,11 @@
  "id": "odette",
  "source": "generated",
  "method": "fix",
- "date": "2026-10-14T02:28:13.635288",
+ "date": "2026-10-14T09:07:50.653147",
  "tool": "表情違いの作り直し（mood.py）",
  "base": {
   "file": "assets/portraits/odette.webp（main）",
-  "sha1": "1ddf7a9bb8bb7190c2097f3dbbcbb1390b76d8a7"
+  "sha1": "6b50d9dbeadc5a50db1a4b1f7137dce1726493b9"
  },
  "fix": [
   "透けた穴 12px を不透明に（半透明の色は残し、足りない分はまわりの色）",
@@ -18,6 +18,26 @@
   "bytes": 18878
  },
  "history": [
+  {
+   "id": "odette",
+   "source": "generated",
+   "method": "fix",
+   "date": "2026-10-14T02:28:13.635288",
+   "tool": "表情違いの作り直し（mood.py）",
+   "base": {
+    "file": "assets/portraits/odette.webp（main）",
+    "sha1": "1ddf7a9bb8bb7190c2097f3dbbcbb1390b76d8a7"
+   },
+   "fix": [
+    "透けた穴 12px を不透明に（半透明の色は残し、足りない分はまわりの色）",
+    "白い背景を抜いた（外から続く白・囲まれた大きく平らな白。ふち 2px は白を引いて半透明。whitebg.py）"
+   ],
+   "post": {
+    "webp_quality": 75,
+    "alpha_quality": 100,
+    "bytes": 18878
+   }
+  },
   {
    "id": "odette",
    "source": "generated",

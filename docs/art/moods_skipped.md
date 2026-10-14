@@ -37,3 +37,6 @@ gerhard・hermes・otmar・aurelia・captain・chezar・constance・farina・gre
 | yurina_anger | 怒りにならず笑った顔のまま（糸目で笑う人物） |
 | zerina_joy | 白目をむく |
 | zork_wicked | 眼帯の形と色が変わる |
+
+## 2026-10-14 試しの 10 人と、取りこぼした 48 枚の作り直しのあと（量より質・IMG-40）
+基本の絵と見分けがつかない、または守る所が動いたので作らない：aubin の joy・sleepy・sorrow（基本とほぼ同じ）／chezar の sorrow・wicked（ほぼ同じ）／constance の anger・joy・serious・tired（無表情の人物で差が出ず、tired は頬に × の傷が出た）／gensai の wicked・greiol の serious（ほぼ同じ）／malvina の joy（ほぼ同じ）・sorrow（布の上の縁に線）。
