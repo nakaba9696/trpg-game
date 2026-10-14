@@ -12,10 +12,17 @@
   ],
   "misfit": 0.083,
   "seam": 1,
-  "diff": 0.057,
+  "diff": 0.054,
   "iris_de": [],
   "region_px": 6735,
   "eye_shift": 0.0,
+  "lost": 6,
+  "skin_shift": [
+   3,
+   -6,
+   -8
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    0,
