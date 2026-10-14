@@ -1,0 +1,239 @@
+{
+ "id": "sheila_face",
+ "date": "2026-10-15T00:04:25.471007",
+ "base_crop": {
+  "face_box": [
+   0.332,
+   0.1672,
+   0.3469,
+   0.2775
+  ],
+  "px": [
+   169,
+   107,
+   347,
+   284
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   276,
+   307,
+   430,
+   430
+  ],
+  [
+   594,
+   307,
+   748,
+   430
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "faint_smile": {
+   "gate": {
+    "who": "sheila",
+    "mood": "faint_smile",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.046,
+    "want_tag": 1,
+    "sim": 0.997,
+    "top_tags": [
+     [
+      1.0,
+      "general"
+     ],
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.98,
+      "hood"
+     ],
+     [
+      0.94,
+      "hair ornament"
+     ],
+     [
+      0.93,
+      "hairclip"
+     ],
+     [
+      0.92,
+      "white hair"
+     ],
+     [
+      0.92,
+      "hair between eyes"
+     ],
+     [
+      0.92,
+      "blue eyes"
+     ],
+     [
+      0.88,
+      "hood up"
+     ],
+     [
+      0.86,
+      "portrait"
+     ],
+     [
+      0.86,
+      "long hair"
+     ]
+    ]
+   },
+   "picked": "sheila_faint_smile_try0.png"
+  },
+  "fun": {
+   "gate": {
+    "who": "sheila",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     1
+    ],
+    "diff": 0.054,
+    "want_tag": 0.94,
+    "sim": 0.524,
+    "top_tags": [
+     [
+      1.0,
+      "general"
+     ],
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.98,
+      "hood"
+     ],
+     [
+      0.94,
+      "one eye closed"
+     ],
+     [
+      0.92,
+      "hair ornament"
+     ],
+     [
+      0.91,
+      "hood up"
+     ],
+     [
+      0.91,
+      "hair between eyes"
+     ],
+     [
+      0.9,
+      "hairclip"
+     ],
+     [
+      0.9,
+      "blue eyes"
+     ],
+     [
+      0.89,
+      "white hair"
+     ],
+     [
+      0.87,
+      "long hair"
+     ]
+    ]
+   },
+   "picked": "sheila_fun_try0.png"
+  },
+  "sorrow": {
+   "gate": {
+    "who": "sheila",
+    "mood": "sorrow",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.048,
+    "want_tag": 0.77,
+    "sim": 0.736,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.99,
+      "general"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.98,
+      "hood"
+     ],
+     [
+      0.95,
+      "hair ornament"
+     ],
+     [
+      0.94,
+      "hair between eyes"
+     ],
+     [
+      0.92,
+      "hairclip"
+     ],
+     [
+      0.92,
+      "blue eyes"
+     ],
+     [
+      0.89,
+      "hood up"
+     ],
+     [
+      0.88,
+      "long hair"
+     ],
+     [
+      0.87,
+      "white hair"
+     ],
+     [
+      0.87,
+      "closed mouth"
+     ]
+    ]
+   },
+   "picked": "sheila_sorrow_try0.png"
+  }
+ },
+ "skipped": {
+  "joy": "点検で 3 回落ちた",
+  "anger": "点検で 3 回落ちた"
+ }
+}

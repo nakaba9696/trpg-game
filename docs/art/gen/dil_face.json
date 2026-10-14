@@ -1,0 +1,304 @@
+{
+ "id": "dil_face",
+ "date": "2026-10-14T23:34:33.135320",
+ "base_crop": {
+  "face_box": [
+   0.271,
+   0.0244,
+   0.364,
+   0.2912
+  ],
+  "px": [
+   138,
+   15,
+   325,
+   201
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   379,
+   543,
+   512,
+   655
+  ],
+  [
+   614,
+   532,
+   788,
+   645
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "anger": {
+   "gate": {
+    "who": "dil",
+    "mood": "anger",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.089,
+    "want_tag": 0.93,
+    "sim": 0.096,
+    "top_tags": [
+     [
+      0.99,
+      "anger vein"
+     ],
+     [
+      0.98,
+      "1boy"
+     ],
+     [
+      0.96,
+      "male focus"
+     ],
+     [
+      0.95,
+      "black hair"
+     ],
+     [
+      0.93,
+      "general"
+     ],
+     [
+      0.93,
+      "angry"
+     ],
+     [
+      0.92,
+      "solo"
+     ],
+     [
+      0.91,
+      "teeth"
+     ],
+     [
+      0.88,
+      "white background"
+     ],
+     [
+      0.84,
+      "simple background"
+     ],
+     [
+      0.79,
+      "clenched teeth"
+     ],
+     [
+      0.76,
+      "brown eyes"
+     ]
+    ]
+   },
+   "picked": "dil_anger_try0.png"
+  },
+  "fun": {
+   "gate": {
+    "who": "dil",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.1,
+    "want_tag": 0.98,
+    "sim": 0.415,
+    "top_tags": [
+     [
+      0.99,
+      "tongue"
+     ],
+     [
+      0.98,
+      "tongue out"
+     ],
+     [
+      0.98,
+      "1boy"
+     ],
+     [
+      0.96,
+      "male focus"
+     ],
+     [
+      0.95,
+      "black hair"
+     ],
+     [
+      0.92,
+      "solo"
+     ],
+     [
+      0.88,
+      "white background"
+     ],
+     [
+      0.86,
+      "simple background"
+     ],
+     [
+      0.86,
+      "general"
+     ],
+     [
+      0.82,
+      "looking at viewer"
+     ],
+     [
+      0.82,
+      ":p"
+     ],
+     [
+      0.81,
+      "brown eyes"
+     ]
+    ]
+   },
+   "picked": "dil_fun_try0.png"
+  },
+  "joy": {
+   "gate": {
+    "who": "dil",
+    "mood": "joy",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     1
+    ],
+    "diff": 0.101,
+    "want_tag": 0.89,
+    "sim": 0.376,
+    "top_tags": [
+     [
+      0.99,
+      "1boy"
+     ],
+     [
+      0.97,
+      "male focus"
+     ],
+     [
+      0.97,
+      "black hair"
+     ],
+     [
+      0.94,
+      "solo"
+     ],
+     [
+      0.93,
+      "general"
+     ],
+     [
+      0.9,
+      "one eye closed"
+     ],
+     [
+      0.89,
+      "white background"
+     ],
+     [
+      0.89,
+      "smile"
+     ],
+     [
+      0.85,
+      "simple background"
+     ],
+     [
+      0.81,
+      "mole"
+     ],
+     [
+      0.8,
+      "mole under mouth"
+     ],
+     [
+      0.77,
+      "open mouth"
+     ]
+    ]
+   },
+   "picked": "dil_joy_try0.png"
+  },
+  "sorrow": {
+   "gate": {
+    "who": "dil",
+    "mood": "sorrow",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.112,
+    "want_tag": 0.59,
+    "sim": 0.014,
+    "top_tags": [
+     [
+      0.98,
+      "male focus"
+     ],
+     [
+      0.98,
+      "1boy"
+     ],
+     [
+      0.96,
+      "black hair"
+     ],
+     [
+      0.95,
+      "solo"
+     ],
+     [
+      0.9,
+      "brown eyes"
+     ],
+     [
+      0.86,
+      "white background"
+     ],
+     [
+      0.86,
+      "simple background"
+     ],
+     [
+      0.83,
+      "general"
+     ],
+     [
+      0.72,
+      "messy hair"
+     ],
+     [
+      0.7,
+      "looking at viewer"
+     ],
+     [
+      0.66,
+      "portrait"
+     ],
+     [
+      0.61,
+      "wavy mouth"
+     ]
+    ]
+   },
+   "picked": "dil_sorrow_try0.png"
+  }
+ },
+ "skipped": {
+  "smug": "点検で 3 回落ちた"
+ }
+}

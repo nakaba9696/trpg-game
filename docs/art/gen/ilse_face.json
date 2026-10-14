@@ -1,0 +1,239 @@
+{
+ "id": "ilse_face",
+ "date": "2026-10-15T00:31:04.808090",
+ "base_crop": {
+  "face_box": [
+   0.289,
+   0.0282,
+   0.392,
+   0.3136
+  ],
+  "px": [
+   147,
+   18,
+   348,
+   218
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   338,
+   614,
+   481,
+   717
+  ],
+  [
+   614,
+   614,
+   768,
+   717
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "anger": {
+   "gate": {
+    "who": "ilse",
+    "mood": "anger",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.093,
+    "want_tag": 0.87,
+    "sim": 0.174,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.98,
+      "general"
+     ],
+     [
+      0.96,
+      "solo"
+     ],
+     [
+      0.95,
+      "teeth"
+     ],
+     [
+      0.92,
+      "mole"
+     ],
+     [
+      0.9,
+      "monocle"
+     ],
+     [
+      0.9,
+      "gloves"
+     ],
+     [
+      0.87,
+      "clenched teeth"
+     ],
+     [
+      0.85,
+      "red hair"
+     ],
+     [
+      0.85,
+      "long hair"
+     ],
+     [
+      0.85,
+      "black gloves"
+     ],
+     [
+      0.83,
+      "looking at viewer"
+     ]
+    ]
+   },
+   "picked": "ilse_anger_try0.png"
+  },
+  "fun": {
+   "gate": {
+    "who": "ilse",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     1
+    ],
+    "diff": 0.093,
+    "want_tag": 0.97,
+    "sim": 0.509,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.98,
+      "general"
+     ],
+     [
+      0.97,
+      "one eye closed"
+     ],
+     [
+      0.96,
+      "tongue out"
+     ],
+     [
+      0.96,
+      "tongue"
+     ],
+     [
+      0.96,
+      "solo"
+     ],
+     [
+      0.92,
+      "gloves"
+     ],
+     [
+      0.87,
+      "looking at viewer"
+     ],
+     [
+      0.85,
+      "red hair"
+     ],
+     [
+      0.83,
+      "long hair"
+     ],
+     [
+      0.82,
+      "black gloves"
+     ],
+     [
+      0.78,
+      "transparent background"
+     ]
+    ]
+   },
+   "picked": "ilse_fun_try0.png"
+  },
+  "sorrow": {
+   "gate": {
+    "who": "ilse",
+    "mood": "sorrow",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.096,
+    "want_tag": 0.63,
+    "sim": 0.708,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.97,
+      "general"
+     ],
+     [
+      0.96,
+      "solo"
+     ],
+     [
+      0.95,
+      "monocle"
+     ],
+     [
+      0.93,
+      "gloves"
+     ],
+     [
+      0.87,
+      "black gloves"
+     ],
+     [
+      0.84,
+      "long hair"
+     ],
+     [
+      0.8,
+      "red hair"
+     ],
+     [
+      0.78,
+      "white background"
+     ],
+     [
+      0.78,
+      "tearing up"
+     ],
+     [
+      0.73,
+      "closed mouth"
+     ],
+     [
+      0.71,
+      "simple background"
+     ]
+    ]
+   },
+   "picked": "ilse_sorrow_try0.png"
+  }
+ },
+ "skipped": {
+  "joy": "点検で 3 回落ちた",
+  "smug": "点検で 3 回落ちた"
+ }
+}

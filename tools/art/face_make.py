@@ -19,27 +19,54 @@ CALMNEG = ", (anger vein:1.6), (tears:1.6), (crying:1.6), (blush:1.5), (sweat:1.
 EYENEG = ", (extra eyes:1.6), (third eye:1.6), (multiple eyes:1.6), (eyebrows over eyes:1.5), (eyebrows touching eyes:1.5), (eyebrows on hair:1.5), (small pupils:1.3), (blank eyes:1.3), (unfocused eyes:1.3)"
 SMILEFUN = "(mischievous smirk:1.6), (closed mouth:1.5), (tongue out:1.3), (one eye closed, wink:1.4)"  # 元から笑顔の人の楽：口の形を基本の笑顔から変える
 SMILEJOY = "(laughing:1.5), (eyes closed, happy closed eyes:1.6), (open mouth:1.4)"  # 元から笑顔の人の喜：目を閉じて笑う
-HIDDEN = {"nora": "left", "mirza": "left"}   # 前髪で片目が隠れる人（画面の左右）
+COMIC = {"nora", "adele", "barnabe", "bruno", "trude", "timo", "gigra", "zerina", "takimaru", "dil", "kaidel", "hartmut", "gustav", "annelise", "elnea", "tula", "pipinelle", "margot", "lumia", "sieglinde"}  # 怒りの印を許す人（コミカル）
+HIDDEN = {"nora": "left", "mirza": "left", "rui": "left", "margot": "left", "solenne": "left", "lisette": "left", "yurien": "left"}   # 前髪で片目が隠れる人（画面の左右）
+
+
+LAYOUT = json.load(open(os.path.join(HERE, "layout.json" if os.path.exists(os.path.join(HERE, "layout.json")) else "face_layout.json"), encoding="utf-8"))   # 人ごとの目の箱（見える目だけ）と口の箱（顔の四角に対する割合）。目で見て書いた
 
 
 def regions(i, big):
     """描いてよい所（0〜1）と、目の情報"""
-    eyes = G.eyes_of(big)
+    eyes = [{"box": [b[0] * S, b[1] * S, b[2] * S, b[3] * S]} for b in LAYOUT[i][0]] if i in LAYOUT else G.eyes_of(big)
     a = np.array(big).astype(np.float32); yy, xx = np.mgrid[:S, :S]
-    hc = np.array(F.HAIR.get(i, [-999, -999, -999]), np.float32)
+    if i in F.HAIR: hc = np.array(F.HAIR[i], np.float32)
+    else:   # 髪の色：顔の四角の上の 15% の真ん中で、いちばん多い色
+        top = a[: int(S * 0.3), int(S * 0.25): int(S * 0.75)].reshape(-1, 3); top = top[top.min(-1) < 235]; q = (top // 16).astype(np.int32); key = q[:, 0] * 10000 + q[:, 1] * 100 + q[:, 2]
+        v, c = np.unique(key, return_counts=True); hc = np.median(top[key == v[np.argmax(c)]], 0)
     hair = np.abs(a - hc).max(-1) < 40
     draw = np.zeros((S, S), bool); used = []
     for e in eyes:
         x0, y0, x1, y1 = e["box"]; ew, eh = x1 - x0, y1 - y0
         inner = (xx >= x0) & (xx <= x1) & (yy >= y0) & (yy <= y1)
-        if hair[inner].mean() > 0.45 or (HIDDEN.get(i) == "left" and (x0 + x1) / 2 < S * 0.45) or (HIDDEN.get(i) == "right" and (x0 + x1) / 2 > S * 0.55):
+        if (i not in LAYOUT and hair[inner].mean() > 0.45) or (HIDDEN.get(i) == "left" and (x0 + x1) / 2 < S * 0.45) or (HIDDEN.get(i) == "right" and (x0 + x1) / 2 > S * 0.55):
             continue   # 前髪で隠れた目は描かない
         box = (xx >= x0 - 0.3 * ew) & (xx <= x1 + 0.3 * ew) & (yy >= y0 - 0.25 * eh) & (yy <= y1 + 0.3 * eh)
         brow = (xx >= x0 - 0.2 * ew) & (xx <= x1 + 0.2 * ew) & (yy >= y0 - 0.95 * eh) & (yy < y0 - 0.25 * eh) & ~ndimage.binary_dilation(hair, iterations=3)   # 眉の帯（前髪の所は外す）
         draw |= box | brow; used.append([round(v) for v in e["box"]])
-    mx0, my0, mx1, my1 = F.EYEMOUTH[i][1]   # 口の四角は人ごとに必ず書く
-    draw |= (xx >= mx0 * S) & (xx <= mx1 * S) & (yy >= my0 * S) & (yy <= my1 * S)
+    if i in LAYOUT:
+        mb = LAYOUT[i][1]; mx0, my0, mx1, my1 = [v * S for v in mb] if mb else (0, 0, 0, 0)
+    elif i in F.EYEMOUTH:
+        mx0, my0, mx1, my1 = [v * S for v in F.EYEMOUTH[i][1]]
+    else:   # 口の四角を目から出す：目の中心の下、目と目の間の 1.05 倍の所
+        es = [e["box"] for e in eyes]
+        if len(es) >= 2:
+            es = sorted(es, key=lambda b: -(b[2] - b[0]) * (b[3] - b[1]))[:2]
+            cx = sum((b[0] + b[2]) / 2 for b in es) / 2; cy = sum((b[1] + b[3]) / 2 for b in es) / 2
+            dist = abs((es[0][0] + es[0][2]) / 2 - (es[1][0] + es[1][2]) / 2)
+        elif len(es) == 1:
+            b = es[0]; cx, cy = S / 2, (b[1] + b[3]) / 2; dist = 2.2 * (b[2] - b[0])
+        else:
+            cx, cy, dist = S / 2, S * 0.4, S * 0.3
+        my = cy + 1.0 * dist
+        mx0, mx1, my0, my1 = cx - 0.5 * dist, cx + 0.5 * dist, my - 0.25 * dist, my + 0.25 * dist
+    draw |= (xx >= mx0) & (xx <= mx1) & (yy >= my0) & (yy <= my1)
     for ex, ey, rx, ry in F.KEEP.get(i, []): draw &= (((xx - ex * S) / (rx * S)) ** 2 + ((yy - ey * S) / (ry * S)) ** 2) > 1
+    # 描いたあと基本に戻す所：髪の色の所のうち、目そのもの（目の箱）でない所。髪の上に記号や前髪の形の変化が残らない
+    core = np.zeros((S, S), bool)
+    for e in eyes:
+        x0, y0, x1, y1 = e["box"]; core |= (xx >= x0) & (xx <= x1) & (yy >= y0) & (yy <= y1)
+    regions.hairkeep = ndimage.binary_opening(hair, iterations=1) & ~core
     return draw, used
 
 
@@ -56,6 +83,8 @@ def gen(i, m, big, edges, draw, pos, neg, seed):
     r = json.loads(urllib.request.urlopen(urllib.request.Request(F.URL + "/sdapi/v1/img2img", json.dumps(body).encode(), {"Content-Type": "application/json"}), timeout=1800).read())
     out = np.array(Image.open(io.BytesIO(base64.b64decode(r["images"][0]))).convert("RGB")).astype(np.float32)
     w = np.array(Image.fromarray((draw * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(3))).astype(np.float32)[..., None] / 255
+    hk = np.array(Image.fromarray((regions.hairkeep * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1))).astype(np.float32)[..., None] / 255
+    w = w * (1 - hk)
     fin = (out * w + np.array(big).astype(np.float32) * (1 - w)).round().clip(0, 255).astype(np.uint8)
     return Image.fromarray(fin), {k: v for k, v in body.items() if k not in ("init_images", "mask", "alwayson_scripts")} | {"controlnet": [{k: v for k, v in a.items() if k != "image"} for a in args]}
 
@@ -86,13 +115,14 @@ def run(i, moods):
         if not calm and smiling and m == "joy": mt = SMILEJOY
         if m == "fun" and i in F.WINK and not calm: mt = mt.replace("(one eye closed, wink:1.5)", F.WINK[i]).replace("(one eye closed, wink:1.4)", F.WINK[i])
         pos = ", ".join(x for x in [F.STYLE.get("prefix", ""), "(portrait:1.2), (close-up face:1.3), face focus", ident, tags, mt, "" if m in F.MOODTAGS else (f"({vt}:1.4)" if vt else "")] if x)
-        neg = neg0 + F.MOODNEG.get(m, "") + (CALMNEG if calm else "")
+        neg = neg0 + F.MOODNEG.get(m, "") + (CALMNEG if calm else "") + ("" if i in COMIC else ", (anger vein:1.6), (cross-popping vein:1.6)")
+        if i not in COMIC: mt = mt.replace(", (anger vein:1.3)", "").replace(", (anger vein:1.2)", "")
         ok = False; tries = []
         for k in range(3):
             seed = (zlib.crc32(f"{i}_{m}_face2".encode()) + k) & 0x7fffffff
             im, gp = gen(i, m, big, edges, draw, pos, neg, seed)
             im.save(f"{OUT}/{i}_{m}_try{k}.png")
-            g = G.check(i, m, f"{OUT}/{i}_base.png", f"{OUT}/{i}_{m}_try{k}.png", HIDDEN.get(i), calm)
+            g = G.check(i, m, f"{OUT}/{i}_base.png", f"{OUT}/{i}_{m}_try{k}.png", HIDDEN.get(i), calm, comic=i in COMIC, draw=draw, eyes=LAYOUT[i][0] if i in LAYOUT else None)
             tries.append({"seed": seed, "ok": g["ok"], "why": g["why"]})
             print(i, m, k, "OK" if g["ok"] else "NG " + " / ".join(g["why"]), flush=True)
             if g["ok"]:

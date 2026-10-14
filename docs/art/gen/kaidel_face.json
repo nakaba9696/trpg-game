@@ -1,0 +1,239 @@
+{
+ "id": "kaidel_face",
+ "date": "2026-10-14T23:59:35.893399",
+ "base_crop": {
+  "face_box": [
+   0.304,
+   0.0132,
+   0.392,
+   0.3136
+  ],
+  "px": [
+   155,
+   8,
+   356,
+   209
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   307,
+   563,
+   461,
+   666
+  ],
+  [
+   563,
+   563,
+   737,
+   666
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "anger": {
+   "gate": {
+    "who": "kaidel",
+    "mood": "anger",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.137,
+    "want_tag": 0.69,
+    "sim": 0.29,
+    "top_tags": [
+     [
+      0.99,
+      "male focus"
+     ],
+     [
+      0.99,
+      "1boy"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.93,
+      "facial hair"
+     ],
+     [
+      0.92,
+      "general"
+     ],
+     [
+      0.9,
+      "anger vein"
+     ],
+     [
+      0.89,
+      "headband"
+     ],
+     [
+      0.89,
+      "arms behind head"
+     ],
+     [
+      0.86,
+      "thick eyebrows"
+     ],
+     [
+      0.86,
+      "forked eyebrows"
+     ],
+     [
+      0.86,
+      "black hair"
+     ],
+     [
+      0.84,
+      "bandages"
+     ]
+    ]
+   },
+   "picked": "kaidel_anger_try2.png"
+  },
+  "fun": {
+   "gate": {
+    "who": "kaidel",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     1
+    ],
+    "diff": 0.149,
+    "want_tag": 0.83,
+    "sim": 0.708,
+    "top_tags": [
+     [
+      0.99,
+      "solo"
+     ],
+     [
+      0.99,
+      "male focus"
+     ],
+     [
+      0.99,
+      "1boy"
+     ],
+     [
+      0.95,
+      "facial hair"
+     ],
+     [
+      0.94,
+      "general"
+     ],
+     [
+      0.9,
+      "headband"
+     ],
+     [
+      0.88,
+      "smile"
+     ],
+     [
+      0.87,
+      "thick eyebrows"
+     ],
+     [
+      0.86,
+      "stubble"
+     ],
+     [
+      0.86,
+      "forked eyebrows"
+     ],
+     [
+      0.86,
+      "arms behind head"
+     ],
+     [
+      0.83,
+      "one eye closed"
+     ]
+    ]
+   },
+   "picked": "kaidel_fun_try0.png"
+  },
+  "joy": {
+   "gate": {
+    "who": "kaidel",
+    "mood": "joy",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     0
+    ],
+    "diff": 0.133,
+    "want_tag": 0.96,
+    "sim": 0.872,
+    "top_tags": [
+     [
+      0.99,
+      "male focus"
+     ],
+     [
+      0.99,
+      "1boy"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.96,
+      "smile"
+     ],
+     [
+      0.94,
+      "headband"
+     ],
+     [
+      0.94,
+      "general"
+     ],
+     [
+      0.93,
+      "facial hair"
+     ],
+     [
+      0.9,
+      "thick eyebrows"
+     ],
+     [
+      0.9,
+      "arms behind head"
+     ],
+     [
+      0.87,
+      "grin"
+     ],
+     [
+      0.84,
+      "stubble"
+     ],
+     [
+      0.83,
+      "forked eyebrows"
+     ]
+    ]
+   },
+   "picked": "kaidel_joy_try0.png"
+  }
+ },
+ "skipped": {
+  "sorrow": "点検で 3 回落ちた",
+  "serious": "目視で落とした：基本と差が無い"
+ }
+}

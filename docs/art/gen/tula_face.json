@@ -1,0 +1,272 @@
+{
+ "id": "tula_face",
+ "date": "2026-10-15T00:35:55.317923",
+ "base_crop": {
+  "face_box": [
+   0.29,
+   0.032,
+   0.42,
+   0.336
+  ],
+  "px": [
+   148,
+   20,
+   363,
+   235
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   225,
+   635,
+   389,
+   737
+  ],
+  [
+   594,
+   614,
+   768,
+   737
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "sorrow": {
+   "inpainting_fill": 1,
+   "inpaint_full_res": false,
+   "mask_blur": 6,
+   "denoising_strength": 0.8,
+   "prompt": "(Inuboshi:1.2),miyanogi_jiji,Anan Shokudow,yutokamizu,ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, (portrait:1.2), (close-up face:1.3), face focus, 1girl, teenage girl, 14 years old, short, stocky, small, tan skin, chestnut brown hair, brown hair, short hair, messy hair, bear ears, round ears, green eyes, round eyes, thick eyebrows, bandaged knuckles, bandage on nose, oversized padded brown work jacket, rolled-up sleeves, fur cap, wooden carrying frame on back, arms crossed, (sad:1.6), (eyebrows raised in the middle, worried eyebrows:1.6), (closed mouth, downturned mouth:1.5), (teary eyes, tears:1.4)",
+   "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hands:1.4), extra person, nsfw, (extra eyes:1.6), (third eye:1.6), (multiple eyes:1.6), (eyebrows over eyes:1.5), (eyebrows touching eyes:1.5), (eyebrows on hair:1.5), (small pupils:1.3), (blank eyes:1.3), (unfocused eyes:1.3), (smile:1.5), grin, (open mouth:1.2), happy",
+   "seed": 761714206,
+   "steps": 28,
+   "cfg_scale": 5.5,
+   "sampler_name": "Euler a",
+   "width": 1024,
+   "height": 1024,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "override_settings_restore_afterwards": true,
+   "controlnet": [
+    {
+     "enabled": true,
+     "module": "ip-adapter_clip_sdxl_plus_vith",
+     "model": "ip-adapter-plus-face_sdxl_vit-h [368cf551]",
+     "weight": 0.6,
+     "guidance_end": 0.8,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    },
+    {
+     "enabled": true,
+     "module": "none",
+     "model": "controlnet-canny-sdxl-1.0-xinsir-v2 [ab7dc06d]",
+     "weight": 0.6,
+     "guidance_end": 0.7,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    }
+   ],
+   "gate": {
+    "who": "tula",
+    "mood": "sorrow",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.106,
+    "want_tag": 0.75,
+    "sim": 0.679,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.99,
+      "general"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.98,
+      "bandaid on nose"
+     ],
+     [
+      0.97,
+      "green eyes"
+     ],
+     [
+      0.97,
+      "bandaid on face"
+     ],
+     [
+      0.96,
+      "bandaid"
+     ],
+     [
+      0.96,
+      "animal ears"
+     ],
+     [
+      0.92,
+      "hair ornament"
+     ],
+     [
+      0.91,
+      "simple background"
+     ],
+     [
+      0.91,
+      "brown hair"
+     ],
+     [
+      0.91,
+      "bear ears"
+     ]
+    ]
+   },
+   "tries": [
+    {
+     "seed": 761714206,
+     "ok": true,
+     "why": []
+    }
+   ],
+   "picked": "tula_sorrow_try0.png"
+  },
+  "fun": {
+   "inpainting_fill": 1,
+   "inpaint_full_res": false,
+   "mask_blur": 6,
+   "denoising_strength": 0.8,
+   "prompt": "(Inuboshi:1.2),miyanogi_jiji,Anan Shokudow,yutokamizu,ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, (portrait:1.2), (close-up face:1.3), face focus, 1girl, teenage girl, 14 years old, short, stocky, small, tan skin, chestnut brown hair, brown hair, short hair, messy hair, bear ears, round ears, green eyes, round eyes, thick eyebrows, bandaged knuckles, bandage on nose, oversized padded brown work jacket, rolled-up sleeves, fur cap, wooden carrying frame on back, arms crossed, (mischievous grin:1.5), (playful smirk:1.4), (one eye closed, wink:1.5)",
+   "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hands:1.4), extra person, nsfw, (extra eyes:1.6), (third eye:1.6), (multiple eyes:1.6), (eyebrows over eyes:1.5), (eyebrows touching eyes:1.5), (eyebrows on hair:1.5), (small pupils:1.3), (blank eyes:1.3), (unfocused eyes:1.3), angry, sad, frown",
+   "seed": 318930027,
+   "steps": 28,
+   "cfg_scale": 5.5,
+   "sampler_name": "Euler a",
+   "width": 1024,
+   "height": 1024,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "override_settings_restore_afterwards": true,
+   "controlnet": [
+    {
+     "enabled": true,
+     "module": "ip-adapter_clip_sdxl_plus_vith",
+     "model": "ip-adapter-plus-face_sdxl_vit-h [368cf551]",
+     "weight": 0.6,
+     "guidance_end": 0.8,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    },
+    {
+     "enabled": true,
+     "module": "none",
+     "model": "controlnet-canny-sdxl-1.0-xinsir-v2 [ab7dc06d]",
+     "weight": 0.6,
+     "guidance_end": 0.7,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    }
+   ],
+   "gate": {
+    "who": "tula",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     1
+    ],
+    "diff": 0.15,
+    "want_tag": 0.96,
+    "sim": 0.317,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.98,
+      "green eyes"
+     ],
+     [
+      0.98,
+      "general"
+     ],
+     [
+      0.97,
+      "bandaid on face"
+     ],
+     [
+      0.96,
+      "one eye closed"
+     ],
+     [
+      0.96,
+      "animal ears"
+     ],
+     [
+      0.93,
+      "hair ornament"
+     ],
+     [
+      0.93,
+      "bandaid on nose"
+     ],
+     [
+      0.91,
+      "smile"
+     ],
+     [
+      0.9,
+      "hat"
+     ],
+     [
+      0.9,
+      "brown hair"
+     ]
+    ]
+   },
+   "tries": [
+    {
+     "seed": 318930026,
+     "ok": false,
+     "why": [
+      "髪の上に赤い記号（88px）",
+      "髪の上に記号や線（682px）"
+     ]
+    },
+    {
+     "seed": 318930027,
+     "ok": true,
+     "why": []
+    }
+   ],
+   "picked": "tula_fun_try1.png"
+  }
+ },
+ "skipped": {
+  "joy": "点検で 3 回落ちた",
+  "anger": "点検で 3 回落ちた",
+  "shy": "目視で落とした：基本と差が無い"
+ }
+}

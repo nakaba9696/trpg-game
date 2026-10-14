@@ -1,0 +1,304 @@
+{
+ "id": "zerina_face",
+ "date": "2026-10-15T00:14:01.407600",
+ "base_crop": {
+  "face_box": [
+   0.276,
+   0.0508,
+   0.448,
+   0.3584
+  ],
+  "px": [
+   141,
+   32,
+   370,
+   261
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   225,
+   532,
+   410,
+   635
+  ],
+  [
+   614,
+   532,
+   799,
+   635
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "anger": {
+   "gate": {
+    "who": "zerina",
+    "mood": "anger",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.091,
+    "want_tag": 0.84,
+    "sim": 0.276,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.99,
+      "general"
+     ],
+     [
+      0.97,
+      "green eyes"
+     ],
+     [
+      0.96,
+      "solo"
+     ],
+     [
+      0.95,
+      "red hair"
+     ],
+     [
+      0.94,
+      "anger vein"
+     ],
+     [
+      0.92,
+      "teeth"
+     ],
+     [
+      0.84,
+      "clenched teeth"
+     ],
+     [
+      0.81,
+      "portrait"
+     ],
+     [
+      0.74,
+      "thick eyebrows"
+     ],
+     [
+      0.74,
+      "short eyebrows"
+     ],
+     [
+      0.73,
+      "blush"
+     ]
+    ]
+   },
+   "picked": "zerina_anger_try0.png"
+  },
+  "fun": {
+   "gate": {
+    "who": "zerina",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     1
+    ],
+    "diff": 0.093,
+    "want_tag": 0.96,
+    "sim": 0.334,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.98,
+      "general"
+     ],
+     [
+      0.96,
+      "tongue out"
+     ],
+     [
+      0.96,
+      "solo"
+     ],
+     [
+      0.95,
+      "tongue"
+     ],
+     [
+      0.95,
+      "green eyes"
+     ],
+     [
+      0.94,
+      "one eye closed"
+     ],
+     [
+      0.93,
+      "red hair"
+     ],
+     [
+      0.89,
+      "food on face"
+     ],
+     [
+      0.85,
+      "chocolate"
+     ],
+     [
+      0.78,
+      "portrait"
+     ],
+     [
+      0.73,
+      "blush"
+     ]
+    ]
+   },
+   "picked": "zerina_fun_try0.png"
+  },
+  "joy": {
+   "gate": {
+    "who": "zerina",
+    "mood": "joy",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     0
+    ],
+    "diff": 0.106,
+    "want_tag": 0.94,
+    "sim": 0.55,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.99,
+      "general"
+     ],
+     [
+      0.98,
+      "solo"
+     ],
+     [
+      0.97,
+      "red hair"
+     ],
+     [
+      0.96,
+      "closed eyes"
+     ],
+     [
+      0.94,
+      "smile"
+     ],
+     [
+      0.91,
+      "thick eyebrows"
+     ],
+     [
+      0.89,
+      "short eyebrows"
+     ],
+     [
+      0.85,
+      "facing viewer"
+     ],
+     [
+      0.82,
+      "open mouth"
+     ],
+     [
+      0.81,
+      "blush"
+     ],
+     [
+      0.77,
+      "shirt"
+     ]
+    ]
+   },
+   "picked": "zerina_joy_try0.png"
+  },
+  "sorrow": {
+   "gate": {
+    "who": "zerina",
+    "mood": "sorrow",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.093,
+    "want_tag": 0.8,
+    "sim": 0.129,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.99,
+      "general"
+     ],
+     [
+      0.96,
+      "solo"
+     ],
+     [
+      0.96,
+      "green eyes"
+     ],
+     [
+      0.95,
+      "red hair"
+     ],
+     [
+      0.91,
+      "food on face"
+     ],
+     [
+      0.87,
+      "thick eyebrows"
+     ],
+     [
+      0.83,
+      "food"
+     ],
+     [
+      0.8,
+      "tears"
+     ],
+     [
+      0.79,
+      "collared shirt"
+     ],
+     [
+      0.78,
+      "short eyebrows"
+     ],
+     [
+      0.78,
+      "portrait"
+     ]
+    ]
+   },
+   "picked": "zerina_sorrow_try0.png"
+  }
+ },
+ "skipped": {
+  "smug": "点検で 3 回落ちた"
+ }
+}

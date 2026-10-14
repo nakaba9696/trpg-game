@@ -1,0 +1,174 @@
+{
+ "id": "natalia_face",
+ "date": "2026-10-15T00:21:34.862331",
+ "base_crop": {
+  "face_box": [
+   0.3477,
+   0.0703,
+   0.3156,
+   0.2525
+  ],
+  "px": [
+   178,
+   44,
+   339,
+   206
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   205,
+   481,
+   430,
+   584
+  ],
+  [
+   594,
+   481,
+   819,
+   584
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "anger": {
+   "gate": {
+    "who": "natalia",
+    "mood": "anger",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.124,
+    "want_tag": 0.89,
+    "sim": 0.432,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.99,
+      "general"
+     ],
+     [
+      0.97,
+      "solo"
+     ],
+     [
+      0.93,
+      "looking at viewer"
+     ],
+     [
+      0.91,
+      "black hair"
+     ],
+     [
+      0.9,
+      "teeth"
+     ],
+     [
+      0.89,
+      "clenched teeth"
+     ],
+     [
+      0.89,
+      "brown eyes"
+     ],
+     [
+      0.88,
+      "blush"
+     ],
+     [
+      0.85,
+      "portrait"
+     ],
+     [
+      0.77,
+      "glaring"
+     ],
+     [
+      0.76,
+      "angry"
+     ]
+    ]
+   },
+   "picked": "natalia_anger_try1.png"
+  },
+  "fun": {
+   "gate": {
+    "who": "natalia",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     1
+    ],
+    "diff": 0.145,
+    "want_tag": 0.96,
+    "sim": 0.634,
+    "top_tags": [
+     [
+      1.0,
+      "1girl"
+     ],
+     [
+      0.97,
+      "solo"
+     ],
+     [
+      0.97,
+      "general"
+     ],
+     [
+      0.96,
+      "tongue out"
+     ],
+     [
+      0.96,
+      "tongue"
+     ],
+     [
+      0.96,
+      "one eye closed"
+     ],
+     [
+      0.91,
+      "smile"
+     ],
+     [
+      0.91,
+      "black hair"
+     ],
+     [
+      0.89,
+      "looking at viewer"
+     ],
+     [
+      0.86,
+      "portrait"
+     ],
+     [
+      0.84,
+      "blush"
+     ],
+     [
+      0.8,
+      "blunt bangs"
+     ]
+    ]
+   },
+   "picked": "natalia_fun_try1.png"
+  }
+ },
+ "skipped": {
+  "joy": "点検で 3 回落ちた",
+  "sorrow": "点検で 3 回落ちた",
+  "drunk": "目視で落とした：基本と差が無い"
+ }
+}

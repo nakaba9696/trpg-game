@@ -1,0 +1,174 @@
+{
+ "id": "bertrand_face",
+ "date": "2026-10-15T00:26:12.485632",
+ "base_crop": {
+  "face_box": [
+   0.303,
+   0.0194,
+   0.364,
+   0.2912
+  ],
+  "px": [
+   155,
+   12,
+   341,
+   198
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   276,
+   512,
+   430,
+   594
+  ],
+  [
+   512,
+   512,
+   666,
+   594
+  ]
+ ],
+ "base_smiling": null,
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "fun": {
+   "gate": {
+    "who": "bertrand",
+    "mood": "fun",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.109,
+    "want_tag": 0.95,
+    "sim": 0.41,
+    "top_tags": [
+     [
+      0.99,
+      "male focus"
+     ],
+     [
+      0.99,
+      "1boy"
+     ],
+     [
+      0.96,
+      "tongue"
+     ],
+     [
+      0.96,
+      "thick eyebrows"
+     ],
+     [
+      0.96,
+      "streaked hair"
+     ],
+     [
+      0.96,
+      "solo"
+     ],
+     [
+      0.95,
+      "one eye closed"
+     ],
+     [
+      0.95,
+      "general"
+     ],
+     [
+      0.95,
+      "facial hair"
+     ],
+     [
+      0.94,
+      "tongue out"
+     ],
+     [
+      0.94,
+      "multicolored hair"
+     ],
+     [
+      0.87,
+      "brown hair"
+     ]
+    ]
+   },
+   "picked": "bertrand_fun_try2.png"
+  },
+  "joy": {
+   "gate": {
+    "who": "bertrand",
+    "mood": "joy",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     0
+    ],
+    "diff": 0.111,
+    "want_tag": 0.85,
+    "sim": 0.475,
+    "top_tags": [
+     [
+      0.99,
+      "male focus"
+     ],
+     [
+      0.99,
+      "1boy"
+     ],
+     [
+      0.96,
+      "thick eyebrows"
+     ],
+     [
+      0.96,
+      "general"
+     ],
+     [
+      0.95,
+      "streaked hair"
+     ],
+     [
+      0.95,
+      "solo"
+     ],
+     [
+      0.95,
+      "multicolored hair"
+     ],
+     [
+      0.95,
+      "facial hair"
+     ],
+     [
+      0.92,
+      "closed eyes"
+     ],
+     [
+      0.85,
+      "smile"
+     ],
+     [
+      0.82,
+      "brown hair"
+     ],
+     [
+      0.8,
+      "stubble"
+     ]
+    ]
+   },
+   "picked": "bertrand_joy_try1.png"
+  }
+ },
+ "skipped": {
+  "anger": "点検で 3 回落ちた",
+  "sorrow": "点検で 3 回落ちた",
+  "cold": "点検で 3 回落ちた"
+ }
+}
