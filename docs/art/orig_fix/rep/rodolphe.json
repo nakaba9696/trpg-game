@@ -1,0 +1,181 @@
+{
+ "rodolphe_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.091,
+  "seam": 0,
+  "diff": 0.057,
+  "iris_de": [],
+  "region_px": 5530,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rodolphe_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.098,
+  "seam": 0,
+  "diff": 0.068,
+  "iris_de": [],
+  "region_px": 5736,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rodolphe_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.108,
+  "seam": 2,
+  "diff": 0.065,
+  "iris_de": [],
+  "region_px": 5589,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rodolphe_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.059,
+  "seam": 1,
+  "diff": 0.072,
+  "iris_de": [],
+  "region_px": 5603,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rodolphe_cold": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.1,
+  "seam": 0,
+  "diff": 0.058,
+  "iris_de": [],
+  "region_px": 5057,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rodolphe_faint_smile": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.058,
+  "seam": 0,
+  "diff": 0.064,
+  "iris_de": [],
+  "region_px": 5616,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rodolphe_serious": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.113,
+  "seam": 1,
+  "diff": 0.059,
+  "iris_de": [
+   4.6,
+   3.4
+  ],
+  "region_px": 6152,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rodolphe_exasperated": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.094,
+  "seam": 4,
+  "diff": 0.083,
+  "iris_de": [],
+  "region_px": 5644,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}
