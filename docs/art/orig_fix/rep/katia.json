@@ -10,14 +10,14 @@
    1.0,
    0.58
   ],
-  "misfit": 0.021,
+  "misfit": 0.02,
   "seam": 0,
   "diff": 0.047,
   "iris_de": [
    1.2,
    2.4
   ],
-  "region_px": 6577,
+  "region_px": 6306,
   "eye_shift": 0.01,
   "lost": 18,
   "skin_shift": [
@@ -43,14 +43,14 @@
    1.0,
    0.697
   ],
-  "misfit": 0.047,
+  "misfit": 0.046,
   "seam": 0,
   "diff": 0.052,
   "iris_de": [
    3.0,
    2.0
   ],
-  "region_px": 6501,
+  "region_px": 6315,
   "eye_shift": 0.01,
   "lost": 18,
   "skin_shift": [
@@ -76,14 +76,14 @@
    1.0,
    0.657
   ],
-  "misfit": 0.047,
+  "misfit": 0.044,
   "seam": 0,
   "diff": 0.071,
   "iris_de": [
    1.8,
    1.2
   ],
-  "region_px": 6583,
+  "region_px": 6378,
   "eye_shift": 0.06,
   "lost": 13,
   "skin_shift": [
@@ -109,14 +109,14 @@
    1.0,
    0.711
   ],
-  "misfit": 0.042,
+  "misfit": 0.04,
   "seam": 0,
   "diff": 0.06,
   "iris_de": [
    5.9,
    1.3
   ],
-  "region_px": 6390,
+  "region_px": 6149,
   "eye_shift": 0.02,
   "lost": 15,
   "skin_shift": [
@@ -142,14 +142,14 @@
    1.0,
    0.516
   ],
-  "misfit": 0.047,
+  "misfit": 0.044,
   "seam": 0,
-  "diff": 0.073,
+  "diff": 0.075,
   "iris_de": [
    1.5,
    0.8
   ],
-  "region_px": 5937,
+  "region_px": 5854,
   "eye_shift": 0.01,
   "lost": 17,
   "skin_shift": [
@@ -175,14 +175,14 @@
    1.0,
    0.591
   ],
-  "misfit": 0.062,
+  "misfit": 0.054,
   "seam": 0,
   "diff": 0.041,
   "iris_de": [
    4.6,
    1.8
   ],
-  "region_px": 6623,
+  "region_px": 6413,
   "eye_shift": 0.01,
   "lost": 10,
   "skin_shift": [
@@ -208,14 +208,14 @@
    1.0,
    0.628
   ],
-  "misfit": 0.021,
+  "misfit": 0.02,
   "seam": 0,
   "diff": 0.049,
   "iris_de": [
    2.2,
    2.6
   ],
-  "region_px": 6560,
+  "region_px": 6290,
   "eye_shift": 0.03,
   "lost": 18,
   "skin_shift": [
@@ -241,14 +241,14 @@
    1.0,
    0.576
   ],
-  "misfit": 0.064,
+  "misfit": 0.059,
   "seam": 0,
   "diff": 0.074,
   "iris_de": [
    1.6,
    1.1
   ],
-  "region_px": 6685,
+  "region_px": 6441,
   "eye_shift": 0.03,
   "lost": 13,
   "skin_shift": [
