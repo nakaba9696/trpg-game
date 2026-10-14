@@ -2,7 +2,7 @@
  "farina_joy": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.016）"
+   "表情の差が残らない（0.015）"
   ],
   "M": [
    1.0,
@@ -12,13 +12,13 @@
    1.0,
    -0.609
   ],
-  "misfit": 0.029,
-  "seam": 1,
-  "diff": 0.016,
+  "misfit": 0.016,
+  "seam": 0,
+  "diff": 0.015,
   "iris_de": [
    1.3
   ],
-  "region_px": 7030,
+  "region_px": 5010,
   "eye_shift": 0.04,
   "lost": 10,
   "skin_shift": [
@@ -36,7 +36,7 @@
  "farina_anger": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.015）"
+   "表情の差が残らない（0.013）"
   ],
   "M": [
    1.0,
@@ -46,13 +46,13 @@
    1.0,
    -0.561
   ],
-  "misfit": 0.03,
-  "seam": 2,
-  "diff": 0.015,
+  "misfit": 0.022,
+  "seam": 0,
+  "diff": 0.013,
   "iris_de": [
    1.6
   ],
-  "region_px": 7034,
+  "region_px": 5099,
   "eye_shift": 0.05,
   "lost": 13,
   "skin_shift": [
@@ -70,7 +70,7 @@
  "farina_sorrow": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.020）"
+   "表情の差が残らない（0.019）"
   ],
   "M": [
    1.0,
@@ -80,13 +80,13 @@
    1.0,
    -0.397
   ],
-  "misfit": 0.08,
-  "seam": 2,
-  "diff": 0.02,
+  "misfit": 0.061,
+  "seam": 0,
+  "diff": 0.019,
   "iris_de": [
    1.3
   ],
-  "region_px": 6838,
+  "region_px": 5078,
   "eye_shift": 0.1,
   "lost": 15,
   "skin_shift": [
@@ -104,7 +104,7 @@
  "farina_fun": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.019）"
+   "表情の差が残らない（0.018）"
   ],
   "M": [
    1.0,
@@ -114,11 +114,11 @@
    1.0,
    -1.158
   ],
-  "misfit": 0.04,
-  "seam": 2,
-  "diff": 0.019,
+  "misfit": 0.034,
+  "seam": 0,
+  "diff": 0.018,
   "iris_de": [],
-  "region_px": 6796,
+  "region_px": 5029,
   "eye_shift": 0.05,
   "lost": 9,
   "skin_shift": [
@@ -136,7 +136,7 @@
  "farina_faint_smile": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.017）"
+   "表情の差が残らない（0.015）"
   ],
   "M": [
    1.0,
@@ -146,13 +146,13 @@
    1.0,
    -0.385
   ],
-  "misfit": 0.033,
-  "seam": 2,
-  "diff": 0.017,
+  "misfit": 0.03,
+  "seam": 0,
+  "diff": 0.015,
   "iris_de": [
    1.7
   ],
-  "region_px": 7248,
+  "region_px": 5187,
   "eye_shift": 0.05,
   "lost": 5,
   "skin_shift": [
@@ -178,13 +178,13 @@
    1.0,
    -0.557
   ],
-  "misfit": 0.046,
-  "seam": 2,
-  "diff": 0.036,
+  "misfit": 0.031,
+  "seam": 0,
+  "diff": 0.03,
   "iris_de": [
    1.4
   ],
-  "region_px": 8206,
+  "region_px": 5102,
   "eye_shift": 0.08,
   "lost": 53,
   "skin_shift": [
@@ -202,7 +202,7 @@
  "farina_cold": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.015）"
+   "表情の差が残らない（0.014）"
   ],
   "M": [
    1.0,
@@ -212,13 +212,13 @@
    1.0,
    -0.661
   ],
-  "misfit": 0.028,
-  "seam": 2,
-  "diff": 0.015,
+  "misfit": 0.023,
+  "seam": 0,
+  "diff": 0.014,
   "iris_de": [
    5.4
   ],
-  "region_px": 6970,
+  "region_px": 5087,
   "eye_shift": 0.06,
   "lost": 17,
   "skin_shift": [
