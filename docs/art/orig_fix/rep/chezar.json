@@ -14,9 +14,15 @@
   "seam": 0,
   "diff": 0.089,
   "iris_de": [],
-  "region_px": 2123,
+  "region_px": 2126,
   "eye_shift": 0.0,
-  "rimfit": 0.94,
+  "lost": 25,
+  "skin_shift": [
+   4,
+   8,
+   7
+  ],
+  "rimfit": 0.92,
   "eyes": [
    1,
    0,
@@ -34,13 +40,21 @@
    1.0,
    0.0
   ],
-  "misfit": 0.009,
+  "misfit": 0.01,
   "seam": 0,
   "diff": 0.093,
-  "iris_de": [],
-  "region_px": 2146,
+  "iris_de": [
+   3.7
+  ],
+  "region_px": 2178,
   "eye_shift": 0.07,
-  "rimfit": 0.89,
+  "lost": 30,
+  "skin_shift": [
+   3,
+   7,
+   6
+  ],
+  "rimfit": 0.87,
   "eyes": [
    1,
    1,
@@ -60,11 +74,19 @@
   ],
   "misfit": 0.032,
   "seam": 0,
-  "diff": 0.103,
-  "iris_de": [],
-  "region_px": 2149,
+  "diff": 0.102,
+  "iris_de": [
+   2.9
+  ],
+  "region_px": 2150,
   "eye_shift": 0.08,
-  "rimfit": 0.98,
+  "lost": 27,
+  "skin_shift": [
+   5,
+   8,
+   7
+  ],
+  "rimfit": 0.97,
   "eyes": [
    1,
    1,
@@ -85,10 +107,18 @@
   "misfit": 0.034,
   "seam": 0,
   "diff": 0.158,
-  "iris_de": [],
-  "region_px": 2200,
-  "eye_shift": 0.1,
-  "rimfit": 0.98,
+  "iris_de": [
+   3.8
+  ],
+  "region_px": 2205,
+  "eye_shift": 0.09,
+  "lost": 27,
+  "skin_shift": [
+   4,
+   8,
+   8
+  ],
+  "rimfit": 0.97,
   "eyes": [
    1,
    1,
@@ -109,9 +139,17 @@
   "misfit": 0.019,
   "seam": 0,
   "diff": 0.105,
-  "iris_de": [],
+  "iris_de": [
+   3.1
+  ],
   "region_px": 2157,
   "eye_shift": 0.02,
+  "lost": 28,
+  "skin_shift": [
+   4,
+   7,
+   7
+  ],
   "rimfit": 0.95,
   "eyes": [
    1,
@@ -132,10 +170,18 @@
   ],
   "misfit": 0.021,
   "seam": 0,
-  "diff": 0.094,
-  "iris_de": [],
-  "region_px": 2140,
+  "diff": 0.093,
+  "iris_de": [
+   2.0
+  ],
+  "region_px": 2142,
   "eye_shift": 0.01,
+  "lost": 27,
+  "skin_shift": [
+   4,
+   7,
+   7
+  ],
   "rimfit": 0.97,
   "eyes": [
    1,
@@ -156,10 +202,18 @@
   ],
   "misfit": 0.007,
   "seam": 0,
-  "diff": 0.103,
-  "iris_de": [],
-  "region_px": 2164,
-  "eye_shift": 0.02,
+  "diff": 0.102,
+  "iris_de": [
+   3.7
+  ],
+  "region_px": 2167,
+  "eye_shift": 0.03,
+  "lost": 25,
+  "skin_shift": [
+   3,
+   7,
+   7
+  ],
   "rimfit": 0.96,
   "eyes": [
    1,
