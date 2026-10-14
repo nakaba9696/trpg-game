@@ -1,0 +1,103 @@
+{
+ "sieglinde_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.597,
+   -0.002,
+   1.0,
+   0.597
+  ],
+  "misfit": 0.091,
+  "seam": 1,
+  "diff": 0.052,
+  "iris_de": [
+   2.3
+  ],
+  "region_px": 8091,
+  "eye_shift": 0.03,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "sieglinde_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.079,
+  "seam": 0,
+  "diff": 0.062,
+  "iris_de": [
+   2.5
+  ],
+  "region_px": 8829,
+  "eye_shift": 0.01,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "sieglinde_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.117,
+  "seam": 2,
+  "diff": 0.058,
+  "iris_de": [
+   8.4,
+   1.1
+  ],
+  "region_px": 8836,
+  "eye_shift": 0.03,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "sieglinde_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.057,
+  "seam": 1,
+  "diff": 0.062,
+  "iris_de": [
+   2.4
+  ],
+  "region_px": 8767,
+  "eye_shift": 0.04,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

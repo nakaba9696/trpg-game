@@ -1,0 +1,214 @@
+{
+ "annelise_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.038,
+  "seam": 0,
+  "diff": 0.065,
+  "iris_de": [
+   0.8,
+   0.8
+  ],
+  "region_px": 9712,
+  "eye_shift": 0.09,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "annelise_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.061,
+  "seam": 0,
+  "diff": 0.089,
+  "iris_de": [
+   1.0,
+   0.9
+  ],
+  "region_px": 9700,
+  "eye_shift": 0.08,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "annelise_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.049,
+  "seam": 0,
+  "diff": 0.068,
+  "iris_de": [
+   1.0,
+   1.2
+  ],
+  "region_px": 9752,
+  "eye_shift": 0.08,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "annelise_fun": {
+  "ok": false,
+  "why": [
+   "目の位置がずれる（1.40）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.046,
+  "seam": 0,
+  "diff": 0.069,
+  "iris_de": [
+   0.9,
+   0.9
+  ],
+  "region_px": 10106,
+  "eye_shift": 1.4,
+  "eyes": [
+   2,
+   3,
+   2
+  ]
+ },
+ "annelise_shy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.041,
+  "seam": 0,
+  "diff": 0.075,
+  "iris_de": [
+   0.8,
+   0.8
+  ],
+  "region_px": 9870,
+  "eye_shift": 0.06,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "annelise_panic": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.116,
+  "seam": 0,
+  "diff": 0.093,
+  "iris_de": [
+   0.9,
+   1.0
+  ],
+  "region_px": 9901,
+  "eye_shift": 0.03,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "annelise_smug": {
+  "ok": false,
+  "why": [
+   "目が 3 つ"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.032,
+  "seam": 1,
+  "diff": 0.071,
+  "iris_de": [
+   0.9,
+   0.7
+  ],
+  "region_px": 9824,
+  "eye_shift": 0.1,
+  "eyes": [
+   2,
+   2,
+   3
+  ]
+ },
+ "annelise_surprise": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.08,
+  "seam": 0,
+  "diff": 0.092,
+  "iris_de": [
+   0.9,
+   1.0
+  ],
+  "region_px": 9952,
+  "eye_shift": 0.05,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

@@ -1,0 +1,196 @@
+{
+ "ingrid_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.524,
+   -0.002,
+   1.0,
+   0.506
+  ],
+  "misfit": 0.059,
+  "seam": 0,
+  "diff": 0.036,
+  "iris_de": [],
+  "region_px": 2883,
+  "eye_shift": 0.0,
+  "eyes": [
+   0,
+   1,
+   2
+  ]
+ },
+ "ingrid_anger": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.020）"
+  ],
+  "M": [
+   1.0,
+   -0.002,
+   0.38,
+   0.002,
+   1.0,
+   -0.358
+  ],
+  "misfit": 0.084,
+  "seam": 1,
+  "diff": 0.02,
+  "iris_de": [],
+  "region_px": 3855,
+  "eye_shift": 0.0,
+  "eyes": [
+   0,
+   1,
+   0
+  ]
+ },
+ "ingrid_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.047,
+  "seam": 1,
+  "diff": 0.025,
+  "iris_de": [],
+  "region_px": 4127,
+  "eye_shift": 0.0,
+  "eyes": [
+   0,
+   1,
+   2
+  ]
+ },
+ "ingrid_fun": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.018）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.043,
+  "seam": 0,
+  "diff": 0.018,
+  "iris_de": [],
+  "region_px": 4364,
+  "eye_shift": 0.0,
+  "eyes": [
+   0,
+   1,
+   2
+  ]
+ },
+ "ingrid_faint_smile": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.009）"
+  ],
+  "M": [
+   1.0,
+   0.002,
+   -0.809,
+   -0.002,
+   1.0,
+   0.627
+  ],
+  "misfit": 0.058,
+  "seam": 0,
+  "diff": 0.009,
+  "iris_de": [],
+  "region_px": 2729,
+  "eye_shift": 0.0,
+  "eyes": [
+   0,
+   0,
+   2
+  ]
+ },
+ "ingrid_sparkle": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.025）"
+  ],
+  "M": [
+   1.0,
+   0.002,
+   -0.558,
+   -0.002,
+   1.0,
+   0.433
+  ],
+  "misfit": 0.136,
+  "seam": 1,
+  "diff": 0.025,
+  "iris_de": [],
+  "region_px": 4208,
+  "eye_shift": 0.0,
+  "eyes": [
+   0,
+   1,
+   2
+  ]
+ },
+ "ingrid_exasperated": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.022,
+  "seam": 0,
+  "diff": 0.029,
+  "iris_de": [],
+  "region_px": 3936,
+  "eye_shift": 0.0,
+  "eyes": [
+   0,
+   2,
+   1
+  ]
+ },
+ "ingrid_pout": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.025）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.105,
+  "seam": 1,
+  "diff": 0.025,
+  "iris_de": [],
+  "region_px": 6124,
+  "eye_shift": 0.0,
+  "eyes": [
+   0,
+   2,
+   1
+  ]
+ }
+}
