@@ -1,0 +1,62 @@
+{
+ "sig_serious": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.129,
+   -0.003,
+   1.0,
+   0.962
+  ],
+  "misfit": 0.03,
+  "seam": 0,
+  "diff": 0.055,
+  "iris_de": [],
+  "region_px": 4445,
+  "eye_shift": 0.04,
+  "lost": 9,
+  "skin_shift": [
+   0,
+   -1,
+   -9
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "sig_surprise": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.103,
+   -0.003,
+   1.0,
+   0.89
+  ],
+  "misfit": 0.042,
+  "seam": 0,
+  "diff": 0.053,
+  "iris_de": [],
+  "region_px": 4447,
+  "eye_shift": 0.06,
+  "lost": 2,
+  "skin_shift": [
+   1,
+   -1,
+   -10
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   1,
+   2
+  ]
+ }
+}

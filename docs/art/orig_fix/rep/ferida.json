@@ -1,0 +1,130 @@
+{
+ "ferida_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.052,
+  "seam": 0,
+  "diff": 0.089,
+  "iris_de": [
+   1.7
+  ],
+  "region_px": 5219,
+  "eye_shift": 0.02,
+  "lost": 18,
+  "skin_shift": [
+   4,
+   -4,
+   -14
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "ferida_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.043,
+  "seam": 0,
+  "diff": 0.094,
+  "iris_de": [
+   4.6
+  ],
+  "region_px": 4948,
+  "eye_shift": 0.02,
+  "lost": 12,
+  "skin_shift": [
+   4,
+   -2,
+   -11
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "ferida_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.055,
+  "seam": 0,
+  "diff": 0.084,
+  "iris_de": [
+   2.8
+  ],
+  "region_px": 4947,
+  "eye_shift": 0.04,
+  "lost": 13,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "ferida_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.045,
+  "seam": 0,
+  "diff": 0.091,
+  "iris_de": [
+   1.4
+  ],
+  "region_px": 4973,
+  "eye_shift": 0.05,
+  "lost": 5,
+  "skin_shift": [
+   3,
+   -4,
+   -11
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ }
+}

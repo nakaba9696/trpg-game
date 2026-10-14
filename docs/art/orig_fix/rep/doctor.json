@@ -1,0 +1,131 @@
+{
+ "doctor_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.002,
+   0.413,
+   0.002,
+   1.0,
+   -0.531
+  ],
+  "misfit": 0.025,
+  "seam": 0,
+  "diff": 0.071,
+  "iris_de": [],
+  "region_px": 3360,
+  "eye_shift": 0.0,
+  "lost": 20,
+  "skin_shift": [
+   -4,
+   -6,
+   -12
+  ],
+  "rimfit": 0.92,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "doctor_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.534,
+   -0.002,
+   1.0,
+   0.673
+  ],
+  "misfit": 0.06,
+  "seam": 2,
+  "diff": 0.071,
+  "iris_de": [
+   3.9,
+   1.6
+  ],
+  "region_px": 3608,
+  "eye_shift": 0.12,
+  "lost": 20,
+  "skin_shift": [
+   0,
+   0,
+   -9
+  ],
+  "rimfit": 0.92,
+  "eyes": [
+   1,
+   2,
+   1
+  ]
+ },
+ "doctor_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.037,
+  "seam": 2,
+  "diff": 0.093,
+  "iris_de": [
+   3.2,
+   1.6
+  ],
+  "region_px": 3761,
+  "eye_shift": 0.17,
+  "lost": 12,
+  "skin_shift": [
+   -9,
+   -8,
+   -12
+  ],
+  "rimfit": 0.92,
+  "eyes": [
+   1,
+   2,
+   0
+  ]
+ },
+ "doctor_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.013,
+  "seam": 0,
+  "diff": 0.066,
+  "iris_de": [
+   4.3,
+   2.9
+  ],
+  "region_px": 3743,
+  "eye_shift": 0.08,
+  "lost": 15,
+  "skin_shift": [
+   -4,
+   -6,
+   -10
+  ],
+  "rimfit": 0.98,
+  "eyes": [
+   1,
+   2,
+   2
+  ]
+ }
+}

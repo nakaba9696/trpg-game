@@ -1,0 +1,212 @@
+{
+ "yurina_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.077,
+  "seam": 0,
+  "diff": 0.049,
+  "iris_de": [],
+  "region_px": 5167,
+  "eye_shift": 0.0,
+  "lost": 4,
+  "skin_shift": [
+   -5,
+   -12,
+   -13
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "yurina_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.063,
+  "seam": 0,
+  "diff": 0.082,
+  "iris_de": [],
+  "region_px": 5633,
+  "eye_shift": 0.0,
+  "lost": 5,
+  "skin_shift": [
+   1,
+   12,
+   13
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   2,
+   1
+  ]
+ },
+ "yurina_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.703,
+   -0.003,
+   1.0,
+   0.921
+  ],
+  "misfit": 0.063,
+  "seam": 0,
+  "diff": 0.062,
+  "iris_de": [],
+  "region_px": 5379,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   2,
+   1
+  ]
+ },
+ "yurina_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.055,
+  "seam": 0,
+  "diff": 0.057,
+  "iris_de": [],
+  "region_px": 5242,
+  "eye_shift": 0.0,
+  "lost": 4,
+  "skin_shift": [
+   0,
+   11,
+   14
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "yurina_cold": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.064,
+  "seam": 0,
+  "diff": 0.069,
+  "iris_de": [],
+  "region_px": 5358,
+  "eye_shift": 0.0,
+  "lost": 3,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   2,
+   2
+  ]
+ },
+ "yurina_serious": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.096,
+  "seam": 0,
+  "diff": 0.062,
+  "iris_de": [],
+  "region_px": 5282,
+  "eye_shift": 0.0,
+  "lost": 2,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   2,
+   2
+  ]
+ },
+ "yurina_surprise": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.14,
+  "seam": 0,
+  "diff": 0.091,
+  "iris_de": [],
+  "region_px": 5976,
+  "eye_shift": 0.0,
+  "lost": 4,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   2,
+   2
+  ]
+ }
+}

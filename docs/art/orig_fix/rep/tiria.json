@@ -1,0 +1,122 @@
+{
+ "tiria_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.002,
+   0.536,
+   0.002,
+   1.0,
+   -0.543
+  ],
+  "misfit": 0.081,
+  "seam": 0,
+  "diff": 0.03,
+  "iris_de": [],
+  "region_px": 7175,
+  "eye_shift": 0.0,
+  "lost": 4,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "tiria_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.06,
+  "seam": 0,
+  "diff": 0.036,
+  "iris_de": [],
+  "region_px": 7176,
+  "eye_shift": 0.0,
+  "lost": 26,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "tiria_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.07,
+  "seam": 3,
+  "diff": 0.069,
+  "iris_de": [],
+  "region_px": 7584,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   2,
+   2
+  ]
+ },
+ "tiria_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.612,
+   -0.002,
+   1.0,
+   0.373
+  ],
+  "misfit": 0.086,
+  "seam": 0,
+  "diff": 0.03,
+  "iris_de": [],
+  "region_px": 7165,
+  "eye_shift": 0.0,
+  "lost": 5,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ }
+}
