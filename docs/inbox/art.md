@@ -17,18 +17,6 @@
 5. 点検：作った全部を、基本の顔と並べて自分の目で見る。「この顔を見て、名前を隠しても何の表情か言えるか」で判定し、言えない物は作り直す。
 
 
-### 2026-10-14 持ち主の確認（最初の 10 人）の反映と、顔だけを大きく作るやり方で 5 人
-確認ページ https://claude.ai/artifact/DZfqdM2o6L8ttwzhj8FJoe のコメント（持ち主・81 件）：
-- OK：alicia・aubin・aurelia・azlag は全部、ambroise は喜・怒・楽。fix-moods-1 のまま入れる。
-- 残したのに NG（fix-moods-1 の目視をすり抜けた）：adele の怒・哀（絆創膏が増えている）、angelica の哀・楽・慌て（透過が甘い）、annelise の怒・哀・照れ（絆創膏が変わっている）。→ 消す。
-- 消した物への同意：anselmo・barnabe は全部「変わってない」、adele の喜「普段の顔と変わらない」、ambroise の哀「傷が増えている」。
-やること（ブランチ face-trial-1 の続き。WebUI を使う）：
-1. adele・angelica・annelise・anselmo・barnabe の 5 人を、顔だけを大きく作るやり方（face-trial-1 の README のとおり）で、喜・怒・哀・楽と、その人らしい表情 1 つを作る。anselmo・barnabe は基本の絵がもう強い表情なので、基本との差がはっきり出るまで作る（出なければ作らない）。
-2. 守る所：絆創膏・傷・そばかす・頬の印は基本の画素を必ず戻す（今回、絆創膏の増減を見落とした）。透過の縁は基本のまま（髪の縁がマゼンタ・白で浮かないか、マゼンタの背景で拡大して見る）。
-3. 点検：基本の顔・作った顔を並べ、目で全部見る。「済み」に 5 人の結果を書いて push。
-4. 見落とした型（絆創膏の増減・透過の甘さ）を、fix-moods-1 の残す絵（残り 107 人）でも計算で探し、引っかかった物の一覧を「済み」に書く（消すかは持ち主の確認のあと）。
-
-
 ## 済み
 
 ### 2026-10-13 表情違いの作り直し：試しの 10 人 → 2026-10-14 済み（redo-moods-9・6bc25b59）
@@ -97,4 +85,28 @@
   - otmar は控えめで、人物に合っている。怒（しかめ）・哀（涙）・楽（にやり）・冷たい目（半目）が分かる。喜は差が小さい。
   - 人ごとに、守る所（前髪の色・絆創膏や鼻の位置）と、目・口の四角を少し合わせる手間がある。1 人に数分。
 - WebUI は試しのあいだ動かした。今は動いたまま（閉じてよい）。
+
+### 2026-10-14 主要な仲間と使徒を顔だけを大きく作る：5 人の合わせ（round2）→ 一度止まる（face-trial-1・2cccf477）
+- 表は docs/art/faces_trial/round2.webp。5 人それぞれ、基本の顔と 5 表情を並べ、表情の名前を付けた。
+- 表情の強さ：表情ごとに、ひと目で分かる形をタグに決め、重みを 1.5〜1.6 に上げた。逆の表情をネガティブに入れ、denoise は 0.8〜0.85 にした。
+  - 喜：口を開けて笑う
+  - 怒：眉を吊り上げて寄せ、歯を食いしばってにらむ・怒りの印
+  - 哀：眉を八の字にして口を結ぶ・涙
+  - 楽：いたずらっぽい笑み・片目つむり
+- nora：怒を、歯を食いしばってにらむ・怒りの印にした。楽は、前髪で隠れない側の目でつむる形にした。喜・哀・目を輝かせるは 1 回目のまま。
+- otmar：1 回目のまま（持ち主 OK）。
+- adele：基本の絵にそばかすが無いので、出ないようにした（一覧の identity にはそばかすがある）。基本がすでに笑顔なので、喜は基本と差が小さい。喜を作らない表情に回すか、持ち主の判断がほしい。
+- barnabe：基本が歯を見せた笑いでも、怒（怒りの印・食いしばり）・哀（涙・八の字）・楽（片目つむり）・驚き（汗・見開き）は、基本と差が出た。粉の白い点が表情ごとに散るので、出ないようにした。
+- mirza：片目が前髪で隠れるので、見える側の目と口で表した。顔の窓の四角（u41_face_box.js）が顔より上にずれているため、切り出しを顔の高さの 14% 下げた。顔の窓の四角も直すかは、画面側と合わせてほしい。
+- 点検：自分の目で全部見た。名前を隠しても何の表情か言えるかで見た。
+  - 言えないもの：adele の喜が基本に近い。
+  - 迷うもの：nora の哀は口を食いしばっていて、怒に少し寄る（1 回目で持ち主 OK だったので、そのまま）。
+- 持ち主の返事が来るまで、残りの 50 人には進まない。WebUI は止めた。
+
+### 2026-10-14 持ち主の確認（最初の 10 人）の反映と、顔だけを大きく作るやり方で 5 人 → 上の指示に置き換え。計算で探した結果だけ書く
+- 5 人の顔は、上の round2 で作った（adele・barnabe）。angelica・annelise・anselmo は、残り 50 人のほうで作る。
+- 前の 5 人の作業は、PC のメモリ不足で途中で止まった（WebUI が約 15GB を使っていた）。
+- 見落とした型を、fix-moods-1 の残す絵（269 枚）で計算で探した。引っかかったのは 91 枚。外れも多く、消すかは持ち主の確認のあと。
+  - 透過の縁（外とつながる背景の縁で、半透明・白・赤紫が基本より増えた）：16 枚。zerina_sorrow・elnea_joy・elnea_anger・elnea_sorrow・elnea_fun・elnea_shy・valeon_anger・zalve_anger・zalve_fun・dorothea_anger・dorothea_sorrow・dorothea_smug・rionetta_joy・rionetta_anger・rionetta_sorrow・rionetta_fun
+  - 白い塊（絆創膏・貼り物など、白っぽい塊の数や面積が基本と違う。歯や白目も数に入る）：75 枚。sheila_sorrow・zerina_anger・valeon_sorrow・valeon_fun・raios_fun・neilas_sorrow・sixth_anger・angelica_sorrow・hermes_fun・ferida_sorrow・ferida_fun・bride_sorrow・bride_cry・boku_anger・boku_sorrow・boku_fun・boku_sparkle・dario_sorrow・valg_anger・aurelia_joy・aurelia_sorrow・mordu_joy・mordu_fun・clarisse_panic・titta_fun・iori_sorrow・dorothea_fun・selevan_anger・solenne_joy・solenne_anger・solenne_sorrow・solenne_fun・lisette_joy・lisette_sorrow・sylvestre_anger・sylvestre_sorrow・sylvestre_fun・odette_anger・odette_fun・wolfram_joy・wolfram_sorrow・gustav_joy・gustav_anger・gustav_sorrow・sieglinde_fun・annelise_sorrow・annelise_shy・radmila_joy・radmila_fun・oren_joy・oren_anger・oren_fun・oren_sparkle・dietrich_anger・gigra_anger・gigra_sorrow・tsuyuha_sorrow・tsuyuha_fun・tsuyuha_sleepy・jonas_anger・jonas_sorrow・jonas_fun・jonas_panic・trude_sorrow・violaine_sorrow・severin_anger・severin_sorrow・severin_wicked・rufina_joy・rufina_fun・shione_sorrow・shione_fun・baudouin_joy・baudouin_anger・baudouin_sorrow
 
