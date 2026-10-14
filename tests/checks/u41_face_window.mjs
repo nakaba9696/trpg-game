@@ -1,4 +1,4 @@
-// U41：ADV の顔の窓（src/ui/zzzzzzzzzz_u41_face.js・src/data/u41_face_box.js）
+// U41：ADV の顔の窓（src/ui/zzzzzz_zz_u41_face.js・src/data/u41_face_box.js）
 // - FACE_BOX の値が 0〜1 で、四角が絵の内側。人の絵（assets/portraits/<id>.webp）がある人だけ
 // - 全身の立ち絵は、表情の付いた場面でも基本の絵（設定 G.P.u41full を選べば表情の絵）
 // - 顔の窓に出すもの：表情があり FACE_BOX のある人だけ。表情の絵が無ければ基本の絵の同じ四角。主人公・魔物・型の絵の人・表情の無い場面・戦闘では出さない
@@ -24,7 +24,7 @@ export default ({ fail, ok, loadEngine }) => {
 
   // ---------------------------------------------------------------- 画面の決まり（DOM なし）
   const vmc = vm.createContext({ console, G, Image: class { addEventListener() {} } });
-  for (const f of ["art_monsters.js", "art_people.js", "r1_race.js", "v4_assets.js", "v5_stand.js", "v8_moods.js", "v8_moods_v11.js", "zzzzzzzzzz_u41_face.js"]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
+  for (const f of ["art_monsters.js", "art_people.js", "r1_race.js", "v4_assets.js", "v5_stand.js", "v8_moods.js", "v8_moods_v11.js", "zzzzzz_zz_u41_face.js"]) vm.runInContext(readFileSync(new URL("../../src/ui/" + f, import.meta.url), "utf8"), vmc, { filename: "ui/" + f });
   const u41 = G.u41, st = G.stand;
   if (!u41 || !u41.faceOf || !u41.crop || !u41.full || !st) return F("G.u41（faceOf・crop・full）が無い");
   const A = "data:image/webp;base64,AA==";

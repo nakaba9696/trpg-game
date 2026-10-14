@@ -1,4 +1,4 @@
-/* U41：ADV の顔の窓（ui/zzzzzzzzzz_u41_face.js）。本文の窓の上（スマホの横長は左）に小さい四角い枠と名前の札を並べる。
+/* U41：ADV の顔の窓（ui/zzzzzz_zz_u41_face.js）。本文の窓の上（スマホの横長は左）に小さい四角い枠と名前の札を並べる。
    絵は表情の絵から顔の四角だけを background-size・background-position で切り出す（位置と大きさは JS が px で入れる）。レーン U（U41） */
 #u41face { position: fixed; z-index: 30; display: none; pointer-events: none; --u41s: 140px; }
 #u41face.on { display: block; }
