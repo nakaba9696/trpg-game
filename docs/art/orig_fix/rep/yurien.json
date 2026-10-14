@@ -1,0 +1,198 @@
+{
+ "yurien_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.025,
+  "seam": 0,
+  "diff": 0.04,
+  "iris_de": [
+   1.8
+  ],
+  "region_px": 3308,
+  "eye_shift": 0.06,
+  "rimfit": 0.94,
+  "eyes": [
+   1,
+   2,
+   1
+  ]
+ },
+ "yurien_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.278,
+   -0.002,
+   1.0,
+   0.905
+  ],
+  "misfit": 0.036,
+  "seam": 1,
+  "diff": 0.035,
+  "iris_de": [
+   2.2
+  ],
+  "region_px": 3639,
+  "eye_shift": 0.02,
+  "rimfit": 0.94,
+  "eyes": [
+   1,
+   2,
+   1
+  ]
+ },
+ "yurien_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.275,
+   -0.003,
+   1.0,
+   0.677
+  ],
+  "misfit": 0.023,
+  "seam": 1,
+  "diff": 0.028,
+  "iris_de": [],
+  "region_px": 3128,
+  "eye_shift": 0.03,
+  "rimfit": 0.89,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "yurien_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.032,
+  "seam": 0,
+  "diff": 0.032,
+  "iris_de": [],
+  "region_px": 2992,
+  "eye_shift": 0.03,
+  "rimfit": 0.91,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "yurien_faint_smile": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.007,
+   0.771,
+   0.007,
+   1.0,
+   -1.904
+  ],
+  "misfit": 0.028,
+  "seam": 0,
+  "diff": 0.029,
+  "iris_de": [],
+  "region_px": 2937,
+  "eye_shift": 0.05,
+  "rimfit": 0.86,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "yurien_cold": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   -0.08,
+   -0.0,
+   1.0,
+   0.507
+  ],
+  "misfit": 0.016,
+  "seam": 0,
+  "diff": 0.027,
+  "iris_de": [],
+  "region_px": 2922,
+  "eye_shift": 0.04,
+  "rimfit": 0.91,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "yurien_smug": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.286,
+   -0.003,
+   1.0,
+   1.331
+  ],
+  "misfit": 0.009,
+  "seam": 1,
+  "diff": 0.035,
+  "iris_de": [],
+  "region_px": 2963,
+  "eye_shift": 0.06,
+  "rimfit": 0.93,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "yurien_pout": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.006,
+   0.718,
+   0.006,
+   1.0,
+   -1.465
+  ],
+  "misfit": 0.013,
+  "seam": 0,
+  "diff": 0.026,
+  "iris_de": [],
+  "region_px": 3046,
+  "eye_shift": 0.08,
+  "rimfit": 0.95,
+  "eyes": [
+   1,
+   1,
+   0
+  ]
+ }
+}

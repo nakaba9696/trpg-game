@@ -1,0 +1,98 @@
+{
+ "yura_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.203,
+   -0.002,
+   1.0,
+   -0.298
+  ],
+  "misfit": 0.245,
+  "seam": 0,
+  "diff": 0.047,
+  "iris_de": [],
+  "region_px": 8726,
+  "eye_shift": 0.0,
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "yura_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.434,
+   -0.003,
+   1.0,
+   0.247
+  ],
+  "misfit": 0.296,
+  "seam": 0,
+  "diff": 0.036,
+  "iris_de": [],
+  "region_px": 9062,
+  "eye_shift": 0.0,
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "yura_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.252,
+  "seam": 0,
+  "diff": 0.027,
+  "iris_de": [],
+  "region_px": 9225,
+  "eye_shift": 0.0,
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "yura_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.008,
+   -1.554,
+   -0.008,
+   1.0,
+   1.74
+  ],
+  "misfit": 0.168,
+  "seam": 0,
+  "diff": 0.049,
+  "iris_de": [],
+  "region_px": 9095,
+  "eye_shift": 0.0,
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ }
+}

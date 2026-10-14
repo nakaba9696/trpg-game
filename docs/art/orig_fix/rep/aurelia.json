@@ -1,0 +1,187 @@
+{
+ "aurelia_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.02,
+  "seam": 0,
+  "diff": 0.076,
+  "iris_de": [],
+  "region_px": 5676,
+  "eye_shift": 0.0,
+  "rimfit": null,
+  "eyes": [
+   2,
+   0,
+   0
+  ]
+ },
+ "aurelia_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.012,
+  "seam": 0,
+  "diff": 0.075,
+  "iris_de": [
+   2.4,
+   7.7
+  ],
+  "region_px": 6053,
+  "eye_shift": 0.2,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "aurelia_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.009,
+  "seam": 0,
+  "diff": 0.059,
+  "iris_de": [
+   2.6,
+   0.8
+  ],
+  "region_px": 5728,
+  "eye_shift": 0.26,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "aurelia_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.025,
+  "seam": 0,
+  "diff": 0.061,
+  "iris_de": [
+   0.9
+  ],
+  "region_px": 5592,
+  "eye_shift": 0.14,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "aurelia_cold": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.04,
+  "seam": 0,
+  "diff": 0.075,
+  "iris_de": [
+   6.0,
+   8.7
+  ],
+  "region_px": 6027,
+  "eye_shift": 0.27,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "aurelia_wicked": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.037,
+  "seam": 0,
+  "diff": 0.068,
+  "iris_de": [
+   3.6,
+   10.4
+  ],
+  "region_px": 6027,
+  "eye_shift": 0.19,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "aurelia_serious": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.038,
+  "seam": 0,
+  "diff": 0.078,
+  "iris_de": [
+   3.0,
+   2.8
+  ],
+  "region_px": 6038,
+  "eye_shift": 0.42,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

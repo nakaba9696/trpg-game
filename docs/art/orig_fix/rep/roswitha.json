@@ -1,0 +1,98 @@
+{
+ "roswitha_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.035,
+  "seam": 0,
+  "diff": 0.067,
+  "iris_de": [],
+  "region_px": 8683,
+  "eye_shift": 0.02,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "roswitha_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.003,
+   0.261,
+   0.003,
+   1.0,
+   -0.614
+  ],
+  "misfit": 0.02,
+  "seam": 0,
+  "diff": 0.061,
+  "iris_de": [],
+  "region_px": 8546,
+  "eye_shift": 0.05,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "roswitha_troubled": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.047,
+  "seam": 0,
+  "diff": 0.073,
+  "iris_de": [],
+  "region_px": 8438,
+  "eye_shift": 0.06,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "roswitha_tired": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.02,
+  "seam": 0,
+  "diff": 0.076,
+  "iris_de": [],
+  "region_px": 8404,
+  "eye_shift": 0.1,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

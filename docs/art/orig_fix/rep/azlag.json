@@ -1,0 +1,112 @@
+{
+ "azlag_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.08,
+  "seam": 0,
+  "diff": 0.1,
+  "iris_de": [
+   3.0,
+   2.8
+  ],
+  "region_px": 4879,
+  "eye_shift": 0.08,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "azlag_anger": {
+  "ok": false,
+  "why": [
+   "目の位置がずれる（4.80）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.102,
+  "seam": 0,
+  "diff": 0.106,
+  "iris_de": [
+   5.9,
+   4.5
+  ],
+  "region_px": 4259,
+  "eye_shift": 4.8,
+  "rimfit": null,
+  "eyes": [
+   2,
+   3,
+   2
+  ]
+ },
+ "azlag_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.005,
+   0.82,
+   0.005,
+   1.0,
+   -1.074
+  ],
+  "misfit": 0.061,
+  "seam": 0,
+  "diff": 0.103,
+  "iris_de": [
+   2.9,
+   2.8
+  ],
+  "region_px": 5205,
+  "eye_shift": 0.06,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "azlag_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.002,
+   0.577,
+   0.002,
+   1.0,
+   -0.308
+  ],
+  "misfit": 0.147,
+  "seam": 0,
+  "diff": 0.122,
+  "iris_de": [
+   3.4,
+   3.0
+  ],
+  "region_px": 5307,
+  "eye_shift": 0.09,
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}
