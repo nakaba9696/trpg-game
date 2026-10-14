@@ -2,7 +2,7 @@
  "aubin_joy": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.014）"
+   "表情の差が残らない（0.013）"
   ],
   "M": [
    1.0,
@@ -14,15 +14,15 @@
   ],
   "misfit": 0.024,
   "seam": 0,
-  "diff": 0.014,
+  "diff": 0.013,
   "iris_de": [],
-  "region_px": 1991,
+  "region_px": 1904,
   "eye_shift": 0.0,
-  "lost": 24,
+  "lost": 22,
   "skin_shift": [
-   0,
-   -2,
-   -6
+   -1,
+   -1,
+   -4
   ],
   "rimfit": null,
   "eyes": [
@@ -42,17 +42,17 @@
    1.0,
    0.0
   ],
-  "misfit": 0.0,
+  "misfit": 0.001,
   "seam": 0,
-  "diff": 0.08,
+  "diff": 0.079,
   "iris_de": [],
-  "region_px": 2439,
+  "region_px": 2417,
   "eye_shift": 0.0,
-  "lost": 22,
+  "lost": 25,
   "skin_shift": [
-   -3,
-   -5,
-   -8
+   -2,
+   -2,
+   -4
   ],
   "rimfit": null,
   "eyes": [
@@ -72,17 +72,17 @@
    1.0,
    0.0
   ],
-  "misfit": 0.022,
+  "misfit": 0.024,
   "seam": 0,
-  "diff": 0.077,
+  "diff": 0.075,
   "iris_de": [],
-  "region_px": 2490,
+  "region_px": 2404,
   "eye_shift": 0.0,
-  "lost": 29,
+  "lost": 26,
   "skin_shift": [
-   1,
-   -1,
-   -8
+   0,
+   0,
+   -5
   ],
   "rimfit": null,
   "eyes": [
@@ -102,17 +102,17 @@
    1.0,
    0.0
   ],
-  "misfit": 0.026,
+  "misfit": 0.028,
   "seam": 3,
   "diff": 0.073,
   "iris_de": [],
-  "region_px": 1655,
+  "region_px": 1650,
   "eye_shift": 0.0,
-  "lost": 10,
+  "lost": 11,
   "skin_shift": [
-   -3,
-   -1,
-   -6
+   -2,
+   0,
+   -4
   ],
   "rimfit": null,
   "eyes": [
@@ -134,11 +134,11 @@
   ],
   "misfit": 0.005,
   "seam": 1,
-  "diff": 0.071,
+  "diff": 0.072,
   "iris_de": [],
-  "region_px": 2562,
+  "region_px": 2571,
   "eye_shift": 0.0,
-  "lost": 38,
+  "lost": 37,
   "skin_shift": [
    0,
    0,
@@ -166,7 +166,7 @@
   "seam": 1,
   "diff": 0.075,
   "iris_de": [],
-  "region_px": 2549,
+  "region_px": 2562,
   "eye_shift": 0.0,
   "lost": 18,
   "skin_shift": [
@@ -226,7 +226,7 @@
   "seam": 0,
   "diff": 0.049,
   "iris_de": [],
-  "region_px": 1676,
+  "region_px": 1673,
   "eye_shift": 0.0,
   "lost": 7,
   "skin_shift": [
