@@ -25,5 +25,8 @@
   - 瞳の色の差。
 - **点検（目）**：全部を顔の窓の四角で、基本・直す前・直した後と並べて見た。
   - 自動の「目が 3 つ」「目の位置がずれる」が外れていた 13 枚は使った（lumia・sixth・zork・magda_fun・raios_fun）。
+  - 「表情の差が残らない」の 37 枚も使った。目を検出できず、差を口だけで測っていたため。直す前と同じ表情が残っていることは目で確かめた。
+    - 当てはまる人：barnabe・constance・ingrid・yurien・farina・felix_anger・aubin_joy。
+    - barnabe と farina は、元の差分が基本とほとんど同じ。
   - gerhard の surprise・serious は、口とひげが混ざって崩れていたので落とした。
 - 落ちた絵は main の絵のまま。描き直し（inpaint）はしていない。
