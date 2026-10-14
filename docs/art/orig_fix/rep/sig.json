@@ -10,17 +10,17 @@
    1.0,
    0.962
   ],
-  "misfit": 0.03,
+  "misfit": 0.031,
   "seam": 0,
   "diff": 0.055,
   "iris_de": [],
-  "region_px": 4445,
+  "region_px": 4479,
   "eye_shift": 0.04,
-  "lost": 9,
+  "lost": 10,
   "skin_shift": [
-   0,
+   1,
    -1,
-   -9
+   -5
   ],
   "rimfit": null,
   "eyes": [
@@ -44,13 +44,13 @@
   "seam": 0,
   "diff": 0.053,
   "iris_de": [],
-  "region_px": 4447,
+  "region_px": 4444,
   "eye_shift": 0.06,
   "lost": 2,
   "skin_shift": [
-   1,
+   0,
    -1,
-   -10
+   -6
   ],
   "rimfit": null,
   "eyes": [
