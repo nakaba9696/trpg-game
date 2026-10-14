@@ -1,0 +1,173 @@
+{
+ "id": "nora_face",
+ "date": "2026-10-14T22:19:18.139053",
+ "base_crop": {
+  "face_box": [
+   0.1836,
+   0.1328,
+   0.4156,
+   0.3325
+  ],
+  "px": [
+   94,
+   84,
+   306,
+   297
+  ],
+  "scaled_to": 1024
+ },
+ "eyes_drawn": [
+  [
+   544,
+   237,
+   717,
+   382
+  ]
+ ],
+ "draw": "目の検出の箱（AnzhcEyes-seg）＋眉の帯（前髪の所を除く）＋口の四角。前髪で隠れた目は描かない",
+ "moods": {
+  "anger": {
+   "inpainting_fill": 1,
+   "inpaint_full_res": false,
+   "mask_blur": 6,
+   "denoising_strength": 0.8,
+   "prompt": "(Inuboshi:1.2),miyanogi_jiji,Anan Shokudow,yutokamizu,ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, (portrait:1.2), (close-up face:1.3), face focus, 1girl, dog girl, 18 years old, athletic, curvy, tan skin, brown hair, chestnut brown hair, medium hair, messy wild hair, ahoge, brown dog ears, floppy ears, brown dog tail, brown eyes, round eyes, thick eyebrows, fang, dirt on face, brown leather hunter clothes, short sleeves, bandaged fists, energetic, hands on hips, (angry:1.6), (v-shaped eyebrows:1.6), (furrowed brows:1.6), (clenched teeth:1.5), (glaring:1.6), (narrowed eyes, sharp eyes:1.6), (anger vein:1.3)",
+   "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hands:1.4), extra person, nsfw, (extra eyes:1.6), (third eye:1.6), (multiple eyes:1.6), (eyebrows over eyes:1.5), (eyebrows touching eyes:1.5), (eyebrows on hair:1.5), (small pupils:1.3), (blank eyes:1.3), (unfocused eyes:1.3), (smile:1.5), happy, (closed eyes:1.3), surprised",
+   "seed": 36956785,
+   "steps": 28,
+   "cfg_scale": 5.5,
+   "sampler_name": "Euler a",
+   "width": 1024,
+   "height": 1024,
+   "override_settings": {
+    "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+   },
+   "override_settings_restore_afterwards": true,
+   "controlnet": [
+    {
+     "enabled": true,
+     "module": "ip-adapter_clip_sdxl_plus_vith",
+     "model": "ip-adapter-plus-face_sdxl_vit-h [368cf551]",
+     "weight": 0.6,
+     "guidance_end": 0.8,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    },
+    {
+     "enabled": true,
+     "module": "none",
+     "model": "controlnet-canny-sdxl-1.0-xinsir-v2 [ab7dc06d]",
+     "weight": 0.6,
+     "guidance_end": 0.7,
+     "control_mode": "Balanced",
+     "resize_mode": "Crop and Resize",
+     "pixel_perfect": true
+    }
+   ],
+   "gate": {
+    "who": "nora",
+    "mood": "anger",
+    "ok": true,
+    "why": [],
+    "eyes": [
+     2,
+     2
+    ],
+    "diff": 0.067,
+    "want_tag": 0.71,
+    "sim": 0.318,
+    "top_tags": [
+     [
+      0.99,
+      "1girl"
+     ],
+     [
+      0.97,
+      "solo"
+     ],
+     [
+      0.97,
+      "general"
+     ],
+     [
+      0.96,
+      "animal ears"
+     ],
+     [
+      0.96,
+      "anger vein"
+     ],
+     [
+      0.95,
+      "hair ornament"
+     ],
+     [
+      0.94,
+      "brown eyes"
+     ],
+     [
+      0.93,
+      "white background"
+     ],
+     [
+      0.92,
+      "simple background"
+     ],
+     [
+      0.91,
+      "dog ears"
+     ],
+     [
+      0.88,
+      "brown hair"
+     ],
+     [
+      0.87,
+      "teeth"
+     ]
+    ]
+   },
+   "tries": [
+    {
+     "seed": 36956784,
+     "ok": false,
+     "why": [
+      "目が 3 つ（基本は 2）",
+      "基本に無い所に目がある"
+     ]
+    },
+    {
+     "seed": 36956785,
+     "ok": true,
+     "why": []
+    }
+   ]
+  }
+ },
+ "skipped": {
+  "fun": [
+   {
+    "seed": 1291216003,
+    "ok": false,
+    "why": [
+     "元から笑顔で、基本と同じ表情（札の似かた 0.91）"
+    ]
+   },
+   {
+    "seed": 1291216004,
+    "ok": false,
+    "why": [
+     "元から笑顔で、基本と同じ表情（札の似かた 0.90）"
+    ]
+   },
+   {
+    "seed": 1291216005,
+    "ok": false,
+    "why": [
+     "基本に無い所に目がある"
+    ]
+   }
+  ]
+ }
+}
