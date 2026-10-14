@@ -15,6 +15,14 @@
   "diff": 0.092,
   "iris_de": [],
   "region_px": 4252,
+  "eye_shift": 0.0,
+  "lost": 23,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    0,
@@ -37,9 +45,17 @@
   "diff": 0.08,
   "iris_de": [
    0.9,
-   1.3
+   0.8
   ],
   "region_px": 5071,
+  "eye_shift": 0.02,
+  "lost": 52,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    2,
@@ -61,10 +77,18 @@
   "seam": 0,
   "diff": 0.071,
   "iris_de": [
-   1.1,
-   0.9
+   0.8,
+   1.1
   ],
   "region_px": 5147,
+  "eye_shift": 0.1,
+  "lost": 36,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    2,
@@ -86,10 +110,18 @@
   "seam": 0,
   "diff": 0.066,
   "iris_de": [
-   1.0,
-   1.3
+   1.3,
+   1.1
   ],
   "region_px": 5134,
+  "eye_shift": 0.02,
+  "lost": 39,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    2,
@@ -109,12 +141,20 @@
   ],
   "misfit": 0.069,
   "seam": 0,
-  "diff": 0.104,
+  "diff": 0.103,
   "iris_de": [
-   2.8,
-   2.4
+   2.3,
+   1.6
   ],
   "region_px": 5499,
+  "eye_shift": 0.28,
+  "lost": 50,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    2,
@@ -136,9 +176,17 @@
   "seam": 0,
   "diff": 0.087,
   "iris_de": [
-   5.4
+   5.1
   ],
   "region_px": 5006,
+  "eye_shift": 0.0,
+  "lost": 37,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -158,11 +206,19 @@
   ],
   "misfit": 0.034,
   "seam": 0,
-  "diff": 0.085,
+  "diff": 0.086,
   "iris_de": [
-   1.1
+   1.0
   ],
   "region_px": 4998,
+  "eye_shift": 0.0,
+  "lost": 50,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    1,
@@ -182,12 +238,20 @@
   ],
   "misfit": 0.036,
   "seam": 0,
-  "diff": 0.063,
+  "diff": 0.064,
   "iris_de": [
-   1.0,
-   1.0
+   1.2,
+   0.9
   ],
   "region_px": 5149,
+  "eye_shift": 0.03,
+  "lost": 38,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    1,
    2,

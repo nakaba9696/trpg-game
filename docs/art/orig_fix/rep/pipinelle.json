@@ -17,6 +17,14 @@
    5.8
   ],
   "region_px": 9494,
+  "eye_shift": 0.05,
+  "lost": 51,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    3,
    1,
@@ -38,9 +46,17 @@
   "seam": 0,
   "diff": 0.058,
   "iris_de": [
-   4.4
+   2.9
   ],
   "region_px": 9619,
+  "eye_shift": 0.11,
+  "lost": 52,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    3,
    1,
@@ -60,12 +76,20 @@
   ],
   "misfit": 0.058,
   "seam": 0,
-  "diff": 0.062,
+  "diff": 0.061,
   "iris_de": [
-   4.8,
-   5.9
+   3.5,
+   1.5
   ],
   "region_px": 9494,
+  "eye_shift": 0.3,
+  "lost": 49,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    3,
    2,
@@ -87,9 +111,17 @@
   "seam": 2,
   "diff": 0.049,
   "iris_de": [
-   4.2
+   1.1
   ],
   "region_px": 9541,
+  "eye_shift": 0.06,
+  "lost": 56,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    3,
    1,
@@ -109,16 +141,24 @@
   ],
   "misfit": 0.07,
   "seam": 0,
-  "diff": 0.043,
+  "diff": 0.044,
   "iris_de": [
-   1.2,
-   1.3
+   3.4,
+   4.8
   ],
   "region_px": 9532,
+  "eye_shift": 0.11,
+  "lost": 53,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    3,
    2,
-   2
+   3
   ]
  },
  "pipinelle_pout": {
@@ -136,10 +176,18 @@
   "seam": 0,
   "diff": 0.062,
   "iris_de": [
-   3.2,
-   5.2
+   4.0,
+   4.3
   ],
   "region_px": 9555,
+  "eye_shift": 0.13,
+  "lost": 53,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    3,
    2,
@@ -161,10 +209,18 @@
   "seam": 0,
   "diff": 0.052,
   "iris_de": [
-   2.9,
+   3.9,
    1.5
   ],
   "region_px": 9550,
+  "eye_shift": 0.08,
+  "lost": 55,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    3,
    2,
@@ -186,10 +242,18 @@
   "seam": 0,
   "diff": 0.056,
   "iris_de": [
-   5.1,
-   1.4
+   2.8,
+   1.6
   ],
   "region_px": 9514,
+  "eye_shift": 0.26,
+  "lost": 48,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    3,
    2,
