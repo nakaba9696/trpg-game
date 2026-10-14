@@ -10,17 +10,17 @@
    1.0,
    1.197
   ],
-  "misfit": 0.084,
+  "misfit": 0.101,
   "seam": 0,
-  "diff": 0.067,
+  "diff": 0.056,
   "iris_de": [],
-  "region_px": 3980,
+  "region_px": 3964,
   "eye_shift": 0.0,
   "lost": 7,
   "skin_shift": [
-   2,
-   -18,
-   -19
+   0,
+   -8,
+   -10
   ],
   "rimfit": 0.88,
   "eyes": [
@@ -40,19 +40,19 @@
    1.0,
    -0.531
   ],
-  "misfit": 0.039,
+  "misfit": 0.034,
   "seam": 0,
-  "diff": 0.062,
+  "diff": 0.048,
   "iris_de": [],
-  "region_px": 3970,
+  "region_px": 3959,
   "eye_shift": 0.0,
-  "lost": 6,
+  "lost": 7,
   "skin_shift": [
-   10,
-   -10,
-   -11
+   7,
+   0,
+   -1
   ],
-  "rimfit": 0.86,
+  "rimfit": 0.87,
   "eyes": [
    1,
    0,
@@ -70,17 +70,17 @@
    1.0,
    -1.41
   ],
-  "misfit": 0.037,
+  "misfit": 0.032,
   "seam": 0,
-  "diff": 0.064,
+  "diff": 0.049,
   "iris_de": [],
-  "region_px": 3974,
+  "region_px": 3972,
   "eye_shift": 0.0,
-  "lost": 7,
+  "lost": 5,
   "skin_shift": [
-   10,
-   -10,
-   -14
+   7,
+   0,
+   -4
   ],
   "rimfit": 0.83,
   "eyes": [
@@ -92,7 +92,7 @@
  "magda_fun": {
   "ok": false,
   "why": [
-   "目の位置がずれる（0.45）"
+   "目の位置がずれる（0.46）"
   ],
   "M": [
    1.0,
@@ -102,19 +102,19 @@
    1.0,
    -1.326
   ],
-  "misfit": 0.035,
-  "seam": 53,
-  "diff": 0.071,
+  "misfit": 0.038,
+  "seam": 55,
+  "diff": 0.062,
   "iris_de": [
-   2.2
+   2.1
   ],
-  "region_px": 5939,
-  "eye_shift": 0.45,
-  "lost": 6,
+  "region_px": 5319,
+  "eye_shift": 0.46,
+  "lost": 3,
   "skin_shift": [
-   6,
-   -14,
-   -14
+   3,
+   -4,
+   -4
   ],
   "rimfit": 0.9,
   "eyes": [
