@@ -1,0 +1,167 @@
+{
+ "liesel_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.006,
+  "seam": 1,
+  "diff": 0.054,
+  "iris_de": [
+   4.4,
+   4.2
+  ],
+  "region_px": 5950,
+  "eye_shift": 0.1,
+  "lost": 30,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "liesel_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.023,
+  "seam": 0,
+  "diff": 0.05,
+  "iris_de": [
+   3.8,
+   2.4
+  ],
+  "region_px": 5977,
+  "eye_shift": 0.06,
+  "lost": 26,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "liesel_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.014,
+  "seam": 0,
+  "diff": 0.057,
+  "iris_de": [
+   1.5,
+   2.9
+  ],
+  "region_px": 5871,
+  "eye_shift": 0.06,
+  "lost": 9,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "liesel_exasperated": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.017,
+  "seam": 0,
+  "diff": 0.041,
+  "iris_de": [
+   2.2,
+   2.7
+  ],
+  "region_px": 5943,
+  "eye_shift": 0.09,
+  "lost": 23,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "liesel_shy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.047,
+  "seam": 2,
+  "diff": 0.076,
+  "iris_de": [
+   2.4,
+   4.1
+  ],
+  "region_px": 6204,
+  "eye_shift": 0.11,
+  "lost": 117,
+  "skin_shift": [
+   71,
+   150,
+   132
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

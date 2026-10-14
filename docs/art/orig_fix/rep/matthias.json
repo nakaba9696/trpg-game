@@ -1,0 +1,68 @@
+{
+ "matthias_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.001,
+   0.353,
+   0.001,
+   1.0,
+   -0.508
+  ],
+  "misfit": 0.097,
+  "seam": 0,
+  "diff": 0.058,
+  "iris_de": [
+   0.7,
+   5.0
+  ],
+  "region_px": 7470,
+  "eye_shift": 0.04,
+  "lost": 2,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "matthias_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.07,
+  "seam": 0,
+  "diff": 0.077,
+  "iris_de": [
+   6.0,
+   1.0
+  ],
+  "region_px": 7220,
+  "eye_shift": 0.04,
+  "lost": 2,
+  "skin_shift": [
+   -4,
+   -7,
+   -4
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

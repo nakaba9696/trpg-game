@@ -1,0 +1,233 @@
+{
+ "odette_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.025,
+  "seam": 0,
+  "diff": 0.04,
+  "iris_de": [
+   5.1,
+   1.5
+  ],
+  "region_px": 4760,
+  "eye_shift": 0.09,
+  "lost": 5,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "odette_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.022,
+  "seam": 0,
+  "diff": 0.047,
+  "iris_de": [
+   1.2,
+   4.2
+  ],
+  "region_px": 4730,
+  "eye_shift": 0.09,
+  "lost": 23,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "odette_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.013,
+  "seam": 0,
+  "diff": 0.046,
+  "iris_de": [
+   4.5,
+   5.1
+  ],
+  "region_px": 4713,
+  "eye_shift": 0.11,
+  "lost": 10,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "odette_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.018,
+  "seam": 0,
+  "diff": 0.05,
+  "iris_de": [
+   1.2,
+   3.4
+  ],
+  "region_px": 4751,
+  "eye_shift": 0.07,
+  "lost": 17,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "odette_wicked": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.018,
+  "seam": 0,
+  "diff": 0.046,
+  "iris_de": [
+   6.0,
+   1.2
+  ],
+  "region_px": 4766,
+  "eye_shift": 0.12,
+  "lost": 7,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "odette_cold": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.023,
+  "seam": 0,
+  "diff": 0.046,
+  "iris_de": [
+   2.6,
+   1.6
+  ],
+  "region_px": 4758,
+  "eye_shift": 0.06,
+  "lost": 9,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "odette_faint_smile": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.024,
+  "seam": 0,
+  "diff": 0.037,
+  "iris_de": [
+   2.3,
+   0.5
+  ],
+  "region_px": 4732,
+  "eye_shift": 0.08,
+  "lost": 13,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

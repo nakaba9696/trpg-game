@@ -1,0 +1,127 @@
+{
+ "dietrich_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.062,
+  "seam": 0,
+  "diff": 0.054,
+  "iris_de": [
+   1.9
+  ],
+  "region_px": 3398,
+  "eye_shift": 0.0,
+  "lost": 3,
+  "skin_shift": [
+   -8,
+   -8,
+   -11
+  ],
+  "rimfit": 1.0,
+  "eyes": [
+   1,
+   2,
+   2
+  ]
+ },
+ "dietrich_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.049,
+  "seam": 0,
+  "diff": 0.068,
+  "iris_de": [
+   2.2,
+   3.8
+  ],
+  "region_px": 3107,
+  "eye_shift": 0.14,
+  "lost": 9,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": 1.0,
+  "eyes": [
+   1,
+   2,
+   2
+  ]
+ },
+ "dietrich_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.002,
+   0.675,
+   0.002,
+   1.0,
+   -0.461
+  ],
+  "misfit": 0.083,
+  "seam": 0,
+  "diff": 0.054,
+  "iris_de": [],
+  "region_px": 2939,
+  "eye_shift": 0.03,
+  "lost": 13,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": 0.97,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "dietrich_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.076,
+  "seam": 0,
+  "diff": 0.051,
+  "iris_de": [],
+  "region_px": 2952,
+  "eye_shift": 0.04,
+  "lost": 1,
+  "skin_shift": [
+   -1,
+   -4,
+   -6
+  ],
+  "rimfit": 1.0,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ }
+}

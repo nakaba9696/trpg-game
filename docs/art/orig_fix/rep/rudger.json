@@ -1,0 +1,134 @@
+{
+ "rudger_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.045,
+  "seam": 0,
+  "diff": 0.091,
+  "iris_de": [
+   3.2,
+   4.0
+  ],
+  "region_px": 6419,
+  "eye_shift": 0.12,
+  "lost": 6,
+  "skin_shift": [
+   -7,
+   -3,
+   2
+  ],
+  "rimfit": 0.89,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rudger_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.064,
+  "seam": 0,
+  "diff": 0.087,
+  "iris_de": [
+   1.6,
+   1.8
+  ],
+  "region_px": 6632,
+  "eye_shift": 0.1,
+  "lost": 8,
+  "skin_shift": [
+   -7,
+   -7,
+   -5
+  ],
+  "rimfit": 0.97,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rudger_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.095,
+  "seam": 0,
+  "diff": 0.091,
+  "iris_de": [
+   2.5,
+   2.5
+  ],
+  "region_px": 6288,
+  "eye_shift": 0.03,
+  "lost": 5,
+  "skin_shift": [
+   -6,
+   -7,
+   -2
+  ],
+  "rimfit": 0.83,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "rudger_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.056,
+  "seam": 0,
+  "diff": 0.078,
+  "iris_de": [
+   1.9,
+   2.1
+  ],
+  "region_px": 6489,
+  "eye_shift": 0.03,
+  "lost": 9,
+  "skin_shift": [
+   -7,
+   -7,
+   -6
+  ],
+  "rimfit": 0.9,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}
