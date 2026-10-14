@@ -2,7 +2,7 @@
  "aubin_joy": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.005）"
+   "表情の差が残らない（0.014）"
   ],
   "M": [
    1.0,
@@ -12,11 +12,19 @@
    1.0,
    0.0
   ],
-  "misfit": 0.02,
+  "misfit": 0.024,
   "seam": 0,
-  "diff": 0.005,
+  "diff": 0.014,
   "iris_de": [],
-  "region_px": 1493,
+  "region_px": 1991,
+  "eye_shift": 0.0,
+  "lost": 24,
+  "skin_shift": [
+   0,
+   -2,
+   -6
+  ],
+  "rimfit": null,
   "eyes": [
    0,
    0,
@@ -36,9 +44,17 @@
   ],
   "misfit": 0.0,
   "seam": 0,
-  "diff": 0.079,
+  "diff": 0.08,
   "iris_de": [],
-  "region_px": 2313,
+  "region_px": 2439,
+  "eye_shift": 0.0,
+  "lost": 22,
+  "skin_shift": [
+   -3,
+   -5,
+   -8
+  ],
+  "rimfit": null,
   "eyes": [
    0,
    2,
@@ -56,11 +72,19 @@
    1.0,
    0.0
   ],
-  "misfit": 0.025,
+  "misfit": 0.022,
   "seam": 0,
-  "diff": 0.074,
+  "diff": 0.077,
   "iris_de": [],
-  "region_px": 2105,
+  "region_px": 2490,
+  "eye_shift": 0.0,
+  "lost": 29,
+  "skin_shift": [
+   1,
+   -1,
+   -8
+  ],
+  "rimfit": null,
   "eyes": [
    0,
    2,
@@ -78,11 +102,19 @@
    1.0,
    0.0
   ],
-  "misfit": 0.028,
+  "misfit": 0.026,
   "seam": 3,
-  "diff": 0.068,
+  "diff": 0.073,
   "iris_de": [],
-  "region_px": 1539,
+  "region_px": 1655,
+  "eye_shift": 0.0,
+  "lost": 10,
+  "skin_shift": [
+   -3,
+   -1,
+   -6
+  ],
+  "rimfit": null,
   "eyes": [
    0,
    1,
@@ -105,6 +137,14 @@
   "diff": 0.071,
   "iris_de": [],
   "region_px": 2562,
+  "eye_shift": 0.0,
+  "lost": 38,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    0,
    2,
@@ -127,6 +167,14 @@
   "diff": 0.075,
   "iris_de": [],
   "region_px": 2549,
+  "eye_shift": 0.0,
+  "lost": 18,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    0,
    2,
@@ -149,6 +197,14 @@
   "diff": 0.092,
   "iris_de": [],
   "region_px": 2484,
+  "eye_shift": 0.0,
+  "lost": 25,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    0,
    2,
@@ -171,6 +227,14 @@
   "diff": 0.049,
   "iris_de": [],
   "region_px": 1676,
+  "eye_shift": 0.0,
+  "lost": 7,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
   "eyes": [
    0,
    1,
