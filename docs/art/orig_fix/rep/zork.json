@@ -1,0 +1,234 @@
+{
+ "zork_joy": {
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.48）"
+  ],
+  "M": [
+   1.0,
+   0.002,
+   0.251,
+   -0.002,
+   1.0,
+   0.59
+  ],
+  "misfit": 0.086,
+  "seam": 0,
+  "diff": 0.075,
+  "iris_de": [
+   3.8
+  ],
+  "region_px": 1852,
+  "eye_shift": 0.48,
+  "lost": 2,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "zork_anger": {
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.62）"
+  ],
+  "M": [
+   1.0,
+   0.002,
+   0.362,
+   -0.002,
+   1.0,
+   0.582
+  ],
+  "misfit": 0.163,
+  "seam": 0,
+  "diff": 0.057,
+  "iris_de": [
+   5.7
+  ],
+  "region_px": 1882,
+  "eye_shift": 0.62,
+  "lost": 2,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   0
+  ]
+ },
+ "zork_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   0.169,
+   -0.003,
+   1.0,
+   0.859
+  ],
+  "misfit": 0.205,
+  "seam": 0,
+  "diff": 0.062,
+  "iris_de": [
+   2.9
+  ],
+  "region_px": 1845,
+  "eye_shift": 0.45,
+  "lost": 1,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "zork_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   0.231,
+   -0.003,
+   1.0,
+   0.832
+  ],
+  "misfit": 0.099,
+  "seam": 0,
+  "diff": 0.106,
+  "iris_de": [
+   1.4
+  ],
+  "region_px": 1902,
+  "eye_shift": 0.05,
+  "lost": 3,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   0
+  ]
+ },
+ "zork_wicked": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   0.287,
+   -0.002,
+   1.0,
+   0.727
+  ],
+  "misfit": 0.081,
+  "seam": 0,
+  "diff": 0.045,
+  "iris_de": [
+   4.8
+  ],
+  "region_px": 1846,
+  "eye_shift": 0.37,
+  "lost": 0,
+  "skin_shift": [
+   -1,
+   2,
+   6
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   0
+  ]
+ },
+ "zork_serious": {
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.63）"
+  ],
+  "M": [
+   1.0,
+   0.003,
+   0.225,
+   -0.003,
+   1.0,
+   0.644
+  ],
+  "misfit": 0.212,
+  "seam": 0,
+  "diff": 0.061,
+  "iris_de": [
+   5.0
+  ],
+  "region_px": 1922,
+  "eye_shift": 0.63,
+  "lost": 2,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "zork_smug": {
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.48）"
+  ],
+  "M": [
+   1.0,
+   0.003,
+   0.21,
+   -0.003,
+   1.0,
+   0.756
+  ],
+  "misfit": 0.142,
+  "seam": 0,
+  "diff": 0.042,
+  "iris_de": [
+   5.9
+  ],
+  "region_px": 1843,
+  "eye_shift": 0.48,
+  "lost": 1,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   0
+  ]
+ }
+}
