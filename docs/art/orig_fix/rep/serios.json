@@ -1,0 +1,134 @@
+{
+ "serios_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.05,
+  "seam": 0,
+  "diff": 0.082,
+  "iris_de": [
+   1.7,
+   1.7
+  ],
+  "region_px": 6642,
+  "eye_shift": 0.12,
+  "lost": 26,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "serios_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.002,
+   0.414,
+   0.002,
+   1.0,
+   -0.282
+  ],
+  "misfit": 0.065,
+  "seam": 0,
+  "diff": 0.081,
+  "iris_de": [
+   1.6,
+   0.6
+  ],
+  "region_px": 6600,
+  "eye_shift": 0.01,
+  "lost": 26,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "serios_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.049,
+  "seam": 0,
+  "diff": 0.083,
+  "iris_de": [
+   2.8,
+   1.2
+  ],
+  "region_px": 6263,
+  "eye_shift": 0.04,
+  "lost": 61,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "serios_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.098,
+  "seam": 0,
+  "diff": 0.082,
+  "iris_de": [
+   5.3,
+   1.0
+  ],
+  "region_px": 6272,
+  "eye_shift": 0.08,
+  "lost": 28,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

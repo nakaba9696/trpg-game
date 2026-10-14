@@ -1,0 +1,290 @@
+{
+ "barnabe_joy": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "barnabe_anger": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "barnabe_sorrow": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "barnabe_fun": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "barnabe_surprise": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "barnabe_shy": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "barnabe_serious": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "barnabe_cry": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ },
+ "barnabe_panic": {
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.017）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.01,
+  "seam": 0,
+  "diff": 0.017,
+  "iris_de": [],
+  "region_px": 5806,
+  "eye_shift": 0.0,
+  "lost": 0,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": null,
+  "eyes": [
+   0,
+   0,
+   0
+  ]
+ }
+}
