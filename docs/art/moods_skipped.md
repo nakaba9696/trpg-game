@@ -40,3 +40,8 @@ gerhard・hermes・otmar・aurelia・captain・chezar・constance・farina・gre
 
 ## 2026-10-14 試しの 10 人と、取りこぼした 48 枚の作り直しのあと（量より質・IMG-40）
 基本の絵と見分けがつかない、または守る所が動いたので作らない：aubin の joy・sleepy・sorrow（基本とほぼ同じ）／chezar の sorrow・wicked（ほぼ同じ）／constance の anger・joy・serious・tired（無表情の人物で差が出ず、tired は頬に × の傷が出た）／gensai の wicked・greiol の serious（ほぼ同じ）／malvina の joy（ほぼ同じ）・sorrow（布の上の縁に線）。
+
+## 2026-10-14 試しの 10 人：持ち主の判定（確認ページ LfyN34Y83fgfVzoCNncjjK）
+- 作らない（持ち主「いらない」・12 枚）：aubin の joy・sleepy・sorrow／chezar の cold・sorrow・wicked／gustav の serious／hartmut の smitten／iori の sleepy／otmar の cold・tired／malvina の faint_smile。ゲームでは近い表情か基本の絵に落ちる。
+- 今のゲームの絵（main）に戻した（持ち主「元でいい」・28 枚）：aubin の anger・drunk・smug／chezar の fun・joy／gustav の joy／iori の anger・faint_smile・fun・serious・shy・sorrow／magda の anger・sorrow／otmar の anger・fun・joy・serious・sorrow／yurien の基本と表情 8 枚。
+- 「作り直す」とされた 20 枚（constance・malvina・hartmut の cry・fun・panic・iori の joy・aubin の serious）は、2026-10-14 の方針の変更により、顔を描き直さず元の絵の崩れた所だけを直す（ブランチ fix-moods-1）。
