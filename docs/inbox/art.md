@@ -5,6 +5,17 @@
 
 ## 未着手
 
+### 2026-10-14 主要な仲間と使徒を、顔だけを大きく作るやり方で全員作り直す（持ち主の決定。これが上の「5 人」の指示を含み、置き換える）
+持ち主「主要な仲間と使徒は、確認を待たずに、全員を顔だけを大きく作るやり方で作り直す」。ただし、試しの顔（nora・otmar）は持ち主に「なんの表情かわからない」と言われた。**表情がひと目で分かることを最優先にする。**
+対象（55 人。顔の四角 src/data/u41_face_box.js がある人）：dil kaidel nora sheila rui zerina elnea natalia bertrand ilse tula mirlene bruno trude souhaku adele celestin felix lucien barnabe selevan aubin lazare rodolphe margot solenne pipinelle lisette wolfram hartmut gustav timo noeris ingrid lumia sieglinde annelise radmila gigra valdun gensai tsuyuha takimaru yurien roswitha izra anselmo mirza zalve aurelia yoihime mordu azlag chezar yura
+やり方：
+1. **まず 5 人で合わせる**：nora・otmar・adele・barnabe・mirza。表情ごとに、ひと目で分かる形にする（喜＝口を開けて笑う・目を細める、怒＝眉を吊り上げて寄せ・歯を食いしばるか怒鳴る、哀＝眉を八の字・口を結ぶか泣く、楽＝いたずらっぽい笑み・片目つむり など）。表情のタグの重みを上げ、目・眉・口の所は canny から消し、denoise を上げる。人物に合う幅（IMG-32）は守るが、「控えめ」で何の表情か分からなくなるのは不可。目は焦点の合った普通の目（IMG-39）。
+2. 5 人の表（基本の顔と 5 つの表情に、表情の名前を付けて並べた物）を docs/art/faces_trial/round2.webp に置き、「済み」に書いて push し、**ここで一度止まる**（配り役が持ち主に見せる。持ち主の返事が art-inbox に来たら残りへ進む）。
+3. 守る所：髪・前髪・ひげ・眼鏡・傷・絆創膏・そばかす・化粧・仮面・耳飾り・髪留めは基本の画素を戻す。透過の縁は基本のまま（マゼンタの背景で拡大して見る）。
+4. 置き場所は assets/portraits/faces/<id>_<表情>.webp（512×512）、表情は喜・怒・哀・楽と、その人らしい表情 1 つ。生成の値は docs/art/gen/<id>_face.json。push 先は face-trial-1。
+5. 点検：作った全部を、基本の顔と並べて自分の目で見る。「この顔を見て、名前を隠しても何の表情か言えるか」で判定し、言えない物は作り直す。
+
+
 ### 2026-10-14 持ち主の確認（最初の 10 人）の反映と、顔だけを大きく作るやり方で 5 人
 確認ページ https://claude.ai/artifact/DZfqdM2o6L8ttwzhj8FJoe のコメント（持ち主・81 件）：
 - OK：alicia・aubin・aurelia・azlag は全部、ambroise は喜・怒・楽。fix-moods-1 のまま入れる。
