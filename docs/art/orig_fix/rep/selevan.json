@@ -1,0 +1,178 @@
+{
+ "selevan_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.038,
+  "seam": 0,
+  "diff": 0.09,
+  "iris_de": [],
+  "region_px": 8117,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "selevan_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.022,
+  "seam": 0,
+  "diff": 0.107,
+  "iris_de": [],
+  "region_px": 8195,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "selevan_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.012,
+  "seam": 0,
+  "diff": 0.086,
+  "iris_de": [],
+  "region_px": 8167,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "selevan_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.037,
+  "seam": 1,
+  "diff": 0.094,
+  "iris_de": [],
+  "region_px": 8170,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "selevan_sparkle": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.382,
+   -0.002,
+   1.0,
+   0.665
+  ],
+  "misfit": 0.041,
+  "seam": 0,
+  "diff": 0.087,
+  "iris_de": [],
+  "region_px": 8103,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "selevan_wicked": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.002,
+   0.275,
+   0.002,
+   1.0,
+   -0.301
+  ],
+  "misfit": 0.014,
+  "seam": 0,
+  "diff": 0.099,
+  "iris_de": [],
+  "region_px": 8001,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "selevan_cold": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.012,
+  "seam": 0,
+  "diff": 0.075,
+  "iris_de": [],
+  "region_px": 8163,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "selevan_faint_smile": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.038,
+  "seam": 0,
+  "diff": 0.082,
+  "iris_de": [],
+  "region_px": 8231,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

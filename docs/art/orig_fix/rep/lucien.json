@@ -1,0 +1,178 @@
+{
+ "lucien_joy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.003,
+   -0.477,
+   -0.003,
+   1.0,
+   1.002
+  ],
+  "misfit": 0.097,
+  "seam": 0,
+  "diff": 0.055,
+  "iris_de": [],
+  "region_px": 3364,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_anger": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.074,
+  "seam": 0,
+  "diff": 0.079,
+  "iris_de": [],
+  "region_px": 3211,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_sorrow": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.003,
+   0.251,
+   0.003,
+   1.0,
+   -0.487
+  ],
+  "misfit": 0.1,
+  "seam": 0,
+  "diff": 0.065,
+  "iris_de": [],
+  "region_px": 3357,
+  "eyes": [
+   2,
+   0,
+   0
+  ]
+ },
+ "lucien_fun": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   -0.002,
+   0.313,
+   0.002,
+   1.0,
+   -0.656
+  ],
+  "misfit": 0.058,
+  "seam": 0,
+  "diff": 0.083,
+  "iris_de": [],
+  "region_px": 3232,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_faint_smile": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.005,
+   -0.676,
+   -0.005,
+   1.0,
+   1.331
+  ],
+  "misfit": 0.07,
+  "seam": 0,
+  "diff": 0.067,
+  "iris_de": [],
+  "region_px": 3341,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_troubled": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.13,
+  "seam": 0,
+  "diff": 0.068,
+  "iris_de": [],
+  "region_px": 3365,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_serious": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.052,
+  "seam": 0,
+  "diff": 0.066,
+  "iris_de": [],
+  "region_px": 3374,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_exasperated": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.002,
+   -0.351,
+   -0.002,
+   1.0,
+   0.408
+  ],
+  "misfit": 0.093,
+  "seam": 1,
+  "diff": 0.077,
+  "iris_de": [],
+  "region_px": 3336,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}
