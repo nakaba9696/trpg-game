@@ -5,6 +5,18 @@
 
 ## 未着手
 
+### 2026-10-14 方針の変更：元の表情違いを直す（持ち主「基本的に元のほうが表情がいい。ひげなくなってたり、メガネ変わってたり、髪が変わってたり、手が生えてるのを直してほしい」）
+**これがいちばん上の指示。下の「試しの 10 人：持ち主の判定を反映」の「作り直す」は、この方針で置き換える（顔を描き直さない）。**
+- 表情は描き直さない。今のゲームの表情違い（main の assets/portraits/<id>_<表情>.webp）を下地にし、崩れている所だけを直す。
+- 直し方：人ごとに「守る所」のマスク（ひげ・口ひげ・眼鏡と片眼鏡の縁とレンズ・目にかかる前髪と髪の房・傷・そばかす・化粧・顔の布や仮面・耳飾り・髪留め）を基本の絵から作り（docs/art/redo_moods/<id>_keep.png。試しで作った物は使ってよい）、その所だけ基本の画素を表情違いの上に戻す。目（瞳と白目）と口の中・唇は戻さない（表情が消えるので、守る所から外す）。口の周りのひげは、口の形を残してその外側だけ戻す。
+- 生えた手・指・余計な物は、その所を基本の画素で消す（体の外の背景なら透明に）。
+- 縁：戻した所の境目はなじませる（1〜2 画素ぼかす）。透過の縁は基本のまま。拡大・縮小はしない（ガビガビの元）。
+- 直す物の一覧：ブランチ mood-audit の docs/art/redo_moods/audit_2026-10-13.md のうち「ひげ・眼鏡・髪・手・傷・マスク・仮面・化粧・髪留め・耳飾り・別人化（小物）」の型。作り直した 60 人については、元の絵（main）を同じ型で点検してから直す（前に持ち主が挙げた annelise の髪・constance の目の透け・farina の髪・greol・salphiel のマスクなど）。体・服・持ち物の崩れは顔の窓に映らないので直さない。
+- 試しで持ち主が OK した新しい絵 22 枚（docs/art/redo_moods の試しの判定）はそのまま新しい物を使う。「いらない」の 12 枚は消す。
+- 点検：直す前と後の顔の四角（src/data/u41_face_box.js）を並べ、計算の点検（守る所が基本と一致するか）→ 引っかかった物だけ目で見る（IMG-41）。
+- push 先：ブランチ fix-moods-1（main から作る）。区切りごとに push し、「済み」に何人・何枚を書く。ゲームに入れるのは配り役がする。
+
+
 ### 2026-10-14 試しの 10 人：持ち主の判定を反映（確認ページ https://claude.ai/artifact/LfyN34Y83fgfVzoCNncjjK ）
 ブランチ redo-moods-9 の上で行い、同じブランチに push する。
 - **今のゲームの絵（main）に戻す（持ち主「元でいい」・28 枚）**：aubin_anger、aubin_drunk、aubin_smug、chezar_fun、chezar_joy、gustav_joy、iori_anger、iori_faint_smile、iori_fun、iori_serious、iori_shy、iori_sorrow、magda_anger、magda_sorrow、otmar_anger、otmar_fun、otmar_joy、otmar_serious、otmar_sorrow、yurien_anger、yurien_base、yurien_cold、yurien_faint_smile、yurien_fun、yurien_joy、yurien_pout、yurien_smug、yurien_sorrow。git checkout origin/main -- assets/portraits/<名>.webp で戻す。
