@@ -1561,6 +1561,15 @@
    "human": true,
    "tags": "(dorontabi:1.3), (towering inhuman aristocrat:1.3), impossibly tall and thin, (face hidden in shadow:1.2), only a glowing red eye behind a monocle visible, long dark wine red hair, black tailcoat with deep purple waistcoat, white cravat with red gem pin, (long arms ending in thin blades:1.2), bowing politely, (a ring of floating blades behind it:1.2), names engraved on the blades, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
    "memo": "使徒（人に化ける）。本性：片眼鏡の老紳士の形をした、刃で問いに答えるもの"
+  },
+  {
+   "id": "e3_zalve",
+   "file": "assets/monsters/e3_zalve.webp",
+   "name": "砂塵の使徒ドレイゼ",
+   "boss": true,
+   "tags": "(dorontabi:1.3), (colossal figure made entirely of dry sand:1.4) many times taller than a man, (crumbling and re-forming outline:1.3), sand flowing inside its body, (no face:1.2), (a silver monocle floating where the face should be:1.4), (amber ringed eye behind the monocle:1.3), (huge horned shadow looming around its head:1.4), tattered remains of a black necktie and dark frock coat being swallowed by the sand, (blank ledger pages swirling in a sandstorm around it:1.4), (dry sand:1.4), (granular sand particles:1.3), fine grains, dust, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly",
+   "seed": 15408,
+   "memo": "使徒（人に化ける）。本性：乾いた砂でできた巨きな姿。角のある影の頭に、鎖つきの銀の片眼鏡と琥珀の輪の瞳だけが浮かぶ。人の姿は立ち絵（zalve）"
   }
  ]
 }

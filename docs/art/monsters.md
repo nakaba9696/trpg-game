@@ -11,7 +11,7 @@
 - 「**異形**」と書いた魔物（一覧の `style: "eldritch"`）は、人の形を持たない格上の存在。別のモデルの [style_eldritch.json](style_eldritch.json)（暗い油彩の挿絵）で作る。ほかは `style_monsters.json`。
 - 埋め込みの合計の上限（12MB）は人物と魔物を合わせて数える。
 
-## 使徒・ボス（30）
+## 使徒・ボス（31）
 
 使徒の魔物の姿と、ボス。特にていねいに。気に入った絵は `--keep <id>` で seed を残す。
 
@@ -47,6 +47,7 @@
 | `assets/monsters/e3_chezar.webp` | 百面の使徒ディエラン | (dorontabi:1.3), (colossal masked general:1.3) many times taller than a man, (no real face:1.2), face made of stacked porcelain masks of old generals, cracked, (a ring of dozens of floating masks behind its head:1.2), each mask a different expression, four arms, each hand holding a different sword, noble military coat with eyes on the cloth, floating giant chess pieces, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：仮面を何枚も重ねた巨きな軍師。面ごとに剣筋が違う |
 | `assets/monsters/e3_azlag.webp` | 剣翼の使徒ヴァルグレア | (dorontabi:1.3), (colossal black bird god:1.3), (silver steel blade wings:1.4), (mechanical wings of overlapping sword blades:1.3), no soft feathers, enormous blade wings spread wide, blades raining down, golden glowing eyes with slit pupils, sharp steel beak, crest of swords, talons, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：刃の羽を持つ巨きな黒い鳥。羽ばたくたびに刃が降る |
 | `assets/monsters/e3_yuzuel.webp` | 問答の使徒ユズエル | (dorontabi:1.3), (towering inhuman aristocrat:1.3), impossibly tall and thin, (face hidden in shadow:1.2), only a glowing red eye behind a monocle visible, long dark wine red hair, black tailcoat with deep purple waistcoat, white cravat with red gem pin, (long arms ending in thin blades:1.2), bowing politely, (a ring of floating blades behind it:1.2), names engraved on the blades, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：片眼鏡の老紳士の形をした、刃で問いに答えるもの |
+| `assets/monsters/e3_zalve.webp` | 砂塵の使徒ドレイゼ<br>seed 15408 | (dorontabi:1.3), (colossal figure made entirely of dry sand:1.4) many times taller than a man, (crumbling and re-forming outline:1.3), sand flowing inside its body, (no face:1.2), (a silver monocle floating where the face should be:1.4), (amber ringed eye behind the monocle:1.3), (huge horned shadow looming around its head:1.4), tattered remains of a black necktie and dark frock coat being swallowed by the sand, (blank ledger pages swirling in a sandstorm around it:1.4), (dry sand:1.4), (granular sand particles:1.3), fine grains, dust, (from below:1.2), towering, looming over the viewer, rim light, divine, ancient, solemn, ominous, awe-inspiring, otherworldly | 使徒（人に化ける）。本性：乾いた砂でできた巨きな姿。角のある影の頭に、鎖つきの銀の片眼鏡と琥珀の輪の瞳だけが浮かぶ。人の姿は立ち絵（zalve） |
 
 ## 魔物（157）
 
