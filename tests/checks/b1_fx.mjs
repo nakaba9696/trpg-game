@@ -32,7 +32,7 @@ export default ({ G, fail: failTo, ok, seeded }) => {
   G.S.maxHp = G.S.hp = 9999;
   G.S.stats.筋力 = 70;   // 使徒に刃が届く点（S5）
   let mark = G.S.log.length;
-  G.startCombat(["graw"], {});
+  G.startCombat(["graw"], { gate: "skip" }); // E13：門を見ない戦いで、戦いの中の絶界の演出を確かめる
   const intro = fxOf(mark).find((e) => e.fx === "boss");
   if (!intro || intro.foe !== "graw" || intro.name !== D.ENEMIES.graw.name || !D.BOSS_LINES.graw.lines.includes(intro.text)) fail("ボス戦の始まりに前口上の fx が無い");
   for (let i = 0; i < 30 && G.S.combat && !fxOf(mark).some((e) => e.fx === "wall"); i++) { G.S.hp = 9999; G.combatAct("attack"); }
