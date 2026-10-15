@@ -49,8 +49,23 @@
   };
 
   const addTry = (id) => { const P = (G.P = G.P || { trophies: {}, graves: [] }); P.e3tries = P.e3tries || {}; P.e3tries[id] = (P.e3tries[id] || 0) + 1; };
+  // 門に止められても、使徒は見ている：手引きが開き（lore.js・e8_grade.js と同じ行）、はじめてなら正気が削れる（sanity_m5.js と同じ印 S.m5.seen）
+  function seen(a) {
+    const S = G.S;
+    const e = G.e3FoeData(a.id);
+    const on = (D.LORE_ON && D.LORE_ON.foe) || {};
+    if (G.openLores) { G.openLores(on[a.foe]); if (e && e.majin) G.openLores(on["@majin"]); }
+    if (G.openLore) { G.openLore("u7_rank:word"); G.openLore("majin:words"); }
+    const T = D.M5 && D.M5.TOLL;
+    if (T && T.majin && G.addSanity && e && e.majin) {
+      const x = (S.m5 = S.m5 || {});
+      x.seen = x.seen || {};
+      if (!x.seen[a.foe]) { x.seen[a.foe] = true; G.addSanity(T.majin); }
+    }
+  }
   function repel(a, g, slip) {
     const S = G.S;
+    seen(a);
     G.say(g.scene);
     if (slip) G.say(E13.SLIP);
     const n = Math.max(1, Math.round((S.maxHp || S.hp) * E13.HURT));

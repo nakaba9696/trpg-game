@@ -53,7 +53,9 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     S.combat = null; S.mode = "explore";
     const ap = Object.values(D.E3.LIST).find((a) => a.id === "tetsukui");
     G.e3Keys = (a, s) => keys0(a, s).map((k) => Object.assign(k, { met: true }));
-    try { G.apply({ e3fight: ap.id }); } finally { G.e3Keys = keys0; }
+    // E13：門は破れていることにして戦いに入る（門の判定は tests/checks/e13_immortal.mjs）
+    G.e3Register(ap.id);
+    try { G.startCombat([ap.foe], { gate: "open" }); } finally { G.e3Keys = keys0; }
     const f = S.combat && S.combat.foes[0];
     if (!f) { F("鉄喰いとの戦いが始まらない（確認の前提が崩れた）"); return; }
     const e = G.foeData(f);
