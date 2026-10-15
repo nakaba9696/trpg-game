@@ -55,7 +55,6 @@
    "variants": {
     "anger": "angry, clenched teeth, glaring, v-shaped eyebrows",
     "sorrow": "sad, frown, looking down, clenched jaw",
-    "serious": "serious, glaring, determined, closed mouth",
     "surprise": "surprised, wide-eyed, open mouth"
    },
    "memo": "傷だらけの古武道使いの傭兵。黒髪・無精ひげ・太い眉。お気楽で、迷ったら殴る。屈託のない笑い"
@@ -75,9 +74,7 @@
     "fun": "laughing, open mouth, closed eyes, wagging tail",
     "sparkle": "excited, sparkling eyes, open mouth, wagging tail",
     "surprise": "surprised, wide-eyed, perked up ears",
-    "cry": "crying, tears, open mouth, drooping ears",
-    "pout": "pout, puffed cheeks, ears back",
-    "shy": "embarrassed, blush, looking away, ears down"
+    "cry": "crying, tears, open mouth, drooping ears"
    },
    "memo": "森の犬の獣人。明るい愛すべきあほ。弓は苦手で拳の力自慢。歯を見せて笑う"
   },
@@ -91,8 +88,6 @@
    "tags": "holding book against chest",
    "face": "expressionless",
    "variants": {
-    "joy": "light smile, closed mouth",
-    "anger": "pout, puffed cheeks, frown",
     "sorrow": "sad, teary eyes, looking down",
     "fun": "smile, open mouth, sparkling eyes",
     "faint_smile": "slight smile, soft eyes, closed mouth",
@@ -117,7 +112,6 @@
     "sorrow": "teary eyes, looking down",
     "fun": "small smile, sparkling eyes",
     "faint_smile": "very slight smile, soft eyes, closed mouth",
-    "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
     "surprise": "slightly wide eyes, small open mouth",
     "cry": "tears, crying, expressionless"
    },
@@ -132,11 +126,8 @@
    "tags": "confident, hand on hip, holding an abacus",
    "face": "closed eyes, big grin",
    "variants": {
-    "joy": "smile, open mouth, happy, closed eyes",
     "anger": "angry, open mouth, shouting, v-shaped eyebrows",
     "sorrow": "sad, teary eyes, frown",
-    "fun": "laughing, open mouth, closed eyes, playful, wink",
-    "smug": "smug, grin, one eye closed",
     "sparkle": "excited, sparkling eyes, open mouth, smile",
     "exasperated": "exasperated, half-closed eyes, frown, sigh",
     "surprise": "surprised, wide-eyed, open mouth"
@@ -152,15 +143,11 @@
    "tags": "holding a crystal ore with both hands",
    "face": "worried eyebrows, open mouth, blush",
    "variants": {
-    "joy": "smile, blush, happy, sparkling eyes",
     "anger": "pout, frown, puffed cheeks, blush",
     "sorrow": "sad, teary eyes, worried eyebrows, looking down",
-    "fun": "excited, open mouth, sparkling eyes, blush",
-    "shy": "blush, embarrassed, looking away, wavy mouth",
     "sparkle": "excited, sparkling eyes, open mouth, blush",
     "panic": "flustered, panicking, sweatdrop, wide-eyed, wavy mouth",
-    "cry": "crying, tears, worried eyebrows",
-    "fear": "scared, frightened, worried eyebrows, teary eyes, trembling"
+    "cry": "crying, tears, worried eyebrows"
    },
    "memo": "エルフの鉱石おたくの技師。容姿に自信がなく、おどおど。「〜っす」"
   },
@@ -173,9 +160,6 @@
    "tags": "martial artist, hand on hip, holding a sake bottle",
    "face": "grin, drunk, blush, half-closed eyes",
    "variants": {
-    "joy": "smile, closed eyes, happy",
-    "anger": "angry, glaring, frown, clenched teeth",
-    "sorrow": "sad, teary eyes, looking down",
     "drunk": "drunk, flushed face, blush, half-closed eyes, wavy mouth",
     "serious": "serious, focused eyes, determined",
     "tired": "tired, hangover, half-closed eyes, sweat",
@@ -194,13 +178,9 @@
    "tags": "crossed arms",
    "face": "fierce grin",
    "variants": {
-    "joy": "smile, teeth, proud",
     "anger": "angry, glaring, frown, clenched teeth",
     "sorrow": "sad, frown, closed eyes, solemn",
-    "fun": "laughing, open mouth, head back",
-    "sparkle": "excited, fierce grin, sparkling eyes",
-    "serious": "serious, stern, glaring",
-    "surprise": "surprised, wide-eyed, open mouth"
+    "serious": "serious, stern, glaring"
    },
    "memo": "レオネストの国王。好戦家で若返った鋼の体。獰猛に笑う"
   },
@@ -236,10 +216,6 @@
    "tags": "hand on chin, holding a paintbrush",
    "face": "aloof",
    "variants": {
-    "joy": "slight smile, half-closed eyes",
-    "anger": "cold eyes, frown",
-    "sorrow": "sad, distant eyes, looking down",
-    "fun": "smile, closed eyes, amused",
     "faint_smile": "faint smile, distant eyes",
     "sparkle": "sparkling eyes, slight smile, inspired",
     "surprise": "surprised, wide-eyed"
@@ -258,11 +234,9 @@
    "variants": {
     "joy": "gentle smile, closed mouth",
     "anger": "glaring, frown, cold eyes",
-    "sorrow": "sad, looking down, frown",
     "fun": "smile, closed eyes",
     "faint_smile": "rare gentle smile, soft eyes",
-    "panic": "flustered, panicking, sweatdrop, wide-eyed",
-    "cold": "cold eyes, narrowed eyes, expressionless"
+    "panic": "flustered, panicking, sweatdrop, wide-eyed"
    },
    "memo": "第三王子（女）。冷静な完璧主義者。笑わない。冷たい視線"
   },
@@ -280,7 +254,6 @@
     "joy": "slight smile, closed mouth",
     "anger": "angry, glaring, clenched teeth",
     "sorrow": "sad, frown, looking down",
-    "fun": "grin, laughing",
     "shy": "blush, embarrassed, looking away, frown",
     "troubled": "troubled, awkward, sweatdrop, frown",
     "serious": "serious, determined, closed mouth"
@@ -300,8 +273,6 @@
    "variants": {
     "joy": "small smile, blush",
     "anger": "pout, frown",
-    "sorrow": "teary eyes, looking down",
-    "fun": "smile, closed eyes",
     "panic": "flustered, sweatdrop, wide-eyed, wavy mouth",
     "faint_smile": "faint smile, soft eyes",
     "sparkle": "sparkling eyes, slight smile, excited",
@@ -343,9 +314,7 @@
     "anger": "glaring, cold eyes",
     "sorrow": "closed eyes, solemn",
     "fun": "small smile, amused",
-    "faint_smile": "very slight smile, closed mouth",
-    "cold": "cold eyes, sharp eyes, expressionless",
-    "surprise": "slightly wide eyes"
+    "faint_smile": "very slight smile, closed mouth"
    },
    "memo": "王国最強の剣。黒髪に一筋の白、冷たい目。寡黙で何を考えているか分からない"
   },
@@ -359,10 +328,8 @@
    "face": "confident smile",
    "variants": {
     "joy": "smile, proud, closed eyes",
-    "anger": "angry, shouting, open mouth, v-shaped eyebrows",
     "sorrow": "sad, teary eyes, frown",
     "fun": "laughing, open mouth, hand over mouth",
-    "panic": "flustered, panicking, sweatdrop, wide-eyed",
     "shy": "blush, embarrassed, looking away",
     "smug": "smug, proud smile, half-closed eyes",
     "surprise": "surprised, wide-eyed, open mouth"
@@ -383,9 +350,7 @@
     "anger": "frown, glaring",
     "sorrow": "sad, looking down",
     "fun": "smile, closed eyes",
-    "faint_smile": "slight smile, soft eyes",
-    "troubled": "troubled, sweatdrop, slight frown",
-    "serious": "serious, determined, closed mouth"
+    "faint_smile": "slight smile, soft eyes"
    },
    "memo": "アンジェリカと組む隊長。寡黙で任務に忠実"
   },
@@ -418,15 +383,7 @@
    "identity": "1boy, male focus, old man, 62 years old, short, wiry, tan skin, white hair, snow white hair, short hair, wild hair, bushy white beard, blue eyes, round eyes, bushy eyebrows, brown explorer hat, brown coat, leather satchel, dirt on clothes, deep wrinkles, big nose",
    "tags": "energetic, hand on hat, holding a magnifying glass",
    "face": "big grin",
-   "variants": {
-    "joy": "smile, closed eyes, happy",
-    "anger": "angry, frown, open mouth, shouting",
-    "sorrow": "sad, looking down, closed eyes",
-    "fun": "laughing, open mouth, excited",
-    "sparkle": "excited, sparkling eyes, open mouth, grin",
-    "surprise": "surprised, wide-eyed, open mouth",
-    "tired": "tired, sweat, open mouth"
-   },
+   "variants": {},
    "memo": "元気な考古学者の爺さん。遺跡が生きがい"
   },
   {
@@ -476,10 +433,7 @@
    "identity": "1boy, male focus, adult, man, 38 years old, very muscular, large build, tan skin, bald, brown beard, full beard, brown eyes, small eyes, thick eyebrows, scar on head, heavy dark grey plate armor, battle axe on back",
    "tags": "crossed arms",
    "face": "stern, angry eyebrows",
-   "variants": {
-    "serious": "serious, determined, frown",
-    "surprise": "surprised, wide-eyed, open mouth"
-   },
+   "variants": {},
    "memo": "王国十指《戦場の鉄塊》。王国最強の盾"
   },
   {
@@ -495,9 +449,7 @@
     "anger": "glaring, frown, sharp eyes",
     "sorrow": "looking down, frown",
     "fun": "smirk, half-closed eyes",
-    "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
-    "cold": "cold eyes, sharp eyes, expressionless",
-    "faint_smile": "slight smile, half-closed eyes"
+    "cold": "cold eyes, sharp eyes, expressionless"
    },
    "memo": "王国十指の天才剣士。目つきが悪く、いつも気だるそう"
   },
@@ -533,9 +485,6 @@
     "joy": "smile, open mouth, closed eyes",
     "anger": "angry, shouting, v-shaped eyebrows",
     "sorrow": "sad, teary eyes, frown",
-    "fun": "laughing, open mouth, closed eyes",
-    "cry": "crying, tears, open mouth, streaming tears",
-    "smitten": "dreamy eyes, blush, smile",
     "pout": "pout, puffed cheeks, looking away"
    },
    "memo": "めちゃくちゃ強い、婚期を逃したお姉さん。波打つ金髪に稲妻の眼帯。豪快に笑う"
@@ -552,10 +501,7 @@
     "anger": "pout, frown",
     "sorrow": "teary eyes, looking down",
     "fun": "laughing, open mouth",
-    "sparkle": "excited, sparkling eyes, open mouth, smile",
-    "shy": "blush, embarrassed, looking away",
-    "panic": "flustered, sweatdrop, wavy mouth, wide-eyed",
-    "fear": "scared, wide-eyed, sweat, wavy mouth"
+    "sparkle": "excited, sparkling eyes, open mouth, smile"
    },
    "memo": "ボーイッシュで自分をボクと呼ぶおたく。左右で色の違う目に小さな帽子。早口で話している"
   },
@@ -595,8 +541,7 @@
     "sorrow": "solemn, closed eyes",
     "fun": "smile, laughing",
     "serious": "serious, stern, closed mouth",
-    "faint_smile": "slight smile, soft eyes",
-    "surprise": "surprised, wide-eyed"
+    "faint_smile": "slight smile, soft eyes"
    },
    "memo": "帝国四騎士《氷壁の父》。巨漢の老騎士。不動・実直"
   },
@@ -629,10 +574,6 @@
    "tags": "crossed arms",
    "face": "fierce grin",
    "variants": {
-    "joy": "grin, fangs",
-    "anger": "angry, snarling, fangs, ears back",
-    "sorrow": "sad, ears down, looking down",
-    "fun": "laughing, open mouth, fangs",
     "smug": "smug, grin, fangs",
     "serious": "serious, sharp eyes, ears up",
     "surprise": "surprised, wide-eyed, ears up"
@@ -647,15 +588,7 @@
    "identity": "1girl, woman, young woman, slim, pale skin, blonde hair, pale blonde hair, long hair, straight hair, dark blue eyes, glowing left eye, cyan left eye, thin eyebrows, black cloth mask covering lower face, black cloak, black clothes, bandages, rune-etched gauntlet",
    "tags": "holding staff with both hands",
    "face": "calm",
-   "variants": {
-    "joy": "smiling eyes, closed eyes",
-    "anger": "glaring, narrowed eyes",
-    "sorrow": "sad eyes, looking down",
-    "fun": "smiling eyes, amused",
-    "serious": "serious, sharp eyes, glowing eye",
-    "cold": "cold eyes, narrowed eyes",
-    "faint_smile": "smiling eyes, soft eyes"
-   },
+   "variants": {},
    "memo": "帝国四騎士の女軍師。顔の下半分を布で覆い、左目が光る。年は分からない"
   },
   {
@@ -693,8 +626,7 @@
     "sorrow": "sad, looking away",
     "fun": "smirk, amused",
     "cold": "cold eyes, narrowed eyes, expressionless, contempt",
-    "smug": "smug, smirk, half-closed eyes",
-    "faint_smile": "slight smile, soft eyes"
+    "smug": "smug, smirk, half-closed eyes"
    },
    "memo": "エルメシアの最高議長。ハイエルフ（見た目は二十代前半、三百歳超）。女王のような圧"
   },
@@ -740,11 +672,7 @@
    "identity": "1boy, male focus, adult, young man, beautiful, androgynous face, pale skin, silver hair, short hair, hair over one eye, red eyes, glowing eyes, luxurious dark blue robe, gold embroidery, wide sleeves, too many rings, puppet strings on fingers",
    "tags": "holding a red parasol, looking down on viewer, dark aura",
    "face": "gentle smile",
-   "variants": {
-    "fun": "laughing, open mouth",
-    "wicked": "evil smile, sinister grin, shaded face, glowing eyes",
-    "smitten": "smitten, blush, dreamy eyes, gentle smile"
-   },
+   "variants": {},
    "memo": "人の姿の使徒（使徒リスト 28）。銀髪の美青年。豪奢な衣で、いつも微笑んでいる。人の苦しむ顔を愛でる"
   },
   {
@@ -832,10 +760,6 @@
    "tags": "hand on chest, roots growing from fingers, spores",
    "face": "polite smile",
    "variants": {
-    "joy": "smile, closed eyes",
-    "anger": "frown, glowing eyes, glaring",
-    "sorrow": "sad, looking down",
-    "fun": "laughing, open mouth",
     "troubled": "troubled, worried eyebrows, polite smile",
     "surprise": "surprised, wide-eyed",
     "sleepy": "sleepy, drowsy, half-closed eyes"
@@ -901,9 +825,7 @@
    "face": "eyes closed, sleeping",
    "variants": {
     "joy": "smile, eyes closed, sleeping",
-    "anger": "pout, frown, eyes closed, sleeping",
     "sorrow": "teary eyes, frown, eyes closed, sleeping",
-    "fun": "open mouth smile, eyes closed, sleeping",
     "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
     "surprise": "eyes open, wide-eyed, blank stare",
     "faint_smile": "faint smile, eyes closed, sleeping"
@@ -1006,9 +928,7 @@
    "tags": "mercenary, adventurer, standing, both hands resting on sword pommel, sword point down, one-eyed, closed mouth",
    "face": "expressionless, closed mouth, unreadable",
    "variants": {
-    "joy": "faint smile, closed mouth",
     "anger": "glaring, frown, tight lips",
-    "sorrow": "looking down, downturned mouth",
     "fun": "slight smirk, closed mouth"
    },
    "memo": "片目の女冒険者。使徒を長く追っている。灰色の頭巾は後ろに下ろしていて、顔が見える（右目は黒い革の眼帯。2026-10-15 に描き直した）。外套の肩に古い爪痕。暗い色の革と布。寡黙でぶっきらぼう、疲れているが芯は強い。酒場の隅で安酒を舐めている。十指のシグとは別人"
@@ -1026,7 +946,6 @@
     "joy": "grin, laughing, closed eyes",
     "anger": "serious, cold stare, frown, sharp eyes",
     "sorrow": "sad smile, looking down, tired",
-    "fun": "smirk, one eye closed, mischievous",
     "cold": "cold eyes, sharp eyes, expressionless",
     "troubled": "awkward smile, sweatdrop, half-closed eyes",
     "faint_smile": "gentle smile, soft eyes"
@@ -1042,10 +961,6 @@
    "tags": "holding a closed folding fan to chin, hand on hip",
    "face": "smug smile, confident",
    "variants": {
-    "joy": "triumphant smile, closed eyes, smug",
-    "anger": "flustered, annoyed, pout",
-    "sorrow": "sad, looking away, forced smile",
-    "fun": "laughing, hand over mouth, smug",
     "smug": "smug, triumphant smile, half-closed eyes, raised eyebrow",
     "panic": "flustered, panicking, sweatdrop, wide-eyed, wavy mouth",
     "surprise": "surprised, wide-eyed, open mouth",
@@ -1084,7 +999,6 @@
     "joy": "happy smile, closed eyes",
     "anger": "determined, serious, frown",
     "sorrow": "sad, teary eyes, looking into distance",
-    "fun": "laughing softly, hand over mouth",
     "serious": "determined, serious, firm eyes, closed mouth",
     "troubled": "troubled, worried eyebrows, awkward smile",
     "smitten": "dreamy eyes, gentle smile, blush, longing",
@@ -1102,13 +1016,9 @@
    "tags": "holding a silver basin with water, ash floating in water",
    "face": "gentle eyes, calm",
    "variants": {
-    "joy": "smiling eyes, gentle",
     "anger": "glaring, glowing eyes",
     "sorrow": "sad eyes, looking down",
-    "fun": "smiling eyes, closed eyes",
-    "faint_smile": "gentle eyes, smiling eyes",
-    "serious": "serious, faintly glowing eyes",
-    "cold": "cold eyes, glowing eyes, expressionless"
+    "serious": "serious, faintly glowing eyes"
    },
    "memo": "C4・使徒（刻印の環の三十三・A 級・友好）。湯の町の湖の、薄布で顔を隠した小さな娘。年寄りの口ぶりで人を子ら扱いする。白い衣と金の刺繍、銀の水盤。人ではない気配は目の淡い光だけで"
   },
@@ -1120,15 +1030,7 @@
    "identity": "1girl, petite, young girl, pale skin, lilac hair, grey hair, bob cut, straight bangs, violet eyes, half-closed eyes, very long eyelashes, expressionless, black frock coat too large for her, white cravat, sewing needles stuck in sleeve, thread wrapped around fingers",
    "tags": "sitting on the shoulder of a giant wooden marionette of an old gentleman in a tailcoat, holding a needle and thread",
    "face": "expressionless, blank stare",
-   "variants": {
-    "joy": "very slight smile",
-    "anger": "half-closed eyes, frown, annoyed",
-    "sorrow": "expressionless, teary eyes",
-    "fun": "slight smirk",
-    "faint_smile": "very slight smile, closed mouth",
-    "exasperated": "exasperated, half-closed eyes, deadpan",
-    "tired": "tired, half-closed eyes, expressionless"
-   },
+   "variants": {},
    "memo": "C4・眷属。日傘の若君の人形師。老紳士の大きな操り人形の中にいる、まつげの長い無表情な小娘。薄紫のおかっぱ、大きすぎる燕尾服、糸を巻いた指"
   },
   {
@@ -1145,7 +1047,6 @@
     "anger": "angry, shouting, clenched teeth",
     "sorrow": "sad, looking down, closed mouth",
     "fun": "laughing, open mouth",
-    "sparkle": "excited, sparkling eyes, open mouth, grin",
     "serious": "serious, determined, frown",
     "surprise": "surprised, wide-eyed, open mouth"
    },
@@ -1160,15 +1061,7 @@
    "identity": "1boy, male focus, adult, man, 44 years old, huge man, burly, big belly, tan skin, black hair, dark hair, slicked back hair, short hair, narrow eyes, squinting eyes, black eyes, thick eyebrows, stubble, scar on chin, gold earring, red bandana around neck, open vest over striped shirt, coin pouch",
    "tags": "holding a rolled treasure map, hand raised beckoning",
    "face": "sly grin",
-   "variants": {
-    "joy": "grin, closed eyes",
-    "anger": "angry, frown, open mouth",
-    "sorrow": "sad, frown",
-    "fun": "laughing, open mouth",
-    "wicked": "evil smile, sinister grin",
-    "panic": "flustered, panicking, sweatdrop, open mouth",
-    "smug": "smug, grin"
-   },
+   "variants": {},
    "memo": "C4・町。ヴァレンツァの糸目の賞金首。小悪党だが子どもに甘く、人買いを嫌う。糸目、撫でつけた黒髪、金の耳飾り、偽の宝の地図"
   },
   {
@@ -1179,16 +1072,7 @@
    "identity": "1girl, teenage girl, 17 years old, petite, short, fair skin, golden blonde hair, blonde hair, long hair, single braid, green eyes, round eyes, blush, white plate armor with gold sun emblem, white tabard, huge war hammer",
    "tags": "holding a huge war hammer with one hand, other hand fidgeting",
    "face": "nervous, worried eyebrows, blush",
-   "variants": {
-    "joy": "smile, blush, happy",
-    "anger": "pout, frown, puffed cheeks",
-    "sorrow": "sad, teary eyes, looking down",
-    "fun": "smile, open mouth",
-    "panic": "flustered, panicking, blush, wide-eyed, wavy mouth",
-    "shy": "blush, embarrassed, looking away",
-    "cry": "crying, tears, open mouth",
-    "serious": "serious, determined, closed mouth"
-   },
+   "variants": {},
    "memo": "C4・町。聖都の聖堂騎士見習い。小柄で可愛いのに怪力。堅物、からかうと慌てる、すぐ落ち込む。金の三つ編み、白い鎧と太陽の紋、身の丈ほどの戦鎚"
   },
   {
@@ -1201,8 +1085,6 @@
    "face": "smug smirk",
    "variants": {
     "joy": "grin, fang",
-    "anger": "angry, frown, ears back",
-    "sorrow": "sad, ears down",
     "fun": "laughing, open mouth, fang",
     "smug": "smug, triumphant smile, fang, half-closed eyes",
     "exasperated": "exasperated, half-closed eyes, deadpan, ears down",
@@ -1224,10 +1106,8 @@
     "anger": "slight frown, pout",
     "sorrow": "sad, looking down",
     "fun": "smile, closed eyes",
-    "sleepy": "sleepy, drowsy, half-closed eyes",
     "shy": "blush, embarrassed, looking away",
-    "serious": "serious, focused eyes, closed mouth",
-    "faint_smile": "faint smile, soft eyes"
+    "serious": "serious, focused eyes, closed mouth"
    },
    "memo": "C4・旅。シェルアークの盤指しの若者。病弱で天然、眠りながら指して勝つ。人と目を合わせない。黒い長髪を低く束ね、淡い藤色の着物"
   },
@@ -1239,15 +1119,7 @@
    "identity": "1girl, adult, woman, 34 years old, tall, fair skin, black hair, jet black hair, hair bun, elegant updo, violet eyes, narrow eyes, confident eyes, red lips, gold earrings, burgundy merchant dress, high collar, feathered hat, folding fan",
    "tags": "hand on hip, holding a wrapped bar of soap",
    "face": "confident smirk",
-   "variants": {
-    "joy": "smile, closed eyes, confident",
-    "anger": "angry, frown, glaring",
-    "sorrow": "sad, looking away",
-    "fun": "laughing, hand over mouth",
-    "smug": "smug, confident smile, half-closed eyes",
-    "smitten": "smitten, blush, dreamy eyes, smile",
-    "surprise": "surprised, wide-eyed, open mouth"
-   },
+   "variants": {},
    "memo": "C4・町。ブランデールの石鹸と香水の商会の女主人。包み紙は自分の顔。自信家の策士で、娘にちょっかいを出しては手をはたかれる。黒髪の結い上げ、羽根の帽子、えんじのドレス"
   },
   {
@@ -1262,12 +1134,9 @@
    "variants": {
     "joy": "faint smile, soft eyes",
     "anger": "cold stare, frown, clenched jaw",
-    "sorrow": "sad, looking down, eyes closed",
     "fun": "wry smile, raised eyebrow",
     "faint_smile": "slight smile, tired eyes, closed mouth",
-    "troubled": "troubled, worried eyebrows, awkward smile",
-    "serious": "serious, determined, focused eyes, closed mouth",
-    "exasperated": "exasperated, half-closed eyes, deadpan, sigh"
+    "serious": "serious, determined, focused eyes, closed mouth"
    },
    "memo": "C6・仲間。王都の下町の嫌われ者の徴税吏。税をくすねて下町に回す、報われない人。黒い外套と帽子、帳面二冊、疲れた目"
   },
@@ -1281,17 +1150,7 @@
    "identity": "1boy, male focus, adult, man, 34 years old, huge man, burly, muscular, big hands, tan skin, freckles, dark blonde hair, short hair, round eyes, green eyes, thick eyebrows, flour dust on face, white kerchief on head, rolled-up sleeves, flour-stained cream shirt, brown miller apron, plain wooden pendant on cord around neck",
    "tags": "carrying a large sack of flour on shoulder",
    "face": "big grin, open mouth",
-   "variants": {
-    "joy": "laughing, closed eyes, big grin",
-    "anger": "angry, shouting, furrowed brows",
-    "sorrow": "teary eyes, frown, sniffling",
-    "fun": "confused, head tilt, open mouth",
-    "surprise": "surprised, wide-eyed, open mouth, raised eyebrows",
-    "shy": "embarrassed, blush, scratching cheek, looking away",
-    "serious": "serious, determined, clenched jaw, focused eyes",
-    "cry": "crying, tears, streaming tears, open mouth",
-    "panic": "flustered, sweatdrop, wide-eyed, wavy mouth"
-   },
+   "variants": {},
    "memo": "C6・仲間。麦の都の粉挽きの大男。王都の大会の優勝者。字が読めずすぐ騙されるが、仲間の前に立つ。小麦色の短髪、そばかす、前掛け"
   },
   {
@@ -1306,12 +1165,7 @@
    "variants": {
     "joy": "delighted smile, eyes slightly open",
     "anger": "cold smile, sharp eyes",
-    "sorrow": "sad smile, looking away",
-    "fun": "sly smile, finger on lips",
-    "sparkle": "excited, sparkling eyes, gentle smile, eyes slightly open",
-    "wicked": "sinister gentle smile, narrowed eyes, shaded face",
-    "cold": "cold eyes, eyes slightly open, expressionless",
-    "faint_smile": "slight smile, closed eyes, closed mouth"
+    "fun": "sly smile, finger on lips"
    },
    "memo": "C6・仲間。ヴァレンツァの裏通りのエルフの検屍医。はんなりした口調で物騒なことを言う。死体を買い、生きた患者からは代を取らない。糸目、銀灰の長髪、丸眼鏡"
   },
@@ -1329,9 +1183,6 @@
     "anger": "serious, sharp eyes, intense stare",
     "sorrow": "sad, looking down, tired",
     "fun": "sly grin, one eye open",
-    "sleepy": "sleepy, drowsy, yawning, half-closed eyes",
-    "serious": "serious, sharp eyes, intense stare, closed mouth",
-    "drunk": "drunk, flushed face, half-closed eyes, wavy mouth",
     "smug": "smug, sly grin, one eye open"
    },
    "memo": "C6・仲間。王城の厩舎の老馬丁。ぼけたふりの昼行灯で、先々代の王の影の盾だった。禿げ頭、白い髭、寝ぼけ眼、鞘の金具だけ新しい剣"
@@ -1373,8 +1224,7 @@
     "fun": "smirk, one ear twitch",
     "cold": "cold eyes, narrowed eyes, expressionless, ears back",
     "faint_smile": "slight smile, looking away, ears relaxed",
-    "serious": "serious, focused eyes, ears perked, closed mouth",
-    "exasperated": "exasperated, half-closed eyes, sigh, ears drooping"
+    "serious": "serious, focused eyes, ears perked, closed mouth"
    },
    "memo": "C6・仲間。王家の猟場の番人の狐の獣人。追う側なのに逃げ道を教える。赤茶の短髪に白髪まじり、狐の耳、縄と罠の鉤"
   },
@@ -1386,17 +1236,7 @@
    "identity": "1girl, mature female, adult, 41 years old, tall, tan skin, dark red hair, long hair, high ponytail, red kerchief headband, sharp eyes, brown eyes, raised eyebrows, scar on cheek, gold hoop earrings, leather vest over loose white shirt, rolled-up sleeves, belt with small poison vials and daggers, coin pouch",
    "tags": "sitting on a barrel, flipping a gold coin",
    "face": "confident grin",
-   "variants": {
-    "joy": "laughing, open mouth",
-    "anger": "angry, glaring, frown",
-    "sorrow": "sad smile, looking down",
-    "fun": "smirk, wink",
-    "smug": "smug, smirk, raised eyebrow, half-closed eyes",
-    "wicked": "evil smile, sinister grin, narrowed eyes",
-    "sparkle": "excited, sparkling eyes, grin, coin in teeth",
-    "serious": "serious, sharp eyes, closed mouth",
-    "smitten": "smitten, blush, gentle smile, looking away"
-   },
+   "variants": {},
    "memo": "C6・仲間。街道の密輸屋の女親分。欲深で卑怯だが子どもと年寄りの荷には手を出さない。赤い髪を布でまとめ、金の耳飾り、毒の小瓶"
   },
   {
@@ -1433,9 +1273,7 @@
     "anger": "pout, angry eyebrows",
     "sorrow": "sad, looking down",
     "fun": "smug grin, hand on hip",
-    "smug": "smug, half-closed eyes, raised eyebrow, hand on hip",
     "pout": "pout, puffed cheeks, looking away",
-    "sleepy": "sleepy, yawning, half-closed eyes",
     "faint_smile": "gentle motherly smile, soft eyes"
    },
    "memo": "C6・仲間。迷いの森の祠の、子どもの姿の古い婆さま。年寄りの口ぶりで、人の子の腹具合にうるさい。苔色の長髪、尖った耳、蜂蜜の壺。恋の相手にしない"
@@ -1448,16 +1286,7 @@
    "identity": "1girl, adult, woman, 32 years old, slender, fair skin, rabbit ears, long white rabbit ears, white hair, bob cut, sleepy eyes, red eyes, calm eyebrows, scar on side, brown leather hunting jacket, short cape, leather boots, long spear with old shaft",
    "tags": "holding a spear, nibbling a carrot",
    "face": "sleepy, gentle smile",
-   "variants": {
-    "joy": "happy smile, closed eyes",
-    "anger": "wide eyes, excited grin, battle lust",
-    "sorrow": "sad smile, ears drooping",
-    "fun": "giggling, head tilt",
-    "sparkle": "excited, sparkling eyes, open mouth, ears perked",
-    "wicked": "battle lust, wide grin, narrowed eyes, ears perked",
-    "sleepy": "sleepy, drowsy, half-closed eyes, ears drooping",
-    "troubled": "troubled, confused, head tilt, ears drooping"
-   },
+   "variants": {},
    "memo": "C6・仲間。迷いの森で迷う兎の獣人の狩人。のんびりした天然なのに、強い相手の前で笑い出す戦闘狂。白いおかっぱ、長い兎の耳、槍"
   },
   {
@@ -1470,13 +1299,7 @@
    "tags": "reading a ledger, standing",
    "face": "polite smile, narrow eyes",
    "variants": {
-    "joy": "pleasant smile, closed eyes",
-    "anger": "cold anger, frown, narrowed eyes",
-    "sorrow": "tired, looking down, closed mouth",
-    "fun": "amused smile, soft chuckle",
-    "cold": "cold eyes, expressionless, contempt",
-    "serious": "serious, focused eyes, closed mouth",
-    "smug": "smug, faint smirk, raised eyebrow"
+    "anger": "cold anger, frown, narrowed eyes"
    },
    "memo": "C6・町（敵）。王国の徴税総監。香水の匂いの老紳士。国庫のためなら下町を消す、筋の通った悪。ルシアンの帳面を握る"
   },
@@ -1489,7 +1312,6 @@
    "tags": "hand on hip, chin raised",
    "face": "haughty, frown",
    "variants": {
-    "joy": "proud smile, chin raised",
     "sorrow": "sad, looking down, biting lip",
     "fun": "haughty laugh, hand near mouth",
     "shy": "embarrassed, heavy blush, looking away",
@@ -1527,15 +1349,7 @@
    "identity": "1boy, male focus, old man, 74 years old, thin, pale skin, grey hair, long hair, long white beard, sleepy eyes, brown eyes, raised eyebrows, deep wrinkles, round spectacles, crimson long robe, silver chain of office, soot on sleeves, wooden staff",
    "tags": "holding a closed old book under arm, standing beside a small bonfire",
    "face": "mischievous smile",
-   "variants": {
-    "joy": "gentle smile, closed eyes",
-    "anger": "stern, frown, sharp eyes",
-    "sorrow": "sad, looking down, closed eyes",
-    "fun": "chuckling, open mouth",
-    "serious": "serious, quiet eyes, closed mouth",
-    "faint_smile": "slight smile, soft eyes",
-    "tired": "tired, half-closed eyes, sigh"
-   },
+   "variants": {},
    "memo": "C6・町（師匠）。王都の焚書官長。焼く前に必ず読む飄々とした老人。ラザールの師で、その両親の写本屋を焼いた本人"
   },
   {
@@ -1567,13 +1381,11 @@
    "tags": "holding a large wooden ladle, standing by a big cooking pot",
    "face": "big grin, confused",
    "variants": {
-    "joy": "laughing, open mouth, closed eyes",
     "anger": "angry, shouting, furrowed brow",
     "sorrow": "serious, sad eyes, looking down",
     "fun": "grin, scratching head, confused",
     "troubled": "troubled, confused, sweatdrop, scratching head",
     "serious": "serious, sharp eyes, determined, closed mouth",
-    "faint_smile": "gentle smile, soft eyes",
     "tired": "tired, sweat, half-closed eyes"
    },
    "memo": "C7・仲間。先帝の代の伝説の将軍。黒鉄の砦の炊き出し小屋の客分。銭勘定と道がだめ、いざという時は誰より正しい。白い短髪と白い髭、古い鎧、木の杓子"
@@ -1592,10 +1404,7 @@
     "anger": "angry, shouting, teeth",
     "sorrow": "crying, teary eyes, looking down",
     "fun": "proud, reciting, hand raised",
-    "shy": "blush, embarrassed, looking away, frown",
-    "cry": "crying, streaming tears, open mouth",
-    "smitten": "dreamy eyes, blush, smile",
-    "panic": "flustered, sweatdrop, wide-eyed"
+    "shy": "blush, embarrassed, looking away, frown"
    },
    "memo": "C7・仲間。帝都の外れの坑夫頭。巨漢で、大仰で下手な詩を書く。不憫。黒い髭と煤けた顔、坑夫の革の前掛け、つるはし、詩の紙"
   },
@@ -1611,11 +1420,8 @@
    "variants": {
     "joy": "laughing, open mouth, thumbs up",
     "anger": "angry, bared teeth, glaring",
-    "sorrow": "sad, serious, looking at an old paper",
-    "fun": "wink, tongue out, mischievous",
     "wicked": "evil grin, narrowed eyes, sinister smile",
     "smug": "smug, smirk, half-closed eyes",
-    "panic": "flustered, sweatdrop, wide-eyed, open mouth",
     "serious": "serious, sharp eyes, closed mouth"
    },
    "memo": "C7・仲間。闘技の都ザルグロスの鼠の獣人の剣闘士。卑怯で人気者、相手を殺さない。子どもの剣闘士を買い戻している。撫でつけた灰色の髪、鼠の耳と尻尾、赤い胴着、砂"
@@ -1632,8 +1438,7 @@
    "variants": {
     "fun": "flustered, heart-struck, ears perked",
     "smitten": "smitten, blush, dreamy eyes, open mouth",
-    "shy": "blush, embarrassed, ears down, looking away",
-    "cry": "crying, tears, ears down"
+    "shy": "blush, embarrassed, ears down, looking away"
    },
    "memo": "C7・仲間・恋。狩り場の町ナグリスの狐の獣人の見習い狩人。惚れっぽい阿呆だが矢は外さない。兄の弓。橙のはね髪、狐の耳と尻尾、緑の狩り装束"
   },
@@ -1646,16 +1451,7 @@
    "identity": "1boy, male focus, adult, young man, 27 years old, slender, tall, pointy ears, elf, pale skin, silver-white hair, platinum silver hair, long hair, low ponytail, light blue eyes, narrowed eyes, thin eyebrows, mole under eye, dangling earring, dark purple loose robe, embroidered sash, rings on fingers",
    "tags": "rolling a die between fingers, sitting behind a gambling table",
    "face": "gentle closed-eye smile",
-   "variants": {
-    "joy": "soft smile, eyes slightly open",
-    "anger": "cold smile, opened eyes, sharp",
-    "sorrow": "melancholic, looking at an old notebook",
-    "fun": "sly smile, finger on lips",
-    "wicked": "sly smile, opened eyes, sinister",
-    "cold": "cold eyes, opened eyes, expressionless",
-    "smug": "smug, closed eyes, smile",
-    "surprise": "surprised, eyes open, wide-eyed"
-   },
+   "variants": {},
    "memo": "C7・仲間・恋。湯の町アミュレインの賭場の胴元のエルフ。糸目、柔らかな話し方で騙すと言って騙す。学院の二番。銀白の長髪を低く束ね、紫の衣、骰子"
   },
   {
@@ -1671,10 +1467,8 @@
     "anger": "expressionless, cold stare, frown",
     "sorrow": "looking down, expressionless, sad eyes",
     "fun": "deadpan, holding three sweets",
-    "faint_smile": "very slight smile, closed mouth",
     "sparkle": "sparkling eyes, expressionless, slight blush",
-    "exasperated": "deadpan, half-closed eyes, exasperated",
-    "pout": "pout, expressionless, puffed cheeks"
+    "exasperated": "deadpan, half-closed eyes, exasperated"
    },
    "memo": "C7・仲間・恋。帝都の検死官。無表情の毒舌で恐ろしいことを言う。袖をつまんで離さず、甘い物をねだる。黒いおかっぱ、丸眼鏡、白衣"
   },
@@ -1690,11 +1484,7 @@
     "joy": "gentle motherly smile, closed eyes",
     "anger": "stern, scolding, pointing finger",
     "sorrow": "sad smile, looking at a carved tree trunk",
-    "fun": "smug, arms crossed, chin up",
-    "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
-    "smug": "smug, chin up, half-closed eyes",
-    "faint_smile": "gentle smile, soft eyes",
-    "pout": "pout, puffed cheeks"
+    "faint_smile": "gentle smile, soft eyes"
    },
    "memo": "C7・仲間（恋の相手にしない）。首都エルメシアの湖のほとりで昼寝をする、子どもの姿の七百年のエルフ。古風な年寄り言葉で議員を坊や扱い。水色がかった白の長髪、額飾り、毛布"
   },
@@ -1707,10 +1497,6 @@
    "tags": "saluting, snow falling",
    "face": "serious, calm",
    "variants": {
-    "joy": "small shy smile, faint blush",
-    "anger": "angry, clenched teeth",
-    "sorrow": "gloomy, tired, downcast eyes",
-    "fun": "flustered, soot on face, holding a burnt pot",
     "troubled": "troubled, sweatdrop, worried eyebrows",
     "shy": "blush, embarrassed, looking away",
     "serious": "serious, determined, closed mouth",
@@ -1772,9 +1558,7 @@
     "anger": "glaring, frown, cold eyes",
     "sorrow": "looking down, frown",
     "fun": "smirk, amused",
-    "cold": "cold eyes, narrowed eyes, expressionless",
-    "serious": "serious, stern, closed mouth",
-    "tired": "tired, sweat, half-closed eyes"
+    "serious": "serious, stern, closed mouth"
    },
    "memo": "C7・町。闘技の都ザルグロスの大闘技場の主。剣闘士を値段で呼ぶ。毎朝雪かきをする。後退した灰色の髪、黒い毛皮の外套、帳面、雪かき"
   },
@@ -1792,8 +1576,6 @@
     "anger": "angry, frown, shouting",
     "sorrow": "sad, looking down",
     "fun": "laughing, open mouth",
-    "sparkle": "sparkling eyes, childlike smile, blush",
-    "pout": "pout, frown, stubborn",
     "serious": "serious, stern, closed mouth"
    },
    "memo": "C7・町。共和国の評議会の最古参の老議員。頑固だが、湖の小さなお方の前では子どものよう。禿頭、白く長い髭、紺の議員の衣、杖"
@@ -1828,7 +1610,6 @@
    "tags": "bowing politely, holding tongs",
    "face": "polite smile, blush",
    "variants": {
-    "anger": "frown, clenched teeth",
     "fun": "laughing, open mouth",
     "troubled": "troubled smile, sweatdrop, worried eyebrows",
     "serious": "serious, determined, closed mouth",
@@ -1845,11 +1626,7 @@
    "tags": "carrying a tray of beer mugs",
    "face": "smirk",
    "variants": {
-    "anger": "angry, frown, open mouth",
-    "sorrow": "sad, looking down",
-    "fun": "laughing, open mouth",
-    "exasperated": "exasperated, half-closed eyes, sigh",
-    "shy": "blush, embarrassed, looking away, frown"
+    "anger": "angry, frown, open mouth"
    },
    "memo": "C7・町。帝都の外れの坑夫酒場の娘。気が強い。坑夫頭の詩を捨てずに樽の上に積んでいる。赤い三つ編み、そばかす、頭巾、前掛け"
   },
@@ -1864,12 +1641,10 @@
    "variants": {
     "joy": "embarrassed, blush, looking away, hiding behind keg",
     "anger": "angry, shouting, fangs",
-    "sorrow": "sad smile, looking down",
     "fun": "grin, wink, holding ladle",
     "shy": "embarrassed, heavy blush, looking away, hiding face behind keg",
     "smug": "smug, smirk, half-closed eyes, raised eyebrow, fang",
     "panic": "flustered, panicking, wide-eyed, sweatdrop, wavy mouth",
-    "wicked": "evil smile, sinister grin, narrowed eyes, fang",
     "drunk": "drunk, flushed face, blush, half-closed eyes, wavy mouth"
    },
    "memo": "C8・仲間（恋の相手）。断界山脈の密造酒のはぐれゴブリンの女。強欲で卑怯、褒められると樽に隠れる。緑の肌、橙の髪、尖った耳、赤い手ぬぐい、背中の小さな樽"
@@ -1883,9 +1658,7 @@
    "identity": "1boy, male focus, adult, middle-aged man, 47 years old, very tall, huge man, muscular, broad shoulders, tan skin, dark brown hair, long hair, wild hair, amber eyes, sharp eyes, thick eyebrows, two curved horns on forehead, scales on cheeks and forearms, full beard, scar on cheek, fur mantle, battered bronze armor, greatsword on back",
    "tags": "holding a small notebook with pressed flowers",
    "face": "serious, frown",
-   "variants": {
-    "joy": "gentle smile, closed eyes"
-   },
+   "variants": {},
    "memo": "C8・仲間。断界山脈の山の民の長。竜の血で角と鱗の大男。熱血で民思い、押し花と詩の帳面"
   },
   {
@@ -1918,11 +1691,8 @@
    "tags": "sitting on a wooden bench, holding a tea cup",
    "face": "sleepy smile",
    "variants": {
-    "joy": "gentle smile, closed eyes",
     "anger": "stern, cold eyes, hand on katana",
-    "sorrow": "sad smile, looking at sea",
     "fun": "yawning, one eye open",
-    "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
     "serious": "serious, cold focused eyes, closed mouth",
     "faint_smile": "slight smile, soft eyes, closed mouth",
     "exasperated": "exasperated, half-closed eyes, deadpan, sigh"
@@ -1939,15 +1709,11 @@
    "tags": "pointing the wrong way, fist on chest",
    "face": "big grin, teeth",
    "variants": {
-    "joy": "laughing, closed eyes, thumbs up",
     "anger": "angry, fangs, shouting",
     "sorrow": "teary eyes, biting lip",
     "fun": "grin, scratching head",
     "sparkle": "excited, sparkling eyes, big smile, open mouth, ears perked up",
-    "panic": "flustered, panicking, wide-eyed, sweatdrop, ears flattened",
-    "cry": "crying, tears, streaming tears, open mouth, ears drooping",
-    "serious": "serious, determined, focused eyes, closed mouth, ears forward",
-    "shy": "embarrassed, blush, looking away, scratching cheek"
+    "serious": "serious, determined, focused eyes, closed mouth, ears forward"
    },
    "memo": "C8・仲間（恋の相手）。島の都の若い衆の頭。狼の獣人。愛すべき馬鹿で道を間違えるが、決める所は決める。鉢巻き、紺の着物、七本紐の腕輪"
   },
@@ -1963,12 +1729,7 @@
    "variants": {
     "joy": "faint smile, adjusting glasses",
     "anger": "cold glare, frown",
-    "sorrow": "looking down, expressionless, holding papers",
-    "fun": "smug, pointing at self",
-    "faint_smile": "slight smile, soft eyes, closed mouth, adjusting glasses",
-    "cold": "cold eyes, narrowed eyes, expressionless, glasses glare",
-    "smug": "smug, smirk, half-closed eyes, raised eyebrow",
-    "pout": "pout, looking away, expressionless"
+    "smug": "smug, smirk, half-closed eyes, raised eyebrow"
    },
    "memo": "C8・仲間。遺構に入り浸る、学院を追われたエルフの学者。無表情の毒舌、自作の二つ名。深緑の長い髪、眼鏡、隈、薄灰の学者の衣、解剖図"
   },
@@ -1980,16 +1741,7 @@
    "identity": "1girl, adult woman, 27 years old, bird girl, hawk wings on back, brown wings, one wing with black feathers, tall, slender, dark brown hair, long hair, golden eyes, sharp eyes, scar on cheek, old leather collar on neck, dark red leather armor, spear",
    "tags": "perched on a rock, wings half spread",
    "face": "confident smirk",
-   "variants": {
-    "joy": "wide eyes, sparkling eyes, holding a round pastry",
-    "anger": "fierce, battle smile, wings spread",
-    "sorrow": "looking down, touching collar",
-    "fun": "smirk, beckoning with finger",
-    "sparkle": "excited, sparkling eyes, smile, open mouth",
-    "serious": "serious, battle-ready, focused eyes, closed mouth",
-    "surprise": "surprised, wide-eyed, open mouth, feathers ruffled",
-    "shy": "embarrassed, blush, looking away, wings folded tight"
-   },
+   "variants": {},
    "memo": "C8・仲間（恋の相手）。使徒領から来た鷹の獣人。黒鎧の居城の元門番。戦闘狂で親身、人の暮らしを珍しがる。片方だけ黒い翼、首の革の輪、槍"
   },
   {
@@ -2001,16 +1753,7 @@
    "identity": "1boy, male focus, adult, middle-aged man, 50 years old, stocky, broad shoulders, red hair, ginger hair, tonsure, short hair, brown eyes, red beard, smiling eyes, bushy eyebrows, wrinkles, missing front tooth, dirty brown monk robe, sun pendant, rusty shovel",
    "tags": "holding a wine bottle, shovel on shoulder",
    "face": "grin",
-   "variants": {
-    "joy": "laughing, mouth open",
-    "anger": "angry, shouting",
-    "sorrow": "singing, closed eyes, solemn",
-    "fun": "sly grin, holding a ring",
-    "drunk": "drunk, flushed face, half-closed eyes, wavy mouth",
-    "serious": "serious, solemn, closed eyes, closed mouth",
-    "wicked": "sly grin, narrowed eyes",
-    "faint_smile": "slight smile, soft eyes, closed mouth"
-   },
+   "variants": {},
    "memo": "C8・仲間。聖都の地下墓地の墓掘り修道士。墓の物を売る罰当たり、酒臭い、聖歌が上手い。赤毛の剃髪と赤い髭、前歯が一本無い、汚れた修道服、錆びた鋤"
   },
   {
@@ -2035,7 +1778,6 @@
    "tags": "holding a magnifying glass over a relic",
    "face": "gentle smile, cold eyes",
    "variants": {
-    "joy": "gentle smile, closed eyes",
     "anger": "cold anger, frown, narrowed eyes",
     "sorrow": "sad smile, looking down",
     "fun": "quiet chuckle, closed eyes",
@@ -2053,15 +1795,7 @@
    "identity": "1girl, young woman, 24 years old, blind, blonde hair, long hair, pale grey eyes, unfocused eyes, gentle eyebrows, white veil, white choir robe, sun pendant",
    "tags": "holding an offering box on lap, sitting on stone steps",
    "face": "soft smile, eyes open looking at nothing",
-   "variants": {
-    "joy": "smile, happy, eyes open looking at nothing",
-    "anger": "frown, pursed lips",
-    "sorrow": "sad, looking down, downturned mouth",
-    "fun": "laughing softly, closed eyes",
-    "serious": "serious, singing, closed eyes, solemn",
-    "troubled": "troubled, worried eyebrows, awkward smile",
-    "faint_smile": "slight smile, soft eyes, closed mouth"
-   },
+   "variants": {},
    "memo": "C8・依頼人。聖都の大聖堂の盲目の歌い手。おっとり、騙されやすい。墓掘りの修道士に拾われた。金髪、白い頭巾、施しの箱"
   },
   {
@@ -2094,7 +1828,6 @@
    "face": "expressionless, serious",
    "variants": {
     "sorrow": "teary eyes, looking down, sewing",
-    "fun": "deadpan, holding a losing lottery ticket",
     "troubled": "troubled, worried eyebrows, awkward smile, sweatdrop",
     "tired": "tired, exhausted, half-closed eyes, sweat"
    },
@@ -2114,7 +1847,6 @@
     "anger": "angry, frown, v-shaped eyebrows",
     "sorrow": "sad, looking down, downturned mouth",
     "fun": "laughing, open mouth, closed eyes",
-    "panic": "flustered, panicking, wide-eyed, sweatdrop, wavy mouth",
     "shy": "embarrassed, blush, looking away",
     "serious": "serious, standing at attention, focused eyes, closed mouth"
    },
@@ -2133,12 +1865,7 @@
     "joy": "relieved smile, teary eyes, laughing",
     "anger": "determined, gritted teeth, frown",
     "sorrow": "crying, tears, sad",
-    "fun": "shy grin, scratching cheek",
-    "fear": "scared, frightened, wide-eyed, pale face, sweat, trembling",
-    "cry": "crying, streaming tears, open mouth",
-    "panic": "panicking, flustered, sweatdrop, wavy mouth",
-    "serious": "determined, gritted teeth, trembling but focused eyes",
-    "shy": "embarrassed, blush, looking away, scratching cheek"
+    "fear": "scared, frightened, wide-eyed, pale face, sweat, trembling"
    },
    "memo": "C5・仲間。港町ヴァレンツァの荷揚げ人足。熊のような巨漢なのに蜘蛛も雷も怖い臆病者。すぐ謝る。九つの輪の鎖を首に。赤毛の短いはね髪、赤い頭巾、無精髭、傷だらけの腕"
   },
@@ -2154,10 +1881,7 @@
     "joy": "triumphant laugh, closed eyes",
     "anger": "scolding, hands on hips, frown",
     "sorrow": "teary eyes, biting lip, looking down",
-    "fun": "proud smirk, adjusting glasses",
-    "smug": "smug, smirk, raised eyebrow, adjusting glasses",
     "sparkle": "excited, sparkling eyes, open mouth, looking at blueprint",
-    "panic": "flustered, sweatdrop, soot on face, wavy mouth",
     "exasperated": "exasperated, half-closed eyes, sigh, hands on hips"
    },
    "memo": "C5・仲間。帝都の工房を爆発で追われた猫の獣人の発明家。大口を叩き、よく爆発させ、仲間の世話を母のように焼く。灰色のおかっぱ、ひびの入った丸眼鏡、煤、大きすぎる作業着、針と糸"
@@ -2175,9 +1899,7 @@
     "joy": "laughing, closed eyes, open mouth",
     "sorrow": "sad smile, looking at the sea",
     "fun": "mischievous grin, one eye closed",
-    "sleepy": "sleepy, drowsy, half-closed eyes, yawning",
     "serious": "serious, sharp eyes, closed mouth, ears pricked",
-    "smitten": "smitten, blush, dreamy eyes, gentle smile",
     "faint_smile": "slight smile, soft eyes, closed mouth"
    },
    "memo": "C5・仲間。島の都の桟橋の釣り好きの狐の獣人の老人。爺と呼ばせる昼行灯。抜けば誰も届かない。白い髷、色あせた着物、歯形の残った鞘、釣り竿"
@@ -2190,16 +1912,7 @@
    "identity": "1girl, adult, young woman, 24 years old, athletic, tan skin, freckles, cream blonde hair, pale blonde hair, long hair, high ponytail, amber eyes, round eyes, bandage on cheek, patched leather armor, brown scarf, worn boots, spear",
    "tags": "holding a spear, pointing finger, proud pose",
    "face": "proud grin, confident",
-   "variants": {
-    "joy": "big smile, closed eyes",
-    "anger": "pout, flustered, angry",
-    "sorrow": "teary eyes, biting lip",
-    "fun": "laughing, wink, thumbs up",
-    "smug": "smug, chest out, smirk",
-    "shy": "embarrassed, heavy blush, looking away",
-    "panic": "panicking, flustered, sweatdrop",
-    "serious": "serious, determined, focused eyes, gripping spear"
-   },
+   "variants": {},
    "memo": "C5・仲間。麦の都の先輩冒険者。教えることは間違っているが槍は本物。ウブで貧乏。淡い金の高いポニーテール、そばかす、つぎはぎの革鎧"
   },
   {
@@ -2213,12 +1926,7 @@
    "face": "blank stare, absent-minded",
    "variants": {
     "joy": "small gentle smile, looking away",
-    "anger": "cold stare, narrowed eyes",
-    "sorrow": "sad eyes, looking down, holding a letter",
     "fun": "slight smirk, head tilt",
-    "sleepy": "sleepy, drowsy, half-closed eyes, blank stare",
-    "faint_smile": "slight smile, soft eyes, closed mouth",
-    "surprise": "mildly surprised, slightly widened eyes, slow reaction",
     "cold": "cold eyes, narrowed eyes, expressionless"
    },
    "memo": "C5・仲間。迷いの森の木の上で暮らすエルフの弓手（九十二歳）。ぼんやりして三拍遅れて返事をする。兄への届かない手紙。深緑の長い三つ編み、深緑の外套、長弓、光る札"
@@ -2236,10 +1944,7 @@
     "joy": "gentle smile, relieved",
     "anger": "stern, frown, adjusting glasses",
     "sorrow": "sad, looking down, holding folded paper",
-    "fun": "flustered, blush, looking away",
-    "shy": "embarrassed, blush, looking away, pushing up glasses",
     "panic": "flustered, sweatdrop, wavy mouth, clutching ledger",
-    "serious": "serious, focused eyes, closed mouth, adjusting glasses",
     "tired": "tired, exhausted, eye bags, half-closed eyes"
    },
    "memo": "C5・仲間。麦の都の取引所の書記。帝国の補給の兵あがり。真面目な堅物で退き方が上手い。整えた茶髪、四角い眼鏡、灰青の制服、分厚い帳面"
@@ -2255,10 +1960,6 @@
    "face": "sly grin",
    "memo": "C5・宿敵。ヴァレンツァの冒険者の一団の頭。横取りと罠の男。団員の葬式には最高の棺。くすんだ金の長髪を束ね、口ひげ、つば広の帽子、からし色の外套",
    "variants": {
-    "joy": "big grin, laughing",
-    "anger": "angry, shouting, frown",
-    "sorrow": "crying loudly, tears, open mouth",
-    "fun": "mischievous grin, wink",
     "smug": "smug, smirk, tipping hat",
     "wicked": "sinister grin, narrowed eyes, shaded face",
     "panic": "panicking, sweatdrop, wavy mouth",
@@ -2278,7 +1979,6 @@
     "joy": "faint relieved smile, soft eyes",
     "anger": "angry, frown, glaring",
     "sorrow": "sad, downcast eyes, biting lip, gloomy",
-    "fun": "small laugh, hand over mouth",
     "serious": "serious, determined, focused eyes",
     "troubled": "troubled, worried eyebrows, lost expression",
     "shy": "embarrassed, blush, looking away",
@@ -2299,10 +1999,8 @@
     "joy": "warm smile, closed eyes",
     "anger": "polite smile, cold eyes",
     "sorrow": "quiet sad smile, looking down",
-    "fun": "silent laughter, shoulders shaking, closed eyes",
     "smug": "pleased smirk, raised eyebrow",
-    "cold": "cold eyes, narrowed eyes, expressionless",
-    "faint_smile": "slight smile, soft eyes, closed mouth"
+    "cold": "cold eyes, narrowed eyes, expressionless"
    }
   },
   {
@@ -2320,7 +2018,6 @@
     "sorrow": "sad, teary eyes, looking up",
     "fun": "innocent smile, head tilt",
     "wicked": "eerie serene smile, empty eyes",
-    "smitten": "smitten, dreamy eyes, blush, looking up",
     "cry": "crying, tears, clasped hands",
     "cold": "cold eyes, expressionless"
    }
@@ -2335,9 +2032,7 @@
    "face": "troubled smile",
    "memo": "C5・眷属（香の姐さんの）。港の香売り。親身で面倒見がいいが不運。歳をとらない。紫の髪をまとめた布、目の下の隈、煙の柄の着物、香炉",
    "variants": {
-    "joy": "happy gentle smile, closed eyes",
     "anger": "scolding, frown, hands on hips",
-    "sorrow": "sad smile, teary eyes, looking away",
     "fun": "laughing softly, hand over mouth",
     "troubled": "troubled, worried eyebrows, awkward smile, sweatdrop",
     "tired": "tired, dark circles, half-closed eyes",
@@ -2378,7 +2073,6 @@
    "variants": {
     "joy": "lazy grin, half-closed eyes",
     "anger": "angry, sharp eyes, frown, low voice",
-    "sorrow": "sad, looking away, chewing leaf",
     "fun": "smirk, one eye closed",
     "sleepy": "sleepy, drowsy, yawning",
     "serious": "serious, sharp eyes, closed mouth",
@@ -2397,7 +2091,6 @@
    "memo": "C5・町。島の都の両替屋「露屋」の女主人。はんなりした商人言葉、算盤は島一番なのにお人好しで貸し倒れだらけ。泳げないのに飛び込む。明るい茶色の横の三つ編み、かんざし、銭の柄の濃い紫の着物、算盤",
    "variants": {
     "joy": "bright smile, closed eyes",
-    "anger": "pout, puffed cheeks, frown",
     "sorrow": "sad, teary eyes, looking down",
     "fun": "laughing, hand over mouth",
     "troubled": "troubled, worried eyebrows, awkward smile",
@@ -2418,12 +2111,7 @@
    "variants": {
     "joy": "gentle happy smile, closed eyes",
     "anger": "gentle scolding, frown",
-    "sorrow": "sad smile, teary eyes",
-    "fun": "soft laugh, hand over mouth",
-    "troubled": "troubled, worried eyebrows, small sigh",
-    "panic": "flustered, sweatdrop, wavy mouth",
-    "faint_smile": "slight smile, soft eyes",
-    "tired": "tired, half-closed eyes, small sigh"
+    "panic": "flustered, sweatdrop, wavy mouth"
    }
   },
   {
@@ -2437,10 +2125,6 @@
    "face": "playful grin",
    "memo": "C5・町。先帝の弟の子の道楽者の興行主。賭けに負けて上着を質に入れる。番組の組み方で死人を出さない。赤毛の短い巻き毛、そばかす、上着無しの白いシャツと青いチョッキ",
    "variants": {
-    "joy": "big grin, laughing, closed eyes",
-    "anger": "annoyed, frown",
-    "sorrow": "sad, looking away, forced smile",
-    "fun": "playful grin, wink",
     "smug": "smug, smirk, raised eyebrow",
     "serious": "serious, focused eyes, closed mouth",
     "panic": "panicking, sweatdrop",
