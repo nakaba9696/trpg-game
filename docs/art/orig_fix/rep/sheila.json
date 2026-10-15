@@ -4,21 +4,21 @@
   "why": [],
   "M": [
    1.0,
-   -0.001,
-   0.472,
-   0.001,
+   0.0,
+   0.0,
+   0.0,
    1.0,
-   -0.588
+   0.0
   ],
-  "misfit": 0.183,
+  "misfit": 0.077,
   "seam": 0,
-  "diff": 0.053,
+  "diff": 0.057,
   "iris_de": [
-   1.4
+   4.1
   ],
-  "region_px": 4632,
-  "eye_shift": 0.01,
-  "lost": 0,
+  "region_px": 6224,
+  "eye_shift": 0.14,
+  "lost": 10,
   "skin_shift": [
    0,
    0,
@@ -32,28 +32,57 @@
   ]
  },
  "sheila_anger": {
-  "skip": "持ち主が表情で NG"
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   1.0,
+   0.0,
+   1.0,
+   -2.0
+  ],
+  "misfit": 0.106,
+  "seam": 0,
+  "diff": 0.097,
+  "iris_de": [
+   1.7
+  ],
+  "region_px": 6140,
+  "eye_shift": 0.23,
+  "lost": 17,
+  "skin_shift": [
+   -3,
+   -2,
+   -5
+  ],
+  "rimfit": null,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
  },
  "sheila_sorrow": {
   "ok": true,
   "why": [],
   "M": [
    1.0,
-   -0.003,
-   0.679,
-   0.003,
+   0.0,
    1.0,
-   -0.975
+   0.0,
+   1.0,
+   -1.0
   ],
-  "misfit": 0.079,
+  "misfit": 0.085,
   "seam": 0,
-  "diff": 0.06,
+  "diff": 0.086,
   "iris_de": [
-   0.8
+   1.0
   ],
-  "region_px": 4642,
-  "eye_shift": 0.01,
-  "lost": 6,
+  "region_px": 6403,
+  "eye_shift": 0.1,
+  "lost": 5,
   "skin_shift": [
    0,
    0,
@@ -77,15 +106,15 @@
    1.0,
    0.0
   ],
-  "misfit": 0.134,
+  "misfit": 0.086,
   "seam": 0,
-  "diff": 0.071,
+  "diff": 0.069,
   "iris_de": [
    4.9
   ],
-  "region_px": 4649,
+  "region_px": 6558,
   "eye_shift": 0.05,
-  "lost": 7,
+  "lost": 3,
   "skin_shift": [
    0,
    0,

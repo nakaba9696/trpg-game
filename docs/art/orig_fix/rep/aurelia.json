@@ -10,13 +10,13 @@
    1.0,
    0.0
   ],
-  "misfit": 0.021,
+  "misfit": 0.025,
   "seam": 0,
-  "diff": 0.076,
+  "diff": 0.065,
   "iris_de": [],
-  "region_px": 5669,
+  "region_px": 6022,
   "eye_shift": 0.0,
-  "lost": 6,
+  "lost": 0,
   "skin_shift": [
    0,
    0,
@@ -40,16 +40,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.008,
+  "misfit": 0.016,
   "seam": 0,
-  "diff": 0.074,
+  "diff": 0.061,
   "iris_de": [
    1.7,
-   1.7
+   1.6
   ],
-  "region_px": 5818,
+  "region_px": 5743,
   "eye_shift": 0.2,
-  "lost": 3,
+  "lost": 0,
   "skin_shift": [
    0,
    0,
@@ -73,16 +73,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.009,
+  "misfit": 0.011,
   "seam": 0,
-  "diff": 0.059,
+  "diff": 0.049,
   "iris_de": [
-   2.0,
-   1.6
+   1.8,
+   1.5
   ],
-  "region_px": 5613,
+  "region_px": 5601,
   "eye_shift": 0.26,
-  "lost": 2,
+  "lost": 0,
   "skin_shift": [
    0,
    0,
@@ -106,16 +106,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.026,
+  "misfit": 0.022,
   "seam": 0,
-  "diff": 0.06,
+  "diff": 0.05,
   "iris_de": [
-   1.6,
+   1.7,
    2.4
   ],
-  "region_px": 5583,
+  "region_px": 5830,
   "eye_shift": 0.14,
-  "lost": 6,
+  "lost": 0,
   "skin_shift": [
    0,
    0,
@@ -139,16 +139,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.039,
+  "misfit": 0.035,
   "seam": 0,
-  "diff": 0.075,
+  "diff": 0.059,
   "iris_de": [
    1.1,
-   3.4
+   3.5
   ],
-  "region_px": 5745,
+  "region_px": 5928,
   "eye_shift": 0.27,
-  "lost": 4,
+  "lost": 0,
   "skin_shift": [
    0,
    0,
@@ -172,16 +172,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.029,
+  "misfit": 0.026,
   "seam": 0,
-  "diff": 0.068,
+  "diff": 0.056,
   "iris_de": [
-   2.6,
-   2.6
+   2.5,
+   2.5
   ],
-  "region_px": 5817,
+  "region_px": 5994,
   "eye_shift": 0.19,
-  "lost": 6,
+  "lost": 0,
   "skin_shift": [
    0,
    0,
@@ -205,16 +205,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.037,
-  "seam": 0,
-  "diff": 0.078,
+  "misfit": 0.03,
+  "seam": 1,
+  "diff": 0.065,
   "iris_de": [
    2.0,
    0.4
   ],
-  "region_px": 5815,
+  "region_px": 6050,
   "eye_shift": 0.42,
-  "lost": 5,
+  "lost": 0,
   "skin_shift": [
    0,
    0,

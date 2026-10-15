@@ -156,150 +156,25 @@
 "orig": 23076,
 "gapPx": 665
 },
-"portraits/alicia_anger": {
-"bytes": 28678,
-"orig": 25152,
-"gapPx": 656
-},
-"portraits/alicia_cold": {
-"bytes": 28420,
-"orig": 24970,
-"gapPx": 646
-},
-"portraits/alicia_faint_smile": {
-"bytes": 28562,
-"orig": 25036,
-"gapPx": 656
-},
-"portraits/alicia_fun": {
-"bytes": 28740,
-"orig": 25158,
-"gapPx": 793
-},
-"portraits/alicia_joy": {
-"bytes": 25922,
-"orig": 25010,
-"gapPx": 793
-},
-"portraits/alicia_smug": {
-"bytes": 29002,
-"orig": 25274,
-"gapPx": 789
-},
-"portraits/alicia_sorrow": {
-"bytes": 28740,
-"orig": 25238,
-"gapPx": 655
-},
-"portraits/baudouin": {
-"bytes": 28770,
-"orig": 27156,
-"gapPx": 400
-},
-"portraits/baudouin_anger": {
-"bytes": 31174,
-"orig": 30124,
-"gapPx": 562
-},
-"portraits/baudouin_exasperated": {
-"bytes": 31046,
-"orig": 30132,
-"gapPx": 458
-},
-"portraits/baudouin_faint_smile": {
-"bytes": 30774,
-"orig": 29986,
-"gapPx": 459
-},
-"portraits/baudouin_fun": {
-"bytes": 31022,
-"orig": 30216,
-"gapPx": 513
-},
-"portraits/baudouin_joy": {
-"bytes": 31162,
-"orig": 30156,
-"gapPx": 504
-},
-"portraits/baudouin_serious": {
-"bytes": 30962,
-"orig": 30020,
-"gapPx": 553
-},
-"portraits/baudouin_sorrow": {
-"bytes": 30956,
-"orig": 30022,
-"gapPx": 464
-},
 "portraits/berangere": {
 "bytes": 37578,
 "orig": 38306,
 "gapPx": 760
-},
-"portraits/berangere_fun": {
-"bytes": 41144,
-"orig": 43504,
-"gapPx": 774
-},
-"portraits/berangere_joy": {
-"bytes": 39794,
-"orig": 42240,
-"gapPx": 783
-},
-"portraits/berangere_pout": {
-"bytes": 41120,
-"orig": 43652,
-"gapPx": 777
-},
-"portraits/berangere_shy": {
-"bytes": 41694,
-"orig": 43810,
-"gapPx": 772
-},
-"portraits/berangere_smug": {
-"bytes": 40818,
-"orig": 43328,
-"gapPx": 779
-},
-"portraits/berangere_sorrow": {
-"bytes": 40858,
-"orig": 43472,
-"gapPx": 777
 },
 "portraits/bruno_anger": {
 "bytes": 45444,
 "orig": 52540,
 "gapPx": 76
 },
-"portraits/bruno_cry": {
-"bytes": 45560,
-"orig": 52958,
-"gapPx": 78
-},
 "portraits/bruno_fear": {
 "bytes": 45814,
 "orig": 52800,
-"gapPx": 78
-},
-"portraits/bruno_fun": {
-"bytes": 45270,
-"orig": 52402,
 "gapPx": 78
 },
 "portraits/bruno_joy": {
 "bytes": 45684,
 "orig": 52510,
 "gapPx": 76
-},
-"portraits/bruno_panic": {
-"bytes": 45582,
-"orig": 52470,
-"gapPx": 78
-},
-"portraits/bruno_serious": {
-"bytes": 45708,
-"orig": 52402,
-"gapPx": 78
 },
 "portraits/captain": {
 "bytes": 46700,
@@ -316,60 +191,15 @@
 "orig": 37882,
 "gapPx": 57
 },
-"portraits/dario_anger": {
-"bytes": 39806,
-"orig": 41224,
-"gapPx": 60
-},
-"portraits/dario_faint_smile": {
-"bytes": 39676,
-"orig": 41416,
-"gapPx": 111
-},
-"portraits/dario_fun": {
-"bytes": 39676,
-"orig": 41224,
-"gapPx": 61
-},
-"portraits/dario_serious": {
-"bytes": 39498,
-"orig": 41280,
-"gapPx": 110
-},
-"portraits/dario_surprise": {
-"bytes": 39990,
-"orig": 41210,
-"gapPx": 112
-},
-"portraits/filie_faint_smile": {
-"bytes": 21946,
-"orig": 21204,
-"gapPx": 77
-},
 "portraits/filie_fun": {
 "bytes": 22200,
 "orig": 21464,
 "gapPx": 78
 },
-"portraits/gramont_cold": {
-"bytes": 24194,
-"orig": 26094,
-"gapPx": 7
-},
-"portraits/gramont_serious": {
-"bytes": 24230,
-"orig": 26028,
-"gapPx": 12
-},
 "portraits/gustav_anger": {
 "bytes": 35168,
 "orig": 33516,
 "gapPx": 19
-},
-"portraits/gustav_fun": {
-"bytes": 34962,
-"orig": 33432,
-"gapPx": 16
 },
 "portraits/hans": {
 "bytes": 24426,
@@ -460,16 +290,6 @@
 "bytes": 40092,
 "orig": 41724,
 "gapPx": 1193
-},
-"portraits/zerina_fun": {
-"bytes": 39276,
-"orig": 41436,
-"gapPx": 1185
-},
-"portraits/zerina_joy": {
-"bytes": 39272,
-"orig": 41342,
-"gapPx": 1284
 },
 "portraits/zerina_smug": {
 "bytes": 38956,

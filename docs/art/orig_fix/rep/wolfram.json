@@ -10,13 +10,13 @@
    1.0,
    0.0
   ],
-  "misfit": 0.05,
-  "seam": 3,
-  "diff": 0.15,
+  "misfit": 0.089,
+  "seam": 0,
+  "diff": 0.182,
   "iris_de": [],
-  "region_px": 5151,
+  "region_px": 7390,
   "eye_shift": 0.0,
-  "lost": 13,
+  "lost": 2,
   "skin_shift": [
    -2,
    -2,
@@ -40,15 +40,15 @@
    1.0,
    0.0
   ],
-  "misfit": 0.053,
-  "seam": 0,
-  "diff": 0.096,
+  "misfit": 0.11,
+  "seam": 16,
+  "diff": 0.129,
   "iris_de": [
-   3.3
+   3.2
   ],
-  "region_px": 5059,
+  "region_px": 7503,
   "eye_shift": 0.02,
-  "lost": 17,
+  "lost": 1,
   "skin_shift": [
    -2,
    -2,
@@ -72,16 +72,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.058,
+  "misfit": 0.104,
   "seam": 0,
-  "diff": 0.129,
+  "diff": 0.149,
   "iris_de": [
    4.0,
-   4.7
+   5.0
   ],
-  "region_px": 5211,
+  "region_px": 7483,
   "eye_shift": 0.06,
-  "lost": 10,
+  "lost": 1,
   "skin_shift": [
    -2,
    -3,
@@ -105,16 +105,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.04,
+  "misfit": 0.088,
   "seam": 0,
-  "diff": 0.073,
+  "diff": 0.084,
   "iris_de": [
    2.4,
-   4.3
+   3.4
   ],
-  "region_px": 5342,
+  "region_px": 7388,
   "eye_shift": 0.01,
-  "lost": 14,
+  "lost": 3,
   "skin_shift": [
    -2,
    -2,
@@ -138,16 +138,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.048,
+  "misfit": 0.115,
   "seam": 0,
-  "diff": 0.115,
+  "diff": 0.134,
   "iris_de": [
-   3.2,
-   2.5
+   3.7,
+   2.6
   ],
-  "region_px": 5336,
+  "region_px": 7444,
   "eye_shift": 0.02,
-  "lost": 11,
+  "lost": 0,
   "skin_shift": [
    -2,
    -3,
@@ -171,16 +171,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.048,
+  "misfit": 0.122,
   "seam": 0,
-  "diff": 0.126,
+  "diff": 0.15,
   "iris_de": [
    1.8,
    3.7
   ],
-  "region_px": 5199,
+  "region_px": 7373,
   "eye_shift": 0.02,
-  "lost": 10,
+  "lost": 2,
   "skin_shift": [
    -2,
    -3,
@@ -204,16 +204,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.038,
+  "misfit": 0.085,
   "seam": 0,
-  "diff": 0.083,
+  "diff": 0.099,
   "iris_de": [
-   3.2,
-   2.9
+   3.1,
+   1.9
   ],
-  "region_px": 5313,
+  "region_px": 7441,
   "eye_shift": 0.01,
-  "lost": 16,
+  "lost": 4,
   "skin_shift": [
    -2,
    -2,
@@ -237,16 +237,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.05,
-  "seam": 1,
-  "diff": 0.136,
+  "misfit": 0.101,
+  "seam": 0,
+  "diff": 0.158,
   "iris_de": [
    2.9,
-   3.6
+   5.1
   ],
-  "region_px": 5149,
+  "region_px": 7394,
   "eye_shift": 0.18,
-  "lost": 17,
+  "lost": 0,
   "skin_shift": [
    -2,
    -3,

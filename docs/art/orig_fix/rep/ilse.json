@@ -1,37 +1,70 @@
 {
  "ilse_joy": {
-  "skip": "持ち主が表情で NG"
- },
- "ilse_anger": {
   "ok": true,
   "why": [],
   "M": [
    1.0,
-   -0.004,
-   0.659,
-   0.004,
+   0.0,
+   0.0,
+   0.0,
    1.0,
-   -1.112
+   -1.0
   ],
-  "misfit": 0.02,
-  "seam": 0,
-  "diff": 0.066,
+  "misfit": 0.052,
+  "seam": 1,
+  "diff": 0.071,
   "iris_de": [
-   1.5
+   2.6,
+   5.6
   ],
-  "region_px": 4261,
-  "eye_shift": 0.01,
+  "region_px": 5031,
+  "eye_shift": 0.14,
   "lost": 0,
   "skin_shift": [
-   -4,
-   -2,
-   -2
+   -5,
+   -5,
+   -6
   ],
-  "rimfit": 0.73,
+  "rimfit": 0.86,
   "eyes": [
    2,
-   1,
+   2,
    2
+  ]
+ },
+ "ilse_anger": {
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.42）"
+  ],
+  "M": [
+   1.0,
+   0.0,
+   1.0,
+   0.0,
+   1.0,
+   -1.0
+  ],
+  "misfit": 0.096,
+  "seam": 1,
+  "diff": 0.078,
+  "iris_de": [
+   1.8,
+   6.4
+  ],
+  "region_px": 5019,
+  "eye_shift": 0.42,
+  "lost": 0,
+  "skin_shift": [
+   -5,
+   -3,
+   -3
+  ],
+  "rimfit": 0.63,
+  "eyes": [
+   2,
+   2,
+   1
   ]
  },
  "ilse_sorrow": {
@@ -45,14 +78,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.043,
+  "misfit": 0.066,
   "seam": 0,
-  "diff": 0.057,
+  "diff": 0.051,
   "iris_de": [
-   2.5,
-   2.5
+   2.4,
+   3.5
   ],
-  "region_px": 4440,
+  "region_px": 4852,
   "eye_shift": 0.17,
   "lost": 0,
   "skin_shift": [
@@ -64,40 +97,42 @@
   "eyes": [
    2,
    2,
-   1
+   2
   ]
  },
  "ilse_fun": {
-  "ok": true,
-  "why": [],
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.24）"
+  ],
   "M": [
    1.0,
-   -0.007,
-   0.911,
-   0.007,
+   0.0,
    1.0,
-   -1.613
+   0.0,
+   1.0,
+   -2.0
   ],
-  "misfit": 0.008,
+  "misfit": 0.141,
   "seam": 0,
-  "diff": 0.057,
+  "diff": 0.079,
   "iris_de": [
-   2.3,
-   4.3
+   2.0,
+   2.1
   ],
-  "region_px": 4346,
-  "eye_shift": 0.05,
-  "lost": 2,
+  "region_px": 5203,
+  "eye_shift": 0.24,
+  "lost": 0,
   "skin_shift": [
    -5,
    -4,
-   -5
+   -6
   ],
-  "rimfit": 0.92,
+  "rimfit": 0.74,
   "eyes": [
    2,
    2,
-   2
+   1
   ]
  }
 }

@@ -10,16 +10,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.055,
-  "seam": 2,
-  "diff": 0.1,
+  "misfit": 0.037,
+  "seam": 0,
+  "diff": 0.093,
   "iris_de": [
    4.0,
    5.3
   ],
-  "region_px": 9324,
+  "region_px": 10414,
   "eye_shift": 0.04,
-  "lost": 42,
+  "lost": 44,
   "skin_shift": [
    0,
    0,
@@ -43,16 +43,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.031,
-  "seam": 3,
-  "diff": 0.081,
+  "misfit": 0.023,
+  "seam": 1,
+  "diff": 0.073,
   "iris_de": [
    5.4,
-   4.4
+   4.0
   ],
-  "region_px": 9357,
+  "region_px": 10500,
   "eye_shift": 0.08,
-  "lost": 39,
+  "lost": 38,
   "skin_shift": [
    0,
    0,
@@ -76,16 +76,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.037,
-  "seam": 1,
-  "diff": 0.099,
+  "misfit": 0.035,
+  "seam": 0,
+  "diff": 0.092,
   "iris_de": [
    1.4,
    3.3
   ],
-  "region_px": 9386,
+  "region_px": 10560,
   "eye_shift": 0.06,
-  "lost": 35,
+  "lost": 37,
   "skin_shift": [
    0,
    0,
@@ -109,16 +109,46 @@
    1.0,
    0.0
   ],
-  "misfit": 0.033,
+  "misfit": 0.107,
   "seam": 3,
-  "diff": 0.087,
-  "iris_de": [
-   1.7,
-   3.5
+  "diff": 0.126,
+  "iris_de": [],
+  "region_px": 11648,
+  "eye_shift": 0.0,
+  "lost": 108,
+  "skin_shift": [
+   0,
+   0,
+   0
   ],
-  "region_px": 9282,
+  "rimfit": null,
+  "eyes": [
+   2,
+   0,
+   0
+  ]
+ },
+ "lumia_sleepy": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.015,
+  "seam": 0,
+  "diff": 0.067,
+  "iris_de": [
+   5.3,
+   4.2
+  ],
+  "region_px": 10850,
   "eye_shift": 0.06,
-  "lost": 32,
+  "lost": 41,
   "skin_shift": [
    0,
    0,
@@ -129,41 +159,6 @@
    2,
    2,
    2
-  ]
- },
- "lumia_sleepy": {
-  "ok": false,
-  "why": [
-   "目が 3 つ"
-  ],
-  "M": [
-   1.0,
-   0.0,
-   0.0,
-   0.0,
-   1.0,
-   0.0
-  ],
-  "misfit": 0.022,
-  "seam": 3,
-  "diff": 0.067,
-  "iris_de": [
-   5.3,
-   4.3
-  ],
-  "region_px": 9206,
-  "eye_shift": 0.06,
-  "lost": 42,
-  "skin_shift": [
-   0,
-   0,
-   0
-  ],
-  "rimfit": null,
-  "eyes": [
-   2,
-   2,
-   3
   ]
  },
  "lumia_smug": {
@@ -177,16 +172,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.035,
-  "seam": 4,
-  "diff": 0.08,
+  "misfit": 0.085,
+  "seam": 2,
+  "diff": 0.111,
   "iris_de": [
-   3.6,
+   3.9,
    4.3
   ],
-  "region_px": 9057,
+  "region_px": 11531,
   "eye_shift": 0.02,
-  "lost": 38,
+  "lost": 56,
   "skin_shift": [
    0,
    0,
@@ -200,10 +195,8 @@
   ]
  },
  "lumia_faint_smile": {
-  "ok": false,
-  "why": [
-   "目が 3 つ"
-  ],
+  "ok": true,
+  "why": [],
   "M": [
    1.0,
    0.0,
@@ -212,14 +205,14 @@
    1.0,
    0.0
   ],
-  "misfit": 0.029,
-  "seam": 1,
-  "diff": 0.098,
+  "misfit": 0.016,
+  "seam": 0,
+  "diff": 0.094,
   "iris_de": [
    1.7,
    4.0
   ],
-  "region_px": 9364,
+  "region_px": 10476,
   "eye_shift": 0.01,
   "lost": 44,
   "skin_shift": [
@@ -231,7 +224,7 @@
   "eyes": [
    2,
    2,
-   3
+   2
   ]
  },
  "lumia_pout": {
@@ -247,16 +240,16 @@
    1.0,
    0.0
   ],
-  "misfit": 0.034,
-  "seam": 3,
-  "diff": 0.117,
+  "misfit": 0.023,
+  "seam": 1,
+  "diff": 0.116,
   "iris_de": [
    1.5,
    5.5
   ],
-  "region_px": 9318,
+  "region_px": 10739,
   "eye_shift": 0.07,
-  "lost": 47,
+  "lost": 38,
   "skin_shift": [
    0,
    0,

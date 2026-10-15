@@ -1,22 +1,24 @@
 {
  "tiria_joy": {
-  "ok": true,
-  "why": [],
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.020）"
+  ],
   "M": [
    1.0,
-   -0.002,
-   0.536,
-   0.002,
+   0.0,
    1.0,
-   -0.543
+   0.0,
+   1.0,
+   -1.0
   ],
-  "misfit": 0.082,
+  "misfit": 0.075,
   "seam": 0,
-  "diff": 0.03,
+  "diff": 0.02,
   "iris_de": [],
-  "region_px": 7200,
+  "region_px": 7970,
   "eye_shift": 0.0,
-  "lost": 4,
+  "lost": 128,
   "skin_shift": [
    0,
    0,
@@ -40,13 +42,13 @@
    1.0,
    0.0
   ],
-  "misfit": 0.06,
-  "seam": 0,
-  "diff": 0.036,
+  "misfit": 0.078,
+  "seam": 1,
+  "diff": 0.027,
   "iris_de": [],
-  "region_px": 7176,
+  "region_px": 8329,
   "eye_shift": 0.0,
-  "lost": 26,
+  "lost": 24,
   "skin_shift": [
    0,
    0,
@@ -70,11 +72,11 @@
    1.0,
    0.0
   ],
-  "misfit": 0.087,
+  "misfit": 0.123,
   "seam": 0,
-  "diff": 0.069,
+  "diff": 0.064,
   "iris_de": [],
-  "region_px": 7568,
+  "region_px": 8047,
   "eye_shift": 0.0,
   "lost": 0,
   "skin_shift": [
@@ -90,23 +92,25 @@
   ]
  },
  "tiria_fun": {
-  "ok": true,
-  "why": [],
+  "ok": false,
+  "why": [
+   "表情の差が残らない（0.022）"
+  ],
   "M": [
    1.0,
-   0.002,
-   -0.612,
-   -0.002,
+   0.0,
+   -1.0,
+   0.0,
    1.0,
-   0.373
+   0.0
   ],
-  "misfit": 0.088,
+  "misfit": 0.06,
   "seam": 0,
-  "diff": 0.03,
+  "diff": 0.022,
   "iris_de": [],
-  "region_px": 7168,
+  "region_px": 7894,
   "eye_shift": 0.0,
-  "lost": 5,
+  "lost": 76,
   "skin_shift": [
    0,
    0,

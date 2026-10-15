@@ -8,21 +8,21 @@
    0.0,
    0.0,
    1.0,
-   0.0
+   -1.0
   ],
-  "misfit": 0.012,
+  "misfit": 0.053,
   "seam": 0,
-  "diff": 0.089,
+  "diff": 0.12,
   "iris_de": [],
-  "region_px": 2117,
+  "region_px": 3285,
   "eye_shift": 0.0,
-  "lost": 24,
+  "lost": 29,
   "skin_shift": [
-   2,
+   1,
    5,
    1
   ],
-  "rimfit": 0.93,
+  "rimfit": 0.8,
   "eyes": [
    1,
    0,
@@ -35,26 +35,26 @@
   "M": [
    1.0,
    0.0,
-   0.0,
+   1.0,
    0.0,
    1.0,
-   0.0
+   -1.0
   ],
-  "misfit": 0.01,
-  "seam": 0,
-  "diff": 0.093,
+  "misfit": 0.047,
+  "seam": 1,
+  "diff": 0.139,
   "iris_de": [
-   3.6
+   2.4
   ],
-  "region_px": 2201,
-  "eye_shift": 0.07,
-  "lost": 27,
+  "region_px": 3273,
+  "eye_shift": 0.08,
+  "lost": 6,
   "skin_shift": [
    2,
    5,
    1
   ],
-  "rimfit": 0.87,
+  "rimfit": 0.77,
   "eyes": [
    1,
    1,
@@ -62,31 +62,33 @@
   ]
  },
  "chezar_sorrow": {
-  "ok": true,
-  "why": [],
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.24）"
+  ],
   "M": [
    1.0,
    0.0,
-   0.0,
+   1.0,
    0.0,
    1.0,
-   0.0
+   -1.0
   ],
-  "misfit": 0.032,
-  "seam": 0,
-  "diff": 0.104,
+  "misfit": 0.05,
+  "seam": 1,
+  "diff": 0.147,
   "iris_de": [
-   2.9
+   3.3
   ],
-  "region_px": 2160,
-  "eye_shift": 0.08,
-  "lost": 24,
+  "region_px": 3291,
+  "eye_shift": 0.24,
+  "lost": 9,
   "skin_shift": [
    3,
    5,
    0
   ],
-  "rimfit": 0.98,
+  "rimfit": 0.86,
   "eyes": [
    1,
    1,
@@ -98,27 +100,27 @@
   "why": [],
   "M": [
    1.0,
-   -0.002,
-   0.207,
-   0.002,
+   0.0,
    1.0,
-   -0.537
+   0.0,
+   1.0,
+   -1.0
   ],
-  "misfit": 0.035,
+  "misfit": 0.06,
   "seam": 0,
-  "diff": 0.16,
+  "diff": 0.216,
   "iris_de": [
-   3.8
+   4.8
   ],
-  "region_px": 2205,
-  "eye_shift": 0.1,
-  "lost": 24,
+  "region_px": 3422,
+  "eye_shift": 0.11,
+  "lost": 10,
   "skin_shift": [
-   2,
+   1,
    6,
    2
   ],
-  "rimfit": 0.98,
+  "rimfit": 0.84,
   "eyes": [
    1,
    1,
@@ -134,23 +136,23 @@
    0.0,
    0.0,
    1.0,
-   0.0
+   -1.0
   ],
-  "misfit": 0.019,
+  "misfit": 0.046,
   "seam": 0,
-  "diff": 0.105,
+  "diff": 0.137,
   "iris_de": [
-   3.3
+   5.5
   ],
-  "region_px": 2155,
-  "eye_shift": 0.02,
-  "lost": 27,
+  "region_px": 3378,
+  "eye_shift": 0.15,
+  "lost": 29,
   "skin_shift": [
-   3,
-   4,
+   2,
+   5,
    1
   ],
-  "rimfit": 0.95,
+  "rimfit": 0.82,
   "eyes": [
    1,
    1,
@@ -166,23 +168,23 @@
    0.0,
    0.0,
    1.0,
-   0.0
+   -1.0
   ],
-  "misfit": 0.021,
+  "misfit": 0.056,
   "seam": 0,
-  "diff": 0.095,
+  "diff": 0.124,
   "iris_de": [
-   2.1
+   2.5
   ],
-  "region_px": 2144,
-  "eye_shift": 0.01,
-  "lost": 26,
+  "region_px": 3256,
+  "eye_shift": 0.17,
+  "lost": 29,
   "skin_shift": [
-   3,
-   4,
+   2,
+   5,
    0
   ],
-  "rimfit": 0.97,
+  "rimfit": 0.84,
   "eyes": [
    1,
    1,
@@ -190,31 +192,33 @@
   ]
  },
  "chezar_wicked": {
-  "ok": true,
-  "why": [],
+  "ok": false,
+  "why": [
+   "目の位置がずれる（0.21）"
+  ],
   "M": [
    1.0,
    0.0,
    0.0,
    0.0,
    1.0,
-   0.0
+   -1.0
   ],
-  "misfit": 0.01,
+  "misfit": 0.042,
   "seam": 0,
-  "diff": 0.103,
+  "diff": 0.126,
   "iris_de": [
-   3.6
+   1.8
   ],
-  "region_px": 2164,
-  "eye_shift": 0.02,
-  "lost": 24,
+  "region_px": 3358,
+  "eye_shift": 0.21,
+  "lost": 33,
   "skin_shift": [
-   2,
+   1,
    5,
    1
   ],
-  "rimfit": 0.96,
+  "rimfit": 0.83,
   "eyes": [
    1,
    1,

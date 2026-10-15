@@ -22,7 +22,16 @@ F = json.load(open(os.path.join(HERE, "faces.json"))); MANUAL = {"barnabe": [195
 EXT = json.load(open(os.path.join(HERE, "ext.json"), encoding="utf-8"))
 HT = {"constance": 14, "margot": 55}
 PJ = {p["id"]: p for p in json.load(open(WT + "docs/art/portraits.json", encoding="utf-8"))["portraits"]}
-NG_OWNER = {"sheila_anger", "ilse_joy", "elnea_joy", "zerina_joy", "zerina_fun"}
+NG_OWNER = {"elnea_joy", "zerina_joy", "zerina_fun", "nora_shy", "bruno_fun", "bruno_shy", "bruno_serious", "bruno_cry", "bruno_panic"}   # 持ち主が作らないと決めた物（barnabe は全部）
+BASEFIX = os.environ.get("BASEFIX", os.path.join(HERE, "basefix"))   # 直した基本の絵（あればこちらを使う）
+FILLD = {"adele": "fill", "selevan": "fill", "constance": "fillrgb"}   # 差分の顔の中の透けた所も埋める人
+REGEN = os.environ.get("REGEN", os.path.join(HERE, "regen"))   # 作り直した差分（あればこちらを使う）
+NOCHEEK = {"felix_fun", "sieglinde"}
+MOUSTACHE = set()   # 基本の口ひげ（白っぽい灰色）を守る   # 頬は基本のまま（差分の頬の赤み・線が汚れに見える物）
+IRISBASE = {"mirlene"}
+IRISGRAY = {"selevan"}
+# 人ごとに、差分の画素を使わない所（顔の窓の四角に対する割合の楕円 [x, y, rx, ry]）。差分にだけ描かれた傷・毛などで、自動で外せない物
+DROP = {}   # 開いた目の瞳・ハイライトを、基本の目から写す（持ち主「差分と元の絵と目が違う」）
 TH = {"misfit": 2.0, "misfit_frac": 0.35, "seam": 60, "diff": 0.025, "iris_de": 12.0}
 for d in ("portraits", "mask", "rep"): os.makedirs(os.path.join(OUT, d), exist_ok=True)
 
@@ -50,9 +59,11 @@ def align(b, d, roi):
         M = np.eye(2, 3, dtype=np.float32)
     if np.abs(M[:, 2]).max() > 12 or abs(M[0, 1]) > 0.05: M = np.eye(2, 3, dtype=np.float32)   # 大きくずれる答えは信じない
     H, W = b.shape[:2]
-    if np.abs(M[:, 2]).max() < 0.5 and abs(M[0, 1]) < 0.002: return d, np.eye(2, 3, dtype=np.float32)   # ずれ 0.5px 未満は動かさない（ぼけない）
-    w = cv2.warpAffine(d, M, (W, H), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
-    return w, M
+    dx, dy = int(round(float(M[0, 2]))), int(round(float(M[1, 2])))   # 整数の平行移動だけ（画素を混ぜない＝ぼけない）
+    if dx == 0 and dy == 0: return d, np.eye(2, 3, dtype=np.float32)
+    w = np.zeros_like(d); ys, xs = slice(max(0, -dy), H - max(0, dy)), slice(max(0, -dx), W - max(0, dx))
+    w[max(0, dy):H - max(0, -dy) if dy < 0 else H, max(0, dx):W - max(0, -dx) if dx < 0 else W] = d[ys, xs]
+    return w, np.array([[1, 0, dx], [0, 1, dy]], np.float32)
 
 
 def parts(a, box, who, ext):
@@ -128,6 +139,28 @@ def iris_match(b, o, be, de, region):
     return o, res
 
 
+def iris_from_base(b, o, be, de, region):
+    """開いた目：差分の目の開きの中の瞳（白目でない所）に、基本の目の瞳・ハイライトを、目の中心を合わせて写す。まぶたの形（表情）は差分のまま"""
+    o = o.copy()
+    for e in de:
+        cx, cy = (e["box"][0] + e["box"][2]) / 2, (e["box"][1] + e["box"][3]) / 2
+        if not be: break
+        q = min(be, key=lambda t: abs((t["box"][0] + t["box"][2]) / 2 - cx))
+        qx, qy = (q["box"][0] + q["box"][2]) / 2, (q["box"][1] + q["box"][3]) / 2
+        if abs(qx - cx) > (q["box"][2] - q["box"][0]): continue
+        hb = q["box"][3] - q["box"][1]; hd = e["box"][3] - e["box"][1]
+        if hd < 0.45 * hb: continue   # 細めた・閉じた目は写さない
+        dx, dy = int(round(cx - qx)), int(round(cy - qy))
+        mb, _ = iris_sel(b, q["mask"]); mb = ndimage.binary_dilation(mb, iterations=1) & q["mask"]
+        ys, xs = np.where(mb)
+        if len(ys) < 20: continue
+        ty, tx = ys + dy, xs + dx; ok = (ty >= 0) & (ty < o.shape[0]) & (tx >= 0) & (tx < o.shape[1])
+        ty, tx, ys, xs = ty[ok], tx[ok], ys[ok], xs[ok]
+        inside = e["mask"][ty, tx] & region[ty, tx]   # 差分の目の開きの中だけ（まぶたの外には描かない）
+        o[ty[inside], tx[inside], :3] = b[ys[inside], xs[inside], :3]
+    return o
+
+
 def misfit(b, d, region):
     """範囲の境目の帯で、基本の輪郭の線から差分の輪郭の線までの距離（px）。2 より遠い線の割合"""
     ring = ndimage.binary_dilation(region, iterations=4) & ~ndimage.binary_erosion(region, iterations=4)
@@ -141,7 +174,7 @@ def misfit(b, d, region):
 
 def run(i, moods=None):
     box = MANUAL.get(i) or F[f"H:/game/trpg-moods/assets/portraits/{i}.webp"][0]
-    b = load(f"{SRC}{i}.webp"); H, W = b.shape[:2]
+    b = load(f"{BASEFIX}/{i}.webp" if os.path.exists(f"{BASEFIX}/{i}.webp") else f"{SRC}{i}.webp"); H, W = b.shape[:2]
     fwin = facebox_win(i)
     win = [int(fwin[0] * W), int(fwin[1] * H), int((fwin[0] + fwin[2]) * W), int((fwin[1] + fwin[3]) * H)] if fwin else [0, 0, W, H]
     ext = EXT.get(i)
@@ -163,8 +196,12 @@ def run(i, moods=None):
     roi = np.zeros((H, W), bool); roi[win[1]:win[3], win[0]:win[2]] = True
     for m in vs:
         v = f"{i}_{m}"
-        if v in NG_OWNER: rep[v] = {"skip": "持ち主が表情で NG"}; continue
-        d0 = load(f"{SRC}{v}.webp")
+        if v in NG_OWNER or i == "barnabe": rep[v] = {"skip": "持ち主が作らないと決めた"}; continue
+        d0 = load(f"{REGEN}/{v}.webp" if os.path.exists(f"{REGEN}/{v}.webp") else f"{SRC}{v}.webp")
+        if i in FILLD:
+            import basefix as BF
+            fb = F[f"H:/game/trpg-moods/assets/portraits/{i}.webp"][0]; bw, bh = fb[2] - fb[0], fb[3] - fb[1]
+            d0, _ = BF.fill(d0, [fb[0] - 0.1 * bw, fb[1] - 0.1 * bh, fb[2] + 0.1 * bw, fb[3] + 0.25 * bh]) if FILLD[i] == "fill" else BF.fillrgb(d0, fb)
         if d0.shape != b.shape: rep[v] = {"skip": "大きさが違う"}; continue
         d, M = align(b, d0, roi & al_b)
         # 肌の色合いを基本に寄せる（差分だけ肌が明るい・暗いと、範囲の所が浮く）
@@ -202,16 +239,72 @@ def run(i, moods=None):
         eyecore = np.zeros((H, W), bool)
         for e in be + de: eyecore |= ndimage.binary_dilation(e["mask"], iterations=3)
         mcore = ndimage.binary_erosion(mouth, iterations=max(2, int(0.05 * fh)))
-        dark = (c_d.mean(-1) < c_b.mean(-1) - 35) & ~eyecore & ~mcore & ~browb
-        dark = ndimage.binary_dilation(ndimage.binary_opening(dark, iterations=2), iterations=2)
+        # 目の範囲を広げる：目の楕円を広げ、その中に触れる「基本か差分の、肌でない塊」（目そのもの）を丸ごと入れる
+        ez0 = ndimage.binary_dilation(eyes_ell, iterations=max(3, int(0.04 * fh)))
+        def eyeish(cc):
+            Lc = cc.mean(-1); ch = cc.max(-1) - cc.min(-1)
+            hue_far = np.abs(((cc[..., 0] - cc[..., 2]) / np.maximum(ch, 1)) - ((sk[0] - sk[2]) / max(float(sk.max() - sk.min()), 1))) > 0.6
+            return (Lc < sk.mean() - 70) | ((Lc > 215) & (ch < 25) & (np.abs(cc - sk).max(-1) > 20)) | (hue_far & (ch > 30))
+        nonskin_bd = (eyeish(c_b) | eyeish(c_d)) & ~bangs_b & ~ndimage.binary_dilation(bangs_d, iterations=1)
+        lab_e, n_e = ndimage.label(nonskin_bd & ndimage.binary_dilation(ez0, iterations=int(0.05 * fh)))
+        ids_e = np.unique(lab_e[ez0 & nonskin_bd]); ids_e = ids_e[ids_e > 0]
+        eyeblob = np.isin(lab_e, ids_e)
+        eyezone = ndimage.binary_fill_holes(ndimage.binary_dilation(ez0 | eyeblob, iterations=2))   # 目と眉の範囲（目を閉じた差分も、検出に頼らずここ全体）
+        Yb = c_b @ np.array([0.3, 0.59, 0.11]); Yd = c_d @ np.array([0.3, 0.59, 0.11])
+        # 口の芯：口の楕円の真ん中に触れる、差分の暗い線のつながり（口から離れた点・ひびは入らない）
+        mys_, mxs_ = np.where(mouth); mcy, mcx = (mys_.mean(), mxs_.mean()) if len(mys_) else (y0 + 0.72 * fh, (x0 + x1) / 2)
+        mc = ((xx - mcx) / (0.15 * fw)) ** 2 + ((yy - mcy) / (0.08 * fh)) ** 2 <= 1
+        ddark = ((Yb - Yd > 25) | (Yd < 120)) & ndimage.binary_dilation(mouth, iterations=2)
+        lab_d, _ = ndimage.label(ddark); idd = np.unique(lab_d[mc & ddark]); mzone = ndimage.binary_dilation(np.isin(lab_d, idd[idd > 0]) | mc, iterations=2)
+        # 目の芯：目の楕円を少し広げた所と、目の検出の塊（ここから外れる差分の線は、目の範囲の中でも外す）
+        eyecore2 = ndimage.binary_dilation(eyes_ell, iterations=max(2, int(0.025 * fh)))
+        for e in be + de: eyecore2 |= ndimage.binary_dilation(e["mask"], iterations=3)
+        dark = (Yb - Yd > 25) & (c_b[..., 0] - c_d[..., 0] > 22) & ~eyecore2 & ~mzone & ~browb   # 線・汚れ・ばんそうこう（赤みの頬は赤が落ちないので入らない）
+        # 差分にだけある明るい物（ばんそうこう・白い布）：基本で肌、差分で明るく色の薄い所
+        chd = c_d.max(-1) - c_d.min(-1)
+        light = (np.abs(c_b - sk).max(-1) < 45) & (Yd - Yb > 18) & (chd < 45) & ~eyecore2 & ~eyezone & ~(mzone & (Yd < 200))   # 口の中の白（歯）・目の所（閉じた目）は残す
+        light = ndimage.binary_closing(light, iterations=2)
+        lab_l, n_l = ndimage.label(light); sz_l = ndimage.sum(light, lab_l, range(1, n_l + 1))
+        light = np.isin(lab_l, [j + 1 for j in range(n_l) if sz_l[j] >= 25])   # 小さな光の点（目のハイライト・汗）は外さない
+        light = ndimage.binary_dilation(light, iterations=2)
+        dark |= light
+        badd = light   # 口の楕円の中でも外す
+        # 差分にだけある細い線（頬の傷・ひび）：基本で肌、差分でまわりより暗い細い線
+        Yd_bl = ndimage.uniform_filter(Yd, 7)
+        thinline = (np.abs(c_b - sk).max(-1) < 45) & (Yd_bl - Yd > 10) & (Yb - Yd > 12) & ~eyecore2 & ~mzone & ~browb
+        dark |= thinline
+        dark = ndimage.binary_dilation(dark, iterations=2)
         excl |= dark
         # 口の所を、差分と基本の違う所へ広げる（基本の大きく開いた口が外に残らないように）
         grow = ndimage.binary_dilation(mouth, iterations=max(3, int(0.08 * fh))) & (np.abs(c_d - c_b).max(-1) > 45) & (yy > ey_bot)
         lab_, n_ = ndimage.label(grow | mouth); keepids = np.unique(lab_[mouth]); grow = np.isin(lab_, keepids[keepids > 0]) & grow
-        region = (eyes | mouth | cheek | grow) & ~excl & roi
+        # 目の範囲の中は、前髪（両方で前髪）と眼鏡の縁だけを外し、ほかの守る所（目の中の白い点・ハイライトの菱形など）は外さない
+        excl_eye = ((bangs_b | bangs_d) & ~browline) | rims | beard_d | dark   # 目の範囲の中でも、目の芯から外れた差分の線（ばんそうこう等）は外す
+        excl = np.where(eyezone, excl_eye, excl)
+        # 基本の口の残り：基本が暗く差分が肌の所のうち、口のまわりに触れるつながり（大きく開いた口の端まで）
+        bm = ((Yd - Yb > 40) | ((np.abs(c_b - sk).max(-1) > 45) & (np.abs(c_d - c_b).max(-1) > 40) & (np.abs(c_d - sk).max(-1) < 60))) & (yy > ey_bot) & roi & ~eyecore2 & al_b   # 基本の口（線・歯）が差分には無い所
+        lab_m, n_m = ndimage.label(bm); touch = ndimage.binary_dilation(mouth, iterations=4)
+        idm = np.unique(lab_m[touch & bm]); basemouth = np.isin(lab_m, idm[idm > 0])
+        near_m = ndimage.binary_dilation(mouth, iterations=max(6, int(0.15 * fh))) & (yy > ey_bot)
+        basemouth |= near_m & (Yd - Yb > 30) & ~eyecore2 & al_b   # 口のそばの、切れ切れの基本の線（ほうれい線・口の端）
+        basemouth = ndimage.binary_dilation(basemouth, iterations=2)
+        if os.environ.get("DEBUG"):
+            dbg = np.zeros((H, W, 3), np.uint8); dbg[..., 0] = bm * 255; dbg[..., 1] = basemouth * 255; dbg[..., 2] = touch * 255
+            Image.fromarray(dbg).save(f"{OUT}/dbg_{v}.png"); print("ey_bot", ey_bot, "mouth y", mcy)
+        if v in NOCHEEK or i in NOCHEEK: cheek = np.zeros_like(cheek); eyezone = eyezone & eyecore2
+        if i in MOUSTACHE:
+            chb = c_b.max(-1) - c_b.min(-1)
+            must = (chb < 30) & (c_b.mean(-1) > 140) & (c_b.mean(-1) < 240) & ndimage.binary_dilation(mouth, iterations=int(0.06 * fh)) & (yy > ey_bot) & al_b
+            must = ndimage.binary_dilation(ndimage.binary_opening(must, iterations=1), iterations=1)
+            badd = badd | must; excl = excl | must
+        for ex, ey, rx, ry in DROP.get(i, []):
+            fx0, fy0 = win[0], win[1]; fwp, fhp = win[2] - win[0], win[3] - win[1]
+            badd = badd | ((((xx - (fx0 + ex * fwp)) / (rx * fwp)) ** 2 + ((yy - (fy0 + ey * fhp)) / (ry * fhp)) ** 2) <= 1)
+            excl = excl | badd
+        region = (((eyes | eyezone | mouth | cheek | grow) & ~excl) | (basemouth & ~rims & ~beard_d & ~badd)) & roi
         region &= ndimage.binary_erosion(al_b, iterations=3) & ndimage.binary_erosion(d[..., 3] > 250, iterations=3)   # 透過の縁は入れない
         region = ndimage.binary_opening(region, iterations=1)
-        region = ndimage.binary_fill_holes(region) & ~excl
+        region = ndimage.binary_fill_holes(region) & ~(excl & ~(basemouth & ~rims & ~beard_d & ~badd))
         # 3. 重ねる（縁を 3〜6px ぼかす：範囲の内側へ）
         inner = ndimage.binary_erosion(region, iterations=2)
         w = ndimage.gaussian_filter(inner.astype(np.float32), 1.6); w = np.where(region, w, 0)[..., None]
@@ -220,6 +313,11 @@ def run(i, moods=None):
         o = o.round().clip(0, 255).astype(np.uint8); o[..., 3] = b[..., 3]
         # 4. 瞳の色
         o, irisde = iris_match(b, o, be, de, ndimage.binary_erosion(region, iterations=1))
+        if i in IRISBASE: o = iris_from_base(b, o, be, de, region)
+        if i in IRISGRAY:   # 基本の瞳が灰色の人：差分の瞳の色みを抜く（明るさは残す）
+            for e in de:
+                mo = e["mask"] & region & ((o[..., :3].max(-1).astype(int) - o[..., :3].min(-1)) > 12)
+                g = o[..., :3][mo].astype(np.float32) @ np.array([0.3, 0.59, 0.11]); o[mo, :3] = np.clip(g[:, None] * np.array([0.98, 1.0, 1.02]), 0, 255).astype(np.uint8)
         # 6. 点検
         why = []
         mf = misfit(b, d, region)

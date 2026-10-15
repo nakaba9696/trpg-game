@@ -4,49 +4,47 @@
   "why": [],
   "M": [
    1.0,
-   0.002,
-   -0.524,
-   -0.002,
+   0.0,
+   -1.0,
+   0.0,
    1.0,
-   0.506
+   1.0
   ],
-  "misfit": 0.056,
-  "seam": 0,
-  "diff": 0.032,
+  "misfit": 0.085,
+  "seam": 1,
+  "diff": 0.05,
   "iris_de": [],
-  "region_px": 2844,
+  "region_px": 4216,
   "eye_shift": 0.0,
-  "lost": 10,
+  "lost": 21,
   "skin_shift": [
    0,
    0,
    0
   ],
-  "rimfit": 0.97,
+  "rimfit": 0.98,
   "eyes": [
    0,
    1,
-   2
+   1
   ]
  },
  "ingrid_anger": {
-  "ok": false,
-  "why": [
-   "表情の差が残らない（0.017）"
-  ],
+  "ok": true,
+  "why": [],
   "M": [
    1.0,
-   -0.002,
-   0.38,
-   0.002,
+   0.0,
+   0.0,
+   0.0,
    1.0,
-   -0.358
+   0.0
   ],
-  "misfit": 0.015,
+  "misfit": 0.087,
   "seam": 0,
-  "diff": 0.017,
+  "diff": 0.029,
   "iris_de": [],
-  "region_px": 2692,
+  "region_px": 4073,
   "eye_shift": 0.0,
   "lost": 2,
   "skin_shift": [
@@ -58,14 +56,12 @@
   "eyes": [
    0,
    1,
-   1
+   0
   ]
  },
  "ingrid_sorrow": {
-  "ok": false,
-  "why": [
-   "表情の差が残らない（0.023）"
-  ],
+  "ok": true,
+  "why": [],
   "M": [
    1.0,
    0.0,
@@ -74,11 +70,11 @@
    1.0,
    0.0
   ],
-  "misfit": 0.027,
-  "seam": 1,
-  "diff": 0.023,
+  "misfit": 0.053,
+  "seam": 0,
+  "diff": 0.036,
   "iris_de": [],
-  "region_px": 2810,
+  "region_px": 4242,
   "eye_shift": 0.0,
   "lost": 1,
   "skin_shift": [
@@ -90,13 +86,13 @@
   "eyes": [
    0,
    1,
-   2
+   1
   ]
  },
  "ingrid_fun": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.015）"
+   "表情の差が残らない（0.023）"
   ],
   "M": [
    1.0,
@@ -106,11 +102,11 @@
    1.0,
    0.0
   ],
-  "misfit": 0.035,
+  "misfit": 0.096,
   "seam": 0,
-  "diff": 0.015,
+  "diff": 0.023,
   "iris_de": [],
-  "region_px": 2859,
+  "region_px": 4346,
   "eye_shift": 0.0,
   "lost": 10,
   "skin_shift": [
@@ -122,29 +118,59 @@
   "eyes": [
    0,
    1,
-   2
+   0
   ]
  },
  "ingrid_faint_smile": {
   "ok": false,
   "why": [
-   "表情の差が残らない（0.009）"
+   "表情の差が残らない（0.021）"
   ],
   "M": [
    1.0,
-   0.002,
-   -0.809,
-   -0.002,
+   0.0,
+   -1.0,
+   0.0,
    1.0,
-   0.627
+   1.0
   ],
-  "misfit": 0.06,
+  "misfit": 0.047,
   "seam": 0,
-  "diff": 0.009,
+  "diff": 0.021,
   "iris_de": [],
-  "region_px": 2757,
+  "region_px": 4144,
   "eye_shift": 0.0,
-  "lost": 29,
+  "lost": 76,
+  "skin_shift": [
+   0,
+   0,
+   0
+  ],
+  "rimfit": 0.97,
+  "eyes": [
+   0,
+   0,
+   1
+  ]
+ },
+ "ingrid_sparkle": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   -1.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.044,
+  "seam": 2,
+  "diff": 0.043,
+  "iris_de": [],
+  "region_px": 4625,
+  "eye_shift": 0.0,
+  "lost": 40,
   "skin_shift": [
    0,
    0,
@@ -153,47 +179,13 @@
   "rimfit": 0.98,
   "eyes": [
    0,
-   0,
-   2
-  ]
- },
- "ingrid_sparkle": {
-  "ok": false,
-  "why": [
-   "表情の差が残らない（0.023）"
-  ],
-  "M": [
-   1.0,
-   0.002,
-   -0.558,
-   -0.002,
-   1.0,
-   0.433
-  ],
-  "misfit": 0.062,
-  "seam": 1,
-  "diff": 0.023,
-  "iris_de": [],
-  "region_px": 2653,
-  "eye_shift": 0.0,
-  "lost": 0,
-  "skin_shift": [
-   0,
-   0,
-   0
-  ],
-  "rimfit": 0.99,
-  "eyes": [
-   0,
-   1,
+   2,
    2
   ]
  },
  "ingrid_exasperated": {
-  "ok": false,
-  "why": [
-   "表情の差が残らない（0.021）"
-  ],
+  "ok": true,
+  "why": [],
   "M": [
    1.0,
    0.0,
@@ -202,13 +194,13 @@
    1.0,
    0.0
   ],
-  "misfit": 0.025,
+  "misfit": 0.057,
   "seam": 0,
-  "diff": 0.021,
+  "diff": 0.027,
   "iris_de": [],
-  "region_px": 3353,
+  "region_px": 4429,
   "eye_shift": 0.0,
-  "lost": 19,
+  "lost": 18,
   "skin_shift": [
    0,
    0,
@@ -218,14 +210,12 @@
   "eyes": [
    0,
    2,
-   0
+   1
   ]
  },
  "ingrid_pout": {
-  "ok": false,
-  "why": [
-   "表情の差が残らない（0.020）"
-  ],
+  "ok": true,
+  "why": [],
   "M": [
    1.0,
    0.0,
@@ -234,13 +224,13 @@
    1.0,
    0.0
   ],
-  "misfit": 0.034,
-  "seam": 0,
-  "diff": 0.02,
+  "misfit": 0.075,
+  "seam": 1,
+  "diff": 0.031,
   "iris_de": [],
-  "region_px": 3337,
+  "region_px": 4915,
   "eye_shift": 0.0,
-  "lost": 12,
+  "lost": 8,
   "skin_shift": [
    0,
    0,
@@ -250,7 +240,7 @@
   "eyes": [
    0,
    2,
-   1
+   0
   ]
  }
 }

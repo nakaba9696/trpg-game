@@ -10,13 +10,13 @@
    1.0,
    0.0
   ],
-  "misfit": 0.084,
-  "seam": 1,
-  "diff": 0.052,
+  "misfit": 0.057,
+  "seam": 0,
+  "diff": 0.055,
   "iris_de": [],
-  "region_px": 6604,
+  "region_px": 10701,
   "eye_shift": 0.0,
-  "lost": 6,
+  "lost": 1,
   "skin_shift": [
    0,
    -6,
