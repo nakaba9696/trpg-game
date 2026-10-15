@@ -753,7 +753,7 @@
    "name": "砂塵の使徒ドレイゼ",
    "type": "ojisan",
    "file": "assets/portraits/zalve.webp",
-   "identity": "1boy, male focus, adult, man, 45 years old, tall, thin, gaunt, pale tan skin, dark brown hair, slicked back hair, narrow eyes, amber eyes, ringed eyes, silver monocle, monocle chain, thin smile, dark grey frock coat, black waistcoat, white shirt, black necktie, holding red ledger, money changer",
+   "identity": "1boy, male focus, adult, man, 45 years old, tall, thin, gaunt, tan skin, dark brown hair, short hair, slicked back hair, half-closed eyes, amber eyes, ringed eyes, silver monocle, monocle chain, thin smile, dark grey frock coat, black waistcoat, white shirt, black necktie, holding red ledger, money changer",
    "tags": "sand grains spilling from sleeve, small pile of sand at feet",
    "face": "smirk",
    "variants": {
@@ -771,7 +771,7 @@
    "name": "取り立て屋ボルグ",
    "type": "brute",
    "file": "assets/portraits/borg.webp",
-   "identity": "1boy, male focus, adult, man, 40 years old, huge man, black hair, long hair, messy hair, black eyes, round eyes, scar, stubble, missing fingers, ragged clothes",
+   "identity": "1boy, male focus, adult, man, 45 years old, huge man, black hair, long hair, messy hair, black eyes, round eyes, scar, stubble, missing fingers, ragged clothes",
    "tags": "grin, debt collector",
    "memo": "ドレイゼの眷属。熊のような大男"
   },
@@ -857,7 +857,7 @@
    "name": "剣翼の使徒ヴァルグレア",
    "type": "ojisan",
    "file": "assets/portraits/azlag.webp",
-   "identity": "1boy, male focus, adult, man, 40 years old, huge man, blonde hair, short hair, spiky hair, golden eyes, glowing eyes, slit pupils, stubble, feathers in hair, charcoal grey coat, white shirt, one black bird wing made of blades",
+   "identity": "1boy, male focus, adult, man, 45 years old, huge man, blonde hair, short hair, spiky hair, golden eyes, glowing eyes, slit pupils, stubble, feathers in hair, charcoal grey coat, white shirt, one black bird wing made of blades",
    "tags": "crossed arms",
    "face": "frown",
    "variants": {
