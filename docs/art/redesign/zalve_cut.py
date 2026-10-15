@@ -21,6 +21,25 @@ if len(sys.argv) > 3:   # 描き足した砂の粒は不透明に（地の上に
     cl = np.array(Image.open(sys.argv[3]).convert("RGB")).astype(np.float32)
     grain = np.abs(c - cl).max(-1) > 12
     a = np.where(grain, 1.0, a)
+# 囲まれた透けた穴（外とつながらない透明）を埋める（IMG-36）。鎖の輪の中は、抜くべき背景なので除く
+tr = a < 0.5
+lab, n = ndimage.label(tr); border = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
+loop = (xx > 420) & (xx < 500) & (yy > 150) & (yy < 390)
+holes = np.zeros_like(tr)
+for j in range(1, n + 1):
+    if j in border: continue
+    m = lab == j
+    if (m & loop).sum() > 0.5 * m.sum(): continue
+    holes |= m
+solid0 = a >= 0.5; _, (jy, jx) = ndimage.distance_transform_edt(~(solid0 & ~ndimage.binary_dilation(holes, iterations=2)), return_indices=True)
+c = np.where(holes[..., None], c[jy, jx], c); a = np.where(holes, 1.0, a)
+print("holes filled", int(holes.sum()))
+# 離れた小さな白いかけら（地の抜き残し）を消す。砂の粒（色がある）は残す
+lab2, n2 = ndimage.label(a > 0.3)
+if n2 > 1:
+    sz2 = ndimage.sum(np.ones_like(a), lab2, range(1, n2 + 1)); mean_l = ndimage.mean(c.mean(-1), lab2, range(1, n2 + 1)); mean_ch = ndimage.mean(c.max(-1) - c.min(-1), lab2, range(1, n2 + 1))
+    kill = [j + 1 for j in range(n2) if sz2[j] < 60 and mean_l[j] > 215 and mean_ch[j] < 30]
+    a = np.where(np.isin(lab2, kill), 0.0, a); print("specks", len(kill))
 fg = (c - (1 - a[..., None]) * 255) / np.maximum(a[..., None], 1e-3)
 solid = a > 0.95; _, (iy, ix) = ndimage.distance_transform_edt(~solid, return_indices=True)
 bad = (a < 0.95) & ((fg < -10).any(-1) | (fg > 265).any(-1) | (a < 0.25))
