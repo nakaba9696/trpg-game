@@ -285,7 +285,7 @@ export const SECTIONS = [
     if (G.S.combat || G.S.mode !== "explore") fail("呪いで敵が倒れても戦闘が終わらない");
     // 使徒には絶界で効かない
     const majin = Object.keys(D.ENEMIES).find((id) => D.ENEMIES[id].majin);
-    G.startCombat([majin], {});
+    G.startCombat([majin], { gate: "skip" }); // E13：門（破るまで戦いにならない）は見ずに、戦いの中の絶界だけを確かめる
     const m = G.S.combat.foes[0];
     always(() => { G.combatAct("curse"); G.combatAct("ice"); });
     if (G.S.combat && (m.hex || m.frozen || m.hp < m.max)) fail("使徒に術が効いた");

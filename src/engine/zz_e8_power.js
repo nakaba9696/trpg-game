@@ -21,9 +21,11 @@
     //   keyHp：条件をそろえた割合に応じて HP に掛ける倍率（すべてそろえたとき keyHp 倍。正面の強さは変えない）
     TUNE: {
       gormore: { hp: 994, dmg: 2 }, levian: { hp: 355, dmg: 2 }, mirza: { hp: 460, dmg: 2 }, aurelia: { hp: 281, dmg: 2 },
-      notari: { hp: 302, dmg: 2 }, tetsukui: { hp: 431, dmg: 2 }, togaoi: { hp: 329, dmg: 2 }, sanno: { hp: 365, dmg: 2 },
+      notari: { hp: 302, dmg: 2 }, tetsukui: { hp: 460, dmg: 2 }, togaoi: { hp: 329, dmg: 2 }, sanno: { hp: 365, dmg: 2 },
       // A 級は E10-3 で約 3 割に下げた（B 級より勝ちにくく。持ち主「A級のほうがB級より勝率高いのおかしい」）
-      graw: { keyHp: 1.305 }, mordu: { keyHp: 0.984 }, zalve: { keyHp: 0.971 }, chezar: { keyHp: 1.122 }, azlag: { keyHp: 0.919 }, lugu: { keyHp: 1.119 },
+      graw: { keyHp: 1.305 }, mordu: { keyHp: 0.984 }, zalve: { keyHp: 1.2 }, chezar: { keyHp: 1.122 }, azlag: { keyHp: 0.7 }, lugu: { keyHp: 1.119 },
+      // E13：門の判定が乱数を一つ使うようになり、10 回の測りの運が変わった。100 回で測り直すと剣翼は約 1 割・砂塵は約 5 割だったので、約 3 割に寄せた（剣翼 26%・砂塵 31%）。
+      // 鉄喰い（B）の HP も 431 → 460（弱点だけの勝ちを 8% → 4%、そろえて 49% → 46%）
       kurobane: { keyHp: 0.57 }, tojizuki: { keyHp: 0.469 },
     },
   });

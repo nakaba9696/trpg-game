@@ -223,7 +223,9 @@
     st.fight = kind;
     pending = { id: sg.id, kind };
     const F = kind === "final" ? sg.final : sg.toy;
-    G.startCombat([sg.foe], { win: kind === "final" ? F.win : null });
+    // E13：一度目の対面は物語の戦い（門を見ない）。決戦は、長編の備えで守りが破れていれば門も破れている（zz_e3y_e13_immortal.js）
+    const gate = kind === "final" ? (X.mods(sg.id, S).open ? "open" : null) : "skip";
+    G.startCombat([sg.foe], { win: kind === "final" ? F.win : null, gate });
     pending = null;
     if (!S.combat) st.fight = "";
   }
