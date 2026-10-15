@@ -421,31 +421,6 @@
 "orig": 45314,
 "gapPx": 8
 },
-"portraits/zalve_anger": {
-"bytes": 30176,
-"orig": 30062,
-"gapPx": 109
-},
-"portraits/zalve_cold": {
-"bytes": 30076,
-"orig": 29454,
-"gapPx": 81
-},
-"portraits/zalve_fun": {
-"bytes": 30342,
-"orig": 29632,
-"gapPx": 84
-},
-"portraits/zalve_sorrow": {
-"bytes": 30132,
-"orig": 30004,
-"gapPx": 109
-},
-"portraits/zalve_surprise": {
-"bytes": 30260,
-"orig": 29636,
-"gapPx": 77
-},
 "portraits/zerina": {
 "bytes": 37106,
 "orig": 37808,

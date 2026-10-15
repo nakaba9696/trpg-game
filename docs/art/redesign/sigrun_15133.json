@@ -1,0 +1,17 @@
+{
+ "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, (middle-aged woman:1.5), (mature female:1.4), (aged face:1.3), 41 years old, (forehead wrinkles:1.1), (hair swept back from the face, both sides of the face visible:1.3), pixie cut, (wrinkles around eyes:1.2), long face, sharp jawline, tall, lean, weathered pale skin, (wrinkles at the corners of the eyes:1.2), gaunt cheeks, thin lips, (black hair:1.5), short hair, (a few grey streaks in black hair:1.2), (multicolored hair:0.8), grey eyes, (black leather eyepatch over right eye:1.3), old scar across eyepatch, (hood down:1.4), hood resting on shoulders, dark grey hooded cloak, torn claw marks on cloak shoulder, black leather armor, hand on sword hilt, mercenary, expressionless, closed mouth, tired eyes, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
+ "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (hood up:1.5), (shadow over face:1.4), (young:1.5), (teenage:1.5), (child:1.4), (loli:1.4), cute, round face, big eyes, hair over eyepatch, glowing eye, full body, plate armor, gauntlets, (crow:1.6), (bird:1.6), feathers, (bangs over eyes:1.4), (silver hair:1.4), (white hair:1.4), (grey hair:1.2)",
+ "seed": 15133,
+ "steps": 20,
+ "cfg_scale": 5.5,
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "width": 1024,
+ "height": 1280,
+ "batch_size": 1,
+ "n_iter": 1,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "override_settings_restore_afterwards": true
+}

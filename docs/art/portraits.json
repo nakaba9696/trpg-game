@@ -753,17 +753,15 @@
    "name": "砂塵の使徒ドレイゼ",
    "type": "ojisan",
    "file": "assets/portraits/zalve.webp",
-   "identity": "1boy, male focus, adult, man, 45 years old, gaunt, tan skin, dark brown hair, short hair, swept back hair, stubble, narrow eyes, amber eyes, ringed eyes, silver monocle, cracks of light on skin, hair crumbling into sand, white shirt, rolled-up sleeves, black necktie, sand-colored vest, money changer",
-   "tags": "hourglass, sand spilling from sleeves",
+   "identity": "1boy, male focus, adult, man, 45 years old, tall, thin, gaunt, tan skin, dark brown hair, short hair, slicked back hair, half-closed eyes, amber eyes, ringed eyes, silver monocle, monocle chain, thin smile, dark grey frock coat, black waistcoat, white shirt, black necktie, holding red ledger, money changer",
+   "tags": "sand grains spilling from sleeve, small pile of sand at feet",
    "face": "smirk",
    "variants": {
     "joy": "grin, teeth",
     "anger": "glaring, frown",
     "sorrow": "frown, looking down",
     "fun": "laughing, open mouth",
-    "smug": "smug, smirk, raised eyebrow",
-    "cold": "cold eyes, expressionless",
-    "surprise": "surprised, wide-eyed"
+    "smug": "smug, smirk, raised eyebrow"
    },
    "memo": "ブランデールの両替商（使徒リスト 64）。砂の体。袖から砂がこぼれる。嘘はつかないが全部は言わない"
   },
@@ -773,7 +771,7 @@
    "name": "取り立て屋ボルグ",
    "type": "brute",
    "file": "assets/portraits/borg.webp",
-   "identity": "1boy, male focus, adult, man, 40 years old, huge man, black hair, long hair, messy hair, black eyes, round eyes, scar, stubble, missing fingers, ragged clothes",
+   "identity": "1boy, male focus, adult, man, 45 years old, huge man, black hair, long hair, messy hair, black eyes, round eyes, scar, stubble, missing fingers, ragged clothes",
    "tags": "grin, debt collector",
    "memo": "ドレイゼの眷属。熊のような大男"
   },
@@ -859,7 +857,7 @@
    "name": "剣翼の使徒ヴァルグレア",
    "type": "ojisan",
    "file": "assets/portraits/azlag.webp",
-   "identity": "1boy, male focus, adult, man, 40 years old, huge man, blonde hair, short hair, spiky hair, golden eyes, glowing eyes, slit pupils, stubble, feathers in hair, charcoal grey coat, white shirt, one black bird wing made of blades",
+   "identity": "1boy, male focus, adult, man, 45 years old, huge man, blonde hair, short hair, spiky hair, golden eyes, glowing eyes, slit pupils, stubble, feathers in hair, charcoal grey coat, white shirt, one black bird wing made of blades",
    "tags": "crossed arms",
    "face": "frown",
    "variants": {
@@ -1004,8 +1002,8 @@
    "group": "named",
    "name": "シグルン",
    "file": "assets/portraits/sigrun.webp",
-   "identity": "1girl, mature female, adult, woman, 41 years old, black hair, short hair, grey eyes, tall, lean, pale weathered skin, gaunt cheeks, faint wrinkles, thin lips, deep hood up, face in shadow, black eyepatch over right eye, one eye glowing in shadow, dark grey hooded cloak, old torn claw marks on cloak shoulder, black leather armor, dark cloth, muted colors, sword hilt peeking from under cloak",
-   "tags": "mysterious, mercenary, adventurer, standing, arms hidden under cloak, one-eyed, closed mouth",
+   "identity": "1girl, mature female, adult, woman, 41 years old, tall, lean, weathered pale skin, faint wrinkles, gaunt cheeks, thin lips, old scars on face, black hair, short hair, grey eyes, black leather eyepatch over right eye, hood down, dark grey hooded cloak, torn claw marks on cloak shoulder, black armor, black gloves, dark cloth, muted colors",
+   "tags": "mercenary, adventurer, standing, both hands resting on sword pommel, sword point down, one-eyed, closed mouth",
    "face": "expressionless, closed mouth, unreadable",
    "variants": {
     "joy": "faint smile, closed mouth",
@@ -1013,7 +1011,7 @@
     "sorrow": "looking down, downturned mouth",
     "fun": "slight smirk, closed mouth"
    },
-   "memo": "片目の女冒険者。使徒を長く追っている。深くかぶった灰色の頭巾の影に顔の上半分が沈み、片目だけが光って見える（右目は眼帯）。外套の肩に古い爪痕。暗い色の革と布。寡黙でぶっきらぼう、疲れているが芯は強い。酒場の隅で安酒を舐めている。十指のシグとは別人"
+   "memo": "片目の女冒険者。使徒を長く追っている。灰色の頭巾は後ろに下ろしていて、顔が見える（右目は黒い革の眼帯。2026-10-15 に描き直した）。外套の肩に古い爪痕。暗い色の革と布。寡黙でぶっきらぼう、疲れているが芯は強い。酒場の隅で安酒を舐めている。十指のシグとは別人"
   },
   {
    "id": "bertrand",

@@ -1,0 +1,55 @@
+{
+ "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, mature male, detailed face, adult, 45 years old, tall, thin, gaunt, pale tan skin, dark brown hair, slicked back hair, grey temples, narrow eyes, amber eyes, ringed eyes, (silver monocle:1.2), monocle chain, (melancholic:1.4), (downcast eyes:1.4), (worried eyebrows:1.3), closed mouth, no smile, (long dark frock coat:1.3), waistcoat, white shirt, sleeve garters, black necktie, ink-stained fingers, (holding a small leather-bound ledger book in one hand:1.4), (pale golden sand pouring from the sleeve cuff:1.5), (sand trickling from the fingertips of the other hand:1.4), (fine cracks on cheek like dry sand:1.2), money changer, elegant, unsettling, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
+ "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, bishounen, pretty boy, baby face, youthful, smooth skin, delicate features, chibi, (stubble:1.4), (beard:1.4), (muscular:1.4), (broad shoulders:1.3), hourglass, (money:1.4), banknotes, (glowing cracks:1.4), horns, rugged, (tray:1.6), (box:1.5), (mud:1.6), (liquid:1.5), dripping, (desert:1.5), sand dunes, scenery, full body, (open mouth:1.4), (teeth:1.4), (glasses:1.3), (multiple monocles:1.4), (blush:1.4), (tears:1.4), (anger vein:1.5), (open mouth:1.2), (teeth:1.3), sweat, comical, chibi",
+ "seed": 15121,
+ "steps": 20,
+ "cfg_scale": 5.5,
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "width": 1024,
+ "height": 1280,
+ "batch_size": 1,
+ "n_iter": 1,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "denoising_strength": 0.5,
+ "resize_mode": 0,
+ "init_image": "zalve_15121.png（基本の絵・白い地）",
+ "id": "zalve_sorrow",
+ "how": "基本の絵（白い地）から全身の img2img（表情のタグだけ差し替え・denoising 0.5）→ 透過を抜く → orig-fix の道具（of.py）で表情の所だけ残し、外は基本の画素（片眼鏡の縁を含む）",
+ "fit": {
+  "ok": true,
+  "why": [],
+  "M": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   0.0
+  ],
+  "misfit": 0.005,
+  "seam": 0,
+  "diff": 0.065,
+  "iris_de": [
+   3.3
+  ],
+  "region_px": 3587,
+  "eye_shift": 0.03,
+  "lost": 14,
+  "skin_shift": [
+   -1,
+   -9,
+   -9
+  ],
+  "rimfit": 0.99,
+  "eyes": [
+   2,
+   1,
+   2
+  ]
+ },
+ "date": "2026-10-15",
+ "refit": "2026-10-15 直した基本の絵に合わせ直した"
+}
