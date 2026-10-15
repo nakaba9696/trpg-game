@@ -139,11 +139,12 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       for (const st of g.stages) if (!said(G, st.broken)) fail(`E13 ${a.id}：破れた一行が出ない`);
       if (g.reveal && !said(G, g.reveal)) fail(`E13 ${a.id}：正体を現す一行が出ない`);
       // 正体を現した使徒：魔物の姿の絵が無ければ、立ち絵に戻さない
-      const ctx = vm.createContext({ G: { ASSETS: { ["portraits/" + a.id]: "p.webp" }, S: G.S }, console });
+      const ctx = vm.createContext({ G: { ASSETS: { ["portraits/" + a.id]: "p.webp" }, S: G.S, data: G.data }, console });
       vm.runInContext(readFileSync(file("src/ui/v6_monsters.js"), "utf8"), ctx, { filename: "ui/v6_monsters.js" });
       vm.runInContext(readFileSync(file("src/ui/zz_e13_reveal.js"), "utf8"), ctx, { filename: "ui/zz_e13_reveal.js" });
       const g6 = ctx.G;
-      if (g6.V6_APOSTLE[a.foe] && g6.v6ArtKey(a.foe)) fail(`E13 ${a.id}：正体を現したのに、戦いで人の姿の立ち絵が出る`);
+      if (!g.human && g6.V6_APOSTLE[a.foe] && g6.v6ArtKey(a.foe)) fail(`E13 ${a.id}：正体を現したのに、戦いで人の姿の立ち絵が出る`);
+      if (g.human && g6.V6_APOSTLE[a.foe] && !g6.v6ArtKey(a.foe)) fail(`E13 ${a.id}：人の姿が正体の使徒なのに、戦いで立ち絵が消える`);
     }
   }
 
