@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-15 持ち主：使徒は「人の姿」と「魔物の姿」に分けてよい → ドレイゼの指示を置き換える（いちばん上。すぐ下の「最初の生成から異質な形で作り直す」は取り消し）
+→ 2026-10-15 人の姿は入れた。魔物の姿は候補 3 枚を置いた（redesign-1・bb0a8e56）。魔物の姿は持ち主の選び待ち。
 持ち主「使徒は人間体と魔物形態でわけてもいいよ」。
 ゲームには、もう二つの絵の置き場がある：人の姿＝立ち絵（assets/portraits/<id>.webp。会話と顔の窓）、魔物の姿＝敵の絵（assets/monsters/<foe>.webp。戦い。docs/art/monsters.md の「使徒・ボス」と同じ作り方・画風の前置き）。使徒の不死を破ると戦いになるので、魔物の姿は「正体を現した」絵になる。
 - **ドレイゼの人の姿**：最初の候補 1（seed 15121。袖から砂・片眼鏡の鎖）を基本の絵にする（A〜D の描き足しは使わない）。透過を抜いて assets/portraits/zalve.webp。喜怒哀楽＋smug の差分を、シグルンと同じやり方（全体の img2img → orig-fix で基本に合わせる）で作る。表情は抑えめ（使徒の格）。
@@ -115,6 +116,36 @@
 
 
 ## 済み
+
+### 2026-10-15 ドレイゼの人の姿と魔物の姿 → 2026-10-15 人の姿は済み・魔物の姿は持ち主の選び待ち（redesign-1・bb0a8e56）
+- **人の姿**
+  - 基本の絵は最初の候補 1（seed 15121）。透過を抜いて assets/portraits/zalve.webp に置いた。
+  - 差分は joy・anger・sorrow・fun・smug の 5 つ。シグルンと同じやり方で作った（全体の img2img → orig-fix で基本に合わせる）。
+  - 片眼鏡の縁とほくろは、基本の画素のまま。
+  - 表情は抑えめにした。歯を見せる・口を開ける・赤面は無し。
+  - portraits.json の variants の joy（grin, teeth）と fun（laughing, open mouth）は使徒の格に合わないので、使わなかった。喜は穏やかな微笑、楽は口の端を上げた笑み。
+- **古い差分を消した**：zalve_cold と zalve_surprise は前のデザインの顔のままなので消した。
+  - portraits.json の variants と a20_gaps.json からも外した。a20_gaps.json の zalve の残りの行も外した（新しい絵は a20 の道具で作っていない）。
+  - portraits.md と moods.md は作り直した。
+- 顔の窓の四角（u41_face_box.js の zalve）を新しい絵に合わせた。
+- 生成の値は docs/art/gen/zalve_base.json・zalve_<表情>.json。
+- 変更履歴に一行足した。
+- 点検：ONLY で u41_face_window・v11_moods・v3_art・v4_assets・a20_gaps・a4_art・u18_changelog を動かし、どれも通った。
+- **魔物の姿**（e3_zalve）
+  - 候補 3 枚の見本：docs/art/redesign/zalve_true.webp。上は生成のまま、下の左は透過を抜いた試し（マゼンタの地）、下の右は頭の拡大。
+  - 作り方：monsters.md の使徒と同じ前置き・後ろ・ネガティブ（--monsters --dry の形）。1024×1024。
+  - 候補：
+    - 1（seed 15408）：砂でできた巨きな体。角のある影の頭。鎖つきの銀の片眼鏡の奥に、琥珀の輪の瞳。黒いタイ。
+    - 2（seed 15401）：コートの形をした砂の体。角の影の頭と片眼鏡。
+    - 3（seed 15404）：砂の外套と細い脚。角のある頭に片眼鏡。
+  - 気になる所：
+    - 帳簿の頁は、どれもほとんど出なかった。
+    - 砂は、細かい粒より、煙や砂嵐の塊に近い。
+    - 文字の指示だけで「白紙の頁の嵐」「粒の砂」を強めると、少女・ゴーレム・大きな紙が出て崩れたので、この 3 枚にした。
+    - 刃物・砂時計・札束は無し。片眼鏡は 1 つ。
+  - 生成の値は docs/art/redesign/zalve_true/。
+- 次：魔物の姿が選ばれたら、透過を抜いて assets/monsters/e3_zalve.webp に置き、monsters.json と monsters.md に行を足す。
+  - e3_mirza・e3_aurelia・e3_yoihime は、そのあとで同じ形で作る。
 
 ### 2026-10-15 ドレイゼの作り直し 3：候補 → 2026-10-15 置いた（redesign-1・0ff3b8c9）。持ち主の選び待ち
 - 見本：docs/art/redesign/zalve_3.webp。候補 1〜4 の全身と顔の拡大を並べた。
