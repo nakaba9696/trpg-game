@@ -31,7 +31,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       const comp0 = JSON.stringify((S.companions || []).map((c) => c.bond));
       const chron0 = S.chronicle.length;
       for (let i = 0; i < 6 && !S.over; i++) {
-        G.startCombat([majinId], {});
+        G.startCombat([majinId], { gate: "skip" }); // E13：門は e13_immortal.mjs
         for (let r = 0; r < 40 && S.mode === "combat" && !S.over; r++) { S.hp = S.maxHp; G.act("cb:attack"); }
         S.mode = "explore"; S.combat = null;
       }
@@ -101,7 +101,7 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
       // 絶界には効かない（何度撃っても使徒は傷つかない）
       S.combat = null; S.mode = "explore";
       G.give(ammo, 30);
-      G.startCombat([majinId], {});
+      G.startCombat([majinId], { gate: "skip" }); // E13：門は e13_immortal.mjs
       const foe = S.combat.foes[0];
       const hp0 = foe.hp;
       for (let i = 0; i < 10 && S.mode === "combat" && !S.over; i++) { S.hp = S.maxHp; G.act("cb:c1shot:" + id); }

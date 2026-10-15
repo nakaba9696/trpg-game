@@ -753,8 +753,8 @@
    "name": "砂塵の使徒ドレイゼ",
    "type": "ojisan",
    "file": "assets/portraits/zalve.webp",
-   "identity": "1boy, male focus, adult, man, 45 years old, gaunt, tan skin, dark brown hair, short hair, swept back hair, stubble, narrow eyes, amber eyes, ringed eyes, silver monocle, cracks of light on skin, hair crumbling into sand, white shirt, rolled-up sleeves, black necktie, sand-colored vest, money changer",
-   "tags": "hourglass, sand spilling from sleeves",
+   "identity": "1boy, male focus, adult, man, 45 years old, tall, thin, gaunt, pale tan skin, dark brown hair, slicked back hair, narrow eyes, amber eyes, ringed eyes, silver monocle, monocle chain, thin smile, dark grey frock coat, black waistcoat, white shirt, black necktie, holding red ledger, money changer",
+   "tags": "sand grains spilling from sleeve, small pile of sand at feet",
    "face": "smirk",
    "variants": {
     "joy": "grin, teeth",
@@ -1002,8 +1002,8 @@
    "group": "named",
    "name": "シグルン",
    "file": "assets/portraits/sigrun.webp",
-   "identity": "1girl, mature female, adult, woman, 41 years old, black hair, short hair, grey eyes, tall, lean, pale weathered skin, gaunt cheeks, faint wrinkles, thin lips, deep hood up, face in shadow, black eyepatch over right eye, one eye glowing in shadow, dark grey hooded cloak, old torn claw marks on cloak shoulder, black leather armor, dark cloth, muted colors, sword hilt peeking from under cloak",
-   "tags": "mysterious, mercenary, adventurer, standing, arms hidden under cloak, one-eyed, closed mouth",
+   "identity": "1girl, mature female, adult, woman, 41 years old, tall, lean, weathered pale skin, faint wrinkles, gaunt cheeks, thin lips, old scars on face, black hair, short hair, grey eyes, black leather eyepatch over right eye, hood down, dark grey hooded cloak, torn claw marks on cloak shoulder, black armor, black gloves, dark cloth, muted colors",
+   "tags": "mercenary, adventurer, standing, both hands resting on sword pommel, sword point down, one-eyed, closed mouth",
    "face": "expressionless, closed mouth, unreadable",
    "variants": {
     "joy": "faint smile, closed mouth",
@@ -1011,7 +1011,7 @@
     "sorrow": "looking down, downturned mouth",
     "fun": "slight smirk, closed mouth"
    },
-   "memo": "片目の女冒険者。使徒を長く追っている。深くかぶった灰色の頭巾の影に顔の上半分が沈み、片目だけが光って見える（右目は眼帯）。外套の肩に古い爪痕。暗い色の革と布。寡黙でぶっきらぼう、疲れているが芯は強い。酒場の隅で安酒を舐めている。十指のシグとは別人"
+   "memo": "片目の女冒険者。使徒を長く追っている。灰色の頭巾は後ろに下ろしていて、顔が見える（右目は黒い革の眼帯。2026-10-15 に描き直した）。外套の肩に古い爪痕。暗い色の革と布。寡黙でぶっきらぼう、疲れているが芯は強い。酒場の隅で安酒を舐めている。十指のシグとは別人"
   },
   {
    "id": "bertrand",

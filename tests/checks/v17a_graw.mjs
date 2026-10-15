@@ -211,14 +211,14 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     { want: "clean", seed: 101, prefer: [/溝に降りて/, /印の名前/, /そのときのこと/, /名を名乗り/, /前に出て、名乗り/, /夜明けを待って/, /^踏みこむ$/, /一人で、最後の一歩/, /地図の線/] },
     { want: "diet", seed: 202, prefer: [/石切り場の穴/, /そのときのこと/, /膝の話を/, /ディートマルと並んで/, /^女剣士と斬り結ぶ/, /ディートマルが、先に前へ出る/], preps: ["feather", "train"], flee: true },
     { want: "laur", seed: 303, prefer: [/溝に降りて/, /前に出て、名乗り/, /ラウレンツの鶴嘴/, /溝のことを聞く/], preps: ["herald", "feather"], investigate: ["map", "rival"] },
-    { want: "knee", seed: 404, prefer: [/尾根の上まで/, /膝が砕けても/], preps: ["arms", "host"], investigate: ["rival", "old"] },
+    { want: "knee", seed: 404, prefer: [/尾根の上まで/, /膝が砕けても/], preps: ["arms", "host"], investigate: ["rival", "old"], feather: true }, // E13：羽か伝説の武具が無いと決戦にならない（門）
   ];
   for (const r of ROUTES) {
     let st = null;
     for (let k = 0; k < (r.want === "clean" ? 3 : 1); k++) {
       const quiet = r.want === "clean" && k < 2;
       hush = quiet;
-      st = runSaga({ seed: r.seed + k * 10, prefer: r.prefer, preps: r.preps, investigate: r.investigate, flee: r.flee }, quiet ? null : r.want);
+      st = runSaga({ seed: r.seed + k * 10, prefer: r.prefer, preps: r.preps, investigate: r.investigate, flee: r.flee, feather: r.feather }, quiet ? null : r.want);
       hush = false;
       if (st && st.end === r.want) break;
     }

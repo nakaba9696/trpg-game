@@ -51,8 +51,11 @@ export default ({ fail, loadEngine, seeded }) => {
     const G = loadEngine();
     start(G, 4);
     G.S.mode = "event";
+    // E13：門（名を刻んだ石と判定）を破れば戦いになる
+    G.S.inv.e3_namestone = 1;
+    G.S.stats.魔力 = 99;
     G.apply({ e3fight: "levian" });
-    if (!G.S.combat) fail("討伐できる使徒（忘れ水）に挑んでも戦いにならない");
+    if (!G.S.combat) fail("討伐できる使徒（忘れ水）に、門を破って挑んでも戦いにならない");
   }
   // 古いセーブ：倒せない使徒を倒した記録があっても、図鑑は壊れず、記録は残る。「五体」は討伐できる使徒だけで数える
   {

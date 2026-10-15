@@ -29,7 +29,9 @@ export default ({ fail, loadEngine, seeded }) => {
     const keys0 = G.e3Keys;
     if (all) { if (G.e10Fill) G.e10Fill(G.S); G.e3Keys = (a, s) => keys0(a, s).map((k) => Object.assign(k, { met: true })); }
     else G.data.E3.LIST[id].keys.forEach((k) => { k.test = () => false; });
-    G.apply({ e3fight: id });
+    // E13：門を破らないと戦いにならないので、守りの効き目（正面）は門を見ない戦いで確かめる
+    if (all) G.apply({ e3fight: id });
+    else { G.e3Register(id); G.startCombat([G.data.E3.LIST[id].foe], { gate: "skip" }); }
     G.e3Keys = keys0;
     const f = G.S.combat && G.S.combat.foes.find((x) => G.e3Of(x.id));
     return { G, f };

@@ -1,7 +1,7 @@
-// D6：魔王と神々の設定（持ち主の決定）に合わせた見える文と、灰色の外套の旅人・昔の時代の断片の出来事
+// D6：神々の設定（持ち主の決定。D11 で創造主の設定に改めた）に合わせた見える文と、灰色の外套の旅人・昔の時代の断片の出来事
 // - D6 の出来事は実在の場所で起きる。lore のきっかけは実在の行を指す
 // - 旅人の出来事・用語説明に、正体や裏設定を表す言葉が出ない
-// - 今の人は「魔王」を知らない：見える文に「魔王」が出るのは、昔の断片（夢の子ども・古い祈祷文）と、その用語説明だけ
+// - 「魔王」は D11 でなくした設定：見える文にも GM への説明にも「魔王」が出ない（昔の断片も「造り主」「あるじ」と書く。創造主の決まりは d11_creators.mjs）
 // - 古い設定（ふて寝・魔王のいびき・七つの国）が、プレイヤーに見える文に残っていない。GM への説明は新しい設定になっている
 // - 前に会ってから日が空くと、また出会う。二度目からは「前にも会った気がする」が添えられる。古いセーブでも動く
 // - どの選択肢を選んでも止まらない
@@ -52,7 +52,7 @@ export default ({ fail, loadEngine, seeded }) => {
   if (D.LORE.d6_walker) { texts.push(["用語 d6_walker", D.LORE.d6_walker.title]); D.LORE.d6_walker.lines.forEach(([k, t]) => texts.push([`用語 d6_walker:${k}`, t])); }
   for (const [w, t] of texts) if (REVEAL.test(t)) fail(`旅人の文に「${t.match(REVEAL)[0]}」：${w}「${t.slice(0, 30)}…」`);
 
-  // ---- 古い設定が見える文に残っていない。今の人の文に「魔王」が無い
+  // ---- 古い設定が見える文に残っていない。見える文に「魔王」が無い
   const seen = [];
   const outText = (w, o) => { if (!o) return; ["text", "memo", "chron"].forEach((k) => o[k] && seen.push([w, o[k]])); outText(w, o.win); };
   D.EVENTS.forEach((e) => { seen.push([e.id, e.title], [e.id, e.text]); e.choices.forEach((c) => { seen.push([e.id, c.label]); outText(e.id, c.ok); outText(e.id, c.ng); outText(e.id, c.win); }); });
@@ -69,14 +69,14 @@ export default ({ fail, loadEngine, seeded }) => {
   Object.entries(D.ENEMIES).forEach(([id, e]) => { seen.push([id, (e.name || "") + (e.desc || "")]); deep(id + ".lines", e.lines); });
   Object.entries(D.LOCS).forEach(([id, L]) => seen.push([id, (L.name || "") + (L.desc || "")]));
   for (const [w, t] of seen) if (OLD.test(t)) fail(`見える文に古い設定「${t.match(OLD)[0]}」：${w}`);
-  // 昔の断片（昔から生きている夢の子ども・古い祈祷文）と、その用語説明の項目だけは「魔王」と書いてよい
-  const OLD_ERA = /^(v1_yuradream|d6_old_\w+|用語 maou(:\w+)?)$/;
-  for (const [w, t] of seen) if (/魔王/.test(t) && !OLD_ERA.test(w)) fail(`今の人は魔王を知らないのに、見える文に「魔王」：${w}「${t.slice(0, 30)}…」`);
+  // D11 で魔王という設定はなくした。昔の断片（夢の子ども・古い祈祷文）と、その用語説明でも「魔王」とは書かない
+  for (const [w, t] of seen) if (/魔王|ガイゼリク/.test(t)) fail(`なくした設定「${t.match(/魔王|ガイゼリク/)[0]}」が見える文にある：${w}「${t.slice(0, 30)}…」`);
   const gm = D.LORE_GM.join("\n") + Object.values(D.MAJIN).map((m) => m.secret || "").join("\n");
   if (OLD.test(gm)) fail(`GM への説明に古い設定「${gm.match(OLD)[0]}」が残っている`);
-  if (!/神々はもういない/.test(gm)) fail("GM への説明に「神々はもういない」が無い");
-  if (!/魔王は幕引きの夜（暦の元年）に死に/.test(gm)) fail("GM への説明に、昔の魔王が死んでいることが無い");
-  if (!/今の人は魔王という存在そのものを知らない/.test(gm)) fail("GM への説明に、今の人は魔王を知らないことが無い");
+  if (!/神々は最初からいない/.test(gm)) fail("GM への説明に「神々は最初からいない」が無い");
+  if (!/最後の創造主が死んだ夜/.test(gm)) fail("GM への説明に、幕引きの夜（暦の元年）は最後の創造主が死んだ夜だということが無い");
+  if (!/今の人は創造主という存在そのものを知らない/.test(gm)) fail("GM への説明に、今の人は創造主を知らないことが無い");
+  if (/魔王|ガイゼリク/.test(gm)) fail(`GM への説明に、なくした設定「${gm.match(/魔王|ガイゼリク/)[0]}」が残っている`);
   if (!/誰の命令でもない/.test(gm)) fail("GM への説明に、使徒の襲来は誰の命令でもないことが無い");
   if (/人に紛れて歩|人間の世界のそこらへんを普通に歩いている/.test(gm)) fail("GM への説明に、取りやめた「魔王は人に紛れて歩く」が残っている");
   if (!/今は中世/.test(gm) || !/オーパーツ/.test(gm)) fail("GM への説明に、技術は中世＋遺跡のオーパーツだということが無い");

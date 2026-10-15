@@ -58,7 +58,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
   }
   // 条件の品と印が出来事で手に入る
   for (const [id, it] of Object.entries(E3.ITEMS)) if (it.type === "key" && !gives.has(id)) fail(`条件の品 ${id} が、どの出来事でも手に入らない`);
-  for (const f of ["e3_awake", "e3_song", "v1_shezar_lost", "e3_shadowword", "e3_rootlie"]) if (!sets.has(f)) fail(`条件の印 ${f} が、どの出来事でも付かない`);
+  for (const f of ["e3_awake", "e3_song", "v1_shezar_lost", "e3_shadowword", "e3_rootlie", "e13_deed"]) if (!sets.has(f)) fail(`条件の印 ${f} が、どの出来事でも付かない`);
   // 書き方：見世物の言葉を出さない・名前（刻印の読み）を地の文に出さない
   const BAD = /見世物|観客|客席|舞台|台本|神々が眺め|魔王/;
   const texts = [];
@@ -88,7 +88,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const S = G.S;
     Object.entries(G.data.E3.ITEMS).forEach(([id, it]) => { if (it.type === "key") G.give(id); });
     G.give("smoke", 2);
-    ["e3_awake", "e3_song", "v1_shezar_lost", "e3_shadowword", "e3_rootlie", "mid:majincastle:3", "mid:e2_kitchen:3", "mid:e2_garden:3", "kain", "w1_gregor", "w1_konoha", "w2_ironwarden"].forEach((f) => { S.flags[f] = true; });
+    ["e3_awake", "e3_song", "v1_shezar_lost", "e3_shadowword", "e3_rootlie", "e13_deed", "mid:majincastle:3", "mid:e2_kitchen:3", "mid:e2_garden:3", "kain", "w1_gregor", "w1_konoha", "w2_ironwarden"].forEach((f) => { S.flags[f] = true; });
     S.companions = [{ name: "剣士のアル", cls: "剣士", power: 70, dmg: 2, desc: "無口", bond: 90 }];
     S.day = 271; S.phase = 3; // 冬の夜
     S.world = Object.assign(S.world || {}, { emp: "civil" });
@@ -188,7 +188,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     const S = G.S;
     S.stats.敏捷 = 99;
     S.mode = "event";
-    G.apply({ e3fight: "notari" });
+    G.e3Register("notari");
+    G.startCombat(["e3_notari"], { gate: "skip" }); // E13：門は tests/checks/e13_immortal.mjs。ここは逃げ方だけ
     const acts = G.actions().flatMap((g) => g.list);
     if (!acts.some((a) => a.id === "cb:e3flee")) fail("使徒との戦いに「背を向けて逃げる」が無い");
     if (acts.find((a) => a.id === "cb:flee" && !a.disabled)) fail("使徒との戦いで、ふつうの逃げるが使える");
@@ -206,14 +207,15 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     strong(G, 4, "none");
     G.S.mode = "event";
     G.apply({ e3fight: "graw" });
-    const f = G.S.combat.foes[0];
-    if (!G.foeData(f).majin) fail("条件も剣も無いのに、絶界が破れている");
+    if (G.S.combat) fail("条件も剣も無いのに、黒鎧との戦いになる（E13：門に止められるはず）");
     const G2 = loadEngine();
     strong(G2, 4, "none");
     G2.S.weapon = "volgrim";
+    G2.S.stats.筋力 = 99;
     G2.S.mode = "event";
     G2.apply({ e3fight: "graw" });
-    if (G2.foeData(G2.S.combat.foes[0]).majin) fail("絶界を破る剣があるのに、絶界が破れない");
+    if (!G2.S.combat) fail("絶界を破る剣があるのに、黒鎧との戦いにならない");
+    else if (G2.foeData(G2.S.combat.foes[0]).majin) fail("絶界を破る剣があるのに、絶界が破れない");
   }
   {
     // 筋のよい遊び方の bot は、使徒に挑む選択肢を選ばない

@@ -139,6 +139,7 @@ export default ({ G, fail, ok, loadEngine, seeded }) => {
     if (!e.text.includes(X.AZ_SEEN) || e.text.includes(X.AZ_EGG)) F("転ぶのを見た印で、口封じの文にならない");
     const labels = g.eventChoices().map((x) => x.c.label);
     if (labels.length !== 1 || labels[0] !== "身構える") F(`見た者の選択肢が口封じだけになっていない（${labels.join("・")}）`);
+    S.inv.e3_blackshard = 1; S.stats.敏捷 = 99; // E13：剣翼の門（宿敵の鎧の欠片と判定）を破れば戦いになる
     g.act("ev:" + g.eventChoices()[0].i);
     if (S.mode !== "combat" || !S.combat.foes.some((f) => f.id === "e3_azlag")) F("口封じで戦いにならない");
     if (t0.includes(X.AZ_SEEN) || t0.includes(X.AZ_EGG)) F("印が無いのに対面の文が変わる");

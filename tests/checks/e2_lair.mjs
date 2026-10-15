@@ -39,6 +39,8 @@ export default ({ fail, ok, loadEngine, seeded }) => {
     // 剣があれば挑めて、勝てば主の旗が立つ
     start(id);
     G.give("volgrim"); G.equip("volgrim");
+    // E13：主の門（灼け口は蜂蜜の焼き菓子・苔衣は剪定鋏）を破ってから戦いになる
+    G.give("e3_honeycake"); G.give("e3_shears"); D.STATS.forEach((k) => { G.S.stats[k] = 99; });
     const fc = G.eventChoices().find(({ c }) => c.fight === L.boss);
     if (!fc) fail(`${id}: 剣があるのに挑めない`);
     else {

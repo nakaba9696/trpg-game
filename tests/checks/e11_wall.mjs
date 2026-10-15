@@ -32,7 +32,8 @@ export default ({ fail, loadEngine, seeded }) => {
     const G = loadEngine();
     start(G, 1);
     G.data.E3.LIST.levian.keys.forEach((k) => { k.test = () => false; });
-    G.apply({ e3fight: "levian" });
+    G.e3Register("levian");
+    G.startCombat(["e3_levian"], { gate: "skip" }); // E13：門を見ない戦い（門は tests/checks/e13_immortal.mjs）
     if (!G.S.combat) fail("忘れ水に挑んでも戦いにならない");
     if (!G.S.log.some((l) => l.text === E11.GUARD.levian)) fail("挑んだとき、固有の守りの一行が出ない");
     if (G.S.log.some((l) => /絶界/.test(l.text || ""))) fail("絶界を持たない使徒との戦いで、絶界と出る");
@@ -47,6 +48,11 @@ export default ({ fail, loadEngine, seeded }) => {
       start(G, 2);
       G.data.E3.LIST[id].keys.forEach((k) => { k.test = () => false; });
       G.apply({ e3fight: id });
+      // E13（決定 1）：剣も条件も無ければ、門に止められて戦いにならない
+      if (G.S.combat) fail(`絶界を持つ ${id} に、剣も条件も無いのに戦いになる`);
+      // 門を見ない戦い（長編の一度目の対面など）では、今までどおり刃が弾かれる
+      G.e3Register(id);
+      G.startCombat([a.foe], { gate: "skip" });
       for (let i = 0; i < 10 && G.S.combat; i++) { G.S.hp = 9999; G.combatAct("attack"); }
       if (!walls(G)) fail(`絶界を持つ ${id} に、剣も条件も無いのに刃が届く`);
     }
@@ -54,7 +60,9 @@ export default ({ fail, loadEngine, seeded }) => {
       const G = loadEngine();
       start(G, 3);
       G.data.E3.LIST[id].keys.forEach((k) => { k.test = () => !!k.zekkai; });
+      G.S.stats.筋力 = 99;
       G.apply({ e3fight: id });
+      if (!G.S.combat) fail(`絶界を持つ ${a.id} に、伝承の条件をそろえても戦いにならない`);
       for (let i = 0; i < 6 && G.S.combat; i++) { G.S.hp = 9999; G.combatAct("attack"); }
       if (walls(G)) fail(`絶界を持つ ${a.id} に、伝承の条件をそろえても刃が弾かれる`);
     }
@@ -65,7 +73,8 @@ export default ({ fail, loadEngine, seeded }) => {
       const G = loadEngine();
       start(G, 5);
       G.data.E3.LIST[id].keys.forEach((k) => { k.test = () => false; });
-      G.apply({ e3fight: id });
+      G.e3Register(id);
+      G.startCombat([D0.E3.LIST[id].foe], { gate: "skip" }); // E13：門を見ない戦いで、刃の弾かれ方だけを確かめる
       const f = G.S.combat && G.S.combat.foes[0];
       if (!f) { fail(`${id} に挑んでも戦いにならない（仲間の一撃の確認）`); continue; }
       const n0 = G.S.log.length;
