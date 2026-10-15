@@ -1,0 +1,187 @@
+{
+ "lucien_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/lucien_joy.webp",
+  "restored_px": 10827,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（260,51）は戻さない",
+   "髪にかかる物（221,52）は戻さない",
+   "目・眉にかかる物（227,126）は戻さない",
+   "髪にかかる物（255,171）は戻さない",
+   "髪にかかる物（311,206）は戻さない",
+   "髪にかかる物（231,201）は戻さない",
+   "髪にかかる物（287,200）は戻さない",
+   "髪にかかる物（234,218）は戻さない",
+   "髪にかかる物（149,222）は戻さない",
+   "髪にかかる物（232,226）は戻さない"
+  ],
+  "iris_de": [
+   4.0,
+   1.6
+  ],
+  "holes_filled": 0,
+  "seam": 3,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/lucien_anger.webp",
+  "restored_px": 10985,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（255,171）は戻さない"
+  ],
+  "iris_de": [
+   1.5,
+   0.8
+  ],
+  "holes_filled": 0,
+  "seam": 2,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/lucien_sorrow.webp",
+  "restored_px": 529,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（255,171）は戻さない"
+  ],
+  "iris_de": [],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   0,
+   0
+  ]
+ },
+ "lucien_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/lucien_fun.webp",
+  "restored_px": 11022,
+  "objects": 15,
+  "not_restored": [
+   "目・眉にかかる物（226,126）は戻さない",
+   "髪にかかる物（255,171）は戻さない"
+  ],
+  "iris_de": [
+   5.1,
+   3.4
+  ],
+  "holes_filled": 0,
+  "seam": 2,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_faint_smile": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/lucien_faint_smile.webp",
+  "restored_px": 10946,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（260,51）は戻さない",
+   "髪にかかる物（221,52）は戻さない",
+   "目・眉にかかる物（227,126）は戻さない",
+   "髪にかかる物（255,171）は戻さない",
+   "髪にかかる物（199,204）は戻さない",
+   "髪にかかる物（311,206）は戻さない",
+   "髪にかかる物（231,201）は戻さない",
+   "髪にかかる物（287,200）は戻さない",
+   "髪にかかる物（234,218）は戻さない",
+   "髪にかかる物（232,226）は戻さない"
+  ],
+  "iris_de": [
+   1.8,
+   3.1
+  ],
+  "holes_filled": 0,
+  "seam": 2,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_troubled": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/lucien_troubled.webp",
+  "restored_px": 11184,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（255,171）は戻さない"
+  ],
+  "iris_de": [
+   2.5,
+   4.9
+  ],
+  "holes_filled": 0,
+  "seam": 3,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_serious": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/lucien_serious.webp",
+  "restored_px": 10915,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（255,171）は戻さない"
+  ],
+  "iris_de": [
+   5.3,
+   4.1
+  ],
+  "holes_filled": 0,
+  "seam": 1,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "lucien_exasperated": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/lucien_exasperated.webp",
+  "restored_px": 10942,
+  "objects": 15,
+  "not_restored": [
+   "目・眉にかかる物（226,126）は戻さない",
+   "髪にかかる物（255,171）は戻さない"
+  ],
+  "iris_de": [
+   1.3,
+   1.8
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

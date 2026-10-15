@@ -22,16 +22,16 @@ F = json.load(open(os.path.join(HERE, "faces.json"))); MANUAL = {"barnabe": [195
 EXT = json.load(open(os.path.join(HERE, "ext.json"), encoding="utf-8"))
 HT = {"constance": 14, "margot": 55}
 PJ = {p["id"]: p for p in json.load(open(WT + "docs/art/portraits.json", encoding="utf-8"))["portraits"]}
-NG_OWNER = {"elnea_joy", "zerina_joy", "zerina_fun", "nora_shy", "bruno_fun", "bruno_shy", "bruno_serious", "bruno_cry", "bruno_panic"}   # 持ち主が作らないと決めた物（barnabe は全部）
+NG_OWNER = {"matthias_anger", "elnea_joy", "zerina_joy", "zerina_fun", "nora_shy", "bruno_fun", "bruno_shy", "bruno_serious", "bruno_cry", "bruno_panic"}   # 持ち主が作らないと決めた物（barnabe は全部）
 BASEFIX = os.environ.get("BASEFIX", os.path.join(HERE, "basefix"))   # 直した基本の絵（あればこちらを使う）
-FILLD = {"adele": "fill", "selevan": "fill", "constance": "fillrgb"}   # 差分の顔の中の透けた所も埋める人
+FILLD = {"adele": "fill", "selevan": "fill", "constance": "fillrgb", "leopold": "fillrgb", "vittorio": "fillrgb", "margot": "fill"}   # 差分の顔の中の透けた所も埋める人
 REGEN = os.environ.get("REGEN", os.path.join(HERE, "regen"))   # 作り直した差分（あればこちらを使う）
 NOCHEEK = {"felix_fun", "sieglinde"}
 MOUSTACHE = set()   # 基本の口ひげ（白っぽい灰色）を守る   # 頬は基本のまま（差分の頬の赤み・線が汚れに見える物）
 IRISBASE = {"mirlene"}
 IRISGRAY = {"selevan"}
 # 人ごとに、差分の画素を使わない所（顔の窓の四角に対する割合の楕円 [x, y, rx, ry]）。差分にだけ描かれた傷・毛などで、自動で外せない物
-DROP = {}   # 開いた目の瞳・ハイライトを、基本の目から写す（持ち主「差分と元の絵と目が違う」）
+DROP = {"margot": [[0.64, 0.5, 0.24, 0.2], [0.25, 0.55, 0.14, 0.14]]}   # 差分に増えた頬の傷（髪のそばで自動では分けられない）   # 開いた目の瞳・ハイライトを、基本の目から写す（持ち主「差分と元の絵と目が違う」）
 TH = {"misfit": 2.0, "misfit_frac": 0.35, "seam": 60, "diff": 0.025, "iris_de": 12.0}
 for d in ("portraits", "mask", "rep"): os.makedirs(os.path.join(OUT, d), exist_ok=True)
 
@@ -196,7 +196,7 @@ def run(i, moods=None):
     roi = np.zeros((H, W), bool); roi[win[1]:win[3], win[0]:win[2]] = True
     for m in vs:
         v = f"{i}_{m}"
-        if v in NG_OWNER or i == "barnabe": rep[v] = {"skip": "持ち主が作らないと決めた"}; continue
+        if v in NG_OWNER or i in ("barnabe", "hermes", "sig", "valdun", "anselmo", "bartolo"): rep[v] = {"skip": "持ち主が作らないと決めた"}; continue
         d0 = load(f"{REGEN}/{v}.webp" if os.path.exists(f"{REGEN}/{v}.webp") else f"{SRC}{v}.webp")
         if i in FILLD:
             import basefix as BF

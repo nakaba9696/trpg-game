@@ -196,11 +196,6 @@
 "orig": 21464,
 "gapPx": 78
 },
-"portraits/gustav_anger": {
-"bytes": 35168,
-"orig": 33516,
-"gapPx": 19
-},
 "portraits/hans": {
 "bytes": 24426,
 "orig": 22856,
@@ -235,21 +230,6 @@
 "bytes": 32236,
 "orig": 32118,
 "gapPx": 224
-},
-"portraits/sig_serious": {
-"bytes": 34076,
-"orig": 34752,
-"gapPx": 192
-},
-"portraits/sig_surprise": {
-"bytes": 34198,
-"orig": 34502,
-"gapPx": 191
-},
-"portraits/valeon_anger": {
-"bytes": 42930,
-"orig": 45314,
-"gapPx": 8
 },
 "portraits/zalve_anger": {
 "bytes": 30176,

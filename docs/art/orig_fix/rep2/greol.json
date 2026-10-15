@@ -1,0 +1,105 @@
+{
+ "greol_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/greol_joy.webp",
+  "restored_px": 8003,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（332,266）は戻さない",
+   "髪にかかる物（256,231）は戻さない",
+   "髪にかかる物（179,285）は戻さない",
+   "髪にかかる物（173,292）は戻さない",
+   "髪にかかる物（196,291）は戻さない",
+   "髪にかかる物（185,309）は戻さない",
+   "髪にかかる物（222,315）は戻さない",
+   "髪にかかる物（341,315）は戻さない",
+   "髪にかかる物（344,319）は戻さない"
+  ],
+  "iris_de": [
+   5.5,
+   5.7
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "greol_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/greol_anger.webp",
+  "restored_px": 8278,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（256,231）は戻さない"
+  ],
+  "iris_de": [
+   2.3,
+   2.7
+  ],
+  "holes_filled": 0,
+  "seam": 5,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "greol_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/greol_sorrow.webp",
+  "restored_px": 8297,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（256,231）は戻さない",
+   "髪にかかる物（196,291）は戻さない"
+  ],
+  "iris_de": [
+   3.6,
+   2.2
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "greol_fun": {
+  "ok": true,
+  "why": [],
+  "from": "regen/greol_fun.webp",
+  "restored_px": 0,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（239,276）は戻さない",
+   "髪にかかる物（332,266）は戻さない",
+   "髪にかかる物（256,231）は戻さない",
+   "髪にかかる物（179,285）は戻さない",
+   "髪にかかる物（173,292）は戻さない",
+   "髪にかかる物（196,291）は戻さない",
+   "髪にかかる物（322,310）は戻さない",
+   "髪にかかる物（185,309）は戻さない",
+   "髪にかかる物（222,315）は戻さない",
+   "髪にかかる物（341,315）は戻さない",
+   "髪にかかる物（344,319）は戻さない"
+  ],
+  "iris_de": [
+   5.6,
+   1.8
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

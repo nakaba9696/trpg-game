@@ -1,0 +1,106 @@
+{
+ "sieglinde_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/sieglinde_joy.webp",
+  "restored_px": 22935,
+  "objects": 17,
+  "not_restored": [
+   "髪にかかる物（234,135）は戻さない",
+   "髪にかかる物（177,159）は戻さない",
+   "髪にかかる物（184,181）は戻さない",
+   "髪にかかる物（186,187）は戻さない",
+   "髪にかかる物（187,198）は戻さない",
+   "髪にかかる物（202,207）は戻さない"
+  ],
+  "iris_de": [
+   2.4,
+   1.3
+  ],
+  "holes_filled": 0,
+  "seam": 1,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "sieglinde_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/sieglinde_anger.webp",
+  "restored_px": 453,
+  "objects": 17,
+  "not_restored": [
+   "髪にかかる物（234,135）は戻さない",
+   "髪にかかる物（177,159）は戻さない",
+   "髪にかかる物（336,160）は戻さない",
+   "髪にかかる物（184,181）は戻さない",
+   "髪にかかる物（186,187）は戻さない",
+   "髪にかかる物（187,198）は戻さない",
+   "髪にかかる物（202,207）は戻さない"
+  ],
+  "iris_de": [
+   2.0,
+   1.6
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "sieglinde_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/sieglinde_sorrow.webp",
+  "restored_px": 663,
+  "objects": 17,
+  "not_restored": [
+   "髪にかかる物（234,135）は戻さない",
+   "髪にかかる物（177,159）は戻さない",
+   "髪にかかる物（184,181）は戻さない",
+   "髪にかかる物（186,187）は戻さない",
+   "髪にかかる物（187,198）は戻さない",
+   "髪にかかる物（198,202）は戻さない"
+  ],
+  "iris_de": [
+   1.2,
+   1.5
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "sieglinde_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/sieglinde_fun.webp",
+  "restored_px": 23062,
+  "objects": 17,
+  "not_restored": [
+   "髪にかかる物（177,159）は戻さない",
+   "髪にかかる物（184,181）は戻さない",
+   "髪にかかる物（186,187）は戻さない",
+   "髪にかかる物（187,198）は戻さない",
+   "髪にかかる物（200,202）は戻さない"
+  ],
+  "iris_de": [
+   2.3,
+   1.7
+  ],
+  "holes_filled": 0,
+  "seam": 4,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

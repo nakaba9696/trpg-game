@@ -1,0 +1,187 @@
+{
+ "gauthier_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/gauthier_joy.webp",
+  "restored_px": 444,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（298,43）は戻さない",
+   "髪にかかる物（214,41）は戻さない",
+   "髪にかかる物（209,86）は戻さない",
+   "髪にかかる物（306,83）は戻さない",
+   "髪にかかる物（222,111）は戻さない",
+   "髪にかかる物（268,146）は戻さない",
+   "髪にかかる物（182,157）は戻さない"
+  ],
+  "iris_de": [],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   0,
+   0
+  ]
+ },
+ "gauthier_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/gauthier_anger.webp",
+  "restored_px": 509,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（298,43）は戻さない",
+   "髪にかかる物（214,41）は戻さない",
+   "髪にかかる物（209,86）は戻さない",
+   "髪にかかる物（306,83）は戻さない",
+   "髪にかかる物（222,111）は戻さない",
+   "髪にかかる物（268,146）は戻さない",
+   "髪にかかる物（182,157）は戻さない"
+  ],
+  "iris_de": [
+   3.7,
+   4.2
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "gauthier_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/gauthier_sorrow.webp",
+  "restored_px": 444,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（298,43）は戻さない",
+   "髪にかかる物（214,41）は戻さない",
+   "髪にかかる物（209,86）は戻さない",
+   "髪にかかる物（306,83）は戻さない",
+   "髪にかかる物（222,111）は戻さない",
+   "髪にかかる物（268,146）は戻さない",
+   "髪にかかる物（182,157）は戻さない"
+  ],
+  "iris_de": [
+   3.3,
+   1.1
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "gauthier_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/gauthier_fun.webp",
+  "restored_px": 444,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（298,43）は戻さない",
+   "髪にかかる物（214,41）は戻さない",
+   "髪にかかる物（209,86）は戻さない",
+   "髪にかかる物（306,83）は戻さない",
+   "髪にかかる物（222,111）は戻さない",
+   "髪にかかる物（268,146）は戻さない",
+   "髪にかかる物（182,157）は戻さない"
+  ],
+  "iris_de": [
+   2.8,
+   3.9
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "gauthier_serious": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/gauthier_serious.webp",
+  "restored_px": 521,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（298,43）は戻さない",
+   "髪にかかる物（214,41）は戻さない",
+   "髪にかかる物（209,86）は戻さない",
+   "髪にかかる物（306,83）は戻さない",
+   "髪にかかる物（222,111）は戻さない",
+   "髪にかかる物（268,146）は戻さない",
+   "髪にかかる物（182,157）は戻さない"
+  ],
+  "iris_de": [
+   2.8,
+   6.0
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "gauthier_faint_smile": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/gauthier_faint_smile.webp",
+  "restored_px": 444,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（298,43）は戻さない",
+   "髪にかかる物（214,41）は戻さない",
+   "髪にかかる物（209,86）は戻さない",
+   "髪にかかる物（306,83）は戻さない",
+   "髪にかかる物（222,111）は戻さない",
+   "髪にかかる物（268,146）は戻さない",
+   "髪にかかる物（182,157）は戻さない"
+  ],
+  "iris_de": [
+   4.0,
+   2.2
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "gauthier_surprise": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/gauthier_surprise.webp",
+  "restored_px": 4773,
+  "objects": 11,
+  "not_restored": [
+   "髪にかかる物（298,43）は戻さない",
+   "髪にかかる物（214,41）は戻さない",
+   "髪にかかる物（209,86）は戻さない",
+   "髪にかかる物（306,83）は戻さない",
+   "髪にかかる物（222,111）は戻さない",
+   "髪にかかる物（182,157）は戻さない"
+  ],
+  "iris_de": [
+   3.5,
+   5.8
+  ],
+  "holes_filled": 0,
+  "seam": 9,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

@@ -1,0 +1,73 @@
+{
+ "mirza_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/mirza_fun.webp",
+  "restored_px": 49640,
+  "objects": 8,
+  "not_restored": [
+   "髪にかかる物（215,136）は戻さない",
+   "髪にかかる物（223,179）は戻さない",
+   "髪にかかる物（300,176）は戻さない",
+   "髪にかかる物（300,182）は戻さない",
+   "髪にかかる物（252,292）は戻さない",
+   "髪にかかる物（314,292）は戻さない"
+  ],
+  "iris_de": [],
+  "holes_filled": 0,
+  "seam": 7,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "mirza_wicked": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/mirza_wicked.webp",
+  "restored_px": 49571,
+  "objects": 8,
+  "not_restored": [
+   "髪にかかる物（215,136）は戻さない",
+   "髪にかかる物（223,179）は戻さない",
+   "髪にかかる物（300,176）は戻さない",
+   "髪にかかる物（300,182）は戻さない",
+   "髪にかかる物（252,292）は戻さない",
+   "髪にかかる物（314,292）は戻さない"
+  ],
+  "iris_de": [],
+  "holes_filled": 0,
+  "seam": 5,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "mirza_smitten": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/mirza_smitten.webp",
+  "restored_px": 49612,
+  "objects": 8,
+  "not_restored": [
+   "髪にかかる物（215,136）は戻さない",
+   "髪にかかる物（223,179）は戻さない",
+   "髪にかかる物（300,176）は戻さない",
+   "髪にかかる物（300,182）は戻さない",
+   "髪にかかる物（252,292）は戻さない",
+   "髪にかかる物（314,292）は戻さない"
+  ],
+  "iris_de": [
+   1.5
+  ],
+  "holes_filled": 0,
+  "seam": 5,
+  "eyes": [
+   1,
+   1,
+   0
+  ]
+ }
+}

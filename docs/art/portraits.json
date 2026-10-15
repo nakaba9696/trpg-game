@@ -414,15 +414,7 @@
    "identity": "1boy, male focus, old man, 62 years old, short, wiry, tan skin, white hair, snow white hair, short hair, wild hair, bushy white beard, blue eyes, round eyes, bushy eyebrows, brown explorer hat, brown coat, leather satchel, dirt on clothes, deep wrinkles, big nose",
    "tags": "energetic, hand on hat, holding a magnifying glass",
    "face": "big grin",
-   "variants": {
-    "joy": "smile, closed eyes, happy",
-    "anger": "angry, frown, open mouth, shouting",
-    "sorrow": "sad, looking down, closed eyes",
-    "fun": "laughing, open mouth, excited",
-    "sparkle": "excited, sparkling eyes, open mouth, grin",
-    "surprise": "surprised, wide-eyed, open mouth",
-    "tired": "tired, sweat, open mouth"
-   },
+   "variants": {},
    "memo": "元気な考古学者の爺さん。遺跡が生きがい"
   },
   {
@@ -472,10 +464,7 @@
    "identity": "1boy, male focus, adult, man, 38 years old, very muscular, large build, tan skin, bald, brown beard, full beard, brown eyes, small eyes, thick eyebrows, scar on head, heavy dark grey plate armor, battle axe on back",
    "tags": "crossed arms",
    "face": "stern, angry eyebrows",
-   "variants": {
-    "serious": "serious, determined, frown",
-    "surprise": "surprised, wide-eyed, open mouth"
-   },
+   "variants": {},
    "memo": "王国十指《戦場の鉄塊》。王国最強の盾"
   },
   {
@@ -1807,7 +1796,6 @@
    "tags": "bowing politely, holding tongs",
    "face": "polite smile, blush",
    "variants": {
-    "anger": "frown, clenched teeth",
     "fun": "laughing, open mouth",
     "troubled": "troubled smile, sweatdrop, worried eyebrows",
     "serious": "serious, determined, closed mouth",

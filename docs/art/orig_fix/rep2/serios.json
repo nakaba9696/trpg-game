@@ -1,0 +1,96 @@
+{
+ "serios_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/serios_joy.webp",
+  "restored_px": 5352,
+  "objects": 24,
+  "not_restored": [
+   "髪にかかる物（273,201）は戻さない",
+   "髪にかかる物（221,207）は戻さない",
+   "髪にかかる物（254,218）は戻さない"
+  ],
+  "iris_de": [
+   1.7,
+   2.7
+  ],
+  "holes_filled": 0,
+  "seam": 8,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "serios_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/serios_anger.webp",
+  "restored_px": 1086,
+  "objects": 24,
+  "not_restored": [
+   "髪にかかる物（191,82）は戻さない",
+   "髪にかかる物（273,201）は戻さない",
+   "髪にかかる物（221,207）は戻さない",
+   "髪にかかる物（254,218）は戻さない"
+  ],
+  "iris_de": [
+   2.4,
+   0.7
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "serios_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/serios_sorrow.webp",
+  "restored_px": 788,
+  "objects": 24,
+  "not_restored": [
+   "髪にかかる物（273,201）は戻さない",
+   "髪にかかる物（221,207）は戻さない",
+   "髪にかかる物（254,218）は戻さない"
+  ],
+  "iris_de": [
+   2.8,
+   1.3
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "serios_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/serios_fun.webp",
+  "restored_px": 694,
+  "objects": 24,
+  "not_restored": [
+   "髪にかかる物（191,82）は戻さない",
+   "髪にかかる物（273,201）は戻さない",
+   "髪にかかる物（221,207）は戻さない",
+   "髪にかかる物（254,218）は戻さない"
+  ],
+  "iris_de": [
+   1.1,
+   5.8
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

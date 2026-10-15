@@ -1,0 +1,76 @@
+{
+ "vittorio_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/vittorio_joy.webp",
+  "restored_px": 17994,
+  "objects": 12,
+  "not_restored": [],
+  "iris_de": [
+   2.4,
+   4.3
+  ],
+  "holes_filled": 31,
+  "seam": 6,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "vittorio_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/vittorio_anger.webp",
+  "restored_px": 18010,
+  "objects": 12,
+  "not_restored": [],
+  "iris_de": [
+   3.1
+  ],
+  "holes_filled": 31,
+  "seam": 3,
+  "eyes": [
+   2,
+   1,
+   1
+  ]
+ },
+ "vittorio_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/vittorio_sorrow.webp",
+  "restored_px": 18086,
+  "objects": 12,
+  "not_restored": [],
+  "iris_de": [
+   5.8
+  ],
+  "holes_filled": 31,
+  "seam": 7,
+  "eyes": [
+   2,
+   1,
+   2
+  ]
+ },
+ "vittorio_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/vittorio_fun.webp",
+  "restored_px": 18001,
+  "objects": 12,
+  "not_restored": [],
+  "iris_de": [
+   3.2,
+   3.9
+  ],
+  "holes_filled": 31,
+  "seam": 10,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

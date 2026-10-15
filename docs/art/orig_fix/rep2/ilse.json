@@ -1,0 +1,103 @@
+{
+ "ilse_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/ilse_joy.webp",
+  "restored_px": 9014,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（298,115）は戻さない",
+   "髪にかかる物（243,115）は戻さない",
+   "髪にかかる物（254,137）は戻さない",
+   "髪にかかる物（319,142）は戻さない",
+   "目・眉にかかる物（258,140）は戻さない",
+   "髪にかかる物（187,183）は戻さない",
+   "髪にかかる物（138,246）は戻さない"
+  ],
+  "iris_de": [
+   2.8,
+   1.0
+  ],
+  "holes_filled": 0,
+  "seam": 1,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "ilse_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/ilse_anger.webp",
+  "restored_px": 8574,
+  "objects": 12,
+  "not_restored": [
+   "髪にかかる物（319,142）は戻さない",
+   "目・眉にかかる物（258,140）は戻さない",
+   "目・眉にかかる物（260,149）は戻さない",
+   "髪にかかる物（138,246）は戻さない"
+  ],
+  "iris_de": [
+   1.6,
+   4.0
+  ],
+  "holes_filled": 0,
+  "seam": 10,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "ilse_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/ilse_sorrow.webp",
+  "restored_px": 611,
+  "objects": 14,
+  "not_restored": [
+   "髪にかかる物（243,115）は戻さない",
+   "髪にかかる物（254,137）は戻さない",
+   "髪にかかる物（319,142）は戻さない",
+   "目・眉にかかる物（258,140）は戻さない",
+   "髪にかかる物（187,183）は戻さない"
+  ],
+  "iris_de": [
+   2.9
+  ],
+  "holes_filled": 0,
+  "seam": 1,
+  "eyes": [
+   2,
+   1,
+   1
+  ]
+ },
+ "ilse_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/ilse_fun.webp",
+  "restored_px": 8736,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（298,115）は戻さない",
+   "髪にかかる物（243,115）は戻さない",
+   "髪にかかる物（254,137）は戻さない",
+   "髪にかかる物（319,142）は戻さない",
+   "目・眉にかかる物（258,140）は戻さない",
+   "髪にかかる物（138,246）は戻さない"
+  ],
+  "iris_de": [
+   2.6,
+   5.5
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

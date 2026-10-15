@@ -4,6 +4,7 @@ import base64, io, json, os, re, subprocess, sys, urllib.request
 from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__)); WT = "H:/game/origfix-wt"
 REP = {
+ "titta_anger": (None, "(angry:1.6), (v-shaped eyebrows:1.5), (frown:1.4), (glaring:1.4), clenched teeth", ", (smile:1.6), (happy:1.4), (calm:1.3)"),
  "mordu_joy": (None, "smile, closed eyes, (short grey mustache:1.5), (stubble:1.2)", ", (clean-shaven:1.5), (no mustache:1.5)"),
 "mordu_anger": ("frown, glaring", "(frown:1.4), (glaring:1.4), (furrowed brows:1.3), (short grey mustache:1.5), (stubble:1.2)", ", (clean-shaven:1.5), (no mustache:1.5)"),
  "mordu_sorrow": (None, "sad, looking down, (short grey mustache:1.5), (stubble:1.2)", ", (clean-shaven:1.5), (no mustache:1.5)"),
@@ -40,8 +41,8 @@ else:   # 一覧の表情のタグのまま（作り直すだけ）。傷・ひ�
     old = new = P[i]["variants"][m]; negx = ", (scar:1.5), (scratch:1.5), (cut on cheek:1.5), (facial mark:1.3), (bandaid:1.3)"
 assert old in pos, (old, pos)
 pos = pos.replace(old, new); neg = neg + negx
-base = Image.open(f"{HERE}/basefix/{i}.webp" if os.path.exists(f"{HERE}/basefix/{i}.webp") else f"{HERE}/../main_orig/assets/portraits/{i}.webp").convert("RGBA"); bg = Image.new("RGBA", base.size, (255, 255, 255, 255)); bg.alpha_composite(base)
-bio = io.BytesIO(); bg.convert("RGB").save(bio, "PNG"); init = base64.b64encode(bio.getvalue()).decode()
+base = Image.open(f"{HERE}/basefix/{i}.webp" if os.path.exists(f"{HERE}/basefix/{i}.webp") else f"{HERE}/../main_orig/assets/portraits/{i}.webp").convert("RGBA"); CLEAN = f"{HERE}/clean_{i}.png"; bg = Image.new("RGBA", base.size, (255, 255, 255, 255)); bg.alpha_composite(base)
+bio = io.BytesIO(); (Image.open(CLEAN).convert("RGB") if os.path.exists(CLEAN) else bg.convert("RGB")).save(bio, "PNG"); init = base64.b64encode(bio.getvalue()).decode()
 st = json.load(open(f"{WT}/docs/art/style.json", encoding="utf-8"))
 for sd in [int(s) for s in sys.argv[2].split(",")]:
     b = {"prompt": pos, "negative_prompt": neg, "seed": sd, "steps": st.get("steps", 20), "cfg_scale": st.get("cfg_scale", 5.5), "sampler_name": st.get("sampler_name", "Euler a"),

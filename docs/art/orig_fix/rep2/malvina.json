@@ -1,0 +1,133 @@
+{
+ "malvina_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/malvina_joy.webp",
+  "restored_px": 8722,
+  "objects": 5,
+  "not_restored": [],
+  "iris_de": [
+   2.6,
+   0.7
+  ],
+  "holes_filled": 0,
+  "seam": 4,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "malvina_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/malvina_anger.webp",
+  "restored_px": 9080,
+  "objects": 5,
+  "not_restored": [],
+  "iris_de": [
+   5.3
+  ],
+  "holes_filled": 0,
+  "seam": 1,
+  "eyes": [
+   2,
+   1,
+   1
+  ]
+ },
+ "malvina_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/malvina_sorrow.webp",
+  "restored_px": 8869,
+  "objects": 5,
+  "not_restored": [],
+  "iris_de": [
+   5.6,
+   4.2
+  ],
+  "holes_filled": 0,
+  "seam": 3,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "malvina_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/malvina_fun.webp",
+  "restored_px": 9098,
+  "objects": 5,
+  "not_restored": [],
+  "iris_de": [
+   4.5,
+   0.7
+  ],
+  "holes_filled": 0,
+  "seam": 1,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "malvina_serious": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/malvina_serious.webp",
+  "restored_px": 9127,
+  "objects": 5,
+  "not_restored": [],
+  "iris_de": [
+   3.5,
+   0.9
+  ],
+  "holes_filled": 0,
+  "seam": 1,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "malvina_cold": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/malvina_cold.webp",
+  "restored_px": 8863,
+  "objects": 6,
+  "not_restored": [],
+  "iris_de": [
+   5.5
+  ],
+  "holes_filled": 0,
+  "seam": 2,
+  "eyes": [
+   2,
+   1,
+   1
+  ]
+ },
+ "malvina_faint_smile": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/malvina_faint_smile.webp",
+  "restored_px": 8883,
+  "objects": 5,
+  "not_restored": [],
+  "iris_de": [
+   5.0,
+   0.6
+  ],
+  "holes_filled": 0,
+  "seam": 1,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

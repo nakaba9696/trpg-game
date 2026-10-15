@@ -1,0 +1,99 @@
+{
+ "mirlene_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/mirlene_joy.webp",
+  "restored_px": 541,
+  "objects": 9,
+  "not_restored": [
+   "髪にかかる物（218,196）は戻さない",
+   "髪にかかる物（301,203）は戻さない",
+   "髪にかかる物（218,206）は戻さない",
+   "髪にかかる物（260,253）は戻さない"
+  ],
+  "iris_de": [
+   1.1,
+   1.0
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "mirlene_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/mirlene_anger.webp",
+  "restored_px": 341,
+  "objects": 9,
+  "not_restored": [
+   "髪にかかる物（218,196）は戻さない",
+   "髪にかかる物（218,206）は戻さない",
+   "髪にかかる物（260,253）は戻さない",
+   "髪にかかる物（218,240）は戻さない"
+  ],
+  "iris_de": [
+   2.2,
+   2.3
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "mirlene_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/mirlene_sorrow.webp",
+  "restored_px": 1100,
+  "objects": 9,
+  "not_restored": [
+   "髪にかかる物（301,203）は戻さない",
+   "髪にかかる物（218,206）は戻さない",
+   "髪にかかる物（294,220）は戻さない",
+   "髪にかかる物（260,253）は戻さない",
+   "髪にかかる物（218,240）は戻さない"
+  ],
+  "iris_de": [
+   1.8,
+   2.0
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ },
+ "mirlene_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/mirlene_fun.webp",
+  "restored_px": 144,
+  "objects": 9,
+  "not_restored": [
+   "髪にかかる物（218,196）は戻さない",
+   "髪にかかる物（301,203）は戻さない",
+   "髪にかかる物（218,206）は戻さない",
+   "髪にかかる物（218,240）は戻さない"
+  ],
+  "iris_de": [
+   1.2,
+   0.9
+  ],
+  "holes_filled": 0,
+  "seam": 0,
+  "eyes": [
+   2,
+   2,
+   2
+  ]
+ }
+}

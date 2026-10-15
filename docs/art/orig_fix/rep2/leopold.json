@@ -1,0 +1,101 @@
+{
+ "leopold_joy": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/leopold_joy.webp",
+  "restored_px": 494,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（258,86）は戻さない",
+   "髪にかかる物（310,93）は戻さない",
+   "髪にかかる物（195,177）は戻さない",
+   "髪にかかる物（341,190）は戻さない",
+   "髪にかかる物（265,210）は戻さない",
+   "髪にかかる物（281,214）は戻さない",
+   "髪にかかる物（334,224）は戻さない"
+  ],
+  "iris_de": [],
+  "holes_filled": 111,
+  "seam": 50,
+  "eyes": [
+   1,
+   0,
+   0
+  ]
+ },
+ "leopold_anger": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/leopold_anger.webp",
+  "restored_px": 9081,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（258,86）は戻さない",
+   "髪にかかる物（310,93）は戻さない",
+   "髪にかかる物（195,177）は戻さない",
+   "髪にかかる物（341,190）は戻さない",
+   "髪にかかる物（265,210）は戻さない",
+   "髪にかかる物（334,224）は戻さない"
+  ],
+  "iris_de": [
+   2.0
+  ],
+  "holes_filled": 111,
+  "seam": 12,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "leopold_sorrow": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/leopold_sorrow.webp",
+  "restored_px": 725,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（258,86）は戻さない",
+   "髪にかかる物（310,93）は戻さない",
+   "髪にかかる物（195,177）は戻さない",
+   "髪にかかる物（341,190）は戻さない",
+   "髪にかかる物（265,210）は戻さない",
+   "髪にかかる物（334,224）は戻さない"
+  ],
+  "iris_de": [
+   1.4
+  ],
+  "holes_filled": 111,
+  "seam": 18,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ },
+ "leopold_fun": {
+  "ok": true,
+  "why": [],
+  "from": "../main_orig/assets/portraits/leopold_fun.webp",
+  "restored_px": 770,
+  "objects": 15,
+  "not_restored": [
+   "髪にかかる物（258,86）は戻さない",
+   "髪にかかる物（310,93）は戻さない",
+   "髪にかかる物（195,177）は戻さない",
+   "髪にかかる物（341,190）は戻さない",
+   "髪にかかる物（265,210）は戻さない",
+   "髪にかかる物（334,224）は戻さない"
+  ],
+  "iris_de": [
+   1.7
+  ],
+  "holes_filled": 111,
+  "seam": 10,
+  "eyes": [
+   1,
+   1,
+   1
+  ]
+ }
+}
