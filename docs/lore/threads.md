@@ -191,7 +191,7 @@
 | オルベの老婆の石工の息子、聖都の大聖堂「仕事はとても静か」 | events_w7b_orb.js:w7b_orb_mother | lore_w7b_orb.js:mother | 未回収 | 聖都の地下（墓守の帳面）への匂わせ。噂だけ |
 | 隊商頭「うちの隊商に会ったら名を言え」 | echo_f4_events.js:f4r_caravan_saved | ― | 未回収 | 印が無い |
 | ケイルから預かった薬師の種 | echo_f4_events.js:f4r_cure_young | ― | 未回収 | 持ち物は薬草に化け、蒔く先が無い |
-| 削られた玉座の獣の顔を何度も削り直す誰か | oldera_d6.js:d6_old_mural | events_w7c_hal.js:w7c_hal_statue | 余白 | 魔王 |
+| 削られた玉座の獣の顔を何度も削り直す誰か | oldera_d6.js:d6_old_mural | events_w7c_hal.js:w7c_hal_statue | 余白 | 創造主（D11。前は魔王） |
 | 祈祷文「王の眠りを妨げるな」 | oldera_d6.js:d6_old_prayer | events_town2.js:v1_yuradream・e3_apostles.js:e3_meet_yura | 回収済み | 断片どうし。本当に眠っているかは余白 |
 | 逆さの夢の子「起こそうとしてる人」 | events_town2.js:v1_yuradream | e3_apostles.js:e3_meet_yura・lore_u3.js:dream | 回収済み | 起こそうとする人が誰か（暁鐘会）は上の行 |
 | 灰色の外套の旅人（八件） | walker_d6.js:d6_w_shrine | ― | 余白 | GM も決めない |
@@ -285,8 +285,9 @@
 | 忘れ名の冠の削られた名・七つの墓標 | items_m5.js:m5_namecrown | sanity_m5.js:crown | 回収済み | |
 | 刻印の環の空いた枠と小さな人の形 | world.js:LORE_GM | ― | 余白 | |
 | 光の壁の向こう（974 年の艦隊） | world.js:LORE_GM・epilogue_m6.js:m6_wall | ― | 余白 | 印 m6_wall_seen は読まれないが、壁の向こうは余白 |
-| 魔王を殺したのは誰か・夜哭城が泣く理由 | world.js:LORE_GM | ― | 余白 | |
-| 神々は死んだのか去ったのか | world.js:LORE_GM | ― | 余白 | |
+| 最後の創造主を殺したのは誰か・夜哭城が泣く理由（D11。前は魔王） | world.js:LORE_GM | ― | 余白 | |
+| 創造主は何人いて何を争ったか・世界はいつ終わるのか | world.js:LORE_GM | ― | 余白 | D11（前の「神々は死んだのか去ったのか」は、神々が最初からいないので取り下げた） |
+| 使徒ごとの不死性と破り方 | world.js:LORE_GM | ― | 未回収 | D11。gods.md「使徒の不死性」。中身はレーン E |
 | 討たれた使徒は本当に死んだか | world.js:LORE_GM・e3_apostles.js:e3_f_bell | ― | 余白 | |
 | ベルファスが目を合わせない理由 | world.js:MAJIN | ― | 余白 | |
 | ベルナが善意か研究か | enemies_e2.js:e2_berna | ― | 余白 | |
@@ -513,7 +514,7 @@
 | 王都の門番の帳面の保証人の酒場 | zz_s8_reasons.js:w3_o_l_gate | ― | 取り下げてよい | その酒場は出ない |
 | 水の都の誰のものでもない小舟（朝には戻る） | zz_a11_sights.js:w4_tulier | ― | 取り下げてよい | 情景 |
 | 黒鎧の帳面の頁「あと一つで百」 | dungeon_w11_places.js:w11_mc_lore2 | boss_lines.js:rize | 回収済み | 頁を返す場面は無い（上の行） |
-| 逆さの浮き彫りの顔を削られた玉座の獣 | dungeon_w11_places.js:w11_mc_lore1・w12_ruins.js:w12_ps_mural | ― | 余白 | 昔の魔王 |
+| 逆さの浮き彫りの顔を削られた玉座の獣 | dungeon_w11_places.js:w11_mc_lore1・w12_ruins.js:w12_ps_mural | ― | 余白 | 創造主（D11。前は昔の魔王） |
 | いちばん古い鎧の子どもの落書きのような丸 | dungeon_w11_places.js:w11_mc_lore3 | ― | 余白 | 刻印の環の彫りかけの人 |
 | ゴズの削られた誓い「夜明けまで、門を」 | dungeon_w11_places.js:w11_og_lore3 | ― | 余白 | 鎖と香煙の女の関わりは〔秘〕 |
 | 石の帳「ヴァ・エル」「名を呼べば竜は膝を折る」 | dungeon_w11_places.js:w11_gy_lore3 | w12_ruins.js:w12_nf_boast | 回収済み | |
