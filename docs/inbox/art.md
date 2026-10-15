@@ -13,6 +13,7 @@
 - 済んだら redesign-1 に push、「済み」に書く。全身と顔の窓を並べた docs/art/redesign/solenne_final.webp も置く。
 
 ### 2026-10-15 持ち主の確認（30〜72 人目）の反映（いちばん上。1〜29 人目の指示の続き）
+→ 2026-10-16 済み（orig-fix-1・d59b5bb5／ソレンヌの候補は redesign-1・eacaa5b0）。
 OK 139・直す 23・印なし 106。
 - **基本の絵から直す**：
   - **背景が抜けていない基本の絵が 11 人**（配り役が全員を機械で調べた。RGB で、四隅が白 242〜255）：chancellor・chezar・dominik・gaston・gauthier・gert・graul・greiol・katia・odette・zork。全員の基本と差分を抜き直す（IMG-52）。抜いたあと、全員の立ち絵が RGBA で透けた画素があることを一覧で確かめて「済み」に書く。
@@ -28,6 +29,7 @@ OK 139・直す 23・印なし 106。
 - 直した物は orig-fix-1 に積み、「済み」に名前と枚数。1〜29 人目の指示と一緒に進めてよい（順番は、基本の絵の直し → 人ごと → 一枚ずつ）。
 
 ### 2026-10-15 持ち主の確認（最初の差分の直し・1〜29 人目）の反映（いちばん上）
+→ 2026-10-16 済み（orig-fix-1・d59b5bb5／ソレンヌの候補は redesign-1・eacaa5b0）。
 持ち主が確認ページ（orig-fix-1 の直した後の絵）で 1〜29 人目を見た。OK 110・直す 22・印なし 77。直す物と、持ち主の言葉：
 - **キャラデザからやり直す**：solenne「全差分旗の色がおかしい　キャラデザからもう一回やり直して」。シグルンと同じ形で、設定（portraits.json の memo・src/data の人物）を読んで候補 3 枚 → docs/art/redesign/solenne.webp を置いて持ち主の選び待ちで止まる。
 - **人ごと全部の差分をやり直す**（基本の絵を先に見直す）：
@@ -174,6 +176,47 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-16 持ち主の確認（1〜29 人目・30〜72 人目）の反映 → 済み（orig-fix-1・d59b5bb5）
+**目の崩れの原因**（natalia・lucien・mirlene・selevan・lisette・wolfram）：瞳の色合わせではなく、目の範囲の取り方にあった。
+1. 目の範囲が検出した目の箱だけだった。閉じた目・細めた目は検出されず、範囲から外れていた。そのため、基本の開いた目と差分の閉じた目が重なった（natalia の喜・lucien の哀・wolfram の喜）。
+2. 「守る所」（肌でない画素）が、目の中のハイライトや白い点まで外していた（lisette・natalia）。
+3. 基本の目の中が透けていた（selevan・constance）。
+
+→ 直し方：目の範囲を目の楕円と目の塊（基本と差分の両方）まで広げた。その中で外すのは、前髪・眼鏡の縁・ひげと、差分にだけある線だけにした。位置合わせは整数の平行移動だけにした（ぼけないように）。mirlene は、開いた目の瞳とハイライトを基本の目から写した。
+
+**基本の絵**
+- 背景が抜けていなかった 19 枚を抜いた。chancellor・chezar・dominik・gaston・gauthier・gert・graul・greiol・katia・odette・zork と、村人の型 8 枚（kind_*）。
+  - 立ち絵 921 枚が、どれも透明つきになったことを確かめた。
+  - 点検 tests/checks/a52_portrait_alpha.mjs を足した。透明の無い立ち絵があると落ちる。
+- 透けた穴を埋めた：adele（ばんそうこう・口の中）、selevan（目）、constance（目。目の絵が残っていたので色はそのまま）。
+- ilse：髪の外に飛び出した細い毛（枝毛）を消した。差分も透明度を合わせた。
+- baudouin：抜き直した（左の髪）。
+- gensai：gensai_wicked を基本にした。wicked の差分はやめた。
+
+**人ごと全部やり直した**：adele・margot・lisette・selevan・natalia・mirlene・chezar・constance・baudouin・gensai・mordu・noeris・sieglinde・izra・mirza・dorothea、と背景を抜いた人。
+- lisette は 8 つとも作り直した。傷が出ないようにした。
+- mordu は 4 つとも口ひげつきで作り直した。基本より口ひげが少し濃い。
+- sieglinde は、頬の赤い所（あざに見えた）を基本のままにした。
+- margot の傷・adele の×のばんそうこう・felix の頬の汚れ：差分にだけある傷・ばんそうこう・汚れは外す決まりを足した。
+
+**一枚ずつ**
+- 作り直し（img2img・表情のタグだけ差し替え・生成の値は docs/art/gen/<id>_fix.json）：sheila 喜（目を閉じて笑う）・sheila 怒（頬をふくらませない）・selevan 哀・gigra 哀・gensai 怒・哀・gustav 楽（舌なし）・lumia 楽・得意げ・yurien 哀・楽・ambroise 哀（葉なし）・angelica 怒。
+- 範囲の直しで直した：kaidel 真剣（基本の口の残り）・wolfram 喜・lucien 哀・trude 楽・得意げ・慌て・felix 楽・yura 怒・楽・farina 哀・ilse 喜。
+- dietrich の喜・哀・楽は、直す前（main）の絵に戻した。
+
+**やめた差分**：nora 照れ・zerina 喜・楽・elnea 喜・barnabe 全部・bruno 楽・照れ・真剣・泣き・慌て・valdun 全部・anselmo 全部・bartolo 全部・tsuyuha 喜・takimaru 喜・bride 楽・gensai 悪い笑み。portraits.json の variants・a20_gaps.json から外した。
+
+**顔の窓の四角**：berangere・clarisse・rufina を下へずらした（目が四角の 55% の高さ）。上端が 0 に近い 39 人を一覧で見て、ほかは顔が入っていた。
+
+**ソレンヌ**：候補 3 枚を redesign-1（eacaa5b0）の docs/art/redesign/solenne.webp に置いた。持ち主は候補 1 を選んだ。基本と差分は次に作る。
+
+**数**
+- 直した差分は 365 枚。1〜72 人目は、印の付いた人と物だけ置き換えた。73 人目から後は、新しい道具の結果に置き換えた。
+- 基本の絵を替えたのは 25 枚。
+- 自動の点検で落ちたので、前の絵のまま残した物が 8 枚：chezar 哀・悪い笑み、constance 疲れ、filie 楽、margot 真剣、shione 目を輝かせる、violaine 怒、zork 怒。透明度だけ新しい基本に合わせた物は 7 枚。
+
+**点検**：ONLY で a52_portrait_alpha・v4_assets・v11_moods・a20_gaps・u41_face_window・v3_art・u18_changelog を動かし、どれも通った。直した絵は、基本・main・直した後を並べて目で見た。
 
 ### 2026-10-15 ドレイゼの仕上げ 3 点 → 2026-10-15 済み（redesign-1・dc766350）
 1. **人の姿の手の穴**
