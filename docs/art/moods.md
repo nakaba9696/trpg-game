@@ -22,13 +22,13 @@
 | `fun` | 楽 | laughing, open mouth, closed eyes | 基本 | 楽しい・笑い転げる | 126 |
 | `surprise` | 驚き | surprised, wide-eyed, open mouth, raised eyebrows | 怯え → 基本 | 目を丸くする・息を呑む | 42 |
 | `shy` | 照れ | embarrassed, blush, looking away | 喜 → 基本 | 頬を染める・褒められて照れる（男も blush でよい。#185） | 31 |
-| `troubled` | 困り | troubled, worried eyebrows, awkward smile, sweatdrop | 哀 → 基本 | 困った顔・苦笑い | 30 |
-| `serious` | 真剣 | serious, determined, focused eyes, closed mouth | 基本 | 腹を決めた・本気の顔 | 72 |
+| `troubled` | 困り | troubled, worried eyebrows, awkward smile, sweatdrop | 哀 → 基本 | 困った顔・苦笑い | 29 |
+| `serious` | 真剣 | serious, determined, focused eyes, closed mouth | 基本 | 腹を決めた・本気の顔 | 71 |
 | `smug` | 得意げ | smug, smirk, half-closed eyes, raised eyebrow | 楽 → 喜 → 基本 | 胸を張る・したり顔 | 37 |
 | `fear` | 怯え | scared, frightened, wide-eyed, worried eyebrows, pale face, sweat | 驚き → 哀 → 基本 | 震える・青ざめる | 6 |
 | `tired` | 疲れ | tired, exhausted, half-closed eyes, sweat, open mouth | 困り → 哀 → 基本 | へたり込む・息が上がる | 12 |
 | `cry` | 泣き | crying, tears, streaming tears, open mouth | 哀 → 基本 | 泣き崩れる・号泣（哀より強い） | 13 |
-| `panic` | 慌て | flustered, panicking, wide-eyed, sweatdrop, wavy mouth | 困り → 驚き → 怯え → 基本 | あたふたする・しくじりに慌てる | 29 |
+| `panic` | 慌て | flustered, panicking, wide-eyed, sweatdrop, wavy mouth | 困り → 驚き → 怯え → 基本 | あたふたする・しくじりに慌てる | 28 |
 | `pout` | すね | pout, puffed cheeks, looking away | 怒 → 基本 | むくれる・すねる | 9 |
 | `faint_smile` | ほんの少し笑う | slight smile, soft eyes, closed mouth | 喜 → 基本 | 無表情な人がわずかに笑う | 53 |
 | `sparkle` | 目を輝かせる | excited, sparkling eyes, smile, open mouth | 楽 → 喜 → 基本 | 好きな物を前に夢中になる | 24 |
@@ -37,7 +37,7 @@
 | `drunk` | 酔い | drunk, flushed face, blush, half-closed eyes, wavy mouth | 楽 → 照れ → 喜 → 基本 | 酒が回った顔 | 4 |
 | `sleepy` | 眠い | sleepy, drowsy, half-closed eyes, yawning | 疲れ → 基本 | あくび・うとうと | 13 |
 | `exasperated` | 呆れ | exasperated, half-closed eyes, deadpan, sigh | 困り → 疲れ → 基本 | ため息・あきれ顔 | 14 |
-| `smitten` | うっとり | smitten, blush, dreamy eyes, gentle smile | 照れ → 喜 → 基本 | 見とれる・想い人を思う | 10 |
+| `smitten` | うっとり | smitten, blush, dreamy eyes, gentle smile | 照れ → 喜 → 基本 | 見とれる・想い人を思う | 9 |
 
 ## 人ごとの割り当て（131 人）
 
@@ -105,7 +105,7 @@
 | ラザール（`lazare`） | 得意げ（`smug`）・照れ（`shy`）・慌て（`panic`）・真剣（`serious`） |
 | ロドルフ（`rodolphe`） | 冷たい目（`cold`）・ほんの少し笑う（`faint_smile`）・真剣（`serious`）・呆れ（`exasperated`） |
 | マルゴ（`margot`） | 得意げ（`smug`）・悪い笑み（`wicked`）・目を輝かせる（`sparkle`）・真剣（`serious`）・うっとり（`smitten`） |
-| ソレンヌ（`solenne`） | 照れ（`shy`）・慌て（`panic`）・真剣（`serious`）・困り（`troubled`）・うっとり（`smitten`） |
+| ソレンヌ（`solenne`） | 照れ（`shy`） |
 | ピピネル（`pipinelle`） | 得意げ（`smug`）・すね（`pout`）・眠い（`sleepy`）・ほんの少し笑う（`faint_smile`） |
 | リゼット（`lisette`） | 目を輝かせる（`sparkle`）・悪い笑み（`wicked`）・眠い（`sleepy`）・困り（`troubled`） |
 | グラモン（`gramont`） | 冷たい目（`cold`）・真剣（`serious`）・得意げ（`smug`） |

@@ -1408,15 +1408,11 @@
    "tags": "holding five dog leashes, standing straight",
    "face": "serious, frown",
    "variants": {
-    "joy": "embarrassed smile, blush",
-    "anger": "angry, shouting, blush",
-    "sorrow": "teary eyes, frown",
-    "fun": "flustered, blush, wide eyes",
-    "shy": "embarrassed, heavy blush, looking away",
-    "panic": "flustered, blush, wide-eyed, sweatdrop, wavy mouth",
-    "serious": "serious, determined, focused eyes, closed mouth",
-    "troubled": "troubled, worried eyebrows, awkward smile",
-    "smitten": "smitten, blush, dreamy eyes, gentle smile"
+    "joy": "(embarrassed smile:1.4), (blush:1.2), (happy:1.2), closed mouth",
+    "anger": "(angry:1.5), (v-shaped eyebrows:1.4), (shouting:1.2), (open mouth:1.2), (blush:1.1)",
+    "sorrow": "(sad:1.5), (teary eyes:1.3), (frown:1.3), (worried eyebrows:1.3)",
+    "fun": "(laughing:1.4), (smile:1.4), (open mouth:1.2), (closed eyes:1.2)",
+    "shy": "(embarrassed:1.5), (heavy blush:1.5), (looking away:1.4), (wavy mouth:1.2)"
    },
    "memo": "C6・仲間。没落した騎士家の娘。騎士学校の首席なのに日雇い。姉御肌で堅物、恋の話に真っ赤になる。黒髪の一つ結び、質札の束"
   },
