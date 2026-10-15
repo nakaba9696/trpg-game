@@ -90,6 +90,22 @@
 
 ## 済み
 
+### 2026-10-15 シグルンの描き直し：基本の絵と喜怒哀楽 → 2026-10-15 済み（redesign-1・678af06c）
+- 基本の絵：持ち主が選んだ候補 1（seed 15131）を、透過を抜いて assets/portraits/sigrun.webp に置いた。
+  - 抜き方：birefnet-general の柔らかいマスクで抜き、白い地を引いて縁の色を戻し、512×640 に縮めた。
+  - 暗い背景とマゼンタの背景で、縁を拡大して確かめた。
+- 差分：joy・anger・sorrow・fun の 4 つ。
+  - 基本の絵から全身の img2img で作った（denoising 0.5・表情のタグだけ差し替え）。
+  - そのあと orig-fix の道具で、表情の所以外を基本の画素に合わせた。眼帯は守る所に入れた。
+  - 寡黙な人なので、表情は小さめにした。怒りの印・涙・赤面は無し。
+  - 喜は口元だけで薄く笑う。楽は片目を細めた笑み。
+  - seed：joy 15131、anger・sorrow・fun 15132。anger と sorrow は、portraits.json の variants のタグでは表情がほとんど変わらなかったので、重みを上げた。
+- 顔の窓の四角（src/data/u41_face_box.js の sigrun）を、新しい絵の顔の位置に合わせて直した。
+- 生成の値は docs/art/gen/sigrun_base.json・sigrun_<表情>.json。道具は docs/art/redesign/cut.py・sigrun_var.py。
+- 点検：ONLY で u41_face_window・v11_moods・v3_art・v4_assets・a4_art・u18_changelog を動かし、どれも通った。
+- 変更履歴（changelog.js の次の版）に一行足した。
+- portraits.json の identity・tags（頭巾を下ろした・顔が見える）の書き換えは、配り役にお願いします。
+
 ### 2026-10-15 ドレイゼの作り直し 2：候補 → 2026-10-15 置いた（redesign-1・6f078b58）。持ち主の選び待ち
 - 見本：docs/art/redesign/zalve_2.webp（A〜D。全身と顔の拡大）。
 - 作り方：候補 1（seed 15121）の服と顔立ちをそのまま使い、異質さだけを足した。
