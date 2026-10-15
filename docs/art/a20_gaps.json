@@ -166,11 +166,6 @@
 "orig": 24970,
 "gapPx": 646
 },
-"portraits/alicia_faint_smile": {
-"bytes": 28562,
-"orig": 25036,
-"gapPx": 656
-},
 "portraits/alicia_fun": {
 "bytes": 28740,
 "orig": 25158,
@@ -241,11 +236,6 @@
 "orig": 43504,
 "gapPx": 774
 },
-"portraits/berangere_joy": {
-"bytes": 39794,
-"orig": 42240,
-"gapPx": 783
-},
 "portraits/berangere_pout": {
 "bytes": 41120,
 "orig": 43652,
@@ -271,35 +261,15 @@
 "orig": 52540,
 "gapPx": 76
 },
-"portraits/bruno_cry": {
-"bytes": 45560,
-"orig": 52958,
-"gapPx": 78
-},
 "portraits/bruno_fear": {
 "bytes": 45814,
 "orig": 52800,
-"gapPx": 78
-},
-"portraits/bruno_fun": {
-"bytes": 45270,
-"orig": 52402,
 "gapPx": 78
 },
 "portraits/bruno_joy": {
 "bytes": 45684,
 "orig": 52510,
 "gapPx": 76
-},
-"portraits/bruno_panic": {
-"bytes": 45582,
-"orig": 52470,
-"gapPx": 78
-},
-"portraits/bruno_serious": {
-"bytes": 45708,
-"orig": 52402,
-"gapPx": 78
 },
 "portraits/captain": {
 "bytes": 46700,
@@ -336,40 +306,10 @@
 "orig": 41280,
 "gapPx": 110
 },
-"portraits/dario_surprise": {
-"bytes": 39990,
-"orig": 41210,
-"gapPx": 112
-},
-"portraits/filie_faint_smile": {
-"bytes": 21946,
-"orig": 21204,
-"gapPx": 77
-},
-"portraits/filie_fun": {
-"bytes": 22200,
-"orig": 21464,
-"gapPx": 78
-},
-"portraits/gramont_cold": {
-"bytes": 24194,
-"orig": 26094,
-"gapPx": 7
-},
-"portraits/gramont_serious": {
-"bytes": 24230,
-"orig": 26028,
-"gapPx": 12
-},
 "portraits/gustav_anger": {
 "bytes": 35168,
 "orig": 33516,
 "gapPx": 19
-},
-"portraits/gustav_fun": {
-"bytes": 34962,
-"orig": 33432,
-"gapPx": 16
 },
 "portraits/hans": {
 "bytes": 24426,
@@ -406,16 +346,6 @@
 "orig": 32118,
 "gapPx": 224
 },
-"portraits/sig_serious": {
-"bytes": 34076,
-"orig": 34752,
-"gapPx": 192
-},
-"portraits/sig_surprise": {
-"bytes": 34198,
-"orig": 34502,
-"gapPx": 191
-},
 "portraits/valeon_anger": {
 "bytes": 42930,
 "orig": 45314,
@@ -435,21 +365,6 @@
 "bytes": 40092,
 "orig": 41724,
 "gapPx": 1193
-},
-"portraits/zerina_fun": {
-"bytes": 39276,
-"orig": 41436,
-"gapPx": 1185
-},
-"portraits/zerina_joy": {
-"bytes": 39272,
-"orig": 41342,
-"gapPx": 1284
-},
-"portraits/zerina_smug": {
-"bytes": 38956,
-"orig": 41090,
-"gapPx": 1204
 },
 "portraits/zerina_sorrow": {
 "bytes": 39898,

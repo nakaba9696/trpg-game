@@ -16,68 +16,68 @@
 
 | 鍵 | 名前 | 既定のタグ | 落とし先 | 使う場面 | 持つ人 |
 |---|---|---|---|---|---|
-| `joy` | 喜 | smile, happy | 基本 | うれしい・ほっとした | 120 |
-| `anger` | 怒 | angry, frown, v-shaped eyebrows | 基本 | 怒る・苛立つ | 123 |
-| `sorrow` | 哀 | sad, looking down, downturned mouth | 基本 | 悲しい・沈む | 125 |
-| `fun` | 楽 | laughing, open mouth, closed eyes | 基本 | 楽しい・笑い転げる | 126 |
-| `surprise` | 驚き | surprised, wide-eyed, open mouth, raised eyebrows | 怯え → 基本 | 目を丸くする・息を呑む | 42 |
-| `shy` | 照れ | embarrassed, blush, looking away | 喜 → 基本 | 頬を染める・褒められて照れる（男も blush でよい。#185） | 31 |
-| `troubled` | 困り | troubled, worried eyebrows, awkward smile, sweatdrop | 哀 → 基本 | 困った顔・苦笑い | 30 |
-| `serious` | 真剣 | serious, determined, focused eyes, closed mouth | 基本 | 腹を決めた・本気の顔 | 72 |
-| `smug` | 得意げ | smug, smirk, half-closed eyes, raised eyebrow | 楽 → 喜 → 基本 | 胸を張る・したり顔 | 37 |
-| `fear` | 怯え | scared, frightened, wide-eyed, worried eyebrows, pale face, sweat | 驚き → 哀 → 基本 | 震える・青ざめる | 6 |
-| `tired` | 疲れ | tired, exhausted, half-closed eyes, sweat, open mouth | 困り → 哀 → 基本 | へたり込む・息が上がる | 12 |
-| `cry` | 泣き | crying, tears, streaming tears, open mouth | 哀 → 基本 | 泣き崩れる・号泣（哀より強い） | 13 |
-| `panic` | 慌て | flustered, panicking, wide-eyed, sweatdrop, wavy mouth | 困り → 驚き → 怯え → 基本 | あたふたする・しくじりに慌てる | 29 |
-| `pout` | すね | pout, puffed cheeks, looking away | 怒 → 基本 | むくれる・すねる | 9 |
-| `faint_smile` | ほんの少し笑う | slight smile, soft eyes, closed mouth | 喜 → 基本 | 無表情な人がわずかに笑う | 53 |
-| `sparkle` | 目を輝かせる | excited, sparkling eyes, smile, open mouth | 楽 → 喜 → 基本 | 好きな物を前に夢中になる | 24 |
-| `cold` | 冷たい目 | cold eyes, narrowed eyes, expressionless, contempt | 真剣 → 怒 → 基本 | 見下す・切り捨てる・剣を抜いた顔 | 31 |
-| `wicked` | 悪い笑み | evil smile, sinister grin, narrowed eyes, shaded face | 得意げ → 楽 → 基本 | 企む・本性がのぞく | 19 |
-| `drunk` | 酔い | drunk, flushed face, blush, half-closed eyes, wavy mouth | 楽 → 照れ → 喜 → 基本 | 酒が回った顔 | 4 |
-| `sleepy` | 眠い | sleepy, drowsy, half-closed eyes, yawning | 疲れ → 基本 | あくび・うとうと | 13 |
-| `exasperated` | 呆れ | exasperated, half-closed eyes, deadpan, sigh | 困り → 疲れ → 基本 | ため息・あきれ顔 | 14 |
-| `smitten` | うっとり | smitten, blush, dreamy eyes, gentle smile | 照れ → 喜 → 基本 | 見とれる・想い人を思う | 10 |
+| `joy` | 喜 | smile, happy | 基本 | うれしい・ほっとした | 83 |
+| `anger` | 怒 | angry, frown, v-shaped eyebrows | 基本 | 怒る・苛立つ | 93 |
+| `sorrow` | 哀 | sad, looking down, downturned mouth | 基本 | 悲しい・沈む | 86 |
+| `fun` | 楽 | laughing, open mouth, closed eyes | 基本 | 楽しい・笑い転げる | 81 |
+| `surprise` | 驚き | surprised, wide-eyed, open mouth, raised eyebrows | 怯え → 基本 | 目を丸くする・息を呑む | 32 |
+| `shy` | 照れ | embarrassed, blush, looking away | 喜 → 基本 | 頬を染める・褒められて照れる（男も blush でよい。#185） | 20 |
+| `troubled` | 困り | troubled, worried eyebrows, awkward smile, sweatdrop | 哀 → 基本 | 困った顔・苦笑い | 25 |
+| `serious` | 真剣 | serious, determined, focused eyes, closed mouth | 基本 | 腹を決めた・本気の顔 | 56 |
+| `smug` | 得意げ | smug, smirk, half-closed eyes, raised eyebrow | 楽 → 喜 → 基本 | 胸を張る・したり顔 | 27 |
+| `fear` | 怯え | scared, frightened, wide-eyed, worried eyebrows, pale face, sweat | 驚き → 哀 → 基本 | 震える・青ざめる | 4 |
+| `tired` | 疲れ | tired, exhausted, half-closed eyes, sweat, open mouth | 困り → 哀 → 基本 | へたり込む・息が上がる | 7 |
+| `cry` | 泣き | crying, tears, streaming tears, open mouth | 哀 → 基本 | 泣き崩れる・号泣（哀より強い） | 6 |
+| `panic` | 慌て | flustered, panicking, wide-eyed, sweatdrop, wavy mouth | 困り → 驚き → 怯え → 基本 | あたふたする・しくじりに慌てる | 17 |
+| `pout` | すね | pout, puffed cheeks, looking away | 怒 → 基本 | むくれる・すねる | 4 |
+| `faint_smile` | ほんの少し笑う | slight smile, soft eyes, closed mouth | 喜 → 基本 | 無表情な人がわずかに笑う | 37 |
+| `sparkle` | 目を輝かせる | excited, sparkling eyes, smile, open mouth | 楽 → 喜 → 基本 | 好きな物を前に夢中になる | 16 |
+| `cold` | 冷たい目 | cold eyes, narrowed eyes, expressionless, contempt | 真剣 → 怒 → 基本 | 見下す・切り捨てる・剣を抜いた顔 | 22 |
+| `wicked` | 悪い笑み | evil smile, sinister grin, narrowed eyes, shaded face | 得意げ → 楽 → 基本 | 企む・本性がのぞく | 11 |
+| `drunk` | 酔い | drunk, flushed face, blush, half-closed eyes, wavy mouth | 楽 → 照れ → 喜 → 基本 | 酒が回った顔 | 2 |
+| `sleepy` | 眠い | sleepy, drowsy, half-closed eyes, yawning | 疲れ → 基本 | あくび・うとうと | 3 |
+| `exasperated` | 呆れ | exasperated, half-closed eyes, deadpan, sigh | 困り → 疲れ → 基本 | ため息・あきれ顔 | 10 |
+| `smitten` | うっとり | smitten, blush, dreamy eyes, gentle smile | 照れ → 喜 → 基本 | 見とれる・想い人を思う | 3 |
 
 ## 人ごとの割り当て（131 人）
 
 | 人 | 喜怒哀楽のほかの表情 |
 |---|---|
 | ディル（`dil`） | 得意げ（`smug`）・驚き（`surprise`）・慌て（`panic`）・呆れ（`exasperated`） |
-| カイデル（`kaidel`） | 真剣（`serious`）・驚き（`surprise`） |
-| ノラミ（ノラ）（`nora`） | 目を輝かせる（`sparkle`）・驚き（`surprise`）・泣き（`cry`）・すね（`pout`）・照れ（`shy`） |
+| カイデル（`kaidel`） | 驚き（`surprise`） |
+| ノラミ（ノラ）（`nora`） | 目を輝かせる（`sparkle`）・驚き（`surprise`）・泣き（`cry`） |
 | シェイラ（`sheila`） | ほんの少し笑う（`faint_smile`）・照れ（`shy`）・目を輝かせる（`sparkle`）・真剣（`serious`）・驚き（`surprise`） |
-| ルイ（`rui`） | ほんの少し笑う（`faint_smile`）・眠い（`sleepy`）・驚き（`surprise`）・泣き（`cry`） |
-| ゼリナ（`zerina`） | 得意げ（`smug`）・目を輝かせる（`sparkle`）・呆れ（`exasperated`）・驚き（`surprise`） |
-| エルネア（`elnea`） | 照れ（`shy`）・目を輝かせる（`sparkle`）・慌て（`panic`）・泣き（`cry`）・怯え（`fear`） |
+| ルイ（`rui`） | ほんの少し笑う（`faint_smile`）・驚き（`surprise`）・泣き（`cry`） |
+| ゼリナ（`zerina`） | 目を輝かせる（`sparkle`）・呆れ（`exasperated`）・驚き（`surprise`） |
+| エルネア（`elnea`） | 目を輝かせる（`sparkle`）・慌て（`panic`）・泣き（`cry`） |
 | ナタリア（`natalia`） | 酔い（`drunk`）・真剣（`serious`）・疲れ（`tired`）・驚き（`surprise`） |
-| ヴァレオン（`valeon`） | 目を輝かせる（`sparkle`）・真剣（`serious`）・驚き（`surprise`） |
+| ヴァレオン（`valeon`） | 真剣（`serious`） |
 | ライオス（`raios`） | 困り（`troubled`）・真剣（`serious`）・驚き（`surprise`） |
 | セリオス（`serios`） | ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・驚き（`surprise`） |
-| ファリナ（`farina`） | ほんの少し笑う（`faint_smile`）・慌て（`panic`）・冷たい目（`cold`） |
+| ファリナ（`farina`） | ほんの少し笑う（`faint_smile`）・慌て（`panic`） |
 | アルマン（`greol`） | 照れ（`shy`）・困り（`troubled`）・真剣（`serious`） |
 | ネイラス（`neilas`） | 慌て（`panic`）・ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・怯え（`fear`） |
 | ティリア（`tiria`） | 慌て（`panic`）・驚き（`surprise`）・目を輝かせる（`sparkle`） |
-| オルヴェイン（第六騎士団の団長）（`sixth`） | ほんの少し笑う（`faint_smile`）・冷たい目（`cold`）・驚き（`surprise`） |
-| アンジェリカ（`angelica`） | 慌て（`panic`）・照れ（`shy`）・得意げ（`smug`）・驚き（`surprise`） |
-| ロウェル（王国軍の隊長）（`captain`） | ほんの少し笑う（`faint_smile`）・困り（`troubled`）・真剣（`serious`） |
+| オルヴェイン（第六騎士団の団長）（`sixth`） | ほんの少し笑う（`faint_smile`） |
+| アンジェリカ（`angelica`） | 照れ（`shy`）・得意げ（`smug`）・驚き（`surprise`） |
+| ロウェル（王国軍の隊長）（`captain`） | ほんの少し笑う（`faint_smile`） |
 | モルヴァン（王国に雇われた博士）（`doctor`） | 悪い笑み（`wicked`）・目を輝かせる（`sparkle`）・冷たい目（`cold`） |
-| ヘル爺（`hermes`） | 目を輝かせる（`sparkle`）・驚き（`surprise`）・疲れ（`tired`） |
+| ヘル爺（`hermes`） | — |
 | ユリナ（`yurina`） | 冷たい目（`cold`）・真剣（`serious`）・驚き（`surprise`） |
 | フェリダ（`ferida`） | 真剣（`serious`）・得意げ（`smug`）・驚き（`surprise`） |
-| シグ（`sig`） | 真剣（`serious`）・驚き（`surprise`） |
-| ライーシャ（`raisha`） | 眠い（`sleepy`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`） |
+| シグ（`sig`） | — |
+| ライーシャ（`raisha`） | 冷たい目（`cold`） |
 | ゾルク（`zork`） | 悪い笑み（`wicked`）・真剣（`serious`）・得意げ（`smug`） |
-| マリエッタ（流れの大槌使い）（`bride`） | 泣き（`cry`）・うっとり（`smitten`）・すね（`pout`） |
-| テオ（「ボク」の娘。名乗るまでは呼び名）（`boku`） | 目を輝かせる（`sparkle`）・照れ（`shy`）・慌て（`panic`）・怯え（`fear`） |
+| マリエッタ（流れの大槌使い）（`bride`） | すね（`pout`） |
+| テオ（「ボク」の娘。名乗るまでは呼び名）（`boku`） | 目を輝かせる（`sparkle`） |
 | グレイオル（`greiol`） | ほんの少し笑う（`faint_smile`）・冷たい目（`cold`）・真剣（`serious`）・驚き（`surprise`） |
-| ダリオ（`dario`） | 真剣（`serious`）・ほんの少し笑う（`faint_smile`）・驚き（`surprise`） |
+| ダリオ（`dario`） | 真剣（`serious`）・ほんの少し笑う（`faint_smile`） |
 | エルナ（`erna`） | ほんの少し笑う（`faint_smile`）・冷たい目（`cold`）・驚き（`surprise`） |
 | ヴァルグ（`valg`） | 得意げ（`smug`）・真剣（`serious`）・驚き（`surprise`） |
-| マルヴィナ（`malvina`） | 真剣（`serious`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`） |
+| マルヴィナ（`malvina`） | — |
 | カティア（`katia`） | 照れ（`shy`）・真剣（`serious`）・困り（`troubled`）・驚き（`surprise`） |
-| アリシア（`alicia`） | 冷たい目（`cold`）・得意げ（`smug`）・ほんの少し笑う（`faint_smile`） |
-| 微笑の使徒カルマトス（`mirza`） | 悪い笑み（`wicked`）・うっとり（`smitten`） |
+| アリシア（`alicia`） | 冷たい目（`cold`）・得意げ（`smug`） |
+| 微笑の使徒カルマトス（`mirza`） | — |
 | 砂塵の使徒ドレイゼ（`zalve`） | 得意げ（`smug`） |
 | 生き聖女ユヴァリエ（`aurelia`） | 冷たい目（`cold`）・悪い笑み（`wicked`）・真剣（`serious`） |
 | 香煙の使徒ベリエラ（`yoihime`） | 目を輝かせる（`sparkle`）・得意げ（`smug`）・困り（`troubled`） |
@@ -90,73 +90,73 @@
 | イルゼ（`ilse`） | 得意げ（`smug`）・慌て（`panic`）・驚き（`surprise`）・困り（`troubled`） |
 | トゥーラ（`tula`） | 照れ（`shy`）・すね（`pout`）・驚き（`surprise`） |
 | ミルレーネ（`mirlene`） | 真剣（`serious`）・困り（`troubled`）・うっとり（`smitten`）・驚き（`surprise`）・怯え（`fear`） |
-| 薄布の娘（使徒サルフィエル）（`salphiel`） | ほんの少し笑う（`faint_smile`）・真剣（`serious`）・冷たい目（`cold`） |
-| 人形遣いの爺さん（眷属ミュゼット）（`musette`） | ほんの少し笑う（`faint_smile`）・呆れ（`exasperated`）・疲れ（`tired`） |
-| ゲルハルト（`gerhard`） | 目を輝かせる（`sparkle`）・真剣（`serious`）・驚き（`surprise`） |
-| バルトロ（`bartolo`） | 悪い笑み（`wicked`）・慌て（`panic`）・得意げ（`smug`） |
-| クラリス（`clarisse`） | 慌て（`panic`）・照れ（`shy`）・泣き（`cry`）・真剣（`serious`） |
+| 薄布の娘（使徒サルフィエル）（`salphiel`） | 真剣（`serious`） |
+| 人形遣いの爺さん（眷属ミュゼット）（`musette`） | — |
+| ゲルハルト（`gerhard`） | 真剣（`serious`）・驚き（`surprise`） |
+| バルトロ（`bartolo`） | — |
+| クラリス（`clarisse`） | — |
 | ティッタ（`titta`） | 得意げ（`smug`）・呆れ（`exasperated`）・驚き（`surprise`） |
-| イオリ（`iori`） | 眠い（`sleepy`）・照れ（`shy`）・真剣（`serious`）・ほんの少し笑う（`faint_smile`） |
-| ドロテア（`dorothea`） | 得意げ（`smug`）・うっとり（`smitten`）・驚き（`surprise`） |
-| ルシアン（`lucien`） | ほんの少し笑う（`faint_smile`）・困り（`troubled`）・真剣（`serious`）・呆れ（`exasperated`） |
-| バルナベ（`barnabe`） | 驚き（`surprise`）・照れ（`shy`）・真剣（`serious`）・泣き（`cry`）・慌て（`panic`） |
-| セレヴァン（`selevan`） | 目を輝かせる（`sparkle`）・悪い笑み（`wicked`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`） |
-| オーバン（`aubin`） | 眠い（`sleepy`）・真剣（`serious`）・酔い（`drunk`）・得意げ（`smug`） |
+| イオリ（`iori`） | 照れ（`shy`）・真剣（`serious`） |
+| ドロテア（`dorothea`） | — |
+| ルシアン（`lucien`） | ほんの少し笑う（`faint_smile`）・真剣（`serious`） |
+| バルナベ（`barnabe`） | — |
+| セレヴァン（`selevan`） | — |
+| オーバン（`aubin`） | 得意げ（`smug`） |
 | ラザール（`lazare`） | 得意げ（`smug`）・照れ（`shy`）・慌て（`panic`）・真剣（`serious`） |
-| ロドルフ（`rodolphe`） | 冷たい目（`cold`）・ほんの少し笑う（`faint_smile`）・真剣（`serious`）・呆れ（`exasperated`） |
-| マルゴ（`margot`） | 得意げ（`smug`）・悪い笑み（`wicked`）・目を輝かせる（`sparkle`）・真剣（`serious`）・うっとり（`smitten`） |
+| ロドルフ（`rodolphe`） | 冷たい目（`cold`）・ほんの少し笑う（`faint_smile`）・真剣（`serious`） |
+| マルゴ（`margot`） | — |
 | ソレンヌ（`solenne`） | 照れ（`shy`）・慌て（`panic`）・真剣（`serious`）・困り（`troubled`）・うっとり（`smitten`） |
-| ピピネル（`pipinelle`） | 得意げ（`smug`）・すね（`pout`）・眠い（`sleepy`）・ほんの少し笑う（`faint_smile`） |
-| リゼット（`lisette`） | 目を輝かせる（`sparkle`）・悪い笑み（`wicked`）・眠い（`sleepy`）・困り（`troubled`） |
-| グラモン（`gramont`） | 冷たい目（`cold`）・真剣（`serious`）・得意げ（`smug`） |
+| ピピネル（`pipinelle`） | すね（`pout`）・ほんの少し笑う（`faint_smile`） |
+| リゼット（`lisette`） | — |
+| グラモン（`gramont`） | — |
 | ベランジェール（`berangere`） | 照れ（`shy`）・すね（`pout`）・得意げ（`smug`） |
 | マリオン（`marion`） | 呆れ（`exasperated`）・ほんの少し笑う（`faint_smile`）・真剣（`serious`） |
-| シルヴェストル（`sylvestre`） | 真剣（`serious`）・ほんの少し笑う（`faint_smile`）・疲れ（`tired`） |
+| シルヴェストル（`sylvestre`） | — |
 | オデット（`odette`） | 悪い笑み（`wicked`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`） |
-| ヴォルフラム（`wolfram`） | 困り（`troubled`）・真剣（`serious`）・ほんの少し笑う（`faint_smile`）・疲れ（`tired`） |
-| ハルトムート（`hartmut`） | 照れ（`shy`）・泣き（`cry`）・うっとり（`smitten`）・慌て（`panic`） |
-| グスタフ（`gustav`） | 悪い笑み（`wicked`）・得意げ（`smug`）・慌て（`panic`）・真剣（`serious`） |
-| ティモ（`timo`） | うっとり（`smitten`）・照れ（`shy`）・泣き（`cry`） |
-| ノエリス（`noeris`） | 悪い笑み（`wicked`）・冷たい目（`cold`）・得意げ（`smug`）・驚き（`surprise`） |
-| イングリット（`ingrid`） | ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・呆れ（`exasperated`）・すね（`pout`） |
-| ルミア（`lumia`） | 眠い（`sleepy`）・得意げ（`smug`）・ほんの少し笑う（`faint_smile`）・すね（`pout`） |
+| ヴォルフラム（`wolfram`） | 困り（`troubled`）・真剣（`serious`）・疲れ（`tired`） |
+| ハルトムート（`hartmut`） | 照れ（`shy`） |
+| グスタフ（`gustav`） | 悪い笑み（`wicked`）・得意げ（`smug`）・真剣（`serious`） |
+| ティモ（`timo`） | うっとり（`smitten`）・照れ（`shy`） |
+| ノエリス（`noeris`） | — |
+| イングリット（`ingrid`） | 目を輝かせる（`sparkle`）・呆れ（`exasperated`） |
+| ルミア（`lumia`） | ほんの少し笑う（`faint_smile`） |
 | ジークリンデ（`sieglinde`） | 困り（`troubled`）・照れ（`shy`）・真剣（`serious`）・疲れ（`tired`） |
 | アンネリーゼ（`annelise`） | 照れ（`shy`）・慌て（`panic`）・得意げ（`smug`）・驚き（`surprise`） |
 | ラドミラ（`radmila`） | 冷たい目（`cold`）・悪い笑み（`wicked`）・ほんの少し笑う（`faint_smile`）・真剣（`serious`） |
-| オトマール（`otmar`） | 冷たい目（`cold`）・真剣（`serious`）・疲れ（`tired`） |
-| オーレン（`oren`） | 目を輝かせる（`sparkle`）・すね（`pout`）・真剣（`serious`） |
+| オトマール（`otmar`） | 真剣（`serious`） |
+| オーレン（`oren`） | 真剣（`serious`） |
 | ディートリヒ（`dietrich`） | 得意げ（`smug`）・冷たい目（`cold`）・慌て（`panic`） |
 | マティアス（`matthias`） | 困り（`troubled`）・真剣（`serious`）・照れ（`shy`） |
-| リーゼル（`liesel`） | 呆れ（`exasperated`）・照れ（`shy`） |
-| ギグラ（`gigra`） | 照れ（`shy`）・得意げ（`smug`）・慌て（`panic`）・悪い笑み（`wicked`）・酔い（`drunk`） |
+| リーゼル（`liesel`） | — |
+| ギグラ（`gigra`） | 照れ（`shy`）・得意げ（`smug`）・慌て（`panic`）・酔い（`drunk`） |
 | ヴァルドゥン（`valdun`） | — |
 | ゲンサイ（`gensai`） | 悪い笑み（`wicked`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`）・真剣（`serious`） |
-| ツユハ（`tsuyuha`） | 眠い（`sleepy`）・真剣（`serious`）・ほんの少し笑う（`faint_smile`）・呆れ（`exasperated`） |
-| タキマル（`takimaru`） | 目を輝かせる（`sparkle`）・慌て（`panic`）・泣き（`cry`）・真剣（`serious`）・照れ（`shy`） |
-| ユリエン（`yurien`） | ほんの少し笑う（`faint_smile`）・冷たい目（`cold`）・得意げ（`smug`）・すね（`pout`） |
-| イズラ（`izra`） | 目を輝かせる（`sparkle`）・真剣（`serious`）・驚き（`surprise`）・照れ（`shy`） |
-| アンセルモ（`anselmo`） | 酔い（`drunk`）・真剣（`serious`）・悪い笑み（`wicked`）・ほんの少し笑う（`faint_smile`） |
+| ツユハ（`tsuyuha`） | 真剣（`serious`）・ほんの少し笑う（`faint_smile`）・呆れ（`exasperated`） |
+| タキマル（`takimaru`） | 目を輝かせる（`sparkle`）・真剣（`serious`） |
+| ユリエン（`yurien`） | 得意げ（`smug`） |
+| イズラ（`izra`） | — |
+| アンセルモ（`anselmo`） | — |
 | ポルフ（`polf`） | — |
 | ルドガー（`rudger`） | 冷たい目（`cold`）・ほんの少し笑う（`faint_smile`）・真剣（`serious`） |
-| リオネッタ（`rionetta`） | 真剣（`serious`）・困り（`troubled`）・ほんの少し笑う（`faint_smile`） |
+| リオネッタ（`rionetta`） | — |
 | ゼルギス（`graul`） | 冷たい目（`cold`）・真剣（`serious`）・ほんの少し笑う（`faint_smile`） |
 | ロスヴィタ（`roswitha`） | 困り（`troubled`）・疲れ（`tired`） |
-| ヨナス（`jonas`） | 慌て（`panic`）・照れ（`shy`）・真剣（`serious`） |
-| ブルーノ（`bruno`） | 怯え（`fear`）・泣き（`cry`）・慌て（`panic`）・真剣（`serious`）・照れ（`shy`） |
-| トルーデ（`trude`） | 得意げ（`smug`）・目を輝かせる（`sparkle`）・慌て（`panic`）・呆れ（`exasperated`） |
-| ソウハク（`souhaku`） | 眠い（`sleepy`）・真剣（`serious`）・うっとり（`smitten`）・ほんの少し笑う（`faint_smile`） |
-| アデル（`adele`） | 得意げ（`smug`）・照れ（`shy`）・慌て（`panic`）・真剣（`serious`） |
-| セレスティン（`celestin`） | 眠い（`sleepy`）・ほんの少し笑う（`faint_smile`）・驚き（`surprise`）・冷たい目（`cold`） |
-| フェリクス（`felix`） | 照れ（`shy`）・慌て（`panic`）・真剣（`serious`）・疲れ（`tired`） |
+| ヨナス（`jonas`） | 照れ（`shy`）・真剣（`serious`） |
+| ブルーノ（`bruno`） | 怯え（`fear`） |
+| トルーデ（`trude`） | 目を輝かせる（`sparkle`）・呆れ（`exasperated`） |
+| ソウハク（`souhaku`） | 真剣（`serious`）・ほんの少し笑う（`faint_smile`） |
+| アデル（`adele`） | — |
+| セレスティン（`celestin`） | 冷たい目（`cold`） |
+| フェリクス（`felix`） | 慌て（`panic`）・疲れ（`tired`） |
 | ヴィットリオ（`vittorio`） | 得意げ（`smug`）・悪い笑み（`wicked`）・慌て（`panic`）・泣き（`cry`） |
 | ヴィオレーヌ（`violaine`） | 真剣（`serious`）・困り（`troubled`）・照れ（`shy`）・泣き（`cry`） |
-| 山の館の伯爵さま（使徒ユズエル）（`yuzuel`） | 得意げ（`smug`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`） |
-| 聖歌隊の若者（眷属セヴラン）（`severin`） | 悪い笑み（`wicked`）・うっとり（`smitten`）・泣き（`cry`）・冷たい目（`cold`） |
+| 山の館の伯爵さま（使徒ユズエル）（`yuzuel`） | 得意げ（`smug`）・冷たい目（`cold`） |
+| 聖歌隊の若者（眷属セヴラン）（`severin`） | 悪い笑み（`wicked`）・泣き（`cry`）・冷たい目（`cold`） |
 | 香売りの姐さん（眷属ルフィナ）（`rufina`） | 困り（`troubled`）・疲れ（`tired`）・ほんの少し笑う（`faint_smile`）・驚き（`surprise`） |
 | コンスタンス（`constance`） | 真剣（`serious`）・疲れ（`tired`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`） |
 | アンブロワーズ（`ambroise`） | 眠い（`sleepy`）・真剣（`serious`）・冷たい目（`cold`）・呆れ（`exasperated`） |
 | シオネ（`shione`） | 困り（`troubled`）・慌て（`panic`）・目を輝かせる（`sparkle`）・真剣（`serious`） |
-| フィリエ（`filie`） | 困り（`troubled`）・慌て（`panic`）・ほんの少し笑う（`faint_smile`）・疲れ（`tired`） |
+| フィリエ（`filie`） | 慌て（`panic`） |
 | レオポルト（`leopold`） | 得意げ（`smug`）・真剣（`serious`）・慌て（`panic`）・困り（`troubled`） |
 | ゴーティエ（`gauthier`） | 真剣（`serious`）・ほんの少し笑う（`faint_smile`）・驚き（`surprise`） |
 | マグダ（`magda`） | 真剣（`serious`）・目を輝かせる（`sparkle`）・呆れ（`exasperated`） |
