@@ -1,0 +1,15 @@
+{
+ "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, (orion \\(orionproject\\):1.2), lack, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, 1boy, male focus, anime coloring, cel shading, thick lineart, flat color, elderly man, old man, deep wrinkles, sagging skin, age spots, crow's feet, thin lips, adult, tall, gardener, bark-like skin, moss and ivy on clothes, mushrooms, spores, wide-brimmed hat, flowers on hat, glowing eyes, (clean-shaven:1.4), round glasses, amber eyes, dark green robe, beige sash, hand on chest, grey hair, short hair, polite smile, closed mouth, black sclera, roots growing from fingers, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
+ "negative_prompt": "long neck, long body, (missing arms:1.2), extra arms, (mutated hands:1.2), extra legs, (bad hands:1.2), poorly drawn hands, (malformed hands:1.2), missing limb, floating limbs, disconnected limbs, extra fingers, bad fingers, liquid fingers, poorly drawn fingers, missing fingers, extra digit, fewer digits, ugly face, deformed eyes, partial face, partial head, worst quality, low quality, bad quality, bad anatomy, bad feet, displeasing, unfinished, missing, artistic error, [abstract], lowres, jpeg artifacts, scan, chromatic aberration, signature, username, watermark, (text:1.2), extra digits, stamp, date, logo, (signature:1.1), (username:1.1), (logo:1.1), error, fewer, extra, twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, 1girl, female, girl, feminine, makeup, lipstick, long eyelashes, androgynous, blush, nose blush, full-face blush, flushed face, red cheeks, embarrassed, shy, flustered, 3d, realistic, photorealistic, glossy skin, airbrushed, smooth shading, blurry, pointy ears, elf ears, young, youthful, smooth skin, bishounen, pretty boy, (mustache:1.5), (beard:1.5), (facial hair:1.5), (stubble:1.4), goatee",
+ "seed": 16403,
+ "steps": 20,
+ "cfg_scale": 5.5,
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "width": 1024,
+ "height": 1280,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "override_settings_restore_afterwards": true
+}
