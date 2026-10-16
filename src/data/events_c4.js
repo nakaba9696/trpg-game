@@ -160,9 +160,9 @@
       ],
     },
 
-    // ================================================================ ミュゼット（眷属。町の人形芝居・灰の荒野）。名乗るまで「人形遣いの爺さん」
+    // ================================================================ ミュゼット（眷属。町の人形芝居・灰の荒野）。名乗るまで「人形芝居の座長」
     {
-      id: "c4_mus_show", where: ["town"], w: 2, once: true, cond: and(day(12), fresh("musette")), c2: "musette", title: "人形芝居の爺さん",
+      id: "c4_mus_show", where: ["town"], w: 2, once: true, cond: and(day(12), fresh("musette")), c2: "musette", title: "人形芝居の座長",
       who: { kind: "elder", sex: "男", age: 72, seed: "c4:puppet", look: { hairStyle: "long", hair: "#e8e4e0", eyes: "sleepy", mouth: "smile", brows: "calm", outfit: "noble", head: "none", cloth: "#2a1a2a", marks: ["wrinkles", "beard"], bg: "#3a2a3a" } },
       text: "町の広場に、人形芝居の小屋が掛かっている。演じているのは、人の背丈の倍ほどもある老紳士の人形が一体だけ。糸は見えない。操る者も見えない。人形は子どもたちの前で帽子を取り、きしむ声で言った。「さあさ、坊やたち。今日は特別にお代はいらん。……代わりに指を一本ずつ見せておくれ。形のいいのを一本だけ」子どもたちが手を広げて前に出る。",
       choices: [
