@@ -4,10 +4,10 @@ from PIL import Image
 R = "../redesign/"
 base = json.load(open(R + "solenne_15612.json", encoding="utf-8"))
 src = base64.b64encode(open(R + "solenne_15612.png", "rb").read()).decode()
-V = {"joy": "(embarrassed smile:1.4), (blush:1.2), (happy:1.2), closed mouth", "anger": "(angry:1.5), (v-shaped eyebrows:1.4), (shouting:1.2), (open mouth:1.2), (blush:1.1)", "sorrow": "(sad:1.5), (teary eyes:1.3), (frown:1.3), (worried eyebrows:1.3)", "fun": "(laughing:1.4), (smile:1.4), (open mouth:1.2), (closed eyes:1.2)", "shy": "(embarrassed:1.5), (heavy blush:1.5), (looking away:1.4), (wavy mouth:1.2)"}
+V = {"joy": "(embarrassed smile:1.4), (blush:1.2), (happy:1.2), closed mouth", "anger": "(angry:1.5), (v-shaped eyebrows:1.4), (shouting:1.2), (open mouth:1.2), (blush:1.1)", "sorrow": "(sad:1.5), (teary eyes:1.3), (frown:1.3), (worried eyebrows:1.3)", "fun": "(laughing:1.4), (smile:1.4), (open mouth:1.2), (closed eyes:1.2)", "anger2": "(angry:1.3), (furrowed brow:1.5), (v-shaped eyebrows:1.3), (closed mouth:1.5), (pursed lips:1.2), glaring, (serious:1.2)", "anger3": "(angry:1.6), (v-shaped eyebrows:1.6), (glaring:1.4), (narrowed eyes:1.2), (closed mouth:1.4), (frown:1.3)", "shy": "(embarrassed:1.5), (heavy blush:1.5), (looking away:1.4), (wavy mouth:1.2)"}
 OLD = "serious, frown, closed mouth"
 assert OLD in base["prompt"]
-NEGX = ", (anger vein:1.5), comical, chibi, (dog:1.6), (knight:1.5), (armor:1.5)"
+NEGX = ", (tears:1.5), (crying:1.5), (teary eyes:1.4), (sad:1.3), (open mouth:1.3), (worried eyebrows:1.4), (anger vein:1.5), comical, chibi, (dog:1.6), (knight:1.5), (armor:1.5)"
 den = float(os.environ.get("DEN", 0.5))
 for m in sys.argv[1].split(","):
     for sd in [int(s) for s in (sys.argv[2].split(",") if len(sys.argv) > 2 else ["15612"])]:
