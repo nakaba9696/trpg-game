@@ -5,8 +5,6 @@
   const V = (i, you, o) => Object.assign({ i: [].concat(i), you: [].concat(you), also: [] }, o || {});
   if (D.K10_VOICE) D.K10_VOICE.violaine = V("わたし", "あなた", { reg: "polite", mates: "さん付け", tail: "短く硬い貴族の言葉。「〜です」「承知しました」。用件から言う。迷子のときだけ声が小さい" });
   if (D.Q8P && D.Q8P.ALLOW) D.Q8P.ALLOW.violaine = "人間（王都の剣の家の娘）";
-  // 恋人の条件：王都に一緒に戻ってから（師に拾われた剣士団の稽古場の柵の外。噂は下）
+  // 恋人の条件：王都に一緒に戻ってから（師に拾われた剣士団の稽古場の柵の外。会話の violaine_l_leavel で察せる）
   if (D.Q8L && D.Q8L.PEOPLE) D.Q8L.PEOPLE.violaine = { with: "leavel" };
-  D.RUMORS = D.RUMORS || [];
-  D.RUMORS.push("王都の黒衣の剣士は、どこへ行っても道に迷うが、王都の剣士団の稽古場の柵の前にだけは、迷わずに来るそうだ。");
 })(globalThis.G = globalThis.G || {});

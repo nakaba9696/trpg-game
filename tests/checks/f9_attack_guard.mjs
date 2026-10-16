@@ -16,6 +16,8 @@ export default ({ fail: fail0, ok, loadEngine, seeded }) => {
     D.STATS.forEach((k) => { stats[k] = 50; caps[k] = 99; });
     if (agi != null) stats["敏捷"] = agi;
     G.newGame({ cls: "merc", stats, caps, goal: Object.keys(D.GOALS)[0], profile: { name: "テスト", sex: "男", age: 20, history: "", personality: "無口" } });
+    // 新しい冒険の始めに引く乱数の数は、人物の数で変わる（F4 の予定の揺れ）。測る所の乱数は、ここで種を入れ直してそろえる
+    G.rand = seeded(seed + 50000);
     const S = G.S;
     S.maxHp = S.hp = 999;
     if (comps) { S.companions = comps; if (G.b5Party) G.b5Party(S); }
