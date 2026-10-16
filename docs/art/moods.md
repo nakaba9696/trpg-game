@@ -91,7 +91,7 @@
 | トゥーラ（`tula`） | 照れ（`shy`）・すね（`pout`）・驚き（`surprise`） |
 | ミルレーネ（`mirlene`） | 真剣（`serious`）・困り（`troubled`）・うっとり（`smitten`）・驚き（`surprise`）・怯え（`fear`） |
 | 薄布の娘（使徒サルフィエル）（`salphiel`） | 真剣（`serious`） |
-| 人形遣いの爺さん（眷属ミュゼット）（`musette`） | — |
+| 人形芝居の座長（眷属ミュゼット）（`musette`） | — |
 | ゲルハルト（`gerhard`） | 真剣（`serious`）・驚き（`surprise`） |
 | バルトロ（`bartolo`） | — |
 | クラリス（`clarisse`） | — |

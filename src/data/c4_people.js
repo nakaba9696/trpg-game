@@ -131,7 +131,7 @@
       who: { kind: "majin", sex: "女", age: 10, seed: "c2:salphiel", look: { hair: "#f0e8d0", hairStyle: "long", eyes: "narrow", iris: "#d8b040", mouth: "smile", brows: "calm", outfit: "robe", head: "veil", gear: "none", chest: "gem", cloth: "#f0ead8", build: "slim", marks: [], bg: "#8a9ab0" } },
     }),
     musette: P({
-      name: "人形遣いの爺さん", full: "ミュゼット（日傘の若君の眷属）", nation: "使徒領", role: "眷属。人形師。大きな老紳士の操り人形の中に入り、人形の口で話す。中身はまつげの長い無表情な小娘。人を材料にした人形の改良を、淡々と提案する毒舌の天才。若君の後始末ばかりさせられている苦労人。〔進〕ベルトランの弟子だった娘。何も覚えていない", sex: "女", age: 13, race: "human", childLook: true,
+      name: "人形芝居の座長", full: "ミュゼット（日傘の若君の眷属）", nation: "使徒領", role: "眷属。人形師。大きな老紳士の操り人形の中に入り、人形の口で話す。中身はまつげの長い無表情な小娘。人を材料にした人形の改良を、淡々と提案する毒舌の天才。若君の後始末ばかりさせられている苦労人。〔進〕ベルトランの弟子だった娘。何も覚えていない", sex: "女", age: 13, race: "human", childLook: true,
       who: { kind: "majin", sex: "女", age: 13, seed: "c2:musette", look: { hair: "#c8c0d8", hairStyle: "bob", eyes: "narrow", iris: "#9a6ad8", mouth: "flat", brows: "calm", outfit: "coat", head: "none", gear: "none", chest: "gem", cloth: "#2a1a2a", build: "slim", marks: [], bg: "#2a1a30" } },
     }),
 

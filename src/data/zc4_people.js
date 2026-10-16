@@ -29,7 +29,7 @@
     tula: { name: "トゥーラ", role: "坑夫長屋の荷運び" },
     mirlene: { name: "ミルレーネ", full: "ミルレーネ・エル・シルヴァリス", role: "名家の令嬢・術士" },
     salphiel: { name: "サルフィエル", alias: "薄布の娘", role: "湖の占い師", reveal: "c4_sal_name" },
-    musette: { name: "ミュゼット", alias: "人形遣いの爺さん", role: "人形師", reveal: "c4_mus_name" },
+    musette: { name: "ミュゼット", alias: "人形芝居の座長", role: "人形師", reveal: "c4_mus_name" },
     gerhard: { name: "ゲルハルト", full: "ゲルハルト・ブラント", role: "黒鉄の砦の砦主" },
     bartolo: { name: "バルトロ", full: "バルトロ・ガッロ", role: "港の賞金首" },
     clarisse: { name: "クラリス", full: "クラリス・ド・ベルモン", role: "聖堂騎士見習い" },
