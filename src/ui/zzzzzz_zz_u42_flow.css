@@ -1,0 +1,2 @@
+/* U42：施設の出口（「〜を出る」）の組は、コマンドの窓の下に貼り付ける（窓が低くても、選択肢が多くても見える。ui/zzzzzz_zz_u42_flow.js） */
+#panel > .agroup.u42exit { position: sticky; bottom: 0; z-index: 2; margin-top: auto; background: var(--win-solid, var(--sheet)); box-shadow: 0 -6px 8px -6px rgba(0, 0, 0, .25); }
