@@ -391,17 +391,15 @@
    "group": "c2",
    "name": "ユリナ",
    "file": "assets/portraits/yurina.webp",
-   "identity": "1girl, 27 years old, slim, fair skin, red hair, crimson hair, short hair, side-swept bangs, golden eyes, closed eyes, squinting, thin eyebrows, beautiful face, dark leather swordsman outfit, black gloves, sword at hip",
+   "identity": "1girl, adult woman, 27 years old, slim, tall, fair skin, red hair, crimson hair, short hair, side-swept bangs, golden eyes, closed eyes, squinting smiling eyes, thin eyebrows, long dark brown matte leather coat, loose dark tunic, black gloves, modest clothes, sword at hip in scabbard",
    "tags": "hands behind back",
-   "face": "smirk",
+   "face": "smirk, carefree",
    "variants": {
     "joy": "smile, closed eyes",
     "anger": "open eyes, glaring, cold smile",
     "sorrow": "sad smile, looking down",
     "fun": "laughing, closed eyes",
-    "cold": "open eyes, cold eyes, expressionless",
-    "serious": "serious, open eyes, closed mouth",
-    "surprise": "surprised, open eyes, open mouth"
+    "cold": "expressionless, cold, narrow eyes, closed mouth, straight mouth"
    },
    "memo": "直轄特殊部隊の剣士。糸目で飄々と笑う、戦うと冷徹"
   },
@@ -809,9 +807,7 @@
     "anger": "glaring, frown",
     "sorrow": "sad, looking down",
     "fun": "laughing, open mouth",
-    "faint_smile": "faint smile, closed mouth",
-    "cold": "cold eyes, expressionless",
-    "wicked": "eerie smile, mask-like smile"
+    "cold": "cold eyes, expressionless"
    },
    "memo": "仮面をいくつも持つ使徒（使徒リスト 23）。今は宮廷の老将の面で、宰相の客分の軍師。駒に話しかける"
   },
@@ -1017,8 +1013,7 @@
    "face": "gentle eyes, calm",
    "variants": {
     "anger": "glaring, glowing eyes",
-    "sorrow": "sad eyes, looking down",
-    "serious": "serious, faintly glowing eyes"
+    "sorrow": "sad eyes, looking down"
    },
    "memo": "C4・使徒（刻印の環の三十三・A 級・友好）。湯の町の湖の、薄布で顔を隠した小さな娘。年寄りの口ぶりで人を子ら扱いする。白い衣と金の刺繍、銀の水盤。人ではない気配は目の淡い光だけで"
   },
@@ -1030,7 +1025,9 @@
    "identity": "1girl, petite, young girl, pale skin, lilac hair, grey hair, bob cut, straight bangs, violet eyes, half-closed eyes, very long eyelashes, expressionless, black frock coat too large for her, white cravat, sewing needles stuck in sleeve, thread wrapped around fingers",
    "tags": "sitting on the shoulder of a giant wooden marionette of an old gentleman in a tailcoat, holding a needle and thread",
    "face": "expressionless, blank stare",
-   "variants": {},
+   "variants": {
+    "exasperated": "exasperated, half-closed eyes, deadpan"
+   },
    "memo": "C4・眷属。日傘の若君の人形師。老紳士の大きな操り人形の中にいる、まつげの長い無表情な小娘。薄紫のおかっぱ、大きすぎる燕尾服、糸を巻いた指"
   },
   {
@@ -1248,15 +1245,11 @@
    "tags": "holding five dog leashes, standing straight",
    "face": "serious, frown",
    "variants": {
-    "joy": "embarrassed smile, blush",
-    "anger": "angry, shouting, blush",
-    "sorrow": "teary eyes, frown",
-    "fun": "flustered, blush, wide eyes",
-    "shy": "embarrassed, heavy blush, looking away",
-    "panic": "flustered, blush, wide-eyed, sweatdrop, wavy mouth",
-    "serious": "serious, determined, focused eyes, closed mouth",
-    "troubled": "troubled, worried eyebrows, awkward smile",
-    "smitten": "smitten, blush, dreamy eyes, gentle smile"
+    "joy": "(embarrassed smile:1.4), (blush:1.2), (happy:1.2), closed mouth",
+    "anger": "(angry:1.5), (v-shaped eyebrows:1.4), (shouting:1.2), (open mouth:1.2), (blush:1.1)",
+    "sorrow": "(sad:1.5), (teary eyes:1.3), (frown:1.3), (worried eyebrows:1.3)",
+    "fun": "(laughing:1.4), (smile:1.4), (open mouth:1.2), (closed eyes:1.2)",
+    "shy": "(embarrassed:1.5), (heavy blush:1.5), (looking away:1.4), (wavy mouth:1.2)"
    },
    "memo": "C6・仲間。没落した騎士家の娘。騎士学校の首席なのに日雇い。姉御肌で堅物、恋の話に真っ赤になる。黒髪の一つ結び、質札の束"
   },
@@ -1326,17 +1319,15 @@
    "name": "マリオン",
    "kin": "moulin",
    "file": "assets/portraits/marion.webp",
-   "identity": "1girl, mature female, old woman, 63 years old, short, small, hunched back, tan skin, grey hair, hair bun, smiling eyes, green eyes, wrinkles, flour-dusted brown dress, white apron, kerchief on head, broom",
+   "identity": "1girl, old woman, elderly, 63 years old, short, small, hunched back, tan skin, wrinkles, grey hair, hair bun, kerchief on head, green eyes, smiling eyes, flour-dusted brown dress, white apron",
    "tags": "holding a broom, hand on lower back",
-   "face": "smile",
+   "face": "kind smile",
    "variants": {
     "joy": "warm smile, closed eyes",
     "anger": "angry, frown, raising broom",
     "sorrow": "sad smile, looking down",
     "fun": "laughing, open mouth",
-    "exasperated": "exasperated, sigh, half-closed eyes",
-    "faint_smile": "gentle motherly smile, soft eyes",
-    "serious": "serious, focused eyes, closed mouth"
+    "exasperated": "exasperated, sigh, half-closed eyes, frown"
    },
    "memo": "C6・町（家族）。バルナベの母。腰の曲がった小さな粉挽きの女房。息子を箒で追い回す。水車の帳面は全部この人"
   },
@@ -1349,7 +1340,10 @@
    "identity": "1boy, male focus, old man, 74 years old, thin, pale skin, grey hair, long hair, long white beard, sleepy eyes, brown eyes, raised eyebrows, deep wrinkles, round spectacles, crimson long robe, silver chain of office, soot on sleeves, wooden staff",
    "tags": "holding a closed old book under arm, standing beside a small bonfire",
    "face": "mischievous smile",
-   "variants": {},
+   "variants": {
+    "serious": "serious, quiet eyes, closed mouth",
+    "tired": "tired, half-closed eyes, sigh"
+   },
    "memo": "C6・町（師匠）。王都の焚書官長。焼く前に必ず読む飄々とした老人。ラザールの師で、その両親の写本屋を焼いた本人"
   },
   {
@@ -2156,18 +2150,16 @@
    "group": "c2",
    "name": "マグダ",
    "file": "assets/portraits/magda.webp",
-   "identity": "1girl, mature female, adult, woman, 46 years old, tall, muscular, tan skin, mole on cheek, ash blonde hair, short hair, messy hair, brown eyes, sharp eyes, dirt on face, red bandana, leather vest over rolled-up shirt, leather gloves, pickaxe on shoulder, reading glasses hanging from collar",
-   "tags": "hand on hip, holding a lantern",
-   "face": "loud grin",
+   "identity": "1girl, mature female, middle-aged woman, 46 years old, tall, muscular, tan skin, mole on cheek, ash blonde hair, short hair, messy hair, brown eyes, sharp eyes, dirt smudge on cheek, red bandana on head, leather vest over rolled-up white shirt, leather gloves, pickaxe resting on shoulder, reading glasses hanging from the shirt collar on a cord, loose work clothes",
+   "tags": "hand on hip",
+   "face": "confident, loud grin",
    "memo": "C5・町。遺構の発掘屋の女親方。口より先に鶴嘴。夜は眼鏡で碑文を読む。灰色がかった金の短いはね髪、頬のほくろ、赤い頭巾、鶴嘴、襟に下げた眼鏡",
    "variants": {
     "joy": "loud laugh, open mouth",
     "anger": "shouting, angry, frown",
     "sorrow": "sad, looking at wall",
     "fun": "grin, thumbs up",
-    "serious": "serious, squinting through glasses",
-    "sparkle": "excited, sparkling eyes, open mouth",
-    "exasperated": "exasperated, sigh, half-closed eyes"
+    "sparkle": "excited, sparkling eyes, open mouth, smile"
    }
   },
   {
