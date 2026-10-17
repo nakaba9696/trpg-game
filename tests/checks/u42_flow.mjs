@@ -4,6 +4,7 @@
 // - 出口の組は窓の下に貼り付ける（.css の sticky）。U21 の組の札の印（.u21acc）は描き直しのたびに外す（王城で「王城を出る」が切れた不具合）
 // - 町に着いた見出しの間は、本文を一行ずつ出す流れ（U28）が待つ口（G.u28.wait）を見る
 // - 道中の出来事：道中の一行のあとに出た出来事の名前から、本文の窓を見せる（G.u42.eventStart）
+// - 出来事が終わって町の画面に戻ったら、その場にいない人の立ち絵は下げる（G.u42.keepWho。C17 が結果の場面で残すのは本文を出している間だけ）
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
@@ -13,7 +14,7 @@ export default ({ fail: failTo, loadEngine, seeded }) => {
   const G = loadEngine();
   const D = G.data;
   const vmc = vm.createContext({ console, G, globalThis: { G }, Image: class { addEventListener() {} } });
-  for (const f of ["art_monsters.js", "art_people.js", "r1_race.js", "v4_assets.js", "v5_stand.js", "v9_pc.js", "u13_menu.js", "zf2_opening.js", "zzzzz_u21_side.js", "zzzzzz_zz_u42_flow.js"])
+  for (const f of ["art_monsters.js", "art_people.js", "r1_race.js", "v4_assets.js", "v5_stand.js", "v9_pc.js", "u13_menu.js", "zf2_opening.js", "zzzzz_u21_side.js", "zzzzzz_zz_u42_flow.js", "zzzzzzzzzzz_u42_linger.js"])
     vm.runInContext(src("ui/" + f), vmc, { filename: "ui/" + f });
   const u42 = G.u42, u13 = G.u13, u21 = G.u21;
   for (const k of ["exitGroup", "eventStart"]) if (!u42 || typeof u42[k] !== "function") return fail(`G.u42.${k} が無い`);
@@ -95,4 +96,31 @@ export default ({ fail: failTo, loadEngine, seeded }) => {
   // 隠すだけ（記録・ログの窓は消さない）：U19 と同じ印で隠す
   const flow = src("ui/zzzzzz_zz_u42_flow.js");
   if (!/classList\.add\("u19gone"\)/.test(flow) || /\.remove\(\)|S\.log\s*=|S\.log\.splice/.test(flow)) fail("道中の出来事の頁替えで、行を隠さず消している・記録を書き換えている");
+  // ---------------------------------------------------------------- 4. 出来事のあとの立ち絵
+  {
+    const who = { kind: "host", seed: "t" };
+    const fac = { kind: "noble", seed: "f" };
+    const k = u42.keepWho;
+    if (typeof k !== "function") fail("G.u42.keepWho が無い（ui/zzzzzzzzzzz_u42_linger.js）");
+    else {
+      if (k({ mode: "event" }, who, false) !== who) fail("出来事の中の人を下げている");
+      if (k({ mode: "fac" }, fac, false) !== fac) fail("施設の人を下げている");
+      if (k({ mode: "explore" }, who, true) !== who) fail("結果の本文を出している間に、出来事の人を下げている");
+      for (const mode of ["explore", "travel"]) if (k({ mode }, who, false) !== null) fail(`本文を出しきった町の画面（${mode}）に、その場にいない人の立ち絵が残る`);
+      if (k({ mode: "event", combat: {} }, who, true) !== null || k({ mode: "explore", over: true }, who, true) !== null) fail("戦闘・冒険の終わりに立ち絵を残す");
+    }
+    // C17 の残し方（次の行動まで）と重ねても、本文を出しきったら下がる。名前の順で U42 が C17 の外から包む
+    const names = ["zzzzzzzzzz_c17_linger.js", "zzzzzzzzzzz_u42_linger.js"];
+    if ([...names].sort().join() !== names.join()) fail("U42 の立ち絵の包みが C17 より先に読まれる");
+    let busy = true;
+    const UG = { stand: { whoOf: (s) => (s.mode === "event" ? who : null) }, c17Linger: (s) => (s.mode === "explore" ? { ev: "x1" } : null), u28: { busy: () => busy }, ui: { render: () => {} } };
+    const c = vm.createContext({ G: UG, globalThis: { G: UG }, setTimeout: () => 0 });
+    for (const f of names) vm.runInContext(src("ui/" + f), c, { filename: "ui/" + f });
+    if (UG.stand.whoOf({ mode: "event", event: "x1", flags: {} }) !== who) fail("出来事のあいだの人が変わる");
+    if (UG.stand.whoOf({ mode: "explore", flags: {} }) !== who) fail("結果の本文を出している間に、立ち絵が下がる");
+    busy = false;
+    if (UG.stand.whoOf({ mode: "explore", flags: {} })) fail("結果の本文を出しきって町の画面に戻っても、出来事の人の立ち絵が残る");
+    if (typeof UG.u28.done !== "function") fail("本文を出しきったときに立ち絵を描き直さない（G.u28.done）");
+    if (!/U\.done\b/.test(src("ui/zzzzzz_u28_beats.js")) || !/U\.going\s*=/.test(src("ui/zzzzzz_u28_beats.js"))) fail("U28 が、出しきったこと（done）・これから出すこと（going）を知らせない");
+  }
 };

@@ -165,6 +165,8 @@
     release();
     releaseBar();
     body.classList.remove("u28busy");
+    // 出しきったあと（U.done を外から置く。結果の場面の立ち絵を下げるなど）
+    if (R && U.done) { try { U.done(); } catch (e) {} }
   }
   U.skip = () => { if (run) finish(); };
   U.busy = () => !!run;
@@ -210,6 +212,7 @@
     const S = G.S;
     const doBeat = acted && U.on && !calm() && S && !S.combat && !run;
     acted = false;
+    U.going = !!doBeat; // これから順に出す描き直しの最中か（中の描き直しが読む。U42 の立ち絵）
     if (run) finish(); // 前の分が出しきれていなければ、先に全部出す
     let before = null;
     if (doBeat) {
@@ -217,7 +220,7 @@
       hold = { scene: null, bgm: false, copies: null };
     }
     let r;
-    try { r = render0(...a); } catch (e) { release(); throw e; }
+    try { r = render0(...a); } catch (e) { release(); U.going = false; throw e; }
     try {
       const S2 = G.S;
       paintHead(S2);
@@ -225,6 +228,9 @@
       if (doBeat && S2 && !S2.combat && !(G.u13 && G.u13.holding && G.u13.holding())) start(S2, before);
       else release();
     } catch (e) { release(); }
+    U.going = false;
+    // 順に出すつもりが、出す行が無かったとき（出しきったのと同じ）
+    if (doBeat && !run && U.done) { try { U.done(); } catch (e) {} }
     return r;
   };
 
