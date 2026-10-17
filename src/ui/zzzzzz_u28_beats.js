@@ -142,6 +142,8 @@
   function stepTo(i) {
     const R = run;
     if (!R) return;
+    // 待たせる間（町に着いた見出しを出している間など。U.wait を外から置く）は、次の行を出さずに待つ
+    if (U.wait && U.wait()) { R.timer = setTimeout(() => stepTo(i), 120); return; }
     for (let k = R.i; k <= i && k < R.rows.length; k++) {
       R.rows[k].classList.remove("u28wait");
       R.rows[k].classList.add("u28show");
