@@ -136,7 +136,7 @@ export default ({ fail, ok, loadEngine, seeded }) => {
       const G3 = loadEngine();
       const S3 = start(G3, 8);
       G3.arrive("leavel"); S3.fame = 200; S3.gold = 1000; S3.visited.w2_dranherz = true;
-      { const H = G3.data.Q8H, off = H && H.off; if (H) H.off = true; G3.crime("murder"); G3.crime("murder"); if (H) H.off = off; } // 人目（Q8 の隠れた罪）に頼らず、罪はそのまま知られる（乱数の並びで結果が変わらないように）
+      G3.crime("murder"); G3.crime("murder");
       S3.mode = "fac"; S3.fac = "castle";
       const d = G3.facActions().flatMap((g) => g.list).find((x) => x.id === "castle:w2knight:dran");
       if (!d || !d.disabled) F("手配中なのに兄君の推挙で騎士の位を願い出られる");

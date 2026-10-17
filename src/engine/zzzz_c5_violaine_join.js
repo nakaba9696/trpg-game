@@ -20,6 +20,21 @@
   const joined = (S) => !!(G.c2State && G.c2State(S).joined[ID]);
   const inParty = (S) => !!(G.c2In && G.c2In(ID, S));
 
+  // ---------------------------------------------------------------- 新しい冒険の予定の揺れ（F4）
+  // ヴィオレーヌの予定は一年じゅう王都なので、日の揺れ（S.f4.shift）は居場所を変えない。揺れの乱数を引かずに 0 にする
+  // （仲間が一人増えるたびに、新しい冒険の始めの乱数が一つずれて、ほかの決まった乱数の流れが変わらないように）
+  const new0 = G.newGame;
+  G.newGame = (opt) => {
+    const p = (D.C2_PEOPLE || {})[ID];
+    const sch = p && p.schedule;
+    const one = Array.isArray(sch) && new Set(sch.map((x) => x.loc)).size === 1;
+    if (one) delete p.schedule;
+    let S;
+    try { S = new0(opt); } finally { if (one) p.schedule = sch; }
+    if (S && S.f4 && S.f4.shift) S.f4.shift[ID] = 0;
+    return S;
+  };
+
   // ---------------------------------------------------------------- 決闘の勝ちに印
   const combat0 = G.startCombat;
   G.startCombat = (ids, opt) => {
