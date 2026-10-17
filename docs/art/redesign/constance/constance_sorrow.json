@@ -1,0 +1,19 @@
+{
+ "prompt": "(Inuboshi:1.2), miyanogi_jiji, Anan Shokudow, yutokamizu, ikezawa shin, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, mature female, adult, woman, 41 years old, slender, pale skin, grey hair, ash grey hair, hair bun, tight bun, green eyes, sharp eyes, (detailed eyes:1.2), (clear pupils:1.2), (black-framed glasses:1.4), (thick rectangular glasses frame:1.3), scar on chin, dark teal high-collared coat, ring of keys at belt, ink-stained fingers, thick ledger, holding a thick ledger, quill behind ear, (sad:1.4), (worried eyebrows:1.4), looking down, closed mouth, solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
+ "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (child:1.5), (loli:1.5), (young:1.3), (closed eyes:1.3), (empty eyes:1.4), (blank eyes:1.4), (no pupils:1.4), (large breasts:1.5), (cleavage:1.5), (dog:1.4), (sword:1.4), (rimless eyewear:1.4), (thin glasses frame:1.3), (semi-rimless eyewear:1.3)",
+ "seed": 16302,
+ "steps": 20,
+ "cfg_scale": 5.5,
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "width": 1024,
+ "height": 1280,
+ "batch_size": 1,
+ "n_iter": 1,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "denoising_strength": 0.5,
+ "resize_mode": 0,
+ "init_image": "constance_16302.png（基本の絵・白い地）"
+}
