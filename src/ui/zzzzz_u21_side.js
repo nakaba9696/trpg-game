@@ -256,6 +256,8 @@
   // 開いた組を、その札のすぐ下に（札 → 開いた組 → 残りの札）。開いた組の中だけ流れる
   function accordion(S) {
     const panel = $("#panel");
+    // 前の描き直しの印を外す（残ると、組の札の無い施設でも窓が流れず、下の選択肢「〜を出る」が切れて押せない）
+    if (panel) panel.classList.remove("u21acc");
     if (!panel || !u21.active || !panel.classList.contains("u13on") || panel.classList.contains("u13fight")) return;
     const bar = panel.querySelector(":scope > .u13tabs");
     if (!bar || !u13) return;
