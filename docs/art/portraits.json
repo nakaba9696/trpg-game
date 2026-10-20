@@ -292,11 +292,7 @@
    "variants": {
     "joy": "smile, open mouth, happy, closed eyes",
     "anger": "pout, puffed cheeks, frown",
-    "sorrow": "sad, teary eyes, worried eyebrows",
-    "fun": "laughing, open mouth, closed eyes",
-    "panic": "flustered, panicking, sweatdrop, open mouth",
-    "surprise": "surprised, wide-eyed, open mouth",
-    "sparkle": "sparkling eyes, smile, excited"
+    "fun": "laughing, open mouth, closed eyes"
    },
    "memo": "第六王子（女）。現場主義でにこやかな愛され姫。少し天然"
   },
@@ -758,9 +754,10 @@
    "tags": "hand on chest, roots growing from fingers, spores",
    "face": "polite smile",
    "variants": {
+    "anger": "frown, glowing eyes, glaring",
+    "fun": "laughing, open mouth",
     "troubled": "troubled, worried eyebrows, polite smile",
-    "surprise": "surprised, wide-eyed",
-    "sleepy": "sleepy, drowsy, half-closed eyes"
+    "surprise": "surprised, wide-eyed"
    },
    "memo": "毒沼の庭師（使徒リスト 7。本体は樹皮に覆われたのろい獣）。穏やかで丁寧、悪意がない"
   },
