@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：イロナの花輪はなしでよい（いちばん上）
+- イロナの案（30 案・追加 1・追加 2）は花輪を付けなくてよい。詳しくは Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾。
+
 ### 2026-10-22 持ち主 → 絵：イロナにさらに 10 案ほど追加（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾「追加 2」を、30 案・追加 1 と一緒に進める。
 
