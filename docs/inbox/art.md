@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 4 回目の選び（いちばん上）
+→ 2026-10-22 置いた（art/owners・27f716d）。千石・イロナは選び待ち、竹之内・ひなたは持ち主の確かめ待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（4 回目の候補）。
 
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 3 回目の選び（いちばん上）
@@ -299,6 +300,13 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-22 競馬ゲームのオーナー：4 回目の選びの反映 → 置いた（Horse-Simulation の art/owners・27f716d）
+- marie（候補 1）：base・smile（口を閉じた笑み）・joy（目を閉じて大笑い）・sad（眉を下げてうつむく）を godot/assets/owners/marie_<mood>.png に置いた（1024 四方・透過）。一覧は docs/art/final/marie.webp。
+- yuni：yuni_smile.png は消した。yuni_surprise.png（目を見開いた驚き）と、ふだんの顔のまま身振りを変えた yuni_base_g1.png（手帳を開く）・g2（指を立てて説明）・g3（胸の前で手を合わせる）を置いた。身振りは胸から下だけを緑の地で描き直して抜いたので、顔・髪・襟は基本と同じ（服の紺・エプロンもそろえた）。一覧は docs/art/final/yuni.webp。
+- sengoku：スマートフォンを持たない候補 3 枚（ポケットに手）を置いた（docs/art/candidates/sengoku.webp）。選び待ち。
+- ilona：37 を軸に 20 案（61〜80。花輪なし。髪は 37 の栗色、細い三つ編み・金の月桂樹の髪飾り・眠たげな目は共通で、服を散らした）。見本は ilona_12〜15.webp。選び待ち。
+- takenouchi・hinata は指示どおり待ち。
 
 ### 2026-10-22 競馬ゲームのオーナー：3 回目の選びの反映 → 置いた（Horse-Simulation の art/owners・ac2f716）
 - yuni：ほほえむを作り直した（目を開けたやさしい笑み。大喜び・悲しいは前のまま）。godot/assets/owners/yuni_smile.png を差し替え、一覧は docs/art/final/yuni.webp。
