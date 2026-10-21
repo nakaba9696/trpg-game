@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-21 持ち主 → 絵：別のリポジトリの絵の頼み（いちばん上）
+→ 2026-10-21 候補を置いた（Horse-Simulation の art/owners・3407b46）。持ち主の選び待ち。
 - 持ち主の別のゲームの絵の頼みがある。nakaba9696/Horse-Simulation のブランチ `art/owners` の `docs/art/ART_SESSION_NOTE.md` を読んで進める（絵柄はこのゲームの style.json と同じでよい、と持ち主）。
 - このゲームの残りの仕事は無い（コンスタンスまで済み）。
 
@@ -271,6 +272,12 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-21 別のリポジトリ（Horse-Simulation）のオーナー 7 人の候補 → 候補を置いた・持ち主の選び待ち（art/owners・3407b46）
+- hinata・sengoku・yuni・takenouchi・marie・lucy・ilona の候補を一人 3 枚、docs/art/candidates/<id>.webp に置いた（番号 1〜3 と seed を書いた。透過して薄い灰色の地に並べた）。生成の値は docs/art/gen/candidates/。
+- 絵柄は trpg-game の style.json（男は style_male.json）の前置き・ネガティブ・設定。構図は胸から上・1024×1024。
+- 文字・背景の建物・二人並んだ絵は外した。lucy は 12 歳の子どもとして描いた。
+- 選ばれたら 4 表情（base・smile・joy・sad）を作り、godot/assets/owners/<id>_<mood>.png に置く（makino・takarada・gfhost に読み替え）。violaine・farina は前の絵と並べて画風を見る。
 
 ### 2026-10-20 コンスタンスの首の横 → 済み（redesign-1・408e4a70）
 - 首の右（あごの線より下、首の線と髪・襟のあいだ）に残っていた白い地を抜いた。頬・傷を削らないよう、あごの線より下だけに限った（docs/art/redesign/constance/neckfix.py）。基本と差分 8 枚とも同じ所を直した（差分は基本と同じ透明）。
