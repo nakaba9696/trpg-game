@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-21 持ち主 → 絵：競馬ゲームのオーナーの候補を選んだ（いちばん上）
+- 結果と作り直しの指示は nakaba9696/Horse-Simulation のブランチ `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（2026-10-21 持ち主の選び）。ユニの元にする絵は、このゲームの `assets/portraits/kind_host_f.webp`。
+
 ### 2026-10-21 持ち主 → 絵：別のリポジトリの絵の頼み（いちばん上）
 → 2026-10-21 候補を置いた（Horse-Simulation の art/owners・3407b46）。持ち主の選び待ち。
 - 持ち主の別のゲームの絵の頼みがある。nakaba9696/Horse-Simulation のブランチ `art/owners` の `docs/art/ART_SESSION_NOTE.md` を読んで進める（絵柄はこのゲームの style.json と同じでよい、と持ち主）。
