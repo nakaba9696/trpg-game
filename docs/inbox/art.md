@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 3 回目の選び（いちばん上）
+→ 2026-10-22 置いた（art/owners・ac2f716）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（3 回目の候補）。
 
 ### 2026-10-22 持ち主 → 絵：イロナにさらに 10 案ほど追加（その 3・いちばん上）
@@ -295,6 +296,11 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-22 競馬ゲームのオーナー：3 回目の選びの反映 → 置いた（Horse-Simulation の art/owners・ac2f716）
+- yuni：ほほえむを作り直した（目を開けたやさしい笑み。大喜び・悲しいは前のまま）。godot/assets/owners/yuni_smile.png を差し替え、一覧は docs/art/final/yuni.webp。
+- 候補の作り直し（docs/art/candidates/<id>.webp。透過済み・選び待ち）：hinata（黒髪の三つ編み・素朴）／sengoku（普通の歯で口を閉じた笑み。ネガティブに sharp teeth・fangs）／takenouchi（黒い三つ揃い・落ち着いた老練な笑み）／marie（仕立ての良い白いジャケットと紫のブラウス・知的な女社長）。
+- ilona：1〜50 を同じ seed・同じ指定で花輪を外して作り直した（見本は ilona_1〜9.webp、番号は前と同じ。51〜60 は前から花輪なし）。31・33・37 は、同じ seed では見本図や文字・小さな絵が入ったので、seed を +1000 して作り直した。案の中の月桂冠・帽子・猫（31〜40 は持ち主の案の猫のチャーム）は案の一部として残した。
 
 ### 2026-10-22 競馬ゲームのオーナー：2 回目の選びの反映 → 置いた（Horse-Simulation の art/owners・b610fea）
 - yuni：OK の基本から 3 表情を作り直した（smile＝目を細めた笑み、joy＝目を閉じて口を開けて笑う、sad＝目を閉じて眉を下げる）。godot/assets/owners/yuni_<mood>.png を差し替え、一覧は docs/art/final/yuni.webp。
