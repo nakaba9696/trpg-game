@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-21 持ち主 → 絵：競馬ゲームのオーナーの候補を選んだ（いちばん上）
+→ 2026-10-21 5 人は候補を置いた（選び待ち）・lucy と yuni は仕上げた（art/owners・9f0e9ae・c0cb8ab）。
 - 結果と作り直しの指示は nakaba9696/Horse-Simulation のブランチ `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（2026-10-21 持ち主の選び）。ユニの元にする絵は、このゲームの `assets/portraits/kind_host_f.webp`。
 
 ### 2026-10-21 持ち主 → 絵：別のリポジトリの絵の頼み（いちばん上）
@@ -275,6 +276,12 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-21 競馬ゲームのオーナー：1 回目の選びの反映 → 5 人は候補を置いた（選び待ち）・ルーシーとユニは仕上げた（Horse-Simulation の art/owners・9f0e9ae・c0cb8ab）
+- 作り直した候補（docs/art/candidates/<id>.webp を上書き。透過済み）：hinata（大人の胸の大きな田舎のお姉さん・栗色の三つ編み・服はきちんと着たまま）／sengoku（IT 社長風・灰色のベスト・いけ好かない笑み）／takenouchi（深緑の三つ揃いの老紳士・懐中時計・杖）／marie（サングラスを頭に掛けた華やかな年上のお姉さん・紫と金）／ilona（キンチェムを元に 3 方向：1 ハンガリーの刺繍の服、2 乗馬服、3 19 世紀のドレス。花輪は 3 枚とも）。男 2 人も style.json だけで作った。
+- lucy（候補 3）・yuni（trpg-game の kind_host_f の子）：基本と 4 表情（base・smile・joy・sad）を godot/assets/owners/<id>_<mood>.png に置いた（1024 四方・透過）。一覧は docs/art/final/<id>.webp（マゼンタと暗い地）。
+  - 透過：金髪や灰色の髪は白い地との差では抜けないので、緑の地で描き直して色の差で抜いた（ルーシーは縁だけ、ユニは全体）。ユニの元の絵の首の左に残っていた白い地は、肌（赤みがある）と色みの無い白を分けて先に抜いた。拡大して白い縁・半透明・穴が無いことを確かめた。
+  - 表情は顔の楕円だけを描き直して基本に重ねた（髪・服・透明は全部同じ）。lucy：smile＝口を閉じたにやり、joy＝目を閉じて大笑い、sad＝ほっぺをふくらませる。yuni：smile＝目を開けてほほえむ、joy＝目を輝かせる、sad＝しょんぼり涙ぐむ。帽子を振る・手帳で口元を隠すなど手の動きは、基本とずれないよう入れていない。
 
 ### 2026-10-21 別のリポジトリ（Horse-Simulation）のオーナー 7 人の候補 → 候補を置いた・持ち主の選び待ち（art/owners・3407b46）
 - hinata・sengoku・yuni・takenouchi・marie・lucy・ilona の候補を一人 3 枚、docs/art/candidates/<id>.webp に置いた（番号 1〜3 と seed を書いた。透過して薄い灰色の地に並べた）。生成の値は docs/art/gen/candidates/。
