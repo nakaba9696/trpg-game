@@ -26,7 +26,7 @@
 | `serious` | 真剣 | serious, determined, focused eyes, closed mouth | 基本 | 腹を決めた・本気の顔 | 52 |
 | `smug` | 得意げ | smug, smirk, half-closed eyes, raised eyebrow | 楽 → 喜 → 基本 | 胸を張る・したり顔 | 27 |
 | `fear` | 怯え | scared, frightened, wide-eyed, worried eyebrows, pale face, sweat | 驚き → 哀 → 基本 | 震える・青ざめる | 4 |
-| `tired` | 疲れ | tired, exhausted, half-closed eyes, sweat, open mouth | 困り → 哀 → 基本 | へたり込む・息が上がる | 8 |
+| `tired` | 疲れ | tired, exhausted, half-closed eyes, sweat, open mouth | 困り → 哀 → 基本 | へたり込む・息が上がる | 7 |
 | `cry` | 泣き | crying, tears, streaming tears, open mouth | 哀 → 基本 | 泣き崩れる・号泣（哀より強い） | 6 |
 | `panic` | 慌て | flustered, panicking, wide-eyed, sweatdrop, wavy mouth | 困り → 驚き → 怯え → 基本 | あたふたする・しくじりに慌てる | 15 |
 | `pout` | すね | pout, puffed cheeks, looking away | 怒 → 基本 | むくれる・すねる | 4 |
@@ -153,7 +153,7 @@
 | 山の館の伯爵さま（使徒ユズエル）（`yuzuel`） | 得意げ（`smug`）・冷たい目（`cold`） |
 | 聖歌隊の若者（眷属セヴラン）（`severin`） | 悪い笑み（`wicked`）・泣き（`cry`）・冷たい目（`cold`） |
 | 香売りの姐さん（眷属ルフィナ）（`rufina`） | 困り（`troubled`）・疲れ（`tired`）・ほんの少し笑う（`faint_smile`）・驚き（`surprise`） |
-| コンスタンス（`constance`） | 真剣（`serious`）・疲れ（`tired`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`） |
+| コンスタンス（`constance`） | 真剣（`serious`）・冷たい目（`cold`）・ほんの少し笑う（`faint_smile`） |
 | アンブロワーズ（`ambroise`） | 眠い（`sleepy`）・真剣（`serious`）・冷たい目（`cold`）・呆れ（`exasperated`） |
 | シオネ（`shione`） | 困り（`troubled`）・慌て（`panic`）・目を輝かせる（`sparkle`）・真剣（`serious`） |
 | フィリエ（`filie`） | 慌て（`panic`） |
