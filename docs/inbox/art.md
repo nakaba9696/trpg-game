@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの候補の 2 回目の選び（いちばん上）
+- 結果と作り直しの指示は nakaba9696/Horse-Simulation のブランチ `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（2026-10-22）。
+
 ### 2026-10-21 持ち主 → 絵：競馬ゲームのオーナーの候補を選んだ（いちばん上）
 → 2026-10-21 5 人は候補を置いた（選び待ち）・lucy と yuni は仕上げた（art/owners・9f0e9ae・c0cb8ab）。
 - 結果と作り直しの指示は nakaba9696/Horse-Simulation のブランチ `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（2026-10-21 持ち主の選び）。ユニの元にする絵は、このゲームの `assets/portraits/kind_host_f.webp`。
