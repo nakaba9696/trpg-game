@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 4 回目の選び（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（4 回目の候補）。
+
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 3 回目の選び（いちばん上）
 → 2026-10-22 置いた（art/owners・ac2f716）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（3 回目の候補）。
