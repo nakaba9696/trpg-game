@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：イロナは髪の色を 2 通り（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾「イロナは髪の色を 2 通り作る」。
+
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 6 回目の選び（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（6 回目の候補）。
 
