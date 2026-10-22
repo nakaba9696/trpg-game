@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのヴィオレーヌはヴィオラに（いちばん上）
+→ 2026-10-23 置いた（art/owners・58fab9f）。8 回目の選びも同じ。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾。絵の id を `viola` に変え、ファイルをリネームする。このゲーム（trpg-game）のヴィオレーヌはそのまま。
 
 ### 2026-10-22 持ち主：このゲームのファリナの指（いちばん上）
@@ -346,6 +347,15 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-23 競馬ゲームのオーナー：8 回目の選び・ヴィオラへの改名 → 置いた（Horse-Simulation の art/owners・58fab9f）
+- violaine → viola：godot/assets/owners/violaine_*.png を viola_*.png に、docs/art/final/violaine.webp を viola.webp に改名した（中身はそのまま）。
+- ilona（gfhost）：髪色は今の明るい栗色に決めたので gfhost_*_mahogany.png を外した。joy は目を閉じた笑いに作り直した（袖の縁の直しも乗せた）。
+- hinata（候補 2）：基本と 4 表情（smile＝歯を見せて笑う、joy＝目を閉じて大笑い、sad＝涙ぐむ）。頬の赤み・日焼けなし。一覧 docs/art/final/hinata.webp。
+- sengoku：後ろ髪の毛先のあいだに残っていた白い地と半透明を抜き直し、表情とコミカルも直した基本に乗せ直した。
+- takenouchi：joy を目を閉じた穏やかな笑いに作り直した（片眼鏡は基本から戻した）。コミカル 3 種（片眼鏡を落としかけて慌てる／若いころの悪童の顔でにやり／照れて赤くなる）。
+- farina：trpg-game の直した 5 本指の手（orig-fix-1・8cf38af9）から競馬ゲームの形に作り直し、4 表情とコミカル 3 種もその基本で作り直した。両手とも 5 本。
+- yuni：身振り 1〜3 で肩の横の髪の見え方が基本と違ったので、肩より上の髪の横を基本の画素にそろえた。
 
 ### 2026-10-23 このゲームのファリナの指 → 済み（orig-fix-1・8cf38af9）
 - 基本の絵を緑の地で 2 倍にし、両手だけを inpaint で描き直した（seed 32・0.6。指が 5 本の物を 4 枚から選んだ）。緑の差で抜いて縮め、基本と差分 7 枚（anger・cold・faint_smile・fun・joy・panic・sorrow）の手の所に同じ手を置いた。顔・髪・服は変えていない。
