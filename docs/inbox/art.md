@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 5 回目の選び（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（5 回目の候補）。
+
 ### 2026-10-22 持ち主 → 絵：イロナの髪の色（いちばん上）
 - イロナの髪は深い赤茶色〜マホガニー色に。Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾。
 
