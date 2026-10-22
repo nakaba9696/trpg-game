@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 7 回目の選び（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（7 回目）。
+
 ### 2026-10-22 持ち主 → 絵：千石とルーシーにもコミカルな顔（いちばん上）
 → 2026-10-22 置いた（art/owners・80a2aa7）。下の 3 つ（ヴィオレーヌとファリナ・マリエのコミカル・イロナの髪色）と 6 回目の選びも同じ。ひなた・千石は選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾。
