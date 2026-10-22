@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-23 持ち主 → 絵：競馬ゲームのオーナーの 9 回目の選び（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（9 回目）。
+
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのヴィオレーヌはヴィオラに（いちばん上）
 → 2026-10-23 置いた（art/owners・58fab9f）。8 回目の選びも同じ。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾。絵の id を `viola` に変え、ファイルをリネームする。このゲーム（trpg-game）のヴィオレーヌはそのまま。
