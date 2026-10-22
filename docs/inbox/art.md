@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-22 持ち主 → 絵：千石とルーシーにもコミカルな顔（いちばん上）
+→ 2026-10-22 置いた（art/owners・80a2aa7）。下の 3 つ（ヴィオレーヌとファリナ・マリエのコミカル・イロナの髪色）と 6 回目の選びも同じ。ひなた・千石は選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾。
 
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのヴィオレーヌとファリナ（いちばん上）
@@ -329,6 +330,14 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-22 競馬ゲームのオーナー：6 回目の選び・イロナの髪色・コミカル・ヴィオレーヌとファリナ → 置いた（Horse-Simulation の art/owners・80a2aa7）
+- ilona（gfhost）：37 を基本に 4 表情。今の髪色は gfhost_<mood>.png、マホガニーは gfhost_<mood>_mahogany.png（髪の色だけを色相で変えた。目・金の月桂樹・ブローチの宝石は変えていない）。一覧 docs/art/final/gfhost.webp。
+- takenouchi：候補 1 の 4 表情（smile＝口ひげの下で穏やかに笑う、joy＝目を細めて大笑い、sad＝眉を下げて目を伏せる）。片眼鏡は基本のまま。頭の上の白い髪が抜けすぎていた所は埋めた。
+- violaine・farina：trpg-game の絵の胸から上を切り出し、緑の地で 1024 四方に描き直して抜いた（顔・髪・服は同じ）。violaine の smile は新しく作った。trpg-game の差分がもともと控えめなので、violaine の joy・sad と farina の smile・joy は基本との差が小さい（気になれば作り直す）。
+- コミカルな顔 3 種ずつ（<id>_comic1〜3.png。一覧 docs/art/final/<id>_comic.webp・violaine.webp・farina.webp）：marie（ドヤ顔／慌てて汗／高笑い）、lucy（><でむくれる／目を輝かせる／舌を出してウインク）、violaine（赤面して慌てる／涙目でむくれる／得意げ）、farina（眼鏡がずれて固まる／眼鏡が光る／汗だくで点の目）。ルーシーの「帽子が目までずり落ちる」は顔だけの描き直しでは帽子が動かなかったので、別の顔にした。farina は眼鏡と手で顔が隠れるので崩しが弱め。
+- yuni：困惑を目は閉じた笑い目のまま、眉と口だけで作り直した（yuni_surprise.png）。身振り 2 はティーカップを両手で差し出す形に作り直した（yuni_base_g2.png）。
+- hinata（頬の赤みと日焼けなし）・sengoku（短く清潔な社長風の髪）の候補 3 枚ずつ。選び待ち。千石のコミカルは候補が決まってから作る。
 
 ### 2026-10-22 競馬ゲームのオーナー：5 回目の選び・イロナあと 10 案 → 置いた（Horse-Simulation の art/owners・b4c2265）
 - marie：ほほえむを作り直した（目を細め、口を閉じた穏やかな笑み）。godot/assets/owners/marie_smile.png・一覧 docs/art/final/marie.webp。
