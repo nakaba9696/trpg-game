@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：イロナをあと 10 案（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾「追加：イロナをあと 10 案」。
+
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 5 回目の選び（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（5 回目の候補）。
 
