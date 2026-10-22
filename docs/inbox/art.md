@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：ひなたと竹之内の候補（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の「4 回目の候補」の hinata（田舎っぽく少し芋っぽく）と takenouchi（人物像を書き足した）の 2 人の候補 3 枚ずつを作る。
+
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 4 回目の選び（いちばん上）
 → 2026-10-22 置いた（art/owners・27f716d）。千石・イロナは選び待ち、竹之内・ひなたは持ち主の確かめ待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（4 回目の候補）。
