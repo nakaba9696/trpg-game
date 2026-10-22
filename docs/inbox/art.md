@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-23 持ち主 → 絵：ファリナは候補 4・競馬ゲームの 10 回目の選び（いちばん上）
+→ 2026-10-23 済み（redesign-1・2b5da403／Horse-Simulation の art/owners）。
 - **このゲームの farina**：作り直しの候補 **4**（redesign-1 c2feccb7・seed 19206）に決定。基本の絵（透過）と、今と同じ種類の差分（喜・怒・哀・楽・ほんの少し笑う・冷たい目・慌て）・顔の窓の四角を作る。指の数を数える。redesign-1 に push して返事に書く（配り役が確認ページを作る）。
 - 競馬ゲームの分は Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（10 回目）：ひなたの smile・竹之内をふつうのスーツで・ファリナを候補 4 から・水着のユニのチョーカーを消す。
 
@@ -368,6 +369,14 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-23 ファリナは候補 4・競馬ゲームの 10 回目 → 済み（redesign-1・2b5da403／Horse-Simulation の art/owners）
+- このゲームの farina（redesign-1・2b5da403）：候補 4（seed 19206）を基本にし、差分 7 枚（joy・anger・sorrow・fun・faint_smile・panic・cold）を全身の img2img から顔だけ重ねて作った。顔の窓の四角を直した。手は眼鏡を直す片手で、人差し指・親指・曲げた 3 本の 5 本（拡大して数えた）。一覧 docs/art/redesign/farina_final.webp。
+- 競馬ゲーム：
+  - hinata：smile を口を閉じたやさしい笑みに作り直した。
+  - takenouchi：首から下をふつうのダークスーツ（黒いジャケット・白いシャツ・黒いネクタイ）に描き直し、顔・髪・ひげ・眼鏡はそのまま。4 表情とコミカル 3 種を新しい基本に乗せ直した。
+  - farina：このゲームの候補 4 の胸から上を切り出して基本にし、smile＝ほんの少し笑う、joy＝目を閉じて笑う、sad＝慌てて汗、コミカル 3 種（目が点／眼鏡が光って早口／汗だく）。
+  - yuni の水着：胸から上（2）はチョーカーとリボンを消して首を素肌にした（yuni_swim.png）。全身（2）は yuni_swim_full.png（1024×1536）。一覧 docs/art/final/yuni_swim.webp。
 
 ### 2026-10-23 競馬ゲームの残り 3 件（9 回目）→ 置いた（Horse-Simulation の art/owners・9a7016b）
 - hinata：候補 2 のデザインのまま、顔だけを描き直して 20 歳くらいの若い顔（丸い輪郭・大きな目）にした基本と 4 表情（smile＝笑う、joy＝目を閉じて大笑い、sad＝涙ぐむ）。全身を img2img すると顔が変わらなかったので、顔の楕円だけを描き直した。
