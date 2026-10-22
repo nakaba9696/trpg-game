@@ -9,6 +9,7 @@
 - イロナの髪は深い赤茶色〜マホガニー色に。Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾。
 
 ### 2026-10-22 持ち主 → 絵：ひなたと竹之内の候補（いちばん上）
+→ 2026-10-22 候補を置いた（art/owners）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の「4 回目の候補」の hinata（田舎っぽく少し芋っぽく）と takenouchi（人物像を書き足した）の 2 人の候補 3 枚ずつを作る。
 
 ### 2026-10-22 持ち主 → 絵：競馬ゲームのオーナーの 4 回目の選び（いちばん上）
@@ -306,6 +307,11 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-22 ひなた・竹之内の候補 → 置いた（Horse-Simulation の art/owners）
+- hinata：黒髪の三つ編みのまま、化粧っけなし・日焼けと赤い頬・太い眉・ほつれ毛・野暮ったい生成りのシャツに緑の前掛け・首にタオル。服はきちんと着たまま。3 枚（docs/art/candidates/hinata.webp）。
+- takenouchi：持ち主の人物像の特徴だけで（似せすぎない）：痩せた老紳士・銀白のなでつけ髪・灰色の口ひげ・鎖の付いた片眼鏡（細い眼鏡）・鋭い目と結んだ口・紺の三つ揃い・赤いアスコット・細い縞のシャツ・白いチーフ。3 枚（docs/art/candidates/takenouchi.webp）。
+- どちらも透過済み・選び待ち。
 
 ### 2026-10-22 競馬ゲームのオーナー：4 回目の選びの反映 → 置いた（Horse-Simulation の art/owners・27f716d）
 - marie（候補 1）：base・smile（口を閉じた笑み）・joy（目を閉じて大笑い）・sad（眉を下げてうつむく）を godot/assets/owners/marie_<mood>.png に置いた（1024 四方・透過）。一覧は docs/art/final/marie.webp。
