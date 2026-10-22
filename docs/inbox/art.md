@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-22 持ち主 → 絵：イロナの髪の色（いちばん上）
+- イロナの髪は深い赤茶色〜マホガニー色に。Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾。
+
 ### 2026-10-22 持ち主 → 絵：ひなたと竹之内の候補（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の「4 回目の候補」の hinata（田舎っぽく少し芋っぽく）と takenouchi（人物像を書き足した）の 2 人の候補 3 枚ずつを作る。
 
