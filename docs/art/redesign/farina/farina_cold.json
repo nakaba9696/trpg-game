@@ -1,0 +1,17 @@
+{
+ "prompt": "(Inuboshi:1.2),miyanogi_jiji,Anan Shokudow,yutokamizu, masterpiece, best quality, good quality, amazing quality, very aesthetic, absurdres, newest, blue archive, no halo, 1girl, princess, 28 years old, slim, pale skin, black hair, blue-black hair, long hair, low ponytail, straight bangs, grey eyes, narrow eyes, cold eyes, thin eyebrows, silver-rimmed glasses, dark blue noble dress, high collar, silver chain necklace, (holding documents to chest:1.2), (one hand adjusting glasses:1.1), (cold eyes:1.6), (narrowed eyes:1.7), (half-closed eyes:1.4), (contempt:1.3), (looking down on viewer:1.3), (expressionless:1.3), solo, standing, cowboy shot, looking at viewer, facing viewer, straight-on, simple background, white background, character focus, fully clothed",
+ "negative_prompt": "long neck,long body,(missing arms:1.2),extra arms,(mutated hands:1.2),extra legs,(bad hands:1.2),poorly drawn hands,(malformed hands:1.2),missing limb,floating limbs,disconnected limbs,extra fingers,bad fingers,liquid fingers,poorly drawn fingers,missing fingers,extra digit,fewer digits,ugly face,deformed eyes,partial face,partial head,worst quality,low quality,bad quality,bad anatomy,bad feet,displeasing,unfinished,missing,artistic error,[abstract],lowres,jpeg artifacts,scan,chromatic aberration,signature,username,watermark,(text:1.2),extra digits,stamp,date,logo,(signature:1.1),(username:1.1),(logo:1.1),error,fewer,extra,twins, multiple girls, multiple boys, 2girls, 2boys, 3girls, 3boys, multiple views, group, crowd, background characters, other characters, reference sheet, split screen, cropped, out of frame, nsfw, nude, nudity, topless, nipples, bare chest, breasts, cleavage, underwear, lingerie, swimsuit, revealing clothes, see-through, halo, (six fingers:1.7), (extra fingers:1.7), (too many fingers:1.7), (fused fingers:1.5), (bad hands:1.6), (both hands on glasses:1.4)",
+ "seed": 19206,
+ "steps": 24,
+ "cfg_scale": 5.5,
+ "sampler_name": "Euler a",
+ "scheduler": "Automatic",
+ "width": 1024,
+ "height": 1280,
+ "override_settings": {
+  "sd_model_checkpoint": "waiIllustriousSDXL_v140.safetensors [bdb59bac77]"
+ },
+ "denoising_strength": 0.62,
+ "resize_mode": 0,
+ "init_image": "farina_19206.png（基本の絵・白い地）"
+}
