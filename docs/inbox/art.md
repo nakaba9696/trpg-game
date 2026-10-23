@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-23 持ち主 → 絵：竹之内を和服に（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（15 回目）。14 回目と一緒に進めてよい。
+
 ### 2026-10-23 持ち主 → 絵：競馬ゲームのオーナーの 14 回目の選び（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（14 回目）：ひなたを 1 から再デザイン（はっきり違う候補 6 枚）・イロナの髪の透過を直す・イロナのコミカルは外す。
 
