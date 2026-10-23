@@ -236,7 +236,9 @@
     "anger": "glaring, frown, cold eyes",
     "fun": "smile, closed eyes",
     "faint_smile": "rare gentle smile, soft eyes",
-    "panic": "flustered, panicking, sweatdrop, wide-eyed"
+    "panic": "flustered, panicking, sweatdrop, wide-eyed",
+    "sorrow": "sad, teary eyes, worried eyebrows, looking down",
+    "cold": "cold eyes, narrowed eyes, expressionless, contempt"
    },
    "memo": "第三王子（女）。冷静な完璧主義者。笑わない。冷たい視線"
   },

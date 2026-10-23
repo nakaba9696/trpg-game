@@ -18,7 +18,7 @@
 |---|---|---|---|---|---|
 | `joy` | 喜 | smile, happy | 基本 | うれしい・ほっとした | 83 |
 | `anger` | 怒 | angry, frown, v-shaped eyebrows | 基本 | 怒る・苛立つ | 94 |
-| `sorrow` | 哀 | sad, looking down, downturned mouth | 基本 | 悲しい・沈む | 85 |
+| `sorrow` | 哀 | sad, looking down, downturned mouth | 基本 | 悲しい・沈む | 86 |
 | `fun` | 楽 | laughing, open mouth, closed eyes | 基本 | 楽しい・笑い転げる | 82 |
 | `surprise` | 驚き | surprised, wide-eyed, open mouth, raised eyebrows | 怯え → 基本 | 目を丸くする・息を呑む | 30 |
 | `shy` | 照れ | embarrassed, blush, looking away | 喜 → 基本 | 頬を染める・褒められて照れる（男も blush でよい。#185） | 20 |
@@ -32,7 +32,7 @@
 | `pout` | すね | pout, puffed cheeks, looking away | 怒 → 基本 | むくれる・すねる | 4 |
 | `faint_smile` | ほんの少し笑う | slight smile, soft eyes, closed mouth | 喜 → 基本 | 無表情な人がわずかに笑う | 35 |
 | `sparkle` | 目を輝かせる | excited, sparkling eyes, smile, open mouth | 楽 → 喜 → 基本 | 好きな物を前に夢中になる | 15 |
-| `cold` | 冷たい目 | cold eyes, narrowed eyes, expressionless, contempt | 真剣 → 怒 → 基本 | 見下す・切り捨てる・剣を抜いた顔 | 22 |
+| `cold` | 冷たい目 | cold eyes, narrowed eyes, expressionless, contempt | 真剣 → 怒 → 基本 | 見下す・切り捨てる・剣を抜いた顔 | 23 |
 | `wicked` | 悪い笑み | evil smile, sinister grin, narrowed eyes, shaded face | 得意げ → 楽 → 基本 | 企む・本性がのぞく | 10 |
 | `drunk` | 酔い | drunk, flushed face, blush, half-closed eyes, wavy mouth | 楽 → 照れ → 喜 → 基本 | 酒が回った顔 | 2 |
 | `sleepy` | 眠い | sleepy, drowsy, half-closed eyes, yawning | 疲れ → 基本 | あくび・うとうと | 2 |
@@ -54,7 +54,7 @@
 | ヴァレオン（`valeon`） | 真剣（`serious`） |
 | ライオス（`raios`） | 困り（`troubled`）・真剣（`serious`）・驚き（`surprise`） |
 | セリオス（`serios`） | ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・驚き（`surprise`） |
-| ファリナ（`farina`） | ほんの少し笑う（`faint_smile`）・慌て（`panic`） |
+| ファリナ（`farina`） | ほんの少し笑う（`faint_smile`）・慌て（`panic`）・冷たい目（`cold`） |
 | アルマン（`greol`） | 照れ（`shy`）・困り（`troubled`）・真剣（`serious`） |
 | ネイラス（`neilas`） | 慌て（`panic`）・ほんの少し笑う（`faint_smile`）・目を輝かせる（`sparkle`）・怯え（`fear`） |
 | ティリア（`tiria`） | — |
