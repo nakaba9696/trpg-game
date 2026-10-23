@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-23 持ち主 → 絵：競馬ゲームのオーナーの 13 回目の選び（いちばん上）
+→ 2026-10-23 済み（art/owners）。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（13 回目）：竹之内の怒り顔・ファリナとひなたの後ろ髪の透過漏れ・イロナのコミカルの作り直し。
 - **このゲームのファリナのコミカル 3 枚**（redesign-1 9da24c8b）は印なし＝いらない。このゲームには入れない（作り直しも不要）。
 
@@ -385,6 +386,13 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-23 競馬ゲームの 13 回目 → 済み（Horse-Simulation の art/owners）
+- 外した：takenouchi の smile・sad・comic2・comic3、hinata の comic1・comic2、yuni の comic1〜3。このゲームのファリナのコミカル 3 枚は入れない（redesign-1 に置いたままだが、portraits.json の variants に足さなければ使われない）。
+- takenouchi_anger.png：眉を寄せ、目を開いてにらみ、口を結んだ静かな怒り（鼻は赤くしていない・灰色の目のまま）。
+- farina（7 枚）：あごの左下の後ろ髪の縁の白い線と、首の横のすき間を、緑の地で描き直して抜き直した（このゲームで直したのと同じやり方）。
+- hinata（base・joy・sad・comic3）：絵全体を緑の地で弱く描き直して抜き直し、顔の外（髪の縁・首まわり）だけを置き換えた。あごの下のぎざぎざの白い地が消えた。
+- gfhost のコミカル 3 種：顔の楕円を、両目がまるごと入り、あごの輪郭にかからない大きさにして描き直した（二重の輪郭は出ていないことを拡大して確かめた）。comic1＝目を丸くしてきょとん、comic2＝ほおをふくらませてすねる（口だけもう一度描き直した）、comic3＝笑いをこらえる。
 
 ### 2026-10-23 コミカルな顔・競馬ゲームの 11・12 回目 → 済み（redesign-1・9da24c8b／Horse-Simulation の art/owners・aa04a9b）
 - このゲームの farina：後ろ髪を直した基本から、コミカル 3 枚（farina_comic1＝眼鏡がずれて目が点／comic2＝涙目でわめく／comic3＝ドヤ顔で眼鏡が光る）。顔だけ描き直したので手（指 5 本）と髪は基本のまま。一覧 docs/art/redesign/farina_comic.webp。
