@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-23 持ち主 → 絵：イロナにハンガリーの刺繍の帯（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（16 回目）。14 回目のイロナの髪の透過と一緒に進める。
+
 ### 2026-10-23 持ち主 → 絵：竹之内を和服に（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（15 回目）。14 回目と一緒に進めてよい。
 
