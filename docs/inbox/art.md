@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-24 持ち主 → 絵：ひなたは 3（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（23 回目）：ひなたの 20 案の 3 から表情 5 つとコミカル 3 種。竹之内の sad（22 回目）と一緒に。
+
 ### 2026-10-24 持ち主 → 絵：竹之内の悲しいを涙なしで（いちばん上）
 → 2026-10-24 置いた（art/owners）。ひなたは返事待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（22 回目）：竹之内の sad だけ涙なしで作り直す・comic3 を外す。イロナは済み。ひなたは持ち主の返事待ち。
