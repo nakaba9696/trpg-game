@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-24 持ち主 → 絵：ひなたの怒り・コミカル 2・3（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（28 回目）：ひなたの anger・comic2・comic3 だけ作り直す。ほかは OK。
+
 ### 2026-10-24 持ち主 → 絵：ひなた（候補 5）の手のひもを消す（いちばん上）
 → 2026-10-24 置いた（art/owners）。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の 27 回目の「追加」：手に持っている白いひもを消し、手は胸の前で軽く握るだけに。全部の表情で。
