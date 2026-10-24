@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-24 持ち主 → 絵：ひなた（候補 5）の手のひもを消す（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の 27 回目の「追加」：手に持っている白いひもを消し、手は胸の前で軽く握るだけに。全部の表情で。
+
 ### 2026-10-24 持ち主 → 絵：ひなたは候補 5（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（27 回目）：ひなたの hinata_r5 の 5 から表情 5 つとコミカル 3 種。
 
