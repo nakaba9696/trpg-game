@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-24 持ち主 → 絵：ひなたは候補 5（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（27 回目）：ひなたの hinata_r5 の 5 から表情 5 つとコミカル 3 種。
+
 ### 2026-10-24 持ち主 → 絵：ひなたを美人な田舎のお姉さんで（いちばん上）
 → 2026-10-24 候補 6 枚を置いた（art/owners・hinata_r5）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（26 回目）：ヤンデレに見えない・髪は焦げ茶か黒に近い茶・美人な田舎のお姉さんで候補 6 枚。
