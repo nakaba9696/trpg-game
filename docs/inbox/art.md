@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-25 持ち主 → 絵：ファリナの頭のてっぺんを丸く（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（33 回目）：てっぺんがまっすぐな線で切れて見える。このゲームの `assets/portraits/farina.webp` の頭頂を見本に、てっぺんの髪だけ丸く描き直す。7 枚とも。
+
 ### 2026-10-25 持ち主 → 絵：ファリナの頭がおかしい（いちばん上）
 → 2026-10-25 置いた（art/owners）。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（32 回目）：頭のてっぺんの描き足しで頭がいびつになった。頭は描き足さず、04cb260 の絵を縮めて下を描き足す。7 枚とも。
