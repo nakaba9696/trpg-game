@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-26 持ち主 → 絵：ひなたに前掛けとかご（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（35 回目）：ひなたの base に緑の前掛け・差し入れのかご・明るい笑顔を足した案を 2〜3 枚。34 回目のファリナの髪と一緒に。
+
 ### 2026-10-26 持ち主 → 絵：ファリナの髪の継ぎ目（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（34 回目）：頭頂を重ねた境目の継ぎ目をなじませる。7 枚とも。
 
