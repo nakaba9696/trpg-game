@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-26 持ち主 → 絵：ファリナの髪の継ぎ目（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（34 回目）：頭頂を重ねた境目の継ぎ目をなじませる。7 枚とも。
+
 ### 2026-10-25 持ち主 → 絵：ファリナの頭のてっぺんを丸く（いちばん上）
 → 2026-10-25 置いた（art/owners）。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（33 回目）：てっぺんがまっすぐな線で切れて見える。このゲームの `assets/portraits/farina.webp` の頭頂を見本に、てっぺんの髪だけ丸く描き直す。7 枚とも。
