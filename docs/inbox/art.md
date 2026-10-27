@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-27 持ち主 → 絵：ファリナは長髪と眼鏡に手・ひなたは目（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（41 回目）：ファリナを前のデザイン（長髪・眼鏡を直す手・細身）で 6 案（指 5 本）、ひなたは目を良くして 8 案。
+
 ### 2026-10-27 持ち主 → 絵：ファリナは指を正しく・ひなたは何も持たせず（いちばん上）
 → 2026-10-27 候補を置いた（art/owners・farina_r4・hinata_r9）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（40 回目）：ファリナ 6 案（指 5 本の物だけ）・ひなた 8 案（何も持たせない）。
