@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-28 持ち主 → 絵：背景 7 枚の選び・ひなた（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（48 回目）：背景は title 2・home 1・shop 2・paddock 2・stand 3・farm 1・data 1 を godot/assets/ui に置いて art/backgrounds に push。ひなたは得意げな顔をやめて 8 案。
+
 ### 2026-10-28 持ち主 → 絵：ひなたを天然パーマで（いちばん上・背景より先）
 → 2026-10-28 候補 8 枚を置いた（art/owners・hinata_r13）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（47 回目）：ひなたを天然パーマのくせっ毛・さばさばした姉御肌で 8 案。背景 7 枚（45 回目）より先に。
