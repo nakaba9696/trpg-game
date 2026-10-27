@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-28 持ち主 → 絵：競馬ゲームの画面の背景 7 枚（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（45 回目）：画面の背景 7 枚を、このゲームの背景（A11・style_scenes.json）と同じやり方で作り直す。各 3 案を置いて持ち主の選び待ち。枝は claude/lucid-ptolemy-j204a3 から新しく art/backgrounds。44 回目（ファリナ・ひなた）が先。
+
 ### 2026-10-28 持ち主 → 絵：ファリナは r6 の 3・ひなたは特徴を（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（44 回目）：ファリナは farina_r6 の 3 と同じやり方で 7 枚を置き換え、ひなたは一目で覚えられる特徴を入れた 8 案。
 
