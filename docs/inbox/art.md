@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-28 持ち主 → 絵：ファリナは r6 の 3・ひなたは特徴を（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（44 回目）：ファリナは farina_r6 の 3 と同じやり方で 7 枚を置き換え、ひなたは一目で覚えられる特徴を入れた 8 案。
+
 ### 2026-10-27 持ち主 → 絵：ファリナは既存の絵のように（いちばん上）
 → 2026-10-28 base 3 案を置いた（art/owners・farina_r6）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（43 回目）：元の OK の絵（78d9e60）を縮めて余白を足し、全体を弱く一度に描き直す。base を 2〜3 案。42 回目のひなたと一緒に。
