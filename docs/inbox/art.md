@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-28 持ち主 → 絵：ファリナ済み・ひなたは待ち（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（46 回目）：ファリナの 7 枚は OK で済み。ひなたは持ち主の返事待ち（作らない）。背景 7 枚（45 回目）はそのまま進める。
+
 ### 2026-10-28 持ち主 → 絵：競馬ゲームの画面の背景 7 枚（いちばん上）
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（45 回目）：画面の背景 7 枚を、このゲームの背景（A11・style_scenes.json）と同じやり方で作り直す。各 3 案を置いて持ち主の選び待ち。枝は claude/lucid-ptolemy-j204a3 から新しく art/backgrounds。44 回目（ファリナ・ひなた）が先。
 
