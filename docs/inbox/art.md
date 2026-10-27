@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-27 持ち主 → 絵：ファリナは指を正しく・ひなたは何も持たせず（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（40 回目）：ファリナ 6 案（指 5 本の物だけ）・ひなた 8 案（何も持たせない）。
+
 ### 2026-10-27 持ち主 → 絵：ファリナ 6 案・ひなた 8 案（いちばん上）
 → 2026-10-27 候補を置いた（art/owners・farina_r3・hinata_r8）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（39 回目）：ファリナは同じやり方で絵柄をそろえて 6 案、ひなたは同じ方向でもう 8 案。
