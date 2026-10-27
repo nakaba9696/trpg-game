@@ -12,6 +12,7 @@
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（46 回目）：ファリナの 7 枚は OK で済み。ひなたは持ち主の返事待ち（作らない）。背景 7 枚（45 回目）はそのまま進める。
 
 ### 2026-10-28 持ち主 → 絵：競馬ゲームの画面の背景 7 枚（いちばん上）
+→ 2026-10-28 候補 21 枚を置いた（art/backgrounds・7781112b）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（45 回目）：画面の背景 7 枚を、このゲームの背景（A11・style_scenes.json）と同じやり方で作り直す。各 3 案を置いて持ち主の選び待ち。枝は claude/lucid-ptolemy-j204a3 から新しく art/backgrounds。44 回目（ファリナ・ひなた）が先。
 
 ### 2026-10-28 持ち主 → 絵：ファリナは r6 の 3・ひなたは特徴を（いちばん上）
@@ -526,6 +527,17 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-28 絵 → 配り役・持ち主：45 回目（画面の背景 7 枚）の候補を置いた（Horse-Simulation の新しい枝 `art/backgrounds`・7781112b）
+- 枝は `claude/lucid-ptolemy-j204a3` から作った `art/backgrounds`。候補 `docs/art/candidates/bg/<名前>_1〜3.png`（1920×1080 の PNG）と 21 枚を並べた縮小 `docs/art/candidates/bg/sheet.webp`。作り方の台本 `bggen.py` と seed の表 `seeds.json`、各案の設定 `<名前>_<n>.json` も同じ所。
+- 作り方：trpg-game の背景（A11）の `style_scenes.json` と同じ（同じモデル・`variant: artist` の prefix_add・Euler a・24 steps・cfg 5.5）。1344×768 で作って hires（Latent・強さ 0.5）で 1920×1080。suffix は屋外 `scenery, no humans, landscape, wide shot, detailed background, outdoors`、室内 `… indoors, … empty room`。fantasy・medieval は入れていない。negative は style_scenes.json から modern を外し、馬・動物・人・騎手・群衆・対称の構図・同じ木の繰り返し・文字・看板・ロゴ・つや・強すぎる夕日などを足した。構図は左右対称を避け、まんなかは静かに。
+- 1 枚ずつ見て、人・馬・犬などの動物・寺のような建物・まんなかに置いたトロフィーが出た案は作り直して外した。
+- 気になる所（選ぶときの目安）：
+  - title：1・2 は静かな夜明け（スタンドの灯りは遠く小さい）、3 は照明の柱が並ぶ。
+  - paddock：1・2 は柵と花壇の道（パドックらしさは弱め）、3 は奥に海が見える。
+  - stand：3 はスタンドがまんなかで左右対称ぎみ。
+  - farm：3 は小屋が 2 つ。
+- 持ち主が選んだら、7 枚を `godot/assets/ui/bg_*.png` に上書きし、`docs/art/bg_sheet.webp` と `godot/CREDITS.md` の背景の行を直す。
 
 ### 2026-10-28 絵 → 配り役・持ち主：44 回目を置いた（Horse-Simulation の art/owners）
 - **ファリナ**（cc7f8f24）：farina_r6 の 3 と同じやり方・同じ数値で 7 枚を置き換えた（78d9e60 の元の絵を 0.78 倍・(110,85)・切れていた縁を描き足し・全体を 0.30 の img2img・下へ 41）。0.30 の描き直しで表情が平らになったので（joy の閉じた目・コミカルの顔）、**顔の表情の所だけは元の絵（78d9e60）の表情を同じ位置に重ねた**（色は基本の絵に合わせた）。7 枚とも頭の位置・大きさは同じ、頭の上の余白 4%、表情は元の絵のまま。見本 `docs/art/final/farina.webp`。
