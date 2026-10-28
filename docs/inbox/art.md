@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-28 持ち主 → 絵：ひなたを、のんびりした黒髪の大人の姉で（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（49 回目）：黒の長い髪・アホ毛・眠たげな半目のゆるい笑み・大人の女性で 8 案。特定の人物に似せない。
+
 ### 2026-10-28 持ち主 → 絵：背景 7 枚の選び・ひなた（いちばん上）
 → 2026-10-28 背景を置いた（art/backgrounds・1ba33d88）・ひなた 8 案（hinata_r14）。ひなたは選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（48 回目）：背景は title 2・home 1・shop 2・paddock 2・stand 3・farm 1・data 1 を godot/assets/ui に置いて art/backgrounds に push。ひなたは得意げな顔をやめて 8 案。
