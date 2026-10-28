@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-28 持ち主 → 絵：ひなたの芯は地元の看板娘の姉（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（52 回目）：牧場の名前入りのジャンパー・キャップ・元気な一つ結びの看板娘で 8 案。
+
 ### 2026-10-28 持ち主 → 絵：ひなたの目と雰囲気（いちばん上）
 → 2026-10-29 候補 8 枚を置いた（art/owners・hinata_r17）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（51 回目）：目を潰さずに開く・にこやかで品のいい姉の雰囲気を足して 8 案。
