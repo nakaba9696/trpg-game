@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-28 持ち主 → 絵：ひなたの目と雰囲気（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（51 回目）：目を潰さずに開く・にこやかで品のいい姉の雰囲気を足して 8 案。
+
 ### 2026-10-28 持ち主 → 絵：ひなたの絵柄をそろえる（いちばん上）
 → 2026-10-29 候補 8 枚を置いた（art/owners・hinata_r16）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（50 回目）：r15 のデザインのまま、線を細く・やわらかい影と頬の赤みでほかの人に絵柄をそろえて 8 案。
