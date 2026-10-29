@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの目と表情（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（59 回目）：base の左目の赤み・黄色のはみ出しを直す。joy・sad・anger・comic2・comic3 を作り直す。smile・comic1 は OK。
+
 ### 2026-10-29 持ち主 → 絵：地方・ダートのオーナーは dirt_r4 の 8_1（いちばん上）
 → 2026-10-30 置いた（art/owners）。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（58 回目）：胸の文字のような模様を消し、8_1 から表情 5 つとコミカル 3 種を作って hinata_*.png を置き換える。
