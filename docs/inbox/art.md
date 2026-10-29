@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-29 持ち主 → 絵：地方・ダートのオーナーは dirt_r4 の 8_1（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（58 回目）：胸の文字のような模様を消し、8_1 から表情 5 つとコミカル 3 種を作って hinata_*.png を置き換える。
+
 ### 2026-10-29 持ち主 → 絵：地方・ダートのオーナーは 2・8 を風なしで（いちばん上・56 回目は止める）
 → 2026-10-30 候補を置いた（art/owners・dirt_r4）。56 回目で置き換えた hinata_*.png は戻した。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（57 回目）：7 からの表情づくりは止めて、dirt_r3 の 2 と 8 の髪だけを風の無い自然な落ち方に描き直す（各 2〜3 枚）。
