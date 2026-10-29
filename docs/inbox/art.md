@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの joy・sad・anger を 3 案ずつ（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（60 回目）：base・smile・comic1〜3 は OK。joy・sad・anger を強さ違いで 3 案ずつ、docs/art/candidates/dirt_expr/ に。
+
 ### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの目と表情（いちばん上）
 → 2026-10-30 置いた（art/owners）。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（59 回目）：base の左目の赤み・黄色のはみ出しを直す。joy・sad・anger・comic2・comic3 を作り直す。smile・comic1 は OK。
