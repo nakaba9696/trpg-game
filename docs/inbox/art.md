@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-29 持ち主 → 絵：地方・ダートのオーナーは 7（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（56 回目）：dirt_r3 の 7 から表情 5 つとコミカル 3 種。線を少し細めに。
+
 ### 2026-10-29 持ち主 → 絵：地方・ダートのオーナーの髪をもっともじゃもじゃに（いちばん上）
 → 2026-10-30 候補 8 枚を置いた（art/owners・dirt_r3）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（55 回目）：髪の量を増やし、細かいうねりでもじゃもじゃにふくらませて 8 案。
