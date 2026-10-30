@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの表情、髪が途切れないように（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（61 回目）：顔だけ描き直すと前髪が途中で切れるので、絵全体を弱い img2img で表情だけ変える。joy・sad・anger を 3 案ずつ dirt_expr2 に。
+
 ### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの joy・sad・anger を 3 案ずつ（いちばん上）
 → 2026-10-30 候補 9 枚を置いた（art/owners・dirt_expr）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（60 回目）：base・smile・comic1〜3 は OK。joy・sad・anger を強さ違いで 3 案ずつ、docs/art/candidates/dirt_expr/ に。**前の NG の理由は眉・目が二重に残っていたこと**：元の眉と目を消してから描き直し、眉 2 本・目 2 つかを確かめる（60 回目の「追加」）。
