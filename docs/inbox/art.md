@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-30 持ち主 → 絵：ユニが大きすぎる（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（63 回目）：ユニの元の 7 枚を 0.85 倍くらいに縮め、下と左右を描き足し、全体を弱い img2img で一度に。顔の大きさをほかの人にそろえる。
+
 ### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの表情は 1・1・1（いちばん上）
 → 2026-10-30 置いた（art/owners）。8 枚そろった。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（62 回目）：dirt_expr2 の joy_1・sad_1・anger_1 を hinata_joy・sad・anger に置く。これで済み。
