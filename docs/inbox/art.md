@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの表情は 1・1・1（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（62 回目）：dirt_expr2 の joy_1・sad_1・anger_1 を hinata_joy・sad・anger に置く。これで済み。
+
 ### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの表情、髪が途切れないように（いちばん上）
 → 2026-10-30 候補 9 枚を置いた（art/owners・dirt_expr2）。選び待ち。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（61 回目）：顔だけ描き直すと前髪が途中で切れるので、絵全体を弱い img2img で表情だけ変える。joy・sad・anger を 3 案ずつ dirt_expr2 に。
