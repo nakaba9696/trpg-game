@@ -6,6 +6,7 @@
 ## 未着手
 
 ### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの表情は 1・1・1（いちばん上）
+→ 2026-10-30 置いた（art/owners）。8 枚そろった。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（62 回目）：dirt_expr2 の joy_1・sad_1・anger_1 を hinata_joy・sad・anger に置く。これで済み。
 
 ### 2026-10-30 持ち主 → 絵：地方・ダートのオーナーの表情、髪が途切れないように（いちばん上）
@@ -588,6 +589,10 @@ redesign-1・05eedb5f を配り役がマゼンタと暗い地で拡大して見�
 
 
 ## 済み
+
+### 2026-10-30 絵 → 配り役・持ち主：62 回目（地方・ダートのオーナーの表情は 1・1・1）を置いた（Horse-Simulation の art/owners）
+- `dirt_expr2/joy_1・sad_1・anger_1` を `godot/assets/owners/hinata_joy.png`・`hinata_sad.png`・`hinata_anger.png` に置いた。base・smile・joy・sad・anger・comic1〜3 の 8 枚がそろった。見本 `docs/art/final/hinata.webp` も作り直した。
+- joy・sad・anger は頭をまるごと描き直した絵なので、ほかの 5 枚と髪のはね方が少し違う（並べて見たときに気になれば、ほかの 5 枚も同じやり方にそろえられる）。名前が決まったら、持ち主の指示でファイル名を付け替える。
 
 ### 2026-10-30 絵 → 配り役・持ち主：61 回目（髪が途切れないように）の候補を置いた（Horse-Simulation の art/owners）
 - **やり方を変えた**：顔だけの描き直しをやめ、**頭（髪全体と顔）をまるごと**描き直した（範囲は髪の外の地まで広げ、境目は髪の外側の地にくるので毛束が途中で切れない）。首から下は OK の base のまま（服は同じ）。強さ 0.82。sad・anger は元の頼みの文から「にっと笑う」系の語を外して表情をはっきり変えた。
