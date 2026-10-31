@@ -5,6 +5,9 @@
 
 ## 未着手
 
+### 2026-10-31 持ち主 → 絵：ユニの手の残骸（いちばん上）
+- Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（64 回目）：ユニの base_g1〜g3・joy・surprise の手のまわりの余分な指・手のかけらを消す。base・sad は OK。
+
 ### 2026-10-30 持ち主 → 絵：ユニが大きすぎる（いちばん上）
 → 2026-10-31 置いた（art/owners）。
 - Horse-Simulation の `art/owners` の `docs/art/ART_SESSION_NOTE.md` の末尾（63 回目）：ユニの元の 7 枚を 0.85 倍くらいに縮め、下と左右を描き足し、全体を弱い img2img で一度に。顔の大きさをほかの人にそろえる。
